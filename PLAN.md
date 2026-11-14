@@ -51,7 +51,7 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
 - Android WebView wrapper (written; first build pending, see STATUS).
 
 ### Phase 1: Ship v1 to the tablet (next)
-- Commit v1 on a branch and open the PR (v1.0).
+- ✅ Commit v1 (v1.0 is on `main`; v1.1 cleans up stray Android Studio files).
 - First Gradle sync/build in Android Studio and sideload. Fix anything the real device shows
   (layout on her screen size, touch feel, audio, speed of the fuzzy filter).
 - Add `APP_VERSION` and an "About" line in Settings. Add a save-data `version` migration hook in `normalize()`.

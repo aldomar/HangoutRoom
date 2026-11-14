@@ -1,3 +1,6 @@
+# Android Studio project settings (if the repo root is opened by mistake)
+.idea/
+
 # Android Studio / Gradle build output
 android/.gradle/
 android/.kotlin/
