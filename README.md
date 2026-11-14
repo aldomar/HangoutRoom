@@ -8,8 +8,12 @@ Double-click `index.html` (or open it in Chrome). It works offline, with nothing
 ## Put it on an Android tablet or phone
 See `android/README.md`. In short: open the `android` folder in Android Studio, build the APK, copy it to the device and tap to install.
 
+## Which version is this?
+In the app: ⚙️ Settings. The version is shown at the bottom (for example "version 1.2").
+
 ## Keep progress safe
 In the app: ⚙️ Settings → Backup & Restore. Update the Android app by installing over it. Never uninstall first.
+Backups from older versions always still restore.
 
 ## For whoever works on it next
 - `CLAUDE.md`: project rules (for Claude Code and people).

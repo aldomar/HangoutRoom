@@ -3,7 +3,9 @@
 _Last updated: 2026-11-14_
 
 ## Where we are
-- **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): next.**
+- **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): finishing** (v1.2 PR open).
+- The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
+  survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
   From now on, work continues in VS Code (whole repo) with Claude Code. Android Studio opens only `android/`, to build the APK.
 
@@ -11,8 +13,8 @@ _Last updated: 2026-11-14_
 - Remote: `https://github.com/aldomar/HangoutRoom`.
 - **v1.0 is on `main`** (commit `fd03c3c` "First code v1 commit"). It was committed straight to `main`, not via a PR.
   That commit also picked up a root `.idea/` folder (Android Studio settings from opening the repo root).
-- PR "v1 cleanup (v1.1)" on branch `feature/v1-cleanup`: stops tracking the root `.idea/`, adds it to `.gitignore`,
-  updates this file, and bumps the version to 1.1 (`versionCode` 2). The files stay on disk.
+- PR #1 "v1 cleanup (v1.1)": merged. Stopped tracking the root `.idea/` and added it to `.gitignore`.
+- PR "App version + save upgrades (v1.2)" on branch `feature/app-version`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -48,10 +50,20 @@ _Last updated: 2026-11-14_
 
 ## Next steps (Phase 1)
 1. ~~Branch, commit, push, open the PR (v1.0).~~ Done: v1.0 is on `main`; cleanup PR is v1.1.
-2. Owner: Android Studio → open `android/` → sync (install SDK 36 if asked) → Build APK → sideload.
-3. Fix whatever the first build or the real tablet shows (paste errors into Claude Code).
-4. Add `APP_VERSION` + an About line in Settings, and a save-version migration hook. Bump to the next version (v1.2 if the cleanup PR is merged first) in a new PR.
+2. ~~Owner: build the APK and sideload.~~ Done, no build errors.
+3. ~~Fix whatever the first build or the real tablet shows.~~ Nothing to fix so far.
+4. ~~`APP_VERSION`, About line, save-upgrade hook.~~ Done in the v1.2 PR. After merging, install v1.2 **over** the
+   current app and check her room is still there and Settings shows "version 1.2". That completes Phase 1.
 5. Then plan Phase 2 (Art Desk) and get it agreed before coding.
+
+## How versions and save upgrades work (since v1.2)
+- `APP_VERSION` (top of the script in `index.html`) is the app version shown in Settings. It must match
+  `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 1 now.
+  Bump it only when the save shape changes, and add a step to `MIGRATIONS` that upgrades the previous version.
+- `fixDB()` runs on the saved data when the app starts **and** on restored backups, then `normalize()` fills in
+  per-profile defaults. So old saves and old backups always get upgraded the same way.
+- A backup from a newer app still restores on an older app. Unknown fields are kept, not deleted.
 
 ## Open questions for the owner
 - Her device model and screen size (to tune layouts).
