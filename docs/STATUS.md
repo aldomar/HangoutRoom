@@ -32,7 +32,8 @@ _Last updated: 2026-11-14_
 - Mascot: original fuzzy emo bunny, default name "Fuzzy" (renamable). Starter look: emo swoop bangs,
   band tee, plaid skirt, black/purple striped leg warmers, platform boots, star clips.
 - Locked room areas become future updates: Art Desk, Photocard Wall, Soccer Field.
-- Android: AGP 9.3.3 with built-in Kotlin, Gradle 9.5.0, SDK 36, min SDK 26, package `com.family.hangoutroom`.
+- Android: AGP 9.5.1 with built-in Kotlin, Gradle 9.6.0 (Android Studio's Upgrade Assistant raised them from
+  9.3.3 / 9.5.0 at the first build; that build worked), SDK 36, min SDK 26, package `com.family.hangoutroom`.
   No AndroidX, no `INTERNET`. Debug-signed APK, sideloaded.
 - Music is off by default. Sounds are on.
 - Backup: a copy/paste code or a `.json` file (Android save picker in the APK).
