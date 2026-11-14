@@ -1,0 +1,31 @@
+# Hangout Room - Android wrapper
+
+A tiny Android app that shows `../index.html` full-screen and offline.
+The web app at the repo root is the only copy you edit; it is copied into the APK on every build.
+
+## Build the APK
+1. Android Studio -> **File > Open** -> pick this `android` folder (not the repo root).
+2. Let Gradle sync. If it asks to install SDK Platform 36 / Build Tools, click to install.
+   If it says the plugin needs a newer Android Studio, update Android Studio (free).
+3. **Build > Build App Bundle(s) / APK(s) > Build APK(s)**.
+4. The APK is at `android/app/build/outputs/apk/debug/app-debug.apk`.
+
+## Install on the tablet / phone (sideload)
+- Copy `app-debug.apk` to the device (USB, Google Drive, etc.) and tap it.
+  Allow "Install unknown apps" for the app you opened it from when asked.
+- Or plug in with USB debugging on and press the green Run button in Android Studio.
+
+## Updating later
+1. Edit `../index.html` (test it in a browser first).
+2. In `app/build.gradle.kts`, bump `versionCode` (1 -> 2 -> 3 ...).
+3. Build again and install over the old app. **Don't uninstall first** - uninstalling deletes her saves.
+
+Updates only install over the old app if they are signed with the same key. Debug builds use
+a key stored on this computer (`%USERPROFILE%\.android\debug.keystore`), so build updates on this
+same computer or keep a copy of that file. Use the in-app **Settings > Backup** before big updates anyway.
+
+## What the wrapper does
+- No internet permission: the app can't go online.
+- Saves use the WebView's localStorage (kept with the app's data).
+- Android back button: closes popups, then goes Room -> Profiles, then exits.
+- Settings > Backup > "Save file" opens Android's save picker; "Restore" can pick that file.
