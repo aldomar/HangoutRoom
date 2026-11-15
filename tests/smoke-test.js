@@ -132,7 +132,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`doRestore(${JSON.stringify(code)})`); await sleep(800);
   check('restore brings back 2 drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2);
   check('artwork not saved into localStorage', await ev(`!JSON.parse(localStorage.getItem('hangoutRoom.v1')).artwork`));
-  check('DB version is 4', (await ev('DB.version'))===4);
+  check('DB version is 5', (await ev('DB.version'))===5);
   await ev(`doRestore(${JSON.stringify(oldCode)})`); await sleep(800);
   check('old backup restores and keeps drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2 && (await ev('DB.profiles.length'))===1);
   await ev(`DB.settings.backupArt=false;backupModal()`); await sleep(400);
@@ -213,7 +213,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const cardCode=await ev('JSON.stringify(DB)');
   const v13Code=await ev(`JSON.stringify(Object.assign({},DB,{version:2,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));['cards','cardPins','bonusGot','cardNo'].forEach(k=>delete q[k]);delete q.stats.cards;return q;})}))`);
   await ev(`doRestore(${JSON.stringify(v13Code)})`); await sleep(500);
-  check('v1.3 backup restores with empty card lists', await ev(`DB.version===4&&DB.profiles[0].cards.length===0&&DB.profiles[0].cardPins.length===0&&DB.profiles[0].stats.cards===0`));
+  check('v1.3 backup restores with empty card lists', await ev(`DB.version===5&&DB.profiles[0].cards.length===0&&DB.profiles[0].cardPins.length===0&&DB.profiles[0].stats.cards===0`));
   await ev(`doRestore(${JSON.stringify(cardCode)})`); await sleep(500);
   check('backup brings cards and pins back', (await ev('DB.profiles[0].cards.length'))===nCards && (await ev('DB.profiles[0].cardPins.length'))===2);
   await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal()`);
@@ -299,11 +299,103 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const v14Code=await ev(`JSON.stringify(Object.assign({},DB,{version:3,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.soccer;['goals','kicks','matches','perfects'].forEach(k=>delete q.stats[k]);return q;})}))`);
   const socCode=await ev('JSON.stringify(DB)');
   await ev(`doRestore(${JSON.stringify(v14Code)})`); await sleep(400);
-  check('v1.4 backup restores with soccer defaults', await ev(`DB.version===4&&DB.profiles[0].soccer.level==='easy'&&DB.profiles[0].soccer.best.hard===0&&DB.profiles[0].stats.goals===0&&DB.profiles[0].soccer.trophies.length===0`));
+  check('v1.4 backup restores with soccer defaults', await ev(`DB.version===5&&DB.profiles[0].soccer.level==='easy'&&DB.profiles[0].soccer.best.hard===0&&DB.profiles[0].stats.goals===0&&DB.profiles[0].soccer.trophies.length===0`));
   await ev(`doRestore(${JSON.stringify(socCode)})`); await sleep(400);
   check('backup keeps soccer progress', await ev(`DB.profiles[0].soccer.best.hard===5&&DB.profiles[0].stats.perfects===1&&DB.profiles[0].soccer.trophies.length===2`));
   await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal()`);
   check('no duplicate trophies after restore', await ev(`P().room.items.filter(i=>/^trophy/.test(i.type)).length===2`));
+
+  console.log('Stage (rhythm game)');
+  // stAll() taps every note still to come exactly on time; stSkip() jumps to the end of the song.
+  await ev(`window.stAll=()=>STG.notes.forEach(n=>{if(!n.r)stTap(n.lane,n.t);});window.stSkip=()=>{STG.t0-=STG.end+2;}`);
+  await ev(`show('room')`); await sleep(300);
+  check('stage marquee in the room', await ev(`!!document.querySelector('[data-hot=stage]')`));
+  await ev(`document.querySelector('[data-hot=stage] rect').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(400);
+  check('marquee opens the Stage on Easy with 3 songs', await ev(`cur==='stage'&&STG.state==='pick'&&P().stage.level==='easy'&&document.querySelectorAll('#stgSongs [data-song]').length===3`));
+  await shot('70-stage-songs');
+  const charts=await ev(`(()=>{const out=[];for(const s of SONG_IDS)for(const l of ['easy','medium','hard']){const a=buildSong(s,l),b=buildSong(s,l),L=STG_LEVELS[l];
+    let gap=99;for(let i=1;i<a.notes.length;i++)gap=Math.min(gap,(a.notes[i].t-a.notes[i-1].t)/a.beat);
+    out.push({s,l,n:a.notes.length,gap:+gap.toFixed(3),len:Math.round(a.end),same:JSON.stringify(a.notes)===JSON.stringify(b.notes),
+      lanes:a.notes.every(n=>n.lane>=0&&n.lane<L.lanes),used:new Set(a.notes.map(n=>n.lane)).size===L.lanes,inSong:a.notes.every(n=>n.t>=a.first&&n.t<a.end-a.bar)});}return out;})()`);
+  check('every chart is fixed (same every time), in its lanes, inside the song', charts.every(c=>c.same&&c.lanes&&c.used&&c.inSong), charts);
+  check('notes are never too close (Easy 1 beat, Medium 1 beat, Hard half a beat)', charts.every(c=>c.gap>=(c.l==='hard'?0.499:0.999)), charts.map(c=>c.s+'/'+c.l+':'+c.gap));
+  check('harder levels have more notes', charts.filter(c=>c.l==='easy').every(e=>{const m=charts.find(c=>c.s===e.s&&c.l==='medium'),h=charts.find(c=>c.s===e.s&&c.l==='hard');return e.n<m.n&&m.n<h.n;}), charts.map(c=>c.s+'/'+c.l+':'+c.n));
+  check('songs are about a minute long', charts.every(c=>c.len>=55&&c.len<=75), charts.map(c=>c.len));
+  await ev(`document.querySelector('[data-late="20"]').click()`);
+  check('"Sound late?" + adds 20 ms', await ev(`DB.settings.stageOffset===20&&document.querySelector('#stgLate').textContent==='+20 ms'`));
+  await ev(`document.querySelector('[data-late="-20"]').click()`);
+  check('"Sound late?" − goes back to 0', await ev(`DB.settings.stageOffset===0`));
+
+  const st0=await ev('P().coins');
+  await ev(`document.querySelector('[data-song=starlight]').click()`); await sleep(300);
+  check('tapping a song starts it', await ev(`STG.state==='play'&&STG.song==='starlight'&&!document.querySelector('#stgPlay').classList.contains('hidden')&&!!document.querySelector('#stgMascot svg')`));
+  await ev(`DB.settings.music=true;document.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}))`);
+  check('background music stays off during a song', await ev(`!musicTimer`)); await ev(`DB.settings.music=false`);
+  await sleep(1200); await shot('71-stage-countin');
+  // a real tap on the pad, sent exactly when the first note arrives
+  const tap1=await ev(`new Promise(r=>setTimeout(()=>{const c=stgCv.getBoundingClientRect(),g=STG.g;stgCv.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,clientX:c.left+g.xs[0],clientY:c.top+g.yh}));r(STG.counts.slice(0,3).reduce((a,b)=>a+b));},Math.max(0,(STG.notes[0].t-stSongT())*1000)))`);
+  check('a tap on time hits the first note', tap1===1, await ev('JSON.stringify(STG.counts)'));
+  await sleep(300); await shot('72-stage-hit');
+  await sleep(Math.max(0,await ev(`(STG.notes[1].t-stSongT())*1000`))+500);
+  check('a note that goes past is an Oops and ends the combo', await ev(`STG.notes[1].r===4&&STG.counts[3]>=1&&STG.combo===0`), await ev('JSON.stringify(STG.counts)'));
+  check('a tap between notes does nothing', await ev(`stTap(0,STG.notes[2].t-0.45)===-1&&STG.counts[3]===STG.notes.filter(n=>n.r===4).length`));
+  await ev('stAll()'); await sleep(200); await shot('73-stage-playing'); await ev('stSkip()'); await sleep(500);
+  check('the song ends with the result box', await ev(`STG.state==='done'&&document.querySelector('#modalTitle').textContent.includes('Starlight Pop')`));
+  await shot('74-stage-result');
+  const b1=await ev('P().stage.best.starlight.easy');
+  check('best stars and score saved', b1&&b1.stars>=2&&b1.score>0, b1);
+  check('coins: stars × 2 on Easy, +10 for the First Show! card', (await ev('P().coins'))===st0+b1.stars*2+10, [st0, await ev('P().coins'), b1]);
+  check('First Show! bonus card (not yet a Full Combo)', await ev(`P().bonusGot.includes('show1')&&!P().bonusGot.includes('combo1')&&P().stats.shows===1`));
+  const st1=await ev('P().coins');
+  await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(200);
+  check('Play again starts the song again', await ev(`STG.state==='play'&&STG.counts.every(x=>x===0)`));
+  await ev('stAll()'); await ev('stSkip()'); await sleep(500);
+  check('every note Perfect = 3 stars and a Full Combo', await ev(`P().stage.best.starlight.easy.stars===3&&P().stats.fullCombos===1&&P().bonusGot.includes('combo1')`));
+  check('coins: 3 × 2, +10 for the Full Combo card', (await ev('P().coins'))===st1+16, [st1, await ev('P().coins')]);
+
+  await ev(`[...document.querySelectorAll('#modalBtns button')][0].click()`); await sleep(200);
+  check('Songs button goes back to the song list', await ev(`STG.state==='pick'&&!document.querySelector('#stgPick').classList.contains('hidden')`));
+  check('song list shows the stars', await ev(`document.querySelectorAll('[data-song=starlight] .ss span:not(.off)').length===3`));
+  await ev(`document.querySelector('#stgTabs [data-lvl=hard]').click()`); await sleep(200);
+  check('Hard tab picked (saved)', await ev(`P().stage.level==='hard'&&document.querySelector('#stgTabs .on').dataset.lvl==='hard'`));
+  check('Hard has no stars yet', await ev(`document.querySelectorAll('[data-song=starlight] .ss span:not(.off)').length===0`));
+  const st2=await ev('P().coins');
+  await ev(`stStart('bats')`); await sleep(4500); await shot('75-stage-hard');
+  check('Hard has 3 lanes', await ev(`STG.g.n===3`));
+  // three fingers: one tap on each lane's pad (the lane comes from where she taps)
+  check('each pad taps its own lane', await ev(`(()=>{const c=stgCv.getBoundingClientRect(),g=STG.g,got=[];const o=window.stTap;window.stTap=(l,t)=>{got.push(l);return -1;};
+    try{g.xs.forEach(x=>stgCv.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,clientX:c.left+x,clientY:c.top+g.yh})));}finally{window.stTap=o;}return got.join();})()`)==='0,1,2');
+  await ev('stAll()'); await ev('stSkip()'); await sleep(500);
+  check('3 stars on Hard wins the Golden Mic (in the room)', await ev(`P().stage.mic&&P().room.items.filter(i=>i.type==='goldenMic'&&i.placed).length===1`));
+  check('result box shows the Golden Mic', (await ev(`document.querySelector('#modalBody').textContent`)).includes('Golden Mic'));
+  check('Superstar bonus card', await ev(`P().bonusGot.includes('superstar')`));
+  check('coins: 3 × 4 on Hard, +10 for Superstar', (await ev('P().coins'))===st2+22, [st2, await ev('P().coins')]);
+  await shot('76-stage-golden-mic');
+  await ev(`closeModal();P().stage.level='medium';stgPickView();stStart('sugar')`); await ev('stSkip()'); await sleep(500);
+  check('a song with no taps gives no stars or coins', await ev(`P().stats.shows===3&&!((P().stage.best.sugar||{}).medium||{}).stars&&!P().bonusGot.includes('encore')`));
+  await ev(`closeModal();stStart('sugar')`); await ev(`STG.notes.forEach((n,i)=>{if(i%2)stTap(n.lane,n.t+0.08);})`); await ev('stSkip()'); await sleep(500);
+  check('half the notes = 1 star', await ev(`P().stage.best.sugar.medium.stars===1`), await ev('JSON.stringify(P().stage.best.sugar)'));
+  check('Encore! card after playing all 3 songs', await ev(`P().bonusGot.includes('encore')`));
+  await ev(`closeModal();stStart('starlight')`); await sleep(200);
+  check('Back during a song goes to the song list', await ev(`window.androidBack()&&cur==='stage'&&STG.state==='pick'`));
+  check('Back again goes to the room', await ev(`window.androidBack()&&cur==='room'`));
+  await ev(`show('stage');show('room')`); await sleep(300);
+  check('the Golden Mic is given only once', await ev(`P().room.items.filter(i=>i.type==='goldenMic').length===1`));
+  check('the Golden Mic is drawn in the room', await ev(`!!document.querySelector('#roomSvg .deco [fill="url(#gGold)"]')`));
+  await shot('77-room-stage');
+  await ev(`enterDecorate();document.querySelector('[data-dt=shop]').click()`); await sleep(150);
+  check('the Golden Mic is not in the Shop', await ev(`!document.querySelector('#decoGrid [data-buy=goldenMic]')`)); await ev(`exitDecorate()`);
+  check('Concert photocard stage is free', await ev(`cardOwned(P(),'stage','concert')`));
+
+  console.log('Stage in backups');
+  const v16Code=await ev(`JSON.stringify(Object.assign({},DB,{version:4,settings:{sound:true,music:false,backupArt:true},profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.stage;delete q.stats.shows;delete q.stats.fullCombos;return q;})}))`);
+  const stgCode=await ev('JSON.stringify(DB)');
+  await ev(`doRestore(${JSON.stringify(v16Code)})`); await sleep(400);
+  check('v1.6 backup restores with stage defaults', await ev(`DB.version===5&&DB.settings.stageOffset===0&&DB.profiles[0].stage.level==='easy'&&Object.keys(DB.profiles[0].stage.best).length===0&&DB.profiles[0].stats.shows===0&&DB.profiles[0].stage.mic===false`));
+  await ev(`doRestore(${JSON.stringify(stgCode)})`); await sleep(400);
+  check('backup keeps stage progress', await ev(`DB.profiles[0].stage.best.bats.hard.stars===3&&DB.profiles[0].stage.mic===true&&DB.profiles[0].stats.fullCombos>=2`));
+  await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal()`);
+  check('no second Golden Mic after restore', await ev(`P().room.items.filter(i=>i.type==='goldenMic').length===1`));
 
   console.log('Squishy: press anywhere, knead, slow rise, poke, two fingers');
   // Finger events are sent from inside the page. sq(type,id,u,v) presses at body position u,v (-1..1 across the toy).
@@ -361,12 +453,17 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`setCardView('binder')`); await sleep(300); await shot('28-phone-binder');
   await ev(`show('soccer')`); await sleep(400); await shot('49-phone-soccer');
   check('phone soccer canvas visible', await ev(`SOC.g&&SOC.g.GW>200`), await ev('SOC.g&&SOC.g.GW'));
+  await ev(`show('stage')`); await sleep(300); await shot('78-phone-stage-songs');
+  await ev(`P().stage.level='hard';stStart('starlight')`); await sleep(4600); await shot('79-phone-stage-play');
+  check('phone stage: 3 pads fit on screen', await ev(`STG.g.xs[0]-STG.g.pr>0&&STG.g.xs[2]+STG.g.pr<innerWidth`), await ev('JSON.stringify(STG.g)'));
   await ev(`show('art')`); await sleep(200);
   await send('Emulation.setDeviceMetricsOverride',{width:860,height:412,deviceScaleFactor:1,mobile:true});
   await ev(`setArtView('pad')`); await sleep(300); await shot('11-phone-landscape');
   await ev(`show('cards');setCardView('make')`); await sleep(300); await shot('29-phone-landscape-cards');
   await ev(`setCardView('binder')`); await sleep(300); await shot('30-phone-landscape-binder');
   await ev(`show('soccer')`); await sleep(400); await shot('50-phone-landscape-soccer');
+  await ev(`show('stage');stStart('bats')`); await sleep(4500); await shot('80-phone-landscape-stage');
+  check('landscape stage: pads below Fuzzy', await ev(`STG.g.yh-STG.g.pr>stgCv.clientHeight*0.4&&stgCv.clientHeight>200`), await ev('JSON.stringify(STG.g)'));
   await ev(`show('art')`);
 
   console.log('Every other screen (tablet size)');

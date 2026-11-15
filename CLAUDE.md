@@ -67,7 +67,8 @@ stripes, stars, bats), and fidget and squishy toys.
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`.
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`.
+  `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting.
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
   (`top:zip`, `legs:pinkFuzz`, `pop:emo`, `squish:bat`, `spin:emo`, `wall:midnight`, `floor:galaxy`).
   Room items reference `DECOR` keys. Prices and names may change; ids may not.
@@ -99,7 +100,7 @@ stripes, stars, bats), and fidget and squishy toys.
 - **Quick check:** open `index.html` in desktop Chrome and use DevTools device mode (tablet and phone sizes, touch).
 - **Automated smoke test:** `node tests/smoke-test.js` (Node 22+ and an installed Chrome or Edge; nothing to install).
   It loads the page in a headless browser with a throwaway profile, makes a test room, opens every screen,
-  exercises the Art Desk, Photocards, Soccer and backup/restore, fails on any console error, and saves screenshots to `tests/shots/` (ignored by git).
+  exercises the Art Desk, Photocards, Soccer, the Stage and backup/restore, fails on any console error, and saves screenshots to `tests/shots/` (ignored by git).
   Run it before every PR, and extend it when you add a feature. Use invented names only.
 - **On the device:** the owner builds the APK in Android Studio and sideloads it.
 
@@ -118,7 +119,8 @@ stripes, stars, bats), and fidget and squishy toys.
   11. Art Desk (drawing pad, stamps, gallery, posters)
   12. Photocard Wall (`STAGES`, `FRAMES`, `CARD_TAGS`, `BONUS`, `cardSVG`, card maker, binder, pins)
   13. Soccer Field (`KEEPERS` by level, `socShoot`, `resolveShot`, `drawSoccer`, `drawKeeper`)
-  14. Main loop + startup (`androidBack` hook)
+  14. Stage (`SONGS`, `buildSong`, `stStart`, `stTap`, `stFinish`, `drawStage`, `giveMic`)
+  15. Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
 - A photocard is a small recipe `{id, no, at, look, stage, frame, title, name, s, bonus?}` in `profile.cards`, drawn by `cardSVG()`.
@@ -129,6 +131,10 @@ stripes, stars, bats), and fidget and squishy toys.
   Level ids `easy/medium/hard` are saved: never rename them. A perfect 5/5 gives that level's trophy once
   (`TROPHIES`, `giveTrophies()`): a room item `trophyBronze` / `trophySilver` / `trophyGold`. Decorations with
   `award:1` are prizes and never appear in the Shop.
+- Stage: songs are generated from small text recipes in `SONGS` (scale, chords, melody, drum patterns). `buildSong(id, level)`
+  turns a recipe into audio events and a fixed note chart (no randomness). Song time comes from the audio clock
+  (`stSongT()`), so taps line up with what she hears. Song ids `starlight/bats/sugar` and level ids are saved: never rename them.
+  3 stars on Hard gives the Golden Mic (`goldenMic`, `award:1`) once (`stage.mic`). Background music pauses during a song.
 - Every room area is open. To add a locked area for a future feature, put it in `LOCKED` and `handleHot()`.
 - `android/`: Gradle project; `app/src/main/java/com/family/hangoutroom/MainActivity.kt`; `android/README.md` has build/sideload steps.
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.
@@ -137,6 +143,7 @@ stripes, stars, bats), and fidget and squishy toys.
 - Coins: 1 per 10 pops, +5 per pop-it flip, 1 per 5 squishes, 1 per 25 spinner turns, +10 daily gift, 25 to start,
   +5 per new drawing (3+ strokes, first 5 a day), +10 per bonus photocard (each milestone once). Making a photocard is free.
   Soccer: +1 / +2 / +3 per goal (Easy / Medium / Hard), +1 more per goal with 2+ soccer clothes on, +5 for 5/5.
+  Stage: 2 / 3 / 4 coins per star (Easy / Medium / Hard), 1–3 stars per song; no stars (and no coins) without a hit.
   Item prices are 0–40. Keep earning steady and fair.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).
   A new decoration = one entry in `DECOR` with `{name, price, box, d()}` (plus `flat:1` for rugs, `wall:1` for wall items).
