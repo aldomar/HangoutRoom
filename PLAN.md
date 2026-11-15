@@ -136,6 +136,18 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
 - More closet items, decorations, squishies and pop-it shapes (heart, star).
 - New fidgets: slime stretcher, fidget-cube clicker, tilt marble maze (device tilt works in WebView).
 - Seasonal decorations, a sticker book of achievements, a pet for the mascot.
+- **New mini-game: Code Lab 💻 (intro to coding, the owner's idea).** A puzzle game where she "programs" Fuzzy.
+  The details below are a first sketch; the full plan gets agreed before building.
+  - Fuzzy stands on a small grid (for example 5×5) and has to reach a ⭐ or collect treats.
+  - She snaps big picture blocks into a row (➡️ ⬅️ ⬆️ ⬇️ moves, 🔁 repeat, later "if"), then presses ▶ Run and
+    watches Fuzzy follow the program one step at a time, with the current block lit up.
+  - Levels teach one idea at a time: putting steps in order → repeat loops → reusing a "my move" block →
+    simple "if" (for example "if there's a puddle, jump").
+  - No failing: if the program goes wrong, Fuzzy stops, the block where it went wrong glows, and she can fix it and try again.
+  - Coins the first time each level is solved, plus a bonus star for using few blocks. All levels are made by hand (not random).
+  - Easy mode (younger sister): only arrow blocks and short paths, so it works without reading.
+  - Original look and art: block coding is a common kind of game, but it must not copy any existing coding app's look,
+    characters or levels.
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), and room themes saved as presets.

@@ -9,8 +9,9 @@ _Last updated: 2026-11-15_
 - **Phase 4 (Soccer Field): done** (v1.5 merged), with the swipe-power fix and Bronze/Silver/Gold trophies. Checked on the device.
 - **Squishy upgrade: done** (v1.6 merged, PR #6).
 - **Phase 5 (Stage rhythm game): done** (v1.7 merged, PR #7).
-- **Phase 6 (little-sister polish): built, PR open as v1.8** on branch `feature/little-sister`. Plan agreed 2026-11-15.
-  Not yet tried on a device.
+- **Phase 6 (little-sister polish): done** (v1.8 merged, PR #8). The owner checked it on the device: everything works.
+- **Phase 7 (content packs): not started.** The owner added a new mini-game idea to it: **Code Lab** (an intro-to-coding
+  puzzle game, sketched in `PLAN.md`). Plan it and get it agreed before building.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -27,7 +28,8 @@ _Last updated: 2026-11-15_
 - PR #5 "Soccer Field (v1.5)": merged.
 - PR #6 "Squishy upgrade (v1.6)": merged.
 - PR #7 "Stage (v1.7)": merged.
-- PR "Little-sister polish (v1.8)" on branch `feature/little-sister` (branched from `main` after #7): open.
+- PR #8 "Little-sister polish (v1.8)": merged.
+- Branch `feature/phase7` (from `main` after #8): Phase 7 planning notes so far, no PR yet.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -212,10 +214,11 @@ _Last updated: 2026-11-15_
 2. ~~Plan Phase 6 (little-sister polish) and get it agreed before coding.~~ Agreed and built (v1.8 PR).
 
 ## Next steps (Phase 6)
-1. Owner: build v1.8, install it over the app, and try Easy mode, the room colour/badge and the PIN (see the PR).
-   Check that both sisters' rooms are still there after the update.
-2. Merge the v1.8 PR.
-3. Plan Phase 7 (content packs) and get it agreed before coding.
+1. ~~Owner: build v1.8 and try it. Merge the v1.8 PR.~~ Done, everything works.
+
+## Next steps (Phase 7)
+1. Decide which Phase 7 item comes first (Code Lab or a content pack) and agree its plan.
+2. `index.html` is about 213 KB. Plan the split into a `web/` folder before it passes ~250 KB (Code Lab alone may push it over).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of the script in `index.html`) is the app version shown in Settings. It must match
