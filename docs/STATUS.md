@@ -7,8 +7,9 @@ _Last updated: 2026-11-15_
 - **Phase 2 (Art Desk): done** (v1.3 merged). Checked on an Android phone: it works, and drawings survive closing the app.
 - **Phase 3 (Photocard Wall): done** (v1.4 merged). The owner checked it on the device: all checks passed (2026-11-15).
 - **Phase 4 (Soccer Field): done** (v1.5 merged), with the swipe-power fix and Bronze/Silver/Gold trophies. Checked on the device.
-- **Squishy upgrade: built, PR open as v1.6** on branch `feature/squishy` (asked for by the owner before Phase 5:
-  the squishy only reacted at the edge). Not yet tried on a device.
+- **Squishy upgrade: done** (v1.6 merged, PR #6).
+- **Phase 5 (Stage rhythm game): built, PR open as v1.7** on branch `feature/stage`. Plan agreed 2026-11-15.
+  Not yet tried on a device.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -23,7 +24,8 @@ _Last updated: 2026-11-15_
 - PR #3 "Art Desk (v1.3)": merged.
 - PR #4 "Photocard Wall (v1.4)": merged.
 - PR #5 "Soccer Field (v1.5)": merged.
-- PR "Squishy upgrade (v1.6)" on branch `feature/squishy` (branched from `main` after #5): open.
+- PR #6 "Squishy upgrade (v1.6)": merged.
+- PR "Stage (v1.7)" on branch `feature/stage` (branched from `main` after #6): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -67,6 +69,17 @@ _Last updated: 2026-11-15_
   and squashes the toy; the dent follows the finger; a squeeze counts once; the dent stays and rises back over ~5 s;
   a quick poke jiggles and is not counted; two fingers make two dents and squash more (counted once);
   pressing outside the toy does nothing; every squishy design draws with dents.
+- **Stage (v1.7)**: `tests/smoke-test.js` now has 158 checks, all passing with no console errors. New checks:
+  - the marquee opens the Stage (Easy, 3 songs); every note chart is the same every time, stays in its lanes, never
+    puts notes too close together, gets busier on harder levels; songs are about a minute long
+  - "Sound late?" buttons; background music stays off during a song
+  - a real tap on time hits a note; a note that goes past is an Oops and ends the combo; a tap between notes does nothing
+  - result box, best stars/score, coins per star, First Show!, Full Combo, Superstar and Encore! cards
+  - no taps = no stars or coins; half the notes = 1 star; on Hard each pad taps its own lane
+  - 3 stars on Hard gives the Golden Mic once (drawn in the room, not in the Shop); the Concert photocard stage is free
+  - Back during a song goes to the song list, then the room; restoring a v1.6 backup (no stage fields) and a v1.7 one
+  - phone portrait and landscape layouts
+  Not tested automatically: how the songs sound and whether taps feel in time on the real tablet (needs ears and fingers).
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -119,6 +132,20 @@ _Last updated: 2026-11-15_
   back after release (memory foam). A quick poke (under 0.25 s) jiggles and doesn't count as a squish. No save changes.
   After the first try: squeezing the sides now makes it narrower and taller (it used to get shorter), and pressing the
   top makes it flatter and wider. The scene sits lower so the ears stay in view when it stretches tall.
+- Stage (agreed 2026-11-15):
+  - **Where:** a glowing "🎤 Stage" marquee above the closet. (The plan said a mic stand on the floor between the
+    shelf and the closet, but every new room starts with a plant on that spot.)
+  - **3 original songs** made by code: Starlight Pop (120 BPM), Midnight Bats (100 BPM), Sugar Clouds (88 BPM).
+    Each song is a short text recipe (scale, chords, melody, drums) in `SONGS`. Note charts are fixed, not random.
+  - **Levels, all open:** Easy = 1 pad (tap anywhere), Medium = 2 pads, Hard = 3 pads (hearts, stars, bats).
+  - **Can't fail:** the song always plays to the end; a tap between notes costs nothing; leaving mid-song is fine.
+  - **Coins:** 2 / 3 / 4 per star (Easy / Medium / Hard), 1–3 stars per song (1 for taking part, 2 at 60%, 3 at 85%).
+    A song with no hits gives no stars and no coins, so leaving the music running earns nothing.
+  - **No outfit bonus** (owner's choice). Fuzzy still performs in today's outfit.
+  - **Golden Mic** (owner's choice): 3 stars on Hard on any song puts it in her room once (`stage.mic`). Not in the Shop.
+  - **Bonus cards:** First Show!, Full Combo, Encore! (all 3 songs), Superstar (3 stars on Hard). Free Concert photocard stage.
+  - **Timing:** song time comes from the audio clock, minus the speaker delay the browser reports, minus
+    "⏱️ Sound late?" (`settings.stageOffset`, -100 to +400 ms, saved per device). Switching away from the app stops the song.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -155,14 +182,21 @@ _Last updated: 2026-11-15_
 2. ~~Merge the v1.5 PR.~~ Merged.
 
 ## Next steps (squishy upgrade, then Phase 5)
-1. Owner: build v1.6 and try the squishy (see the PR). Merge the v1.6 PR.
-2. Plan Phase 5 (Stage rhythm game) and get it agreed before coding.
+1. ~~Owner: build v1.6 and try the squishy (see the PR). Merge the v1.6 PR.~~ Merged.
+2. ~~Plan Phase 5 (Stage rhythm game) and get it agreed before coding.~~ Agreed and built (v1.7 PR).
+
+## Next steps (Phase 5)
+1. Owner: build v1.7, install it over the app, and play the Stage (see the PR). Listen to all 3 songs and check that
+   taps feel in time; if not, try "⏱️ Sound late?".
+2. Merge the v1.7 PR.
+3. Plan Phase 6 (little-sister polish) and get it agreed before coding.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of the script in `index.html`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 4 since v1.5
-  (Soccer: `soccer`, `stats.goals/kicks/matches/perfects`). It was 3 in v1.4
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 5 since v1.7
+  (Stage: `stage`, `stats.shows/fullCombos`, plus `settings.stageOffset` filled in by `DEFAULT_SETTINGS`).
+  It was 4 in v1.5 (Soccer: `soccer`, `stats.goals/kicks/matches/perfects`). It was 3 in v1.4
   (Photocards: `cards`, `cardPins`, `bonusGot`, `cardNo`, `stats.cards`). It was 2 in v1.3
   (Art Desk: `stats.drawings`, `artPay`, poster room items).
   Bump it only when the save shape changes, and add a step to `MIGRATIONS` that upgrades the previous version.

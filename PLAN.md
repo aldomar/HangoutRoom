@@ -105,9 +105,20 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
 - ✅ The face watches her finger, scrunches up when squeezed, and blushes more when its cheeks are squished.
 - ✅ Same coins as before (1 per 5 squishes), counted once per squeeze even with several fingers.
 
-### Phase 5: Stage 🎤
-- Tap-to-the-beat rhythm game with original generated songs. The mascot performs in the current outfit.
-- Rewards: coins and special photocards.
+### ✅ Phase 5: Stage 🎤 (v1.7, the glowing sign above the closet)
+- ✅ Tap-to-the-beat rhythm game. Notes (hearts, stars, bats) fall from the stage toward glowing pads; tap a pad as
+  its note arrives. Ratings: Perfect / Great / Good / Oops. The bunny dances to the beat in today's outfit.
+- ✅ 3 original songs made with code (about a minute each): Starlight Pop (bright, 120 BPM), Midnight Bats
+  (spooky-cute, 100 BPM), Sugar Clouds (soft and dreamy, 88 BPM). The notes are the same every time, so she can learn them.
+- ✅ Three levels, all open: Easy = 1 pad (tap anywhere, good for her little sister), Medium = 2 pads, Hard = 3 pads.
+- ✅ You can't fail: the song always plays to the end, and a tap between notes costs nothing. Leaving mid-song is fine.
+- ✅ 1–3 stars per song (1 for taking part, 2 at 60%, 3 at 85% of the best score). Coins: 2 / 3 / 4 per star
+  (Easy / Medium / Hard). Best stars and score per song and level.
+- ✅ 4 new bonus photocards: First Show!, Full Combo, Encore! (all 3 songs), Superstar (3 stars on Hard).
+  A new free photocard stage: Concert.
+- ✅ Golden Mic: 3 stars on Hard (any song) puts a Golden Mic in her room, once. Never sold in the Shop.
+- ✅ "⏱️ Sound late?" setting on the Stage for speakers that lag (saved per device).
+- **Done when:** it plays in time on her tablet and stage progress survives updates and backups.
 
 ### Phase 6: Little-sister polish
 - "Easy mode" per profile: bigger buttons, fewer words, simpler shop.
