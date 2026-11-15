@@ -3,9 +3,9 @@
 _Last updated: 2026-11-15_
 
 ## Where we are
-- **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): finishing** (v1.2 PR open).
-- **Phase 2 (Art Desk): done, PR open as v1.3** on branch `feature/art-desk`. It is based on the v1.2 branch,
-  so merge the v1.2 PR first. Checked on an Android phone: it works, and drawings survive closing the app.
+- **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
+- **Phase 2 (Art Desk): done** (v1.3 merged). Checked on an Android phone: it works, and drawings survive closing the app.
+- **Phase 3 (Photocard Wall): built, PR open as v1.4** on branch `feature/photocards`. Not yet tried on a device.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -16,8 +16,9 @@ _Last updated: 2026-11-15_
 - **v1.0 is on `main`** (commit `fd03c3c` "First code v1 commit"). It was committed straight to `main`, not via a PR.
   That commit also picked up a root `.idea/` folder (Android Studio settings from opening the repo root).
 - PR #1 "v1 cleanup (v1.1)": merged. Stopped tracking the root `.idea/` and added it to `.gitignore`.
-- PR "App version + save upgrades (v1.2)" on branch `feature/app-version`: open.
-- PR "Art Desk (v1.3)" on branch `feature/art-desk` (branched from `feature/app-version`): open.
+- PR #2 "App version + save upgrades (v1.2)": merged.
+- PR #3 "Art Desk (v1.3)": merged.
+- PR "Photocard Wall (v1.4)" on branch `feature/photocards` (branched from `main` after #3): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -37,6 +38,15 @@ _Last updated: 2026-11-15_
 - **On a device (2026-11-15):** the owner installed v1.3 on an Android phone. The new features worked, and a saved
   drawing was still in the Gallery after swiping the app away and reopening it. So drawing storage (IndexedDB)
   works inside the Android WebView. Not yet tried on her tablet.
+- **Photocard Wall (v1.4)**: `tests/smoke-test.js` now has 67 checks, all passing with no console errors. New checks:
+  - the corkboard opens the Photocards screen; snapping is free; card stats match the outfit
+  - buying a stage, picking a free frame and a title; 10 cards → 3 binder pages; paging
+  - bonus cards: the first-drawing card pops up in the room, the flip card gives +10 coins once, the
+    "Card Collector" card at 10 cards, and no repeats after a restore
+  - pinning (max 3, the oldest pin comes down), the 3 cards drawn on the room corkboard without the fuzz filter,
+    and deleting a pinned card unpins it
+  - restoring a v1.3 backup (no card fields) and a v1.4 backup with cards and pins
+  - Back from Photocards goes to the room; maker and binder at phone portrait and landscape sizes
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -44,7 +54,7 @@ _Last updated: 2026-11-15_
 - No SQLite; localStorage is enough for v1. IndexedDB comes later for drawings.
 - Mascot: original fuzzy emo bunny, default name "Fuzzy" (renamable). Starter look: emo swoop bangs,
   band tee, plaid skirt, black/purple striped leg warmers, platform boots, star clips.
-- Locked room areas become future updates: Art Desk, Photocard Wall, Soccer Field.
+- Locked room areas become future updates: Art Desk (v1.3), Photocard Wall (v1.4), Soccer Field (still locked).
 - Android: AGP 9.5.1 with built-in Kotlin, Gradle 9.6.0 (Android Studio's Upgrade Assistant raised them from
   9.3.3 / 9.5.0 at the first build; that build worked), SDK 36, min SDK 26, package `com.family.hangoutroom`.
   No AndroidX, no `INTERNET`. Debug-signed APK, sideloaded.
@@ -57,6 +67,15 @@ _Last updated: 2026-11-15_
     drawing pays nothing.
   - **Posters** are free, up to 4 per room. Deleting a drawing takes its poster down.
   - Drawings are stored in IndexedDB as WebP images (PNG/JPEG if WebP isn't available), with a localStorage fallback.
+- Photocard Wall (agreed 2026-11-15):
+  - **Making a card is free** and pays no coins (so it can't be used to farm coins). Up to 60 made cards per room.
+  - **Bonus cards** for 8 fixed milestones (not random), +10 coins each, given once. Milestones reached before
+    v1.4 are given the first time she opens her room after the update. Deleting a bonus card doesn't bring it back.
+  - **Shop:** 3 stages and 3 frames are free; the others cost 10–25 coins.
+  - **Stats** on a card are Cute / Spooky / Sporty, worked out from the outfit (no randomness).
+  - Cards are saved as small "recipes" in the normal save (not as pictures), so they are always in backups.
+  - Pinning a 4th card on the corkboard sends the oldest pin back to the binder (simpler for a young child than
+    asking which one to swap).
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -79,13 +98,20 @@ _Last updated: 2026-11-15_
 
 ## Next steps (Phase 2)
 1. ~~Check on a device that drawings survive closing the app.~~ Done on an Android phone (2026-11-15).
-2. Owner: merge v1.2, then the v1.3 PR. Install **over** the app on her tablet and check that her room is still there.
-3. Plan Phase 3 (Photocard Wall) and get it agreed before coding.
+2. ~~Owner: merge v1.2, then the v1.3 PR.~~ Merged. Install **over** the app on her tablet and check that her room is still there.
+3. ~~Plan Phase 3 (Photocard Wall) and get it agreed before coding.~~ Agreed and built (v1.4 PR).
+
+## Next steps (Phase 3)
+1. Owner: build v1.4, install it **over** the app, and try the Photocard Wall (see the PR for what to check).
+2. Check that cards and pins survive closing the app and installing an update.
+3. Merge the v1.4 PR.
+4. Plan Phase 4 (Soccer Field) and get it agreed before coding.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of the script in `index.html`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 2 since v1.3
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 3 since v1.4
+  (Photocards: `cards`, `cardPins`, `bonusGot`, `cardNo`, `stats.cards`). It was 2 in v1.3
   (Art Desk: `stats.drawings`, `artPay`, poster room items).
   Bump it only when the save shape changes, and add a step to `MIGRATIONS` that upgrades the previous version.
 - `fixDB()` runs on the saved data when the app starts **and** on restored backups, then `normalize()` fills in

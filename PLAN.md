@@ -70,11 +70,19 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
 - **Done when:** drawings survive restarts, app updates and backups. ✅ Checked on an Android phone:
   drawings survive closing the app (IndexedDB works inside the WebView).
 
-### Phase 3: Photocard Wall 📸
-- "Idol card maker": photograph the mascot in its current outfit on a stage background, with a name, sparkle frame and
-  stats, as original collectible cards.
-- Binder view of all cards. Pin up to 3 on the corkboard in the room.
-- Bonus cards for milestones (first flip, 100 squishes, ...).
+### ✅ Phase 3: Photocard Wall 📸 (v1.4)
+- ✅ Card maker: tap 📸 Snap! to take a card of the bunny in today's outfit. Pick a stage (Spotlight, Starry Night,
+  Candy Clouds free; Soccer Pitch 10, Neon Hearts 15, Spooky Moon 20), a frame (Sparkle, Hearts, Stars free;
+  Emo Stripes 10, Bats 15, Gold 25) and a title from a list. The name on the card can be changed.
+- ✅ Making cards is free and pays no coins. Up to 60 cards per room.
+- ✅ Card stats (Cute / Spooky / Sporty, 1–5 stars) come from the outfit, so the same outfit always gets the same stats.
+- ✅ Binder with pages of 6 cards (newest first). Tap a card to pin it, unpin it or delete it.
+- ✅ Up to 3 cards pinned on the corkboard in the room. Pinning a 4th puts the oldest pin back in the binder.
+- ✅ 8 gold "holo" bonus cards for milestones (first flip, 1,000 pops, 100 squishes, 500 RPM spin, first drawing,
+  10 drawings, 10 closet items, 10 cards made). Each comes with +10 coins and is given only once. Milestones
+  reached before v1.4 are given the first time she opens the room.
+- ✅ Cards are saved as small recipes in the normal save, so they are in every backup. Old backups still restore.
+- **Done when:** cards survive restarts, app updates and backups (check on the tablet).
 
 ### Phase 4: Soccer Field ⚽ (the window)
 - Penalty kicks: swipe to aim and shoot, a goalkeeper (original character) and a few difficulty levels.

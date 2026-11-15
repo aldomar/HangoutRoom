@@ -87,6 +87,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`artBack()`); await sleep(500);
   check('back to room (clean pad, no prompt)', await ev(`cur==='room'&&document.querySelector('#modal').classList.contains('hidden')`));
   check('poster image drawn in room', await ev(`!!document.querySelector('#roomSvg image')`));
+  await sleep(700);
+  check('first-drawing bonus pops up in the room', (await ev(`document.querySelector('#modalTitle').textContent`)).includes('Bonus'));
+  await shot('05b-bonus-in-room'); await ev(`closeModal()`);
   await shot('05-room-poster');
   await ev(`enterDecorate()`); await sleep(200); await shot('06-decorate'); await ev(`exitDecorate()`);
 
@@ -117,7 +120,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Backup + restore');
   await ev(`setArtView('pad')`); await ev(`document.querySelector('[data-act=save]').click()`); await sleep(600);
-  check('second drawing saved (+5)', (await ev('P().coins'))===coins0+10);
+  check('second drawing saved (+5, plus the +10 first-drawing bonus)', (await ev('P().coins'))===coins0+5+5+10, [coins0, await ev('P().coins')]);
   await ev(`closeModal();backupModal()`); await sleep(500);
   const info=await ev(`document.querySelector('#modalBody').textContent`);
   check('backup says 2 drawings', info.includes('2 drawings'), info);
@@ -128,7 +131,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`doRestore(${JSON.stringify(code)})`); await sleep(800);
   check('restore brings back 2 drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2);
   check('artwork not saved into localStorage', await ev(`!JSON.parse(localStorage.getItem('hangoutRoom.v1')).artwork`));
-  check('DB version is 2', (await ev('DB.version'))===2);
+  check('DB version is 3', (await ev('DB.version'))===3);
   await ev(`doRestore(${JSON.stringify(oldCode)})`); await sleep(800);
   check('old backup restores and keeps drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2 && (await ev('DB.profiles.length'))===1);
   await ev(`DB.settings.backupArt=false;backupModal()`); await sleep(400);
@@ -145,15 +148,93 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('poster removed with drawing', (await ev(`P().room.items.filter(i=>i.type==='poster').length`))===0);
   check('1 drawing left', (await ev(`ArtStore.all().then(l=>l.filter(r=>!r.draft).length)`))===1);
 
+  console.log('Photocard Wall');
+  const btn=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
+  await ev(`closeModal();show('room')`); await sleep(1300); await ev(`closeModal()`);
+  check('photocard sign is unlocked', await ev(`!document.querySelector('[data-hot=photo]').textContent.includes('🔒')`));
+  check('first-drawing bonus card given', await ev(`P().bonusGot.includes('draw1')&&P().cards.some(c=>c.bonus==='draw1'&&c.stage==='gold'&&c.frame==='holo')`));
+  await ev(`handleHot('photo')`); await sleep(400);
+  check('cards screen shown', await ev(`cur==='cards'&&!!document.querySelector('#cardBig svg')`));
+  await shot('20-card-maker');
+  const cBonus=await ev('P().coins');
+  await ev(`P().stats.flips=1;show('cards')`); await sleep(700);
+  check('flip bonus: modal + 10 coins', (await ev(`document.querySelector('#modalTitle').textContent`)).includes('Bonus') && (await ev('P().coins'))===cBonus+10);
+  await shot('21-bonus-modal');
+  await ev(`closeModal();show('cards')`); await sleep(500);
+  check('bonus is given only once', (await ev(`P().cards.filter(c=>c.bonus==='flip1').length`))===1 && (await ev('P().coins'))===cBonus+10);
+  const cSnap=await ev('P().coins');
+  await ev(`document.querySelector('#snapBtn').click()`); await sleep(700);
+  check('snap makes a card (free)', (await ev(`P().cards.filter(c=>!c.bonus).length`))===1 && (await ev('P().stats.cards'))===1 && (await ev('P().coins'))===cSnap);
+  check('new card modal shown', (await ev(`document.querySelector('#modalTitle').textContent`)).includes('Card #'));
+  check('card stats come from outfit', JSON.stringify(await ev(`P().cards[P().cards.length-1].s`))===JSON.stringify(await ev(`cardStats(P().look)`)));
+  await shot('22-new-card');
+  await ev(`${btn('Pin')}.click()`); await sleep(200);
+  check('card pinned', (await ev('P().cardPins.length'))===1);
+  await ev(`document.querySelector('[data-ct=stage]').click()`); await sleep(100);
+  await ev(`document.querySelector('[data-stage=pitch]').click()`); await sleep(150);
+  await ev(`${btn('Yes')}.click()`); await sleep(200);
+  check('bought Soccer Pitch stage', await ev(`P().owned.includes('stage:pitch')&&CARD.stage==='pitch'`) && (await ev('P().coins'))===cSnap-10);
+  await ev(`document.querySelector('[data-ct=frame]').click()`); await sleep(100);
+  await ev(`document.querySelector('[data-frame=hearts]').click()`); await sleep(100);
+  check('free frame picked', await ev(`CARD.frame==='hearts'`));
+  await shot('23-card-frames');
+  await ev(`document.querySelector('[data-ct=title]').click()`); await sleep(100);
+  await ev(`document.querySelector('[data-title="Team Captain"]').click()`);
+  check('title picked', await ev(`CARD.title==='Team Captain'&&document.querySelector('#cardBig').textContent.includes('Team Captain')`));
+  for(let i=0;i<9;i++){await ev(`closeModal();document.querySelector('#snapBtn').click()`);await sleep(420);}
+  await ev(`closeModal()`);
+  check('10 cards made', (await ev('P().stats.cards'))===10);
+  await ev(`show('cards')`); await sleep(500); await ev(`closeModal()`);
+  check('Card Collector bonus at 10 cards', await ev(`P().bonusGot.includes('cards10')`));
+  await ev(`setCardView('binder')`); await sleep(300);
+  check('binder page shows 6', (await ev(`document.querySelectorAll('#binderGrid .bcard').length`))===6);
+  check('3 pages (10 made + 3 bonus)', (await ev(`document.querySelector('#pgInfo').textContent`)).includes('of 3'), await ev(`document.querySelector('#pgInfo').textContent`));
+  await shot('24-binder');
+  await ev(`document.querySelector('#pgNext').click();document.querySelector('#pgNext').click()`); await sleep(200);
+  check('last page shows 1', (await ev(`document.querySelectorAll('#binderGrid .bcard').length`))===1);
+  await ev(`document.querySelector('#binderGrid .bcard').click()`); await sleep(200);
+  await shot('25-card-modal');
+  await ev(`closeModal();CARD.page=0;renderBinder()`);
+  for(let i=0;i<4;i++){await ev(`document.querySelectorAll("#binderGrid .bcard")[${i}].click()`);await ev(`${btn("Pin")}.click()`);await sleep(120);}
+  check('only 3 pins (oldest pin replaced)', (await ev('P().cardPins.length'))===3, await ev('JSON.stringify([P().cardPins,binderList(P()).slice(0,4).map(c=>c.id)])'));
+  await ev(`show('room')`); await sleep(500);
+  check('3 cards on the corkboard', (await ev(`document.querySelectorAll('[data-hot=photo] svg[viewBox="0 0 300 420"]').length`))===3);
+  check('corkboard cards have no fuzz filter', await ev(`!document.querySelector('[data-hot=photo] [filter="url(#fuzz)"]')`));
+  await shot('26-room-corkboard');
+  await ev(`show('cards');setCardView('binder')`); await sleep(200);
+  const pinId=await ev('P().cardPins[0]');
+  await ev(`cardModal(P().cards.find(c=>c.id===${JSON.stringify(pinId)}))`); await ev(`${btn('Delete')}.click()`); await sleep(100); await ev(`${btn('Delete')}.click()`); await sleep(200);
+  check('deleting a pinned card unpins it', (await ev('P().cardPins.length'))===2 && !(await ev(`P().cards.some(c=>c.id===${JSON.stringify(pinId)})`)));
+  check('androidBack from cards goes to room', await ev(`window.androidBack()&&cur==='room'`));
+
+  console.log('Photocards in backups');
+  const nCards=await ev('P().cards.length');
+  const cardCode=await ev('JSON.stringify(DB)');
+  const v13Code=await ev(`JSON.stringify(Object.assign({},DB,{version:2,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));['cards','cardPins','bonusGot','cardNo'].forEach(k=>delete q[k]);delete q.stats.cards;return q;})}))`);
+  await ev(`doRestore(${JSON.stringify(v13Code)})`); await sleep(500);
+  check('v1.3 backup restores with empty card lists', await ev(`DB.version===3&&DB.profiles[0].cards.length===0&&DB.profiles[0].cardPins.length===0&&DB.profiles[0].stats.cards===0`));
+  await ev(`doRestore(${JSON.stringify(cardCode)})`); await sleep(500);
+  check('backup brings cards and pins back', (await ev('DB.profiles[0].cards.length'))===nCards && (await ev('DB.profiles[0].cardPins.length'))===2);
+  await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal()`);
+  check('no repeat bonus after restore', (await ev(`P().cards.filter(c=>c.bonus).length`))===3);
+
   console.log('Phone portrait + other screens');
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
   await send('Emulation.setTouchEmulationEnabled',{enabled:true});
-  await ev(`setArtView('pad');document.querySelector('[data-tool=stamp]').click()`); await sleep(300);
+  await ev(`show('art');setArtView('pad');document.querySelector('[data-tool=stamp]').click()`); await sleep(300);
   const pr=await padRect(); check('phone pad visible', pr.w>200&&pr.h>140, pr);
   await shot('09-phone-pad');
   await ev(`setArtView('gal')`); await sleep(400); await shot('10-phone-gallery');
+  await ev(`show('cards');setCardView('make')`); await sleep(300); await shot('27-phone-card-maker');
+  const big=await ev(`(()=>{const r=document.querySelector('#cardBig svg').getBoundingClientRect();return {w:r.width,h:r.height};})()`);
+  check('phone card preview visible', big.h>150, big);
+  await ev(`setCardView('binder')`); await sleep(300); await shot('28-phone-binder');
+  await ev(`show('art')`); await sleep(200);
   await send('Emulation.setDeviceMetricsOverride',{width:860,height:412,deviceScaleFactor:1,mobile:true});
   await ev(`setArtView('pad')`); await sleep(300); await shot('11-phone-landscape');
+  await ev(`show('cards');setCardView('make')`); await sleep(300); await shot('29-phone-landscape-cards');
+  await ev(`setCardView('binder')`); await sleep(300); await shot('30-phone-landscape-binder');
+  await ev(`show('art')`);
 
   console.log('Every other screen (tablet size)');
   await send('Emulation.setTouchEmulationEnabled',{enabled:false});
