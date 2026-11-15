@@ -57,6 +57,32 @@ h1{margin:4px 0;font-size:clamp(26px,5vw,42px);text-shadow:0 3px 0 #000}
 .furpick{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
 .furpick button{width:50px;height:50px;border-radius:50%;border:4px solid #0003}
 .furpick button.on{border-color:var(--pink);transform:scale(1.1)}
+.pcard{position:relative}
+.pbadge{position:absolute;top:6px;left:8px;font-size:30px;line-height:1;filter:drop-shadow(0 2px 0 #0008)}
+.ptag{font-size:14px;font-weight:900;color:var(--mint)}
+.pick-lbl{margin:12px 0 6px;text-align:center;font-weight:800}
+.badgepick{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.badgepick button{width:52px;height:52px;border-radius:14px;background:var(--panel2);font-size:28px;border:3px solid transparent}
+.badgepick button.on{border-color:var(--pink);background:#4b3a66}
+/* grown-up PIN pad */
+.pindots{display:flex;gap:14px;justify-content:center;margin:6px 0 14px}
+.pindots span{width:20px;height:20px;border-radius:50%;border:3px solid var(--muted)}
+.pindots span.on{background:var(--pink);border-color:var(--pink)}
+.pindots.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+.pinpad{display:grid;grid-template-columns:repeat(3,72px);gap:10px;justify-content:center}
+.pinpad .btn{height:60px;font-size:26px;padding:0}
+
+/* Easy mode (per room, for a younger child): bigger buttons and tiles, fewer words */
+body.easy .btn.small{font-size:18px;padding:12px 16px;min-height:52px;border-radius:16px}
+body.easy .tab{font-size:17px;padding:12px 18px}
+body.easy .grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px}
+body.easy .tile .tn{font-size:16px}
+body.easy .tile .tp{font-size:14px}
+body.easy .tile.poor{opacity:.5}
+body.easy .hint,body.easy .fid-tip,body.easy .song .sd,body.easy .stg-late{display:none}
+body.easy .binder-head .hint{display:block}
+body.easy .topbar .title{font-size:22px}
 
 /* room */
 .stage{flex:1;min-height:0;display:flex;background:#1a1422}
@@ -437,11 +463,12 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.7';    // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.8';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=5;           // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=6;           // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
-const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0};
+// pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
+const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:''};
 
 function freshDB(){return {version:DB_VERSION,profiles:[],activeId:null,settings:Object.assign({},DEFAULT_SETTINGS)};}
 
@@ -467,7 +494,10 @@ const MIGRATIONS={
   // v1.7 Stage: stage {level, best{songId:{easy,medium,hard:{stars,score}}}, mic} and stats.shows / fullCombos.
   5: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(!p||typeof p!=='object') return;
     if(!p.stage||typeof p.stage!=='object') p.stage={level:'easy',best:{},mic:false};
-    if(p.stats) ['shows','fullCombos'].forEach(k=>{ if(typeof p.stats[k]!=='number') p.stats[k]=0; }); }); }
+    if(p.stats) ['shows','fullCombos'].forEach(k=>{ if(typeof p.stats[k]!=='number') p.stats[k]=0; }); }); },
+  // v1.8 Little-sister polish: easy (Easy mode on/off), color (a ROOM_COLORS id) and badge (one of ROOM_BADGES)
+  // per profile, filled in by normalize(); settings.pin comes from DEFAULT_SETTINGS.
+  6: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&typeof p.easy!=='boolean') p.easy=false; }); }
 };
 
 // Used for the saved data on load AND for restored backups, so both get the same fixes.
@@ -478,6 +508,7 @@ function fixDB(d){
   while(v<DB_VERSION){v++;if(MIGRATIONS[v])MIGRATIONS[v](d);}
   d.version=v; // a backup from a newer app keeps its higher number and extra fields
   d.settings=Object.assign({},DEFAULT_SETTINGS,d.settings||{});
+  if(!/^\d{4}$/.test(String(d.settings.pin))) d.settings.pin='';
   d.profiles=Array.isArray(d.profiles)?d.profiles.filter(p=>p&&typeof p==='object'):[];
   if(!d.profiles.some(p=>p.id===d.activeId)) d.activeId=null;
   return d;
@@ -827,8 +858,12 @@ const FID={popit:{key:'pop',list:POP_THEMES},squish:{key:'squish',list:SQUISHIES
 /* =========================================================
    6. PROFILES
    ========================================================= */
-function newProfile(name,fur){
-  const p={id:uid(),name,mascotName:'Fuzzy',coins:25,created:Date.now(),lastDaily:'',seenTip:false,
+// Each room has a colour and a badge, so a child who can't read yet can still find her own room.
+// Colour ids and badges are saved: never rename or remove them (new ones can be added).
+const ROOM_COLORS={pink:'#ff8cc6',purple:'#a97cff',mint:'#8ff0d0',gold:'#ffd166',sky:'#7fc8ff',peach:'#ffab7a'};
+const ROOM_BADGES=['🐰','⭐','💜','🦇','⚽','🎤','🎨','☁️'];
+function newProfile(name,fur,color,badge){
+  const p={id:uid(),name,color,badge,mascotName:'Fuzzy',coins:25,created:Date.now(),lastDaily:'',seenTip:false,
     stats:{pops:0,flips:0,squish:0,spins:0,bestRpm:0},look:Object.assign({},DEFAULT_LOOK,{fur}),owned:[],
     room:{wall:'lavender',floor:'wood',items:[]},fid:{pop:'rainbow',squish:'mochi',spin:'galaxy'}};
   p.room.items.push({uid:uid(),type:'starRug',x:500,y:665,placed:true});
@@ -866,6 +901,10 @@ function normalize(p){
     Object.keys(b).forEach(l=>{const r=b[l];if(!r||typeof r!=='object')delete b[l];else{r.stars=Number(r.stars)||0;r.score=Number(r.score)||0;}});});
   if(!['easy','medium','hard'].includes(p.stage.level)) p.stage.level='easy';
   p.stage.mic=!!p.stage.mic;
+  // Little-sister polish (v1.8): Easy mode, and the room's colour + badge on the profile screen.
+  p.easy=!!p.easy;
+  if(!ROOM_COLORS[p.color]){const ks=Object.keys(ROOM_COLORS);p.color=ks[[...p.id].reduce((a,c)=>a+c.charCodeAt(0),0)%ks.length];}
+  if(!ROOM_BADGES.includes(p.badge)) p.badge=ROOM_BADGES[0];
 }
 DB.profiles.forEach(normalize);
 
@@ -958,14 +997,25 @@ function earn(n,label,x,y){const p=P();if(!p)return;p.coins+=n;save();updateCoin
 function tryBuy(key,price,name,done){
   const p=P();
   if(!price||p.owned.includes(key)){done();return;}
-  if(p.coins<price){SFX.locked();toast(`You need ${price-p.coins} more 🪙 — play on the Fidget Shelf to earn some!`);return;}
-  modal(`Get ${esc(name)}?`,`It costs 🪙 ${price}. You have 🪙 ${p.coins}.`,[{text:'Not now',cls:'ghost'},{text:'Yes, get it!',cls:'pink',on:()=>{p.coins-=price;p.owned.push(key);save();updateCoins();SFX.buy();toast(`Yay! You got ${name}! ✨`);done();}}]);
+  if(p.coins<price){needMore(p,price);return;}
+  buyAsk(p,'Get',name,price,()=>{p.coins-=price;p.owned.push(key);save();updateCoins();SFX.buy();toast(`Yay! You got ${name}! ✨`);done();});
 }
 function buyConsumable(price,name,done){
   const p=P();
-  if(p.coins<price){SFX.locked();toast(`You need ${price-p.coins} more 🪙 — play on the Fidget Shelf to earn some!`);return;}
-  modal(`Buy ${esc(name)}?`,`It costs 🪙 ${price}. You have 🪙 ${p.coins}.`,[{text:'Not now',cls:'ghost'},{text:'Buy it!',cls:'pink',on:()=>{p.coins-=price;save();updateCoins();SFX.buy();done();}}]);
+  if(p.coins<price){needMore(p,price);return;}
+  buyAsk(p,'Buy',name,price,()=>{p.coins-=price;save();updateCoins();SFX.buy();done();});
 }
+function needMore(p,price){SFX.locked();toast(p.easy?`🔒 Need ${price-p.coins} more 🪙`:`You need ${price-p.coins} more 🪙 — play on the Fidget Shelf to earn some!`);}
+function buyAsk(p,verb,name,price,yes){
+  if(p.easy) modal(`${esc(name)}?`,`<div style="font-size:24px;text-align:center">🪙 ${price}</div>`,[{text:'✖ No',cls:'ghost'},{text:'✔ Yes!',cls:'pink',on:yes}]);
+  else modal(`${verb} ${esc(name)}?`,`It costs 🪙 ${price}. You have 🪙 ${p.coins}.`,[{text:'Not now',cls:'ghost'},{text:verb==='Get'?'Yes, get it!':'Buy it!',cls:'pink',on:yes}]);
+}
+// Easy mode shops: things she owns (or that are free) first, then cheapest first; ones she can't afford yet are dimmed.
+// list = [key, item] entries; cost(entry) = 0 if owned/free, else the price.
+function easySort(list,cost){const p=P();if(!p||!p.easy)return list;
+  return list.map((e,i)=>[e,i]).sort((a,b)=>cost(a[0])-cost(b[0])||a[1]-b[1]).map(x=>x[0]);}
+const poorCls=(p,own,price)=>!own&&p.easy&&p.coins<price?' poor':'';
+const priceTag=(p,price)=>`<div class="tp">${p.easy&&p.coins<price?'🔒 ':''}🪙 ${price}</div>`;
 
 /* =========================================================
    9. SCREENS
@@ -974,6 +1024,8 @@ let cur='profiles';
 function show(n){
   if(n!=='room'&&decorating) exitDecorate(true);
   cur=n; $$('.screen').forEach(s=>s.classList.toggle('on',s.id==='scr-'+n));
+  const ep=n==='profiles'?null:P(); applyEasy();
+  if(ep&&ep.easy){if(n==='soccer')ep.soccer.level='easy';if(n==='stage')ep.stage.level='easy';} // Easy mode opens games on Easy
   if(n==='room'||n==='cards') checkBonus(); // gives any milestone cards she has earned (section 12)
   if(n==='room'||n==='soccer'){const t=giveTrophies();if(t.length)setTimeout(()=>toast(`🏆 ${t.join(' and ')} added to your room!`),400);} // section 13
   if(n==='profiles') renderProfiles();
@@ -991,26 +1043,36 @@ function show(n){
 /* ---------- profiles ---------- */
 function renderProfiles(){
   $('#profHero').innerHTML=mascotSVG(DEFAULT_LOOK);
-  $('#profList').innerHTML=DB.profiles.map(p=>`<div class="pcard" data-id="${p.id}"><div class="pm">${mascotSVG(p.look,'10 0 180 270')}</div><div class="pn">${esc(p.name)}</div><div class="pc">🪙 ${p.coins}</div><div class="pa"><button class="btn small ghost" data-act="rename">✏️</button><button class="btn small ghost" data-act="del">🗑️</button></div></div>`).join('')||'<div class="empty">No rooms yet — make one to start! 💜</div>';
+  $('#profList').innerHTML=DB.profiles.map(p=>{const c=ROOM_COLORS[p.color];
+    return `<div class="pcard" data-id="${p.id}" style="border-color:${c};background:linear-gradient(${c}66,var(--panel) 65%)"><div class="pbadge">${p.badge}</div><div class="pm">${mascotSVG(p.look,'10 0 180 270')}</div><div class="pn">${esc(p.name)}</div><div class="pc">🪙 ${p.coins}${p.easy?' <span class="ptag">· 🐣 Easy</span>':''}</div><div class="pa"><button class="btn small ghost" data-act="edit">✏️</button><button class="btn small ghost" data-act="del">🗑️</button></div></div>`;}).join('')||'<div class="empty">No rooms yet — make one to start! 💜</div>';
   $('#newProfBtn').classList.toggle('hidden',DB.profiles.length>=6);
 }
 $('#profList').addEventListener('click',e=>{
   const c=e.target.closest('.pcard'); if(!c) return;
   const p=DB.profiles.find(x=>x.id===c.dataset.id); if(!p) return;
   const act=e.target.closest('[data-act]');
-  if(act){ if(act.dataset.act==='rename') renameModal(p,'name','Rename room'); else delModal(p); return; }
+  if(act){ SFX.click(); askPin(()=>act.dataset.act==='edit'?roomModal(p):delModal(p)); return; }
   DB.activeId=p.id; save(); SFX.happy(); enterRoom();
 });
-$('#newProfBtn').onclick=()=>{
-  let fur='white';
-  modal('✨ New Room ✨',`<input id="npName" class="inp" maxlength="16" placeholder="Your name" autocomplete="off"><div class="furpick" id="npFur">${Object.entries(FUR).filter(([k,v])=>!v.price).map(([k,v])=>`<button data-fur="${k}" style="background:${v.c}" class="${k==='white'?'on':''}" title="${v.name}"></button>`).join('')}</div><div style="margin-top:10px;text-align:center">Pick your bunny's fur color!</div>`,
-    [{text:'Cancel',cls:'ghost'},{text:'Make it!',cls:'pink',keep:true,on:()=>{
+$('#newProfBtn').onclick=()=>askPin(()=>roomModal(null));
+// Make a new room (p = null) or change a room's name, colour and badge.
+function roomModal(p){
+  const used=DB.profiles.map(x=>x.color), free=Object.keys(ROOM_COLORS).find(k=>!used.includes(k));
+  let fur='white', color=p?p.color:(free||'purple'), badge=p?p.badge:ROOM_BADGES[0];
+  modal(p?'✏️ Change Room':'✨ New Room ✨',`<input id="npName" class="inp" maxlength="16" placeholder="Your name" autocomplete="off" value="${p?esc(p.name):''}">`
+    +(p?'':`<div class="pick-lbl">Bunny fur</div><div class="furpick" id="npFur">${Object.entries(FUR).filter(([k,v])=>!v.price).map(([k,v])=>`<button data-fur="${k}" style="background:${v.c}" class="${k===fur?'on':''}" title="${v.name}"></button>`).join('')}</div>`)
+    +`<div class="pick-lbl">Room colour</div><div class="furpick" id="npCol">${Object.entries(ROOM_COLORS).map(([k,c])=>`<button data-col="${k}" style="background:${c}" class="${k===color?'on':''}"></button>`).join('')}</div>`
+    +`<div class="pick-lbl">Badge</div><div class="badgepick" id="npBadge">${ROOM_BADGES.map(b=>`<button data-badge="${b}" class="${b===badge?'on':''}">${b}</button>`).join('')}</div>`,
+    [{text:'Cancel',cls:'ghost'},{text:p?'Save':'Make it!',cls:'pink',keep:true,on:()=>{
       const n=$('#npName').value.trim(); if(!n){toast('Type a name first!');return;}
-      const p=newProfile(n,fur); DB.profiles.push(p); DB.activeId=p.id; save(); closeModal(); SFX.buy(); enterRoom();
+      closeModal();
+      if(p){p.name=n;p.color=color;p.badge=badge;save();SFX.happy();renderProfiles();return;}
+      const q=newProfile(n,fur,color,badge); DB.profiles.push(q); DB.activeId=q.id; save(); SFX.buy(); enterRoom();
     }}]);
-  $('#npFur').onclick=e=>{const b=e.target.closest('[data-fur]');if(!b)return;fur=b.dataset.fur;$$('#npFur button').forEach(x=>x.classList.toggle('on',x===b));SFX.click();};
-  setTimeout(()=>{const i=$('#npName');if(i)i.focus();},60);
-};
+  const pick=(sel,attr,set)=>{const row=$(sel);if(row)row.onclick=e=>{const b=e.target.closest(`[data-${attr}]`);if(!b)return;set(b.dataset[attr]);$$(sel+' button').forEach(x=>x.classList.toggle('on',x===b));SFX.click();};};
+  pick('#npFur','fur',v=>fur=v); pick('#npCol','col',v=>color=v); pick('#npBadge','badge',v=>badge=v);
+  if(!p) setTimeout(()=>{const i=$('#npName');if(i)i.focus();},60);
+}
 function renameModal(p,field,title){
   modal(title,`<input id="rnName" class="inp" maxlength="16" value="${esc(p[field])}" autocomplete="off">`,[{text:'Cancel',cls:'ghost'},{text:'Save',cls:'pink',on:()=>{const n=$('#rnName').value.trim();if(n){p[field]=n;save();}if(cur==='profiles')renderProfiles();if(cur==='closet')renderCloset();if(cur==='room')renderRoom();}}]);
 }
@@ -1117,11 +1179,12 @@ function renderDecoGrid(){
       +keys.map(k=>`<button class="tile" data-place="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${DECOR[k].name}</div><div class="tp cnt">×${counts[k]}</div></button>`).join('');
     if(!h) h=`<div class="empty">Nothing stored right now! Drag things from your room down here to put them away, or get new stuff in the Shop 🛍️</div>`;
   } else if(decoTab==='shop'){
-    h=Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award).map(([k,d])=>`<button class="tile" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div><div class="tp">🪙 ${d.price}</div></button>`).join('');
+    h=easySort(Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award),([k,d])=>d.price).map(([k,d])=>`<button class="tile${poorCls(p,false,d.price)}" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div>${priceTag(p,d.price)}</button>`).join('');
   } else {
     const isW=decoTab==='wall', L=isW?WALLS:FLOORS, curId=isW?p.room.wall:p.room.floor;
-    h=Object.entries(L).map(([k,v])=>{const own=!v.price||p.owned.includes((isW?'wall:':'floor:')+k);
-      return `<button class="tile ${k===curId?'on':''} ${own?'':'locked'}" data-surf="${k}"><div class="tv"><svg viewBox="0 0 300 200"><rect width="300" height="200" fill="${v.fill}"/><rect width="300" height="200" fill="url(#${v.pat})"/></svg></div><div class="tn">${v.name}</div>${own?'':`<div class="tp">🪙 ${v.price}</div>`}</button>`;}).join('');
+    const own=([k,v])=>!v.price||p.owned.includes((isW?'wall:':'floor:')+k);
+    h=easySort(Object.entries(L),e=>own(e)?0:e[1].price).map(e=>{const [k,v]=e, o=own(e);
+      return `<button class="tile ${k===curId?'on':''} ${o?'':'locked'}${poorCls(p,o,v.price)}" data-surf="${k}"><div class="tv"><svg viewBox="0 0 300 200"><rect width="300" height="200" fill="${v.fill}"/><rect width="300" height="200" fill="url(#${v.pat})"/></svg></div><div class="tn">${v.name}</div>${o?'':priceTag(p,v.price)}</button>`;}).join('');
   }
   $('#decoGrid').innerHTML=h;
 }
@@ -1147,11 +1210,57 @@ $('#decoGrid').addEventListener('click',e=>{
 $('#setBtn').onclick=settingsModal;
 function settingsModal(){
   const s=DB.settings;
-  modal('⚙️ Settings',`<div class="setlist"><button class="btn ghost" id="sSound">${s.sound?'🔊 Sounds: ON':'🔇 Sounds: OFF'}</button><button class="btn ghost" id="sMusic">${s.music?'🎵 Music: ON':'🎵 Music: OFF'}</button><button class="btn ghost" id="sSwitch">👥 Switch Room</button><button class="btn ghost" id="sBackup">💾 Backup &amp; Restore</button></div><p class="about">🐰 Hangout Room · version ${APP_VERSION}</p>`,[{text:'Close',cls:'pink'}]);
+  const p=P();
+  modal('⚙️ Settings',`<div class="setlist"><button class="btn ghost" id="sSound">${s.sound?'🔊 Sounds: ON':'🔇 Sounds: OFF'}</button><button class="btn ghost" id="sMusic">${s.music?'🎵 Music: ON':'🎵 Music: OFF'}</button>`
+    +(p?`<button class="btn ghost" id="sEasy">${p.easy?'🐣 Easy mode: ON':'🐣 Easy mode: OFF'}</button>`:'')
+    +`<button class="btn ghost" id="sSwitch">👥 Switch Room</button><button class="btn ghost" id="sBackup">💾 Backup &amp; Restore</button><button class="btn ghost" id="sPin">${s.pin?'🔒 Grown-up PIN: ON':'🔓 Grown-up PIN: OFF'}</button></div><p class="about">🐰 Hangout Room · version ${APP_VERSION}</p>`,[{text:'Close',cls:'pink'}]);
   $('#sSound').onclick=()=>{s.sound=!s.sound;save();SFX.click();settingsModal();};
   $('#sMusic').onclick=()=>{s.music=!s.music;save();if(s.music)startMusic();else stopMusic();settingsModal();};
+  if(p) $('#sEasy').onclick=()=>{p.easy=!p.easy;save();SFX.click();applyEasy();if(cur==='room')renderRoom();settingsModal();};
   $('#sSwitch').onclick=()=>{closeModal();show('profiles');};
   $('#sBackup').onclick=backupModal;
+  $('#sPin').onclick=pinSettings;
+}
+// Easy mode belongs to a room, so it is on only while that room is open (never on the profile screen).
+function applyEasy(){const p=cur==='profiles'?null:P();document.body.classList.toggle('easy',!!(p&&p.easy));}
+
+/* ---------- grown-up PIN ---------- */
+// Optional 4-digit PIN in DB.settings.pin. When it is set, making / changing / deleting a room and restoring
+// a backup ask for it. "Forgot PIN?" clears it after a grown-up sum (two 2-digit numbers multiplied).
+function pinPad(title,onCode,btns){ // onCode(code) returns true when it handled the code, false to try again
+  let code='';
+  modal(title,`<div class="pindots" id="pinDots"></div><div class="pinpad" id="pinPad">${['1','2','3','4','5','6','7','8','9','','0','⌫'].map(k=>k?`<button class="btn ghost" data-k="${k}">${k}</button>`:'<span></span>').join('')}</div>`,btns);
+  const dots=()=>{const d=$('#pinDots');if(d)d.innerHTML=[0,1,2,3].map(i=>`<span class="${i<code.length?'on':''}"></span>`).join('');};
+  dots();
+  $('#pinPad').onclick=e=>{const b=e.target.closest('[data-k]');if(!b||code.length>=4)return;SFX.click();
+    code=b.dataset.k==='⌫'?code.slice(0,-1):code+b.dataset.k; dots();
+    if(code.length===4) setTimeout(()=>{if(!onCode(code)){code='';dots();const d=$('#pinDots');d.classList.remove('shake');void d.offsetWidth;d.classList.add('shake');}},150);};
+}
+function askPin(then){
+  const pin=DB.settings.pin; if(!pin){then();return;}
+  pinPad('🔒 Grown-up PIN',c=>{if(c!==pin){SFX.locked();toast('Wrong PIN');return false;}closeModal();then();return true;},
+    [{text:'Forgot PIN?',cls:'ghost',keep:true,on:forgotPin},{text:'Cancel',cls:'pink'}]);
+}
+function forgotPin(){
+  const a=12+Math.floor(Math.random()*88), b=12+Math.floor(Math.random()*88);
+  modal('🧮 Grown-up check',`To remove the PIN, what is <b style="color:#fff">${a} × ${b}</b>?<input id="fpAns" class="inp" inputmode="numeric" autocomplete="off" style="margin-top:10px">`,
+    [{text:'Cancel',cls:'ghost'},{text:'Remove PIN',cls:'pink',keep:true,on:()=>{
+      if(Number($('#fpAns').value.trim())!==a*b){SFX.locked();toast('Not quite. Try again!');return;}
+      DB.settings.pin='';save();closeModal();toast('PIN removed 🔓');}}]);
+}
+function newPin(){ // type a new PIN twice
+  const back={text:'Cancel',cls:'ghost',on:settingsModal};
+  pinPad('🔒 Pick a 4-digit PIN',c=>{
+    pinPad('🔒 Type it again',c2=>{
+      if(c2!==c){SFX.locked();toast('Those did not match. Try again!');newPin();return true;}
+      DB.settings.pin=c;save();SFX.buy();toast('PIN is on 🔒');settingsModal();return true;},[back]);
+    return true;},[back]);
+}
+function pinSettings(){
+  if(!DB.settings.pin){newPin();return;}
+  askPin(()=>modal('🔒 Grown-up PIN','The PIN is needed to make, change or delete a room, and to restore a backup.',[
+    {text:'Remove PIN',cls:'ghost',on:()=>{DB.settings.pin='';save();toast('PIN removed 🔓');settingsModal();}},
+    {text:'Change PIN',cls:'ghost',on:newPin},{text:'Close',cls:'pink',on:settingsModal}]));
 }
 // A backup is the save data (DB) as text. With the drawings switch on, it also has
 // artwork:[...drawing records]. Older backups have no artwork list and still restore.
@@ -1167,7 +1276,7 @@ function backupModal(){
       <div class="setlist" style="margin-top:10px"><button class="btn ghost" id="bkArt">${withArt?'🎨 Drawings: IN backup':'🎨 Drawings: NOT in backup'}</button></div>
       <p style="margin:10px 0 0">${info}</p>`+(big?`<p style="margin:6px 0 0">This backup is big, so the code is not shown. Use Copy code or Save file.</p>`
         :`<textarea class="inp" id="bkCode" readonly style="margin-top:10px">${esc(code)}</textarea>`),
-      [{text:'Copy code',cls:'ghost',keep:true,on:()=>copyText(code)},{text:'Save file',cls:'ghost',keep:true,on:()=>downloadFile(code)},{text:'Restore…',cls:'ghost',on:restoreModal},{text:'Close',cls:'pink'}]);
+      [{text:'Copy code',cls:'ghost',keep:true,on:()=>copyText(code)},{text:'Save file',cls:'ghost',keep:true,on:()=>downloadFile(code)},{text:'Restore…',cls:'ghost',on:()=>askPin(restoreModal)},{text:'Close',cls:'pink'}]);
     $('#bkArt').onclick=()=>{DB.settings.backupArt=!withArt;save();SFX.click();backupModal();};
   });
 }
@@ -1195,7 +1304,8 @@ function doRestore(txt){
   let d,art;
   try{d=JSON.parse(txt);if(!d||!Array.isArray(d.profiles))throw new Error('bad');
     art=Array.isArray(d.artwork)?d.artwork.filter(okArt):null; delete d.artwork; // drawings go to IndexedDB, not localStorage
-    d=fixDB(d);d.profiles.forEach(normalize);}
+    d=fixDB(d);d.profiles.forEach(normalize);
+    d.settings.pin=DB.settings.pin||'';} // the PIN belongs to this device, so a backup can't change or remove it
   catch(e){toast('Hmm, that backup code did not work.');return;}
   const done=msg=>{DB=d;save();ART.owner=null;closeModal();toast(msg);show('profiles');};
   // No drawings in the backup: keep the drawings already on this device.
@@ -1212,8 +1322,8 @@ function renderCloset(){
   $('#mascotNameBtn').textContent=p.mascotName+' ✏️';
   $('#closetTabs').innerHTML=Object.entries(CLOSET).map(([k,c])=>`<button class="tab ${k===closetCat?'on':''}" data-cat="${k}">${c.icon} ${c.label}</button>`).join('');
   const C=CLOSET[closetCat];
-  $('#closetGrid').innerHTML=C.items.map(it=>{const own=isOwned(p,closetCat,it),on=p.look[closetCat]===it.id;
-    return `<button class="tile ${on?'on':''} ${own?'':'locked'}" data-id="${it.id}"><div class="tv">${mascotSVG(Object.assign({},p.look,{[closetCat]:it.id}),C.vb)}</div><div class="tn">${it.name}</div>${own?'':`<div class="tp">🪙 ${it.price}</div>`}</button>`;}).join('');
+  $('#closetGrid').innerHTML=easySort(C.items,it=>isOwned(p,closetCat,it)?0:it.price).map(it=>{const own=isOwned(p,closetCat,it),on=p.look[closetCat]===it.id;
+    return `<button class="tile ${on?'on':''} ${own?'':'locked'}${poorCls(p,own,it.price)}" data-id="${it.id}"><div class="tv">${mascotSVG(Object.assign({},p.look,{[closetCat]:it.id}),C.vb)}</div><div class="tn">${it.name}</div>${own?'':priceTag(p,it.price)}</button>`;}).join('');
 }
 function hopCloset(){const m=$('#closetMascot');m.classList.remove('hop');void m.offsetWidth;m.classList.add('hop');}
 $('#closetTabs').onclick=e=>{const b=e.target.closest('[data-cat]');if(!b)return;closetCat=b.dataset.cat;SFX.click();renderCloset();$('#closetGrid').scrollTop=0;};
@@ -1244,7 +1354,9 @@ function setFidTab(t){
 $('#fidTabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(!b)return;SFX.click();setFidTab(b.dataset.tab);};
 function renderSkins(){
   const p=P(); if(!p) return; const F=FID[fidTab];
-  $('#skinRow').innerHTML=Object.entries(F.list).map(([id,t])=>{const own=!t.price||p.owned.includes(F.key+':'+id);return `<button class="tab ${p.fid[F.key]===id?'on':''}" data-skin="${id}">${t.name}${own?'':' · 🪙'+t.price}</button>`;}).join('');
+  const own=([id,t])=>!t.price||p.owned.includes(F.key+':'+id);
+  $('#skinRow').innerHTML=easySort(Object.entries(F.list),e=>own(e)?0:e[1].price).map(e=>{const [id,t]=e, o=own(e), poor=poorCls(p,o,t.price);
+    return `<button class="tab ${p.fid[F.key]===id?'on':''}" data-skin="${id}"${poor?' style="opacity:.5"':''}>${t.name}${o?'':(poor?' · 🔒🪙':' · 🪙')+t.price}</button>`;}).join('');
 }
 $('#skinRow').onclick=e=>{
   const b=e.target.closest('[data-skin]'); if(!b) return; const p=P(), F=FID[fidTab], id=b.dataset.skin, t=F.list[id];
@@ -1895,10 +2007,10 @@ function renderMaker(){
   $('#cardNameBtn').textContent=CARD.name+' ✏️';
   $$('#cardTabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.ct===CARD.tab));
   let h='';
-  if(CARD.tab==='stage') h=Object.entries(STAGES).filter(([k,v])=>!v.bonus).map(([k,v])=>{const own=cardOwned(p,'stage',k);
-    return `<button class="tile ${k===CARD.stage?'on':''} ${own?'':'locked'}" data-stage="${k}"><div class="tv"><svg viewBox="0 0 268 250">${v.d()}</svg></div><div class="tn">${v.name}</div>${own?'':`<div class="tp">🪙 ${v.price}</div>`}</button>`;}).join('');
-  else if(CARD.tab==='frame') h=Object.entries(FRAMES).filter(([k,v])=>!v.bonus).map(([k,v])=>{const own=cardOwned(p,'frame',k);
-    return `<button class="tile ${k===CARD.frame?'on':''} ${own?'':'locked'}" data-frame="${k}"><div class="tcard">${cardSVG(Object.assign(previewCard(p),{frame:k}),true)}</div><div class="tn">${v.name}</div>${own?'':`<div class="tp">🪙 ${v.price}</div>`}</button>`;}).join('');
+  if(CARD.tab==='stage') h=easySort(Object.entries(STAGES).filter(([k,v])=>!v.bonus),([k,v])=>cardOwned(p,'stage',k)?0:v.price).map(([k,v])=>{const own=cardOwned(p,'stage',k);
+    return `<button class="tile ${k===CARD.stage?'on':''} ${own?'':'locked'}${poorCls(p,own,v.price)}" data-stage="${k}"><div class="tv"><svg viewBox="0 0 268 250">${v.d()}</svg></div><div class="tn">${v.name}</div>${own?'':priceTag(p,v.price)}</button>`;}).join('');
+  else if(CARD.tab==='frame') h=easySort(Object.entries(FRAMES).filter(([k,v])=>!v.bonus),([k,v])=>cardOwned(p,'frame',k)?0:v.price).map(([k,v])=>{const own=cardOwned(p,'frame',k);
+    return `<button class="tile ${k===CARD.frame?'on':''} ${own?'':'locked'}${poorCls(p,own,v.price)}" data-frame="${k}"><div class="tcard">${cardSVG(Object.assign(previewCard(p),{frame:k}),true)}</div><div class="tn">${v.name}</div>${own?'':priceTag(p,v.price)}</button>`;}).join('');
   else h=CARD_TITLES.map(t=>`<button class="tile ttl ${t===CARD.title?'on':''}" data-title="${esc(t)}"><div class="tn">${esc(t)}</div></button>`).join('');
   $('#cardGrid').innerHTML=h;
 }

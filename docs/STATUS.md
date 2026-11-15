@@ -8,7 +8,8 @@ _Last updated: 2026-11-15_
 - **Phase 3 (Photocard Wall): done** (v1.4 merged). The owner checked it on the device: all checks passed (2026-11-15).
 - **Phase 4 (Soccer Field): done** (v1.5 merged), with the swipe-power fix and Bronze/Silver/Gold trophies. Checked on the device.
 - **Squishy upgrade: done** (v1.6 merged, PR #6).
-- **Phase 5 (Stage rhythm game): built, PR open as v1.7** on branch `feature/stage`. Plan agreed 2026-11-15.
+- **Phase 5 (Stage rhythm game): done** (v1.7 merged, PR #7).
+- **Phase 6 (little-sister polish): built, PR open as v1.8** on branch `feature/little-sister`. Plan agreed 2026-11-15.
   Not yet tried on a device.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -25,7 +26,8 @@ _Last updated: 2026-11-15_
 - PR #4 "Photocard Wall (v1.4)": merged.
 - PR #5 "Soccer Field (v1.5)": merged.
 - PR #6 "Squishy upgrade (v1.6)": merged.
-- PR "Stage (v1.7)" on branch `feature/stage` (branched from `main` after #6): open.
+- PR #7 "Stage (v1.7)": merged.
+- PR "Little-sister polish (v1.8)" on branch `feature/little-sister` (branched from `main` after #7): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -80,6 +82,15 @@ _Last updated: 2026-11-15_
   - Back during a song goes to the song list, then the room; restoring a v1.6 backup (no stage fields) and a v1.7 one
   - phone portrait and landscape layouts
   Not tested automatically: how the songs sound and whether taps feel in time on the real tablet (needs ears and fingers).
+- **Little-sister polish (v1.8)**: `tests/smoke-test.js` now has 197 checks, all passing with no console errors. New checks:
+  - every room gets a colour and a badge; changing them with ✏️; the badge shows on the profile card
+  - Easy mode on/off from Settings; it hides tips, makes buttons 52 px or taller, and is off on the profile screen
+  - Easy shops (closet, decorate shop, walls, photocard stages) sorted owned-then-cheapest; too-dear items dimmed with 🔒;
+    tapping one says "Need N more"; the short ✔ Yes / ✖ No buy box; the normal order comes back when Easy mode is off
+  - Soccer and the Stage open on Easy in Easy mode
+  - PIN: set (typed twice, a mismatch starts over); delete, make, change and restore ask for it; a wrong PIN does nothing;
+    restoring a backup keeps the device's PIN; "Forgot PIN?" needs the right answer to the sum
+  - restoring a v1.7 backup (no easy/colour/badge fields)
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -147,6 +158,17 @@ _Last updated: 2026-11-15_
   - **Timing:** song time comes from the audio clock, minus the speaker delay the browser reports, minus
     "⏱️ Sound late?" (`settings.stageOffset`, -100 to +400 ms, saved per device). Switching away from the app stops the song.
 
+- Little-sister polish (agreed 2026-11-15):
+  - **Easy mode is per room**, switched in ⚙️ Settings (not behind the PIN). Bigger buttons/tiles, no tips or long
+    descriptions, games open on Easy.
+  - **Easy shops:** show everything, owned first then cheapest first; too-dear items dimmed with a 🔒 (owner's choice
+    over hiding them, so she can see what to save up for).
+  - **Room look:** a colour (`ROOM_COLORS`, 6) and an emoji badge (`ROOM_BADGES`, 8) per room. A new room gets the first
+    colour no other room uses.
+  - **Grown-up PIN** (optional, off by default) guards: deleting a room, restoring a backup, making a room, and changing
+    a room (✏️). It does **not** guard the Easy mode switch (owner's choice). Forgot PIN = a 2-digit × 2-digit sum.
+    The PIN is saved in `settings.pin` and stays with the device: restoring a backup never changes it.
+
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
 - $0 beyond the Claude subscription. Use free tiers and free tools only.
@@ -186,15 +208,20 @@ _Last updated: 2026-11-15_
 2. ~~Plan Phase 5 (Stage rhythm game) and get it agreed before coding.~~ Agreed and built (v1.7 PR).
 
 ## Next steps (Phase 5)
-1. Owner: build v1.7, install it over the app, and play the Stage (see the PR). Listen to all 3 songs and check that
-   taps feel in time; if not, try "⏱️ Sound late?".
-2. Merge the v1.7 PR.
-3. Plan Phase 6 (little-sister polish) and get it agreed before coding.
+1. ~~Owner: build v1.7 and play the Stage. Merge the v1.7 PR.~~ Merged.
+2. ~~Plan Phase 6 (little-sister polish) and get it agreed before coding.~~ Agreed and built (v1.8 PR).
+
+## Next steps (Phase 6)
+1. Owner: build v1.8, install it over the app, and try Easy mode, the room colour/badge and the PIN (see the PR).
+   Check that both sisters' rooms are still there after the update.
+2. Merge the v1.8 PR.
+3. Plan Phase 7 (content packs) and get it agreed before coding.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of the script in `index.html`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 5 since v1.7
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 6 since v1.8
+  (Little-sister polish: per-profile `easy`, `color`, `badge`, plus `settings.pin`). It was 5 in v1.7
   (Stage: `stage`, `stats.shows/fullCombos`, plus `settings.stageOffset` filled in by `DEFAULT_SETTINGS`).
   It was 4 in v1.5 (Soccer: `soccer`, `stats.goals/kicks/matches/perfects`). It was 3 in v1.4
   (Photocards: `cards`, `cardPins`, `bonusGot`, `cardNo`, `stats.cards`). It was 2 in v1.3
