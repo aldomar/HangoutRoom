@@ -412,9 +412,9 @@ const MIGRATIONS={
     if(!Array.isArray(p.cards)) p.cards=[]; if(!Array.isArray(p.cardPins)) p.cardPins=[];
     if(!Array.isArray(p.bonusGot)) p.bonusGot=[]; if(typeof p.cardNo!=='number') p.cardNo=0;
     if(p.stats&&typeof p.stats.cards!=='number') p.stats.cards=0; }); }, // stats.cards = cards made (for a bonus)
-  // v1.5 Soccer Field: soccer {level, best{easy,medium,hard}} and stats.goals / kicks / matches / perfects.
+  // v1.5 Soccer Field: soccer {level, best{easy,medium,hard}, trophies[]} and stats.goals / kicks / matches / perfects.
   4: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(!p||typeof p!=='object') return;
-    if(!p.soccer||typeof p.soccer!=='object') p.soccer={level:'easy',best:{easy:0,medium:0,hard:0}};
+    if(!p.soccer||typeof p.soccer!=='object') p.soccer={level:'easy',best:{easy:0,medium:0,hard:0},trophies:[]};
     if(p.stats) ['goals','kicks','matches','perfects'].forEach(k=>{ if(typeof p.stats[k]!=='number') p.stats[k]=0; }); }); }
 };
 
@@ -687,9 +687,27 @@ const DECOR={
       +(t?`<image href="${esc(t)}" x="-68" y="-117" width="136" height="96" preserveAspectRatio="xMidYMid slice"/>`
          :`<rect x="-68" y="-117" width="136" height="96" fill="#e9ddff"/><text x="0" y="-55" text-anchor="middle" font-size="40">🎨</text>`)
       +`<circle cx="0" cy="-124" r="8" fill="#ff8cc6" stroke="#2b2235" stroke-width="3"/>`;}},
+  // Soccer trophies: won with a perfect 5/5 on each level (award:1 = never in the Shop).
+  trophyBronze:{name:'Bronze Trophy',price:0,award:1,box:'-70 -150 140 160',d:()=>trophyArt('#cd7f32','#f2b77c','#7a4518','EASY')},
+  trophySilver:{name:'Silver Trophy',price:0,award:1,box:'-70 -150 140 160',d:()=>trophyArt('#b9c2cf','#f1f5fa','#5d6675','MEDIUM')},
+  trophyGold:{name:'Gold Trophy',price:0,award:1,box:'-70 -150 140 160',d:()=>trophyArt('#ffc83d','#fff1b8','#a8730f','HARD')},
   moon:{name:'Moon Lamp',price:15,box:'-60 -140 120 150',d:()=>`<rect x="-26" y="-14" width="52" height="14" rx="6" fill="#3b2f52"/><rect x="-4" y="-50" width="8" height="38" fill="#3b2f52"/><path d="M8 -128 A40 40 0 1 0 8 -48 A30 30 0 1 1 8 -128Z" fill="#ffe9a8" stroke="#e8b84a" stroke-width="3" filter="url(#glow)"/>`}
 };
 
+// A trophy cup with a soccer-ball badge, drawn bottom-centre at (0,0) like the other decorations.
+function trophyArt(main,light,dark,label){
+  const o=`stroke="#2b2235" stroke-width="4" stroke-linejoin="round"`;
+  return `<ellipse cx="0" cy="-2" rx="44" ry="7" fill="#00000030"/>`
+    +`<path d="M-34 -96 Q-62 -98 -56 -72 Q-50 -54 -26 -56" fill="none" stroke="#2b2235" stroke-width="11" stroke-linecap="round"/><path d="M34 -96 Q62 -98 56 -72 Q50 -54 26 -56" fill="none" stroke="#2b2235" stroke-width="11" stroke-linecap="round"/>`
+    +`<path d="M-34 -96 Q-62 -98 -56 -72 Q-50 -54 -26 -56" fill="none" stroke="${main}" stroke-width="5" stroke-linecap="round"/><path d="M34 -96 Q62 -98 56 -72 Q50 -54 26 -56" fill="none" stroke="${main}" stroke-width="5" stroke-linecap="round"/>`
+    +`<rect x="-38" y="-26" width="76" height="26" rx="5" fill="#5b3a99" ${o}/><rect x="-28" y="-20" width="56" height="13" rx="3" fill="${light}"/>`
+    +`<text x="0" y="-9.5" text-anchor="middle" font-size="10" font-weight="900" fill="${dark}">${label}</text>`
+    +`<path d="M-9 -26 L-6 -48 H6 L9 -26Z" fill="${main}" ${o}/><ellipse cx="0" cy="-48" rx="16" ry="5" fill="${main}" ${o}/>`
+    +`<path d="M-38 -132 H38 Q38 -64 0 -52 Q-38 -64 -38 -132Z" fill="${main}" ${o}/><ellipse cx="0" cy="-132" rx="38" ry="7" fill="${light}" ${o}/>`
+    +`<path d="M-25 -122 Q-27 -84 -11 -66" stroke="${light}" stroke-width="6" fill="none" stroke-linecap="round" opacity=".75"/>`
+    +`<circle cx="4" cy="-96" r="15" fill="#fff" stroke="#2b2235" stroke-width="3"/><path d="M4 -103 l6 4.5 -2.3 7 h-7.4 l-2.3 -7z" fill="#2b2235"/>`
+    +`<path d="${starPath(-22,-142,7)} ${starPath(24,-144,5)}" fill="#fff" opacity=".9"/>`;
+}
 const LOCKED={}; // every room area is open since v1.5; add future locked areas here
 function sign(x,y,text,locked){
   const w=Math.round(text.length*11.5+34);
@@ -771,6 +789,7 @@ function normalize(p){
   // Soccer (v1.5): chosen level and best score (out of 5) per level.
   p.soccer=Object.assign({level:'easy'},p.soccer&&typeof p.soccer==='object'?p.soccer:{});
   p.soccer.best=Object.assign({easy:0,medium:0,hard:0},p.soccer.best&&typeof p.soccer.best==='object'?p.soccer.best:{});
+  p.soccer.trophies=Array.isArray(p.soccer.trophies)?p.soccer.trophies.filter(l=>['easy','medium','hard'].includes(l)):[]; // levels whose trophy she has won
   if(!['easy','medium','hard'].includes(p.soccer.level)) p.soccer.level='easy';
 }
 DB.profiles.forEach(normalize);
@@ -878,6 +897,7 @@ function show(n){
   if(n!=='room'&&decorating) exitDecorate(true);
   cur=n; $$('.screen').forEach(s=>s.classList.toggle('on',s.id==='scr-'+n));
   if(n==='room'||n==='cards') checkBonus(); // gives any milestone cards she has earned (section 12)
+  if(n==='room'||n==='soccer'){const t=giveTrophies();if(t.length)setTimeout(()=>toast(`🏆 ${t.join(' and ')} added to your room!`),400);} // section 13
   if(n==='profiles') renderProfiles();
   if(n==='room') renderRoom();
   if(n==='closet') renderCloset();
@@ -1016,7 +1036,7 @@ function renderDecoGrid(){
       +keys.map(k=>`<button class="tile" data-place="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${DECOR[k].name}</div><div class="tp cnt">×${counts[k]}</div></button>`).join('');
     if(!h) h=`<div class="empty">Nothing stored right now! Drag things from your room down here to put them away, or get new stuff in the Shop 🛍️</div>`;
   } else if(decoTab==='shop'){
-    h=Object.entries(DECOR).filter(([k,d])=>!d.art).map(([k,d])=>`<button class="tile" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div><div class="tp">🪙 ${d.price}</div></button>`).join('');
+    h=Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award).map(([k,d])=>`<button class="tile" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div><div class="tp">🪙 ${d.price}</div></button>`).join('');
   } else {
     const isW=decoTab==='wall', L=isW?WALLS:FLOORS, curId=isW?p.room.wall:p.room.floor;
     h=Object.entries(L).map(([k,v])=>{const own=!v.price||p.owned.includes((isW?'wall:':'floor:')+k);
@@ -1871,14 +1891,26 @@ function nextKick(){
   if(cur!=='soccer'||SOC.state!=='result') return;
   if(SOC.kicks.length>=SOC_KICKS) endMatch(); else {resetKick();renderSocScore();}
 }
+// Trophies: a perfect 5/5 on a level wins that level's trophy once, as a room decoration (placed in the room).
+// Ids are saved in soccer.trophies (level ids) and as room items (DECOR keys): never rename them.
+const TROPHIES={easy:'trophyBronze',medium:'trophySilver',hard:'trophyGold'};
+function giveTrophies(){
+  const p=P(); if(!p) return [];
+  const won=LVL_KEYS.filter(l=>(p.soccer.best[l]||0)>=SOC_KICKS&&!p.soccer.trophies.includes(l));
+  won.forEach(l=>{const type=TROPHIES[l];p.soccer.trophies.push(l);p.room.items.push(Object.assign({uid:uid(),type,placed:true},spot(type)));});
+  if(won.length) save();
+  return won.map(l=>DECOR[TROPHIES[l]].name);
+}
 function endMatch(){
   const p=P(), lvl=p.soccer.level, L=socLevel(), goals=SOC.kicks.filter(Boolean).length;
   SOC.state='done'; p.stats.matches++;
   const best=goals>(p.soccer.best[lvl]||0); if(best) p.soccer.best[lvl]=goals;
   if(goals===SOC_KICKS){p.stats.perfects++;earn(PERFECT_COINS,'Perfect!');} else save();
-  SFX.whistle(); renderSocScore();
+  const trophies=giveTrophies();
+  SFX.whistle(); renderSocScore(); if(trophies.length) setTimeout(SFX.buy,400);
   const line=goals===SOC_KICKS?'PERFECT! 🌟':goals>=3?'Great kicks! ✨':goals>=1?'Nice! Keep practising 💪':`${L.name} was on fire! Try again? ${L.icon}`;
-  modal(`⚽ ${goals} / ${SOC_KICKS} goals!`,`<div style="text-align:center;font-size:18px">${line}${best&&goals?`<br>New best on ${lvl[0].toUpperCase()+lvl.slice(1)}! 🏆`:''}</div>`,
+  const tro=trophies.map(n=>`<div style="margin-top:10px">You won the <b>${n}</b>! It's in your room 🏆</div><svg viewBox="${DECOR[TROPHIES[lvl]].box}" style="height:110px">${DECOR[TROPHIES[lvl]].d()}</svg>`).join('');
+  modal(`⚽ ${goals} / ${SOC_KICKS} goals!`,`<div style="text-align:center;font-size:18px">${line}${best&&goals?`<br>New best on ${lvl[0].toUpperCase()+lvl.slice(1)}! 🏆`:''}${tro}</div>`,
     [{text:'⬅ Room',cls:'ghost',on:()=>show('room')},{text:'Play again',cls:'pink',on:()=>{newMatch();SFX.whistle();}}]);
   checkBonus(); // e.g. "First Goal!" (shown as a message, because the result box is open)
 }

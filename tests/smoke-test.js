@@ -78,6 +78,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Gallery + poster');
   await ev(`document.querySelector('#artGalBtn').click()`); await sleep(500);
+  for(let i=0;i<30&&!(await ev(`document.querySelectorAll('#artGrid [data-art]').length`));i++) await sleep(100); // the gallery loads in the background
   check('gallery has 1 drawing', (await ev(`document.querySelectorAll('#artGrid [data-art]').length`))===1);
   await shot('03-gallery');
   await ev(`document.querySelector('#artGrid [data-art]').click()`); await sleep(200);
@@ -279,19 +280,29 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await sleep(1500);
   check('perfect 5/5 on Hard: 5×3 + 5 coins, +10 for the bonus card', (await ev('P().coins'))===sc2+30 && (await ev('P().stats.perfects'))===1, [sc2, await ev('P().coins')]);
   check('Perfect 5/5 bonus card', await ev(`P().bonusGot.includes('perfect1')`));
+  check('perfect on Hard wins the Gold Trophy (in the room)', await ev(`P().soccer.trophies.includes('hard')&&P().room.items.filter(i=>i.type==='trophyGold'&&i.placed).length===1`));
+  check('result box shows the trophy', (await ev(`document.querySelector('#modalBody').textContent`)).includes('Gold Trophy'));
   await shot('48-soccer-perfect');
   await ev(`closeModal()`);
   check('androidBack from soccer goes to room', await ev(`window.androidBack()&&cur==='room'`));
+  await ev(`P().soccer.best.medium=5;show('room')`); await sleep(300);
+  check('an earlier perfect on Medium gives the Silver Trophy', await ev(`P().soccer.trophies.includes('medium')&&P().room.items.some(i=>i.type==='trophySilver')`));
+  await ev(`show('soccer')`); await sleep(200); await ev(`show('room')`); await sleep(300);
+  check('trophies are given only once', await ev(`P().room.items.filter(i=>/^trophy/.test(i.type)).length===2&&!P().soccer.trophies.includes('easy')`));
+  await ev(`closeModal()`); await shot('51-room-trophies');
+  await ev(`enterDecorate();document.querySelector('[data-dt=shop]').click()`);
+  check('trophies are not in the Shop', await ev(`!document.querySelector('#decoGrid [data-buy^=trophy]')`)); await ev(`exitDecorate()`);
   await ev(`Math.random=window._rand`);
 
   console.log('Soccer in backups');
   const v14Code=await ev(`JSON.stringify(Object.assign({},DB,{version:3,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.soccer;['goals','kicks','matches','perfects'].forEach(k=>delete q.stats[k]);return q;})}))`);
   const socCode=await ev('JSON.stringify(DB)');
   await ev(`doRestore(${JSON.stringify(v14Code)})`); await sleep(400);
-  check('v1.4 backup restores with soccer defaults', await ev(`DB.version===4&&DB.profiles[0].soccer.level==='easy'&&DB.profiles[0].soccer.best.hard===0&&DB.profiles[0].stats.goals===0`));
+  check('v1.4 backup restores with soccer defaults', await ev(`DB.version===4&&DB.profiles[0].soccer.level==='easy'&&DB.profiles[0].soccer.best.hard===0&&DB.profiles[0].stats.goals===0&&DB.profiles[0].soccer.trophies.length===0`));
   await ev(`doRestore(${JSON.stringify(socCode)})`); await sleep(400);
-  check('backup keeps soccer progress', await ev(`DB.profiles[0].soccer.best.hard===5&&DB.profiles[0].stats.perfects===1`));
+  check('backup keeps soccer progress', await ev(`DB.profiles[0].soccer.best.hard===5&&DB.profiles[0].stats.perfects===1&&DB.profiles[0].soccer.trophies.length===2`));
   await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal()`);
+  check('no duplicate trophies after restore', await ev(`P().room.items.filter(i=>/^trophy/.test(i.type)).length===2`));
 
   console.log('Phone portrait + other screens');
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});

@@ -92,6 +92,8 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
 - ✅ Coins: +1 / +2 / +3 per goal (Easy / Medium / Hard), +5 for a perfect 5/5. Team kit bonus: +1 more per goal
   with 2 or more soccer clothes on (jersey, shorts, soccer socks, cleats).
 - ✅ Best score per level. 3 new bonus photocards: First Goal!, Perfect 5/5, 50 Goals.
+- ✅ Trophies: a perfect 5/5 wins a Bronze (Easy), Silver (Medium) or Gold (Hard) trophy, once each.
+  It appears in her room as a decoration she can move or put away. Trophies are never sold in the Shop.
 - ✅ No timer and nothing to lose: a miss just counts as a miss. Leaving mid-match is fine.
 - **Done when:** it plays smoothly on her tablet and soccer progress survives updates and backups.
 
