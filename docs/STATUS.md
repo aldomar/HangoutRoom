@@ -94,6 +94,10 @@ _Last updated: 2026-11-15_
   - **Coins:** +1 / +2 / +3 per goal by level, +5 for a perfect 5/5, +1 more per goal with 2+ soccer clothes on.
   - **Controls:** swipe up from the ball (aim, power, curve) **or** tap a spot in the goal (for the younger sister).
   - Matches are 5 kicks. No timer, nothing lost on a miss, leaving mid-match just starts a fresh match next time.
+  - **Swipe power (fixed after the first device test):** it was measured over the whole touch, so touching the ball,
+    pausing, then flicking gave a weak, slow roll. Power now comes from the speed of the last 0.12 s of the flick.
+    Even a gentle swipe is about as strong as a tap, and full power rises to the top corners without going over the bar.
+    To tune it, change the numbers in `power=` and `v=` in `socRelease()`.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.

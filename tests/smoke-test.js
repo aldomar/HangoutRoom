@@ -241,10 +241,14 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('tapping the goal shoots there (goal)', await ev(`SOC.kicks[2]===true&&Math.abs(SOC.shot.u+0.38)<0.02`), await ev('JSON.stringify(SOC.shot)'));
   await sleep(kickWait-1200);
   const ball=await ev(`(()=>{const r=socCv.getBoundingClientRect();return [r.left+SOC.g.bx,r.top+SOC.g.by];})()`);
-  await mouse('mousePressed',ball[0],ball[1]);
-  for(let i=1;i<=6;i++){await mouse('mouseMoved',ball[0]-i*8,ball[1]-i*35);await sleep(30);}
-  await mouse('mouseReleased',ball[0]-48,ball[1]-210); await sleep(100);
+  // Like a child: touch the ball, wait a moment, then flick hard. The pause must not make the kick weak.
+  // (Sent from inside the page so the 10 ms gaps are exact: about 3.6 px per ms, a real quick flick.)
+  await ev(`(async()=>{const pe=(t,x,y)=>socCv.dispatchEvent(new PointerEvent(t,{clientX:x,clientY:y,pointerId:7,bubbles:true}));
+    const [x,y]=${JSON.stringify(ball)}; pe('pointerdown',x,y); await new Promise(r=>setTimeout(r,600));
+    for(let i=1;i<=6;i++){await new Promise(r=>setTimeout(r,10)); pe('pointermove',x-i*8,y-i*35);}
+    pe('pointerup',x-48,y-210);})()`); await sleep(100);
   check('swiping up kicks the ball (aimed left)', await ev(`SOC.kicks.length===3&&SOC.state==='fly'&&SOC.shot.u<0`), await ev('JSON.stringify(SOC.shot)'));
+  check('a hard flick after a pause is a strong shot that stays under the bar', await ev(`SOC.shot.T<0.7&&SOC.shot.v>0.5&&SOC.shot.v<=0.9`), await ev('JSON.stringify(SOC.shot)'));
   for(let i=0;i<60&&!(await ev(`SOC.state==='aim'`));i++) await sleep(100);
   await ev(`socShoot(0.8,0.4,1,0)`); await sleep(1200);
   check('a wide shot misses', await ev(`SOC.shot.res==='wide'`));
