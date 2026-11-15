@@ -10,7 +10,7 @@ const PACK1_BAT='M84 156 Q90 145 96 152 Q100 146 104 152 Q110 145 116 156 Q110 1
 const p1Slipper=x=>`<ellipse cx="${x}" cy="244" rx="19" ry="11" fill="#fbf7ff" ${st('#9b8cc9',2.5)}/><ellipse cx="${x-6}" cy="231" rx="4" ry="9" fill="#fbf7ff" ${st('#9b8cc9',2)} transform="rotate(-12 ${x-6} 238)"/>`
   +`<ellipse cx="${x+6}" cy="231" rx="4" ry="9" fill="#fbf7ff" ${st('#9b8cc9',2)} transform="rotate(12 ${x+6} 238)"/><circle cx="${x-5}" cy="243" r="1.8" fill="#2a1f33"/><circle cx="${x+5}" cy="243" r="1.8" fill="#2a1f33"/><ellipse cx="${x}" cy="248" rx="3" ry="2" fill="#ff8fb8"/>`;
 const p1Flower=(x,y,c)=>[0,1,2,3,4].map(k=>{const a=k*TAU/5;return `<circle cx="${(x+Math.cos(a)*5).toFixed(1)}" cy="${(y+Math.sin(a)*5).toFixed(1)}" r="4.2" fill="${c}"/>`;}).join('')+`<circle cx="${x}" cy="${y}" r="3" fill="#ffd166"/>`;
-CLOSET.hair.items.push({id:'swoopCandy',name:'Cotton Candy',price:20,d:()=>swoop('#c9a7ff',`<path d="M58 77 C76 58 102 50 124 56 C134 62 134 76 128 92" stroke="#ff9fd0" stroke-width="7" fill="none" stroke-linecap="round"/>`)});
+// (Cotton Candy hair became a hair colour in v1.11: see HAIR_COLORS in section 3.)
 CLOSET.top.items.push({id:'batSweater',name:'Bat Sweater',price:25,
   t:()=>`<path d="${TORSO}" fill="#3b2f52" ${st()}/><path d="M66 182 H134" stroke="#c9a7ff" stroke-width="4" stroke-dasharray="6 4"/><path d="${PACK1_BAT}" fill="#c9a7ff" ${st('#1f1a26',1.5)}/><circle cx="97" cy="154" r="1.3" fill="#ff6fae"/><circle cx="103" cy="154" r="1.3" fill="#ff6fae"/>`,
   s:()=>sleeves('#3b2f52',58)+`<g stroke="#c9a7ff" stroke-width="4"><path d="M37 184 l18 -7" transform="${LA}"/><path d="M145 177 l18 7" transform="${RA}"/></g>`});
@@ -23,7 +23,7 @@ CLOSET.acc.items.push(
   {id:'flowers',name:'Flower Crown',price:20,d:()=>`<path d="M62 56 Q100 34 138 56" stroke="#5cc28a" stroke-width="4" fill="none"/>`+p1Flower(66,55,'#ff9fd0')+p1Flower(84,45,'#c9a7ff')+p1Flower(100,42,'#fff')+p1Flower(116,45,'#8ff0d0')+p1Flower(134,55,'#ff9fd0')},
   {id:'heartShades',name:'Heart Shades',price:15,d:()=>`<g fill="#ff4fa3" fill-opacity=".85" ${st('#1f1a26',2.5)}><path d="${heartPath(80,99,11)}"/><path d="${heartPath(120,99,11)}"/></g><path d="M91 96 Q100 91 109 96" stroke="#1f1a26" stroke-width="3" fill="none"/><path d="M73 93 l4 -3" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>`}
 );
-CARD_TAGS.cute.push('hair:swoopCandy','bottom:galaxySkirt','legs:mintFuzz','arms:rainbow','shoes:slippers','acc:flowers','acc:heartShades');
+CARD_TAGS.cute.push('bottom:galaxySkirt','legs:mintFuzz','arms:rainbow','shoes:slippers','acc:flowers','acc:heartShades');
 CARD_TAGS.spooky.push('top:batSweater','bottom:galaxySkirt');
 CARD_TAGS.sporty.push('acc:heartShades');
 

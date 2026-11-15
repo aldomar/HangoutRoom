@@ -90,7 +90,9 @@ function renderRoom(){
   const items=R.items.filter(i=>i.placed&&DECOR[i.type]);
   const deco=i=>`<g class="deco" data-uid="${i.uid}" transform="translate(${Math.round(i.x)} ${Math.round(i.y)})">${DECOR[i.type].d(i)}</g>`;
   s+=items.filter(i=>DECOR[i.type].flat).map(deco).join('');
-  const list=items.filter(i=>!DECOR[i.type].flat).map(i=>({y:i.y,h:deco(i)}));
+  // Wall things (posters, shelves…) are drawn behind everything that stands, so things on a shelf show in front of it.
+  s+=items.filter(i=>DECOR[i.type].wall&&!DECOR[i.type].flat).sort((a,b)=>a.y-b.y).map(deco).join('');
+  const list=items.filter(i=>!DECOR[i.type].flat&&!DECOR[i.type].wall).map(i=>({y:i.y,h:deco(i)}));
   list.push({y:604,h:mascotG(p)}); list.sort((a,b)=>a.y-b.y);
   s+=list.map(o=>o.h).join('');
   roomSvg.innerHTML=s;
@@ -131,23 +133,37 @@ roomSvg.addEventListener('pointerdown',e=>{
   if(!decorating) return;
   const g=e.target.closest('.deco'); if(!g) return;
   const it=curRoom(P()).items.find(i=>i.uid===g.dataset.uid); if(!it) return;
-  const pt=toSvg(e); drag={it,g,dx:it.x-pt.x,dy:it.y-pt.y};
+  const pt=toSvg(e); drag={it,g,dx:it.x-pt.x,dy:it.y-pt.y,riders:[]};
   try{roomSvg.setPointerCapture(e.pointerId);}catch(_){}
   g.classList.add('dragging'); roomSvg.appendChild(g); SFX.click(); e.preventDefault();
+  // a shelf takes the things sitting on it along
+  if(DECOR[it.type].shelf) drag.riders=onShelf(it).map(r=>{const rg=roomSvg.querySelector(`.deco[data-uid="${r.uid}"]`);if(rg)roomSvg.appendChild(rg);return {r,g:rg,dx:r.x-it.x,dy:r.y-it.y};});
 });
 roomSvg.addEventListener('pointermove',e=>{
   if(!drag) return;
   const pt=toSvg(e); drag.it.x=clamp(pt.x+drag.dx,30,970); drag.it.y=clamp(pt.y+drag.dy,90,700);
   drag.g.setAttribute('transform',`translate(${Math.round(drag.it.x)} ${Math.round(drag.it.y)})`);
+  for(const R of drag.riders){R.r.x=drag.it.x+R.dx;R.r.y=drag.it.y+R.dy;if(R.g)R.g.setAttribute('transform',`translate(${Math.round(R.r.x)} ${Math.round(R.r.y)})`);}
   $('#decoPanel').classList.toggle('drop',e.clientY>$('#decoPanel').getBoundingClientRect().top);
 });
 function endDrag(e){
   if(!drag) return;
   if(e.clientY>$('#decoPanel').getBoundingClientRect().top){drag.it.placed=false;SFX.whoosh();toast('Put away in My Stuff 📦');}
+  else if(snapToShelf(drag.it)) SFX.pop();
   drag=null; save(); $('#decoPanel').classList.remove('drop'); renderRoom(); renderDecoGrid();
 }
 roomSvg.addEventListener('pointerup',endDrag);
 roomSvg.addEventListener('pointercancel',endDrag);
+// Shelves: the top of shelf s is at y = s.y - top, from s.x - w/2 to s.x + w/2. Nothing about it is saved.
+const standing=i=>i.placed&&DECOR[i.type]&&!DECOR[i.type].wall&&!DECOR[i.type].flat;
+function onShelf(s){const S=DECOR[s.type].shelf, top=s.y-S.top;
+  return curRoom(P()).items.filter(i=>standing(i)&&Math.abs(i.y-top)<3&&Math.abs(i.x-s.x)<=S.w/2+4);}
+function snapToShelf(it){ // drop a standing thing near a shelf top and it sits on it
+  if(!standing(it)) return false; let best=null, bd=31;
+  for(const s of curRoom(P()).items){const S=s.placed&&DECOR[s.type]&&DECOR[s.type].shelf; if(!S) continue;
+    const d=Math.abs(it.y-(s.y-S.top)); if(d<bd&&Math.abs(it.x-s.x)<=S.w/2){bd=d;best=s;}}
+  if(!best) return false; it.y=best.y-DECOR[best.type].shelf.top; return true;
+}
 
 function enterDecorate(){decorating=true;$('#decoPanel').classList.remove('hidden');$('#decoBtn').textContent='✔ Done';renderRoom();renderDecoGrid();SFX.click();}
 function exitDecorate(silent){decorating=false;drag=null;$('#decoPanel').classList.add('hidden');$('#decoBtn').textContent='🛋️ Decorate';if(!silent)renderRoom();}
@@ -318,7 +334,15 @@ function renderCloset(){
   const C=CLOSET[closetCat];
   $('#closetGrid').innerHTML=easySort(C.items,it=>isOwned(p,closetCat,it)?0:it.price).map(it=>{const own=isOwned(p,closetCat,it),on=p.look[closetCat]===it.id;
     return `<button class="tile ${on?'on':''} ${own?'':'locked'}${poorCls(p,own,it.price)}" data-id="${it.id}"><div class="tv">${mascotSVG(Object.assign({},p.look,{[closetCat]:it.id}),C.vb)}</div><div class="tn">${it.name}</div>${own?'':priceTag(p,it.price)}</button>`;}).join('');
+  // Hair colours: a row of swatches above the styles (bought once, for every style)
+  const hc=$('#hairCols'); hc.classList.toggle('hidden',closetCat!=='hair');
+  if(closetCat==='hair'){const cur=hairIds(p.look).c;
+    hc.innerHTML=easySort(Object.entries(HAIR_COLORS),([k,v])=>hcOwned(p,k)?0:v.price).map(([k,v])=>{const own=hcOwned(p,k), poor=poorCls(p,own,v.price);
+      return `<button class="hcol${k===cur?' on':''}${own?'':' locked'}" data-hc="${k}" title="${v.name}" style="background:${v.s?`linear-gradient(135deg,${v.c} 55%,${v.s} 55%)`:v.c}${poor?';opacity:.5':''}">${own?'':`<span>${poor?'🔒':''}🪙${v.price}</span>`}</button>`;}).join('');}
 }
+const hcOwned=(p,k)=>!HAIR_COLORS[k].price||p.owned.includes('hairc:'+k);
+$('#hairCols').onclick=e=>{const b=e.target.closest('[data-hc]');if(!b)return;const p=P(),k=b.dataset.hc,v=HAIR_COLORS[k];
+  tryBuy('hairc:'+k,v.price,v.name+' hair',()=>{p.look.hairColor=k;save();SFX.happy();const st=$('#closetGrid').scrollTop;renderCloset();$('#closetGrid').scrollTop=st;hopCloset();});};
 function hopCloset(){const m=$('#closetMascot');m.classList.remove('hop');void m.offsetWidth;m.classList.add('hop');}
 $('#closetTabs').onclick=e=>{const b=e.target.closest('[data-cat]');if(!b)return;closetCat=b.dataset.cat;SFX.click();renderCloset();$('#closetGrid').scrollTop=0;};
 $('#closetGrid').onclick=e=>{
@@ -329,6 +353,7 @@ $('#closetGrid').onclick=e=>{
 $('#randomBtn').onclick=()=>{
   const p=P();
   for(const cat of Object.keys(CLOSET)){if(cat==='fur')continue;const own=CLOSET[cat].items.filter(i=>isOwned(p,cat,i));p.look[cat]=own[Math.floor(Math.random()*own.length)].id;}
+  const cols=Object.keys(HAIR_COLORS).filter(k=>hcOwned(p,k)); p.look.hairColor=cols[Math.floor(Math.random()*cols.length)];
   save();SFX.happy();renderCloset();hopCloset();
 };
 $('#mascotNameBtn').onclick=()=>renameModal(P(),'mascotName',"Name your bunny");

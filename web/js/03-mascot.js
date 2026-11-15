@@ -24,15 +24,40 @@ const kick=(x,fill,sole,studs)=>`<path d="M${x} 238 Q${x} 228 ${x+12} 228 H${x+2
 const mj=x=>`<path d="M${x} 246 Q${x} 234 ${x+19} 234 Q${x+38} 234 ${x+38} 250 H${x}Z" fill="#1f1a26" ${st('#000',2)}/><path d="M${x+6} 238 L${x+32} 238" stroke="#ff8cc6" stroke-width="3"/><circle cx="${x+30}" cy="238" r="2.5" fill="#ffd166"/>`;
 const none=()=>'';
 
+// Hair colours (v1.11): bought once (owned 'hairc:<id>') and used with every style. s = a streak colour.
+// Ids are saved: never rename them.
+const HAIR_COLORS={
+  black:{name:'Black',c:'#2a2230',price:0}, brown:{name:'Brown',c:'#6b4630',price:0},
+  purple:{name:'Purple',c:'#7c4ddb',price:10}, pink:{name:'Pink',c:'#ff6fae',price:10}, blonde:{name:'Blonde',c:'#f2c75c',price:10},
+  mint:{name:'Mint',c:'#7fdcbc',price:10}, sky:{name:'Sky Blue',c:'#7fb8ff',price:10}, snow:{name:'Snow White',c:'#f6f2fa',price:10},
+  streak:{name:'Pink Streak',c:'#2a2230',s:'#ff6fae',price:20}, candy:{name:'Cotton Candy',c:'#c9a7ff',s:'#ff9fd0',price:20}
+};
+const HL=st('#1a1320',2.5);
+const hShine=d=>`<path d="${d}" stroke="#fff" stroke-opacity=".25" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+const hStreak=(H,d)=>H.s?`<path d="${d}" stroke="${H.s}" stroke-width="7" fill="none" stroke-linecap="round"/>`:'';
+// The hair a look really shows: old coloured-swoop ids (LEGACY_HAIR, section 1) become Emo Swoop in that colour.
+function hairIds(L){let h=L.hair,c=L.hairColor;if(LEGACY_HAIR[h]){c=LEGACY_HAIR[h];h='swoopBlack';}return {h,c:HAIR_COLORS[c]?c:'black'};}
 const CLOSET={
   fur:{label:'Fur',icon:'🐰',vb:'0 0 200 270',items:Object.entries(FUR).map(([id,f])=>({id,name:f.name,price:f.price,d:none}))},
-  hair:{label:'Hair',icon:'💇',vb:'30 10 140 120',items:[
-    {id:'none',name:'No Bangs',price:0,d:none},
-    {id:'tuft',name:'Fluffy Tuft',price:0,d:(f,l)=>`<path d="M86 50 Q86 28 98 40 Q102 22 110 40 Q122 30 118 52 Z" fill="${f.c}" ${st(l)}/>`},
-    {id:'swoopBlack',name:'Emo Swoop',price:0,d:()=>swoop('#2a2230')},
-    {id:'swoopPurple',name:'Purple Swoop',price:15,d:()=>swoop('#7c4ddb')},
-    {id:'swoopPink',name:'Pink Swoop',price:15,d:()=>swoop('#ff6fae')},
-    {id:'swoopStreak',name:'Pink Streak',price:20,d:()=>swoop('#2a2230',`<path d="M58 77 C76 58 102 50 124 56 C134 62 134 76 128 92" stroke="#ff6fae" stroke-width="7" fill="none" stroke-linecap="round"/>`)}
+  // Hair (v1.11): each item is a STYLE; the colour comes from look.hairColor (HAIR_COLORS). d = in front of the head,
+  // b = behind the head and body (long hair). fur:1 styles are made of fur, so the hair colour doesn't change them.
+  hair:{label:'Hair',icon:'💇',vb:'0 0 200 230',items:[
+    {id:'none',name:'No Bangs',price:0,fur:1,d:none},
+    {id:'tuft',name:'Fluffy Tuft',price:0,fur:1,d:(f,l)=>`<path d="M86 50 Q86 28 98 40 Q102 22 110 40 Q122 30 118 52 Z" fill="${f.c}" ${st(l)}/>`},
+    {id:'swoopBlack',name:'Emo Swoop',price:0,d:(f,l,H)=>swoop(H.c,hStreak(H,'M58 77 C76 58 102 50 124 56 C134 62 134 76 128 92'))},
+    {id:'bob',name:'Short Bob',price:15,b:(f,l,H)=>`<path d="M32 92 Q28 152 60 152 H140 Q172 152 168 92 Q166 32 100 32 Q34 32 32 92Z" fill="${H.c}" ${HL}/>`,
+      d:(f,l,H)=>`<path d="M44 86 Q44 42 100 40 Q156 42 156 86 L146 80 L134 86 L122 79 L110 86 L100 80 L90 86 L78 79 L66 86 L54 80Z" fill="${H.c}" ${HL}/>`+hShine('M66 56 Q100 44 134 56')+hStreak(H,'M72 50 Q78 66 74 80')},
+    {id:'pigtails',name:'Pigtails',price:15,b:(f,l,H)=>[1,-1].map(k=>`<g transform="${k<0?'translate(200 0) scale(-1 1)':''}"><ellipse cx="36" cy="128" rx="15" ry="36" fill="${H.c}" ${HL} transform="rotate(16 36 100)"/></g>`).join(''),
+      d:(f,l,H)=>`<path d="M46 84 C50 50 90 38 120 44 C140 48 154 62 156 84 C140 70 120 64 104 66 C92 74 70 80 46 84Z" fill="${H.c}" ${HL}/>`+hShine('M70 54 Q96 44 124 50')+hStreak(H,'M96 46 Q108 56 112 66')
+        +[46,154].map(x=>`<g fill="#ff8cc6" ${st('#c8578f',2)}><path d="M${x} 92 l-11 -7 v14Z"/><path d="M${x} 92 l11 -7 v14Z"/><circle cx="${x}" cy="92" r="4"/></g>`).join('')},
+    {id:'waves',name:'Long Waves',price:20,b:(f,l,H)=>`<path d="M38 84 Q22 150 34 214 Q46 204 56 216 Q66 204 76 214 H124 Q134 204 144 216 Q154 204 166 214 Q178 150 162 84 Q160 30 100 30 Q40 30 38 84Z" fill="${H.c}" ${HL}/>`,
+      d:(f,l,H)=>`<path d="M46 86 C52 48 96 36 134 44 C150 50 158 66 156 86 C140 70 112 62 84 70 C70 76 56 82 46 86Z" fill="${H.c}" ${HL}/>`+hShine('M70 56 Q100 42 132 50')+hStreak(H,'M120 48 Q136 60 140 76')},
+    {id:'spikes',name:'Emo Spikes',price:20,d:(f,l,H)=>`<path d="M42 88 L48 58 L58 70 L64 42 L76 62 L86 34 L96 58 L108 32 L116 58 L130 38 L134 62 L148 50 L150 72 L160 66 L156 90 Q132 70 100 70 Q68 70 42 88Z" fill="${H.c}" ${HL}/>`+hStreak(H,'M88 42 L95 62 M110 38 L113 60')},
+    // Original anime-style twin tails: star clips, heart-dip fringe, tails that float out in a big curl.
+    {id:'twinTails',name:'Starry Twin Tails',price:25,b:(f,l,H)=>[1,-1].map(k=>`<path transform="${k<0?'translate(200 0) scale(-1 1)':''}" d="M56 56 C12 26 -6 92 10 140 C22 178 6 218 24 258 C42 228 36 196 40 160 C44 120 34 92 62 74Z" fill="${H.c}" ${HL}/>`).join('')
+        +hStreak(H,'M30 70 C12 110 26 150 20 200'),
+      d:(f,l,H)=>`<path d="M46 86 Q46 44 100 42 Q154 44 154 86 Q138 74 124 80 Q112 66 100 78 Q88 66 76 80 Q62 74 46 86Z" fill="${H.c}" ${HL}/>`+hShine('M66 56 Q100 44 134 56')
+        +`<path d="${starPath(54,60,10)} ${starPath(146,60,10)}" fill="#ffd166" ${st('#b8860b',2)}/>`}
   ]},
   top:{label:'Tops',icon:'👕',vb:'26 110 148 100',items:[
     {id:'none',name:'Just Fluff',price:0},
@@ -86,7 +111,7 @@ const CLOSET={
     {id:'batclip',name:'Bat Clip',price:15,d:()=>`<path d="M122 62 Q126 52 134 56 Q138 48 142 56 Q150 52 154 62 Q146 60 144 66 Q140 60 138 66 Q136 60 132 66 Q130 60 122 62Z" fill="#1f1a26" ${st('#000',1.5)}/><circle cx="135" cy="58" r="1.4" fill="#ff6fae"/><circle cx="141" cy="58" r="1.4" fill="#ff6fae"/>`}
   ]}
 };
-const DEFAULT_LOOK={fur:'white',hair:'swoopBlack',top:'tee',bottom:'plaid',legs:'stripeBP',arms:'none',shoes:'boots',acc:'stars'};
+const DEFAULT_LOOK={fur:'white',hair:'swoopBlack',hairColor:'black',top:'tee',bottom:'plaid',legs:'stripeBP',arms:'none',shoes:'boots',acc:'stars'};
 function itemOf(cat,id){const list=CLOSET[cat].items;return list.find(i=>i.id===id)||list[0];}
 function isOwned(p,cat,it){return !it.price||p.owned.includes(cat+':'+it.id);}
 
@@ -102,6 +127,8 @@ function mascotSVG(L,vb,attrs){
   let s=`<svg viewBox="${vb||'0 0 200 270'}" xmlns="http://www.w3.org/2000/svg" ${attrs||''}>`;
   s+=`<g ${st(line)} fill="${f.c}"><ellipse cx="74" cy="40" rx="17" ry="40" transform="rotate(-14 74 70)"/><ellipse cx="126" cy="40" rx="17" ry="40" transform="rotate(14 126 70)"/></g>`;
   s+=`<g fill="${f.e}"><ellipse cx="74" cy="44" rx="8" ry="27" transform="rotate(-14 74 70)"/><ellipse cx="126" cy="44" rx="8" ry="27" transform="rotate(14 126 70)"/></g>`;
+  const hi=hairIds(L), hair=itemOf('hair',hi.h), HC=HAIR_COLORS[hi.c];
+  if(hair.b) s+=hair.b(f,line,HC); // long hair goes behind the head and body
   s+=`<g ${st(line)} fill="${f.c}"><rect x="70" y="186" width="25" height="56" rx="12"/><rect x="105" y="186" width="25" height="56" rx="12"/></g>`;
   s+=`<rect x="60" y="126" width="80" height="84" rx="32" fill="${f.c}" ${st(line)}/><ellipse cx="100" cy="178" rx="24" ry="22" fill="#fff" opacity=".3"/>`;
   if(bot.under) s+=bot.d(f,line);
@@ -114,7 +141,7 @@ function mascotSVG(L,vb,attrs){
   s+=itemOf('arms',L.arms).d(f,line);
   s+=`<ellipse cx="100" cy="92" rx="58" ry="50" fill="${f.c}" ${st(line)}/>`;
   s+=face(dark);
-  s+=itemOf('hair',L.hair).d(f,line);
+  s+=hair.d(f,line,HC);
   s+=itemOf('acc',L.acc).d(f,line);
   return s+'</svg>';
 }
