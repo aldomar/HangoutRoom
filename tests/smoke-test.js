@@ -305,6 +305,49 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal()`);
   check('no duplicate trophies after restore', await ev(`P().room.items.filter(i=>/^trophy/.test(i.type)).length===2`));
 
+  console.log('Squishy: press anywhere, knead, slow rise, poke, two fingers');
+  // Finger events are sent from inside the page. sq(type,id,u,v) presses at body position u,v (-1..1 across the toy).
+  await ev(`window.sq=(t,id,u,v)=>{const r=sqc.getBoundingClientRect(),g=SQ.geo;sqc.dispatchEvent(new PointerEvent(t,{pointerId:id,bubbles:true,clientX:r.left+g.cx+u*g.R*g.sx,clientY:r.top+g.cy+v*g.R*g.sy}));}`);
+  await ev(`show('fidget');setFidTab('squish')`); await sleep(500);
+  const sq0=await ev('P().stats.squish');
+  await ev(`sq('pointerdown',11,0,0)`); await sleep(700);
+  check('pressing the middle makes a deep dent', await ev(`SQ.touches.size===1&&SQ.touches.get(11).d>0.5`), await ev('JSON.stringify([...SQ.touches.values()])'));
+  check('pressing the middle squashes the toy', await ev('SQ.s>0.08'), await ev('SQ.s'));
+  await shot('60-squish-press-middle');
+  await ev(`sq('pointermove',11,0.45,0.1)`); await sleep(200);
+  check('the dent follows the finger (kneading)', await ev('SQ.touches.get(11).u>0.3'));
+  await ev(`sq('pointerup',11,0.45,0.1)`); await sleep(300);
+  check('a squeeze counts as one squish', (await ev('P().stats.squish'))===sq0+1);
+  check('the dent stays after letting go', await ev('SQ.touches.size===0&&SQ.dents.length===1&&SQ.dents[0].d>0.4'), await ev('JSON.stringify(SQ.dents)'));
+  await shot('61-squish-slow-rise');
+  await sleep(1500);
+  check('...and is still rising slowly', await ev('SQ.dents.length===1&&SQ.dents[0].d>0.05&&SQ.dents[0].d<0.6'), await ev('JSON.stringify(SQ.dents)'));
+  await sleep(4000);
+  check('...until it is smooth again', await ev('SQ.dents.length===0'));
+  await ev(`sq('pointerdown',12,-0.3,-0.3)`); await sleep(50); await ev(`sq('pointerup',12,-0.3,-0.3)`); await sleep(60);
+  check('a quick poke jiggles', await ev('Math.abs(SQ.wob)>0.005'), await ev('SQ.wob'));
+  check('a quick poke is not counted as a squish', (await ev('P().stats.squish'))===sq0+1);
+  await sleep(800);
+  await ev(`sq('pointerdown',21,-0.6,0);sq('pointerdown',22,0.6,0)`); await sleep(700);
+  check('two fingers make two dents', await ev('SQ.touches.size===2'));
+  check('squeezing both sides makes it narrower and taller', await ev('SQ.geo.sx<0.92&&SQ.geo.sy>1.05'), await ev('JSON.stringify(SQ.geo)'));
+  await shot('62-squish-two-fingers');
+  await ev(`sq('pointerup',21,-0.6,0)`); await sleep(50); await ev(`sq('pointerup',22,0.6,0)`); await sleep(100);
+  check('a two-finger squeeze counts once', (await ev('P().stats.squish'))===sq0+2);
+  await sleep(5500);
+  await ev(`sq('pointerdown',23,0,-0.6)`); await sleep(700);
+  check('pressing the top makes it flatter and wider', await ev('SQ.geo.sx>1.05&&SQ.geo.sy<0.9'), await ev('JSON.stringify(SQ.geo)'));
+  await shot('62b-squish-top'); await ev(`sq('pointerup',23,0,-0.6)`); await sleep(100);
+  await ev(`sqc.dispatchEvent(new PointerEvent('pointerdown',{pointerId:31,bubbles:true,clientX:sqc.getBoundingClientRect().left+4,clientY:sqc.getBoundingClientRect().top+4}))`);
+  check('pressing outside the toy does nothing', await ev('SQ.touches.size===0'));
+  await ev(`sqc.dispatchEvent(new PointerEvent('pointerup',{pointerId:31,bubbles:true}))`);
+  for(const k of await ev('Object.keys(SQUISHIES)')){
+    await ev(`P().fid.squish='${k}';sq('pointerdown',40,0.4,0.15)`); await sleep(450);
+    await shot('63-squish-'+k); await ev(`sq('pointerup',40,0.4,0.15)`); await sleep(50);
+  }
+  check('every squishy design draws with dents', await ev("cur==='fidget'"));
+  await ev(`P().fid.squish='mochi';show('room')`);
+
   console.log('Phone portrait + other screens');
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
   await send('Emulation.setTouchEmulationEnabled',{enabled:true});

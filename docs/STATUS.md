@@ -6,7 +6,9 @@ _Last updated: 2026-11-15_
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
 - **Phase 2 (Art Desk): done** (v1.3 merged). Checked on an Android phone: it works, and drawings survive closing the app.
 - **Phase 3 (Photocard Wall): done** (v1.4 merged). The owner checked it on the device: all checks passed (2026-11-15).
-- **Phase 4 (Soccer Field): built, PR open as v1.5** on branch `feature/soccer`. Not yet tried on a device.
+- **Phase 4 (Soccer Field): done** (v1.5 merged), with the swipe-power fix and Bronze/Silver/Gold trophies. Checked on the device.
+- **Squishy upgrade: built, PR open as v1.6** on branch `feature/squishy` (asked for by the owner before Phase 5:
+  the squishy only reacted at the edge). Not yet tried on a device.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -20,7 +22,8 @@ _Last updated: 2026-11-15_
 - PR #2 "App version + save upgrades (v1.2)": merged.
 - PR #3 "Art Desk (v1.3)": merged.
 - PR #4 "Photocard Wall (v1.4)": merged.
-- PR "Soccer Field (v1.5)" on branch `feature/soccer` (branched from `main` after #4): open.
+- PR #5 "Soccer Field (v1.5)": merged.
+- PR "Squishy upgrade (v1.6)" on branch `feature/squishy` (branched from `main` after #5): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -50,7 +53,7 @@ _Last updated: 2026-11-15_
   - restoring a v1.3 backup (no card fields) and a v1.4 backup with cards and pins
   - Back from Photocards goes to the room; maker and binder at phone portrait and landscape sizes
 - **On a device (2026-11-15):** the owner installed v1.4 and all checks from the PR passed.
-- **Soccer Field (v1.5)**: `tests/smoke-test.js` now has 99 checks, all passing with no console errors. New checks
+- **Soccer Field (v1.5)**: `tests/smoke-test.js` now has 99 checks (v1.5), all passing with no console errors. New checks
   (the keeper's guess is fixed in the test so results are repeatable):
   - the window opens the Soccer screen on Easy with Mochi; a goal pays +1 coin; a keeper save; a wide shot
   - tapping a spot in the goal shoots there; a real swipe kicks the ball in the swiped direction
@@ -60,6 +63,10 @@ _Last updated: 2026-11-15_
   - Back goes to the room; restoring a v1.4 backup (no soccer fields) and a v1.5 one; phone portrait and landscape
   - trophies: Gold for a perfect on Hard, shown in the result box; Silver from an earlier perfect on Medium;
     never given twice (also after a restore); not in the Shop; never placed behind Fuzzy. 99 checks in all.
+- **Squishy upgrade (v1.6)**: 114 checks (incl. side squeeze = taller, top press = flatter), all passing, no console errors. New: pressing the middle makes a deep dent
+  and squashes the toy; the dent follows the finger; a squeeze counts once; the dent stays and rises back over ~5 s;
+  a quick poke jiggles and is not counted; two fingers make two dents and squash more (counted once);
+  pressing outside the toy does nothing; every squishy design draws with dents.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -107,6 +114,12 @@ _Last updated: 2026-11-15_
     Even a gentle swipe is about as strong as a tap, and full power rises to the top corners without going over the bar.
     To tune it, change the numbers in `power=` and `v=` in `socRelease()`.
 
+- Squishy upgrade (2026-11-15): the owner found the squishy dull because only pokes near the edge did anything.
+  Now a dent forms anywhere under each finger (multi-touch), deepens while held, follows the finger, and slowly rises
+  back after release (memory foam). A quick poke (under 0.25 s) jiggles and doesn't count as a squish. No save changes.
+  After the first try: squeezing the sides now makes it narrower and taller (it used to get shorter), and pressing the
+  top makes it flatter and wider. The scene sits lower so the ears stay in view when it stretches tall.
+
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
 - $0 beyond the Claude subscription. Use free tiers and free tools only.
@@ -138,10 +151,12 @@ _Last updated: 2026-11-15_
 4. ~~Plan Phase 4 (Soccer Field) and get it agreed before coding.~~ Agreed and built (v1.5 PR).
 
 ## Next steps (Phase 4)
-1. Owner: build v1.5, install it **over** the app, and play the Soccer Field (see the PR for what to check).
-2. Check that it runs smoothly on her tablet, and that soccer progress survives closing the app.
-3. Merge the v1.5 PR.
-4. Plan Phase 5 (Stage rhythm game) and get it agreed before coding.
+1. ~~Owner: build v1.5, install it over the app, and play the Soccer Field.~~ Done (swipes fixed, trophies added).
+2. ~~Merge the v1.5 PR.~~ Merged.
+
+## Next steps (squishy upgrade, then Phase 5)
+1. Owner: build v1.6 and try the squishy (see the PR). Merge the v1.6 PR.
+2. Plan Phase 5 (Stage rhythm game) and get it agreed before coding.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of the script in `index.html`) is the app version shown in Settings. It must match
