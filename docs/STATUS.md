@@ -1,9 +1,11 @@
 # Status / handover
 
-_Last updated: 2026-11-14_
+_Last updated: 2026-11-15_
 
 ## Where we are
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): finishing** (v1.2 PR open).
+- **Phase 2 (Art Desk): built, PR open as v1.3** on branch `feature/art-desk`. It is based on the v1.2 branch,
+  so merge the v1.2 PR first. Then check it on the tablet (see Next steps).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -15,6 +17,7 @@ _Last updated: 2026-11-14_
   That commit also picked up a root `.idea/` folder (Android Studio settings from opening the repo root).
 - PR #1 "v1 cleanup (v1.1)": merged. Stopped tracking the root `.idea/` and added it to `.gitignore`.
 - PR "App version + save upgrades (v1.2)" on branch `feature/app-version`: open.
+- PR "Art Desk (v1.3)" on branch `feature/art-desk` (branched from `feature/app-version`): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -22,8 +25,15 @@ _Last updated: 2026-11-14_
 - `index.html` was tested in headless Chrome at tablet (1180×820) and phone (412×860) sizes:
   every screen, buying, the pop-it flip bonus (+8 coins per full board), squishy and spinner physics,
   decorating, saving across reload, and the Android back/backup hooks with a fake bridge. No console errors.
-- **The APK has not been built yet.** The Kotlin and Gradle files were written without an Android SDK.
-  The first sync/build in Android Studio is the real test, so expect a small fix or two.
+- The APK builds in Android Studio and runs on the device (see "Where we are").
+- **Art Desk (v1.3)** was tested with a small script that drives the installed desktop Chrome (headless) through its
+  DevTools connection, so nothing had to be installed. 36 checks passed with no console errors:
+  - every tool, stamp, undo, clear and paper; saving and the coin rules
+  - the gallery, and hanging/taking down/deleting posters
+  - the "Save your drawing?" prompt on Back, and a draft surviving a reload
+  - a backup with drawings, wiping and restoring it, and restoring an old backup without drawings
+  - tablet, phone portrait and phone landscape sizes
+- Not tested yet: IndexedDB inside the Android WebView, on the real tablet.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -37,6 +47,13 @@ _Last updated: 2026-11-14_
   No AndroidX, no `INTERNET`. Debug-signed APK, sideloaded.
 - Music is off by default. Sounds are on.
 - Backup: a copy/paste code or a `.json` file (Android save picker in the APK).
+- Art Desk (agreed 2026-11-15):
+  - **Backups include drawings**, with a switch in the backup screen (on by default) to leave them out.
+    Restoring a backup with drawings replaces the drawings on the device. Restoring one without drawings keeps them.
+  - **Coins:** +5 per new drawing (needs 3+ strokes), for the first 5 new drawings a day. Updating a saved
+    drawing pays nothing.
+  - **Posters** are free, up to 4 per room. Deleting a drawing takes its poster down.
+  - Drawings are stored in IndexedDB as WebP images (PNG/JPEG if WebP isn't available), with a localStorage fallback.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -55,12 +72,22 @@ _Last updated: 2026-11-14_
 3. ~~Fix whatever the first build or the real tablet shows.~~ Nothing to fix so far.
 4. ~~`APP_VERSION`, About line, save-upgrade hook.~~ Done in the v1.2 PR. After merging, install v1.2 **over** the
    current app and check her room is still there and Settings shows "version 1.2". That completes Phase 1.
-5. Then plan Phase 2 (Art Desk) and get it agreed before coding.
+5. ~~Plan Phase 2 (Art Desk) and get it agreed.~~ Agreed and built (v1.3 PR).
+
+## Next steps (Phase 2)
+1. Owner: merge v1.2, then the v1.3 PR. Build and install **over** the current app.
+2. On the tablet:
+   - Open the Art Desk, draw, save, close the app fully, and reopen. The drawing must still be in the Gallery.
+     (This proves IndexedDB works in the WebView.)
+   - Hang a poster.
+   - Make a backup file and check it says how many drawings it holds.
+3. Fix anything the tablet shows, then plan Phase 3 (Photocard Wall).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of the script in `index.html`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 1 now.
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 2 since v1.3
+  (Art Desk: `stats.drawings`, `artPay`, poster room items).
   Bump it only when the save shape changes, and add a step to `MIGRATIONS` that upgrades the previous version.
 - `fixDB()` runs on the saved data when the app starts **and** on restored backups, then `normalize()` fills in
   per-profile defaults. So old saves and old backups always get upgraded the same way.
@@ -68,4 +95,4 @@ _Last updated: 2026-11-14_
 
 ## Open questions for the owner
 - Her device model and screen size (to tune layouts).
-- Should backups include drawings once the Art Desk exists (bigger backup files)?
+- ~~Should backups include drawings?~~ Yes, with a switch (decided 2026-11-15).

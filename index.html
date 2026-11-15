@@ -13,9 +13,10 @@
 
   Map of the code:
     1. CSS (look & layout)
-    2. HTML screens: profiles, room, fidget shelf, closet, + modal/toast
-    3. JS: save data -> art helpers -> mascot + closet items -> room + decor
-           -> fidgets (pop-it, squishy, spinner) -> sound/music -> screens/wiring
+    2. HTML screens: profiles, room, fidget shelf, closet, art desk, + modal/toast
+    3. JS: save data (+ drawings store) -> art helpers -> mascot + closet items -> room + decor
+           -> fidgets (pop-it, squishy, spinner) -> sound/music -> screens/wiring -> art desk
+  Drawings are kept in IndexedDB ("hangoutRoomArt"), not localStorage, because they are big.
 -->
 <style>
 :root{--bg:#231b2e;--panel:#2f2540;--panel2:#3b2f52;--ink:#fff;--muted:#cbbbe6;--pink:#ff8cc6;--purple:#a97cff;--mint:#8ff0d0;--gold:#ffd166;--line:#4a3d63}
@@ -117,6 +118,33 @@ h1{margin:4px 0;font-size:clamp(26px,5vw,42px);text-shadow:0 3px 0 #000}
 .fid-tip{position:absolute;bottom:8px;left:0;right:0;text-align:center;color:var(--muted);font-weight:800;font-size:14px;pointer-events:none}
 .skins{display:flex;gap:8px;padding:8px 10px;padding-bottom:max(10px,env(safe-area-inset-bottom));overflow-x:auto;flex:0 0 auto;background:var(--panel);border-top:3px solid var(--line)}
 
+/* art desk */
+.art-body{flex:1;min-height:0;display:flex;flex-direction:column}
+.art-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#3b2f52,#1d1626 75%)}
+.art-pad{position:relative;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 0 0 4px var(--line),0 8px 0 4px rgba(0,0,0,.3);touch-action:none}
+.art-pad canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#artLive.marker{opacity:.5}
+#artLive.neon{filter:drop-shadow(0 0 4px var(--glow)) drop-shadow(0 0 10px var(--glow))}
+.art-tools{flex:0 0 auto;max-height:48vh;overflow-y:auto;background:var(--panel);border-top:3px solid var(--line);padding:8px;padding-bottom:max(8px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px}
+.arow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.abtn{min-width:56px;height:58px;padding:4px 6px;border-radius:14px;background:var(--panel2);border:3px solid transparent;box-shadow:0 3px 0 #1a1424;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:22px;line-height:1}
+.abtn small{font-size:14px;font-weight:800}
+.abtn:active{transform:translateY(2px);box-shadow:0 1px 0 #1a1424}
+.abtn.on{border-color:var(--pink);background:#4b3a66}
+.abtn.pink{background:var(--pink);color:#3a1830;box-shadow:0 3px 0 #c8578f}
+.sdot{display:block;border-radius:50%;background:#fff}
+.swatch{width:48px;height:48px;border-radius:50%;border:4px solid #0005;box-shadow:0 3px 0 #1a1424}
+.swatch.on{border-color:#fff;transform:scale(1.1)}
+@media (orientation:landscape){.art-body{flex-direction:row}.art-tools{flex:0 0 min(310px,38vw);max-height:none;border-top:0;border-left:3px solid var(--line)}}
+.art-gal{flex:1;min-height:0;display:flex;flex-direction:column}
+.gal-head{display:flex;align-items:center;gap:10px;padding:10px 10px 0;flex-wrap:wrap}
+.gal-head .hint{padding:0}
+.gal-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.tile .tv.wide{aspect-ratio:10/7;background:#fff}
+.tile .tv img{width:100%;height:100%;object-fit:cover;display:block}
+.art-big{width:100%;aspect-ratio:10/7;border-radius:12px;overflow:hidden;border:3px solid var(--line)}
+.art-big img{width:100%;height:100%;display:block}
+
 /* modal, toast, floaties */
 .modal{position:fixed;inset:0;background:rgba(10,6,16,.65);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
 .modal-card{background:var(--panel);border:3px solid var(--line);border-radius:24px;padding:18px;width:min(460px,100%);max-height:90vh;overflow:auto;box-shadow:0 10px 0 rgba(0,0,0,.3)}
@@ -215,6 +243,37 @@ textarea.inp{height:110px;font-size:11px;font-family:monospace;resize:none}
   </div>
 </div>
 
+<!-- ART DESK -->
+<div id="scr-art" class="screen">
+  <div class="topbar">
+    <button class="btn small ghost" id="artBack">⬅ Room</button>
+    <div class="title">🎨 Art Desk</div>
+    <div class="coins coinsDisp"></div>
+    <button class="btn small ghost" id="artGalBtn">🖼️ Gallery</button>
+  </div>
+  <div id="artPadView" class="art-body">
+    <div class="art-stage" id="artStage">
+      <div class="art-pad" id="artPad"><canvas id="artCv" width="800" height="560"></canvas><canvas id="artLive" width="800" height="560"></canvas></div>
+    </div>
+    <div class="art-tools" id="artTools">
+      <div class="arow">
+        <button class="abtn" data-act="undo">↩️<small>Undo</small></button>
+        <button class="abtn" data-act="clear">🗑️<small>Clear</small></button>
+        <button class="abtn" data-act="paper">📄<small>Paper</small></button>
+        <button class="abtn pink" data-act="save">💾<small>Save</small></button>
+      </div>
+      <div class="arow" id="artToolRow"></div>
+      <div class="arow hidden" id="artStampRow"></div>
+      <div class="arow" id="artSizeRow"></div>
+      <div class="arow" id="artColRow"></div>
+    </div>
+  </div>
+  <div id="artGalView" class="art-gal hidden">
+    <div class="gal-head"><button class="btn pink" id="artNewBtn">＋ New drawing</button><div class="hint" id="galInfo"></div></div>
+    <div class="grid gal-grid" id="artGrid"></div>
+  </div>
+</div>
+
 <div id="modal" class="modal hidden"><div class="modal-card"><div id="modalTitle"></div><div id="modalBody"></div><div id="modalBtns"></div></div></div>
 <div id="toast"></div>
 
@@ -229,18 +288,23 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.2';      // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.3';     // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=1;           // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=2;           // version of the save-data shape; bump only when the shape changes
+const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true};
 
-function freshDB(){return {version:DB_VERSION,profiles:[],activeId:null,settings:{sound:true,music:false}};}
+function freshDB(){return {version:DB_VERSION,profiles:[],activeId:null,settings:Object.assign({},DEFAULT_SETTINGS)};}
 
 // Save-data upgrades. When the shape changes, bump DB_VERSION and add a step here
 // that turns a save of the previous version into the new one, e.g.
 //   2: d=>{ d.profiles.forEach(p=>{ p.drawings=p.drawings||[]; }); },
 // Steps run in order, so a very old save or backup is upgraded one version at a time.
 // Never rename or remove saved fields or item ids.
-const MIGRATIONS={};
+const MIGRATIONS={
+  // v1.3 Art Desk: drawings live in IndexedDB (see ArtStore below). Profiles count them in
+  // stats.drawings and track today's art coins in artPay; posters are room items {type:'poster', art:<drawing id>}.
+  2: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&p.stats&&typeof p.stats.drawings!=='number') p.stats.drawings=0; }); }
+};
 
 // Used for the saved data on load AND for restored backups, so both get the same fixes.
 // (Per-profile defaults are filled in later by normalize() in section 6.)
@@ -249,7 +313,7 @@ function fixDB(d){
   let v=Number(d.version)||1;
   while(v<DB_VERSION){v++;if(MIGRATIONS[v])MIGRATIONS[v](d);}
   d.version=v; // a backup from a newer app keeps its higher number and extra fields
-  d.settings=Object.assign({sound:true,music:false},d.settings||{});
+  d.settings=Object.assign({},DEFAULT_SETTINGS,d.settings||{});
   d.profiles=Array.isArray(d.profiles)?d.profiles.filter(p=>p&&typeof p==='object'):[];
   if(!d.profiles.some(p=>p.id===d.activeId)) d.activeId=null;
   return d;
@@ -262,6 +326,59 @@ DB=fixDB(DB);
 function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(DB));}catch(e){toast('Hmm, could not save!');}}
 function saveSoon(){clearTimeout(saveSoon.t);saveSoon.t=setTimeout(save,600);}
 const P=()=>DB.profiles.find(p=>p.id===DB.activeId);
+
+// ---------- Drawings store (Art Desk) ----------
+// Drawings are too big for localStorage, so they live in IndexedDB. One record per drawing:
+//   {id, profileId, created, updated, paper, ink, thumb}
+//   ink   = the drawing itself (see-through image, data URL); paper = paper colour id
+//   thumb = small picture with the paper behind it (gallery + room posters)
+// A record with draft:true is an unsaved drawing kept while the app is in the background.
+// If IndexedDB is not available, drawings fall back to the localStorage key ART_LS (smaller limit),
+// and move into IndexedDB automatically the next time it works.
+const ART_DB='hangoutRoomArt', ART_LS='hangoutRoom.art';
+let ART_THUMBS={}; // drawing id -> thumb, used to draw posters in the room
+const ArtStore={
+  mode:'', db:null, _ready:null,
+  ready(){
+    if(!this._ready) this._ready=new Promise(done=>{
+      let settled=false; const finish=m=>{if(!settled){settled=true;this.mode=m;done();}};
+      try{
+        const q=indexedDB.open(ART_DB,1);
+        q.onupgradeneeded=()=>{q.result.createObjectStore('art',{keyPath:'id'});};
+        q.onsuccess=()=>{if(settled){q.result.close();return;}this.db=q.result;finish('idb');};
+        q.onerror=e=>{try{e.preventDefault();}catch(_){}finish('ls');};
+      }catch(e){finish('ls');}
+      setTimeout(()=>finish('ls'),4000);
+    }).then(()=>this._moveFromLS());
+    return this._ready;
+  },
+  _moveFromLS(){
+    const l=this._ls(); if(this.mode!=='idb'||!l.length) return;
+    return this._tx('readwrite',s=>{l.forEach(r=>s.put(r));}).then(()=>localStorage.removeItem(ART_LS),()=>{});
+  },
+  _tx(mode,fn){return new Promise((ok,bad)=>{
+    const t=this.db.transaction('art',mode), r=fn(t.objectStore('art'));
+    t.oncomplete=()=>ok(r?r.result:undefined); t.onerror=t.onabort=()=>bad(t.error);
+  });},
+  _ls(){try{const l=JSON.parse(localStorage.getItem(ART_LS));return Array.isArray(l)?l:[];}catch(e){return [];}},
+  _setLs(l){if(l.length)localStorage.setItem(ART_LS,JSON.stringify(l));else localStorage.removeItem(ART_LS);}, // throws when full
+  all(){return this.ready().then(()=>this.mode==='idb'?this._tx('readonly',s=>s.getAll()):this._ls());},
+  get(id){return this.ready().then(()=>this.mode==='idb'?this._tx('readonly',s=>s.get(id)):this._ls().find(r=>r.id===id));},
+  put(rec){return this.ready().then(()=>{
+    if(this.mode==='idb') return this._tx('readwrite',s=>{s.put(rec);});
+    this._setLs(this._ls().filter(r=>r.id!==rec.id).concat([rec]));
+  });},
+  del(id){return this.delWhere(r=>r.id===id);},
+  delWhere(test){return this.all().then(l=>{
+    const ids=l.filter(test).map(r=>r.id); if(!ids.length) return;
+    if(this.mode==='idb') return this._tx('readwrite',s=>{ids.forEach(i=>s.delete(i));});
+    this._setLs(this._ls().filter(r=>!test(r)));
+  });},
+  replaceAll(list){return this.ready().then(()=>{
+    if(this.mode==='idb') return this._tx('readwrite',s=>{s.clear();list.forEach(r=>s.put(r));});
+    this._setLs(list);
+  });}
+};
 
 /* =========================================================
    2. ART HELPERS
@@ -446,10 +563,17 @@ const DECOR={
   ghost:{name:'Ghost Plush',price:12,box:'-55 -125 110 130',d:()=>`<path d="M-40 0 V-60 Q-40 -112 0 -112 Q40 -112 40 -60 V0 Q30 -12 20 0 Q10 -12 0 0 Q-10 -12 -20 0 Q-30 -12 -40 0Z" fill="#fbf7ff" stroke="#5b4a6b" stroke-width="4"/><ellipse cx="-13" cy="-66" rx="5" ry="7" fill="#2a1f33"/><ellipse cx="13" cy="-66" rx="5" ry="7" fill="#2a1f33"/><ellipse cx="-24" cy="-52" rx="6" ry="4" fill="#ff8fb8" opacity=".6"/><ellipse cx="24" cy="-52" rx="6" ry="4" fill="#ff8fb8" opacity=".6"/><ellipse cx="0" cy="-50" rx="5" ry="6" fill="#2a1f33"/>`},
   bat:{name:'Bat Plush',price:12,box:'-90 -100 180 110',d:()=>`<g fill="#6b46b8" stroke="#1a1422" stroke-width="3"><path d="M-30 -40 Q-60 -80 -85 -50 Q-70 -46 -72 -34 Q-58 -40 -56 -26 Q-44 -34 -30 -24Z"/><path d="M30 -40 Q60 -80 85 -50 Q70 -46 72 -34 Q58 -40 56 -26 Q44 -34 30 -24Z"/></g><path d="M-22 -58 L-16 -82 L-6 -62 M22 -58 L16 -82 L6 -62" fill="#2a2430" stroke="#1a1422" stroke-width="3"/><circle cx="0" cy="-36" r="34" fill="#2a2430" stroke="#1a1422" stroke-width="4"/><circle cx="-12" cy="-42" r="7" fill="#fff"/><circle cx="12" cy="-42" r="7" fill="#fff"/><circle cx="-11" cy="-41" r="3.5" fill="#ff4fa3"/><circle cx="13" cy="-41" r="3.5" fill="#ff4fa3"/><path d="M-6 -24 l3 6 3 -6 M2 -24 l3 6 3 -6" fill="#fff"/>`},
   blob:{name:'Squish Plush',price:10,box:'-60 -90 120 100',d:()=>`<path d="M-48 0 Q-56 -70 0 -76 Q56 -70 48 0Z" fill="#a6f0d5" stroke="#4fa889" stroke-width="4"/><circle cx="-14" cy="-38" r="5" fill="#2a1f33"/><circle cx="14" cy="-38" r="5" fill="#2a1f33"/><path d="M-6 -28 q3 4 6 0 q3 4 6 0" stroke="#2a1f33" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="-26" cy="-28" rx="7" ry="4" fill="#ff8fb8" opacity=".6"/><ellipse cx="26" cy="-28" rx="7" ry="4" fill="#ff8fb8" opacity=".6"/>`},
+  // A framed drawing from the Art Desk. Not sold in the Shop (art:1); made with "Hang in room" in the Gallery.
+  // The room item has an extra field: art = the drawing's id.
+  poster:{name:'My Poster',price:0,wall:1,art:1,box:'-82 -138 164 146',d:i=>{const t=i&&ART_THUMBS[i.art];
+    return `<rect x="-75" y="-124" width="150" height="110" rx="6" fill="#fff" stroke="#5b4a6b" stroke-width="5"/>`
+      +(t?`<image href="${esc(t)}" x="-68" y="-117" width="136" height="96" preserveAspectRatio="xMidYMid slice"/>`
+         :`<rect x="-68" y="-117" width="136" height="96" fill="#e9ddff"/><text x="0" y="-55" text-anchor="middle" font-size="40">🎨</text>`)
+      +`<circle cx="0" cy="-124" r="8" fill="#ff8cc6" stroke="#2b2235" stroke-width="3"/>`;}},
   moon:{name:'Moon Lamp',price:15,box:'-60 -140 120 150',d:()=>`<rect x="-26" y="-14" width="52" height="14" rx="6" fill="#3b2f52"/><rect x="-4" y="-50" width="8" height="38" fill="#3b2f52"/><path d="M8 -128 A40 40 0 1 0 8 -48 A30 30 0 1 1 8 -128Z" fill="#ffe9a8" stroke="#e8b84a" stroke-width="3" filter="url(#glow)"/>`}
 };
 
-const LOCKED={window:'⚽ The Soccer Field',photo:'📸 The Photocard Wall',desk:'🎨 The Art Desk'};
+const LOCKED={window:'⚽ The Soccer Field',photo:'📸 The Photocard Wall'};
 function sign(x,y,text,locked){
   const w=Math.round(text.length*11.5+34);
   return `<g${locked?'':' class="bob"'}><rect x="${x-w/2}" y="${y-20}" width="${w}" height="40" rx="20" fill="${locked?'#4a3d63':'#ff8cc6'}" stroke="#2b2235" stroke-width="3"/><text x="${x}" y="${y+7}" text-anchor="middle" font-size="20" font-weight="800" fill="${locked?'#e2d8f0':'#3a1830'}">${text}</text></g>`;
@@ -464,8 +588,8 @@ function furniture(){
   s+=`<g class="hot" data-hot="shelf"><rect x="350" y="222" width="300" height="148" fill="transparent"/><path d="M390 316 v24 h14 M610 316 v24 h-14" stroke="#c8578f" stroke-width="6" fill="none"/><rect x="384" y="250" width="80" height="50" rx="14" fill="#ff6b8a" stroke="#2b2235" stroke-width="3"/>${[0,1,2,3].map(i=>`<circle cx="${400+i*16}" cy="266" r="6" fill="${['#ffe066','#69db7c','#4dabf7','#b197fc'][i]}"/><circle cx="${400+i*16}" cy="284" r="6" fill="${['#b197fc','#ffe066','#69db7c','#4dabf7'][i]}"/>`).join('')}<ellipse cx="484" cy="252" rx="7" ry="16" fill="#fff6fa" stroke="#c9a3b8" stroke-width="2" transform="rotate(-15 484 262)"/><ellipse cx="510" cy="252" rx="7" ry="16" fill="#fff6fa" stroke="#c9a3b8" stroke-width="2" transform="rotate(15 510 262)"/><path d="M468 302 C462 262 532 262 526 302Z" fill="#fff6fa" stroke="#c9a3b8" stroke-width="3"/><circle cx="488" cy="286" r="2.5" fill="#2a1f33"/><circle cx="506" cy="286" r="2.5" fill="#2a1f33"/>${[0,1,2].map(k=>{const a=k*TAU/3-Math.PI/2;return `<circle cx="${(585+Math.cos(a)*16).toFixed(1)}" cy="${(278+Math.sin(a)*16).toFixed(1)}" r="11" fill="#6d3fd6" stroke="#2b2235" stroke-width="2"/>`;}).join('')}<circle cx="585" cy="278" r="7" fill="#ffd166" stroke="#2b2235" stroke-width="2"/><rect x="365" y="302" width="270" height="16" rx="6" fill="#ff8cc6" stroke="#2b2235" stroke-width="4"/>${sign(500,352,'🫧 Fidget Shelf',false)}</g>`;
   // closet (open!)
   s+=`<g class="hot" data-hot="closet"><rect x="770" y="150" width="190" height="400" rx="16" fill="#6b46b8" stroke="#3e2670" stroke-width="5"/><rect x="785" y="168" width="78" height="365" rx="10" fill="#7d58cc" stroke="#3e2670" stroke-width="3"/><rect x="867" y="168" width="78" height="365" rx="10" fill="#7d58cc" stroke="#3e2670" stroke-width="3"/><circle cx="852" cy="350" r="7" fill="#ffd166"/><circle cx="878" cy="350" r="7" fill="#ffd166"/><path d="${heartPath(824,240,14)}" fill="#ff8cc6"/><path d="${starPath(906,236,16)}" fill="#ffd166"/><rect x="858" y="440" width="15" height="70" rx="6" fill="url(#stripeBP)" filter="url(#fuzz)" transform="rotate(8 865 440)"/><rect x="788" y="548" width="22" height="16" fill="#3e2670"/><rect x="920" y="548" width="22" height="16" fill="#3e2670"/>${sign(865,126,'👗 Closet',false)}</g>`;
-  // art desk (locked)
-  s+=`<g class="hot" data-hot="desk"><rect x="58" y="432" width="16" height="150" fill="#e48fbf" stroke="#2b2235" stroke-width="3"/><rect x="276" y="432" width="16" height="150" fill="#e48fbf" stroke="#2b2235" stroke-width="3"/><rect x="190" y="432" width="90" height="60" rx="6" fill="#ffb3d9" stroke="#2b2235" stroke-width="3"/><circle cx="235" cy="462" r="5" fill="#2b2235"/><rect x="40" y="410" width="270" height="22" rx="6" fill="#ffb3d9" stroke="#2b2235" stroke-width="4"/><rect x="80" y="396" width="90" height="14" rx="3" fill="#fff" stroke="#2b2235" stroke-width="3"/><path d="M95 402 q20 -6 40 0" stroke="#a97cff" stroke-width="3" fill="none"/><rect x="236" y="374" width="34" height="36" rx="6" fill="#a97cff" stroke="#2b2235" stroke-width="3"/>${[['#ff6b8a',-8],['#ffd166',0],['#4dabf7',8]].map(([c,o])=>`<rect x="${249+o}" y="350" width="6" height="28" rx="2" fill="${c}" stroke="#2b2235" stroke-width="1.5" transform="rotate(${o} 252 378)"/>`).join('')}${sign(175,370,'🎨 Art Desk 🔒',true)}</g>`;
+  // art desk (open since v1.3)
+  s+=`<g class="hot" data-hot="desk"><rect x="58" y="432" width="16" height="150" fill="#e48fbf" stroke="#2b2235" stroke-width="3"/><rect x="276" y="432" width="16" height="150" fill="#e48fbf" stroke="#2b2235" stroke-width="3"/><rect x="190" y="432" width="90" height="60" rx="6" fill="#ffb3d9" stroke="#2b2235" stroke-width="3"/><circle cx="235" cy="462" r="5" fill="#2b2235"/><rect x="40" y="410" width="270" height="22" rx="6" fill="#ffb3d9" stroke="#2b2235" stroke-width="4"/><rect x="80" y="396" width="90" height="14" rx="3" fill="#fff" stroke="#2b2235" stroke-width="3"/><path d="M95 402 q20 -6 40 0" stroke="#a97cff" stroke-width="3" fill="none"/><rect x="236" y="374" width="34" height="36" rx="6" fill="#a97cff" stroke="#2b2235" stroke-width="3"/>${[['#ff6b8a',-8],['#ffd166',0],['#4dabf7',8]].map(([c,o])=>`<rect x="${249+o}" y="350" width="6" height="28" rx="2" fill="${c}" stroke="#2b2235" stroke-width="1.5" transform="rotate(${o} 252 378)"/>`).join('')}${sign(175,370,'🎨 Art Desk',false)}</g>`;
   return s;
 }
 
@@ -502,12 +626,14 @@ function newProfile(name,fur){
     room:{wall:'lavender',floor:'wood',items:[]},fid:{pop:'rainbow',squish:'mochi',spin:'galaxy'}};
   p.room.items.push({uid:uid(),type:'starRug',x:500,y:665,placed:true});
   p.room.items.push({uid:uid(),type:'plant',x:705,y:560,placed:true});
+  normalize(p);
   return p;
 }
 function normalize(p){
   if(!p.id) p.id=uid();
   if(!p.name) p.name='Room';
-  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0},p.stats||{});
+  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0},p.stats||{});
+  p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.look=Object.assign({},DEFAULT_LOOK,p.look||{});
   p.owned=Array.isArray(p.owned)?p.owned:[];
   p.room=Object.assign({wall:'lavender',floor:'wood',items:[]},p.room||{});
@@ -617,6 +743,7 @@ function show(n){
   if(n==='room') renderRoom();
   if(n==='closet') renderCloset();
   if(n==='fidget') setFidTab(fidTab);
+  if(n==='art') renderArt();
   updateCoins();
 }
 
@@ -647,13 +774,16 @@ function renameModal(p,field,title){
   modal(title,`<input id="rnName" class="inp" maxlength="16" value="${esc(p[field])}" autocomplete="off">`,[{text:'Cancel',cls:'ghost'},{text:'Save',cls:'pink',on:()=>{const n=$('#rnName').value.trim();if(n){p[field]=n;save();}if(cur==='profiles')renderProfiles();if(cur==='closet')renderCloset();if(cur==='room')renderRoom();}}]);
 }
 function delModal(p){
-  modal('Delete this room?',`${esc(p.name)}'s room, coins, outfits and decorations will be gone forever.`,[{text:'Keep it',cls:'pink'},{text:'Delete',cls:'ghost',on:()=>{DB.profiles=DB.profiles.filter(x=>x.id!==p.id);if(DB.activeId===p.id)DB.activeId=null;save();renderProfiles();}}]);
+  modal('Delete this room?',`${esc(p.name)}'s room, coins, outfits, decorations and drawings will be gone forever.`,[{text:'Keep it',cls:'pink'},{text:'Delete',cls:'ghost',on:()=>{
+    DB.profiles=DB.profiles.filter(x=>x.id!==p.id);if(DB.activeId===p.id)DB.activeId=null;save();renderProfiles();
+    if(ART.owner===p.id) ART.owner=null;
+    ArtStore.delWhere(r=>r.profileId===p.id).catch(()=>{});}}]);
 }
 function enterRoom(){
-  const p=P(); if(!p) return; show('room');
+  const p=P(); if(!p) return; show('room'); loadArtThumbs();
   const today=new Date().toDateString();
   if(p.lastDaily!==today){p.lastDaily=today;save();setTimeout(()=>{earn(10,'Daily gift!',innerWidth/2,innerHeight/2);toast('🎁 Daily gift! +10 coins');},600);}
-  if(!p.seenTip){p.seenTip=true;save();setTimeout(()=>say(`Hi ${p.name}! Tap the shelf or closet ✨`),1200);}
+  if(!p.seenTip){p.seenTip=true;save();setTimeout(()=>say(`Hi ${p.name}! Tap the shelf, closet or desk ✨`),1200);}
 }
 
 /* ---------- room ---------- */
@@ -667,7 +797,7 @@ function renderRoom(){
   s+=`<rect y="470" width="1000" height="230" fill="${F.fill}"/><rect y="470" width="1000" height="230" fill="url(#${F.pat})"/><rect y="458" width="1000" height="16" fill="#00000026"/>`;
   s+=furniture();
   const items=p.room.items.filter(i=>i.placed&&DECOR[i.type]);
-  const deco=i=>`<g class="deco" data-uid="${i.uid}" transform="translate(${Math.round(i.x)} ${Math.round(i.y)})">${DECOR[i.type].d()}</g>`;
+  const deco=i=>`<g class="deco" data-uid="${i.uid}" transform="translate(${Math.round(i.x)} ${Math.round(i.y)})">${DECOR[i.type].d(i)}</g>`;
   s+=items.filter(i=>DECOR[i.type].flat).map(deco).join('');
   const list=items.filter(i=>!DECOR[i.type].flat).map(i=>({y:i.y,h:deco(i)}));
   list.push({y:604,h:mascotG(p)}); list.sort((a,b)=>a.y-b.y);
@@ -693,6 +823,7 @@ function mascotTap(){
 function handleHot(h){
   if(h==='shelf'){SFX.click();show('fidget');}
   else if(h==='closet'){SFX.click();show('closet');}
+  else if(h==='desk'){SFX.click();show('art');}
   else {SFX.locked();toast(`🔒 ${LOCKED[h]} is coming in a future update!`);}
 }
 roomSvg.addEventListener('click',e=>{
@@ -734,12 +865,15 @@ function renderDecoGrid(){
   $$('#decoTabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.dt===decoTab));
   let h='';
   if(decoTab==='mine'){
-    const counts={}; p.room.items.filter(i=>!i.placed&&DECOR[i.type]).forEach(i=>counts[i.type]=(counts[i.type]||0)+1);
+    const stored=p.room.items.filter(i=>!i.placed&&DECOR[i.type]), counts={};
+    stored.filter(i=>!DECOR[i.type].art).forEach(i=>counts[i.type]=(counts[i.type]||0)+1);
     const keys=Object.keys(counts);
-    h=keys.length?keys.map(k=>`<button class="tile" data-place="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${DECOR[k].name}</div><div class="tp cnt">×${counts[k]}</div></button>`).join('')
-      :`<div class="empty">Nothing stored right now! Drag things from your room down here to put them away, or get new stuff in the Shop 🛍️</div>`;
+    // posters are each different, so they get one tile each
+    h=stored.filter(i=>DECOR[i.type].art).map(i=>`<button class="tile" data-place-uid="${i.uid}"><div class="tv"><svg viewBox="${DECOR[i.type].box}">${DECOR[i.type].d(i)}</svg></div><div class="tn">${DECOR[i.type].name}</div></button>`).join('')
+      +keys.map(k=>`<button class="tile" data-place="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${DECOR[k].name}</div><div class="tp cnt">×${counts[k]}</div></button>`).join('');
+    if(!h) h=`<div class="empty">Nothing stored right now! Drag things from your room down here to put them away, or get new stuff in the Shop 🛍️</div>`;
   } else if(decoTab==='shop'){
-    h=Object.entries(DECOR).map(([k,d])=>`<button class="tile" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div><div class="tp">🪙 ${d.price}</div></button>`).join('');
+    h=Object.entries(DECOR).filter(([k,d])=>!d.art).map(([k,d])=>`<button class="tile" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div><div class="tp">🪙 ${d.price}</div></button>`).join('');
   } else {
     const isW=decoTab==='wall', L=isW?WALLS:FLOORS, curId=isW?p.room.wall:p.room.floor;
     h=Object.entries(L).map(([k,v])=>{const own=!v.price||p.owned.includes((isW?'wall:':'floor:')+k);
@@ -747,11 +881,12 @@ function renderDecoGrid(){
   }
   $('#decoGrid').innerHTML=h;
 }
-function spot(type){return DECOR[type].wall?{x:380+Math.random()*240,y:200+Math.random()*60}:{x:400+Math.random()*200,y:560+Math.random()*90};}
+// Posters go on the free bit of wall between the photocard board and the closet.
+function spot(type){if(type==='poster')return {x:686+Math.random()*12,y:200+Math.random()*12};return DECOR[type].wall?{x:380+Math.random()*240,y:200+Math.random()*60}:{x:400+Math.random()*200,y:560+Math.random()*90};}
 $('#decoGrid').addEventListener('click',e=>{
   const t=e.target.closest('.tile'); if(!t) return; const p=P();
-  if(t.dataset.place){
-    const it=p.room.items.find(i=>!i.placed&&i.type===t.dataset.place);
+  if(t.dataset.place||t.dataset.placeUid){
+    const it=p.room.items.find(i=>!i.placed&&(t.dataset.placeUid?i.uid===t.dataset.placeUid:i.type===t.dataset.place));
     if(it){Object.assign(it,spot(it.type),{placed:true});save();SFX.pop();renderRoom();renderDecoGrid();}
   } else if(t.dataset.buy){
     const k=t.dataset.buy, d=DECOR[k];
@@ -772,13 +907,27 @@ function settingsModal(){
   $('#sSwitch').onclick=()=>{closeModal();show('profiles');};
   $('#sBackup').onclick=backupModal;
 }
+// A backup is the save data (DB) as text. With the drawings switch on, it also has
+// artwork:[...drawing records]. Older backups have no artwork list and still restore.
 function backupModal(){
-  const code=JSON.stringify(DB);
-  modal('💾 Backup &amp; Restore','Copy this code (or save it as a file) to keep every room safe. Paste it into Restore on any device to bring the rooms back.<textarea class="inp" id="bkCode" readonly style="margin-top:10px">'+esc(code)+'</textarea>',
-    [{text:'Copy code',cls:'ghost',keep:true,on:()=>copyText(code)},{text:'Save file',cls:'ghost',keep:true,on:()=>downloadFile(code)},{text:'Restore…',cls:'ghost',on:restoreModal},{text:'Close',cls:'pink'}]);
+  const withArt=DB.settings.backupArt!==false;
+  (withArt?ArtStore.all().catch(()=>[]):Promise.resolve([])).then(all=>{
+    const artwork=all.filter(r=>!r.draft);
+    const code=JSON.stringify(withArt?Object.assign({},DB,{artwork}):DB);
+    const kb=code.length/1024, size=kb<1024?Math.max(1,Math.round(kb))+' KB':(kb/1024).toFixed(1)+' MB';
+    const info=withArt?`🎨 ${artwork.length} drawing${artwork.length===1?'':'s'} in this backup · ${size}`:`🎨 Drawings are NOT in this backup · ${size}`;
+    const big=code.length>150000; // a huge code would make the text box slow, so hide it
+    modal('💾 Backup &amp; Restore',`Copy this code (or save it as a file) to keep every room safe. Paste it into Restore on any device to bring the rooms back.
+      <div class="setlist" style="margin-top:10px"><button class="btn ghost" id="bkArt">${withArt?'🎨 Drawings: IN backup':'🎨 Drawings: NOT in backup'}</button></div>
+      <p style="margin:10px 0 0">${info}</p>`+(big?`<p style="margin:6px 0 0">This backup is big, so the code is not shown. Use Copy code or Save file.</p>`
+        :`<textarea class="inp" id="bkCode" readonly style="margin-top:10px">${esc(code)}</textarea>`),
+      [{text:'Copy code',cls:'ghost',keep:true,on:()=>copyText(code)},{text:'Save file',cls:'ghost',keep:true,on:()=>downloadFile(code)},{text:'Restore…',cls:'ghost',on:restoreModal},{text:'Close',cls:'pink'}]);
+    $('#bkArt').onclick=()=>{DB.settings.backupArt=!withArt;save();SFX.click();backupModal();};
+  });
 }
 function copyText(txt){
-  const fallback=()=>{const ta=$('#bkCode');if(ta){ta.select();try{document.execCommand('copy');toast('Copied! 📋');}catch(e){toast('Select the code and copy it');}}};
+  const fallback=()=>{const ta=document.createElement('textarea');ta.className='inp';ta.value=txt;ta.style.cssText='position:fixed;left:-9999px;top:0';document.body.appendChild(ta);ta.select();
+    let ok=false;try{ok=document.execCommand('copy');}catch(e){}ta.remove();toast(ok?'Copied! 📋':'Copying did not work here, use Save file');};
   if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(()=>toast('Copied! 📋'),fallback); else fallback();
 }
 function downloadFile(txt){
@@ -789,14 +938,24 @@ function downloadFile(txt){
   catch(e){toast('Saving files is not supported here — use Copy code');}
 }
 function restoreModal(){
-  modal('♻️ Restore','Paste a backup code, or pick a backup file. This replaces ALL rooms on this device.<textarea class="inp" id="rsCode" placeholder="Paste backup code here" style="margin-top:10px"></textarea><input type="file" id="rsFile" accept=".json,application/json,text/plain" style="margin-top:10px;color:#fff">',
+  modal('♻️ Restore','Paste a backup code, or pick a backup file. This replaces ALL rooms on this device. If the backup has drawings, they replace the drawings here too.<textarea class="inp" id="rsCode" placeholder="Paste backup code here" style="margin-top:10px"></textarea><input type="file" id="rsFile" accept=".json,application/json,text/plain" style="margin-top:10px;color:#fff">',
     [{text:'Cancel',cls:'ghost'},{text:'Restore',cls:'pink',keep:true,on:()=>doRestore($('#rsCode').value)}]);
   $('#rsFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$('#rsCode').value=r.result;};r.readAsText(f);};
 }
+const IMG_URL=/^data:image\/(png|webp|jpeg);base64,[A-Za-z0-9+/=]+$/;
+function okArt(r){return r&&typeof r==='object'&&!r.draft&&typeof r.id==='string'&&typeof r.profileId==='string'
+  &&typeof r.ink==='string'&&IMG_URL.test(r.ink)&&typeof r.thumb==='string'&&IMG_URL.test(r.thumb);}
 function doRestore(txt){
-  try{const d=JSON.parse(txt);if(!d||!Array.isArray(d.profiles))throw new Error('bad');
-    fixDB(d);d.profiles.forEach(normalize);DB=d;save();closeModal();toast('Rooms restored! ✨');show('profiles');}
-  catch(e){toast('Hmm, that backup code did not work.');}
+  let d,art;
+  try{d=JSON.parse(txt);if(!d||!Array.isArray(d.profiles))throw new Error('bad');
+    art=Array.isArray(d.artwork)?d.artwork.filter(okArt):null; delete d.artwork; // drawings go to IndexedDB, not localStorage
+    d=fixDB(d);d.profiles.forEach(normalize);}
+  catch(e){toast('Hmm, that backup code did not work.');return;}
+  const done=msg=>{DB=d;save();ART.owner=null;closeModal();toast(msg);show('profiles');};
+  // No drawings in the backup: keep the drawings already on this device.
+  if(!art){done('Rooms restored! ✨');return;}
+  ArtStore.replaceAll(art).then(()=>done(`Rooms and ${art.length} drawing${art.length===1?'':'s'} restored! ✨`),
+    ()=>done('Rooms restored! The drawings did not fit on this device.'));
 }
 
 /* ---------- closet ---------- */
@@ -1005,7 +1164,279 @@ function drawSpin(dt){
 }
 
 /* =========================================================
-   11. MAIN LOOP + STARTUP
+   11. ART DESK: drawing pad, stamps, gallery, posters
+   The pad is a fixed 800 x 560 canvas, scaled to fit the screen.
+   #artCv holds the drawing. It is see-through where nothing is drawn;
+   the paper colour is the background behind it (so the eraser just erases).
+   #artLive shows the marker/neon line while the finger is down, and is
+   copied onto #artCv when it lifts (so the marker doesn't get darker where it crosses itself).
+   No animation loop: the pad only redraws when she touches it.
+   ========================================================= */
+const ART_W=800,ART_H=560,UNDO_MAX=12;
+const ART_COINS=5,ART_DAILY=5,ART_MIN_MARKS=3,MAX_POSTERS=4; // +5 per new drawing, first 5 a day; needs 3+ strokes
+const PAPERS={white:'#ffffff',dark:'#231b2e',pink:'#ffe3f1'};
+const ART_COLS=['#2b2235','#ffffff','#ff4fa3','#ff8cc6','#ff6b8a','#ffa94d','#ffd166','#69db7c','#8ff0d0','#4dabf7','#a97cff','#6d3fd6','rainbow'];
+const TOOLS={
+  pen:{icon:'✏️',name:'Pen',sizes:[4,10,20]},
+  marker:{icon:'🖍️',name:'Marker',sizes:[14,28,48],live:1},
+  glitter:{icon:'✨',name:'Glitter',sizes:[10,22,40]},
+  neon:{icon:'💡',name:'Neon',sizes:[6,12,22],live:1},
+  eraser:{icon:'🧽',name:'Eraser',sizes:[14,32,64]},
+  stamp:{icon:'⭐',name:'Stamps',sizes:[50,85,130]}
+};
+// Stamps are drawn around (0,0) about 100 wide, then scaled to the brush size.
+const INK='#2b2235';
+function isDark(c){const n=parseInt(c.slice(1),16);return ((n>>16)*299+((n>>8)&255)*587+(n&255)*114)/1000<110;}
+function shape(ctx,d,fill){const p=new Path2D(d);ctx.fillStyle=fill;ctx.fill(p);ctx.lineWidth=5;ctx.lineJoin='round';ctx.strokeStyle=INK;ctx.stroke(p);}
+function dots(ctx,list,c){ctx.fillStyle=c;list.forEach(([x,y,rx,ry])=>{ctx.beginPath();ctx.ellipse(x,y,rx,ry||rx,0,0,TAU);ctx.fill();});}
+const STAMPS={
+  star:{icon:'⭐',d:(c,col)=>shape(c,starPath(0,0,52),col)},
+  heart:{icon:'💗',d:(c,col)=>shape(c,heartPath(0,4,36),col)},
+  bat:{icon:'🦇',d:(c,col)=>{
+    shape(c,'M-24 -4 Q-56 -46 -86 -16 Q-70 -12 -72 0 Q-58 -6 -56 8 Q-44 0 -26 12Z M24 -4 Q56 -46 86 -16 Q70 -12 72 0 Q58 -6 56 8 Q44 0 26 12Z',col);
+    shape(c,'M-20 -18 L-15 -46 L-3 -26Z M20 -18 L15 -46 L3 -26Z',col);
+    shape(c,'M-30 0 A30 30 0 1 0 30 0 A30 30 0 1 0 -30 0Z',col);
+    dots(c,[[-11,-4,7],[11,-4,7]],'#fff');dots(c,[[-10,-3,3.5],[12,-3,3.5]],INK);}},
+  ghost:{icon:'👻',d:(c,col)=>{
+    shape(c,'M-38 46 V-6 Q-38 -50 0 -50 Q38 -50 38 -6 V46 Q29 34 19 46 Q10 34 0 46 Q-10 34 -19 46 Q-29 34 -38 46Z',col);
+    dots(c,[[-13,-8,5,7],[13,-8,5,7],[0,8,5,6]],isDark(col)?'#fff':INK);dots(c,[[-24,6,6,4],[24,6,6,4]],'#ff8fb8');}},
+  moon:{icon:'🌙',d:(c,col)=>{shape(c,'M12 -48 A48 48 0 1 0 12 48 A24 48 0 0 1 12 -48Z',col);shape(c,starPath(30,-20,10),col);}},
+  ball:{icon:'⚽',d:(c,col)=>{
+    shape(c,'M-46 0 A46 46 0 1 0 46 0 A46 46 0 1 0 -46 0Z',col);
+    const pent=[0,1,2,3,4].map(k=>{const a=-Math.PI/2+k*TAU/5;return [Math.cos(a),Math.sin(a)];});
+    c.strokeStyle=INK;c.lineWidth=4;c.beginPath();pent.forEach(([x,y])=>{c.moveTo(x*17,y*17);c.lineTo(x*44,y*44);});c.stroke();
+    c.fillStyle=INK;c.beginPath();pent.forEach(([x,y],k)=>k?c.lineTo(x*18,y*18):c.moveTo(x*18,y*18));c.closePath();c.fill();}}
+};
+
+const acv=$('#artCv'), alive=$('#artLive'), artPad=$('#artPad');
+const actx=acv.getContext('2d',{willReadFrequently:true}), lctx=alive.getContext('2d');
+const ART_FMT=(()=>{try{const c=document.createElement('canvas');c.width=c.height=2;return c.toDataURL('image/webp').indexOf('data:image/webp')===0?'image/webp':'';}catch(e){return '';}})();
+// owner = profile the pad belongs to; editId = the gallery drawing being changed (null = a new drawing)
+const ART={tool:'pen',size:1,col:'#ff4fa3',stamp:'star',paper:'white',view:'pad',owner:null,editId:null,created:0,dirty:false,marks:0,undo:[],stroke:null};
+
+function resetPad(owner){
+  actx.clearRect(0,0,ART_W,ART_H); lctx.clearRect(0,0,ART_W,ART_H);
+  Object.assign(ART,{owner,editId:null,created:0,dirty:false,marks:0,undo:[],stroke:null,paper:'white'});
+  artPad.style.background=PAPERS.white;
+}
+function loadInto(rec,isDraft){
+  const img=new Image();
+  img.onload=()=>{
+    resetPad(rec.profileId); actx.drawImage(img,0,0,ART_W,ART_H);
+    ART.paper=Object.prototype.hasOwnProperty.call(PAPERS,rec.paper)?rec.paper:'white'; artPad.style.background=PAPERS[ART.paper];
+    ART.editId=isDraft?(rec.editId||null):rec.id; ART.created=rec.created||0;
+    ART.marks=isDraft?(rec.marks||0):ART_MIN_MARKS; ART.dirty=!!isDraft;
+  };
+  img.src=rec.ink;
+}
+function artBlank(){const d=actx.getImageData(0,0,ART_W,ART_H).data;for(let i=3;i<d.length;i+=28)if(d[i]>8)return false;return true;}
+function fitPad(){
+  const r=$('#artStage').getBoundingClientRect(); let w=r.width-24,h=r.height-24;
+  if(w<=0||h<=0) return; if(w/h>ART_W/ART_H) w=h*ART_W/ART_H; else h=w*ART_H/ART_W;
+  artPad.style.width=Math.floor(w)+'px'; artPad.style.height=Math.floor(h)+'px';
+}
+function renderArt(){
+  const p=P(); if(!p) return;
+  if(ART.owner!==p.id){
+    resetPad(p.id); ART.view='pad';
+    // bring back a drawing that was not saved when the app last went to the background
+    ArtStore.get('draft-'+p.id).then(d=>{if(d&&ART.owner===p.id&&!ART.dirty&&!ART.marks)loadInto(d,true);}).catch(()=>{});
+  }
+  renderArtTools(); setArtView(ART.view);
+}
+function renderArtTools(){
+  $('#artToolRow').innerHTML=Object.entries(TOOLS).map(([k,t])=>`<button class="abtn ${k===ART.tool?'on':''}" data-tool="${k}">${t.icon}<small>${t.name}</small></button>`).join('');
+  $('#artStampRow').classList.toggle('hidden',ART.tool!=='stamp');
+  $('#artStampRow').innerHTML=Object.entries(STAMPS).map(([k,s])=>`<button class="abtn ${k===ART.stamp?'on':''}" data-stamp="${k}">${s.icon}</button>`).join('');
+  $('#artSizeRow').innerHTML=[8,16,26].map((px,i)=>`<button class="abtn ${i===ART.size?'on':''}" data-size="${i}" aria-label="Size ${i+1}"><span class="sdot" style="width:${px}px;height:${px}px"></span></button>`).join('');
+  $('#artColRow').innerHTML=ART_COLS.map(c=>`<button class="swatch ${c===ART.col?'on':''}" data-col="${c}" aria-label="Colour" style="background:${c==='rainbow'?'conic-gradient(#ff6b8a,#ffd166,#69db7c,#4dabf7,#a97cff,#ff6b8a)':c}"></button>`).join('');
+}
+function setArtView(v){
+  ART.view=v;
+  $('#artPadView').classList.toggle('hidden',v!=='pad'); $('#artGalView').classList.toggle('hidden',v!=='gal');
+  $('#artGalBtn').textContent=v==='gal'?'✏️ Draw':'🖼️ Gallery';
+  if(v==='gal') renderGallery(); else fitPad();
+}
+
+/* ---------- drawing ---------- */
+function artPt(e){const r=acv.getBoundingClientRect();return {x:(e.clientX-r.left)*ART_W/r.width,y:(e.clientY-r.top)*ART_H/r.height};}
+function pushUndo(){ART.undo.push(actx.getImageData(0,0,ART_W,ART_H));if(ART.undo.length>UNDO_MAX)ART.undo.shift();}
+function strokeCol(s,dist){return ART.col==='rainbow'?`hsl(${Math.round(s.hue+dist*0.6)%360},90%,62%)`:ART.col;}
+function artSeg(a,b){ // pen, eraser and glitter draw straight onto the drawing
+  const s=ART.stroke;
+  if(ART.tool==='glitter'){sparkle(a,b,s);return;}
+  actx.save(); actx.lineCap=actx.lineJoin='round'; actx.lineWidth=s.w;
+  if(ART.tool==='eraser'){actx.globalCompositeOperation='destination-out';actx.strokeStyle='#000';} else actx.strokeStyle=strokeCol(s,s.dist);
+  actx.beginPath(); actx.moveTo(a.x,a.y); actx.lineTo(b.x+0.01,b.y); actx.stroke(); actx.restore();
+}
+function sparkle(a,b,s){
+  const n=2*Math.max(1,Math.round(Math.hypot(b.x-a.x,b.y-a.y)/5));
+  for(let i=0;i<n;i++){
+    const t=Math.random(), r=Math.random()*s.w, an=Math.random()*TAU, k=Math.random();
+    const x=a.x+(b.x-a.x)*t+Math.cos(an)*r, y=a.y+(b.y-a.y)*t+Math.sin(an)*r, sz=1+Math.random()*s.w*0.13;
+    actx.fillStyle=ART.col==='rainbow'?`hsl(${Math.floor(Math.random()*360)},95%,65%)`:(k<0.6?ART.col:k<0.8?'#ffffff':'#ffd166');
+    actx.globalAlpha=0.6+Math.random()*0.4; actx.beginPath();
+    if(Math.random()<0.25){const q=sz*2.4;actx.moveTo(x,y-q);actx.quadraticCurveTo(x,y,x+q,y);actx.quadraticCurveTo(x,y,x,y+q);actx.quadraticCurveTo(x,y,x-q,y);actx.quadraticCurveTo(x,y,x,y-q);}
+    else actx.arc(x,y,sz,0,TAU);
+    actx.fill();
+  }
+  actx.globalAlpha=1;
+}
+function drawLive(){ // marker + neon: redraw the whole line on the top canvas
+  const s=ART.stroke, c=lctx, pts=s.pts;
+  c.clearRect(0,0,ART_W,ART_H); c.lineCap=c.lineJoin='round';
+  const pass=(w,col)=>{
+    c.lineWidth=w;
+    if(ART.col==='rainbow'&&!col){let d=0;for(let i=0;i<pts.length;i++){const a=pts[Math.max(0,i-1)],b=pts[i];d+=Math.hypot(b.x-a.x,b.y-a.y);c.strokeStyle=strokeCol(s,d);c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x+0.01,b.y);c.stroke();}return;}
+    c.strokeStyle=col||ART.col; c.beginPath(); c.moveTo(pts[0].x,pts[0].y);
+    for(let i=1;i<pts.length;i++) c.lineTo(pts[i].x,pts[i].y);
+    if(pts.length===1) c.lineTo(pts[0].x+0.01,pts[0].y);
+    c.stroke();
+  };
+  pass(s.w); if(ART.tool==='neon') pass(Math.max(2,s.w*0.35),'#ffffff');
+}
+function commitLive(){
+  actx.save();
+  if(ART.tool==='marker'){actx.globalAlpha=0.5;actx.drawImage(alive,0,0);}
+  else{actx.shadowColor=ART.col==='rainbow'?'#ff8cc6':ART.col;actx.shadowBlur=18;actx.drawImage(alive,0,0);actx.shadowBlur=7;actx.drawImage(alive,0,0);}
+  actx.restore(); lctx.clearRect(0,0,ART_W,ART_H); alive.className='';
+}
+function placeStamp(pt,w){
+  const col=ART.col==='rainbow'?ART_COLS[2+Math.floor(Math.random()*10)]:ART.col;
+  actx.save(); actx.translate(pt.x,pt.y); actx.rotate((Math.random()-0.5)*0.4); actx.scale(w/100,w/100);
+  STAMPS[ART.stamp].d(actx,col); actx.restore(); SFX.pop(); vibrate(8);
+}
+artPad.addEventListener('pointerdown',e=>{
+  if(ART.stroke||e.button>0) return; // one finger at a time
+  e.preventDefault();
+  const pt=artPt(e), T=TOOLS[ART.tool], w=T.sizes[ART.size];
+  pushUndo(); ART.dirty=true; ART.marks++;
+  if(ART.tool==='stamp'){placeStamp(pt,w);return;}
+  ART.stroke={id:e.pointerId,pts:[pt],last:pt,dist:0,hue:Math.random()*360,w};
+  try{artPad.setPointerCapture(e.pointerId);}catch(_){}
+  if(T.live){alive.className=ART.tool;alive.style.setProperty('--glow',ART.col==='rainbow'?'#ff8cc6':ART.col);drawLive();}
+  else artSeg(pt,pt);
+});
+artPad.addEventListener('pointermove',e=>{
+  const s=ART.stroke; if(!s||e.pointerId!==s.id) return;
+  const evs=(e.getCoalescedEvents&&e.getCoalescedEvents())||[], live=TOOLS[ART.tool].live;
+  (evs.length?evs:[e]).forEach(ev=>{
+    const pt=artPt(ev), d=Math.hypot(pt.x-s.last.x,pt.y-s.last.y); if(d<1.5) return;
+    if(!live) artSeg(s.last,pt);
+    s.dist+=d; s.pts.push(pt); s.last=pt;
+  });
+  if(live) drawLive();
+});
+function artEnd(e){const s=ART.stroke;if(!s||e.pointerId!==s.id)return;if(TOOLS[ART.tool].live)commitLive();ART.stroke=null;}
+artPad.addEventListener('pointerup',artEnd);
+artPad.addEventListener('pointercancel',artEnd);
+
+$('#artTools').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return; const ds=b.dataset;
+  if(ds.tool){ART.tool=ds.tool;SFX.click();renderArtTools();fitPad();}
+  else if(ds.stamp){ART.stamp=ds.stamp;SFX.click();renderArtTools();}
+  else if(ds.size){ART.size=+ds.size;SFX.click();renderArtTools();}
+  else if(ds.col){ART.col=ds.col;SFX.click();renderArtTools();}
+  else if(ds.act==='undo'){const u=ART.undo.pop();if(!u){toast('Nothing to undo');return;}actx.putImageData(u,0,0);ART.dirty=true;SFX.whoosh();}
+  else if(ds.act==='clear'){if(artBlank()){toast('The paper is already empty ✨');return;}pushUndo();actx.clearRect(0,0,ART_W,ART_H);ART.dirty=true;SFX.whoosh();toast('Cleared! Tap ↩️ Undo to bring it back');}
+  else if(ds.act==='paper'){const ks=Object.keys(PAPERS);ART.paper=ks[(ks.indexOf(ART.paper)+1)%ks.length];artPad.style.background=PAPERS[ART.paper];ART.dirty=true;SFX.click();}
+  else if(ds.act==='save') saveDrawing();
+});
+
+/* ---------- saving ---------- */
+function inkURL(){return ART_FMT?acv.toDataURL(ART_FMT,0.9):acv.toDataURL('image/png');}
+function thumbURL(){
+  const c=document.createElement('canvas');c.width=240;c.height=168;const x=c.getContext('2d');
+  x.fillStyle=PAPERS[ART.paper];x.fillRect(0,0,240,168);x.drawImage(acv,0,0,240,168);
+  return c.toDataURL(ART_FMT||'image/jpeg',0.8);
+}
+function saveDrawing(){
+  const p=P(); if(!p) return Promise.resolve(false);
+  if(artBlank()){toast('Draw something first! ✏️');return Promise.resolve(false);}
+  const isNew=!ART.editId, now=Date.now();
+  const rec={id:ART.editId||uid(),profileId:p.id,created:ART.created||now,updated:now,paper:ART.paper,ink:inkURL(),thumb:thumbURL()};
+  return ArtStore.put(rec).then(()=>{
+    ArtStore.del('draft-'+p.id).catch(()=>{});
+    Object.assign(ART,{editId:rec.id,created:rec.created,dirty:false}); ART_THUMBS[rec.id]=rec.thumb; SFX.buy();
+    if(!isNew){save();toast('Drawing updated! 🖼️');return true;}
+    p.stats.drawings++;
+    const today=new Date().toDateString(); if(p.artPay.day!==today) p.artPay={day:today,n:0};
+    if(ART.marks>=ART_MIN_MARKS&&p.artPay.n<ART_DAILY){p.artPay.n++;earn(ART_COINS,'Art!');toast('Saved to your Gallery! 🖼️');}
+    else{save();toast(p.artPay.n>=ART_DAILY?'Saved! 🖼️ Art coins are done for today. Keep drawing for fun!':'Saved to your Gallery! 🖼️');}
+    return true;
+  },()=>{toast('No space left for drawings. Delete an old one in the Gallery.');return false;});
+}
+// While the app is in the background, keep an unsaved drawing as a draft so it isn't lost.
+function saveDraft(){
+  const p=P(); if(cur!=='art'||!ART.dirty||!p||ART.owner!==p.id) return;
+  ArtStore.put({id:'draft-'+p.id,draft:true,profileId:p.id,editId:ART.editId,created:ART.created,marks:ART.marks,paper:ART.paper,ink:inkURL(),updated:Date.now()}).catch(()=>{});
+}
+// Leaving the pad with unsaved changes asks first.
+function artLeave(next){
+  const p=P();
+  const drop=()=>{if(p)ArtStore.del('draft-'+p.id).catch(()=>{});resetPad(p?p.id:null);next();};
+  if(!ART.dirty){next();return;}
+  if(artBlank()){drop();return;}
+  modal('Save your drawing? 🎨','Your drawing is not in the Gallery yet.',[
+    {text:"Don't save",cls:'ghost',on:drop},
+    {text:'💾 Save it!',cls:'pink',keep:true,on:()=>saveDrawing().then(ok=>{if(ok){closeModal();next();}})}]);
+}
+function artBack(){artLeave(()=>{ART.view='pad';show('room');});}
+$('#artBack').onclick=()=>{SFX.click();artBack();};
+$('#artGalBtn').onclick=()=>{SFX.click();setArtView(ART.view==='gal'?'pad':'gal');};
+$('#artNewBtn').onclick=()=>{SFX.click();artLeave(()=>{resetPad(P().id);setArtView('pad');});};
+addEventListener('resize',()=>{if(cur==='art'&&ART.view==='pad')fitPad();});
+
+/* ---------- gallery + posters ---------- */
+let galList=[];
+function myArt(){const p=P();return ArtStore.all().catch(()=>[]).then(l=>l.filter(r=>!r.draft&&p&&r.profileId===p.id).sort((a,b)=>b.updated-a.updated));}
+function renderGallery(){
+  myArt().then(list=>{
+    const p=P(); if(!p||cur!=='art'||ART.view!=='gal') return; galList=list;
+    const hung=new Set(p.room.items.filter(i=>i.type==='poster').map(i=>i.art));
+    $('#galInfo').textContent=list.length?`${list.length} drawing${list.length===1?'':'s'} · 🖼️ ${hung.size} of ${MAX_POSTERS} in your room`:'';
+    $('#artGrid').innerHTML=list.length?list.map(r=>`<button class="tile" data-art="${esc(r.id)}"><div class="tv wide"><img src="${esc(r.thumb)}" alt=""></div>${hung.has(r.id)?'<div class="tp cnt">🖼️</div>':''}<div class="tn">${new Date(r.created).toLocaleDateString()}</div></button>`).join('')
+      :'<div class="empty">No drawings yet! Draw something, then tap 💾 Save 🎨</div>';
+  });
+}
+$('#artGrid').addEventListener('click',e=>{const t=e.target.closest('[data-art]');if(!t)return;const r=galList.find(x=>x.id===t.dataset.art);if(r){SFX.click();artModal(r);}});
+function artModal(r){
+  const p=P(), hung=p.room.items.some(i=>i.type==='poster'&&i.art===r.id);
+  modal('🎨 My drawing',`<div class="art-big" style="background:${Object.prototype.hasOwnProperty.call(PAPERS,r.paper)?PAPERS[r.paper]:'#fff'}"><img src="${esc(r.ink)}" alt=""></div>`,[
+    {text:'🗑️ Delete',cls:'ghost',on:()=>delArt(r)},
+    {text:hung?'📦 Take down':'🖼️ Hang in room',cls:'ghost',on:()=>hung?takeDown(r.id):hangArt(r)},
+    {text:'Close',cls:'ghost'},
+    {text:'✏️ Keep drawing',cls:'pink',on:()=>openArt(r)}]);
+}
+function openArt(r){
+  if(ART.editId===r.id&&ART.dirty){setArtView('pad');return;}
+  artLeave(()=>{loadInto(r,false);setArtView('pad');});
+}
+function hangArt(r){
+  const p=P();
+  if(p.room.items.filter(i=>i.type==='poster').length>=MAX_POSTERS){SFX.locked();toast(`You have ${MAX_POSTERS} posters already! Take one down first.`);return;}
+  p.room.items.push(Object.assign({uid:uid(),type:'poster',art:r.id,placed:true},spot('poster')));
+  ART_THUMBS[r.id]=r.thumb; save(); SFX.buy(); toast('Your poster is in your room! Use 🛋️ Decorate to move it.'); renderGallery();
+}
+function takeDown(id){const p=P();p.room.items=p.room.items.filter(i=>!(i.type==='poster'&&i.art===id));save();SFX.whoosh();toast('Poster taken down 📦');renderGallery();}
+function delArt(r){
+  modal('Delete this drawing?','It will be gone forever. If it is hanging in your room, the poster comes down too.',[
+    {text:'Keep it',cls:'pink'},
+    {text:'🗑️ Delete',cls:'ghost',on:()=>{
+      const p=P(); p.room.items=p.room.items.filter(i=>!(i.type==='poster'&&i.art===r.id)); save();
+      delete ART_THUMBS[r.id]; if(ART.editId===r.id) resetPad(p.id);
+      ArtStore.del(r.id).catch(()=>{}).then(()=>{SFX.whoosh();toast('Drawing deleted');renderGallery();});}}]);
+}
+// Posters in the room need the small pictures in memory, because the room draws all at once.
+function loadArtThumbs(){
+  return ArtStore.all().then(list=>{
+    ART_THUMBS={}; list.forEach(r=>{if(!r.draft)ART_THUMBS[r.id]=r.thumb;});
+    const p=P(); if(cur==='room'&&!drag&&p&&p.room.items.some(i=>i.type==='poster')) renderRoom();
+  }).catch(()=>{});
+}
+
+/* =========================================================
+   12. MAIN LOOP + STARTUP
    ========================================================= */
 function loop(t){
   const dt=Math.min(0.05,(t-(loop.last||t))/1000); loop.last=t;
@@ -1022,10 +1453,11 @@ window.androidBack=function(){
   if(!$('#modal').classList.contains('hidden')){closeModal();return true;}
   if(decorating){exitDecorate();return true;}
   if(cur==='fidget'||cur==='closet'){show('room');return true;}
+  if(cur==='art'){artBack();return true;}
   if(cur==='room'){show('profiles');return true;}
   return false;
 };
-document.addEventListener('visibilitychange',()=>{if(document.hidden){save();if(AC)AC.suspend();}else if(AC)AC.resume();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){save();saveDraft();if(AC)AC.suspend();}else if(AC)AC.resume();});
 
 buildDefs();
 show('profiles');

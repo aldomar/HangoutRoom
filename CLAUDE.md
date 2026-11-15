@@ -113,13 +113,17 @@ stripes, stars, bats), and fidget and squishy toys.
   8. UI basics (`toast`, `modal`, `earn`, `tryBuy`, `buyConsumable`)
   9. Screens (profiles, room + decorate, settings/backup, closet)
   10. Fidget shelf (pop-it, squishy physics, spinner physics)
-  11. Main loop + startup (`androidBack` hook)
-- Locked room areas waiting for features: `window` (Soccer), `photo` (Photocards), `desk` (Art Desk). See `LOCKED` and `handleHot()`.
+  11. Art Desk (drawing pad, stamps, gallery, posters)
+  12. Main loop + startup (`androidBack` hook)
+- Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
+  (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
+- Locked room areas waiting for features: `window` (Soccer), `photo` (Photocards). See `LOCKED` and `handleHot()`.
 - `android/`: Gradle project; `app/src/main/java/com/family/hangoutroom/MainActivity.kt`; `android/README.md` has build/sideload steps.
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.
 
 ## Conventions
-- Coins: 1 per 10 pops, +5 per pop-it flip, 1 per 5 squishes, 1 per 25 spinner turns, +10 daily gift, 25 to start.
+- Coins: 1 per 10 pops, +5 per pop-it flip, 1 per 5 squishes, 1 per 25 spinner turns, +10 daily gift, 25 to start,
+  +5 per new drawing (3+ strokes, first 5 a day).
   Item prices are 0–40. Keep earning steady and fair.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).
   A new decoration = one entry in `DECOR` with `{name, price, box, d()}` (plus `flat:1` for rugs, `wall:1` for wall items).

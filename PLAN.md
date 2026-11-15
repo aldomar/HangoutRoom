@@ -56,15 +56,19 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
   Keep an eye out for layout on her screen size, touch feel, audio and the speed of the fuzzy filter.
 - ✅ `APP_VERSION` and an "About" line in Settings (v1.2). Save-data upgrade hook (`fixDB()` + `MIGRATIONS`),
   used for both loading and restoring.
-- Optional: a free automated smoke test (Playwright with the installed Chrome), if the owner agrees.
+- Optional: a free automated smoke test. (Phase 2 used a small script that drives the installed Chrome directly,
+  with nothing to install.)
 - **Done when:** the APK installs, saves survive closing the app and installing an update, and Back works as described.
 
-### Phase 2: Art Desk 🎨
-- Drawing pad: pen, marker, glitter brush, neon brush, eraser, stamp stickers (stars, hearts, bats, soccer balls).
-- Colour palette, brush size, undo, clear (with undo).
-- Drawings saved in IndexedDB as a gallery. Earn coins for finished drawings.
-- Hang a favourite drawing in the room as a framed poster (new decor type that references a drawing).
-- **Done when:** drawings survive restarts and backups. Backups must include drawings, or clearly say they don't. Decide in the plan.
+### Phase 2: Art Desk 🎨 (built in v1.3, PR open)
+- ✅ Drawing pad: pen, marker, glitter, neon, eraser, stamps (star, heart, bat, ghost, moon, soccer ball).
+- ✅ 12 colours plus rainbow, 3 brush sizes, 3 paper colours, undo (12 steps), clear (can be undone).
+- ✅ Gallery saved in IndexedDB. +5 coins for each new drawing with 3 or more strokes, for the first 5 drawings a day.
+- ✅ "Hang in room" turns a drawing into a framed poster (up to 4). Deleting a drawing takes its poster down.
+- ✅ An unsaved drawing is kept as a draft when the app goes into the background, and comes back next time.
+- ✅ Backups include drawings (a switch in the backup screen, on by default). Older backups still restore.
+- **Done when:** drawings survive restarts, app updates and backups. Still to check on the tablet:
+  IndexedDB must work inside the Android WebView (if not, drawings use a smaller localStorage fallback).
 
 ### Phase 3: Photocard Wall 📸
 - "Idol card maker": photograph the mascot in its current outfit on a stage background, with a name, sparkle frame and
