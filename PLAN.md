@@ -100,7 +100,8 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
 ### ✅ Squishy upgrade (v1.6, between phases 4 and 5)
 - ✅ Press anywhere on the squishy, not just the edge: a soft dent forms under each finger and gets deeper the longer
   she holds. The toy flattens and bulges around it, and the dent follows her finger (kneading).
-- ✅ Two or more fingers at once. A quick poke jiggles; a long squeeze leaves a dent that slowly rises back.
+- ✅ Two or more fingers at once. Squeezing the sides makes it narrower and taller; pressing the top makes it flatter
+  and wider. A quick poke jiggles; a long squeeze leaves a dent that slowly rises back.
 - ✅ The face watches her finger, scrunches up when squeezed, and blushes more when its cheeks are squished.
 - ✅ Same coins as before (1 per 5 squishes), counted once per squeeze even with several fingers.
 

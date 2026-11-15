@@ -63,7 +63,7 @@ _Last updated: 2026-11-15_
   - Back goes to the room; restoring a v1.4 backup (no soccer fields) and a v1.5 one; phone portrait and landscape
   - trophies: Gold for a perfect on Hard, shown in the result box; Silver from an earlier perfect on Medium;
     never given twice (also after a restore); not in the Shop; never placed behind Fuzzy. 99 checks in all.
-- **Squishy upgrade (v1.6)**: 113 checks, all passing, no console errors. New: pressing the middle makes a deep dent
+- **Squishy upgrade (v1.6)**: 114 checks (incl. side squeeze = taller, top press = flatter), all passing, no console errors. New: pressing the middle makes a deep dent
   and squashes the toy; the dent follows the finger; a squeeze counts once; the dent stays and rises back over ~5 s;
   a quick poke jiggles and is not counted; two fingers make two dents and squash more (counted once);
   pressing outside the toy does nothing; every squishy design draws with dents.
@@ -117,6 +117,8 @@ _Last updated: 2026-11-15_
 - Squishy upgrade (2026-11-15): the owner found the squishy dull because only pokes near the edge did anything.
   Now a dent forms anywhere under each finger (multi-touch), deepens while held, follows the finger, and slowly rises
   back after release (memory foam). A quick poke (under 0.25 s) jiggles and doesn't count as a squish. No save changes.
+  After the first try: squeezing the sides now makes it narrower and taller (it used to get shorter), and pressing the
+  top makes it flatter and wider. The scene sits lower so the ears stay in view when it stretches tall.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.

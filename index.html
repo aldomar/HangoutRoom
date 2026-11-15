@@ -1212,7 +1212,7 @@ function fit(cv){
    flattens and bulges around it, and the dent follows the finger (kneading). Several fingers work at once.
    On release the dent stays and slowly rises back (memory foam). A quick poke jiggles instead.
    Dents are kept in body coordinates (u,v: -1..1 across the toy), so they stay put as the toy moves. */
-const SQ={N:72,r:new Array(72).fill(1),s:0,lean:0,wob:0,wv:0,touches:new Map(),dents:[],geo:null,long:false,look:{u:0,v:0}};
+const SQ={N:72,r:new Array(72).fill(1),s:0,q:0,lean:0,wob:0,wv:0,touches:new Map(),dents:[],geo:null,long:false,look:{u:0,v:0}};
 const sqc=$('#squishCv');
 const SQ_POKE_MS=250, SQ_MEMORY=8;
 function sqLocal(e){const r=sqc.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top};}
@@ -1244,22 +1244,26 @@ const hexRgb=h=>{const n=parseInt(h.slice(1),16);return `${n>>16},${(n>>8)&255},
 function drawSquish(dt){
   const {ctx,W,H}=fit(sqc); ctx.clearRect(0,0,W,H);
   const T=SQUISHIES[P().fid.squish]||SQUISHIES.mochi;
-  const R=Math.min(W*0.3,H*0.28), baseY=H*0.5+R*0.95;
+  const R=Math.min(W*0.3,H*0.28), baseY=Math.min(H*0.58+R*0.95,H-36); // low enough that the ears fit when it is squeezed tall
   const k=x=>1-Math.pow(1-x,dt*60);
   // fingers: dents deepen while held and follow the finger
   const active=[...SQ.touches.values()];
-  let sT=0, leanT=0;
+  // Where the fingers press decides the shape: the sides squeeze it narrower and taller (q), the top or middle
+  // flattens it lower and wider (s). One finger on a side also tips it away.
+  let sT=0, qT=0, leanT=0;
   for(const t of active){
     const b=sqBody(t.x,t.y); t.u=b.u; t.v=b.v; t.d+=(1-t.d)*k(0.05);
-    sT+=t.d*(0.1+0.12*clamp(0.4-t.v,0,1)); leanT-=t.d*t.u*0.1;
+    const side=clamp((Math.abs(t.u)-0.15)/0.6,0,1), top=clamp(0.4-t.v,0,1);
+    sT+=t.d*(0.1*(1-side)+0.12*top*(1-side*0.7)); qT+=t.d*side*0.13; leanT-=t.d*t.u*0.1;
   }
   // released dents rise back slowly (a quick poke rises fast)
   for(const D of SQ.dents) D.d-=dt*(D.quick?1.8:0.28)*(0.4+D.d);
   SQ.dents=SQ.dents.filter(D=>D.d>0.02);
   SQ.s+=(Math.min(sT,0.34)-SQ.s)*k(active.length?0.15:0.025);
+  SQ.q+=(Math.min(qT,0.18)-SQ.q)*k(active.length?0.15:0.025);
   SQ.lean+=(clamp(leanT,-0.12,0.12)-SQ.lean)*k(active.length?0.12:0.03);
   SQ.wv+=(-180*SQ.wob-9*SQ.wv)*dt; SQ.wob=clamp(SQ.wob+SQ.wv*dt,-0.12,0.12); // jiggle spring
-  const s=SQ.s, sx=(1+s*.55)*(1+SQ.wob), sy=(1-s)*(1-SQ.wob), cx=W/2+SQ.lean*R, cy=baseY-R*sy;
+  const s=SQ.s, q=SQ.q, sx=(1+s*.55)*(1-q)*(1+SQ.wob), sy=(1-s)*(1+q*0.65)*(1-SQ.wob), cx=W/2+SQ.lean*R, cy=baseY-R*sy;
   SQ.geo={cx,cy,R,sx,sy};
   const all=active.concat(SQ.dents);
   if(active.length){const t=active[active.length-1];SQ.look={u:t.u,v:t.v};} else if(!SQ.dents.length) SQ.look.u*=0.95,SQ.look.v*=0.95;
