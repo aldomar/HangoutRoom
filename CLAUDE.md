@@ -62,7 +62,7 @@ stripes, stars, bats), and fidget and squishy toys.
   `web/js/NN-name.js`, one file per numbered section, listed in order by `<script src>` tags at the bottom of `index.html`.
   - All files share one global scope, but code that **runs while a file loads** (top-level statements, `x.onclick=fn`)
     may only use things from the same or earlier files. Functions called later (on taps, in the loop) can use anything.
-  - A new game or content pack gets a **new numbered file** (e.g. `16-codelab.js`) and a new `<script src>` tag
+  - A new game or content pack gets a **new numbered file** (e.g. `18-codelab.js`) and a new `<script src>` tag
     just above `99-startup.js` (which always loads last), rather than growing an old file. Keep each file under ~40 KB.
   - Keep the numbered section banner at the top of each file. The smoke test checks every `web/js` file is loaded, in order.
 - **Touch first.** Use pointer events, which also work with a mouse. Interactive canvases and boards need `touch-action:none`.
@@ -71,7 +71,7 @@ stripes, stars, bats), and fidget and squishy toys.
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`.
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`.
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
   optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it.
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
@@ -127,6 +127,7 @@ stripes, stars, bats), and fidget and squishy toys.
   14. `14-stage.js` Stage (`SONGS`, `buildSong`, `stStart`, `stTap`, `stFinish`, `drawStage`, `giveMic`)
   16. `16-room2.js` Cozy Loft, the second room (`loftFurniture`, the `attic` wall)
   17. `17-pack1.js` Content Pack 1 (only adds entries to `CLOSET`, `DECOR`, `WALLS`, `FLOORS`, `SQUISHIES`, `SPINS`, `POP_SHAPES`, `CARD_TAGS`)
+  18. `18-codelab.js` Code Lab (`CODE_PUZZLES`, `CODE_LEVELS`, `codeSim`, `clOpen`, `clGo`)
   99. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -155,6 +156,10 @@ stripes, stars, bats), and fidget and squishy toys.
 - Two rooms (since v1.10): `roomNo` (1 = `p.room`, 2 = `p.room2`), `curRoom(p)` for the room on screen and `allItems(p)` for
   both. My Stuff (items with `placed:false`) is shared between rooms; placing a stored item moves it into the room on screen.
   New code that adds or finds room items must use these, not `p.room` directly (prizes like trophies still go to `p.room`).
+- Code Lab (since v1.13): the Loft's computer desk (`data-hot="code"`). Puzzles are text recipes in `CODE_PUZZLES`
+  (map rows: `.` floor, `F` Fuzzy, `C` carrot, `*` star, `#` toy block; `max` blocks; `sol` = one answer, which the smoke
+  test runs). `codeSim()` holds the rules with no drawing; the board is SVG moved by CSS transitions (nothing in the main loop).
+  Puzzle ids (`e1`, `m1`, `h1` …) and level ids are saved in `code.solved`: never rename them. Add new puzzles at the end of a level.
 - Every room area is open. To add a locked area for a future feature, put it in `LOCKED` and `handleHot()`.
 - `android/`: Gradle project; `app/src/main/java/com/family/hangoutroom/MainActivity.kt`; `android/README.md` has build/sideload steps.
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.
@@ -164,6 +169,7 @@ stripes, stars, bats), and fidget and squishy toys.
   +5 per new drawing (3+ strokes, first 5 a day), +10 per bonus photocard (each milestone once). Making a photocard is free.
   Soccer: +1 / +2 / +3 per goal (Easy / Medium / Hard), +1 more per goal with 2+ soccer clothes on, +5 for 5/5.
   Stage: 2 / 3 / 4 coins per star (Easy / Medium / Hard), 1–3 stars per song; no stars (and no coins) without a hit.
+  Code Lab: +3 per puzzle the first time it is solved, +5 when every puzzle of a level is solved.
   Item prices are 0–40. Keep earning steady and fair.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).
   A new decoration = one entry in `DECOR` with `{name, price, box, d()}` (plus `flat:1` for rugs, `wall:1` for wall items).

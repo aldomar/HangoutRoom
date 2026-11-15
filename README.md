@@ -1,7 +1,8 @@
 # HangoutRoom
 Mini game app for niblings: a cozy virtual bedroom with a fuzzy emo bunny, fidget toys,
 dress-up, decorating, an Art Desk for drawing, a Photocard Wall for making collectible bunny cards
-a Soccer Field for penalty kicks, and a Stage where the bunny performs to original songs (tap to the beat).
+a Soccer Field for penalty kicks, a Stage where the bunny performs to original songs (tap to the beat),
+and a Code Lab where she "programs" the bunny with arrow blocks (a first taste of coding).
 A family gift; not for sale or public sharing.
 
 ## Try it on a computer
@@ -21,7 +22,7 @@ Since version 1.3 a backup also holds the drawings from the Art Desk (you can sw
 to make the file smaller). Restoring an older backup without drawings leaves the drawings on the device alone.
 Photocards (since version 1.4) are always in the backup. They are tiny, because each card is saved as a
 short description (outfit, stage, frame, title) instead of a picture.
-Soccer and Stage progress (best scores, trophies, the Golden Mic) are in the backup too.
+Soccer, Stage and Code Lab progress (best scores, trophies, the Golden Mic, puzzles solved) are in the backup too.
 
 ## The Cozy Loft (since version 1.10)
 Every room has a second room upstairs: tap **🪜 Loft** at the top of the room screen (and **🏠 Room** to go back).
@@ -30,8 +31,18 @@ in either room.
 
 ## Where things are
 In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
-(🎨 Art Desk) and the wardrobe (👗 Closet). In the Cozy Loft: the glowing **🎤 Stage** sign (since version 1.12).
+(🎨 Art Desk) and the wardrobe (👗 Closet). In the Cozy Loft: the glowing **🎤 Stage** sign (since version 1.12)
+and the computer desk (**💻 Code Lab**, since version 1.13).
 The pink labels only show in Easy mode; otherwise, tap things to find out what they do.
+
+## Code Lab (since version 1.13)
+Tap the computer desk in the Cozy Loft. Pick a puzzle, then tap arrow blocks to make a "program" for Fuzzy,
+and press **▶️ Run**. Fuzzy follows the blocks one at a time (the block that is running lights up) to reach the carrot 🥕.
+- **Easy:** arrows only. **Medium:** adds 🔁 repeat blocks (🔁 ×3 then ➡️ = go right 3 times), and only a few blocks fit,
+  so she has to use them. **Hard:** adds toy blocks in the way and ⭐ stars to pick up with the 🌟 block.
+- If Fuzzy bumps into something, the block that went wrong glows yellow. Nothing is lost: tap a block to take it out,
+  fix the program and run it again. There is no timer.
+- Each puzzle pays 3 coins the first time it is solved, plus 5 more for finishing a whole level.
 
 ## Shelves and hair (since version 1.11)
 - **Shelves:** buy a Little or Long Shelf in the Shop and hang it on the wall. Drag a small thing onto the shelf and it

@@ -13,11 +13,12 @@
 
   Map of the code:
     web/app.css   look & layout
-    this file     the screens: profiles, room, fidget shelf, closet, art desk, photocards, soccer field, stage, + modal/toast
+    this file     the screens: profiles, room, fidget shelf, closet, art desk, photocards, soccer field, stage, code lab, + modal/toast
     web/js/       the code, one file per numbered section, loaded in order (see the script tags at the bottom):
                   01 save data (+ drawings store) -> 02 art helpers -> 03 mascot + closet items -> 04 room + decor
                   -> 05 fidget data -> 06 profiles -> 07 sound/music -> 08 UI basics -> 09 screens/wiring
-                  -> 10 fidget shelf -> 11 art desk -> 12 photocards -> 13 soccer -> 14 stage -> 99 main loop + startup (always last)
+                  -> 10 fidget shelf -> 11 art desk -> 12 photocards -> 13 soccer -> 14 stage -> 16 loft -> 17 pack 1
+                  -> 18 code lab -> 99 main loop + startup (always last)
   Drawings are kept in IndexedDB ("hangoutRoomArt"), not localStorage, because they are big.
 -->
 <link rel="stylesheet" href="web/app.css">
@@ -218,6 +219,37 @@
   </div>
 </div>
 
+<!-- CODE LAB (coding puzzles, on the Loft's computer desk) -->
+<div id="scr-code" class="screen">
+  <div class="topbar">
+    <button class="btn small ghost" id="clBack">⬅ Room</button>
+    <div class="title">💻 Code Lab</div>
+    <div class="coins coinsDisp"></div>
+  </div>
+  <div class="tabs" id="clTabs" style="background:var(--panel);justify-content:center">
+    <button class="tab on" data-lvl="easy">🐣 Easy</button>
+    <button class="tab" data-lvl="medium">🔁 Medium</button>
+    <button class="tab" data-lvl="hard">🌟 Hard</button>
+  </div>
+  <div class="cl-pick" id="clPick">
+    <div class="stg-note" id="clHint"></div>
+    <div class="cl-list" id="clList"></div>
+  </div>
+  <div class="cl-play hidden" id="clPlay">
+    <div class="cl-board"><svg id="clBoard" viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet"></svg></div>
+    <div class="cl-side">
+      <div class="cl-msg" id="clMsg"></div>
+      <div class="cl-prog" id="clProg"></div>
+      <div class="cl-pal" id="clPal"></div>
+      <div class="cl-ctl">
+        <button class="btn ghost" id="clUndo">↩️</button>
+        <button class="btn ghost" id="clClear">🗑️</button>
+        <button class="btn pink" id="clRun">▶️ <span>Run</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="modal" class="modal hidden"><div class="modal-card"><div id="modalTitle"></div><div id="modalBody"></div><div id="modalBtns"></div></div></div>
 <div id="toast"></div>
 <div id="flash"></div>
@@ -238,6 +270,7 @@
 <script src="web/js/14-stage.js"></script>
 <script src="web/js/16-room2.js"></script>
 <script src="web/js/17-pack1.js"></script>
+<script src="web/js/18-codelab.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

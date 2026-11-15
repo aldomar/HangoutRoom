@@ -140,7 +140,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`doRestore(${JSON.stringify(code)})`); await sleep(800);
   check('restore brings back 2 drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2);
   check('artwork not saved into localStorage', await ev(`!JSON.parse(localStorage.getItem('hangoutRoom.v1')).artwork`));
-  check('DB version is 8', (await ev('DB.version'))===8);
+  check('DB version is DB_VERSION (9)', (await ev('DB.version'))===9);
   await ev(`doRestore(${JSON.stringify(oldCode)})`); await sleep(800);
   check('old backup restores and keeps drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2 && (await ev('DB.profiles.length'))===1);
   await ev(`DB.settings.backupArt=false;backupModal()`); await sleep(400);
@@ -692,11 +692,91 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const hairCode=await ev('JSON.stringify(DB)');
   const v110Hair=await ev(`JSON.stringify(Object.assign({},DB,{version:7,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));q.look.hair='swoopPurple';delete q.look.hairColor;q.owned=q.owned.filter(k=>!k.startsWith('hairc:')).concat(['hair:swoopPink','hair:swoopCandy']);return q;})}))`);
   await ev(`doRestore(${JSON.stringify(v110Hair)})`); await sleep(400);
-  check('a v1.10 backup turns Purple Swoop into Emo Swoop + Purple', await ev(`DB.version===8&&DB.profiles[0].look.hair==='swoopBlack'&&DB.profiles[0].look.hairColor==='purple'`));
+  check('a v1.10 backup turns Purple Swoop into Emo Swoop + Purple', await ev(`DB.version===DB_VERSION&&DB.profiles[0].look.hair==='swoopBlack'&&DB.profiles[0].look.hairColor==='purple'`));
   check('...and owned Pink Swoop / Cotton Candy become owned colours', await ev(`['hairc:pink','hairc:candy'].every(k=>DB.profiles[0].owned.includes(k))&&DB.profiles[0].owned.includes('hair:swoopPink')`));
   await ev(`doRestore(${JSON.stringify(hairCode)})`); await sleep(400);
   check('a v1.11 backup keeps style and colour', await ev(`DB.profiles[0].owned.includes('hair:twinTails')&&HAIR_COLORS[DB.profiles[0].look.hairColor]`));
   await ev(`document.querySelector('.pcard').click()`); await sleep(300); await ev(`closeModal();show('room')`);
+
+  console.log('Code Lab (coding puzzles)');
+  // clSolve(level, n) loads a puzzle's own answer and runs it; steps are sped up so the test is quick.
+  await ev(`window.clSolve=(l,i)=>{clOpen(l,i);CL.prog=[...CODE_PUZZLES[l][i].sol];clProg();clGo();};CODE_STEP=40`);
+  await ev(`closeModal();P().easy=false;show('room');goRoom(2)`); await sleep(300);
+  check('the Loft computer desk is the Code Lab spot', await ev(`!!document.querySelector('[data-hot=code]')`));
+  await ev(`document.querySelector('[data-hot=code] rect').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(300);
+  check('the desk opens the Code Lab on Easy with 6 puzzles', await ev(`cur==='code'&&CL.view==='pick'&&P().code.level==='easy'&&document.querySelectorAll('#clList [data-pz]').length===6`));
+  await shot('A20-code-list');
+  const pzs=await ev(`(()=>{const out=[];for(const l of CODE_LVL_IDS)CODE_PUZZLES[l].forEach(q=>{const g=codeParse(q),all=q.map.join('');
+    out.push({id:q.id,l,rect:q.map.every(r=>r.length===q.map[0].length),one:all.split('F').length===2&&all.split('C').length===2,
+      fits:q.sol.length<=codeMax(l,q),palette:[...q.sol].every(t=>CODE_LEVELS[l].blocks.includes(t)),win:codeSim(q,[...q.sol]).end==='win',
+      extras:l==='hard'||!/[#*]/.test(all),far:Math.abs(g.goal.x-g.start.x)+Math.abs(g.goal.y-g.start.y)>codeMax(l,q)});});return out;})()`);
+  check('every puzzle has one Fuzzy and one carrot, is a rectangle, uses only its level\'s blocks; walls and stars only on Hard', pzs.every(q=>q.rect&&q.one&&q.palette&&q.extras), pzs);
+  check('every puzzle can be solved within its block limit (its answer wins)', pzs.every(q=>q.win&&q.fits), pzs.filter(q=>!q.win||!q.fits));
+  check('puzzle ids are all different', new Set(pzs.map(q=>q.id)).size===pzs.length);
+  check('Medium needs 🔁 (plain arrows would not fit)', pzs.filter(q=>q.l==='medium').every(q=>q.far), pzs.filter(q=>q.l==='medium'));
+  const cl0=await ev('P().coins');
+  await ev(`document.querySelector('#clList [data-pz="0"]').click()`); await sleep(200);
+  check('puzzle 1 opens: board, Fuzzy, arrows only', await ev(`CL.view==='play'&&!!document.querySelector('#clFz svg')&&document.querySelectorAll('#clPal [data-add]').length===4&&!document.querySelector('#clPal [data-add=S]')`));
+  await ev(`document.querySelector('#clRun').click()`); await sleep(100);
+  check('Run with no blocks asks for some (nothing happens)', await ev(`CL.state==='edit'&&document.querySelector('#clMsg').textContent.length>0`));
+  await ev(`document.querySelector('[data-add=L]').click();document.querySelector('#clRun').click()`); await sleep(400);
+  check('a bump is a gentle oops: the block glows, no coins', await ev(`CL.state==='oops'&&CL.end==='bump'&&!!document.querySelector('#clProg .clb.oops')&&P().coins===${cl0}`));
+  await shot('A21-code-oops');
+  await ev(`document.querySelector('#clProg [data-at="0"]').click()`);
+  check('tapping a block takes it out; Fuzzy goes back to the start', await ev(`CL.prog.length===0&&CL.state==='edit'&&document.querySelector('#clFz').style.transform==='translate(0px, 100px)'`), await ev(`document.querySelector('#clFz').style.transform`));
+  await ev(`document.querySelector('[data-add=R]').click();document.querySelector('#clRun').click()`); await sleep(400);
+  check('running out of blocks says "add more"', await ev(`CL.end==='short'&&CL.state==='oops'&&!document.querySelector('#clProg .clb.oops')`));
+  await ev(`document.querySelector('[data-add=R]').click();document.querySelector('#clRun').click()`); await sleep(1400);
+  check('reaching the carrot solves it: +3 coins', await ev(`P().code.solved.includes('e1')&&P().coins===${cl0}+3+BONUS_COINS`), await ev('P().coins-'+cl0));
+  check('result box shows, and the "First Program!" bonus card is given', await ev(`document.querySelector('#modalTitle').textContent.includes('solved')&&P().bonusGot.includes('code1')`));
+  await shot('A22-code-solved');
+  await ev(`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes('Next')).click()`); await sleep(200);
+  check('Next opens puzzle 2', await ev(`CL.view==='play'&&CL.idx===1&&CL.prog.length===0`));
+  await ev(`clSolve('easy',0)`); await sleep(1300); await ev(`closeModal()`);
+  check('solving a puzzle again pays nothing', (await ev('P().coins'))===cl0+3+(await ev('BONUS_COINS')));
+  for(let i=1;i<6;i++){await ev(`clSolve('easy',${i})`);await sleep(1500);await ev(`closeModal()`);}
+  check('every Easy puzzle solved: 3 coins each + 5 level bonus', await ev(`CODE_PUZZLES.easy.every(q=>P().code.solved.includes(q.id))&&P().coins===${cl0}+BONUS_COINS+6*CODE_COINS+CODE_LEVEL_BONUS`), await ev('P().coins-'+cl0));
+  await ev(`clPickView()`); await sleep(100);
+  check('the list ticks solved puzzles', await ev(`document.querySelectorAll('#clList .clp.done').length===6`));
+  await ev(`document.querySelector('#clTabs [data-lvl=medium]').click()`); await sleep(100);
+  check('Medium tab is saved and shows its puzzles', await ev(`P().code.level==='medium'&&document.querySelectorAll('#clList .clp.done').length===0`));
+  await ev(`document.querySelector('#clList [data-pz="0"]').click()`); await sleep(150);
+  check('Medium adds 🔁 ×2 ×3 ×4', await ev(`['2','3','4'].every(t=>document.querySelector('#clPal [data-add="'+t+'"]'))`));
+  await ev(`document.querySelector('[data-add="4"]').click();document.querySelector('#clRun').click()`); await sleep(300);
+  check('a 🔁 with nothing after it is an oops', await ev(`CL.end==='lonely'&&!!document.querySelector('#clProg .clb.oops')`));
+  await ev(`document.querySelector('[data-add=R]').click();document.querySelector('[data-add=R]').click()`);
+  check('the block limit (2 here) stops a 3rd block', await ev(`CL.prog.join('')==='4R'&&document.querySelectorAll('#clProg .clslot').length===0`));
+  await ev(`document.querySelector('#clRun').click()`); await sleep(500);
+  check('🔁 4 ➡️ walks 4 squares and solves it', await ev(`CL.state==='win'&&P().code.solved.includes('m1')`));
+  await sleep(900); await shot('A23-code-medium'); await ev(`closeModal()`);
+  await ev(`P().code.level='hard';clOpen('hard',0)`); await sleep(150);
+  check('Hard adds 🌟 and draws the stars', await ev(`!!document.querySelector('#clPal [data-add=S]')&&document.querySelectorAll('#clBoard .clstar').length===1`));
+  await ev(`CL.prog=['R','R','R','R'];clProg();clGo()`); await sleep(500);
+  check('the carrot without the star is not a win', await ev(`CL.end==='stars'&&!P().code.solved.includes('h1')`));
+  await ev(`CL.prog=['R','S'];clEdited();clGo()`); await sleep(400);
+  check('🌟 where there is no star is an oops', await ev(`CL.end==='nostar'&&!!document.querySelector('#clProg .clb.oops')`));
+  await ev(`clOpen('hard',3);CL.prog=[...CODE_PUZZLES.hard[3].sol];clProg();clGo()`); await sleep(400); await shot('A24-code-hard-running');
+  await sleep(1400);
+  check('a Hard maze with 2 stars solves (stars picked up)', await ev(`P().code.solved.includes('h4')&&document.querySelectorAll('#clBoard .clstar.got').length===2`));
+  await shot('A25-code-hard-solved'); await ev(`closeModal()`);
+  await ev(`CODE_STEP=400;clSolve('hard',5)`); await sleep(200); await ev(`show('room')`); await sleep(900);
+  check('leaving during a run stops it (nothing paid)', await ev(`CL.state!=='run'&&!P().code.solved.includes('h6')`));
+  await ev(`CODE_STEP=40;show('code');clOpen('hard',0)`); await sleep(100);
+  check('Back from a puzzle goes to the list, then the Loft', await ev(`window.androidBack()&&cur==='code'&&CL.view==='pick'&&window.androidBack()&&cur==='room'&&roomNo===2`));
+  await ev(`P().easy=true;P().code.level='hard';show('code')`); await sleep(200);
+  check('Easy mode opens the Code Lab on Easy', await ev(`P().code.level==='easy'&&document.querySelector('#clTabs .tab.on').dataset.lvl==='easy'`));
+  await ev(`clOpen('easy',1)`); await sleep(100); await shot('A26-code-easy-mode');
+  check('Easy mode: big blocks (64 px+), no tip text', await ev(`document.querySelector('#clPal .clb').getBoundingClientRect().width>=64&&getComputedStyle(document.querySelector('#clMsg')).display==='none'`));
+  await ev(`P().easy=false;show('room')`);
+
+  console.log('Code Lab in backups');
+  const v112Code=await ev(`JSON.stringify(Object.assign({},DB,{version:8,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.code;return q;})}))`);
+  const clCode=await ev('JSON.stringify(DB)');
+  await ev(`doRestore(${JSON.stringify(v112Code)})`); await sleep(400);
+  check('a v1.12 backup (no Code Lab) restores with nothing solved', await ev(`DB.version===9&&DB.profiles[0].code.level==='easy'&&DB.profiles[0].code.solved.length===0`));
+  await ev(`doRestore(${JSON.stringify(clCode)})`); await sleep(400);
+  check('a v1.13 backup keeps solved puzzles', await ev(`DB.profiles[0].code.solved.includes('h4')&&DB.profiles[0].code.solved.length===8`));
+  await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal();show('room')`);
 
   console.log('Phone portrait + other screens');
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
@@ -714,6 +794,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`show('stage')`); await sleep(300); await shot('78-phone-stage-songs');
   await ev(`P().stage.level='hard';stStart('starlight')`); await sleep(4600); await shot('79-phone-stage-play');
   check('phone stage: 3 pads fit on screen', await ev(`STG.g.xs[0]-STG.g.pr>0&&STG.g.xs[2]+STG.g.pr<innerWidth`), await ev('JSON.stringify(STG.g)'));
+  await ev(`show('code');clOpen('hard',3)`); await sleep(300); await shot('A27-phone-code');
+  check('phone: Code Lab board and Run button both on screen', await ev(`(()=>{const b=document.querySelector('#clBoard').getBoundingClientRect(),r=document.querySelector('#clRun').getBoundingClientRect();return b.height>150&&r.bottom<=innerHeight&&r.height>=48;})()`));
   await ev(`show('room')`); await sleep(200); await shot('A10-phone-room-topbar');
   check('phone: the Loft button fits in the top bar', await ev(`(()=>{const r=document.querySelector('#roomGo').getBoundingClientRect(), d=document.querySelector('#setBtn').getBoundingClientRect();return r.width>=48&&d.right<=innerWidth;})()`));
   await ev(`show('art')`); await sleep(200);
@@ -724,6 +806,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`show('soccer')`); await sleep(400); await shot('50-phone-landscape-soccer');
   await ev(`show('stage');stStart('bats')`); await sleep(4500); await shot('80-phone-landscape-stage');
   check('landscape stage: pads below Fuzzy', await ev(`STG.g.yh-STG.g.pr>stgCv.clientHeight*0.4&&stgCv.clientHeight>200`), await ev('JSON.stringify(STG.g)'));
+  await ev(`show('code');clOpen('hard',3)`); await sleep(300); await shot('A28-phone-landscape-code');
+  check('landscape: Code Lab board and Run button both on screen', await ev(`(()=>{const b=document.querySelector('#clBoard').getBoundingClientRect(),r=document.querySelector('#clRun').getBoundingClientRect();return b.height>150&&r.bottom<=innerHeight&&r.right<=innerWidth;})()`));
   await ev(`show('art')`);
 
   console.log('Every other screen (tablet size)');

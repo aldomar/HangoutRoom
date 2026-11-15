@@ -15,9 +15,8 @@ _Last updated: 2026-11-15_
   - **Code split: done** (v1.9 merged, PR #9). Built in Android Studio and checked on the device: everything works.
   - **Cozy Loft + Content Pack 1: done** (v1.10 merged, PR #10). Tried on a device: everything works.
   - **Shelves + Hair Styles: done** (v1.11 merged, PR #11). The owner asked for it before Code Lab.
-  - **Stage in the Loft + Easy-only labels: built, PR open as v1.12** on branch `feature/stage-loft` (the owner's
-    request, before Code Lab). Not yet tried on a device.
-  - **Code Lab: plan agreed (2026-11-15)**, to be built next as v1.13 (see "Decisions made").
+  - **Stage in the Loft + Easy-only labels: done** (v1.12 merged, PR #12; the owner's request, before Code Lab).
+  - **Code Lab: built, PR open as v1.13** on branch `feature/codelab` (from `main` after #12). Not yet tried on a device.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -38,7 +37,8 @@ _Last updated: 2026-11-15_
 - PR #9 "Code split (v1.9)": merged.
 - PR #10 "Cozy Loft + Content Pack 1 (v1.10)": merged.
 - PR #11 "Shelves + Hair Styles (v1.11)": merged.
-- PR "Stage in the Loft (v1.12)" on branch `feature/stage-loft` (from `main` after #11): open.
+- PR #12 "Stage in the Loft (v1.12)": merged.
+- PR "Code Lab (v1.13)" on branch `feature/codelab` (from `main` after #12): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -125,6 +125,16 @@ _Last updated: 2026-11-15_
   - her first room has no Stage marquee; the Loft has it, fully on its wall, and tapping it opens the Stage;
     Back from the song list goes to the Loft
   - room labels (Soccer, Closet …) show with Easy mode on and are hidden with it off
+- **Code Lab (v1.13)**: 301 checks, all passing, no console errors. New checks:
+  - the Loft's computer desk opens the Code Lab on Easy with 6 puzzles
+  - every one of the 18 puzzles is checked: one Fuzzy and one carrot, only its level's blocks, walls and stars only on
+    Hard, Medium can't be done without 🔁, and its stored answer really solves it within the block limit
+  - Run with no blocks; a bump (block glows, no coins); tapping a block takes it out and Fuzzy goes back to the start;
+    running out of blocks; a 🔁 with nothing after it; 🌟 where there is no star; the carrot without every star
+  - solving pays +3 once (not again), the "First Program!" bonus card, all of Easy pays the +5 level bonus, solved puzzles
+    get a tick; the block limit stops extra blocks; a Hard maze with 2 stars
+  - leaving during a run stops it; Back goes puzzle → list → Loft; Easy mode opens on Easy with bigger blocks and no tips
+  - restoring a v1.12 backup (no Code Lab) and a v1.13 one; phone portrait and landscape layouts fit the board and ▶️ Run
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -233,13 +243,20 @@ _Last updated: 2026-11-15_
     first room was cramped. Songs, scores, the Golden Mic and its place in her first room are unchanged.
   - **The pink room labels (⚽ Soccer, 👗 Closet …) only show in Easy mode.** Without Easy mode she finds what can be
     tapped by exploring; a younger child in Easy mode still gets the labels.
-- Code Lab (plan agreed 2026-11-15, build as v1.13):
+- Code Lab (plan agreed 2026-11-15, built as v1.13):
   - Tap the Loft's computer desk. A small grid with Fuzzy and a goal; she lines up big arrow blocks, taps ▶️ Run and
     watches Fuzzy follow them. A bump is a gentle "oops, try again": nothing is lost.
   - Easy = arrows only; Medium adds a 🔁 repeat block; Hard adds walls and a 🌟 pick-up block.
   - Coins: about 3 per new puzzle solved plus a small level bonus, each puzzle paying once. No timers.
   - Puzzles are short text recipes in a new `18-codelab.js`, so more puzzles and levels are easy to add.
   - Save: `code{level, solved[]}` per room, with defaults for old saves (save version 9).
+  - As built: 6 puzzles per level (18). The goal is a carrot 🥕 (Fuzzy is a bunny); walls are pink toy blocks.
+    🔁 comes as ×2, ×3 and ×4 blocks and repeats the block right after it. Medium puzzles have a block limit (shown
+    as empty slots) so 🔁 is needed. Reaching the carrot with every ⭐ wins straight away, even if blocks are left.
+    Tapping a block in the program takes it out; ↩️ removes the last one, 🗑️ clears all.
+  - Coins: 3 per new puzzle, +5 when every puzzle of a level is solved. If puzzles are added to a level later, finishing
+    the new ones pays that level bonus again (a small, fair extra).
+  - Added a **"First Program!" bonus photocard** (+10, once), like the other games have. Easy to remove if not wanted.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -293,13 +310,16 @@ _Last updated: 2026-11-15_
 4. ~~Owner: build v1.10 and try the Loft.~~ Everything works. Merged.
 5. ~~Owner: build v1.11 and merge it.~~ Merged.
 6. ~~Plan Code Lab and get it agreed.~~ Agreed (see "Decisions made").
-7. Owner: build v1.12, try the Stage in the Loft and the labels (see the PR), and merge it.
-8. Build Code Lab (v1.13) on the Loft's computer desk.
+7. ~~Owner: build v1.12, try the Stage in the Loft and the labels, and merge it.~~ Merged.
+8. ~~Build Code Lab (v1.13) on the Loft's computer desk.~~ Built (v1.13 PR).
+9. Owner: build v1.13, try the Code Lab (see the PR), and merge it.
+10. Pick the next Phase 7 item (ideas: Content Pack 2, more Code Lab puzzles or a "my move" block, new fidgets).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 8 since v1.11
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 9 since v1.13
+  (Code Lab: `code{level, solved[]}`). It was 8 in v1.11
   (old swoop hair ids → `swoopBlack` + `look.hairColor`, and `hairc:<colour>` added to `owned`). It was 7 in v1.10
   (Loft + Content Pack 1: `room2` and `fid.popShape`). It was 6 in v1.8
   (Little-sister polish: per-profile `easy`, `color`, `badge`, plus `settings.pin`). It was 5 in v1.7
