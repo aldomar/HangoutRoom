@@ -4,8 +4,8 @@ _Last updated: 2026-11-15_
 
 ## Where we are
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): finishing** (v1.2 PR open).
-- **Phase 2 (Art Desk): built, PR open as v1.3** on branch `feature/art-desk`. It is based on the v1.2 branch,
-  so merge the v1.2 PR first. Then check it on the tablet (see Next steps).
+- **Phase 2 (Art Desk): done, PR open as v1.3** on branch `feature/art-desk`. It is based on the v1.2 branch,
+  so merge the v1.2 PR first. Checked on an Android phone: it works, and drawings survive closing the app.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -34,7 +34,9 @@ _Last updated: 2026-11-15_
   - the "Save your drawing?" prompt on Back, and a draft surviving a reload
   - a backup with drawings, wiping and restoring it, and restoring an old backup without drawings
   - tablet, phone portrait and phone landscape sizes
-- Not tested yet: IndexedDB inside the Android WebView, on the real tablet.
+- **On a device (2026-11-15):** the owner installed v1.3 on an Android phone. The new features worked, and a saved
+  drawing was still in the Gallery after swiping the app away and reopening it. So drawing storage (IndexedDB)
+  works inside the Android WebView. Not yet tried on her tablet.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -76,13 +78,9 @@ _Last updated: 2026-11-15_
 5. ~~Plan Phase 2 (Art Desk) and get it agreed.~~ Agreed and built (v1.3 PR).
 
 ## Next steps (Phase 2)
-1. Owner: merge v1.2, then the v1.3 PR. Build and install **over** the current app.
-2. On the tablet:
-   - Open the Art Desk, draw, save, close the app fully, and reopen. The drawing must still be in the Gallery.
-     (This proves IndexedDB works in the WebView.)
-   - Hang a poster.
-   - Make a backup file and check it says how many drawings it holds.
-3. Fix anything the tablet shows, then plan Phase 3 (Photocard Wall).
+1. ~~Check on a device that drawings survive closing the app.~~ Done on an Android phone (2026-11-15).
+2. Owner: merge v1.2, then the v1.3 PR. Install **over** the app on her tablet and check that her room is still there.
+3. Plan Phase 3 (Photocard Wall) and get it agreed before coding.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of the script in `index.html`) is the app version shown in Settings. It must match

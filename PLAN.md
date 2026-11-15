@@ -60,15 +60,15 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
   with nothing to install.
 - **Done when:** the APK installs, saves survive closing the app and installing an update, and Back works as described.
 
-### Phase 2: Art Desk 🎨 (built in v1.3, PR open)
+### ✅ Phase 2: Art Desk 🎨 (v1.3)
 - ✅ Drawing pad: pen, marker, glitter, neon, eraser, stamps (star, heart, bat, ghost, moon, soccer ball).
 - ✅ 12 colours plus rainbow, 3 brush sizes, 3 paper colours, undo (12 steps), clear (can be undone).
 - ✅ Gallery saved in IndexedDB. +5 coins for each new drawing with 3 or more strokes, for the first 5 drawings a day.
 - ✅ "Hang in room" turns a drawing into a framed poster (up to 4). Deleting a drawing takes its poster down.
 - ✅ An unsaved drawing is kept as a draft when the app goes into the background, and comes back next time.
 - ✅ Backups include drawings (a switch in the backup screen, on by default). Older backups still restore.
-- **Done when:** drawings survive restarts, app updates and backups. Still to check on the tablet:
-  IndexedDB must work inside the Android WebView (if not, drawings use a smaller localStorage fallback).
+- **Done when:** drawings survive restarts, app updates and backups. ✅ Checked on an Android phone:
+  drawings survive closing the app (IndexedDB works inside the WebView).
 
 ### Phase 3: Photocard Wall 📸
 - "Idol card maker": photograph the mascot in its current outfit on a stage background, with a name, sparkle frame and
