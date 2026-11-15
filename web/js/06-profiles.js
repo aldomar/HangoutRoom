@@ -23,7 +23,10 @@ function normalize(p){
   p.look=Object.assign({},DEFAULT_LOOK,p.look||{});
   p.owned=Array.isArray(p.owned)?p.owned:[];
   p.room=Object.assign({wall:'lavender',floor:'wood',items:[]},p.room||{});
-  p.fid=Object.assign({pop:'rainbow',squish:'mochi',spin:'galaxy'},p.fid||{});
+  // The Cozy Loft (v1.10), a second room with its own wall, floor and decorations. My Stuff is shared between rooms.
+  p.room2=Object.assign({wall:'attic',floor:'wood',items:[]},p.room2&&typeof p.room2==='object'?p.room2:{});
+  [p.room,p.room2].forEach(r=>{if(!Array.isArray(r.items))r.items=[];r.items=r.items.filter(i=>i&&typeof i==='object');});
+  p.fid=Object.assign({pop:'rainbow',squish:'mochi',spin:'galaxy',popShape:'classic'},p.fid||{}); // popShape: v1.10
   if(typeof p.coins!=='number') p.coins=0;
   if(!p.mascotName) p.mascotName='Fuzzy';
   // Photocards (v1.4). A card: {id, no, at, look, stage, frame, title, name, s:[cute,spooky,sporty], bonus?}

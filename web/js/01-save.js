@@ -8,9 +8,9 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.9';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.10';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=6;           // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=7;           // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
 // pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
 const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:''};
@@ -42,7 +42,10 @@ const MIGRATIONS={
     if(p.stats) ['shows','fullCombos'].forEach(k=>{ if(typeof p.stats[k]!=='number') p.stats[k]=0; }); }); },
   // v1.8 Little-sister polish: easy (Easy mode on/off), color (a ROOM_COLORS id) and badge (one of ROOM_BADGES)
   // per profile, filled in by normalize(); settings.pin comes from DEFAULT_SETTINGS.
-  6: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&typeof p.easy!=='boolean') p.easy=false; }); }
+  6: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&typeof p.easy!=='boolean') p.easy=false; }); },
+  // v1.10 Loft + Content Pack 1: room2 {wall, floor, items} (the Cozy Loft, empty at first) and fid.popShape
+  // ('classic' | 'heart' | 'star'). normalize() fills in both; this step only marks the upgrade.
+  7: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&!p.room2) p.room2={wall:'attic',floor:'wood',items:[]}; }); }
 };
 
 // Used for the saved data on load AND for restored backups, so both get the same fixes.

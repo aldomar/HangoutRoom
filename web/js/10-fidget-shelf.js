@@ -15,9 +15,17 @@ function renderSkins(){
   const p=P(); if(!p) return; const F=FID[fidTab];
   const own=([id,t])=>!t.price||p.owned.includes(F.key+':'+id);
   $('#skinRow').innerHTML=easySort(Object.entries(F.list),e=>own(e)?0:e[1].price).map(e=>{const [id,t]=e, o=own(e), poor=poorCls(p,o,t.price);
-    return `<button class="tab ${p.fid[F.key]===id?'on':''}" data-skin="${id}"${poor?' style="opacity:.5"':''}>${t.name}${o?'':(poor?' · 🔒🪙':' · 🪙')+t.price}</button>`;}).join('');
+    return `<button class="tab ${p.fid[F.key]===id?'on':''}" data-skin="${id}"${poor?' style="opacity:.5"':''}>${t.name}${o?'':(poor?' · 🔒🪙':' · 🪙')+t.price}</button>`;}).join('')
+    +(fidTab==='popit'?'<span class="skin-sep"></span>'+shapeButtons(p):'');
+}
+function shapeButtons(p){ // pop-it board shapes, after the colour themes
+  const own=([id,t])=>!t.price||p.owned.includes('popshape:'+id);
+  return easySort(Object.entries(POP_SHAPES),e=>own(e)?0:e[1].price).map(e=>{const [id,t]=e, o=own(e), poor=poorCls(p,o,t.price);
+    return `<button class="tab ${p.fid.popShape===id?'on':''}" data-shape="${id}"${poor?' style="opacity:.5"':''}>${t.name}${o?'':(poor?' · 🔒🪙':' · 🪙')+t.price}</button>`;}).join('');
 }
 $('#skinRow').onclick=e=>{
+  const sb=e.target.closest('[data-shape]');
+  if(sb){const p=P(), id=sb.dataset.shape, t=POP_SHAPES[id]; if(t) tryBuy('popshape:'+id,t.price,t.name,()=>{p.fid.popShape=id;save();SFX.click();renderSkins();renderPop();}); return;}
   const b=e.target.closest('[data-skin]'); if(!b) return; const p=P(), F=FID[fidTab], id=b.dataset.skin, t=F.list[id];
   tryBuy(F.key+':'+id,t.price,t.name,()=>{p.fid[F.key]=id;save();SFX.click();renderSkins();if(fidTab==='popit')renderPop();});
 };
@@ -26,10 +34,26 @@ $('#skinRow').onclick=e=>{
 const popState={down:new Array(36).fill(false),flipping:false};
 const board=$('#popBoard');
 let popping=false;
+// A shaped board leaves out the bubbles that don't fit inside its outline. They count as already popped,
+// so popping every bubble that IS there still flips the board. Worked out once per shape from the CSS grid
+// (6% padding, 3% gaps) by testing points around each bubble against the outline.
+const popMasks={};
+function popMask(id){
+  if(popMasks[id]) return popMasks[id];
+  const S=POP_SHAPES[id]; let m=new Array(36).fill(false);
+  if(S&&S.path){const ctx=document.createElement('canvas').getContext('2d'), path=new Path2D(S.path);
+    const gap=0.03*88, cell=(88-gap*5)/6, r=cell/2*0.5, pts=[[0,0]].concat([0,1,2,3,4,5,6,7].map(k=>[Math.cos(k*TAU/8)*r,Math.sin(k*TAU/8)*r]));
+    m=m.map((_,i)=>{const cx=6+(i%6)*(cell+gap)+cell/2, cy=6+Math.floor(i/6)*(cell+gap)+cell/2;
+      return !pts.every(([dx,dy])=>ctx.isPointInPath(path,cx+dx,cy+dy));});}
+  return popMasks[id]=m;
+}
 function renderPop(){
-  const T=POP_THEMES[P().fid.pop]||POP_THEMES.rainbow;
-  board.style.background=T.board;
-  board.innerHTML=popState.down.map((d,i)=>`<div class="bub${d?' down':''}" data-i="${i}" style="background:${T.cols[Math.floor(i/6)]}"></div>`).join('');
+  const p=P(), T=POP_THEMES[p.fid.pop]||POP_THEMES.rainbow, sh=POP_SHAPES[p.fid.popShape]?p.fid.popShape:'classic', S=POP_SHAPES[sh], mask=popMask(sh);
+  if(popState.shape!==sh){popState.shape=sh;popState.down=mask.slice();}
+  board.classList.toggle('shaped',!!S.path);
+  board.style.background=S.path?'transparent':T.board;
+  board.innerHTML=(S.path?`<svg class="popshape" viewBox="0 0 100 100" preserveAspectRatio="none" overflow="visible"><path d="${S.path}" fill="${T.board}" stroke="#ffffff66" stroke-width="2.5" stroke-linejoin="round"/></svg>`:'')
+    +popState.down.map((d,i)=>`<div class="bub${mask[i]?' gone':d?' down':''}" data-i="${i}" style="background:${T.cols[Math.floor(i/6)]}"></div>`).join('');
 }
 function popAt(el){
   if(!el||!el.classList||!el.classList.contains('bub')||popState.flipping) return;
@@ -41,7 +65,7 @@ function popAt(el){
     popState.flipping=true;
     setTimeout(()=>{
       board.classList.add('flip'); SFX.flip();
-      setTimeout(()=>{popState.down.fill(false);renderPop();},320);
+      setTimeout(()=>{popState.down=popMask(popState.shape||'classic').slice();renderPop();},320);
       setTimeout(()=>{board.classList.remove('flip');popState.flipping=false;p.stats.flips++;const r=board.getBoundingClientRect();earn(5,'Flip bonus!',r.left+r.width/2,r.top+r.height/2);},680);
     },250);
   }
@@ -129,7 +153,8 @@ function drawSquish(dt){
     for(const D of all){const rho=Math.hypot(D.u,D.v), edge=clamp((rho-0.45)/0.55,0,1), da=Math.atan2(Math.sin(a-Math.atan2(D.v,D.u)),Math.cos(a-Math.atan2(D.v,D.u)));
       const near=Math.exp(-da*da/0.14); t+=D.d*(0.07*(1-edge*near)-0.32*edge*near);}
     SQ.r[i]+=(t-SQ.r[i])*k(0.3);
-    const bump=T.extra==='cloud'?1+0.06*Math.cos(a*7):1, rr=R*SQ.r[i]*bump;
+    const ghostHem=T.extra==='ghost'&&Math.sin(a)>0.25?Math.min(1,(Math.sin(a)-0.25)*3):0; // Ghosty: a wavy hem along the bottom
+    const bump=T.extra==='cloud'?1+0.06*Math.cos(a*7):1+0.07*ghostHem*Math.cos(a*10), rr=R*SQ.r[i]*bump;
     pts.push({x:cx+Math.cos(a)*rr*sx,y:cy+Math.sin(a)*rr*sy});
   }
   const at=a=>pts[Math.round((((a%TAU)+TAU)%TAU)/TAU*N)%N];
@@ -208,6 +233,8 @@ function addRot(d){
   while(SP.acc>=TAU){SP.acc-=TAU;const p=P();p.stats.spins++;if(p.stats.spins%25===0){const r=spc.getBoundingClientRect();earn(1,null,r.left+r.width/2,r.top+r.height*0.2);}}
 }
 function cStar(ctx,x,y,r){ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;ctx.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr);}ctx.closePath();ctx.fill();}
+function cBat(ctx,x,y,s){ctx.beginPath();ctx.moveTo(x-1.6*s,y);ctx.quadraticCurveTo(x-s,y-s,x-.4*s,y-.4*s);ctx.quadraticCurveTo(x,y-s,x+.4*s,y-.4*s);ctx.quadraticCurveTo(x+s,y-s,x+1.6*s,y);
+  ctx.quadraticCurveTo(x+s,y-.2*s,x+.8*s,y+.4*s);ctx.quadraticCurveTo(x+.4*s,y,x,y+.6*s);ctx.quadraticCurveTo(x-.4*s,y,x-.8*s,y+.4*s);ctx.quadraticCurveTo(x-s,y-.2*s,x-1.6*s,y);ctx.fill();}
 function cHeart(ctx,x,y,s){ctx.beginPath();ctx.moveTo(x,y+s*.9);ctx.bezierCurveTo(x-s*1.6,y-s*.1,x-s*.9,y-s*1.3,x,y-s*.45);ctx.bezierCurveTo(x+s*.9,y-s*1.3,x+s*1.6,y-s*.1,x,y+s*.9);ctx.fill();}
 function spinnerShape(ctx,cx,cy,R,a,T){
   ctx.save(); ctx.translate(cx,cy); ctx.rotate(a);
@@ -223,7 +250,7 @@ function spinnerShape(ctx,cx,cy,R,a,T){
   });
   ctx.fillStyle=T.deco==='pent'?'#222':T.edge;
   for(let k=0;k<3;k++){const t=k*TAU/3+Math.PI/3,x=Math.cos(t)*R*.35,y=Math.sin(t)*R*.35;
-    if(T.deco==='star')cStar(ctx,x,y,R*.08);else if(T.deco==='heart')cHeart(ctx,x,y,R*.06);else{ctx.beginPath();for(let i=0;i<5;i++){const q=i*TAU/5-Math.PI/2;ctx.lineTo(x+Math.cos(q)*R*.06,y+Math.sin(q)*R*.06);}ctx.closePath();ctx.fill();}}
+    if(T.deco==='star')cStar(ctx,x,y,R*.08);else if(T.deco==='bat')cBat(ctx,x,y,R*.065);else if(T.deco==='heart')cHeart(ctx,x,y,R*.06);else{ctx.beginPath();for(let i=0;i<5;i++){const q=i*TAU/5-Math.PI/2;ctx.lineTo(x+Math.cos(q)*R*.06,y+Math.sin(q)*R*.06);}ctx.closePath();ctx.fill();}}
   ctx.fillStyle=T.cap;ctx.strokeStyle=T.edge;ctx.lineWidth=5;ctx.beginPath();ctx.arc(0,0,R*.24,0,TAU);ctx.fill();ctx.stroke();
   ctx.fillStyle=T.body;ctx.beginPath();ctx.arc(0,0,R*.11,0,TAU);ctx.fill();
   ctx.restore();

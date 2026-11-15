@@ -10,10 +10,11 @@ _Last updated: 2026-11-15_
 - **Squishy upgrade: done** (v1.6 merged, PR #6).
 - **Phase 5 (Stage rhythm game): done** (v1.7 merged, PR #7).
 - **Phase 6 (little-sister polish): done** (v1.8 merged, PR #8). The owner checked it on the device: everything works.
-- **Phase 7 (content packs): started.** Step 1, the code split, is built, with the PR open as **v1.9** on branch `feature/web-split`
-  (plan agreed 2026-11-15). It is not yet built in Android Studio.
-- Phase 7 order (agreed 2026-11-15): code split (v1.9) → content pack with a second room (v1.10) → Code Lab. The owner added a new mini-game idea to it: **Code Lab** (an intro-to-coding
-  puzzle game, sketched in `PLAN.md`). Plan it and get it agreed before building.
+- **Phase 7 (content packs): in progress.** Order (agreed 2026-11-15): code split (v1.9) → Cozy Loft + Content Pack 1 (v1.10)
+  → Code Lab (the owner's intro-to-coding game idea, sketched in `PLAN.md`).
+  - **Code split: done** (v1.9 merged, PR #9). Built in Android Studio and checked on the device: everything works.
+  - **Cozy Loft + Content Pack 1: built, PR open as v1.10** on branch `feature/loft-pack1` (plan agreed 2026-11-15).
+    Not yet tried on a device.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -31,7 +32,8 @@ _Last updated: 2026-11-15_
 - PR #6 "Squishy upgrade (v1.6)": merged.
 - PR #7 "Stage (v1.7)": merged.
 - PR #8 "Little-sister polish (v1.8)": merged.
-- PR "Code split (v1.9)" on branch `feature/web-split` (from `main` after #8, includes the Phase 7 notes from `feature/phase7`): open.
+- PR #9 "Code split (v1.9)": merged.
+- PR "Cozy Loft + Content Pack 1 (v1.10)" on branch `feature/loft-pack1` (from `main` after #9): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -98,7 +100,16 @@ _Last updated: 2026-11-15_
 - **Code split (v1.9)**: 200 checks, all passing, no console errors. The split was done by a script that cut the old
   `index.html` at its section banners and checked the pieces add back up to exactly the old code (no code was retyped).
   New checks: `index.html` loads every `web/js` file in number order, the CSS loaded, the last file ran, and a missing
-  file now fails the test (tried by hiding `13-soccer.js`). Not yet tried: the Android build with the new copy task.
+  file now fails the test (tried by hiding `13-soccer.js`). The owner then built it in Android Studio: it works.
+- **Cozy Loft + Content Pack 1 (v1.10)**: 238 checks, all passing, no console errors. New checks:
+  - the 🪜 Loft button opens the Loft (own Attic wall, Fuzzy there too); Back goes Loft → room
+  - buying and changing walls in the Loft only changes the Loft; My Stuff is shared (something put away in her room
+    can be placed in the Loft and moves there); 4 posters per room; trophies and the Golden Mic stay in her room
+  - every new closet item draws; buying and wearing one; new clothes count on photocard stats
+  - all 8 new decorations in the Shop and drawn in the Loft; new walls and floors
+  - heart and star pop-it boards: bought, a sensible number of bubbles, popping them all flips the board and the shape
+    stays; back to the square board; Ghosty squishy and Batwing spinner draw
+  - restoring a v1.9 backup (empty Loft, square board) and a v1.10 backup; the Loft button fits on a phone
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -178,6 +189,21 @@ _Last updated: 2026-11-15_
     a room (✏️). It does **not** guard the Easy mode switch (owner's choice). Forgot PIN = a 2-digit × 2-digit sum.
     The PIN is saved in `settings.pin` and stays with the device: restoring a backup never changes it.
 
+- Cozy Loft + Content Pack 1 (agreed 2026-11-15):
+  - **The second room is a Cozy Loft** (slanted roof, round night-sky window, a pendant lamp and a computer desk),
+    **free from the start** for every room. Switched with the 🪜 Loft / 🏠 Room button in the top bar (one tap).
+  - Her first room stays `p.room`; the Loft is `p.room2`. Each has its own wall, floor and decorations.
+    **My Stuff is shared**: put something away in one room and place it in the other. Up to 4 posters per room
+    ("Hang in room" uses her room first, then the Loft). Trophies and the Golden Mic are given to her first room.
+  - **The computer desk is plain furniture** (owner's choice: no "coming soon" sign). It becomes the Code Lab later.
+  - **Content Pack 1:** 8 clothes (Cotton Candy hair, Bat Sweater, Galaxy Skirt, Mint Fluff leg warmers, Rainbow Fluff
+    arm warmers, Bunny Slippers, Flower Crown, Heart Shades), 8 decorations (Book Nook, Disco Ball, Floor Cushions,
+    Bat Garland, Egg Chair, Cloud Shelf, Star Mirror, Checker Rug), 2 walls (Peachy Stripes, Sky Clouds) plus the free
+    Attic Boards wall, 2 floors (Mint Tiles, Cloud Carpet), the Ghosty squishy, the Batwing spinner, and heart / star
+    pop-it boards (15 coins each). Prices 15–40.
+  - **Pop-it shapes** are picked next to the colour themes. Bubbles that don't fit the shape are left out (heart 28,
+    star 22). Popping all of them still flips the board for the same +5 coins.
+
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
 - $0 beyond the Claude subscription. Use free tiers and free tools only.
@@ -225,15 +251,17 @@ _Last updated: 2026-11-15_
 
 ## Next steps (Phase 7)
 1. ~~Decide which Phase 7 item comes first.~~ Code split, then content pack + second room, then Code Lab.
-2. Owner: merge the v1.9 PR after building it once in Android Studio (the copy task now copies `web/` too) and
-   checking the app opens and her rooms are there.
-3. Plan the content pack + second room (v1.10) and get it agreed before coding.
-4. Later: Code Lab, starting with Easy / Medium / Hard levels, built so more puzzles and levels are easy to add.
+2. ~~Merge the v1.9 PR.~~ Merged after a device check.
+3. ~~Plan the content pack + second room (v1.10).~~ Agreed and built (v1.10 PR).
+4. Owner: build v1.10, install it over the app, and try the Loft and the new things (see the PR). Merge the PR.
+5. Plan Code Lab (Easy / Medium / Hard, puzzles as data so more are easy to add) and get it agreed. It goes on the
+   Loft's computer desk.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 6 since v1.8
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 7 since v1.10
+  (Loft + Content Pack 1: `room2` and `fid.popShape`). It was 6 in v1.8
   (Little-sister polish: per-profile `easy`, `color`, `badge`, plus `settings.pin`). It was 5 in v1.7
   (Stage: `stage`, `stats.shows/fullCombos`, plus `settings.stageOffset` filled in by `DEFAULT_SETTINGS`).
   It was 4 in v1.5 (Soccer: `soccer`, `stats.goals/kicks/matches/perfects`). It was 3 in v1.4

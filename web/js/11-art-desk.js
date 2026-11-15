@@ -229,15 +229,15 @@ function myArt(){const p=P();return ArtStore.all().catch(()=>[]).then(l=>l.filte
 function renderGallery(){
   myArt().then(list=>{
     const p=P(); if(!p||cur!=='art'||ART.view!=='gal') return; galList=list;
-    const hung=new Set(p.room.items.filter(i=>i.type==='poster').map(i=>i.art));
-    $('#galInfo').textContent=list.length?`${list.length} drawing${list.length===1?'':'s'} · 🖼️ ${hung.size} of ${MAX_POSTERS} in your room`:'';
+    const hung=new Set(allItems(p).filter(i=>i.type==='poster').map(i=>i.art));
+    $('#galInfo').textContent=list.length?`${list.length} drawing${list.length===1?'':'s'} · 🖼️ ${hung.size} poster${hung.size===1?'':'s'}`:'';
     $('#artGrid').innerHTML=list.length?list.map(r=>`<button class="tile" data-art="${esc(r.id)}"><div class="tv wide"><img src="${esc(r.thumb)}" alt=""></div>${hung.has(r.id)?'<div class="tp cnt">🖼️</div>':''}<div class="tn">${new Date(r.created).toLocaleDateString()}</div></button>`).join('')
       :'<div class="empty">No drawings yet! Draw something, then tap 💾 Save 🎨</div>';
   });
 }
 $('#artGrid').addEventListener('click',e=>{const t=e.target.closest('[data-art]');if(!t)return;const r=galList.find(x=>x.id===t.dataset.art);if(r){SFX.click();artModal(r);}});
 function artModal(r){
-  const p=P(), hung=p.room.items.some(i=>i.type==='poster'&&i.art===r.id);
+  const p=P(), hung=allItems(p).some(i=>i.type==='poster'&&i.art===r.id);
   modal('🎨 My drawing',`<div class="art-big" style="background:${Object.prototype.hasOwnProperty.call(PAPERS,r.paper)?PAPERS[r.paper]:'#fff'}"><img src="${esc(r.ink)}" alt=""></div>`,[
     {text:'🗑️ Delete',cls:'ghost',on:()=>delArt(r)},
     {text:hung?'📦 Take down':'🖼️ Hang in room',cls:'ghost',on:()=>hung?takeDown(r.id):hangArt(r)},
@@ -250,16 +250,20 @@ function openArt(r){
 }
 function hangArt(r){
   const p=P();
-  if(p.room.items.filter(i=>i.type==='poster').length>=MAX_POSTERS){SFX.locked();toast(`You have ${MAX_POSTERS} posters already! Take one down first.`);return;}
-  p.room.items.push(Object.assign({uid:uid(),type:'poster',art:r.id,placed:true},spot('poster')));
-  ART_THUMBS[r.id]=r.thumb; save(); SFX.buy(); toast('Your poster is in your room! Use 🛋️ Decorate to move it.'); renderGallery();
+  // Up to MAX_POSTERS hanging in each room: her room first, then the Loft.
+  const R=[p.room,p.room2].find(x=>postersUp(x)<MAX_POSTERS);
+  if(!R){SFX.locked();toast(`Both rooms have ${MAX_POSTERS} posters already! Take one down first.`);return;}
+  const keep=roomNo; roomNo=R===p.room2?2:1; R.items.push(Object.assign({uid:uid(),type:'poster',art:r.id,placed:true},spot('poster'))); roomNo=keep;
+  ART_THUMBS[r.id]=r.thumb; save(); SFX.buy(); toast(R===p.room2?'Your poster is in the Loft! 🪜':'Your poster is in your room! Use 🛋️ Decorate to move it.'); renderGallery();
 }
-function takeDown(id){const p=P();p.room.items=p.room.items.filter(i=>!(i.type==='poster'&&i.art===id));save();SFX.whoosh();toast('Poster taken down 📦');renderGallery();}
+const postersUp=R=>R.items.filter(i=>i.type==='poster'&&i.placed).length;
+function dropPoster(p,id){[p.room,p.room2].forEach(R=>{R.items=R.items.filter(i=>!(i.type==='poster'&&i.art===id));});}
+function takeDown(id){const p=P();dropPoster(p,id);save();SFX.whoosh();toast('Poster taken down 📦');renderGallery();}
 function delArt(r){
   modal('Delete this drawing?','It will be gone forever. If it is hanging in your room, the poster comes down too.',[
     {text:'Keep it',cls:'pink'},
     {text:'🗑️ Delete',cls:'ghost',on:()=>{
-      const p=P(); p.room.items=p.room.items.filter(i=>!(i.type==='poster'&&i.art===r.id)); save();
+      const p=P(); dropPoster(p,r.id); save();
       delete ART_THUMBS[r.id]; if(ART.editId===r.id) resetPad(p.id);
       ArtStore.del(r.id).catch(()=>{}).then(()=>{SFX.whoosh();toast('Drawing deleted');renderGallery();});}}]);
 }
@@ -267,6 +271,6 @@ function delArt(r){
 function loadArtThumbs(){
   return ArtStore.all().then(list=>{
     ART_THUMBS={}; list.forEach(r=>{if(!r.draft)ART_THUMBS[r.id]=r.thumb;});
-    const p=P(); if(cur==='room'&&!drag&&p&&p.room.items.some(i=>i.type==='poster')) renderRoom();
+    const p=P(); if(cur==='room'&&!drag&&p&&allItems(p).some(i=>i.type==='poster')) renderRoom();
   }).catch(()=>{});
 }

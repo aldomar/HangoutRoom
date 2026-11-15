@@ -136,14 +136,16 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
 Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a content pack with a second room (v1.10),
 **3)** Code Lab. Each gets its own plan, agreed before building.
 
-- **Code split (v1.9), agreed 2026-11-15:** `index.html` stays at the repo root (page shell and screen markup).
+- ✅ **Code split (v1.9), agreed 2026-11-15:** `index.html` stays at the repo root (page shell and screen markup).
   The CSS moves to `web/app.css` and the code to `web/js/`, one file per numbered section
   (`01-save.js` … `14-stage.js`, and `99-startup.js` last), loaded in order with plain `<script src>`. It still runs from `file://` with no server
   and no build step. New games and packs get their own numbered files. The Android build copies `index.html` and `web/`.
   Nothing changes for her: same app, same saves.
-- **A second room** (moved up from the ideas backlog by the owner). Part of the first content pack, and it gives
-  new areas like Code Lab somewhere to live.
-- More closet items, decorations, squishies and pop-it shapes (heart, star).
+- ✅ **A second room** (moved up from the ideas backlog by the owner): the Cozy Loft, in v1.10.
+- ✅ **Cozy Loft + Content Pack 1 (v1.10):** a free second room (🪜 Loft button) with its own wall, floor and decorations,
+  shared My Stuff, and a computer desk ready for Code Lab. Pack 1: 8 clothes, 8 decorations, 2 walls + the free Attic wall,
+  2 floors, the Ghosty squishy, the Batwing spinner, and heart / star pop-it boards.
+- More closet items, decorations and squishies (future packs: `18-pack2.js` …).
 - New fidgets: slime stretcher, fidget-cube clicker, tilt marble maze (device tilt works in WebView).
 - Seasonal decorations, a sticker book of achievements, a pet for the mascot.
 - **New mini-game: Code Lab 💻 (intro to coding, the owner's idea).** A puzzle game where she "programs" Fuzzy.

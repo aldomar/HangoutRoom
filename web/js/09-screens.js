@@ -65,7 +65,7 @@ function delModal(p){
     ArtStore.delWhere(r=>r.profileId===p.id).catch(()=>{});}}]);
 }
 function enterRoom(){
-  const p=P(); if(!p) return; show('room'); loadArtThumbs();
+  const p=P(); if(!p) return; roomNo=1; show('room'); loadArtThumbs();
   const today=new Date().toDateString();
   if(p.lastDaily!==today){p.lastDaily=today;save();setTimeout(()=>{earn(10,'Daily gift!',innerWidth/2,innerHeight/2);toast('🎁 Daily gift! +10 coins');},600);}
   if(!p.seenTip){p.seenTip=true;save();setTimeout(()=>say(`Hi ${p.name}! Tap the shelf, closet or desk ✨`),1200);}
@@ -74,14 +74,20 @@ function enterRoom(){
 /* ---------- room ---------- */
 const roomSvg=$('#roomSvg');
 let decorating=false,decoTab='mine',drag=null;
+// Two rooms (v1.10): 1 = her room (p.room), 2 = the Cozy Loft (p.room2, drawn in 16-room2.js). Each has its own wall,
+// floor and items; My Stuff (items with placed:false) is shared, so a stored thing can be placed in either room.
+let roomNo=1;
+const curRoom=p=>roomNo===2?p.room2:p.room;
+const allItems=p=>p.room.items.concat(p.room2.items);
+function goRoom(n){roomNo=n;drag=null;SFX.whoosh();renderRoom();if(decorating)renderDecoGrid();}
 function mascotG(p){return `<g id="mascotG" class="mascot"><ellipse cx="500" cy="604" rx="62" ry="12" fill="#00000030"/>${mascotSVG(p.look,null,'x="420" y="396" width="160" height="216"')}</g>`;}
 function renderRoom(){
   const p=P(); if(!p) return;
-  const W=WALLS[p.room.wall]||WALLS.lavender, F=FLOORS[p.room.floor]||FLOORS.wood;
+  const R=curRoom(p), W=WALLS[R.wall]||WALLS.lavender, F=FLOORS[R.floor]||FLOORS.wood;
   let s=`<rect width="1000" height="470" fill="${W.fill}"/><rect width="1000" height="470" fill="url(#${W.pat})"/>`;
   s+=`<rect y="470" width="1000" height="230" fill="${F.fill}"/><rect y="470" width="1000" height="230" fill="url(#${F.pat})"/><rect y="458" width="1000" height="16" fill="#00000026"/>`;
-  s+=furniture();
-  const items=p.room.items.filter(i=>i.placed&&DECOR[i.type]);
+  s+=roomNo===2?loftFurniture():furniture();
+  const items=R.items.filter(i=>i.placed&&DECOR[i.type]);
   const deco=i=>`<g class="deco" data-uid="${i.uid}" transform="translate(${Math.round(i.x)} ${Math.round(i.y)})">${DECOR[i.type].d(i)}</g>`;
   s+=items.filter(i=>DECOR[i.type].flat).map(deco).join('');
   const list=items.filter(i=>!DECOR[i.type].flat).map(i=>({y:i.y,h:deco(i)}));
@@ -89,7 +95,8 @@ function renderRoom(){
   s+=list.map(o=>o.h).join('');
   roomSvg.innerHTML=s;
   roomSvg.classList.toggle('decorating',decorating);
-  $('#roomTitle').textContent=`${p.name}'s Room`;
+  $('#roomTitle').textContent=roomNo===2?`${p.name}'s Loft`:`${p.name}'s Room`;
+  $('#roomGo').innerHTML=roomNo===2?'🏠 <span>Room</span>':'🪜 <span>Loft</span>';
   updateCoins();
 }
 function say(text){
@@ -123,7 +130,7 @@ function toSvg(e){const pt=roomSvg.createSVGPoint();pt.x=e.clientX;pt.y=e.client
 roomSvg.addEventListener('pointerdown',e=>{
   if(!decorating) return;
   const g=e.target.closest('.deco'); if(!g) return;
-  const it=P().room.items.find(i=>i.uid===g.dataset.uid); if(!it) return;
+  const it=curRoom(P()).items.find(i=>i.uid===g.dataset.uid); if(!it) return;
   const pt=toSvg(e); drag={it,g,dx:it.x-pt.x,dy:it.y-pt.y};
   try{roomSvg.setPointerCapture(e.pointerId);}catch(_){}
   g.classList.add('dragging'); roomSvg.appendChild(g); SFX.click(); e.preventDefault();
@@ -145,6 +152,7 @@ roomSvg.addEventListener('pointercancel',endDrag);
 function enterDecorate(){decorating=true;$('#decoPanel').classList.remove('hidden');$('#decoBtn').textContent='✔ Done';renderRoom();renderDecoGrid();SFX.click();}
 function exitDecorate(silent){decorating=false;drag=null;$('#decoPanel').classList.add('hidden');$('#decoBtn').textContent='🛋️ Decorate';if(!silent)renderRoom();}
 $('#decoBtn').onclick=()=>decorating?exitDecorate():enterDecorate();
+$('#roomGo').onclick=()=>goRoom(roomNo===2?1:2);
 $('#decoDone').onclick=()=>exitDecorate();
 $('#decoTabs').onclick=e=>{const b=e.target.closest('[data-dt]');if(!b)return;decoTab=b.dataset.dt;SFX.click();renderDecoGrid();};
 const decoPrev=k=>`<svg viewBox="${DECOR[k].box}">${DECOR[k].d()}</svg>`;
@@ -153,7 +161,7 @@ function renderDecoGrid(){
   $$('#decoTabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.dt===decoTab));
   let h='';
   if(decoTab==='mine'){
-    const stored=p.room.items.filter(i=>!i.placed&&DECOR[i.type]), counts={};
+    const stored=allItems(p).filter(i=>!i.placed&&DECOR[i.type]), counts={};
     stored.filter(i=>!DECOR[i.type].art).forEach(i=>counts[i.type]=(counts[i.type]||0)+1);
     const keys=Object.keys(counts);
     // posters are each different, so they get one tile each
@@ -163,7 +171,7 @@ function renderDecoGrid(){
   } else if(decoTab==='shop'){
     h=easySort(Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award),([k,d])=>d.price).map(([k,d])=>`<button class="tile${poorCls(p,false,d.price)}" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div>${priceTag(p,d.price)}</button>`).join('');
   } else {
-    const isW=decoTab==='wall', L=isW?WALLS:FLOORS, curId=isW?p.room.wall:p.room.floor;
+    const isW=decoTab==='wall', L=isW?WALLS:FLOORS, curId=isW?curRoom(p).wall:curRoom(p).floor;
     const own=([k,v])=>!v.price||p.owned.includes((isW?'wall:':'floor:')+k);
     h=easySort(Object.entries(L),e=>own(e)?0:e[1].price).map(e=>{const [k,v]=e, o=own(e);
       return `<button class="tile ${k===curId?'on':''} ${o?'':'locked'}${poorCls(p,o,v.price)}" data-surf="${k}"><div class="tv"><svg viewBox="0 0 300 200"><rect width="300" height="200" fill="${v.fill}"/><rect width="300" height="200" fill="url(#${v.pat})"/></svg></div><div class="tn">${v.name}</div>${o?'':priceTag(p,v.price)}</button>`;}).join('');
@@ -173,18 +181,22 @@ function renderDecoGrid(){
 // Posters go on the free bit of wall between the photocard board and the closet.
 // Trophies each get their own clear spot on the floor, so they never hide behind Fuzzy (who stands at x 420-580).
 const TROPHY_SPOTS={trophyBronze:{x:345,y:665},trophySilver:{x:655,y:680},trophyGold:{x:850,y:660},goldenMic:{x:180,y:688}};
-function spot(type){if(TROPHY_SPOTS[type])return Object.assign({},TROPHY_SPOTS[type]);if(type==='poster')return {x:686+Math.random()*12,y:200+Math.random()*12};return DECOR[type].wall?{x:380+Math.random()*240,y:200+Math.random()*60}:{x:400+Math.random()*200,y:560+Math.random()*90};}
+// In the Loft, posters go on the wall left of the skylight instead.
+function spot(type){if(TROPHY_SPOTS[type])return Object.assign({},TROPHY_SPOTS[type]);if(type==='poster')return roomNo===2?{x:170+Math.random()*12,y:230+Math.random()*12}:{x:686+Math.random()*12,y:200+Math.random()*12};return DECOR[type].wall?{x:380+Math.random()*240,y:200+Math.random()*60}:{x:400+Math.random()*200,y:560+Math.random()*90};}
 $('#decoGrid').addEventListener('click',e=>{
   const t=e.target.closest('.tile'); if(!t) return; const p=P();
   if(t.dataset.place||t.dataset.placeUid){
-    const it=p.room.items.find(i=>!i.placed&&(t.dataset.placeUid?i.uid===t.dataset.placeUid:i.type===t.dataset.place));
-    if(it){Object.assign(it,spot(it.type),{placed:true});save();SFX.pop();renderRoom();renderDecoGrid();}
+    const it=allItems(p).find(i=>!i.placed&&(t.dataset.placeUid?i.uid===t.dataset.placeUid:i.type===t.dataset.place));
+    if(!it) return; const R=curRoom(p);
+    if(it.type==='poster'&&postersUp(R)>=MAX_POSTERS){SFX.locked();toast(`This room has ${MAX_POSTERS} posters already!`);return;}
+    if(!R.items.includes(it)){[p.room,p.room2].forEach(r=>{r.items=r.items.filter(i=>i!==it);});R.items.push(it);} // moving it to this room
+    Object.assign(it,spot(it.type),{placed:true});save();SFX.pop();renderRoom();renderDecoGrid();
   } else if(t.dataset.buy){
     const k=t.dataset.buy, d=DECOR[k];
-    buyConsumable(d.price,d.name,()=>{p.room.items.push(Object.assign({uid:uid(),type:k,placed:true},spot(k)));save();renderRoom();renderDecoGrid();toast(`${d.name} is in your room! Drag it anywhere ✨`);});
+    buyConsumable(d.price,d.name,()=>{curRoom(p).items.push(Object.assign({uid:uid(),type:k,placed:true},spot(k)));save();renderRoom();renderDecoGrid();toast(`${d.name} is in your room! Drag it anywhere ✨`);});
   } else if(t.dataset.surf){
     const isW=decoTab==='wall', k=t.dataset.surf, v=(isW?WALLS:FLOORS)[k];
-    tryBuy((isW?'wall:':'floor:')+k,v.price,v.name,()=>{if(isW)p.room.wall=k;else p.room.floor=k;save();SFX.click();renderRoom();renderDecoGrid();});
+    tryBuy((isW?'wall:':'floor:')+k,v.price,v.name,()=>{if(isW)curRoom(p).wall=k;else curRoom(p).floor=k;save();SFX.click();renderRoom();renderDecoGrid();});
   }
 });
 

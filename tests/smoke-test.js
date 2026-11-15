@@ -140,7 +140,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`doRestore(${JSON.stringify(code)})`); await sleep(800);
   check('restore brings back 2 drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2);
   check('artwork not saved into localStorage', await ev(`!JSON.parse(localStorage.getItem('hangoutRoom.v1')).artwork`));
-  check('DB version is 6', (await ev('DB.version'))===6);
+  check('DB version is 7', (await ev('DB.version'))===7);
   await ev(`doRestore(${JSON.stringify(oldCode)})`); await sleep(800);
   check('old backup restores and keeps drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2 && (await ev('DB.profiles.length'))===1);
   await ev(`DB.settings.backupArt=false;backupModal()`); await sleep(400);
@@ -532,7 +532,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('restoring keeps this device\'s PIN', (await ev('DB.settings.pin'))==='1234');
   const v17Code=await ev(`JSON.stringify(Object.assign({},DB,{version:5,settings:{sound:true,music:false,backupArt:true,stageOffset:0},profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));['easy','color','badge'].forEach(k=>delete q[k]);return q;})}))`);
   await ev(`doRestore(${JSON.stringify(v17Code)})`); await sleep(400);
-  check('v1.7 backup restores with a colour, a badge and Easy mode off', await ev(`DB.version===6&&ROOM_COLORS[DB.profiles[0].color]&&DB.profiles[0].badge==='🐰'&&DB.profiles[0].easy===false&&DB.settings.pin==='1234'`));
+  check('v1.7 backup restores with a colour, a badge and Easy mode off', await ev(`DB.version===DB_VERSION&&ROOM_COLORS[DB.profiles[0].color]&&DB.profiles[0].badge==='🐰'&&DB.profiles[0].easy===false&&DB.settings.pin==='1234'`));
   await ev(`window._ok=0;askPin(()=>window._ok=1)`); await ev(`${mbtn('Forgot')}.click()`); await sleep(100);
   check('Forgot PIN asks a grown-up sum', (await title()).includes('Grown-up'));
   await shot('99-forgot-pin');
@@ -541,6 +541,94 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('a wrong answer keeps the PIN', (await ev('DB.settings.pin'))==='1234');
   await ev(`document.querySelector('#fpAns').value='${fa*fb}';${mbtn('Remove')}.click()`); await sleep(100);
   check('the right answer removes the PIN', (await ev('DB.settings.pin'))==='' && !(await title()));
+  await ev(`document.querySelector('.pcard').click()`); await sleep(300); await ev(`closeModal();show('room')`);
+
+  console.log('Cozy Loft (second room)');
+  await ev(`P().coins=400;save()`);
+  check('room button says Loft', (await ev(`document.querySelector('#roomGo').textContent`)).includes('Loft'));
+  await ev(`document.querySelector('#roomGo').click()`); await sleep(200);
+  check('the Loft opens', await ev(`roomNo===2&&document.querySelector('#roomTitle').textContent.includes('Loft')&&!!document.querySelector('#roomSvg [fill="url(#gMoonSky)"]')`));
+  check('the Loft has its own free Attic wall', await ev(`P().room2.wall==='attic'&&!!document.querySelector('#gdefs #pBoards')`));
+  check('Fuzzy is in the Loft too', await ev(`!!document.querySelector('#mascotG')`));
+  await shot('A0-loft');
+  check('Back from the Loft goes to her room', await ev(`window.androidBack()&&cur==='room'&&roomNo===1&&document.querySelector('#roomGo').textContent.includes('Loft')`));
+  await ev(`goRoom(2);enterDecorate();document.querySelector('[data-dt=shop]').click()`); await sleep(150);
+  const r1n=await ev('P().room.items.length');
+  await ev(`document.querySelector('#decoGrid [data-buy=disco]').click()`); await ev(`${mbtn('Buy')}.click()`); await sleep(150);
+  check('buying in the Loft puts it in the Loft', await ev(`P().room2.items.some(i=>i.type==='disco'&&i.placed)`) && (await ev('P().room.items.length'))===r1n);
+  await ev(`document.querySelector('[data-dt=wall]').click()`); await sleep(100);
+  check('the Loft shows its own wall as picked', await ev(`!!document.querySelector('#decoGrid .tile.on[data-surf=attic]')`));
+  await ev(`document.querySelector('#decoGrid [data-surf=peachStripe]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
+  check('changing the Loft wall leaves her room alone', await ev(`P().room2.wall==='peachStripe'&&P().room.wall!=='peachStripe'`));
+  await shot('A1-loft-decorate');
+  // My Stuff is shared: put the plant away in her room, then place it in the Loft
+  await ev(`P().room.items.find(i=>i.type==='plant').placed=false;save();renderDecoGrid();document.querySelector('[data-dt=mine]').click()`); await sleep(100);
+  check('My Stuff in the Loft shows things put away in her room', await ev(`!!document.querySelector('#decoGrid [data-place=plant]')`));
+  await ev(`document.querySelector('#decoGrid [data-place=plant]').click()`); await sleep(100);
+  check('placing it moves it into the Loft', await ev(`P().room2.items.some(i=>i.type==='plant'&&i.placed)&&!P().room.items.some(i=>i.type==='plant')`));
+  // posters: 4 per room
+  await ev(`for(let k=0;k<4;k++)P().room2.items.push({uid:'tp'+k,type:'poster',art:'fake'+k,placed:true,x:200,y:250});P().room.items.push({uid:'tp9',type:'poster',art:'fake9',placed:false,x:0,y:0});save();renderDecoGrid()`);
+  await ev(`document.querySelector('#decoGrid [data-place-uid=tp9]').click()`); await sleep(100);
+  check('a 5th poster does not fit in the Loft', await ev(`P().room.items.find(i=>i.uid==='tp9').placed===false`) && (await ev(`document.querySelector('#toast').textContent`)).includes('posters'));
+  await ev(`exitDecorate();goRoom(1);enterDecorate();document.querySelector('[data-dt=mine]').click()`); await sleep(100);
+  await ev(`document.querySelector('#decoGrid [data-place-uid=tp9]').click()`); await sleep(100);
+  check('...but it fits in her room', await ev(`P().room.items.find(i=>i.uid==='tp9').placed===true`));
+  await ev(`exitDecorate();[P().room,P().room2].forEach(R=>{R.items=R.items.filter(i=>i.type!=='poster'||!String(i.art).startsWith('fake'));});save();renderRoom()`);
+  check('the Golden Mic and trophies stay in her room', await ev(`P().room.items.some(i=>i.type==='goldenMic')&&!P().room2.items.some(i=>DECOR[i.type].award)`));
+
+  console.log('Content Pack 1');
+  await ev(`show('closet')`);
+  const newClothes=[['hair','swoopCandy'],['top','batSweater'],['bottom','galaxySkirt'],['legs','mintFuzz'],['arms','rainbow'],['shoes','slippers'],['acc','flowers'],['acc','heartShades']];
+  for(const [c,i] of newClothes){await ev(`document.querySelector('[data-cat=${c}]').click()`);
+    check(`closet has ${c}:${i}`, await ev(`!!document.querySelector('#closetGrid [data-id=${i}] svg')`));}
+  await ev(`document.querySelector('[data-cat=top]').click();document.querySelector('#closetGrid [data-id=batSweater]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
+  check('bought and wearing the Bat Sweater', await ev(`P().look.top==='batSweater'&&P().owned.includes('top:batSweater')`));
+  check('new clothes count on photocard stats (spooky)', (await ev(`cardStats(Object.assign({},DEFAULT_LOOK,{fur:'white',hair:'tuft',top:'batSweater',bottom:'tutu',legs:'none',arms:'none',shoes:'none',acc:'none'}))[1]`))===2);
+  await ev(`P().look=Object.assign({},P().look,{hair:'swoopCandy',bottom:'galaxySkirt',legs:'mintFuzz',arms:'rainbow',shoes:'slippers',acc:'flowers'});renderCloset()`); await sleep(100);
+  await shot('A2-pack-outfit');
+  await ev(`P().look.acc='heartShades';renderCloset()`); await sleep(80); await shot('A3-pack-shades');
+  await ev(`show('room');enterDecorate();document.querySelector('[data-dt=shop]').click()`); await sleep(150);
+  check('the Shop has all 8 new decorations', await ev(`['bookNook','disco','cushions','batGarland','eggChair','cloudShelf','starMirror','checkerRug'].every(k=>document.querySelector('#decoGrid [data-buy='+k+']'))`));
+  await shot('A4-pack-shop');
+  await ev(`document.querySelector('[data-dt=floor]').click()`); await sleep(100);
+  check('new floors in the Shop', await ev(`!!document.querySelector('#decoGrid [data-surf=mintTiles]')&&!!document.querySelector('#decoGrid [data-surf=cloudCarpet]')`));
+  await ev(`exitDecorate();goRoom(2);for(const k of ['bookNook','cushions','batGarland','eggChair','cloudShelf','starMirror','checkerRug'])P().room2.items.push(Object.assign({uid:uid(),type:k,placed:true},spot(k)));P().room2.floor='cloudCarpet';save();renderRoom()`); await sleep(200);
+  await shot('A5-loft-furnished');
+  check('every new decoration draws in the Loft', (await ev(`document.querySelectorAll('#roomSvg .deco').length`))>=9);
+  await ev(`goRoom(1)`);
+
+  console.log('Pop-it shapes, Ghosty, Batwing');
+  await ev(`show('fidget');setFidTab('popit')`); await sleep(200);
+  check('board shapes are listed after the themes', await ev(`!!document.querySelector('#skinRow [data-shape=heart]')&&!!document.querySelector('#skinRow [data-shape=star]')&&!!document.querySelector('#skinRow .skin-sep')`));
+  await ev(`document.querySelector('#skinRow [data-shape=heart]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(200);
+  check('bought the Heart Board', await ev(`P().fid.popShape==='heart'&&P().owned.includes('popshape:heart')&&document.querySelector('#popBoard').classList.contains('shaped')`));
+  const heartN=await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').length`);
+  check('the heart has a sensible number of bubbles', heartN>=16&&heartN<36, heartN);
+  await shot('A6-pop-heart');
+  const flips0=await ev('P().stats.flips');
+  await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').forEach(b=>popAt(b))`); await sleep(1300);
+  check('popping every heart bubble flips the board', (await ev('P().stats.flips'))===flips0+1 && (await ev(`document.querySelectorAll('#popBoard .bub.down').length`))===0);
+  check('...and the heart shape stays after the flip', (await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').length`))===heartN);
+  await ev(`P().fid.pop='emo';document.querySelector('#skinRow [data-shape=star]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(200);
+  const starN=await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').length`);
+  check('the star has a sensible number of bubbles', starN>=12&&starN<36, starN);
+  await shot('A7-pop-star');
+  await ev(`document.querySelector('#skinRow [data-shape=classic]').click()`); await sleep(100);
+  check('back to the square board (36 bubbles)', (await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').length`))===36);
+  await ev(`P().fid.pop='rainbow';P().fid.squish='ghost';setFidTab('squish')`); await sleep(100);
+  await ev(`sq('pointerdown',50,0.3,0.1)`); await sleep(500); await shot('A8-squish-ghosty'); await ev(`sq('pointerup',50,0.3,0.1)`);
+  check('Ghosty squishy is listed', await ev(`!!document.querySelector('#skinRow [data-skin=ghost]')`));
+  await ev(`P().fid.squish='mochi';P().fid.spin='batwing';setFidTab('spin');SP.w=20`); await sleep(400); await shot('A9-spin-batwing');
+  check('Batwing spinner is listed', await ev(`!!document.querySelector('#skinRow [data-skin=batwing]')`));
+  await ev(`P().fid.spin='galaxy';save();show('room')`);
+
+  console.log('Loft + pack in backups');
+  const v19Code=await ev(`JSON.stringify(Object.assign({},DB,{version:6,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.room2;delete q.fid.popShape;return q;})}))`);
+  const v110Code=await ev('JSON.stringify(DB)');
+  await ev(`doRestore(${JSON.stringify(v19Code)})`); await sleep(400);
+  check('v1.9 backup restores with an empty Loft and the square board', await ev(`DB.version===7&&DB.profiles[0].room2.wall==='attic'&&DB.profiles[0].room2.items.length===0&&DB.profiles[0].fid.popShape==='classic'`));
+  await ev(`doRestore(${JSON.stringify(v110Code)})`); await sleep(400);
+  check('v1.10 backup keeps the Loft and pop-it shape', await ev(`DB.profiles[0].room2.wall==='peachStripe'&&DB.profiles[0].room2.items.some(i=>i.type==='eggChair')&&DB.profiles[0].owned.includes('popshape:star')`));
   await ev(`document.querySelector('.pcard').click()`); await sleep(300); await ev(`closeModal();show('room')`);
 
   console.log('Phone portrait + other screens');
@@ -559,6 +647,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`show('stage')`); await sleep(300); await shot('78-phone-stage-songs');
   await ev(`P().stage.level='hard';stStart('starlight')`); await sleep(4600); await shot('79-phone-stage-play');
   check('phone stage: 3 pads fit on screen', await ev(`STG.g.xs[0]-STG.g.pr>0&&STG.g.xs[2]+STG.g.pr<innerWidth`), await ev('JSON.stringify(STG.g)'));
+  await ev(`show('room')`); await sleep(200); await shot('A10-phone-room-topbar');
+  check('phone: the Loft button fits in the top bar', await ev(`(()=>{const r=document.querySelector('#roomGo').getBoundingClientRect(), d=document.querySelector('#setBtn').getBoundingClientRect();return r.width>=48&&d.right<=innerWidth;})()`));
   await ev(`show('art')`); await sleep(200);
   await send('Emulation.setDeviceMetricsOverride',{width:860,height:412,deviceScaleFactor:1,mobile:true});
   await ev(`setArtView('pad')`); await sleep(300); await shot('11-phone-landscape');

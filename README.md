@@ -23,6 +23,11 @@ Photocards (since version 1.4) are always in the backup. They are tiny, because 
 short description (outfit, stage, frame, title) instead of a picture.
 Soccer and Stage progress (best scores, trophies, the Golden Mic) are in the backup too.
 
+## The Cozy Loft (since version 1.10)
+Every room has a second room upstairs: tap **🪜 Loft** at the top of the room screen (and **🏠 Room** to go back).
+The Loft has its own wall, floor and decorations. Things put away in **My Stuff** (🛋️ Decorate) can be placed
+in either room.
+
 ## For a younger child (since version 1.8)
 - **Easy mode:** open her room, then ⚙️ Settings → 🐣 Easy mode. Buttons get bigger, tips are hidden,
   shops show the cheapest things first (too-dear things are dimmed with a 🔒), and the games start on Easy.
