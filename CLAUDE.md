@@ -138,12 +138,12 @@ stripes, stars, bats), and fidget and squishy toys.
   Level ids `easy/medium/hard` are saved: never rename them. A perfect 5/5 gives that level's trophy once
   (`TROPHIES`, `giveTrophies()`): a room item `trophyBronze` / `trophySilver` / `trophyGold`. Decorations with
   `award:1` are prizes and never appear in the Shop.
-- Stage: songs are generated from small text recipes in `SONGS` (scale, chords, melody, drum patterns). `buildSong(id, level)`
+- Stage: the marquee (`stageMarquee()` in 04) hangs on the Cozy Loft's wall since v1.12 (it was above the closet). Songs are generated from small text recipes in `SONGS` (scale, chords, melody, drum patterns). `buildSong(id, level)`
   turns a recipe into audio events and a fixed note chart (no randomness). Song time comes from the audio clock
   (`stSongT()`), so taps line up with what she hears. Song ids `starlight/bats/sugar` and level ids are saved: never rename them.
   3 stars on Hard gives the Golden Mic (`goldenMic`, `award:1`) once (`stage.mic`). Background music pauses during a song.
 - Easy mode (per profile, `p.easy`): `applyEasy()` puts `easy` on `<body>` while that room is open; CSS under `body.easy`
-  makes things bigger and hides tips. Shop grids go through `easySort()`, `poorCls()` and `priceTag()`; buying goes through
+  makes things bigger and hides tips. The pink room labels (`sign()`, class `sign`) only show under `body.easy` (since v1.12). Shop grids go through `easySort()`, `poorCls()` and `priceTag()`; buying goes through
   `tryBuy`/`buyConsumable`, which switch to the short Easy buy box. New shops should use the same helpers.
 - Grown-up PIN: wrap a guarded action in `askPin(fn)` (it runs `fn` straight away when no PIN is set).
   Room colours (`ROOM_COLORS`) and badges (`ROOM_BADGES`) are saved ids: never rename or remove them.

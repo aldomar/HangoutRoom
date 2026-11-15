@@ -316,10 +316,15 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   console.log('Stage (rhythm game)');
   // stAll() taps every note still to come exactly on time; stSkip() jumps to the end of the song.
   await ev(`window.stAll=()=>STG.notes.forEach(n=>{if(!n.r)stTap(n.lane,n.t);});window.stSkip=()=>{STG.t0-=STG.end+2;}`);
-  await ev(`show('room')`); await sleep(300);
-  check('stage marquee in the room', await ev(`!!document.querySelector('[data-hot=stage]')`));
+  await ev(`show('room');goRoom(1)`); await sleep(300);
+  check('no stage marquee in her first room (moved to the Loft in v1.12)', await ev(`!document.querySelector('[data-hot=stage]')`));
+  await ev(`goRoom(2)`); await sleep(300);
+  check('stage marquee on the Loft wall', await ev(`(()=>{const m=document.querySelector('[data-hot=stage] rect');if(!m)return false;const r=m.getBoundingClientRect(),w=document.querySelector('[data-hot=stage]').ownerSVGElement.getBoundingClientRect();return r.width>50&&r.left>w.left&&r.right<w.right&&r.top>w.top;})()`));
+  await shot('69-loft-stage');
   await ev(`document.querySelector('[data-hot=stage] rect').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(400);
   check('marquee opens the Stage on Easy with 3 songs', await ev(`cur==='stage'&&STG.state==='pick'&&P().stage.level==='easy'&&document.querySelectorAll('#stgSongs [data-song]').length===3`));
+  check('Back from the song list goes to the Loft', await ev(`window.androidBack()&&cur==='room'&&roomNo===2`));
+  await ev(`goRoom(1);show('stage')`); await sleep(300);
   await shot('70-stage-songs');
   const charts=await ev(`(()=>{const out=[];for(const s of SONG_IDS)for(const l of ['easy','medium','hard']){const a=buildSong(s,l),b=buildSong(s,l),L=STG_LEVELS[l];
     let gap=99;for(let i=1;i<a.notes.length;i++)gap=Math.min(gap,(a.notes[i].t-a.notes[i-1].t)/a.beat);
@@ -459,6 +464,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`document.querySelector('#sEasy').click()`); await sleep(150);
   check('Settings turns Easy mode on', await ev(`P().easy===true&&document.body.classList.contains('easy')`));
   check('Settings button says ON', (await ev(`document.querySelector('#sEasy').textContent`)).includes('ON'));
+  check('room labels show in Easy mode', await ev(`(()=>{const L=[...document.querySelectorAll('#roomSvg .sign, svg .sign')];return L.length>=5&&L.every(g=>getComputedStyle(g).display!=='none');})()`));
   await ev(`closeModal()`); await shot('91-easy-room');
   await ev(`show('fidget');setFidTab('popit')`); await sleep(200);
   check('Easy mode hides the tips', await ev(`getComputedStyle(document.querySelector('#fid-popit .fid-tip')).display==='none'`));
@@ -493,6 +499,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('opening the room turns Easy mode back on', await ev(`document.body.classList.contains('easy')`));
   await ev(`settingsModal();document.querySelector('#sEasy').click();closeModal()`);
   check('Easy mode off again', await ev(`!P().easy&&!document.body.classList.contains('easy')`));
+  check('room labels hidden when Easy mode is off', await ev(`(()=>{const L=[...document.querySelectorAll('svg .sign')];return L.length>=5&&L.every(g=>getComputedStyle(g).display==='none');})()`));
   await ev(`show('closet')`); await sleep(150);
   check('normal closet keeps its usual order', JSON.stringify(await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id)`))===JSON.stringify(await ev(`CLOSET.top.items.map(i=>i.id)`)));
 

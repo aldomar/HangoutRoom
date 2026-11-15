@@ -81,7 +81,17 @@ function trophyArt(main,light,dark,label){
 const LOCKED={}; // every room area is open since v1.5; add future locked areas here
 function sign(x,y,text,locked){
   const w=Math.round(text.length*11.5+34);
-  return `<g${locked?'':' class="bob"'}><rect x="${x-w/2}" y="${y-20}" width="${w}" height="40" rx="20" fill="${locked?'#4a3d63':'#ff8cc6'}" stroke="#2b2235" stroke-width="3"/><text x="${x}" y="${y+7}" text-anchor="middle" font-size="20" font-weight="800" fill="${locked?'#e2d8f0':'#3a1830'}">${text}</text></g>`;
+  return `<g class="sign${locked?'':' bob'}"><rect x="${x-w/2}" y="${y-20}" width="${w}" height="40" rx="20" fill="${locked?'#4a3d63':'#ff8cc6'}" stroke="#2b2235" stroke-width="3"/><text x="${x}" y="${y+7}" text-anchor="middle" font-size="20" font-weight="800" fill="${locked?'#e2d8f0':'#3a1830'}">${text}</text></g>`;
+}
+// Stage marquee (open since v1.7; in the Cozy Loft since v1.12). Drawn at x 766-964, y 6-104; the Loft moves it with a
+// transform. Two groups of bulbs twinkle in turn.
+function stageMarquee(){
+  const bulbs=(k)=>{let b='';for(let i=0;i<9;i++){const x=788+i*19.5;if(i%2===k)b+=`<circle cx="${x}" cy="16" r="5"/><circle cx="${x}" cy="94" r="5"/>`;}
+    [[0,36],[1,55],[0,74]].forEach(([q,y])=>{if(q===k)b+=`<circle cx="776" cy="${y}" r="5"/><circle cx="954" cy="${y}" r="5"/>`;});return b;};
+  return `<g class="hot" data-hot="stage"><rect x="766" y="6" width="198" height="98" rx="16" fill="#2b2340" stroke="#ff8cc6" stroke-width="5"/>`
+    +`<g fill="#ffd166">${bulbs(0)}<animate attributeName="opacity" values="1;.35;1" dur="1.2s" repeatCount="indefinite"/></g>`
+    +`<g fill="#8ff0d0">${bulbs(1)}<animate attributeName="opacity" values=".35;1;.35" dur="1.2s" repeatCount="indefinite"/></g>`
+    +`<text x="865" y="68" text-anchor="middle" font-size="32" font-weight="900" fill="#ffd1ea" filter="url(#glow)">🎤 Stage</text></g>`;
 }
 function furniture(){
   let s='';
@@ -97,13 +107,6 @@ function furniture(){
   s+=`<g class="hot" data-hot="shelf"><rect x="350" y="222" width="300" height="148" fill="transparent"/><path d="M390 316 v24 h14 M610 316 v24 h-14" stroke="#c8578f" stroke-width="6" fill="none"/><rect x="384" y="250" width="80" height="50" rx="14" fill="#ff6b8a" stroke="#2b2235" stroke-width="3"/>${[0,1,2,3].map(i=>`<circle cx="${400+i*16}" cy="266" r="6" fill="${['#ffe066','#69db7c','#4dabf7','#b197fc'][i]}"/><circle cx="${400+i*16}" cy="284" r="6" fill="${['#b197fc','#ffe066','#69db7c','#4dabf7'][i]}"/>`).join('')}<ellipse cx="484" cy="252" rx="7" ry="16" fill="#fff6fa" stroke="#c9a3b8" stroke-width="2" transform="rotate(-15 484 262)"/><ellipse cx="510" cy="252" rx="7" ry="16" fill="#fff6fa" stroke="#c9a3b8" stroke-width="2" transform="rotate(15 510 262)"/><path d="M468 302 C462 262 532 262 526 302Z" fill="#fff6fa" stroke="#c9a3b8" stroke-width="3"/><circle cx="488" cy="286" r="2.5" fill="#2a1f33"/><circle cx="506" cy="286" r="2.5" fill="#2a1f33"/>${[0,1,2].map(k=>{const a=k*TAU/3-Math.PI/2;return `<circle cx="${(585+Math.cos(a)*16).toFixed(1)}" cy="${(278+Math.sin(a)*16).toFixed(1)}" r="11" fill="#6d3fd6" stroke="#2b2235" stroke-width="2"/>`;}).join('')}<circle cx="585" cy="278" r="7" fill="#ffd166" stroke="#2b2235" stroke-width="2"/><rect x="365" y="302" width="270" height="16" rx="6" fill="#ff8cc6" stroke="#2b2235" stroke-width="4"/>${sign(500,352,'🫧 Fidget Shelf',false)}</g>`;
   // closet (open!)
   s+=`<g class="hot" data-hot="closet"><rect x="770" y="150" width="190" height="400" rx="16" fill="#6b46b8" stroke="#3e2670" stroke-width="5"/><rect x="785" y="168" width="78" height="365" rx="10" fill="#7d58cc" stroke="#3e2670" stroke-width="3"/><rect x="867" y="168" width="78" height="365" rx="10" fill="#7d58cc" stroke="#3e2670" stroke-width="3"/><circle cx="852" cy="350" r="7" fill="#ffd166"/><circle cx="878" cy="350" r="7" fill="#ffd166"/><path d="${heartPath(824,240,14)}" fill="#ff8cc6"/><path d="${starPath(906,236,16)}" fill="#ffd166"/><rect x="858" y="440" width="15" height="70" rx="6" fill="url(#stripeBP)" filter="url(#fuzz)" transform="rotate(8 865 440)"/><rect x="788" y="548" width="22" height="16" fill="#3e2670"/><rect x="920" y="548" width="22" height="16" fill="#3e2670"/>${sign(865,126,'👗 Closet',false)}</g>`;
-  // stage marquee above the closet (open since v1.7). Two groups of bulbs twinkle in turn.
-  const bulbs=(k)=>{let b='';for(let i=0;i<9;i++){const x=788+i*19.5;if(i%2===k)b+=`<circle cx="${x}" cy="16" r="5"/><circle cx="${x}" cy="94" r="5"/>`;}
-    [[0,36],[1,55],[0,74]].forEach(([q,y])=>{if(q===k)b+=`<circle cx="776" cy="${y}" r="5"/><circle cx="954" cy="${y}" r="5"/>`;});return b;};
-  s+=`<g class="hot" data-hot="stage"><rect x="766" y="6" width="198" height="98" rx="16" fill="#2b2340" stroke="#ff8cc6" stroke-width="5"/>`
-    +`<g fill="#ffd166">${bulbs(0)}<animate attributeName="opacity" values="1;.35;1" dur="1.2s" repeatCount="indefinite"/></g>`
-    +`<g fill="#8ff0d0">${bulbs(1)}<animate attributeName="opacity" values=".35;1;.35" dur="1.2s" repeatCount="indefinite"/></g>`
-    +`<text x="865" y="68" text-anchor="middle" font-size="32" font-weight="900" fill="#ffd1ea" filter="url(#glow)">🎤 Stage</text></g>`;
   // art desk (open since v1.3)
   s+=`<g class="hot" data-hot="desk"><rect x="58" y="432" width="16" height="150" fill="#e48fbf" stroke="#2b2235" stroke-width="3"/><rect x="276" y="432" width="16" height="150" fill="#e48fbf" stroke="#2b2235" stroke-width="3"/><rect x="190" y="432" width="90" height="60" rx="6" fill="#ffb3d9" stroke="#2b2235" stroke-width="3"/><circle cx="235" cy="462" r="5" fill="#2b2235"/><rect x="40" y="410" width="270" height="22" rx="6" fill="#ffb3d9" stroke="#2b2235" stroke-width="4"/><rect x="80" y="396" width="90" height="14" rx="3" fill="#fff" stroke="#2b2235" stroke-width="3"/><path d="M95 402 q20 -6 40 0" stroke="#a97cff" stroke-width="3" fill="none"/><rect x="236" y="374" width="34" height="36" rx="6" fill="#a97cff" stroke="#2b2235" stroke-width="3"/>${[['#ff6b8a',-8],['#ffd166',0],['#4dabf7',8]].map(([c,o])=>`<rect x="${249+o}" y="350" width="6" height="28" rx="2" fill="${c}" stroke="#2b2235" stroke-width="1.5" transform="rotate(${o} 252 378)"/>`).join('')}${sign(175,370,'🎨 Art Desk',false)}</g>`;
   return s;

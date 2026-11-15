@@ -3,6 +3,7 @@
    16. COZY LOFT: the second room (v1.10)
    Saved in p.room2 {wall, floor, items}; switched with the 🪜 Loft / 🏠 Room button (goRoom in section 9).
    Same 1000 x 700 box as her room. Fuzzy hangs out in whichever room is showing.
+   The Stage marquee hangs on the Loft wall (since v1.12; it used to be above the closet downstairs).
    The computer desk is plain furniture for now: it becomes the Code Lab later (add data-hot="code" then).
    ========================================================= */
 // A free wall made for the Loft (it can be used in her room too). Wall ids are saved: never rename.
@@ -24,6 +25,8 @@ function loftFurniture(){
   s+=`<path d="M340 72 V208 M272 140 H408" stroke="#5b3a99" stroke-width="7"/>`;
   // a little pendant lamp
   s+=`<line x1="590" y1="0" x2="590" y2="66" stroke="#3b2f52" stroke-width="3"/><path d="M562 96 Q590 56 618 96Z" fill="#ff8cc6" ${o}/><ellipse cx="590" cy="100" rx="14" ry="6" fill="#fff6c8"/>`;
+  // the Stage marquee, on the wall between the window and the desk (moved up from her room in v1.12)
+  s+=`<g transform="translate(-345 230)">${stageMarquee()}</g>`;
   // computer desk (the future Code Lab spot)
   s+=`<g><rect x="712" y="434" width="250" height="20" rx="6" fill="#c9a7ff" ${o}/>`;
   s+=`<rect x="726" y="454" width="16" height="140" fill="#a283e0" ${o}/><rect x="932" y="454" width="16" height="140" fill="#a283e0" ${o}/>`;

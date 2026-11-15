@@ -105,7 +105,7 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
 - ✅ The face watches her finger, scrunches up when squeezed, and blushes more when its cheeks are squished.
 - ✅ Same coins as before (1 per 5 squishes), counted once per squeeze even with several fingers.
 
-### ✅ Phase 5: Stage 🎤 (v1.7, the glowing sign above the closet)
+### ✅ Phase 5: Stage 🎤 (v1.7, the glowing sign above the closet; in the Cozy Loft since v1.12)
 - ✅ Tap-to-the-beat rhythm game. Notes (hearts, stars, bats) fall from the stage toward glowing pads; tap a pad as
   its note arrives. Ratings: Perfect / Great / Good / Oops. The bunny dances to the beat in today's outfit.
 - ✅ 3 original songs made with code (about a minute each): Starlight Pop (bright, 120 BPM), Midnight Bats
@@ -148,6 +148,8 @@ Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a conte
 - ✅ **Shelves + Hair Styles (v1.11, the owner's request):** Little and Long wall shelves (things snap onto them and
   move with them). Hair is now a style plus a colour bought once: Emo Swoop, Short Bob, Pigtails, Long Waves, Emo Spikes
   and Starry Twin Tails, in 10 colours.
+- ✅ **Stage in the Loft (v1.12, the owner's request):** the Stage marquee moved up to the Loft to give her first room
+  more space. The pink room labels now only show in Easy mode, so an older child finds things by exploring.
 - More closet items, decorations and squishies (future packs: `18-pack2.js` …).
 - New fidgets: slime stretcher, fidget-cube clicker, tilt marble maze (device tilt works in WebView).
 - Seasonal decorations, a sticker book of achievements, a pet for the mascot.

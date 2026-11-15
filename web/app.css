@@ -68,6 +68,9 @@ body.easy .topbar .title{font-size:22px}
 #roomSvg{width:100%;height:100%;display:block;touch-action:none}
 .hot{cursor:pointer}
 .bob{animation:bob 2.6s ease-in-out infinite}
+/* room labels (Soccer, Closet...) only show in Easy mode; older kids find things by exploring (v1.12) */
+.sign{display:none}
+body.easy .sign{display:inline}
 @keyframes bob{50%{transform:translateY(-5px)}}
 .mascot{animation:breathe 3.2s ease-in-out infinite;transform-origin:500px 604px;cursor:pointer}
 @keyframes breathe{50%{transform:scale(1.02,.985)}}
