@@ -5,7 +5,8 @@ _Last updated: 2026-11-15_
 ## Where we are
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
 - **Phase 2 (Art Desk): done** (v1.3 merged). Checked on an Android phone: it works, and drawings survive closing the app.
-- **Phase 3 (Photocard Wall): built, PR open as v1.4** on branch `feature/photocards`. Not yet tried on a device.
+- **Phase 3 (Photocard Wall): done** (v1.4 merged). The owner checked it on the device: all checks passed (2026-11-15).
+- **Phase 4 (Soccer Field): built, PR open as v1.5** on branch `feature/soccer`. Not yet tried on a device.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -18,7 +19,8 @@ _Last updated: 2026-11-15_
 - PR #1 "v1 cleanup (v1.1)": merged. Stopped tracking the root `.idea/` and added it to `.gitignore`.
 - PR #2 "App version + save upgrades (v1.2)": merged.
 - PR #3 "Art Desk (v1.3)": merged.
-- PR "Photocard Wall (v1.4)" on branch `feature/photocards` (branched from `main` after #3): open.
+- PR #4 "Photocard Wall (v1.4)": merged.
+- PR "Soccer Field (v1.5)" on branch `feature/soccer` (branched from `main` after #4): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -47,6 +49,15 @@ _Last updated: 2026-11-15_
     and deleting a pinned card unpins it
   - restoring a v1.3 backup (no card fields) and a v1.4 backup with cards and pins
   - Back from Photocards goes to the room; maker and binder at phone portrait and landscape sizes
+- **On a device (2026-11-15):** the owner installed v1.4 and all checks from the PR passed.
+- **Soccer Field (v1.5)**: `tests/smoke-test.js` now has 91 checks, all passing with no console errors. New checks
+  (the keeper's guess is fixed in the test so results are repeatable):
+  - the window opens the Soccer screen on Easy with Mochi; a goal pays +1 coin; a keeper save; a wide shot
+  - tapping a spot in the goal shoots there; a real swipe kicks the ball in the swiped direction
+  - the match ends after 5 kicks with the result box; best score saved; "First Goal!" bonus card
+  - team kit badge and +1 kit coin; Medium shows Boo, Hard shows Flap; a perfect 5/5 on Hard pays 5×3 + 5
+    (+10 for the "Perfect 5/5" bonus card)
+  - Back goes to the room; restoring a v1.4 backup (no soccer fields) and a v1.5 one; phone portrait and landscape
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -54,7 +65,7 @@ _Last updated: 2026-11-15_
 - No SQLite; localStorage is enough for v1. IndexedDB comes later for drawings.
 - Mascot: original fuzzy emo bunny, default name "Fuzzy" (renamable). Starter look: emo swoop bangs,
   band tee, plaid skirt, black/purple striped leg warmers, platform boots, star clips.
-- Locked room areas become future updates: Art Desk (v1.3), Photocard Wall (v1.4), Soccer Field (still locked).
+- Locked room areas became updates: Art Desk (v1.3), Photocard Wall (v1.4), Soccer Field (v1.5). Every area is now open.
 - Android: AGP 9.5.1 with built-in Kotlin, Gradle 9.6.0 (Android Studio's Upgrade Assistant raised them from
   9.3.3 / 9.5.0 at the first build; that build worked), SDK 36, min SDK 26, package `com.family.hangoutroom`.
   No AndroidX, no `INTERNET`. Debug-signed APK, sideloaded.
@@ -76,6 +87,13 @@ _Last updated: 2026-11-15_
   - Cards are saved as small "recipes" in the normal save (not as pictures), so they are always in backups.
   - Pinning a 4th card on the corkboard sends the oldest pin back to the binder (simpler for a young child than
     asking which one to swap).
+- Soccer Field (agreed 2026-11-15):
+  - **A different original keeper on each level** (the owner's idea): Easy = Mochi the sleepy cat,
+    Medium = Boo the fluffy ghost, Hard = Flap the chubby bat.
+  - **All levels open** from the start. No unlocking.
+  - **Coins:** +1 / +2 / +3 per goal by level, +5 for a perfect 5/5, +1 more per goal with 2+ soccer clothes on.
+  - **Controls:** swipe up from the ball (aim, power, curve) **or** tap a spot in the goal (for the younger sister).
+  - Matches are 5 kicks. No timer, nothing lost on a miss, leaving mid-match just starts a fresh match next time.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -102,15 +120,22 @@ _Last updated: 2026-11-15_
 3. ~~Plan Phase 3 (Photocard Wall) and get it agreed before coding.~~ Agreed and built (v1.4 PR).
 
 ## Next steps (Phase 3)
-1. Owner: build v1.4, install it **over** the app, and try the Photocard Wall (see the PR for what to check).
-2. Check that cards and pins survive closing the app and installing an update.
-3. Merge the v1.4 PR.
-4. Plan Phase 4 (Soccer Field) and get it agreed before coding.
+1. ~~Owner: build v1.4, install it over the app, and try the Photocard Wall.~~ Done, all checks passed.
+2. ~~Check that cards and pins survive closing the app and installing an update.~~ Done.
+3. ~~Merge the v1.4 PR.~~ Merged.
+4. ~~Plan Phase 4 (Soccer Field) and get it agreed before coding.~~ Agreed and built (v1.5 PR).
+
+## Next steps (Phase 4)
+1. Owner: build v1.5, install it **over** the app, and play the Soccer Field (see the PR for what to check).
+2. Check that it runs smoothly on her tablet, and that soccer progress survives closing the app.
+3. Merge the v1.5 PR.
+4. Plan Phase 5 (Stage rhythm game) and get it agreed before coding.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of the script in `index.html`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 3 since v1.4
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 4 since v1.5
+  (Soccer: `soccer`, `stats.goals/kicks/matches/perfects`). It was 3 in v1.4
   (Photocards: `cards`, `cardPins`, `bonusGot`, `cardNo`, `stats.cards`). It was 2 in v1.3
   (Art Desk: `stats.drawings`, `artPay`, poster room items).
   Bump it only when the save shape changes, and add a step to `MIGRATIONS` that upgrades the previous version.
