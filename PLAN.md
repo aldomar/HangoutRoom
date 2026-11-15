@@ -56,8 +56,8 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
   Keep an eye out for layout on her screen size, touch feel, audio and the speed of the fuzzy filter.
 - ✅ `APP_VERSION` and an "About" line in Settings (v1.2). Save-data upgrade hook (`fixDB()` + `MIGRATIONS`),
   used for both loading and restoring.
-- Optional: a free automated smoke test. (Phase 2 used a small script that drives the installed Chrome directly,
-  with nothing to install.)
+- ✅ A free automated smoke test: `tests/smoke-test.js` (added in v1.3). It drives the installed Chrome directly,
+  with nothing to install.
 - **Done when:** the APK installs, saves survive closing the app and installing an update, and Back works as described.
 
 ### Phase 2: Art Desk 🎨 (built in v1.3, PR open)

@@ -16,3 +16,6 @@ android/captures/
 # Signing keys - never commit these
 *.jks
 *.keystore
+
+# smoke test screenshots
+tests/shots/

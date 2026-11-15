@@ -21,3 +21,5 @@ to make the file smaller). Restoring an older backup without drawings leaves the
 - `CLAUDE.md`: project rules (for Claude Code and people).
 - `PLAN.md`: layout and roadmap.
 - `docs/STATUS.md`: where things stand right now.
+- `tests/smoke-test.js`: an automatic check of the whole app. With Node.js and Chrome installed, run
+  `node tests/smoke-test.js` in the repo folder. It prints "ok" or "FAIL" for each check and saves screenshots in `tests/shots/`.

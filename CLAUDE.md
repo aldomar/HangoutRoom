@@ -96,9 +96,10 @@ stripes, stars, bats), and fidget and squishy toys.
 
 ## Testing
 - **Quick check:** open `index.html` in desktop Chrome and use DevTools device mode (tablet and phone sizes, touch).
-- **Automated smoke test** (ask first if Playwright isn't installed): load the page, make a test profile,
-  open every screen, fail on any console error, take screenshots to look at.
-  Use invented names only.
+- **Automated smoke test:** `node tests/smoke-test.js` (Node 22+ and an installed Chrome or Edge; nothing to install).
+  It loads the page in a headless browser with a throwaway profile, makes a test room, opens every screen,
+  exercises the Art Desk and backup/restore, fails on any console error, and saves screenshots to `tests/shots/` (ignored by git).
+  Run it before every PR, and extend it when you add a feature. Use invented names only.
 - **On the device:** the owner builds the APK in Android Studio and sideloads it.
 
 ## Layout

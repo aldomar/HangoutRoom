@@ -26,8 +26,9 @@ _Last updated: 2026-11-15_
   every screen, buying, the pop-it flip bonus (+8 coins per full board), squishy and spinner physics,
   decorating, saving across reload, and the Android back/backup hooks with a fake bridge. No console errors.
 - The APK builds in Android Studio and runs on the device (see "Where we are").
-- **Art Desk (v1.3)** was tested with a small script that drives the installed desktop Chrome (headless) through its
-  DevTools connection, so nothing had to be installed. 36 checks passed with no console errors:
+- **Art Desk (v1.3)** was tested with `tests/smoke-test.js`, which drives the installed desktop Chrome (headless) through its
+  DevTools connection, so nothing had to be installed. Run it with `node tests/smoke-test.js`. 40 checks passed with
+  no console errors. It covers every screen, plus:
   - every tool, stamp, undo, clear and paper; saving and the coin rules
   - the gallery, and hanging/taking down/deleting posters
   - the "Save your drawing?" prompt on Back, and a draft surviving a reload
