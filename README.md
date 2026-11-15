@@ -28,6 +28,11 @@ Every room has a second room upstairs: tap **🪜 Loft** at the top of the room 
 The Loft has its own wall, floor and decorations. Things put away in **My Stuff** (🛋️ Decorate) can be placed
 in either room.
 
+## Where things are
+In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
+(🎨 Art Desk) and the wardrobe (👗 Closet). In the Cozy Loft: the glowing **🎤 Stage** sign (since version 1.12).
+The pink labels only show in Easy mode; otherwise, tap things to find out what they do.
+
 ## Shelves and hair (since version 1.11)
 - **Shelves:** buy a Little or Long Shelf in the Shop and hang it on the wall. Drag a small thing onto the shelf and it
   sits on top. Move the shelf and everything on it comes along.
@@ -35,7 +40,7 @@ in either room.
   with every style.
 
 ## For a younger child (since version 1.8)
-- **Easy mode:** open her room, then ⚙️ Settings → 🐣 Easy mode. Buttons get bigger, tips are hidden,
+- **Easy mode:** open her room, then ⚙️ Settings → 🐣 Easy mode. Buttons get bigger, tips are hidden, the room shows labels,
   shops show the cheapest things first (too-dear things are dimmed with a 🔒), and the games start on Easy.
   It is set for each room separately, so the older sister's room stays as it is.
 - **Room colour and badge:** each room has a colour and a little picture (🐰⭐💜🦇⚽🎤🎨☁️) on the first screen.

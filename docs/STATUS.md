@@ -13,10 +13,11 @@ _Last updated: 2026-11-15_
 - **Phase 7 (content packs): in progress.** Order (agreed 2026-11-15): code split (v1.9) → Cozy Loft + Content Pack 1 (v1.10)
   → Code Lab (the owner's intro-to-coding game idea, sketched in `PLAN.md`).
   - **Code split: done** (v1.9 merged, PR #9). Built in Android Studio and checked on the device: everything works.
-  - **Cozy Loft + Content Pack 1: built, PR open as v1.10** on branch `feature/loft-pack1` (plan agreed 2026-11-15).
-    The owner tried it on a device: everything works. Not merged yet.
-  - **Shelves + Hair Styles: built, PR open as v1.11** on branch `feature/shelves-hair` (stacked on v1.10, so merge
-    #10 first). The owner asked for it before Code Lab. Not yet tried on a device.
+  - **Cozy Loft + Content Pack 1: done** (v1.10 merged, PR #10). Tried on a device: everything works.
+  - **Shelves + Hair Styles: done** (v1.11 merged, PR #11). The owner asked for it before Code Lab.
+  - **Stage in the Loft + Easy-only labels: built, PR open as v1.12** on branch `feature/stage-loft` (the owner's
+    request, before Code Lab). Not yet tried on a device.
+  - **Code Lab: plan agreed (2026-11-15)**, to be built next as v1.13 (see "Decisions made").
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -35,8 +36,9 @@ _Last updated: 2026-11-15_
 - PR #7 "Stage (v1.7)": merged.
 - PR #8 "Little-sister polish (v1.8)": merged.
 - PR #9 "Code split (v1.9)": merged.
-- PR "Cozy Loft + Content Pack 1 (v1.10)" on branch `feature/loft-pack1` (from `main` after #9): open.
-- PR "Shelves + Hair Styles (v1.11)" on branch `feature/shelves-hair` (from `feature/loft-pack1`): open. Merge #10 first.
+- PR #10 "Cozy Loft + Content Pack 1 (v1.10)": merged.
+- PR #11 "Shelves + Hair Styles (v1.11)": merged.
+- PR "Stage in the Loft (v1.12)" on branch `feature/stage-loft` (from `main` after #11): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -119,6 +121,10 @@ _Last updated: 2026-11-15_
   - every hair style draws in every colour; buying a colour once works on all styles; free colours are owned
   - a v1.10-style backup with old swoop hair (e.g. Cotton Candy) restores as Emo Swoop in the matching colour,
     with the colour owned; old photocards still draw
+- **Stage in the Loft (v1.12)**: 267 checks, all passing, no console errors. New checks:
+  - her first room has no Stage marquee; the Loft has it, fully on its wall, and tapping it opens the Stage;
+    Back from the song list goes to the Loft
+  - room labels (Soccer, Closet …) show with Easy mode on and are hidden with it off
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -173,7 +179,7 @@ _Last updated: 2026-11-15_
   After the first try: squeezing the sides now makes it narrower and taller (it used to get shorter), and pressing the
   top makes it flatter and wider. The scene sits lower so the ears stay in view when it stretches tall.
 - Stage (agreed 2026-11-15):
-  - **Where:** a glowing "🎤 Stage" marquee above the closet. (The plan said a mic stand on the floor between the
+  - **Where:** a glowing "🎤 Stage" marquee above the closet (moved to the Cozy Loft's wall in v1.12). (The plan said a mic stand on the floor between the
     shelf and the closet, but every new room starts with a plant on that spot.)
   - **3 original songs** made by code: Starlight Pop (120 BPM), Midnight Bats (100 BPM), Sugar Clouds (88 BPM).
     Each song is a short text recipe (scale, chords, melody, drums) in `SONGS`. Note charts are fixed, not random.
@@ -222,6 +228,18 @@ _Last updated: 2026-11-15_
     gravity-defying twin tails with star clips. The owner asked for "anime style" hair; it is kept original (star clips,
     heart-dip fringe, no teal default) so it doesn't look like any real character.
   - Old saves: anyone wearing or owning an old swoop gets Emo Swoop plus that colour, free. The old ids stay readable.
+- Stage in the Loft + labels (owner's request, 2026-11-15):
+  - **The Stage marquee moved to the Cozy Loft's wall** (between the round window and the computer desk), because her
+    first room was cramped. Songs, scores, the Golden Mic and its place in her first room are unchanged.
+  - **The pink room labels (⚽ Soccer, 👗 Closet …) only show in Easy mode.** Without Easy mode she finds what can be
+    tapped by exploring; a younger child in Easy mode still gets the labels.
+- Code Lab (plan agreed 2026-11-15, build as v1.13):
+  - Tap the Loft's computer desk. A small grid with Fuzzy and a goal; she lines up big arrow blocks, taps ▶️ Run and
+    watches Fuzzy follow them. A bump is a gentle "oops, try again": nothing is lost.
+  - Easy = arrows only; Medium adds a 🔁 repeat block; Hard adds walls and a 🌟 pick-up block.
+  - Coins: about 3 per new puzzle solved plus a small level bonus, each puzzle paying once. No timers.
+  - Puzzles are short text recipes in a new `18-codelab.js`, so more puzzles and levels are easy to add.
+  - Save: `code{level, solved[]}` per room, with defaults for old saves (save version 9).
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -272,10 +290,11 @@ _Last updated: 2026-11-15_
 1. ~~Decide which Phase 7 item comes first.~~ Code split, then content pack + second room, then Code Lab.
 2. ~~Merge the v1.9 PR.~~ Merged after a device check.
 3. ~~Plan the content pack + second room (v1.10).~~ Agreed and built (v1.10 PR).
-4. ~~Owner: build v1.10 and try the Loft.~~ Everything works. Owner: merge PR #10.
-5. Owner: build v1.11, try the shelves and hair (see the PR), then merge it after #10.
-6. Plan Code Lab (Easy / Medium / Hard, puzzles as data so more are easy to add) and get it agreed. It goes on the
-   Loft's computer desk.
+4. ~~Owner: build v1.10 and try the Loft.~~ Everything works. Merged.
+5. ~~Owner: build v1.11 and merge it.~~ Merged.
+6. ~~Plan Code Lab and get it agreed.~~ Agreed (see "Decisions made").
+7. Owner: build v1.12, try the Stage in the Loft and the labels (see the PR), and merge it.
+8. Build Code Lab (v1.13) on the Loft's computer desk.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
