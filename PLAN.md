@@ -120,9 +120,17 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
 - ✅ "⏱️ Sound late?" setting on the Stage for speakers that lag (saved per device).
 - **Done when:** it plays in time on her tablet and stage progress survives updates and backups.
 
-### Phase 6: Little-sister polish
-- "Easy mode" per profile: bigger buttons, fewer words, simpler shop.
-- Profile picture or colour choice. An optional grown-up PIN for delete/restore.
+### ✅ Phase 6: Little-sister polish (v1.8)
+- ✅ "Easy mode" per room (⚙️ Settings → 🐣 Easy mode): bigger buttons, tabs and tiles; no tip lines or long
+  descriptions; Soccer and the Stage open on Easy (the other levels still work).
+- ✅ Simpler shops in Easy mode: things she owns come first, then the cheapest first. Things she can't afford yet
+  are dimmed with a 🔒 and tapping one says "Need 5 more 🪙". The buy box is just the price with ✔ Yes / ✖ No.
+- ✅ Each room has a colour (6 to pick from) and a badge (🐰⭐💜🦇⚽🎤🎨☁️) on the profile screen, so a child who
+  can't read yet can find her own room. Picked when making a room, changed with ✏️.
+- ✅ Optional grown-up PIN (⚙️ Settings → 🔒 Grown-up PIN). When it is on, making, changing or deleting a room and
+  restoring a backup ask for it. Easy mode does not. "Forgot PIN?" removes it after a grown-up multiplication sum.
+  The PIN stays with the device: restoring a backup never changes it.
+- **Done when:** the younger sister can find her room and play on her own, and old saves and backups still load.
 
 ### Phase 7: Content packs (ongoing)
 - More closet items, decorations, squishies and pop-it shapes (heart, star).

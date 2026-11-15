@@ -11,7 +11,7 @@ Double-click `index.html` (or open it in Chrome). It works offline, with nothing
 See `android/README.md`. In short: open the `android` folder in Android Studio, build the APK, copy it to the device and tap to install.
 
 ## Which version is this?
-In the app: ⚙️ Settings. The version is shown at the bottom (for example "version 1.7").
+In the app: ⚙️ Settings. The version is shown at the bottom (for example "version 1.8").
 
 ## Keep progress safe
 In the app: ⚙️ Settings → Backup & Restore. Update the Android app by installing over it. Never uninstall first.
@@ -21,6 +21,16 @@ to make the file smaller). Restoring an older backup without drawings leaves the
 Photocards (since version 1.4) are always in the backup. They are tiny, because each card is saved as a
 short description (outfit, stage, frame, title) instead of a picture.
 Soccer and Stage progress (best scores, trophies, the Golden Mic) are in the backup too.
+
+## For a younger child (since version 1.8)
+- **Easy mode:** open her room, then ⚙️ Settings → 🐣 Easy mode. Buttons get bigger, tips are hidden,
+  shops show the cheapest things first (too-dear things are dimmed with a 🔒), and the games start on Easy.
+  It is set for each room separately, so the older sister's room stays as it is.
+- **Room colour and badge:** each room has a colour and a little picture (🐰⭐💜🦇⚽🎤🎨☁️) on the first screen.
+  Change them with ✏️ under the room.
+- **Grown-up PIN (optional):** ⚙️ Settings → 🔒 Grown-up PIN. When it is on, making, changing or deleting a room and
+  restoring a backup ask for the 4-digit PIN. If you forget it, tap "Forgot PIN?" and answer the sum
+  (a calculator helps). The PIN belongs to the device and is not changed by restoring a backup.
 
 ## Stage timing
 If the notes on the Stage seem to arrive before you hear the beat (this can happen with Bluetooth speakers or slow tablets),
