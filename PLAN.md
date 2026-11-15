@@ -145,6 +145,9 @@ Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a conte
 - ✅ **Cozy Loft + Content Pack 1 (v1.10):** a free second room (🪜 Loft button) with its own wall, floor and decorations,
   shared My Stuff, and a computer desk ready for Code Lab. Pack 1: 8 clothes, 8 decorations, 2 walls + the free Attic wall,
   2 floors, the Ghosty squishy, the Batwing spinner, and heart / star pop-it boards.
+- ✅ **Shelves + Hair Styles (v1.11, the owner's request):** Little and Long wall shelves (things snap onto them and
+  move with them). Hair is now a style plus a colour bought once: Emo Swoop, Short Bob, Pigtails, Long Waves, Emo Spikes
+  and Starry Twin Tails, in 10 colours.
 - More closet items, decorations and squishies (future packs: `18-pack2.js` …).
 - New fidgets: slime stretcher, fidget-cube clicker, tilt marble maze (device tilt works in WebView).
 - Seasonal decorations, a sticker book of achievements, a pet for the mascot.

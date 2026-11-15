@@ -54,9 +54,16 @@ const DECOR={
       +`<path d="M-15 -164 Q-10 -172 -2 -173" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".8"/>`
       +`<path d="${starPath(-36,-176,9)} ${starPath(38,-160,7)} ${starPath(30,-192,5)}" fill="#ffd166" stroke="#2b2235" stroke-width="1.5"/>`
       +`<text x="0" y="-4" text-anchor="middle" font-size="11" font-weight="900" fill="#ffd166">STAR</text>`;}},
-  moon:{name:'Moon Lamp',price:15,box:'-60 -140 120 150',d:()=>`<rect x="-26" y="-14" width="52" height="14" rx="6" fill="#3b2f52"/><rect x="-4" y="-50" width="8" height="38" fill="#3b2f52"/><path d="M8 -128 A40 40 0 1 0 8 -48 A30 30 0 1 1 8 -128Z" fill="#ffe9a8" stroke="#e8b84a" stroke-width="3" filter="url(#glow)"/>`}
+  moon:{name:'Moon Lamp',price:15,box:'-60 -140 120 150',d:()=>`<rect x="-26" y="-14" width="52" height="14" rx="6" fill="#3b2f52"/><rect x="-4" y="-50" width="8" height="38" fill="#3b2f52"/><path d="M8 -128 A40 40 0 1 0 8 -48 A30 30 0 1 1 8 -128Z" fill="#ffe9a8" stroke="#e8b84a" stroke-width="3" filter="url(#glow)"/>`},
+  // Wall shelves (v1.11). shelf = {w: width of the top, top: height of the top above the item's (0,0)}.
+  // In Decorate, standing things dropped near the top snap onto it, and moving a shelf takes them along.
+  shelfS:{name:'Little Shelf',price:10,wall:1,shelf:{w:160,top:44},box:'-95 -60 190 70',d:()=>shelfArt(160)},
+  shelfL:{name:'Long Shelf',price:15,wall:1,shelf:{w:300,top:44},box:'-165 -60 330 70',d:()=>shelfArt(300)}
 };
 
+function shelfArt(w){const h=w/2, o='stroke="#2b2235" stroke-width="4" stroke-linejoin="round"';
+  return [-1,1].map(k=>`<path d="M${k*(h-26)} -30 V-4 L${k*(h-26)-k*22} -30Z" fill="#ff8cc6" ${o}/>`).join('')
+    +`<rect x="${-h}" y="-44" width="${w}" height="16" rx="5" fill="#fbf2e6" ${o}/><rect x="${-h+6}" y="-34" width="${w-12}" height="3" fill="#e7d6c2"/>`;}
 // A trophy cup with a soccer-ball badge, drawn bottom-centre at (0,0) like the other decorations.
 function trophyArt(main,light,dark,label){
   const o=`stroke="#2b2235" stroke-width="4" stroke-linejoin="round"`;

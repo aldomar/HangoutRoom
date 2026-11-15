@@ -14,7 +14,9 @@ _Last updated: 2026-11-15_
   → Code Lab (the owner's intro-to-coding game idea, sketched in `PLAN.md`).
   - **Code split: done** (v1.9 merged, PR #9). Built in Android Studio and checked on the device: everything works.
   - **Cozy Loft + Content Pack 1: built, PR open as v1.10** on branch `feature/loft-pack1` (plan agreed 2026-11-15).
-    Not yet tried on a device.
+    The owner tried it on a device: everything works. Not merged yet.
+  - **Shelves + Hair Styles: built, PR open as v1.11** on branch `feature/shelves-hair` (stacked on v1.10, so merge
+    #10 first). The owner asked for it before Code Lab. Not yet tried on a device.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -34,6 +36,7 @@ _Last updated: 2026-11-15_
 - PR #8 "Little-sister polish (v1.8)": merged.
 - PR #9 "Code split (v1.9)": merged.
 - PR "Cozy Loft + Content Pack 1 (v1.10)" on branch `feature/loft-pack1` (from `main` after #9): open.
+- PR "Shelves + Hair Styles (v1.11)" on branch `feature/shelves-hair` (from `feature/loft-pack1`): open. Merge #10 first.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -110,6 +113,12 @@ _Last updated: 2026-11-15_
   - heart and star pop-it boards: bought, a sensible number of bubbles, popping them all flips the board and the shape
     stays; back to the square board; Ghosty squishy and Batwing spinner draw
   - restoring a v1.9 backup (empty Loft, square board) and a v1.10 backup; the Loft button fits on a phone
+- **Shelves + Hair Styles (v1.11)**: 263 checks, all passing, no console errors. New checks:
+  - both shelves are in the Shop and hang on the wall; something dropped near a shelf top snaps onto it; dragging the
+    shelf carries what's on it; things off the shelf don't move
+  - every hair style draws in every colour; buying a colour once works on all styles; free colours are owned
+  - a v1.10-style backup with old swoop hair (e.g. Cotton Candy) restores as Emo Swoop in the matching colour,
+    with the colour owned; old photocards still draw
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -203,6 +212,16 @@ _Last updated: 2026-11-15_
     pop-it boards (15 coins each). Prices 15–40.
   - **Pop-it shapes** are picked next to the colour themes. Bubbles that don't fit the shape are left out (heart 28,
     star 22). Popping all of them still flips the board for the same +5 coins.
+- Shelves + Hair Styles (agreed 2026-11-15):
+  - **Two wall shelves** in the Shop: Little Shelf (10) and Long Shelf (15), one cozy style (white wood, pink brackets).
+    Something dropped near a shelf's top **snaps** onto it, and moving the shelf **carries** what's on it.
+  - **Hair is now style + colour.** The old coloured swoops became one **Emo Swoop** style. Colours are bought
+    **once** and work on every style: Black and Brown free; Purple, Pink, Blonde, Mint, Sky, Snow 10; Black + Pink
+    Streak and Cotton Candy 20.
+  - **New styles:** Short Bob, Pigtails (15), Long Waves, Emo Spikes (20), and **Starry Twin Tails** (25): long,
+    gravity-defying twin tails with star clips. The owner asked for "anime style" hair; it is kept original (star clips,
+    heart-dip fringe, no teal default) so it doesn't look like any real character.
+  - Old saves: anyone wearing or owning an old swoop gets Emo Swoop plus that colour, free. The old ids stay readable.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -253,14 +272,16 @@ _Last updated: 2026-11-15_
 1. ~~Decide which Phase 7 item comes first.~~ Code split, then content pack + second room, then Code Lab.
 2. ~~Merge the v1.9 PR.~~ Merged after a device check.
 3. ~~Plan the content pack + second room (v1.10).~~ Agreed and built (v1.10 PR).
-4. Owner: build v1.10, install it over the app, and try the Loft and the new things (see the PR). Merge the PR.
-5. Plan Code Lab (Easy / Medium / Hard, puzzles as data so more are easy to add) and get it agreed. It goes on the
+4. ~~Owner: build v1.10 and try the Loft.~~ Everything works. Owner: merge PR #10.
+5. Owner: build v1.11, try the shelves and hair (see the PR), then merge it after #10.
+6. Plan Code Lab (Easy / Medium / Hard, puzzles as data so more are easy to add) and get it agreed. It goes on the
    Loft's computer desk.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 7 since v1.10
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 8 since v1.11
+  (old swoop hair ids → `swoopBlack` + `look.hairColor`, and `hairc:<colour>` added to `owned`). It was 7 in v1.10
   (Loft + Content Pack 1: `room2` and `fid.popShape`). It was 6 in v1.8
   (Little-sister polish: per-profile `easy`, `color`, `badge`, plus `settings.pin`). It was 5 in v1.7
   (Stage: `stage`, `stats.shows/fullCombos`, plus `settings.stageOffset` filled in by `DEFAULT_SETTINGS`).

@@ -28,6 +28,12 @@ Every room has a second room upstairs: tap **🪜 Loft** at the top of the room 
 The Loft has its own wall, floor and decorations. Things put away in **My Stuff** (🛋️ Decorate) can be placed
 in either room.
 
+## Shelves and hair (since version 1.11)
+- **Shelves:** buy a Little or Long Shelf in the Shop and hang it on the wall. Drag a small thing onto the shelf and it
+  sits on top. Move the shelf and everything on it comes along.
+- **Hair:** in the Closet's Hair tab, pick a style, then tap a colour circle above. A colour is bought once and works
+  with every style.
+
 ## For a younger child (since version 1.8)
 - **Easy mode:** open her room, then ⚙️ Settings → 🐣 Easy mode. Buttons get bigger, tips are hidden,
   shops show the cheapest things first (too-dear things are dimmed with a 🔒), and the games start on Easy.
