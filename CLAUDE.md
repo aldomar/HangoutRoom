@@ -11,7 +11,7 @@ Hangout Room: a personal gift app for the owner's 11-year-old niece, and later h
 It's a cozy virtual bedroom with an original fuzzy emo bunny mascot, a fidget shelf (pop-it, squishy,
 spinner), a closet for dress-up, coins and room decorating.
 
-- The app is **one self-contained web page**, `index.html` at the repo root. It runs offline in any browser.
+- The app is **one web page**: `index.html` at the repo root plus the `web/` folder (CSS and code). It runs offline in any browser.
 - `android/` is a thin WebView wrapper that builds a **sideloaded APK**. It is never published.
 - **Family only.** It is never sold, published to an app store, or shared beyond the family.
 
@@ -52,15 +52,19 @@ stripes, stars, bats), and fidget and squishy toys.
   - No large asset files.
 
 ## Architecture rules
-- `index.html` (repo root) is the **single source of truth**. The Android build copies it into the APK
+- `index.html` + `web/` (repo root) are the **single source of truth**. The Android build copies both into the APK
   (`CopyWebApp` task in `android/app/build.gradle.kts`). Never edit or commit a copy inside `android/`.
 - **It must run from `file://` with no server:**
-  - Classic `<script>` only: no ES modules, no `import`.
+  - Classic `<script src>` only: no ES modules, no `import`. Every file starts with `'use strict';`.
   - No `fetch()`/XHR of local files, no CDNs, no downloaded web fonts.
   - No npm/build step needed to run it.
-- If `index.html` grows past ~250 KB, plan a split into a `web/` folder (plain `<script src>` / `<link>`)
-  and update `CopyWebApp` to copy the folder. Plan first.
-- Keep the numbered section banners in `index.html` (see Layout) and put new code in the right section.
+- **Files (since v1.9):** `index.html` holds only the page shell and screen markup; CSS is `web/app.css`; code is
+  `web/js/NN-name.js`, one file per numbered section, listed in order by `<script src>` tags at the bottom of `index.html`.
+  - All files share one global scope, but code that **runs while a file loads** (top-level statements, `x.onclick=fn`)
+    may only use things from the same or earlier files. Functions called later (on taps, in the loop) can use anything.
+  - A new game or content pack gets a **new numbered file** (e.g. `16-codelab.js`) and a new `<script src>` tag
+    just above `99-startup.js` (which always loads last), rather than growing an old file. Keep each file under ~40 KB.
+  - Keep the numbered section banner at the top of each file. The smoke test checks every `web/js` file is loaded, in order.
 - **Touch first.** Use pointer events, which also work with a mouse. Interactive canvases and boards need `touch-action:none`.
 - Tap targets of 48 px or more; text at least 14 px (16 px or more for body text).
 
@@ -92,7 +96,7 @@ stripes, stars, bats), and fidget and squishy toys.
 ## Versions and pull requests
 - Every pull request raises the minor version by one (1.0 → 1.1 → 1.2), committed on the branch before the PR:
   - `versionName` **and** `versionCode` (+1) in `android/app/build.gradle.kts`.
-  - `APP_VERSION` in `index.html` (added in Phase 1; shown in Settings).
+  - `APP_VERSION` in `web/js/01-save.js` (shown in Settings).
 - Put the version in the PR title, for example "Art Desk (v1.2)".
 - When several PRs are open, each takes the next number after the highest already used on any branch.
 - The PR description says what to try on the tablet.
@@ -106,22 +110,22 @@ stripes, stars, bats), and fidget and squishy toys.
 - **On the device:** the owner builds the APK in Android Studio and sideloads it.
 
 ## Layout
-- `index.html`, sections in order:
-  1. Helpers + save data (`DB`, `save`, `saveSoon`, `P()`)
-  2. Art helpers (`st`, `starPath`, `heartPath`, `buildDefs` shared patterns and `#fuzz`/`#glow` filters)
-  3. Mascot + closet items (`FUR`, `CLOSET` by category, `mascotSVG`; mascot box is 200×270)
-  4. Room (`WALLS`, `FLOORS`, `DECOR` drawn bottom-centre at 0,0; `furniture()` hotspots; room box is 1000×700)
-  5. Fidget data (`POP_THEMES`, `SQUISHIES`, `SPINS`)
-  6. Profiles (`newProfile`, `normalize`)
-  7. Sound (`SFX`, generated music, spinner hum)
-  8. UI basics (`toast`, `modal`, `earn`, `tryBuy`, `buyConsumable`)
-  9. Screens (profiles, room + decorate, settings/backup, closet)
-  10. Fidget shelf (pop-it, squishy physics, spinner physics)
-  11. Art Desk (drawing pad, stamps, gallery, posters)
-  12. Photocard Wall (`STAGES`, `FRAMES`, `CARD_TAGS`, `BONUS`, `cardSVG`, card maker, binder, pins)
-  13. Soccer Field (`KEEPERS` by level, `socShoot`, `resolveShot`, `drawSoccer`, `drawKeeper`)
-  14. Stage (`SONGS`, `buildSong`, `stStart`, `stTap`, `stFinish`, `drawStage`, `giveMic`)
-  15. Main loop + startup (`androidBack` hook)
+- `index.html` (markup) + `web/app.css` + `web/js/`, one file per section, in order:
+  1. `01-save.js` Helpers + save data (`DB`, `save`, `saveSoon`, `P()`)
+  2. `02-art-helpers.js` Art helpers (`st`, `starPath`, `heartPath`, `buildDefs` shared patterns and `#fuzz`/`#glow` filters)
+  3. `03-mascot.js` Mascot + closet items (`FUR`, `CLOSET` by category, `mascotSVG`; mascot box is 200×270)
+  4. `04-room.js` Room (`WALLS`, `FLOORS`, `DECOR` drawn bottom-centre at 0,0; `furniture()` hotspots; room box is 1000×700)
+  5. `05-fidget-data.js` Fidget data (`POP_THEMES`, `SQUISHIES`, `SPINS`)
+  6. `06-profiles.js` Profiles (`newProfile`, `normalize`)
+  7. `07-sound.js` Sound (`SFX`, generated music, spinner hum)
+  8. `08-ui.js` UI basics (`toast`, `modal`, `earn`, `tryBuy`, `buyConsumable`)
+  9. `09-screens.js` Screens (profiles, room + decorate, settings/backup, closet)
+  10. `10-fidget-shelf.js` Fidget shelf (pop-it, squishy physics, spinner physics)
+  11. `11-art-desk.js` Art Desk (drawing pad, stamps, gallery, posters)
+  12. `12-photocards.js` Photocard Wall (`STAGES`, `FRAMES`, `CARD_TAGS`, `BONUS`, `cardSVG`, card maker, binder, pins)
+  13. `13-soccer.js` Soccer Field (`KEEPERS` by level, `socShoot`, `resolveShot`, `drawSoccer`, `drawKeeper`)
+  14. `14-stage.js` Stage (`SONGS`, `buildSong`, `stStart`, `stTap`, `stFinish`, `drawStage`, `giveMic`)
+  15. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
 - A photocard is a small recipe `{id, no, at, look, stage, frame, title, name, s, bonus?}` in `profile.cards`, drawn by `cardSVG()`.

@@ -6,6 +6,7 @@ A family gift; not for sale or public sharing.
 
 ## Try it on a computer
 Double-click `index.html` (or open it in Chrome). It works offline, with nothing to install.
+Since version 1.9 the app is `index.html` **plus the `web` folder** next to it. If you copy it somewhere, copy both.
 
 ## Put it on an Android tablet or phone
 See `android/README.md`. In short: open the `android` folder in Android Studio, build the APK, copy it to the device and tap to install.
@@ -40,5 +41,7 @@ open the Stage and press + next to "⏱️ Sound late?" a few times. Each press 
 - `CLAUDE.md`: project rules (for Claude Code and people).
 - `PLAN.md`: layout and roadmap.
 - `docs/STATUS.md`: where things stand right now.
+- `index.html` is the page; `web/app.css` is the look; `web/js/` is the code, one numbered file per part of the app
+  (for example `13-soccer.js`). They load in number order.
 - `tests/smoke-test.js`: an automatic check of the whole app. With Node.js and Chrome installed, run
   `node tests/smoke-test.js` in the repo folder. It prints "ok" or "FAIL" for each check and saves screenshots in `tests/shots/`.

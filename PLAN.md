@@ -133,6 +133,16 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
 - **Done when:** the younger sister can find her room and play on her own, and old saves and backups still load.
 
 ### Phase 7: Content packs (ongoing)
+Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a content pack with a second room (v1.10),
+**3)** Code Lab. Each gets its own plan, agreed before building.
+
+- **Code split (v1.9), agreed 2026-11-15:** `index.html` stays at the repo root (page shell and screen markup).
+  The CSS moves to `web/app.css` and the code to `web/js/`, one file per numbered section
+  (`01-save.js` … `14-stage.js`, and `99-startup.js` last), loaded in order with plain `<script src>`. It still runs from `file://` with no server
+  and no build step. New games and packs get their own numbered files. The Android build copies `index.html` and `web/`.
+  Nothing changes for her: same app, same saves.
+- **A second room** (moved up from the ideas backlog by the owner). Part of the first content pack, and it gives
+  new areas like Code Lab somewhere to live.
 - More closet items, decorations, squishies and pop-it shapes (heart, star).
 - New fidgets: slime stretcher, fidget-cube clicker, tilt marble maze (device tilt works in WebView).
 - Seasonal decorations, a sticker book of achievements, a pet for the mascot.
@@ -144,6 +154,8 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
   - Levels teach one idea at a time: putting steps in order → repeat loops → reusing a "my move" block →
     simple "if" (for example "if there's a puddle, jump").
   - No failing: if the program goes wrong, Fuzzy stops, the block where it went wrong glows, and she can fix it and try again.
+  - **Starts with 3 levels, Easy / Medium / Hard** (like Soccer and the Stage), each with a handful of hand-made puzzles.
+    More puzzles and levels will be added later, so puzzles are plain data entries (adding one = one entry).
   - Coins the first time each level is solved, plus a bonus star for using few blocks. All levels are made by hand (not random).
   - Easy mode (younger sister): only arrow blocks and short paths, so it works without reading.
   - Original look and art: block coding is a common kind of game, but it must not copy any existing coding app's look,
@@ -152,14 +164,13 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), and room themes saved as presets.
 - Night mode for the room (lights on/off with the lamps glowing).
-- Bigger rooms or a second room.
 - Gift room items between the sisters' profiles on the same device (no network).
 
 ## Risks and how we handle them
 | Risk | Plan |
 | --- | --- |
 | Lost progress (uninstall, new device) | Update in place, keep the debug keystore safe, use Backup before big updates |
-| `index.html` gets too big to manage | Split into `web/` with plain script tags once it passes ~250 KB (plan first) |
+| The code gets too big to manage | Split into `web/` in v1.9: one file per section. Start a new file for each new game or pack instead of growing old ones |
 | Slow on an older tablet | Limit fuzz filters/animations, test on the real device every phase |
 | Android tooling changes | Versions pinned in `android/`. Upgrade only when Android Studio requires it, using its Upgrade Assistant |
 | Copyright slips | Original-only rule in CLAUDE.md. Review new art against it in every PR |

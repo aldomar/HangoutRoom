@@ -1,7 +1,8 @@
 # Hangout Room - Android wrapper
 
 A tiny Android app that shows `../index.html` full-screen and offline.
-The web app at the repo root is the only copy you edit; it is copied into the APK on every build.
+The web app at the repo root (`index.html` plus the `web/` folder) is the only copy you edit;
+both are copied into the APK on every build.
 
 ## Build the APK
 1. Android Studio -> **File > Open** -> pick this `android` folder (not the repo root).
@@ -16,8 +17,8 @@ The web app at the repo root is the only copy you edit; it is copied into the AP
 - Or plug in with USB debugging on and press the green Run button in Android Studio.
 
 ## Updating later
-1. Edit `../index.html` (test it in a browser first).
-2. In `app/build.gradle.kts`, bump `versionCode` (1 -> 2 -> 3 ...).
+1. Edit `../index.html` or the files in `../web/` (test in a browser first).
+2. In `app/build.gradle.kts`, bump `versionCode` (1 -> 2 -> 3 ...) and `versionName`.
 3. Build again and install over the old app. **Don't uninstall first** - uninstalling deletes her saves.
 
 Updates only install over the old app if they are signed with the same key. Debug builds use
