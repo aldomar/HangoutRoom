@@ -50,11 +50,12 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
 - Sounds + optional music (generated), Backup & Restore.
 - Android WebView wrapper (written; first build pending, see STATUS).
 
-### Phase 1: Ship v1 to the tablet (next)
+### Phase 1: Ship v1 to the tablet (finishing)
 - ✅ Commit v1 (v1.0 is on `main`; v1.1 cleans up stray Android Studio files).
-- First Gradle sync/build in Android Studio and sideload. Fix anything the real device shows
-  (layout on her screen size, touch feel, audio, speed of the fuzzy filter).
-- Add `APP_VERSION` and an "About" line in Settings. Add a save-data `version` migration hook in `normalize()`.
+- ✅ First Gradle sync/build in Android Studio and sideload. Built with no errors; saves and Back checked on the device.
+  Keep an eye out for layout on her screen size, touch feel, audio and the speed of the fuzzy filter.
+- ✅ `APP_VERSION` and an "About" line in Settings (v1.2). Save-data upgrade hook (`fixDB()` + `MIGRATIONS`),
+  used for both loading and restoring.
 - Optional: a free automated smoke test (Playwright with the installed Chrome), if the owner agrees.
 - **Done when:** the APK installs, saves survive closing the app and installing an update, and Back works as described.
 

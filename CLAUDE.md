@@ -77,7 +77,7 @@ stripes, stars, bats), and fidget and squishy toys.
 
 ## Android wrapper (`android/`)
 - Minimal on purpose: a plain `Activity` + `WebView`, no AndroidX, no dependencies.
-  AGP 9.3.3 (built-in Kotlin, no Kotlin plugin), Gradle 9.5.0, compile/target SDK 36, min SDK 26.
+  AGP 9.5.1 (built-in Kotlin, no Kotlin plugin), Gradle 9.6.0, compile/target SDK 36, min SDK 26.
   Android Studio 2026.x runs Gradle on a new Java, so Gradle must stay at 9.1 or newer.
 - JS ↔ Android contract (keep both working, and feature-detect so the browser version still works):
   - `window.AndroidBridge.saveBackup(text, fileName)` opens Android's save picker (SAF `ACTION_CREATE_DOCUMENT`).
