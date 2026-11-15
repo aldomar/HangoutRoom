@@ -78,6 +78,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Gallery + poster');
   await ev(`document.querySelector('#artGalBtn').click()`); await sleep(500);
+  for(let i=0;i<30&&!(await ev(`document.querySelectorAll('#artGrid [data-art]').length`));i++) await sleep(100); // the gallery loads in the background
   check('gallery has 1 drawing', (await ev(`document.querySelectorAll('#artGrid [data-art]').length`))===1);
   await shot('03-gallery');
   await ev(`document.querySelector('#artGrid [data-art]').click()`); await sleep(200);
@@ -131,7 +132,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`doRestore(${JSON.stringify(code)})`); await sleep(800);
   check('restore brings back 2 drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2);
   check('artwork not saved into localStorage', await ev(`!JSON.parse(localStorage.getItem('hangoutRoom.v1')).artwork`));
-  check('DB version is 3', (await ev('DB.version'))===3);
+  check('DB version is 4', (await ev('DB.version'))===4);
   await ev(`doRestore(${JSON.stringify(oldCode)})`); await sleep(800);
   check('old backup restores and keeps drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2 && (await ev('DB.profiles.length'))===1);
   await ev(`DB.settings.backupArt=false;backupModal()`); await sleep(400);
@@ -212,11 +213,97 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const cardCode=await ev('JSON.stringify(DB)');
   const v13Code=await ev(`JSON.stringify(Object.assign({},DB,{version:2,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));['cards','cardPins','bonusGot','cardNo'].forEach(k=>delete q[k]);delete q.stats.cards;return q;})}))`);
   await ev(`doRestore(${JSON.stringify(v13Code)})`); await sleep(500);
-  check('v1.3 backup restores with empty card lists', await ev(`DB.version===3&&DB.profiles[0].cards.length===0&&DB.profiles[0].cardPins.length===0&&DB.profiles[0].stats.cards===0`));
+  check('v1.3 backup restores with empty card lists', await ev(`DB.version===4&&DB.profiles[0].cards.length===0&&DB.profiles[0].cardPins.length===0&&DB.profiles[0].stats.cards===0`));
   await ev(`doRestore(${JSON.stringify(cardCode)})`); await sleep(500);
   check('backup brings cards and pins back', (await ev('DB.profiles[0].cards.length'))===nCards && (await ev('DB.profiles[0].cardPins.length'))===2);
   await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal()`);
   check('no repeat bonus after restore', (await ev(`P().cards.filter(c=>c.bonus).length`))===3);
+
+  console.log('Soccer Field');
+  // The keeper guesses with Math.random. 0.99 = "guess a side, the right one" (dives to u=+0.32), so tests are repeatable.
+  await ev(`window._rand=Math.random;Math.random=()=>0.99`);
+  check('soccer sign is unlocked', await ev(`!document.querySelector('[data-hot=window]').textContent.includes('🔒')`));
+  await ev(`handleHot('window')`); await sleep(500);
+  check('soccer screen shown', await ev(`cur==='soccer'&&!!SOC.g&&document.querySelectorAll('#socScore .dot').length===5`));
+  check('starts on Easy with Mochi', await ev(`P().soccer.level==='easy'&&document.querySelector('#socTip').textContent.includes('Mochi')`));
+  await shot('40-soccer-easy');
+  const sc0=await ev('P().coins');
+  const kickWait=2700; // 0.95 s flight + 1.5 s before the next kick
+  await ev(`socShoot(-0.35,0.5,1,0)`); await sleep(500); await shot('41-soccer-flying'); await sleep(700);
+  check('goal on the left (keeper dived right)', await ev(`SOC.kicks[0]===true&&P().stats.goals===1`));
+  check('+1 coin per goal on Easy', (await ev('P().coins'))===sc0+1, [sc0, await ev('P().coins')]);
+  await shot('42-soccer-goal'); await sleep(kickWait-1200);
+  check('ready for kick 2', await ev(`SOC.state==='aim'`));
+  await ev(`socShoot(0.3,0.3,1,0)`); await sleep(1200);
+  check('saved by the keeper', await ev(`SOC.kicks[1]===false&&SOC.shot.res==='saved'`));
+  await shot('43-soccer-saved'); await sleep(kickWait-1200);
+  const tapAt=await ev(`(()=>{const r=socCv.getBoundingClientRect(),p=toScr(SOC.g,-0.38,0.6);return [r.left+p.x,r.top+p.y];})()`);
+  await mouse('mousePressed',tapAt[0],tapAt[1]); await mouse('mouseReleased',tapAt[0],tapAt[1]); await sleep(1200);
+  check('tapping the goal shoots there (goal)', await ev(`SOC.kicks[2]===true&&Math.abs(SOC.shot.u+0.38)<0.02`), await ev('JSON.stringify(SOC.shot)'));
+  await sleep(kickWait-1200);
+  const ball=await ev(`(()=>{const r=socCv.getBoundingClientRect();return [r.left+SOC.g.bx,r.top+SOC.g.by];})()`);
+  // Like a child: touch the ball, wait a moment, then flick hard. The pause must not make the kick weak.
+  // (Sent from inside the page so the 10 ms gaps are exact: about 3.6 px per ms, a real quick flick.)
+  await ev(`(async()=>{const pe=(t,x,y)=>socCv.dispatchEvent(new PointerEvent(t,{clientX:x,clientY:y,pointerId:7,bubbles:true}));
+    const [x,y]=${JSON.stringify(ball)}; pe('pointerdown',x,y); await new Promise(r=>setTimeout(r,600));
+    for(let i=1;i<=6;i++){await new Promise(r=>setTimeout(r,10)); pe('pointermove',x-i*8,y-i*35);}
+    pe('pointerup',x-48,y-210);})()`); await sleep(100);
+  check('swiping up kicks the ball (aimed left)', await ev(`SOC.kicks.length===3&&SOC.state==='fly'&&SOC.shot.u<0`), await ev('JSON.stringify(SOC.shot)'));
+  check('a hard flick after a pause is a strong shot that stays under the bar', await ev(`SOC.shot.T<0.7&&SOC.shot.v>0.5&&SOC.shot.v<=0.9`), await ev('JSON.stringify(SOC.shot)'));
+  for(let i=0;i<60&&!(await ev(`SOC.state==='aim'`));i++) await sleep(100);
+  await ev(`socShoot(0.8,0.4,1,0)`); await sleep(1200);
+  check('a wide shot misses', await ev(`SOC.shot.res==='wide'`));
+  await sleep(1700);
+  check('match ends after 5 kicks', (await ev(`document.querySelector('#modalTitle').textContent`)).includes('/ 5 goals') && (await ev('P().stats.matches'))===1);
+  check('best score saved', (await ev('P().soccer.best.easy'))>=2);
+  await shot('44-soccer-result');
+  check('First Goal! bonus card', await ev(`P().bonusGot.includes('goal1')`));
+  await ev(`closeModal()`); await sleep(100);
+  check('tap after the match starts a new one', await ev(`(()=>{socCv.dispatchEvent(new PointerEvent('pointerdown',{clientX:5,clientY:5}));return SOC.state==='aim'&&SOC.kicks.length===0;})()`));
+
+  console.log('Team kit bonus + harder keepers');
+  const look0=await ev('JSON.stringify(P().look)');
+  await ev(`P().look.top='jersey';P().look.bottom='shorts';renderSoccer()`); await sleep(300);
+  check('kit badge shows with 2 soccer items', await ev(`!document.querySelector('#kitBadge').classList.contains('hidden')`));
+  const sc1=await ev('P().coins');
+  await ev(`socShoot(-0.35,0.5,1,0)`); await sleep(1300);
+  check('+1 kit bonus (2 coins per goal on Easy)', (await ev('P().coins'))===sc1+2, [sc1, await ev('P().coins')]);
+  await shot('45-soccer-kit');
+  await ev(`document.querySelector('[data-lvl=medium]').click()`); await sleep(400);
+  check('Medium has Boo', await ev(`P().soccer.level==='medium'&&document.querySelector('#socTip').textContent.includes('Boo')`));
+  await shot('46-soccer-medium');
+  await ev(`P().look=JSON.parse(${JSON.stringify(look0)});document.querySelector('[data-lvl=hard]').click()`); await sleep(400);
+  check('Hard has Flap, kit badge gone', await ev(`P().soccer.level==='hard'&&document.querySelector('#socTip').textContent.includes('Flap')&&document.querySelector('#kitBadge').classList.contains('hidden')`));
+  await shot('47-soccer-hard');
+  const sc2=await ev('P().coins');
+  for(let i=0;i<5;i++){await ev(`socShoot(-0.35,0.5,1.2,0)`);await sleep(i<4?kickWait:1300);}
+  await sleep(1500);
+  check('perfect 5/5 on Hard: 5×3 + 5 coins, +10 for the bonus card', (await ev('P().coins'))===sc2+30 && (await ev('P().stats.perfects'))===1, [sc2, await ev('P().coins')]);
+  check('Perfect 5/5 bonus card', await ev(`P().bonusGot.includes('perfect1')`));
+  check('perfect on Hard wins the Gold Trophy (in the room)', await ev(`P().soccer.trophies.includes('hard')&&P().room.items.filter(i=>i.type==='trophyGold'&&i.placed).length===1`));
+  check('trophy stands in its own spot, not behind Fuzzy', await ev(`(()=>{const t=P().room.items.find(i=>i.type==='trophyGold');return t.x===TROPHY_SPOTS.trophyGold.x&&Object.values(TROPHY_SPOTS).every(p=>p.x+70<420||p.x-70>580||p.y>604);})()`));
+  check('result box shows the trophy', (await ev(`document.querySelector('#modalBody').textContent`)).includes('Gold Trophy'));
+  await shot('48-soccer-perfect');
+  await ev(`closeModal()`);
+  check('androidBack from soccer goes to room', await ev(`window.androidBack()&&cur==='room'`));
+  await ev(`P().soccer.best.medium=5;show('room')`); await sleep(300);
+  check('an earlier perfect on Medium gives the Silver Trophy', await ev(`P().soccer.trophies.includes('medium')&&P().room.items.some(i=>i.type==='trophySilver')`));
+  await ev(`show('soccer')`); await sleep(200); await ev(`show('room')`); await sleep(300);
+  check('trophies are given only once', await ev(`P().room.items.filter(i=>/^trophy/.test(i.type)).length===2&&!P().soccer.trophies.includes('easy')`));
+  await ev(`closeModal()`); await shot('51-room-trophies');
+  await ev(`enterDecorate();document.querySelector('[data-dt=shop]').click()`);
+  check('trophies are not in the Shop', await ev(`!document.querySelector('#decoGrid [data-buy^=trophy]')`)); await ev(`exitDecorate()`);
+  await ev(`Math.random=window._rand`);
+
+  console.log('Soccer in backups');
+  const v14Code=await ev(`JSON.stringify(Object.assign({},DB,{version:3,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.soccer;['goals','kicks','matches','perfects'].forEach(k=>delete q.stats[k]);return q;})}))`);
+  const socCode=await ev('JSON.stringify(DB)');
+  await ev(`doRestore(${JSON.stringify(v14Code)})`); await sleep(400);
+  check('v1.4 backup restores with soccer defaults', await ev(`DB.version===4&&DB.profiles[0].soccer.level==='easy'&&DB.profiles[0].soccer.best.hard===0&&DB.profiles[0].stats.goals===0&&DB.profiles[0].soccer.trophies.length===0`));
+  await ev(`doRestore(${JSON.stringify(socCode)})`); await sleep(400);
+  check('backup keeps soccer progress', await ev(`DB.profiles[0].soccer.best.hard===5&&DB.profiles[0].stats.perfects===1&&DB.profiles[0].soccer.trophies.length===2`));
+  await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal()`);
+  check('no duplicate trophies after restore', await ev(`P().room.items.filter(i=>/^trophy/.test(i.type)).length===2`));
 
   console.log('Phone portrait + other screens');
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
@@ -229,11 +316,14 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const big=await ev(`(()=>{const r=document.querySelector('#cardBig svg').getBoundingClientRect();return {w:r.width,h:r.height};})()`);
   check('phone card preview visible', big.h>150, big);
   await ev(`setCardView('binder')`); await sleep(300); await shot('28-phone-binder');
+  await ev(`show('soccer')`); await sleep(400); await shot('49-phone-soccer');
+  check('phone soccer canvas visible', await ev(`SOC.g&&SOC.g.GW>200`), await ev('SOC.g&&SOC.g.GW'));
   await ev(`show('art')`); await sleep(200);
   await send('Emulation.setDeviceMetricsOverride',{width:860,height:412,deviceScaleFactor:1,mobile:true});
   await ev(`setArtView('pad')`); await sleep(300); await shot('11-phone-landscape');
   await ev(`show('cards');setCardView('make')`); await sleep(300); await shot('29-phone-landscape-cards');
   await ev(`setCardView('binder')`); await sleep(300); await shot('30-phone-landscape-binder');
+  await ev(`show('soccer')`); await sleep(400); await shot('50-phone-landscape-soccer');
   await ev(`show('art')`);
 
   console.log('Every other screen (tablet size)');

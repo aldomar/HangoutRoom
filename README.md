@@ -1,6 +1,7 @@
 # HangoutRoom
 Mini game app for niblings: a cozy virtual bedroom with a fuzzy emo bunny, fidget toys,
-dress-up, decorating, an Art Desk for drawing and a Photocard Wall for making collectible bunny cards.
+dress-up, decorating, an Art Desk for drawing, a Photocard Wall for making collectible bunny cards
+and a Soccer Field for penalty kicks.
 A family gift; not for sale or public sharing.
 
 ## Try it on a computer
@@ -10,7 +11,7 @@ Double-click `index.html` (or open it in Chrome). It works offline, with nothing
 See `android/README.md`. In short: open the `android` folder in Android Studio, build the APK, copy it to the device and tap to install.
 
 ## Which version is this?
-In the app: ⚙️ Settings. The version is shown at the bottom (for example "version 1.4").
+In the app: ⚙️ Settings. The version is shown at the bottom (for example "version 1.5").
 
 ## Keep progress safe
 In the app: ⚙️ Settings → Backup & Restore. Update the Android app by installing over it. Never uninstall first.

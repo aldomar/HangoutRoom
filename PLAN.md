@@ -82,11 +82,20 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
   10 drawings, 10 closet items, 10 cards made). Each comes with +10 coins and is given only once. Milestones
   reached before v1.4 are given the first time she opens the room.
 - ✅ Cards are saved as small recipes in the normal save, so they are in every backup. Old backups still restore.
-- **Done when:** cards survive restarts, app updates and backups (check on the tablet).
+- **Done when:** cards survive restarts, app updates and backups. ✅ Checked on the device.
 
-### Phase 4: Soccer Field ⚽ (the window)
-- Penalty kicks: swipe to aim and shoot, a goalkeeper (original character) and a few difficulty levels.
-- Coins per goal. Bonus when wearing the soccer outfit.
+### ✅ Phase 4: Soccer Field ⚽ (v1.5, the window)
+- ✅ Penalty kicks, 5 per match. Swipe up from the ball to shoot (direction = aim, speed = power and height,
+  a bent swipe curves the ball), or just tap a spot in the goal for an easy shot.
+- ✅ Three levels, all open, each with its own original keeper: Easy = Mochi the sleepy cat, Medium = Boo the ghost,
+  Hard = Flap the bat. Harder keepers react faster, reach further and guess better.
+- ✅ Coins: +1 / +2 / +3 per goal (Easy / Medium / Hard), +5 for a perfect 5/5. Team kit bonus: +1 more per goal
+  with 2 or more soccer clothes on (jersey, shorts, soccer socks, cleats).
+- ✅ Best score per level. 3 new bonus photocards: First Goal!, Perfect 5/5, 50 Goals.
+- ✅ Trophies: a perfect 5/5 wins a Bronze (Easy), Silver (Medium) or Gold (Hard) trophy, once each.
+  It appears in her room as a decoration she can move or put away. Trophies are never sold in the Shop.
+- ✅ No timer and nothing to lose: a miss just counts as a miss. Leaving mid-match is fine.
+- **Done when:** it plays smoothly on her tablet and soccer progress survives updates and backups.
 
 ### Phase 5: Stage 🎤
 - Tap-to-the-beat rhythm game with original generated songs. The mascot performs in the current outfit.
