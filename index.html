@@ -1045,7 +1045,9 @@ function renderDecoGrid(){
   $('#decoGrid').innerHTML=h;
 }
 // Posters go on the free bit of wall between the photocard board and the closet.
-function spot(type){if(type==='poster')return {x:686+Math.random()*12,y:200+Math.random()*12};return DECOR[type].wall?{x:380+Math.random()*240,y:200+Math.random()*60}:{x:400+Math.random()*200,y:560+Math.random()*90};}
+// Trophies each get their own clear spot on the floor, so they never hide behind Fuzzy (who stands at x 420-580).
+const TROPHY_SPOTS={trophyBronze:{x:345,y:665},trophySilver:{x:655,y:680},trophyGold:{x:850,y:660}};
+function spot(type){if(TROPHY_SPOTS[type])return Object.assign({},TROPHY_SPOTS[type]);if(type==='poster')return {x:686+Math.random()*12,y:200+Math.random()*12};return DECOR[type].wall?{x:380+Math.random()*240,y:200+Math.random()*60}:{x:400+Math.random()*200,y:560+Math.random()*90};}
 $('#decoGrid').addEventListener('click',e=>{
   const t=e.target.closest('.tile'); if(!t) return; const p=P();
   if(t.dataset.place||t.dataset.placeUid){

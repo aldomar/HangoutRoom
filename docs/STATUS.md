@@ -50,7 +50,7 @@ _Last updated: 2026-11-15_
   - restoring a v1.3 backup (no card fields) and a v1.4 backup with cards and pins
   - Back from Photocards goes to the room; maker and binder at phone portrait and landscape sizes
 - **On a device (2026-11-15):** the owner installed v1.4 and all checks from the PR passed.
-- **Soccer Field (v1.5)**: `tests/smoke-test.js` now has 98 checks, all passing with no console errors. New checks
+- **Soccer Field (v1.5)**: `tests/smoke-test.js` now has 99 checks, all passing with no console errors. New checks
   (the keeper's guess is fixed in the test so results are repeatable):
   - the window opens the Soccer screen on Easy with Mochi; a goal pays +1 coin; a keeper save; a wide shot
   - tapping a spot in the goal shoots there; a real swipe kicks the ball in the swiped direction
@@ -59,7 +59,7 @@ _Last updated: 2026-11-15_
     (+10 for the "Perfect 5/5" bonus card)
   - Back goes to the room; restoring a v1.4 backup (no soccer fields) and a v1.5 one; phone portrait and landscape
   - trophies: Gold for a perfect on Hard, shown in the result box; Silver from an earlier perfect on Medium;
-    never given twice (also after a restore); not in the Shop. 98 checks in all.
+    never given twice (also after a restore); not in the Shop; never placed behind Fuzzy. 99 checks in all.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -100,6 +100,8 @@ _Last updated: 2026-11-15_
     Silver (Medium) or Gold (Hard), once each. The trophy is put straight into her room as a decoration (she can move
     it or store it with Decorate). Not sold in the Shop. A perfect game from before is rewarded the next time she opens
     the room or the Soccer Field. Saved in `soccer.trophies` so it is never given twice.
+    Each trophy has its own clear spot on the floor (`TROPHY_SPOTS`: Bronze left of Fuzzy, Silver right, Gold by the
+    closet). At first they landed at random and could hide behind Fuzzy.
   - **Swipe power (fixed after the first device test):** it was measured over the whole touch, so touching the ball,
     pausing, then flicking gave a weak, slow roll. Power now comes from the speed of the last 0.12 s of the flick.
     Even a gentle swipe is about as strong as a tap, and full power rises to the top corners without going over the bar.
