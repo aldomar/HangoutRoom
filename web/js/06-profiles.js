@@ -52,5 +52,9 @@ function normalize(p){
   p.easy=!!p.easy;
   if(!ROOM_COLORS[p.color]){const ks=Object.keys(ROOM_COLORS);p.color=ks[[...p.id].reduce((a,c)=>a+c.charCodeAt(0),0)%ks.length];}
   if(!ROOM_BADGES.includes(p.badge)) p.badge=ROOM_BADGES[0];
+  // Code Lab (v1.13): chosen level and the ids of the puzzles solved (each puzzle pays once).
+  p.code=Object.assign({level:'easy'},p.code&&typeof p.code==='object'&&!Array.isArray(p.code)?p.code:{});
+  p.code.solved=Array.isArray(p.code.solved)?p.code.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[];
+  if(!['easy','medium','hard'].includes(p.code.level)) p.code.level='easy';
 }
 DB.profiles.forEach(normalize);

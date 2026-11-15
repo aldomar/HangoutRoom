@@ -153,8 +153,12 @@ Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a conte
 - More closet items, decorations and squishies (future packs: `18-pack2.js` …).
 - New fidgets: slime stretcher, fidget-cube clicker, tilt marble maze (device tilt works in WebView).
 - Seasonal decorations, a sticker book of achievements, a pet for the mascot.
-- **New mini-game: Code Lab 💻 (intro to coding, the owner's idea).** A puzzle game where she "programs" Fuzzy.
-  The details below are a first sketch; the full plan gets agreed before building.
+- ✅ **Code Lab 💻 (v1.13, the owner's idea):** tap the Loft's computer desk. 18 hand-made puzzles (6 per level):
+  Easy = arrows only, Medium = 🔁 repeat (with a block limit, so repeat is needed), Hard = toy-block walls and ⭐ stars
+  picked up with 🌟. No timers, a bump is a gentle "oops". 3 coins per new puzzle, +5 for a whole level, and a
+  "First Program!" bonus card. Puzzles are text recipes in `18-codelab.js`, so more are easy to add.
+  Ideas for later Code Lab updates (not built yet): a "my move" block (functions), a simple "if" block, more puzzles.
+- First sketch of Code Lab (kept for the history; the build above is what was agreed):
   - Fuzzy stands on a small grid (for example 5×5) and has to reach a ⭐ or collect treats.
   - She snaps big picture blocks into a row (➡️ ⬅️ ⬆️ ⬇️ moves, 🔁 repeat, later "if"), then presses ▶ Run and
     watches Fuzzy follow the program one step at a time, with the current block lit up.

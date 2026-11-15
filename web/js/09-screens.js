@@ -7,7 +7,7 @@ function show(n){
   if(n!=='room'&&decorating) exitDecorate(true);
   cur=n; $$('.screen').forEach(s=>s.classList.toggle('on',s.id==='scr-'+n));
   const ep=n==='profiles'?null:P(); applyEasy();
-  if(ep&&ep.easy){if(n==='soccer')ep.soccer.level='easy';if(n==='stage')ep.stage.level='easy';} // Easy mode opens games on Easy
+  if(ep&&ep.easy){if(n==='soccer')ep.soccer.level='easy';if(n==='stage')ep.stage.level='easy';if(n==='code')ep.code.level='easy';} // Easy mode opens games on Easy
   if(n==='room'||n==='cards') checkBonus(); // gives any milestone cards she has earned (section 12)
   if(n==='room'||n==='soccer'){const t=giveTrophies();if(t.length)setTimeout(()=>toast(`🏆 ${t.join(' and ')} added to your room!`),400);} // section 13
   if(n==='profiles') renderProfiles();
@@ -19,6 +19,7 @@ function show(n){
   if(n==='soccer') renderSoccer();
   if(n==='room'||n==='stage'){if(giveMic())setTimeout(()=>toast('🎤 The Golden Mic is in your room!'),400);} // section 14
   if(n==='stage') renderStage(); else stgStop();
+  if(n==='code') renderCode(); else codeStop(); // section 18
   updateCoins();
 }
 
@@ -121,6 +122,7 @@ function handleHot(h){
   else if(h==='photo'){SFX.click();show('cards');}
   else if(h==='window'){SFX.click();show('soccer');}
   else if(h==='stage'){SFX.click();show('stage');}
+  else if(h==='code'){SFX.click();show('code');}
   else {SFX.locked();toast(`🔒 ${LOCKED[h]} is coming in a future update!`);}
 }
 roomSvg.addEventListener('click',e=>{
