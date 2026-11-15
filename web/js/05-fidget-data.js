@@ -21,4 +21,7 @@ const SPINS={
   soccer:{name:'Soccer',price:15,body:'#f4f4f4',edge:'#222',cap:'#222',deco:'pent'},
   emo:{name:'Emo',price:20,body:'#1d1724',edge:'#ff4fa3',cap:'#a97cff',deco:'heart'}
 };
+// Pop-it board shapes (v1.10). 'classic' is the square board; content packs add more (with a 100 x 100 outline path).
+// Saved in p.fid.popShape and owned as popshape:<id>: never rename the ids.
+const POP_SHAPES={classic:{name:'⬜ Square Board',price:0}};
 const FID={popit:{key:'pop',list:POP_THEMES},squish:{key:'squish',list:SQUISHIES},spin:{key:'spin',list:SPINS}};

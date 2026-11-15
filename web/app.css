@@ -116,6 +116,14 @@ body.easy .topbar .title{font-size:22px}
 .fid.on{display:flex}
 .fid canvas{width:100%;height:100%;touch-action:none;display:block}
 .popboard{width:min(88vw,64vh);aspect-ratio:1;border-radius:22%;padding:6%;display:grid;grid-template-columns:repeat(6,1fr);gap:3%;touch-action:none;box-shadow:0 10px 0 rgba(0,0,0,.3),inset 0 0 0 7px rgba(255,255,255,.25)}
+.popboard{position:relative}
+.popboard.shaped{box-shadow:none;border-radius:0}
+.popshape{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;filter:drop-shadow(0 10px 0 rgba(0,0,0,.3))}
+.bub{position:relative}
+.bub.gone{visibility:hidden}
+.skin-sep{flex:0 0 3px;align-self:stretch;background:var(--line);border-radius:3px;margin:0 4px}
+#roomGo{min-width:48px}
+@media (max-width:560px){#roomGo span{display:none}}
 .popboard.flip{animation:flip .65s ease-in-out}
 @keyframes flip{0%{transform:perspective(900px) rotateY(0)}50%{transform:perspective(900px) rotateY(90deg) scale(.9)}100%{transform:perspective(900px) rotateY(0)}}
 .bub{border-radius:50%;aspect-ratio:1;box-shadow:inset 0 -6px 0 rgba(0,0,0,.2),inset 0 6px 8px rgba(255,255,255,.65),0 3px 0 rgba(0,0,0,.2);transition:transform .08s,box-shadow .08s,filter .08s}

@@ -29,5 +29,7 @@ function buildDefs(){
   <linearGradient id="gCandy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffc9e4"/><stop offset="1" stop-color="#d9c6ff"/></linearGradient>
   <linearGradient id="gSpooky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1b4a"/><stop offset="1" stop-color="#7a4fa8"/></linearGradient>
   <radialGradient id="gGold" cx=".5" cy=".45" r=".7"><stop offset="0" stop-color="#fff4c2"/><stop offset=".55" stop-color="#ffd166"/><stop offset="1" stop-color="#e09a2d"/></radialGradient>
-  <linearGradient id="gHolo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9fd0"/><stop offset=".3" stop-color="#ffe9a8"/><stop offset=".55" stop-color="#8ff0d0"/><stop offset=".8" stop-color="#a9c8ff"/><stop offset="1" stop-color="#c9a7ff"/></linearGradient>`;
+  <linearGradient id="gHolo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9fd0"/><stop offset=".3" stop-color="#ffe9a8"/><stop offset=".55" stop-color="#8ff0d0"/><stop offset=".8" stop-color="#a9c8ff"/><stop offset="1" stop-color="#c9a7ff"/></linearGradient>`+EXTRA_DEFS.join('');
 }
+// Content packs add their own patterns/gradients here (strings of SVG defs). buildDefs() runs at startup, after every file has loaded.
+const EXTRA_DEFS=[];
