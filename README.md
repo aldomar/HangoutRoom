@@ -1,7 +1,8 @@
 # HangoutRoom
 Mini game app for niblings: a cozy virtual bedroom with a fuzzy emo bunny, fidget toys,
-dress-up, decorating, an Art Desk for drawing, a Photocard Wall for making collectible bunny cards
-a Soccer Field for penalty kicks, a Stage where the bunny performs to original songs (tap to the beat),
+dress-up, decorating, an Art Desk for drawing, a Photocard Wall for making collectible bunny cards,
+a Fidget Shelf (pop-it, squishy, spinner, slime, clicker cube and a tilt marble maze), a Soccer Field for penalty kicks,
+a Stage where the bunny performs to original songs (tap to the beat),
 and a Code Lab where she "programs" the bunny with arrow blocks (a first taste of coding).
 A family gift; not for sale or public sharing.
 
@@ -52,6 +53,19 @@ and press **▶️ Run**. Fuzzy follows the blocks one at a time (the block that
   *inside* ✨ My Move, so one move handles puddles and stars wherever they are. Each pays 5 coins, plus 10 for the level.
 - Other puzzles pay 3 coins the first time they are solved, plus 5 more for finishing a whole level. There are 6 levels
   (6 puzzles each, 8 in Challenge), all open from the start.
+
+## New fidgets (since version 1.16)
+On the Fidget Shelf (the shelf in her room) there are three more tabs:
+- **🧪 Slime:** grab it and pull. It stretches after your finger and snaps back when you let go. Two fingers stretch
+  both ways. A quick tap leaves a little dent that fills back in. 1 coin for every 5 stretches.
+- **🎛️ Clicker:** a fidget cube with 3 clicky buttons, a flip switch, a roller, a joystick and a spinning ball,
+  each with its own sound. 1 coin for every 25 clicks.
+- **🔮 Maze:** tilt the tablet to roll the marble into the ⭐ hole. However she is holding the tablet when a maze starts
+  counts as "flat". She can also hold a finger on the board where the marble should roll (this always works, for example
+  on a computer). 6 mazes, picked with the number buttons; a solved maze gets a ⭐. +3 coins the first time each maze is
+  solved, +1 for playing it again, +5 once for solving all 6. **📱 Tilt ON/OFF** switches tilting off (for example
+  when playing in a car).
+Each one has a free design and more to buy in the row at the bottom.
 
 ## Shelves and hair (since version 1.11)
 - **Shelves:** buy a Little or Long Shelf in the Shop and hang it on the wall. Drag a small thing onto the shelf and it

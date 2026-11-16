@@ -151,7 +151,10 @@ Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a conte
 - ✅ **Stage in the Loft (v1.12, the owner's request):** the Stage marquee moved up to the Loft to give her first room
   more space. The pink room labels now only show in Easy mode, so an older child finds things by exploring.
 - More closet items, decorations and squishies (future packs: `18-pack2.js` …).
-- New fidgets: slime stretcher, fidget-cube clicker, tilt marble maze (device tilt works in WebView).
+- ✅ **New fidgets (v1.16):** three more Fidget Shelf tabs. 🧪 Slime (pull to stretch, snaps back, pokes leave a dent;
+  1 coin per 5 stretches), 🎛️ Clicker cube (buttons, switch, roller, joystick, spinning ball; 1 coin per 25 clicks) and
+  🔮 Marble Maze (tilt the tablet or hold a finger; 6 mazes, +3 each the first time, +1 replay, +5 for all 6).
+  Each has a free design and 3 to buy (10–20). Save version 10 (`maze.solved`).
 - Seasonal decorations, a sticker book of achievements, a pet for the mascot.
 - ✅ **Code Lab 💻 (v1.13, the owner's idea):** tap the Loft's computer desk. 18 hand-made puzzles (6 per level):
   Easy = arrows only, Medium = 🔁 repeat (with a block limit, so repeat is needed), Hard = toy-block walls and ⭐ stars
