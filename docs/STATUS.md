@@ -1,6 +1,6 @@
 # Status / handover
 
-_Last updated: 2026-11-15_
+_Last updated: 2026-11-16_
 
 ## Where we are
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
@@ -17,7 +17,8 @@ _Last updated: 2026-11-15_
   - **Shelves + Hair Styles: done** (v1.11 merged, PR #11). The owner asked for it before Code Lab.
   - **Stage in the Loft + Easy-only labels: done** (v1.12 merged, PR #12; the owner's request, before Code Lab).
   - **Code Lab: done** (v1.13 merged, PR #13). The owner checked it on the device: it all works.
-  - **Code Lab: My Move + If levels: built, PR open as v1.14** on branch `feature/codelab2` (from `main` after #13).
+  - **Code Lab: My Move + If levels: done** (v1.14 merged, PR #14). The owner tried it: it worked great.
+  - **Code Lab: 🧠 Challenge level: built, PR open as v1.15** on branch `feature/codelab3` (from `main` after #14).
     Not yet tried on a device.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -41,7 +42,8 @@ _Last updated: 2026-11-15_
 - PR #11 "Shelves + Hair Styles (v1.11)": merged.
 - PR #12 "Stage in the Loft (v1.12)": merged.
 - PR #13 "Code Lab (v1.13)": merged.
-- PR "Code Lab: My Move + If (v1.14)" on branch `feature/codelab2` (from `main` after #13): open.
+- PR #14 "Code Lab: My Move + If (v1.14)": merged.
+- PR "Code Lab: Challenge (v1.15)" on branch `feature/codelab3` (from `main` after #14): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -149,6 +151,11 @@ _Last updated: 2026-11-15_
   - coins: 3 per puzzle and the +5 level bonus on both new levels; a backup keeps the new level and solved puzzles; an
     unknown level falls back to Easy; on a phone the 5 tabs fit (icons only) and both rows, the board and ▶️ Run fit
   - One run had 3 Soccer checks fail by timing (nothing in Soccer changed); the next full run passed everything.
+- **Code Lab: Challenge (v1.15)**: 345 checks, all passing, no console errors. New checks:
+  - a search through every program and My Move row proves no Challenge puzzle can be solved without ✨, nor without ❓
+    when it has puddles; 7 of the 8 answers put 🌟 or ❓ inside My Move; c4's second answer also wins
+  - 6 tabs; Challenge shows 8 puzzles and every block; puzzle 1 built by tapping picks up both stars and pays 5;
+    all 8 pay 5 each + 10; other levels still pay 3 / 5; backups keep the level; phone portrait and landscape fit
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -281,6 +288,13 @@ _Last updated: 2026-11-15_
     a puddle (2 squares) if one is next, otherwise a normal step. A hop can't land on a toy block, a puddle or off the board.
   - Same coins as the other levels (3 per new puzzle, +5 per finished level). No save shape change (`DB_VERSION` stays 9);
     `normalize()` now also accepts `move` and `if` as `code.level`. On a phone the level tabs show only their icons.
+- Code Lab: Challenge (agreed 2026-11-16, built as v1.15): the owner found the levels straightforward once the idea is
+  learned and asked for a harder layer that mixes everything.
+  - **🧠 Challenge**, a 6th tab, open from the start, with **8 puzzles** (ids `c1`–`c8`, level id `challenge`) and every
+    block. The key ideas: 🌟 inside ✨ My Move, ❓ inside My Move, both together, and finding a pattern (c4 has two answers).
+  - Puzzles were designed with a search through every possible program, so none has an easy shortcut.
+  - **Coins: 5 per puzzle, +10 for the whole level** (owner's choice; other levels stay 3 / +5). Levels can now set their
+    own `coins` and `bonus` in `CODE_LEVELS`. No save shape change. Level tabs show only icons below 760 px wide.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -338,14 +352,16 @@ _Last updated: 2026-11-15_
 8. ~~Build Code Lab (v1.13) on the Loft's computer desk.~~ Built (v1.13 PR).
 9. ~~Owner: build v1.13, try the Code Lab (see the PR), and merge it.~~ Merged; it all works on the device.
 10. ~~Pick the next Phase 7 item.~~ Code Lab: My Move + If (v1.14), built (v1.14 PR).
-11. Owner: build v1.14, try the ✨ My Move and ❓ If levels (see the PR), and merge it.
-12. Pick the next Phase 7 item (ideas: Content Pack 2, more Code Lab puzzles, new fidgets, a sticker book or a pet).
+11. ~~Owner: build v1.14, try the ✨ My Move and ❓ If levels (see the PR), and merge it.~~ Merged; worked great.
+12. ~~Next: a harder Code Lab layer.~~ 🧠 Challenge level built (v1.15 PR).
+13. Owner: build v1.15, try the Challenge puzzles (see the PR), and merge it.
+14. Pick the next Phase 7 item (ideas: Content Pack 2, more Challenge puzzles, new fidgets, a sticker book or a pet).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
 - `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 9 since v1.13
-  (Code Lab: `code{level, solved[]}`; v1.14 added level ids only, no new shape). It was 8 in v1.11
+  (Code Lab: `code{level, solved[]}`; v1.14 and v1.15 added level ids only, no new shape). It was 8 in v1.11
   (old swoop hair ids → `swoopBlack` + `look.hairColor`, and `hairc:<colour>` added to `owned`). It was 7 in v1.10
   (Loft + Content Pack 1: `room2` and `fid.popShape`). It was 6 in v1.8
   (Little-sister polish: per-profile `easy`, `color`, `badge`, plus `settings.pin`). It was 5 in v1.7

@@ -1,10 +1,11 @@
 'use strict';
 /* =========================================================
-   18. CODE LAB: a first coding game on the Loft's computer desk (v1.13; My Move and If levels v1.14)
+   18. CODE LAB: a first coding game on the Loft's computer desk (v1.13; My Move and If levels v1.14; Challenge v1.15)
    Fuzzy stands on a small grid. She lines up big blocks (arrows, 🔁 repeat, 🌟 pick up), taps ▶️ Run and watches
    Fuzzy follow them one step at a time, with the block that is running lit up. Reaching the carrot 🥕 (with every
    ⭐ picked up) solves the puzzle. A bump is a gentle "oops": the block glows, nothing is lost, she fixes it and tries again.
-   No timers. Each puzzle pays CODE_COINS once; finishing every puzzle of a level pays CODE_LEVEL_BONUS.
+   No timers. Each puzzle pays CODE_COINS once; finishing every puzzle of a level pays CODE_LEVEL_BONUS
+   (a level can pay more with its own coins/bonus: the Challenge level pays 5 and 10).
    Saved in p.code {level, solved[]}. Level ids (easy/medium/hard) and puzzle ids (e1, m1, h1 …) are saved: never rename them.
    The board is plain SVG moved with CSS transitions, so nothing runs in the main loop.
    v1.14: two more levels. My Move: a second short row of blocks (✨ My Move) that the ✨ block runs (a first
@@ -27,7 +28,9 @@ const CODE_LEVELS={
   medium:{icon:'🔁',name:'Medium',blocks:'ULRD234',max:8},
   hard:{icon:'🌟',name:'Hard',blocks:'ULRD234S',max:16},
   move:{icon:'✨',name:'My Move',blocks:'ULRD234M',max:3,moveMax:4},
-  if:{icon:'❓',name:'If',blocks:'ULRD234Q',max:4}
+  if:{icon:'❓',name:'If',blocks:'ULRD234Q',max:4},
+  // (v1.15) every block at once, for after the ideas are learned; harder, so it pays more
+  challenge:{icon:'🧠',name:'Challenge',blocks:'ULRD234SMQ',max:4,moveMax:4,coins:5,bonus:10}
 };
 // Puzzles are short text recipes. Map rows: . floor, F Fuzzy's start, C the carrot, * a star to pick up, # a toy block (wall),
 // ~ a puddle. sol = one answer (move = the My Move row of that answer) (the smoke test runs every one, so each puzzle is known to be solvable); hint = shown above the board
@@ -72,6 +75,16 @@ const CODE_PUZZLES={
     {id:'i4',map:['.C','.~','..','.~','..','.F'],max:3,sol:'4QU'},
     {id:'i5',map:['F~.~.','###.~','.....','.....','....C'],max:6,sol:'2QR3QD',hint:'Along, then down. Check for puddles both ways!'},
     {id:'i6',map:['......','F~.~##','...~.C'],max:6,sol:'QRD2QR'}
+  ],
+  challenge:[ // (v1.15) the ideas mixed: 🌟 and ❓ inside ✨ My Move. Each is checked: it can't be done without ✨ (or ❓ if it has puddles)
+    {id:'c1',map:['...C','..*.','.*..','F...'],max:2,sol:'3M',move:'RUS',hint:'🌟 can go inside ✨ My Move too!'},
+    {id:'c2',map:['####.C','###.~.','##....','F~....'],max:2,sol:'3M',move:'QRU',hint:'❓ can go inside ✨ My Move. Each time, it checks for a puddle.'},
+    {id:'c3',map:['F~*~*C'],max:2,sol:'3M',move:'QRS'},
+    {id:'c4',map:['.#....','.#...C','.....#','....#.','F#....'],max:5,sol:'3M',move:'URR',hint:'Find the pattern. There is more than one answer!'},
+    {id:'c5',map:['F~**~*','#####C'],max:3,sol:'3MD',move:'QRS'},
+    {id:'c6',map:['.....C','....~.','......','..~...','.~....','F.....'],max:2,sol:'4M',move:'QRQU',hint:'❓ works with ⬆️ too.'},
+    {id:'c7',map:['......','.....C','....~*','...*..','F~*...'],max:2,sol:'3M',move:'QRSU'},
+    {id:'c8',map:['....*C','....~.','...*..','.*~...','.~....','F.....'],max:2,moveMax:5,sol:'4M',move:'QRQUS',hint:'The big one! Hop, climb and pick up every ⭐.'}
   ]
 };
 const CODE_LVL_IDS=Object.keys(CODE_LEVELS);
@@ -140,6 +153,7 @@ function codeSim(pz,prog,move){
   return {ev,end};
 }
 const codeMax=(lvl,pz)=>pz.max||CODE_LEVELS[lvl].max;
+const codeCoins=lvl=>CODE_LEVELS[lvl].coins||CODE_COINS, codeBonus=lvl=>CODE_LEVELS[lvl].bonus||CODE_LEVEL_BONUS;
 
 /* ---------- screen ---------- */
 // view: 'pick' (puzzle list) or 'play'. state while playing: 'edit' | 'run' | 'oops' | 'win'.
@@ -311,8 +325,8 @@ function clWin(){
   CL.state='win'; clProg();
   let coins=0, all=false;
   if(first){
-    p.code.solved.push(pz.id); coins=CODE_COINS;
-    all=CODE_PUZZLES[CL.lvl].every(q=>p.code.solved.includes(q.id)); if(all) coins+=CODE_LEVEL_BONUS;
+    p.code.solved.push(pz.id); coins=codeCoins(CL.lvl);
+    all=CODE_PUZZLES[CL.lvl].every(q=>p.code.solved.includes(q.id)); if(all) coins+=codeBonus(CL.lvl);
   }
   const hop=$('#clFz .clhop'); if(hop) hop.classList.add('on');
   SFX.cheer(); vibrate(30);
@@ -323,7 +337,7 @@ function clWin(){
     modal(`🥕 Yum! Puzzle ${idx+1} solved!`,
       `<div style="text-align:center;font-size:17px">${p.easy?'🎉':`${esc(p.mascotName)} followed your program all the way! 🎉`}`
       +`<br>${n} block${n>1?'s':''}${coins?` · +${coins} 🪙`:''}`
-      +(all?`<br>Every ${CODE_LEVELS[lvl].name} puzzle solved! (+${CODE_LEVEL_BONUS} bonus) 🏆`:'')+'</div>',
+      +(all?`<br>Every ${CODE_LEVELS[lvl].name} puzzle solved! (+${codeBonus(lvl)} bonus) 🏆`:'')+'</div>',
       [{text:'🧩 Puzzles',cls:'ghost',on:clPickView},next?{text:'Next ▶',cls:'pink',on:()=>clOpen(lvl,idx+1)}:{text:'Yay! ✨',cls:'pink',on:clPickView}]);
     checkBonus(); // "First Program!" (shown as a message, because the result box is open)
   },700);

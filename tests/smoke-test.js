@@ -711,8 +711,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
       fits:q.sol.length<=codeMax(l,q)&&(q.move||'').length<=(q.moveMax||CODE_LEVELS[l].moveMax||0),
       palette:[...q.sol+(q.move||'')].every(t=>CODE_LEVELS[l].blocks.includes(t))&&!(q.move||'').includes('M'),
       win:codeSim(q,[...q.sol],q.move?[...q.move]:null).end==='win',
-      extras:(!all.includes('#')||!['easy','medium'].includes(l))&&(!all.includes('*')||l==='hard')&&(!all.includes('~')||l==='if'),far:Math.abs(g.goal.x-g.start.x)+Math.abs(g.goal.y-g.start.y)>codeMax(l,q)});});return out;})()`);
-  check('every puzzle has one Fuzzy and one carrot, is a rectangle, uses only its level\'s blocks; no walls on Easy or Medium, stars only on Hard, puddles only on If', pzs.every(q=>q.rect&&q.one&&q.palette&&q.extras), pzs);
+      extras:(!all.includes('#')||!['easy','medium'].includes(l))&&(!all.includes('*')||['hard','challenge'].includes(l))&&(!all.includes('~')||['if','challenge'].includes(l)),far:Math.abs(g.goal.x-g.start.x)+Math.abs(g.goal.y-g.start.y)>codeMax(l,q)});});return out;})()`);
+  check('every puzzle has one Fuzzy and one carrot, is a rectangle, uses only its level\'s blocks; no walls on Easy or Medium, stars only on Hard and Challenge, puddles only on If and Challenge', pzs.every(q=>q.rect&&q.one&&q.palette&&q.extras), pzs);
   check('every puzzle can be solved within its block limit (its answer wins)', pzs.every(q=>q.win&&q.fits), pzs.filter(q=>!q.win||!q.fits));
   check('puzzle ids are all different', new Set(pzs.map(q=>q.id)).size===pzs.length);
   // My Move puzzles must need ✨ and If puzzles must need ❓: try every program without that block (up to the block limit).
@@ -788,7 +788,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Code Lab: My Move and If levels (v1.14)');
   await ev(`P().easy=false;P().code.level='easy';show('code')`); await sleep(200);
-  check('5 level tabs: Easy, Medium, Hard, My Move, If', await ev(`[...document.querySelectorAll('#clTabs [data-lvl]')].map(b=>b.dataset.lvl).join()==='easy,medium,hard,move,if'`));
+  check('level tabs start Easy, Medium, Hard, My Move, If', await ev(`[...document.querySelectorAll('#clTabs [data-lvl]')].map(b=>b.dataset.lvl).join().startsWith('easy,medium,hard,move,if')`));
   await ev(`document.querySelector('#clTabs [data-lvl=move]').click()`); await sleep(150);
   check('My Move tab is saved and shows 6 puzzles', await ev(`P().code.level==='move'&&document.querySelectorAll('#clList [data-pz]').length===6`));
   const mv0=await ev('P().coins');
@@ -851,6 +851,43 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`doRestore(${JSON.stringify(lvCode)})`); await sleep(400);
   await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal();show('room')`);
 
+  console.log('Code Lab: Challenge level (v1.15)');
+  // Every Challenge puzzle must need ✨, and the ones with puddles must need ❓: search every program (and My Move row) without it.
+  const chNeed=await ev(`(()=>{
+    const strs=(pal,n)=>{const o=[];const r=p=>{if(p.length)o.push(p.slice());if(p.length>=n)return;for(const t of pal){p.push(t);r(p);p.pop();}};r([]);return o;};
+    const search=(q,pal,max,mm)=>{const moves=pal.includes('M')?strs(pal.filter(t=>t!=='M'),mm):[];
+      for(const p of strs(pal,max)){if(!p.includes('M')){if(codeSim(q,p,null).end==='win')return p.join('');continue;}
+        for(const m of moves)if(codeSim(q,p,m).end==='win')return p.join('')+' / '+m.join('');}return null;};
+    const L=CODE_LEVELS.challenge, out={};
+    CODE_PUZZLES.challenge.forEach(q=>{const max=codeMax('challenge',q), mm=q.moveMax||L.moveMax;
+      out[q.id+' without ✨']=search(q,[...L.blocks.replace('M','')],max,mm);
+      if(q.map.join('').includes('~')) out[q.id+' without ❓']=search(q,[...L.blocks.replace('Q','')],max,mm);});
+    return out;})()`);
+  check('every Challenge puzzle needs ✨ (and ❓ when it has puddles): no answer without them fits', Object.values(chNeed).every(v=>v===null)&&Object.keys(chNeed).length>=14, chNeed);
+  check('Challenge puzzles mix ideas: every answer puts 🌟 or ❓ inside ✨ My Move, except one pattern puzzle', await ev(`CODE_PUZZLES.challenge.filter(q=>/[SQ]/.test(q.move)).length>=7`));
+  check('c4 has a second answer: ✨, 🔁2 ➡️, 🔁2 ✨ (My Move = ⬆️ ➡️) also wins', await ev(`codeSim(CODE_PUZZLES.challenge[3],[...'M2R2M'],[...'UR']).end==='win'`));
+  await ev(`P().easy=false;P().code.level='if';show('code')`); await sleep(200);
+  check('6 level tabs, the last is 🧠 Challenge', await ev(`[...document.querySelectorAll('#clTabs [data-lvl]')].map(b=>b.dataset.lvl).join()==='easy,medium,hard,move,if,challenge'`));
+  await ev(`document.querySelector('#clTabs [data-lvl=challenge]').click()`); await sleep(150);
+  check('Challenge tab is saved and shows 8 puzzles', await ev(`P().code.level==='challenge'&&document.querySelectorAll('#clList [data-pz]').length===8`));
+  await shot('A40-code-challenge-list');
+  const ch0=await ev('P().coins');
+  await ev(`document.querySelector('#clList [data-pz="0"]').click()`); await sleep(150);
+  check('Challenge puzzle: every block in the palette (arrows, 🔁, 🌟, ✨, ❓) and the ✨ row', await ev(`[...'ULRD234SMQ'].every(t=>document.querySelector('#clPal [data-add="'+t+'"]'))&&!document.querySelector('#clMove').classList.contains('hidden')`));
+  await ev(`['R','U','S'].forEach(t=>document.querySelector('[data-add='+t+']').click());document.querySelector('#clProg').click();document.querySelector('[data-add="3"]').click();document.querySelector('[data-add=M]').click()`);
+  check('built by tapping: My Move = ➡️ ⬆️ 🌟, program = 🔁3 ✨', await ev(`CL.move.join('')==='RUS'&&CL.prog.join('')==='3M'`));
+  await ev(`document.querySelector('#clRun').click()`); await sleep(1300);
+  check('🌟 inside My Move picks up both stars and solves it: +5 coins', await ev(`P().code.solved.includes('c1')&&document.querySelectorAll('#clBoard .clstar.got').length===2&&P().coins===${ch0}+5`), await ev('P().coins-'+ch0));
+  await ev(`closeModal()`);
+  for(let i=1;i<8;i++){await ev(`clSolve('challenge',${i})`);await sleep(i===7?2600:2000);if(i===7)await shot('A41-code-challenge-final');await ev(`closeModal()`);}
+  check('every Challenge puzzle solved: 5 coins each + 10 level bonus', await ev(`CODE_PUZZLES.challenge.every(q=>P().code.solved.includes(q.id))&&P().coins===${ch0}+8*5+10`), await ev('P().coins-'+ch0));
+  check('the other levels still pay 3 a puzzle and 5 a level', await ev(`codeCoins('easy')===3&&codeBonus('if')===5&&codeCoins('challenge')===5&&codeBonus('challenge')===10`));
+  await ev(`clOpen('challenge',7);CL.move=[...'QRQUS'];CL.prog=['4','M'];clProg()`); await sleep(200); await shot('A42-code-challenge-board');
+  const chCode=await ev('JSON.stringify(DB)');
+  await ev(`doRestore(${JSON.stringify(chCode)})`); await sleep(400);
+  check('a v1.15 backup keeps the Challenge level and its solved puzzles', await ev(`DB.profiles[0].code.level==='challenge'&&DB.profiles[0].code.solved.includes('c8')`));
+  await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal();show('room')`);
+
   console.log('Phone portrait + other screens');
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
   await send('Emulation.setTouchEmulationEnabled',{enabled:true});
@@ -870,7 +907,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`show('code');clOpen('hard',3)`); await sleep(300); await shot('A27-phone-code');
   check('phone: Code Lab board and Run button both on screen', await ev(`(()=>{const b=document.querySelector('#clBoard').getBoundingClientRect(),r=document.querySelector('#clRun').getBoundingClientRect();return b.height>150&&r.bottom<=innerHeight&&r.height>=48;})()`));
   await ev(`clPickView()`); await sleep(150); await shot('A35-phone-code-tabs');
-  check('phone: all 5 Code Lab tabs fit without scrolling', await ev(`(()=>{const t=document.querySelector('#clTabs');return t.scrollWidth<=t.clientWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`));
+  check('phone: all 6 Code Lab tabs fit without scrolling', await ev(`(()=>{const t=document.querySelector('#clTabs');return t.scrollWidth<=t.clientWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`));
+  await ev(`clOpen('challenge',7);CL.move=[...'QRQUS'];CL.prog=['4','M'];clProg()`); await sleep(200); await shot('A43-phone-code-challenge');
+  check('phone: Challenge puzzle (10 palette blocks, both rows) fits with ▶️ Run on screen', await ev(`(()=>{const r=document.querySelector('#clRun').getBoundingClientRect(),b=document.querySelector('#clBoard').getBoundingClientRect();return r.bottom<=innerHeight&&b.height>120;})()`));
   await ev(`clOpen('move',4);CL.move=[...'2R2U'];CL.prog=['2','M'];clProg()`); await sleep(200); await shot('A36-phone-code-mymove');
   check('phone: My Move puzzle shows both rows, the board and ▶️ Run', await ev(`(()=>{const r=document.querySelector('#clRun').getBoundingClientRect(),m=document.querySelector('#clMove').getBoundingClientRect(),b=document.querySelector('#clBoard').getBoundingClientRect();return r.bottom<=innerHeight&&m.height>40&&b.height>120;})()`));
   await ev(`show('room')`); await sleep(200); await shot('A10-phone-room-topbar');
@@ -885,6 +924,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('landscape stage: pads below Fuzzy', await ev(`STG.g.yh-STG.g.pr>stgCv.clientHeight*0.4&&stgCv.clientHeight>200`), await ev('JSON.stringify(STG.g)'));
   await ev(`show('code');clOpen('hard',3)`); await sleep(300); await shot('A28-phone-landscape-code');
   check('landscape: Code Lab board and Run button both on screen', await ev(`(()=>{const b=document.querySelector('#clBoard').getBoundingClientRect(),r=document.querySelector('#clRun').getBoundingClientRect();return b.height>150&&r.bottom<=innerHeight&&r.right<=innerWidth;})()`));
+  await ev(`clOpen('challenge',7);CL.move=[...'QRQUS'];CL.prog=['4','M'];clProg()`); await sleep(200); await shot('A44-phone-landscape-challenge');
+  check('landscape: Challenge puzzle fits with ▶️ Run on screen', await ev(`(()=>{const r=document.querySelector('#clRun').getBoundingClientRect(),b=document.querySelector('#clBoard').getBoundingClientRect();return r.bottom<=innerHeight&&r.right<=innerWidth&&b.height>120;})()`));
   await ev(`clOpen('move',4);CL.move=[...'2R2U'];CL.prog=['2','M'];clProg()`); await sleep(200); await shot('A37-phone-landscape-mymove');
   check('landscape: My Move puzzle shows both rows and ▶️ Run', await ev(`(()=>{const r=document.querySelector('#clRun').getBoundingClientRect(),m=document.querySelector('#clMove').getBoundingClientRect();return r.bottom<=innerHeight&&r.right<=innerWidth&&m.height>40;})()`));
   await ev(`show('art')`);

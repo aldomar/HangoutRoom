@@ -263,7 +263,7 @@ body.easy .hcol{width:56px;height:56px}
 .cl-tag{display:flex;align-items:center;justify-content:center;width:34px;font-size:24px;flex:0 0 auto}
 .clhop.jump{animation:clJump .38s ease;transform-box:fill-box;transform-origin:50% 100%}
 @keyframes clJump{50%{transform:translateY(-38px)}}
-@media (max-width:560px){#clTabs .tab span{display:none}#clTabs .tab{font-size:22px;padding:8px 16px}}
+@media (max-width:760px){#clTabs .tab span{display:none}#clTabs .tab{font-size:22px;padding:8px 16px}}
 .clb small{font-size:16px;font-weight:900}
 .cl-pal .clb{width:64px;height:64px;font-size:32px}
 .clslot{width:56px;height:56px;border-radius:14px;border:3px dashed #5a4a78}
