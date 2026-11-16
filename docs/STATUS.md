@@ -27,7 +27,7 @@ _Last updated: 2026-11-16_
   - **Buddies + Content Pack 2** (plan agreed 2026-11-16, two PRs): options the nieces' younger brothers (5 and 3)
     will like too, while everyone can still use everything.
     - **🐾 Buddies: done** (v1.20 merged, PR #20).
-    - **🦕 Content Pack 2: built, PR open as v1.21** on branch `feature/pack2` (from `main` after #20).
+    - **🦕 Content Pack 2: built, PR #21 open as v1.21** on branch `feature/pack2` (from `main` after #20).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -57,7 +57,7 @@ _Last updated: 2026-11-16_
 - PR #18 "Sticker Book (v1.18)": merged.
 - PR #19 "Pet (v1.19)": merged.
 - PR #20 "Buddies (v1.20)": merged.
-- PR "Content Pack 2 (v1.21)" on branch `feature/pack2` (from `main` after #20): open.
+- PR #21 "Content Pack 2 (v1.21)" on branch `feature/pack2` (from `main` after #20): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
