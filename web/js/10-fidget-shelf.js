@@ -174,6 +174,7 @@ function drawSquish(dt){
       ctx.quadraticCurveTo(R*.47,0,R*.42,R*.18);ctx.quadraticCurveTo(R*.26,R*.05,0,R*.2);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();}
     for(const sg of [-1,1]){const p=at(-Math.PI/2+sg*0.45);ctx.fillStyle=T.fill;ctx.beginPath();ctx.moveTo(p.x-R*.14,p.y+R*.12);ctx.lineTo(p.x+sg*R*.06,p.y-R*.3);ctx.lineTo(p.x+R*.14,p.y+R*.12);ctx.closePath();ctx.fill();ctx.stroke();}
   }
+  if(SQ_EXTRAS[T.extra]&&SQ_EXTRAS[T.extra].back){ctx.save();SQ_EXTRAS[T.extra].back(ctx,at,cx,cy,R,T);ctx.restore();}
   // body
   const g=ctx.createRadialGradient(cx-R*.35,cy-R*.45*sy,R*.08,cx,cy,R*1.5);
   g.addColorStop(0,T.hi); g.addColorStop(.4,T.fill); g.addColorStop(1,T.shade);
@@ -201,6 +202,7 @@ function drawSquish(dt){
   if(T.extra==='berry'||T.extra==='leaf'){const p=at(-Math.PI/2);ctx.fillStyle='#5cc28a';ctx.strokeStyle='#2b6a4a';ctx.lineWidth=3;
     const leaves=T.extra==='berry'?[-0.9,-0.3,0.3,0.9]:[0.5];
     for(const a of leaves){ctx.save();ctx.translate(p.x,p.y+R*.04);ctx.rotate(a);ctx.beginPath();ctx.ellipse(0,-R*.14,R*.08,R*.18,0,0,TAU);ctx.fill();ctx.stroke();ctx.restore();}}
+  if(SQ_EXTRAS[T.extra]&&SQ_EXTRAS[T.extra].front){ctx.save();SQ_EXTRAS[T.extra].front(ctx,at,cx,cy,R,T);ctx.restore();}
   // face: watches your finger, scrunches up when squeezed, blushes when you squish its cheeks
   const fx=R*.3*fsx, ey=cy+R*.02, ink=T.dark?'#fff':'#2a1f33';
   const squint=s>0.13||active.some(t=>t.d>0.35);
@@ -252,7 +254,7 @@ function spinnerShape(ctx,cx,cy,R,a,T){
   });
   ctx.fillStyle=T.deco==='pent'?'#222':T.edge;
   for(let k=0;k<3;k++){const t=k*TAU/3+Math.PI/3,x=Math.cos(t)*R*.35,y=Math.sin(t)*R*.35;
-    if(T.deco==='star')cStar(ctx,x,y,R*.08);else if(T.deco==='bat')cBat(ctx,x,y,R*.065);else if(T.deco==='heart')cHeart(ctx,x,y,R*.06);else{ctx.beginPath();for(let i=0;i<5;i++){const q=i*TAU/5-Math.PI/2;ctx.lineTo(x+Math.cos(q)*R*.06,y+Math.sin(q)*R*.06);}ctx.closePath();ctx.fill();}}
+    if(T.deco==='star')cStar(ctx,x,y,R*.08);else if(T.deco==='bat')cBat(ctx,x,y,R*.065);else if(T.deco==='heart')cHeart(ctx,x,y,R*.06);else if(FID_ICONS[T.deco]){ctx.save();FID_ICONS[T.deco](ctx,x,y,R*.07);ctx.restore();}else{ctx.beginPath();for(let i=0;i<5;i++){const q=i*TAU/5-Math.PI/2;ctx.lineTo(x+Math.cos(q)*R*.06,y+Math.sin(q)*R*.06);}ctx.closePath();ctx.fill();}}
   ctx.fillStyle=T.cap;ctx.strokeStyle=T.edge;ctx.lineWidth=5;ctx.beginPath();ctx.arc(0,0,R*.24,0,TAU);ctx.fill();ctx.stroke();
   ctx.fillStyle=T.body;ctx.beginPath();ctx.arc(0,0,R*.11,0,TAU);ctx.fill();
   ctx.restore();

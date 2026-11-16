@@ -136,6 +136,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   22. `22-pet.js` Pet (`PETS`, `PET_ACC`, `PET_TRICKS`, `petG` drawn by `renderRoom`, `petTap`, `petMenu`, `petPat`, `petTreat`)
   23. `23-buddies.js` Buddies (`STARTERS` for New Room, `starterRow`, `giveStarter`; room colour tints `TINTS`, `applyTint`;
       furniture colours `FURN_COLORS`, `FURN_PIECES`, `furnC`, `furnGrid`; `ROOM_START` for a new room's wall and colours)
+  24. `24-pack2.js` Content Pack 2 (dinosaurs, space, vehicles, robots/sharks/heroes; only adds entries, each with `p2:<theme>`;
+      `p2Have` counts a theme for its 4 stickers)
   99. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -224,4 +226,6 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   `EXTRA_DEFS` (added by `buildDefs`). New clothes should get photocard tags in `CARD_TAGS`. Give pack helpers a unique
   prefix (`p1Bat`, `p1Line`): all files share one global scope, so a repeated name stops the file from loading.
   Pop-it shapes are `POP_SHAPES` entries with a 100×100 outline `path`; owned as `popshape:<id>`.
+  A new squishy `extra` goes in `SQ_EXTRAS` (`back`/`front` canvas drawings); a new spinner or slime `deco` picture goes in
+  `FID_ICONS` (both in section 5, since v1.21). Pack 2 helpers use the `p2` prefix.
 - Use the existing palette (`:root` CSS variables; pink `#ff8cc6`, purple `#a97cff`, mint `#8ff0d0`, gold `#ffd166`, dark `#231b2e`).

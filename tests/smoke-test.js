@@ -952,7 +952,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`(()=>{const b=document.querySelectorAll('#cube .cb-btn')[1];for(let i=0;i<13;i++){cbp(b,'pointerdown');cbp(b,'pointerup');}})()`);
   check('25 clicks pay 1 coin', (await ev('P().stats.clicks'))===fzk0+25&&(await ev('P().coins'))===fzkc0+1, [await ev(`P().stats.clicks-${fzk0}`),await ev(`P().coins-${fzkc0}`)]);
   for(const k of await ev('Object.keys(CUBES)')){await ev(`P().fid.cube='${k}';renderCube()`);await sleep(80);await shot('B6-cube-'+k);}
-  check('every cube colour draws', await ev(`getComputedStyle(cubeEl).getPropertyValue('--f').trim()===CUBES.star.face`));
+  check('every cube colour draws', await ev(`getComputedStyle(cubeEl).getPropertyValue('--f').trim()===CUBES[Object.keys(CUBES).pop()].face`));
   await ev(`P().fid.cube='pastel';renderCube()`);
 
   await ev(`setFidTab('maze')`); await sleep(300); await shot('B7-maze');
@@ -1080,7 +1080,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('49 stickers on 6 pages (4 for the pet since v1.19), ids all different, 6 or more per page', await ev(`STICKERS.length===49&&new Set(STICKERS.map(s=>s.id)).size===49&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('53 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21), ids all different, 6 or more per page', await ev(`STICKERS.length===53&&new Set(STICKERS.map(s=>s.id)).size===53&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1312,6 +1312,88 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   // tidy up: remove the test room and go back to the earlier one
   await ev(`closeModal();DB.profiles=DB.profiles.filter(p=>p.id!=='${rexId}');DB.activeId='${prevId}';P().look.kind='bunny';P().look.face='sparkle';save();show('room')`); await sleep(200);
   check('back to the earlier room', await ev(`DB.profiles.length===${nRooms}&&P().id==='${prevId}'`));
+
+  console.log('Content Pack 2 (v1.21): dinosaurs, space, vehicles, robots/sharks/heroes');
+  await ev(`closeModal();stkPaused=true;P().easy=false;P().coins=500;applyEasy();show('room');goRoom(1)`); await sleep(200);
+  const p2Wall=await ev('P().room.wall');
+  const p2Clothes=JSON.parse(await ev(`JSON.stringify(Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p2).map(i=>[c,i.id])))`));
+  check('16 new clothes, each with a theme', p2Clothes.length===16&&await ev(`Object.values(CLOSET).every(c=>c.items.filter(i=>i.p2).every(i=>P2_THEMES[i.p2]))`), p2Clothes.length);
+  check('nothing in the pack says "boy" or "girl"', await ev(`![...Object.values(CLOSET).flatMap(c=>c.items),...Object.values(DECOR),...Object.values(WALLS),...Object.values(FLOORS),...Object.values(POP_THEMES),...Object.values(POP_SHAPES),...Object.values(SQUISHIES),...Object.values(SPINS),...Object.values(SLIMES),...Object.values(CUBES),...Object.values(MARBLES),...STICKERS].some(x=>/\\b(boy|girl)s?\\b/i.test((x.name||'')+' '+(x.hint||'')))`));
+  check('every new piece of clothing draws on every buddy, with no broken numbers', await ev(`(()=>{const items=Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p2).map(i=>[c,i.id]));return items.every(([c,id])=>Object.keys(BUDDIES).every(k=>{const s=mascotSVG(Object.assign({},DEFAULT_LOOK,{kind:k,[c]:id}));return s.length>500&&!/NaN|undefined/.test(s);}));})()`));
+  await ev(`show('closet')`);
+  for(const [c,i] of p2Clothes){await ev(`document.querySelector('[data-cat=${c}]').click()`);
+    check(`closet has ${c}:${i}`, await ev(`!!document.querySelector('#closetGrid [data-id=${i}] svg')`));}
+  await ev(`document.querySelector('[data-cat=top]').click();document.querySelector('#closetGrid [data-id=dinoHoodie]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
+  check('bought and wearing the Dino Spike Hoodie (20)', await ev(`P().look.top==='dinoHoodie'&&P().owned.includes('top:dinoHoodie')&&P().coins===480`), await ev('P().coins'));
+  check('new clothes count on photocard stats (sporty)', (await ev(`cardStats(Object.assign({},DEFAULT_LOOK,{top:'heroSuit',bottom:'racePants',legs:'none',arms:'none',shoes:'rocketBoots',acc:'hardHat'}))[2]`))===5);
+  await ev(`P().look=Object.assign({},P().look,{kind:'dino',bottom:'dinoShorts',legs:'dinoSocks',arms:'none',shoes:'dinoFeet',acc:'none'});renderCloset()`); await sleep(100); await shot('G1-pack2-dino');
+  await ev(`P().look=Object.assign({},P().look,{kind:'puppy',top:'rocketTee',bottom:'cargo',legs:'spaceSocks',shoes:'rocketBoots',acc:'spaceHelmet'});renderCloset()`); await sleep(100); await shot('G2-pack2-space');
+  await ev(`P().look=Object.assign({},P().look,{kind:'bear',top:'robotTop',bottom:'racePants',legs:'none',arms:'robotArms',shoes:'hightops',acc:'antennae'});renderCloset()`); await sleep(100); await shot('G3-pack2-robot');
+  await ev(`P().look=Object.assign({},P().look,{kind:'fox',top:'heroSuit',bottom:'cargo',arms:'none',acc:'heroMask'});renderCloset()`); await sleep(100); await shot('G4-pack2-hero');
+  await ev(`P().look=Object.assign({},P().look,{kind:'bunny',top:'stripeTee',acc:'sharkHat'});renderCloset()`); await sleep(100); await shot('G5-pack2-shark');
+  await ev(`P().look=Object.assign({},P().look,{top:'tee',bottom:'plaid',legs:'stripeBP',arms:'none',shoes:'boots',acc:'hardHat'});renderCloset()`); await sleep(100); await shot('G6-pack2-hardhat');
+  await ev(`P().look=Object.assign({},P().look,{kind:'bunny',acc:'stars'});save();show('room')`);
+  const p2Decor=['dinoPlush','dinoNest','volcano','toyRocket','planetMobile','telescope','trainRug','dumpTruck','trafficLight','robotPal','sharkBean','heroBadge'];
+  check('12 new decorations, each with a theme', (await ev(`Object.entries(DECOR).filter(([k,d])=>d.p2).map(([k])=>k).join()`))===p2Decor.join());
+  await ev(`enterDecorate();document.querySelector('[data-dt=shop]').click()`); await sleep(150);
+  check('the Shop has all 12 new decorations', await ev(`${JSON.stringify(p2Decor)}.every(k=>document.querySelector('#decoGrid [data-buy='+k+']'))`));
+  await shot('G7-pack2-shop');
+  await ev(`document.querySelector('#decoGrid [data-buy=dinoPlush]').click()`); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(150);
+  check('buying the Dino Plush (20) puts it in her room', await ev(`P().room.items.some(i=>i.type==='dinoPlush'&&i.placed)&&P().coins===460`), await ev('P().coins'));
+  await ev(`document.querySelector('[data-dt=wall]').click()`); await sleep(100);
+  check('4 new walls', await ev(`['jungle','outerSpace','ocean','robotPanels'].every(k=>document.querySelector('#decoGrid [data-surf='+k+']'))`));
+  await ev(`document.querySelector('#decoGrid [data-surf=outerSpace]').click()`); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(150);
+  check('bought and put up the Outer Space wall', await ev(`P().room.wall==='outerSpace'&&P().owned.includes('wall:outerSpace')`));
+  await ev(`document.querySelector('[data-dt=floor]').click()`); await sleep(100);
+  check('3 new floors', await ev(`['road','moon','dinoDig'].every(k=>document.querySelector('#decoGrid [data-surf='+k+']'))`));
+  await ev(`exitDecorate();renderRoom()`); await sleep(150); await shot('G7b-pack2-space-room');
+  await ev(`goRoom(2);for(const k of ${JSON.stringify(p2Decor)})P().room2.items.push(Object.assign({uid:'p2'+k,type:k,placed:true},spot(k)));P().room2.floor='road';P().room2.wall='ocean';save();renderRoom()`); await sleep(200);
+  await shot('G8-pack2-loft');
+  check('every new decoration draws in the Loft, with no broken numbers', await ev(`(()=>{const h=document.querySelector('#roomSvg').innerHTML;return ${JSON.stringify(p2Decor)}.every(k=>P().room2.items.some(i=>i.type===k))&&document.querySelectorAll('#roomSvg .deco').length>=12&&!/NaN|undefined/.test(h);})()`));
+  for(const [w,f] of [['jungle','dinoDig'],['robotPanels','moon']]){await ev(`P().room2.wall='${w}';P().room2.floor='${f}';renderRoom()`); await sleep(100); await shot('G9-pack2-'+w);}
+  await ev(`P().room2.items=P().room2.items.filter(i=>!String(i.uid).startsWith('p2'));P().room2.wall='attic';save();goRoom(1)`);
+
+  console.log('Content Pack 2: fidget designs');
+  await ev(`show('fidget');setFidTab('popit')`); await sleep(200);
+  check('3 new pop-it colours and 2 new board shapes', await ev(`['dino','space','traffic'].every(k=>document.querySelector('#skinRow [data-skin='+k+']'))&&['rocket','dino'].every(k=>document.querySelector('#skinRow [data-shape='+k+']'))`));
+  for(const sh of ['rocket','dino']){
+    await ev(`P().fid.pop='${sh==='rocket'?'space':'dino'}';document.querySelector('#skinRow [data-shape=${sh}]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(200);
+    const n=await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').length`);
+    check(`the ${sh} board has a sensible number of bubbles`, n>=12&&n<36, n); await shot('G10-pop-'+sh);
+    const fl=await ev('P().stats.flips'); await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').forEach(b=>popAt(b))`); await sleep(1300);
+    check(`popping every ${sh} bubble flips the board`, (await ev('P().stats.flips'))===fl+1);
+  }
+  await ev(`P().fid.pop='traffic';P().fid.popShape='classic';renderPop()`); await sleep(100); await shot('G11-pop-traffic');
+  await ev(`P().fid.pop='rainbow';renderPop()`);
+  check('every squishy extra has a drawing', await ev(`Object.values(SQUISHIES).every(T=>!T.extra||['ears','wings','berry','leaf','cloud','ghost'].includes(T.extra)||SQ_EXTRAS[T.extra])`));
+  check('every spinner and slime picture exists', await ev(`Object.values(SPINS).every(T=>['star','bat','heart','pent'].includes(T.deco)||FID_ICONS[T.deco])&&Object.values(SLIMES).every(T=>['glitter','fluff','stars','bats'].includes(T.deco)||FID_ICONS[T.deco])`));
+  for(const [tab,ids] of [['squish',['dino','shark','planet']],['spin',['rocket','gear','dino']],['slime',['dino','rocket']],['cube',['robot','dino']],['maze',['earth','wheel']]]){
+    await ev(`setFidTab('${tab}')`); await sleep(150);
+    check(`new ${tab} designs are listed`, await ev(`${JSON.stringify(ids)}.every(k=>document.querySelector('#skinRow [data-skin='+k+']'))`));
+    for(const id of ids){await ev(`P().fid[FID['${tab}'].key]='${id}';fid2Open('${tab}');${tab==='spin'?'SP.w=12;':''}`);
+      if(tab==='squish'){await ev(`sq('pointerdown',51,0.2,0.1)`); await sleep(450); await shot(`G12-${tab}-${id}`); await ev(`sq('pointerup',51,0.2,0.1)`);}
+      else {await sleep(350); await shot(`G12-${tab}-${id}`);}}
+  }
+  await ev(`P().fid.spin='galaxy';setFidTab('spin');document.querySelector('#skinRow [data-skin=rocket]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
+  check('bought the Rocket spinner (owned as spin:rocket)', await ev(`P().fid.spin==='rocket'&&P().owned.includes('spin:rocket')`));
+  await ev(`P().fid.squish='mochi';P().fid.spin='galaxy';P().fid.slime='grape';P().fid.cube='pastel';P().fid.marble='pearl';save();show('room')`);
+
+  console.log('Content Pack 2: stickers');
+  check('53 stickers; the 4 pack stickers are at the end, on the Room & Style page', await ev(`STICKERS.length===53&&STICKERS.slice(-4).every(s=>s.page==='room'&&/^p2/.test(s.id))`));
+  check('pack stickers count what she has: 3 dino things (hoodie, plush, dino board), 3 space (wall, spinner, rocket board), 0 vehicle', await ev(`p2Have(P(),'dino')===3&&p2Have(P(),'space')===3&&p2Have(P(),'ride')===0`), await ev(`[p2Have(P(),'dino'),p2Have(P(),'space'),p2Have(P(),'ride'),p2Have(P(),'hero')]`));
+  await ev(`P().owned.push('legs:dinoSocks');P().room.items.push({uid:'p2nest',type:'dinoNest',placed:false})`);
+  check('socks and a decoration in My Stuff count too (5 dino things)', await ev(`p2Have(P(),'dino')===5`));
+  const p2c0=await ev('P().coins');
+  await ev(`stkPaused=false`); const p2Got=await ev(`checkStickers().map(s=>s.id).filter(id=>/^p2/.test(id)).join()`); const p2c1=await ev('P().coins'); await ev(`stkPaused=true;closeModal()`);
+  check('3+ dino and 3 space things give Dino Fan and Space Cadet, not the other two', p2Got==='p2dino,p2space', p2Got);
+  check('...and they pay +2 each (with any other sticker that came at the same time)', p2c1>=p2c0+4&&(p2c1-p2c0)%2===0, [p2c0,p2c1]);
+  await ev(`P().room.items=P().room.items.filter(i=>i.uid!=='p2nest');save()`);
+
+  console.log('Content Pack 2 in backups');
+  const p2Id=await ev('P().id'), p2Code=await ev('JSON.stringify(DB)');
+  await ev(`doRestore(${JSON.stringify(p2Code)})`); await sleep(400);
+  check('a backup keeps the pack clothes, wall, spinner, plush and sticker', await ev(`(()=>{const p=DB.profiles.find(q=>q.id==='${p2Id}');return !!p&&p.owned.includes('top:dinoHoodie')&&p.owned.includes('wall:outerSpace')&&p.owned.includes('spin:rocket')&&p.stickers.includes('p2dino')&&p.room.items.some(i=>i.type==='dinoPlush');})()`));
+  await ev(`closeModal();document.querySelector('.pcard[data-id="${p2Id}"]').click()`); await sleep(1300); await ev(`closeModal();P().room.wall='${p2Wall}';save();show('room')`);
 
   console.log('Phone portrait + other screens');
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});

@@ -106,7 +106,8 @@ function drawSlime(dt){
     if(T.deco==='glitter'){ctx.save();ctx.translate(x,y);ctx.rotate(G.r);ctx.fillRect(-s*0.6,-s*0.6,s*1.2,s*1.2);ctx.restore();}
     else if(T.deco==='fluff'){ctx.beginPath();ctx.arc(x,y,s*3,0,TAU);ctx.fill();}
     else if(T.deco==='stars') cStar(ctx,x,y,s*1.6);
-    else if(T.deco==='bats') cBat(ctx,x,y,s*1.3);}
+    else if(T.deco==='bats') cBat(ctx,x,y,s*1.3);
+    else if(FID_ICONS[T.deco]){ctx.save();FID_ICONS[T.deco](ctx,x,y,s*1.3);ctx.restore();}}
   ctx.globalAlpha=1;
   // dimples from pokes
   for(const D of SL.dimples){const x=cx+D.x*R, y=cy+D.y*R, rd=R*0.17, dg=ctx.createRadialGradient(x,y,0,x,y,rd);
