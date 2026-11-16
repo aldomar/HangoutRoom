@@ -208,11 +208,12 @@ numbers after v1.22 are only a guide. The usual rules apply to every new game: a
 timers, nothing lost, Easy mode works for the 3- and 5-year-olds, and a few new stickers.
 
 ### Phase 8: Made for you + room to grow
-- **💌 About & Gift Story (v1.22, the owner's idea):** ⚙️ Settings → 💌 About, so the children can show others the app
+- ✅ **💌 About & Gift Story (v1.22, the owner's idea):** ⚙️ Settings → 💌 About, so the children can show others the app
   was made just for them:
   - a dedication letter from the owner with the children's **nicknames** and the date the project started (14 Nov 2026)
   - a gift timeline: every update with its date and a short "why" line ("v1.5 Soccer Field ⚽: for our soccer star")
-  - a family secret: tap Fuzzy 5 times on the About page to see an inside joke only the family knows
+  - a family secret: tap the buddy on the certificate 5 times to see an inside joke only the family knows
+    (built, but switched off until the owner writes a secret into the local file)
   - an "Edition 1 of 1" certificate, drawn like a gold photocard
   - a ✨ What's New box, shown once after an update is installed
   - **Privacy (the repo is public):** the personal words live in `web/about-local.js`, which is **git-ignored**, so it

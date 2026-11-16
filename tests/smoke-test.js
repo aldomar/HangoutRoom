@@ -34,7 +34,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   ws.onmessage=m=>{const d=JSON.parse(m.data);if(d.id&&pend[d.id]){d.error?pend[d.id].rej(new Error(JSON.stringify(d.error))):pend[d.id].res(d.result);delete pend[d.id];}
     if(d.method==='Runtime.exceptionThrown')errors.push(d.params.exceptionDetails.exception?d.params.exceptionDetails.exception.description:d.params.exceptionDetails.text);
     if(d.method==='Runtime.consoleAPICalled'&&d.params.type==='error')errors.push(d.params.args.map(a=>a.value||a.description).join(' '));
-    if(d.method==='Log.entryAdded'&&d.params.entry.level==='error'&&d.params.entry.source==='network')errors.push(d.params.entry.text+' '+(d.params.entry.url||''));}; // e.g. a web/ file that is missing
+    if(d.method==='Log.entryAdded'&&d.params.entry.level==='error'&&d.params.entry.source==='network'&&!/web\/about-local\.js$/.test(d.params.entry.url||''))errors.push(d.params.entry.text+' '+(d.params.entry.url||''));}; // e.g. a web/ file that is missing (the git-ignored web/about-local.js may be missing on purpose)
   await send('Runtime.enable'); await send('Page.enable'); await send('Log.enable');
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   // stickers pay coins, so they are paused (also after a reload) until their own checks; other games' exact coin checks still add up
@@ -45,8 +45,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('The page and its web/ files');
   const jsFiles=fs.readdirSync(path.join(__dirname,'..','web','js')).filter(f=>f.endsWith('.js')).sort();
-  const loaded=await ev(`[...document.scripts].map(s=>s.getAttribute('src'))`);
+  const allSrc=await ev(`[...document.scripts].map(s=>s.getAttribute('src'))`), loaded=allSrc.filter(s=>s.startsWith('web/js/'));
   check('index.html loads every web/js file, in number order', JSON.stringify(loaded)===JSON.stringify(jsFiles.map(f=>'web/js/'+f)), [loaded,jsFiles]);
+  check('the personal About file (git-ignored) is loaded after 25-about.js, before startup', allSrc.indexOf('web/about-local.js')===allSrc.indexOf('web/js/25-about.js')+1&&allSrc.indexOf('web/js/99-startup.js')>allSrc.indexOf('web/about-local.js'), allSrc.slice(-3));
   check('the CSS loaded', await ev(`getComputedStyle(document.body).backgroundColor==='rgb(35, 27, 46)'`));
   check('the last file ran (startup)', await ev(`cur==='profiles'&&document.querySelector('#scr-profiles').classList.contains('on')`));
 
@@ -1482,6 +1483,52 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('settings shows APP_VERSION', (await ev(`document.querySelector('.about').textContent`)).includes(appV));
   check('APP_VERSION matches Android versionName', appV===gradleV, [appV,gradleV]);
   await ev(`closeModal();show('profiles')`); await sleep(200); await shot('16-profiles');
+
+  console.log('About & Gift Story (v1.22)');
+  check('a new device (no rooms at the start) noted the version without a What\'s New box', await ev(`DB.settings.seenNew===APP_VERSION`));
+  await ev(`show('room');settingsModal()`);
+  check('Settings has a 💌 About button', await ev(`!!document.querySelector('#sAbout')`));
+  await ev(`document.querySelector('#sAbout').click()`); await sleep(300);
+  check('it opens the About screen and closes Settings', await ev(`cur==='about'&&document.querySelector('#modal').classList.contains('hidden')`));
+  const realLocal=await ev(`JSON.stringify(window.ABOUT_LOCAL||null)`);
+  check('the example About file is in the repo', fs.existsSync(path.join(__dirname,'..','web','about-local.example.js')));
+  await ev(`window.ABOUT_LOCAL=undefined;renderAbout()`); await sleep(150); await shot('C01-about-generic');
+  check('with no local file: generic greeting, letter and signature, "made just for you"', await ev(`(()=>{const t=document.querySelector('#abPage').textContent,c=document.querySelector('#abCert').textContent;return t.includes(ABOUT_DEFAULT.greeting)&&t.includes(ABOUT_DEFAULT.from)&&t.includes(ABOUT_DEFAULT.letter[0])&&c.includes('made just for')&&c.includes('you');})()`));
+  const tl=await ev(`GIFT_TIMELINE.map(t=>t.v)`);
+  check('the gift timeline has every version from 1.0 to APP_VERSION, in order', tl[0]==='1.0'&&tl[tl.length-1]===appV&&tl.every((v,i)=>v==='1.'+i), tl);
+  check('every timeline entry has a date, icon, name and why line', await ev(`GIFT_TIMELINE.every(t=>/^\\d{4}-\\d\\d-\\d\\d$/.test(t.d)&&t.i&&t.n&&t.why)`));
+  check('this version has What\'s New news', await ev(`!!(GIFT_TIMELINE[GIFT_TIMELINE.length-1].news||[]).length`));
+  check('the timeline shows one row per version; this version is highlighted', await ev(`document.querySelectorAll('.ab-row').length===GIFT_TIMELINE.length&&document.querySelector('.ab-row.now').dataset.v===APP_VERSION`));
+  check('the certificate shows Edition 1 of 1, the version and the start date', await ev(`(()=>{const t=document.querySelector('#abCert').textContent;return t.includes('Edition 1 of 1')&&t.includes('version '+APP_VERSION)&&t.includes('14 Nov 2026');})()`));
+  await ev(`window.ABOUT_LOCAL={names:['Zip','Bean','Moss'],from:'Love, Test Cousin',letter:['Hello from the test.'],why:{'1.5':'For Zip ⚽'}};renderAbout()`); await sleep(150); await shot('C02-about-local');
+  check('a local file\'s nicknames, letter and signature are used', await ev(`(()=>{const t=document.querySelector('#abPage').textContent;return t.includes('Dear Zip, Bean and Moss,')&&document.querySelector('#abCert').textContent.includes('Zip, Bean & Moss')&&t.includes('Hello from the test.')&&!t.includes(ABOUT_DEFAULT.letter[0])&&t.includes('Love, Test Cousin');})()`));
+  check('a local why line replaces only its own update', await ev(`document.querySelector('.ab-row[data-v="1.5"]').textContent.includes('For Zip')&&document.querySelector('.ab-row[data-v="1.3"]').textContent.includes('Because you love to draw')`));
+  await ev(`window.ABOUT_LOCAL={names:'oops',letter:[3,''],from:'  ',why:null};renderAbout()`); await sleep(100);
+  check('odd local words fall back to the generic ones', await ev(`(()=>{const t=document.querySelector('#abPage').textContent;return t.includes(ABOUT_DEFAULT.greeting)&&t.includes(ABOUT_DEFAULT.letter[0])&&t.includes(ABOUT_DEFAULT.from);})()`));
+  const tapBuddy=async()=>{for(let i=0;i<5;i++){await ev(`document.querySelector('#abBuddy').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}))`);await sleep(60);}};
+  await tapBuddy();
+  check('with no secret, tapping the buddy 5 times shows nothing', await ev(`document.querySelector('#abSecret').classList.contains('hidden')`));
+  await ev(`window.ABOUT_LOCAL={secret:'Boop the snoot!'};renderAbout()`); await sleep(100); await tapBuddy(); await sleep(100);
+  check('with a secret, tapping the buddy 5 times shows it', await ev(`!document.querySelector('#abSecret').classList.contains('hidden')&&document.querySelector('#abSecret').textContent==='Boop the snoot!'`));
+  await shot('C03-about-secret');
+  await ev(`window.ABOUT_LOCAL=${realLocal}||undefined;renderAbout()`);
+  check('Android Back from About goes to the room', await ev(`window.androidBack()===true&&cur==='room'`));
+  await ev(`show('about')`); await ev(`document.querySelector('#scr-about [data-back]').click()`);
+  check('⬅ Room from About goes to the room', await ev(`cur==='room'`));
+  await ev(`show('profiles');DB.settings.seenNew='1.21';whatsNew()`); await sleep(200); await shot('C04-whats-new');
+  check('after an update, What\'s New shows this version\'s news once', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#modalTitle').textContent.includes('New')&&document.querySelector('#modalBody').textContent.includes('About')&&DB.settings.seenNew===APP_VERSION`));
+  await ev(`closeModal();whatsNew()`);
+  check('it does not show again', await ev(`document.querySelector('#modal').classList.contains('hidden')`));
+  await ev(`DB.settings.seenNew='';whatsNew()`);
+  check('an old save with no seenNew sees only this version\'s news', await ev(`document.querySelectorAll('#modalBody .wn').length===1&&document.querySelector('#modalBody').textContent.includes('v'+APP_VERSION)`));
+  await ev(`closeModal()`);
+  await ev(`(()=>{const b=JSON.parse(JSON.stringify(DB));b.settings.seenNew='1.0';doRestore(JSON.stringify(b));})()`); await sleep(300);
+  check('restoring a backup keeps this device\'s What\'s New (no repeat)', await ev(`DB.settings.seenNew===APP_VERSION`));
+  await ev(`closeModal();DB.activeId=DB.profiles[0].id;show('about')`);
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300); await shot('C05-phone-about');
+  check('phone: the certificate and letter fit the width (no sideways scroll)', await ev(`(()=>{const pg=document.querySelector('#abPage'),c=document.querySelector('#abCert').getBoundingClientRect();return pg.scrollWidth<=pg.clientWidth&&c.right<=innerWidth&&c.left>=0&&c.width>300;})()`));
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  await ev(`show('room')`);
 
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');

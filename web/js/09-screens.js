@@ -21,6 +21,7 @@ function show(n){
   if(n==='stage') renderStage(); else stgStop();
   if(n==='code') renderCode(); else codeStop(); // section 18
   if(n==='stickers') renderStickers(); // section 21
+  if(n==='about') renderAbout(); // section 25
   if(n==='room') stkDot();
   if(n!=='profiles') setTimeout(checkStickers,400); // new stickers (section 21)
   updateCoins();
@@ -241,13 +242,14 @@ function settingsModal(){
   const p=P();
   modal('⚙️ Settings',`<div class="setlist"><button class="btn ghost" id="sSound">${s.sound?'🔊 Sounds: ON':'🔇 Sounds: OFF'}</button><button class="btn ghost" id="sMusic">${s.music?'🎵 Music: ON':'🎵 Music: OFF'}</button>`
     +(p?`<button class="btn ghost" id="sEasy">${p.easy?'🐣 Easy mode: ON':'🐣 Easy mode: OFF'}</button>`:'')
-    +`<button class="btn ghost" id="sSwitch">👥 Switch Room</button><button class="btn ghost" id="sBackup">💾 Backup &amp; Restore</button><button class="btn ghost" id="sPin">${s.pin?'🔒 Grown-up PIN: ON':'🔓 Grown-up PIN: OFF'}</button></div><p class="about">🐰 Hangout Room · version ${APP_VERSION}</p>`,[{text:'Close',cls:'pink'}]);
+    +`<button class="btn ghost" id="sSwitch">👥 Switch Room</button><button class="btn ghost" id="sBackup">💾 Backup &amp; Restore</button><button class="btn ghost" id="sPin">${s.pin?'🔒 Grown-up PIN: ON':'🔓 Grown-up PIN: OFF'}</button><button class="btn ghost" id="sAbout">💌 About</button></div><p class="about">🐰 Hangout Room · version ${APP_VERSION}</p>`,[{text:'Close',cls:'pink'}]);
   $('#sSound').onclick=()=>{s.sound=!s.sound;save();SFX.click();settingsModal();};
   $('#sMusic').onclick=()=>{s.music=!s.music;save();if(s.music)startMusic();else stopMusic();settingsModal();};
   if(p) $('#sEasy').onclick=()=>{p.easy=!p.easy;save();SFX.click();applyEasy();if(cur==='room')renderRoom();settingsModal();};
   $('#sSwitch').onclick=()=>{closeModal();show('profiles');};
   $('#sBackup').onclick=backupModal;
   $('#sPin').onclick=pinSettings;
+  $('#sAbout').onclick=()=>{closeModal();SFX.click();show('about');}; // section 25
 }
 // Easy mode belongs to a room, so it is on only while that room is open (never on the profile screen).
 function applyEasy(){const p=cur==='profiles'?null:P();document.body.classList.toggle('easy',!!(p&&p.easy));applyTint();}
@@ -333,7 +335,8 @@ function doRestore(txt){
   try{d=JSON.parse(txt);if(!d||!Array.isArray(d.profiles))throw new Error('bad');
     art=Array.isArray(d.artwork)?d.artwork.filter(okArt):null; delete d.artwork; // drawings go to IndexedDB, not localStorage
     d=fixDB(d);d.profiles.forEach(normalize);
-    d.settings.pin=DB.settings.pin||'';} // the PIN belongs to this device, so a backup can't change or remove it
+    d.settings.pin=DB.settings.pin||''; // the PIN belongs to this device, so a backup can't change or remove it
+    d.settings.seenNew=DB.settings.seenNew||'';} // so is "What's New seen" (section 25)
   catch(e){toast('Hmm, that backup code did not work.');return;}
   const done=msg=>{DB=d;save();ART.owner=null;closeModal();toast(msg);show('profiles');};
   // No drawings in the backup: keep the drawings already on this device.

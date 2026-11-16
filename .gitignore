@@ -19,3 +19,6 @@ android/captures/
 
 # smoke test screenshots
 tests/shots/
+
+# Personal About words (nicknames, letter): kept off GitHub. See web/about-local.example.js
+web/about-local.js

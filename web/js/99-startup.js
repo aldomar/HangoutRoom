@@ -23,7 +23,7 @@ window.androidBack=function(){
   if(decorating){exitDecorate();return true;}
   if(cur==='fidget'||cur==='closet'){show('room');return true;}
   if(cur==='art'){artBack();return true;}
-  if(cur==='cards'||cur==='soccer'||cur==='stickers'){show('room');return true;}
+  if(cur==='cards'||cur==='soccer'||cur==='stickers'||cur==='about'){show('room');return true;}
   if(cur==='stage'){if(STG.state==='pick')show('room');else stgPickView();return true;} // a song -> the song list -> room
   if(cur==='code'){clBackKey();return true;} // a puzzle -> the puzzle list -> room
   if(cur==='room'){if(roomNo===2)goRoom(1);else show('profiles');return true;} // Loft -> room -> profiles
@@ -36,4 +36,5 @@ document.addEventListener('visibilitychange',()=>{
 
 buildDefs();
 show('profiles');
+setTimeout(whatsNew,600); // ✨ What's New, once per device after an update (section 25)
 requestAnimationFrame(loop);

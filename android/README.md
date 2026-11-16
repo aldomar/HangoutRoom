@@ -25,6 +25,12 @@ Updates only install over the old app if they are signed with the same key. Debu
 a key stored on this computer (`%USERPROFILE%\.android\debug.keystore`), so build updates on this
 same computer or keep a copy of that file. Use the in-app **Settings > Backup** before big updates anyway.
 
+## The personal About words (since version 1.22)
+The letter and nicknames in **⚙️ Settings > 💌 About** come from `../web/about-local.js`. That file is kept off GitHub
+(it is git-ignored), but the build copies the whole `web/` folder, so an APK built on this computer includes it.
+An APK built from a fresh copy of the repo (without the file) shows a generic About instead. Keep a copy of
+`about-local.js` somewhere safe, next to the debug key.
+
 ## What the wrapper does
 - No internet permission: the app can't go online.
 - Saves use the WebView's localStorage (kept with the app's data).

@@ -68,6 +68,14 @@
 </div>
 
 <!-- STICKER BOOK (v1.18) -->
+<div id="scr-about" class="screen">
+  <div class="topbar">
+    <button class="btn small ghost" data-back>⬅ Room</button>
+    <div class="title">💌 About</div>
+  </div>
+  <div class="ab-page" id="abPage"></div>
+</div>
+
 <div id="scr-stickers" class="screen">
   <div class="topbar">
     <button class="btn small ghost" data-back>⬅ Room</button>
@@ -302,6 +310,10 @@
 <script src="web/js/22-pet.js"></script>
 <script src="web/js/23-buddies.js"></script>
 <script src="web/js/24-pack2.js"></script>
+<script src="web/js/25-about.js"></script>
+<!-- Personal About words (nicknames, letter). Git-ignored, so it is only on the owner's PC and in the APK built there.
+     If it is missing, the About uses the generic words in 25-about.js. See web/about-local.example.js. -->
+<script src="web/about-local.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

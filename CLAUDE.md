@@ -99,6 +99,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 - Every pull request raises the minor version by one (1.0 → 1.1 → 1.2), committed on the branch before the PR:
   - `versionName` **and** `versionCode` (+1) in `android/app/build.gradle.kts`.
   - `APP_VERSION` in `web/js/01-save.js` (shown in Settings).
+  - A `GIFT_TIMELINE` entry for the new version in `web/js/25-about.js` (since v1.22).
 - Put the version in the PR title, for example "Art Desk (v1.2)".
 - When several PRs are open, each takes the next number after the highest already used on any branch.
 - The PR description says what to try on the tablet.
@@ -138,6 +139,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
       furniture colours `FURN_COLORS`, `FURN_PIECES`, `furnC`, `furnGrid`; `ROOM_START` for a new room's wall and colours)
   24. `24-pack2.js` Content Pack 2 (dinosaurs, space, vehicles, robots/sharks/heroes; only adds entries, each with `p2:<theme>`;
       `p2Have` counts a theme for its 4 stickers)
+  25. `25-about.js` About & Gift Story (`ABOUT_DEFAULT`, `GIFT_TIMELINE`, `aboutData`, `renderAbout`, `whatsNew`)
   99. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -207,6 +209,12 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   `furnC(piece)` (classic colours when `p.furn[piece]` is missing or unknown). A new built-in piece that should be
   recolourable gets a `FURN_PIECES` entry. Piece ids (`desk closet shelf curtain desk2 beams window2 lamp`) and colour ids
   are saved: never rename them.
+- About (since v1.22): ⚙️ Settings → 💌 About (`scr-about`). The personal words (nicknames, letter, secret, per-version
+  `why` lines) are in `web/about-local.js`, which is **git-ignored and must never be committed, read into a PR, or
+  quoted on GitHub**; `index.html` loads it right after `25-about.js`, and each field falls back to `ABOUT_DEFAULT`.
+  `web/about-local.example.js` (in git) uses invented names only. **Every PR adds a `GIFT_TIMELINE` entry** for its
+  version (date, icon, name, generic `why`, and a short `news` list for the ✨ What's New box). `settings.seenNew` is
+  the last version whose What's New was shown; it belongs to the device, so `doRestore()` keeps it (like the PIN).
 - Every room area is open. To add a locked area for a future feature, put it in `LOCKED` and `handleHot()`.
 - `android/`: Gradle project; `app/src/main/java/com/family/hangoutroom/MainActivity.kt`; `android/README.md` has build/sideload steps.
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.
