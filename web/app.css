@@ -329,3 +329,28 @@ body.easy .cube{margin-bottom:0}
 .grid-head{grid-column:1/-1;font-weight:900;font-size:16px;padding:6px 4px 0;color:var(--muted,#cbbbe6)}
 .grid-head.now{color:var(--gold,#ffd166)}
 @media (max-width:620px){#decoTabs .tab span{display:none}#decoTabs .tab{font-size:21px;padding:8px 10px}}
+/* Sticker Book (v1.18) */
+#stkBtn{position:relative;min-width:48px}#decoBtn{min-width:48px}
+.stk-dot{position:absolute;top:-3px;right:-3px;width:14px;height:14px;border-radius:50%;background:#ff4f8b;border:2px solid var(--panel)}
+.tab .stk-dot{position:relative;display:inline-block;top:-6px;right:0;margin-left:2px;width:10px;height:10px}
+.tab small{font-size:12px;opacity:.75}
+.stk-count{font-weight:900;color:var(--gold);white-space:nowrap}
+.stk-page{flex:1;min-height:0;overflow-y:auto;margin:10px;padding:12px;border-radius:22px;background:#fff6fb;background-image:radial-gradient(#f3dcee 1.5px,transparent 1.5px);background-size:22px 22px;box-shadow:inset 0 0 0 4px #ffd6ec,0 6px 0 #00000040}
+.stk-title{text-align:center;font-weight:900;font-size:22px;color:#5b3a99;margin:2px 0 10px}
+.stk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:12px}
+.stk{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;border-radius:18px;border:3px dashed #e8c8e0;background:#ffffff80;color:#3a2c4a;min-height:48px}
+.stk svg{width:96px;height:96px}
+.stk .sn{font-weight:900;font-size:15px;text-align:center;line-height:1.2}
+.stk.locked{border-color:#e6dcef}
+.stk.locked svg,.stk-big.locked svg{filter:grayscale(1);opacity:.35}
+.stk.locked .sn{font-weight:700;font-size:14px;color:#7a6a8f}
+.stk.new{border:3px solid var(--gold);background:#fff4cc;animation:stkNew 1.2s ease-in-out 3}
+@keyframes stkNew{50%{transform:scale(1.06)}}
+.sbar{width:80%;height:8px;border-radius:99px;background:#eadff2;overflow:hidden}
+.sbar i{display:block;height:100%;background:var(--pink);border-radius:99px}
+.sbar.big{width:100%;height:14px;margin:10px 0 6px;background:#3b2f52}
+.stk-big{display:flex;justify-content:center}.stk-big svg{width:150px;height:150px}
+.stk-few{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}.stk-few svg{width:72px;height:72px}
+body.easy .stk svg{width:110px;height:110px}body.easy .stk.locked .sn{display:none}
+@media (max-width:560px){#decoBtn span{display:none}}
+@media (max-width:760px){#stkTabs .tab span{display:none}#stkTabs .tab{font-size:21px;padding:8px 10px}#stkTabs .tab small{display:none}.stk-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}.stk svg{width:80px;height:80px}.stk-page{margin:6px;padding:8px}}

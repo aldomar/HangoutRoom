@@ -20,6 +20,9 @@ function show(n){
   if(n==='room'||n==='stage'){if(giveMic())setTimeout(()=>toast('🎤 The Golden Mic is in your room!'),400);} // section 14
   if(n==='stage') renderStage(); else stgStop();
   if(n==='code') renderCode(); else codeStop(); // section 18
+  if(n==='stickers') renderStickers(); // section 21
+  if(n==='room') stkDot();
+  if(n!=='profiles') setTimeout(checkStickers,400); // new stickers (section 21)
   updateCoins();
 }
 
@@ -68,7 +71,7 @@ function delModal(p){
 function enterRoom(){
   const p=P(); if(!p) return; roomNo=1; show('room'); loadArtThumbs();
   const today=new Date().toDateString();
-  if(p.lastDaily!==today){p.lastDaily=today;save();setTimeout(()=>{earn(10,'Daily gift!',innerWidth/2,innerHeight/2);toast('🎁 Daily gift! +10 coins');},600);}
+  if(p.lastDaily!==today){p.lastDaily=today;p.stats.dailies++;save();setTimeout(()=>{earn(10,'Daily gift!',innerWidth/2,innerHeight/2);toast('🎁 Daily gift! +10 coins');},600);}
   if(!p.seenTip){p.seenTip=true;save();setTimeout(()=>say(`Hi ${p.name}! Tap the shelf, closet or desk ✨`),1200);}
 }
 
@@ -167,8 +170,8 @@ function snapToShelf(it){ // drop a standing thing near a shelf top and it sits 
   if(!best) return false; it.y=best.y-DECOR[best.type].shelf.top; return true;
 }
 
-function enterDecorate(){decorating=true;$('#decoPanel').classList.remove('hidden');$('#decoBtn').textContent='✔ Done';renderRoom();renderDecoGrid();SFX.click();}
-function exitDecorate(silent){decorating=false;drag=null;$('#decoPanel').classList.add('hidden');$('#decoBtn').textContent='🛋️ Decorate';if(!silent)renderRoom();}
+function enterDecorate(){decorating=true;$('#decoPanel').classList.remove('hidden');$('#decoBtn').innerHTML='✔<span> Done</span>';renderRoom();renderDecoGrid();SFX.click();}
+function exitDecorate(silent){decorating=false;drag=null;$('#decoPanel').classList.add('hidden');$('#decoBtn').innerHTML='🛋️<span> Decorate</span>';if(!silent)renderRoom();}
 $('#decoBtn').onclick=()=>decorating?exitDecorate():enterDecorate();
 $('#roomGo').onclick=()=>goRoom(roomNo===2?1:2);
 $('#decoDone').onclick=()=>exitDecorate();

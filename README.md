@@ -67,6 +67,16 @@ On the Fidget Shelf (the shelf in her room) there are three more tabs:
   when playing in a car).
 Each one has a free design and more to buy in the row at the bottom.
 
+## Sticker Book (since version 1.18)
+- Tap **📒** at the top of the room. The book has 6 pages (🫧 Fidgets, 🎨 Art & Cards, ⚽ Soccer, 🎤 Stage, 💻 Code Lab,
+  🏠 Room & Style) with 45 stickers in all.
+- Each sticker is for doing something, for example popping 1,000 bubbles, scoring 25 goals, solving a ✨ My Move
+  puzzle, or putting 5 things in the Loft. Many come in steps (1, 2 or 3 little stars on the sticker).
+- Stickers she hasn't got yet are grey, with what to do and a bar that shows how far she is. Tap one to see the numbers.
+- Each new sticker gives **+2 coins**, once. A sticker is never taken away. A red dot on 📒 means there's a new one to see.
+- Stickers for things she had already done before this update all arrive the first time she opens her room.
+- The bonus photocards are still there, just as before.
+
 ## Seasons (since version 1.17)
 - In 🛋️ Decorate there is a **Seasons** tab (its icon is the season right now: 🍂 autumn, ❄️ winter, 🌸 spring, ☀️ summer).
   It has 4 decorations and a wall for each season, such as a Smiley Pumpkin, a Snow Bunny, a Tulip Pot and a Lemonade Stand.

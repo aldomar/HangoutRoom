@@ -45,7 +45,8 @@
     <div class="title" id="roomTitle">My Room</div>
     <div class="coins coinsDisp"></div>
     <button class="btn small ghost" id="roomGo">🪜 <span>Loft</span></button>
-    <button class="btn small ghost" id="decoBtn">🛋️ Decorate</button>
+    <button class="btn small ghost" id="stkBtn" aria-label="Sticker Book">📒<i id="stkDot" class="stk-dot hidden"></i></button>
+    <button class="btn small ghost" id="decoBtn">🛋️<span> Decorate</span></button>
     <button class="btn small ghost" id="setBtn">⚙️</button>
   </div>
   <div class="stage"><svg id="roomSvg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet"></svg></div>
@@ -63,6 +64,18 @@
     <div class="hint">Drag things in your room to move them. Drop them down here to put them away!</div>
     <div class="grid" id="decoGrid"></div>
   </div>
+</div>
+
+<!-- STICKER BOOK (v1.18) -->
+<div id="scr-stickers" class="screen">
+  <div class="topbar">
+    <button class="btn small ghost" data-back>⬅ Room</button>
+    <div class="title">📒 Sticker Book</div>
+    <div class="stk-count" id="stkCount"></div>
+    <div class="coins coinsDisp"></div>
+  </div>
+  <div class="tabs" id="stkTabs" style="background:var(--panel);justify-content:center"></div>
+  <div class="stk-page" id="stkPage"></div>
 </div>
 
 <!-- FIDGET SHELF -->
@@ -284,6 +297,7 @@
 <script src="web/js/18-codelab.js"></script>
 <script src="web/js/19-fidgets2.js"></script>
 <script src="web/js/20-seasons.js"></script>
+<script src="web/js/21-stickers.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

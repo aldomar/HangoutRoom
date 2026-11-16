@@ -37,7 +37,11 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     if(d.method==='Log.entryAdded'&&d.params.entry.level==='error'&&d.params.entry.source==='network')errors.push(d.params.entry.text+' '+(d.params.entry.url||''));}; // e.g. a web/ file that is missing
   await send('Runtime.enable'); await send('Page.enable'); await send('Log.enable');
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  // stickers pay coins, so they are paused (also after a reload) until their own checks; other games' exact coin checks still add up
+  await send('Page.addScriptToEvaluateOnNewDocument',{source:'window.STK_TEST_PAUSE=true'});
   await send('Page.navigate',{url:URL}); await sleep(1200);
+  // a cold start (e.g. right after files changed) can be slow: wait until the page has fully loaded
+  for(let i=0;i<60&&!(await ev('document.readyState==="complete"'));i++) await sleep(250);
 
   console.log('The page and its web/ files');
   const jsFiles=fs.readdirSync(path.join(__dirname,'..','web','js')).filter(f=>f.endsWith('.js')).sort();
@@ -140,7 +144,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`doRestore(${JSON.stringify(code)})`); await sleep(800);
   check('restore brings back 2 drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2);
   check('artwork not saved into localStorage', await ev(`!JSON.parse(localStorage.getItem('hangoutRoom.v1')).artwork`));
-  check('DB version is DB_VERSION (10)', (await ev('DB.version'))===10);
+  check('DB version is DB_VERSION (11)', (await ev('DB.version'))===11);
   await ev(`doRestore(${JSON.stringify(oldCode)})`); await sleep(800);
   check('old backup restores and keeps drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2 && (await ev('DB.profiles.length'))===1);
   await ev(`DB.settings.backupArt=false;backupModal()`); await sleep(400);
@@ -1017,7 +1021,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const fzfCode=await ev('JSON.stringify(DB)');
   const fzv115=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.version=9;d.profiles.forEach(p=>{delete p.maze;['slime','cube','marble'].forEach(k=>delete p.fid[k]);['stretches','clicks','mazes'].forEach(k=>delete p.stats[k]);p.owned=p.owned.filter(o=>!/^(slime|cube|marble):/.test(o));});return JSON.stringify(d);})()`);
   await ev(`doRestore(${JSON.stringify(fzv115)})`); await sleep(400);
-  check('a v1.15 backup restores with the new fidgets at their defaults', await ev(`DB.version===10&&DB.profiles.every(p=>Array.isArray(p.maze.solved)&&p.maze.solved.length===0&&p.fid.slime==='grape'&&p.fid.cube==='pastel'&&p.fid.marble==='pearl'&&p.stats.clicks===0)`));
+  check('a v1.15 backup restores with the new fidgets at their defaults', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>Array.isArray(p.maze.solved)&&p.maze.solved.length===0&&p.fid.slime==='grape'&&p.fid.cube==='pastel'&&p.fid.marble==='pearl'&&p.stats.clicks===0)`));
   await ev(`doRestore(${JSON.stringify(fzfCode)})`); await sleep(400);
   check('a v1.16 backup keeps solved mazes, designs and counts', await ev(`(()=>{const p=DB.profiles.find(q=>q.maze.solved.length===6);return !!p&&p.fid.slime==='mint'&&p.owned.includes('marble:galaxy')&&p.stats.stretches>=5&&p.stats.clicks>=25;})()`));
   await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal();show('room')`);
@@ -1074,6 +1078,65 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('a backup keeps seasonal decorations and walls', await ev(`(()=>{const p=DB.profiles.find(q=>q.id==='${ssId}');return !!p&&p.owned.includes('wall:winterSnow')&&p.room.items.some(i=>i.type==='pumpkin');})()`));
   await ev(`closeModal();document.querySelector('.pcard[data-id="${ssId}"]').click()`); await sleep(1300); await ev(`closeModal();show('room')`);
 
+  console.log('Sticker Book (v1.18)');
+  await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
+  check('45 stickers on 6 pages, ids all different, 6 or more per page', await ev(`STICKERS.length===45&&new Set(STICKERS.map(s=>s.id)).size===45&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
+  check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
+  const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
+  await ev(`stkPaused=false;show('room')`); await sleep(900);
+  const skGot=await ev('P().stickers.length');
+  check('stickers she already earned arrive the first time (many, from all the games played)', skGot===skWant&&skGot>=10, [skGot,skWant]);
+  check('+2 coins for each one', (await ev('P().coins'))===sk0+2*skGot, [sk0,await ev('P().coins'),skGot]);
+  check('several at once in the room get one happy box', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#modalTitle').textContent.includes('new stickers')&&document.querySelectorAll('#modalBody .stk-few svg').length>=3`));
+  await shot('D1-stickers-welcome');
+  await ev(`closeModal()`);
+  const sk1=await ev('P().coins');
+  check('never given twice', (await ev('checkStickers().length'))===0&&(await ev('P().coins'))===sk1);
+  check('the 📒 button has a dot for new stickers', await ev(`!document.querySelector('#stkDot').classList.contains('hidden')`));
+  await ev(`document.querySelector('#stkBtn').click()`); await sleep(250);
+  check('📒 opens the Sticker Book on the Fidgets page', await ev(`cur==='stickers'&&document.querySelectorAll('#stkPage .stk').length===STICKERS.filter(s=>s.page==='fidget').length`));
+  check('the count shows stickers got / all', await ev(`document.querySelector('#stkCount').textContent===P().stickers.length+' / 45'`));
+  check('earned stickers are in colour with their name; the rest are grey with a hint and a bar', await ev(`[...document.querySelectorAll('#stkPage .stk')].every(b=>{const s=STICKERS.find(x=>x.id===b.dataset.stk), got=P().stickers.includes(s.id);return got?!b.classList.contains('locked')&&b.querySelector('.sn').textContent===s.name:b.classList.contains('locked')&&b.querySelector('.sn').textContent===s.hint&&!!b.querySelector('.sbar');})`));
+  check('new stickers sparkle', await ev(`document.querySelectorAll('#stkPage .stk.new').length>0`));
+  await shot('D2-stickers-fidgets');
+  check('stickers on a page count as seen once it is open', await ev(`!P().stickerNew.some(id=>STICKERS.find(s=>s.id===id).page==='fidget')`));
+  check('other pages with new stickers show a dot on their tab', await ev(`P().stickerNew.length===0||!!document.querySelector('#stkTabs .stk-dot')`));
+  for(const pg of ['art','soccer','stage','code','room']){await ev(`document.querySelector('#stkTabs [data-page=${pg}]').click()`); await sleep(120); await shot('D3-stickers-'+pg);}
+  check('after every page is seen, the dot goes away', await ev(`P().stickerNew.length===0&&document.querySelector('#stkDot').classList.contains('hidden')`));
+  const skLocked=await ev(`(STICKERS.find(s=>!P().stickers.includes(s.id))||{}).id`);
+  if(skLocked){
+    await ev(`stkPage=STICKERS.find(s=>s.id==='${skLocked}').page;renderStickers();document.querySelector('#stkPage [data-stk=${skLocked}]').click()`); await sleep(150);
+    check('tapping a grey sticker says what to do and how far she is', await ev(`(()=>{const s=STICKERS.find(x=>x.id==='${skLocked}');const t=document.querySelector('#modalBody').textContent;return document.querySelector('#modalTitle').textContent.includes('Not yet')&&t.includes(s.hint)&&t.includes(stkHave(P(),s).toLocaleString()+' / '+stkNeed(s).toLocaleString());})()`));
+    await shot('D4-sticker-locked'); await ev(`closeModal()`);
+  }
+  check('Back goes from the Sticker Book to the room', await ev(`window.androidBack()&&cur==='room'`));
+  // the daily gift is counted (a plain count, never lost), and the 7th one gives a sticker
+  await ev(`P().stickers=P().stickers.filter(x=>x!=='daily7');P().stats.dailies=6;P().lastDaily='';save()`);
+  const sk2=await ev('P().coins');
+  await ev(`enterRoom()`); await sleep(1100);
+  check('opening the daily gift counts it', (await ev('P().stats.dailies'))===7);
+  check('the 7th daily gift gives the Gift Box sticker (+10 gift, +2 sticker), with a message, not a box', (await ev(`P().stickers.includes('daily7')&&document.querySelector('#modal').classList.contains('hidden')`))&&(await ev('P().coins'))===sk2+12, [sk2,await ev('P().coins')]);
+  // a sticker earned in the middle of a game: a short message only
+  await ev(`P().stickers=P().stickers.filter(x=>x!=='click500');P().stats.clicks=Math.max(P().stats.clicks,500);show('fidget');setFidTab('cube')`); await sleep(2600);
+  check('a sticker earned while playing shows a message (no box over the game)', await ev(`P().stickers.includes('click500')&&document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#toast').textContent.includes('Click Click')`));
+  await ev(`show('room')`); await sleep(200);
+  check('a new sticker brings the dot back', await ev(`!document.querySelector('#stkDot').classList.contains('hidden')`));
+  await ev(`P().easy=true;openStickers('room')`); await sleep(200); await shot('D5-stickers-easy');
+  check('Easy mode: big stickers, no hint text on grey ones', await ev(`document.querySelector('#stkPage .stk svg').getBoundingClientRect().width>=104&&[...document.querySelectorAll('#stkPage .stk.locked .sn')].every(e=>getComputedStyle(e).display==='none')`));
+  await ev(`P().easy=false;show('room')`);
+  console.log('Stickers in backups');
+  const skCode=await ev('JSON.stringify(DB)'), skId=await ev('P().id'), skN=await ev('P().stickers.length');
+  const sk117=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.version=10;d.profiles.forEach(p=>{delete p.stickers;delete p.stickerNew;delete p.stats.dailies;});return JSON.stringify(d);})()`);
+  await ev(`doRestore(${JSON.stringify(sk117)})`); await sleep(400);
+  check('a v1.17 backup restores with an empty sticker book', await ev(`DB.version===11&&DB.profiles.every(p=>Array.isArray(p.stickers)&&p.stickers.length===0&&p.stickerNew.length===0&&p.stats.dailies===0)`));
+  await ev(`doRestore(${JSON.stringify(skCode)})`); await sleep(400);
+  check('a v1.18 backup keeps the stickers', await ev(`DB.profiles.find(p=>p.id==='${skId}').stickers.length===${skN}`));
+  await ev(`closeModal();document.querySelector('.pcard[data-id="${skId}"]').click()`); await sleep(1300);
+  const sk3=await ev('P().coins'); await ev(`closeModal()`); await sleep(2200);
+  check('no stickers (or coins) are given again after restoring', (await ev('P().stickers.length'))===skN&&(await ev('P().coins'))===sk3);
+  await ev(`closeModal();show('room')`);
+
   console.log('Phone portrait + other screens');
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
   await send('Emulation.setTouchEmulationEnabled',{enabled:true});
@@ -1103,6 +1166,10 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`show('room');enterDecorate();document.querySelector('[data-dt=season]').click()`); await sleep(200); await shot('C5-phone-seasons');
   check('phone: all 5 Decorate tabs and ✔ Done fit without scrolling', await ev(`(()=>{const t=document.querySelector('#decoTabs'),d=document.querySelector('#decoDone').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&d.right<=innerWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`), await ev(`(()=>{const t=document.querySelector('#decoTabs');return [t.scrollWidth,t.clientWidth,document.querySelector('#decoDone').getBoundingClientRect().right,[...t.children].map(b=>Math.round(b.getBoundingClientRect().height))];})()`));
   await ev(`exitDecorate()`);
+  check('phone: the 📒 Sticker Book button and ⚙️ fit in the room top bar', await ev(`(()=>{const b=document.querySelector('#stkBtn').getBoundingClientRect(),s=document.querySelector('#setBtn').getBoundingClientRect(),t=document.querySelector('#roomTitle').getBoundingClientRect();return b.width>=44&&s.right<=innerWidth&&t.width>=60;})()`));
+  await ev(`openStickers('fidget')`); await sleep(250); await shot('D6-phone-stickers');
+  check('phone: the 6 sticker page tabs fit, and 3 stickers fit across', await ev(`(()=>{const t=document.querySelector('#stkTabs'),g=[...document.querySelectorAll('#stkPage .stk')].slice(0,3).map(b=>b.getBoundingClientRect());return t.scrollWidth<=t.clientWidth&&g[2].top===g[0].top&&g[2].right<=innerWidth;})()`));
+  await ev(`show('room')`);
   await ev(`show('fidget');setFidTab('cube')`); await sleep(300); await shot('B12-phone-cube');
   check('phone: all 6 fidget tabs fit without scrolling', await ev(`(()=>{const t=document.querySelector('#fidTabs');return t.scrollWidth<=t.clientWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`));
   check('phone: the clicker cube fits and its buttons are 48 px or more', await ev(`(()=>{const c=cubeEl.getBoundingClientRect(),s=document.querySelector('.fid-stage').getBoundingClientRect(),b=document.querySelector('#cube .cb-btn').getBoundingClientRect();return c.top>=s.top&&c.bottom<=s.bottom&&c.right<=innerWidth&&b.width>=48;})()`));
