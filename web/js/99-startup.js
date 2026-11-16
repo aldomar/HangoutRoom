@@ -8,8 +8,11 @@ function loop(t){
   if(cur==='stage'&&STG.state!=='pick'&&P()) drawStage(dt); // keeps dancing behind the result box
   if(cur==='fidget'&&P()){
     if(fidTab==='squish') drawSquish(dt);
+    if(fidTab==='slime') drawSlime(dt);
+    if(fidTab==='maze') drawMaze(dt);
     if(fidTab==='spin') drawSpin(dt); else if(humG&&AC) humG.gain.setTargetAtTime(0,AC.currentTime,0.05);
   } else if(humG&&AC) humG.gain.setTargetAtTime(0,AC.currentTime,0.05);
+  mzSensor(cur==='fidget'&&fidTab==='maze'&&!!P()); // the tilt sensor is only used while the maze is on screen
   requestAnimationFrame(loop);
 }
 document.addEventListener('pointerdown',e=>{lastX=e.clientX;lastY=e.clientY;ac();if(DB.settings.music)startMusic();},true);

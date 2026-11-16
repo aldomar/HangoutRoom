@@ -18,8 +18,9 @@ _Last updated: 2026-11-16_
   - **Stage in the Loft + Easy-only labels: done** (v1.12 merged, PR #12; the owner's request, before Code Lab).
   - **Code Lab: done** (v1.13 merged, PR #13). The owner checked it on the device: it all works.
   - **Code Lab: My Move + If levels: done** (v1.14 merged, PR #14). The owner tried it: it worked great.
-  - **Code Lab: 🧠 Challenge level: built, PR open as v1.15** on branch `feature/codelab3` (from `main` after #14).
-    Not yet tried on a device.
+  - **Code Lab: 🧠 Challenge level: done** (v1.15 merged, PR #15).
+  - **New fidgets (🧪 Slime, 🎛️ Clicker cube, 🔮 Marble Maze): built, PR open as v1.16** on branch `feature/fidgets`
+    (from `main` after #15). Not yet tried on a device (tilting needs a real tablet).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -43,7 +44,8 @@ _Last updated: 2026-11-16_
 - PR #12 "Stage in the Loft (v1.12)": merged.
 - PR #13 "Code Lab (v1.13)": merged.
 - PR #14 "Code Lab: My Move + If (v1.14)": merged.
-- PR "Code Lab: Challenge (v1.15)" on branch `feature/codelab3` (from `main` after #14): open.
+- PR #15 "Code Lab: Challenge (v1.15)": merged.
+- PR "New fidgets (v1.16)" on branch `feature/fidgets` (from `main` after #15): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -156,6 +158,21 @@ _Last updated: 2026-11-16_
     when it has puddles; 7 of the 8 answers put 🌟 or ❓ inside My Move; c4's second answer also wins
   - 6 tabs; Challenge shows 8 puzzles and every block; puzzle 1 built by tapping picks up both stars and pays 5;
     all 8 pay 5 each + 10; other levels still pay 3 / 5; backups keep the level; phone portrait and landscape fit
+- **New fidgets (v1.16)**: 408 checks, all passing, no console errors. New checks:
+  - 6 shelf tabs (icons only on a phone, all fit)
+  - Slime: pulling stretches it after the finger and thins the rest; letting go counts one stretch and it snaps back;
+    a quick poke leaves a dent that fills in and isn't a stretch; two fingers stretch both sides (counted once);
+    5 stretches = 1 coin; touching outside does nothing; every design draws
+  - Clicker: buttons go down and up (1 click), the switch flips on and off, the joystick moves and clicks per new
+    direction and springs back, one turn of the ball = 3 clicks, the roller ticks; 25 clicks = 1 coin; every colour
+  - Maze: every maze is 9×6 with one start and one star hole and can be solved (path search); a finger to the right
+    rolls the marble right; the first tilt reading counts as flat; **an autopilot that only sends tilt readings solves
+    all 6 mazes without the marble ever entering a wall**; coins 6×3 + 5, a replay pays 1; ⭐ on solved buttons;
+    Tilt ON/OFF; the sensor is only listened to while the maze is on screen
+  - buying a design of each (owned as `slime:` / `cube:` / `marble:`); a v1.15 backup restores with the new defaults
+    (save version 10); a v1.16 backup keeps solved mazes, designs and counts; phone portrait and landscape layouts
+  - Not tested automatically: how tilting feels on the real tablet, and whether auto-rotate turns the screen
+    while she tilts it (if it does, turn on the tablet's rotation lock, or use 📱 Tilt OFF and a finger).
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -295,6 +312,19 @@ _Last updated: 2026-11-16_
   - Puzzles were designed with a search through every possible program, so none has an easy shortcut.
   - **Coins: 5 per puzzle, +10 for the whole level** (owner's choice; other levels stay 3 / +5). Levels can now set their
     own `coins` and `bonus` in `CODE_LEVELS`. No save shape change. Level tabs show only icons below 760 px wide.
+- New fidgets (agreed 2026-11-16, built as v1.16): all three in one PR, as three more Fidget Shelf tabs (in the new
+  `19-fidgets2.js`). On a phone the 6 tabs show only their icons.
+  - **🧪 Slime:** pull to stretch (one or two fingers), snaps back with a wobble; a quick poke leaves a dent.
+    1 coin per 5 stretches (a pull counts once, however many fingers). Glitter Grape free; Mint Cloud 10, Galaxy Goo 15,
+    Bat Goo 20.
+  - **🎛️ Clicker cube:** 3 buttons, a flip switch, a roller, a joystick and a spinning ball, made of plain buttons
+    (no animation loop). 1 coin per 25 clicks; the roller and ball "tick", and 4 ticks count as 1 click, so fast rolling
+    doesn't earn faster than tapping. Pastel free; Emo Night 10, Soccer 15, Starry 20.
+  - **🔮 Marble Maze:** 6 hand-made mazes (ids `m1`–`m6`), with no traps or timers. Tilt the device (no permission needed);
+    the way it's held when a maze starts counts as flat. A finger held on the board always works too (and is the only
+    way on a computer). The **📱 Tilt ON/OFF** button appears once a tilt sensor is found. +3 per new maze, +1 per replay,
+    +5 once for all 6. Moon Pearl free; Candy Swirl 10, Galaxy 15, Soccer Ball 15.
+  - Save version 10: `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -354,13 +384,16 @@ _Last updated: 2026-11-16_
 10. ~~Pick the next Phase 7 item.~~ Code Lab: My Move + If (v1.14), built (v1.14 PR).
 11. ~~Owner: build v1.14, try the ✨ My Move and ❓ If levels (see the PR), and merge it.~~ Merged; worked great.
 12. ~~Next: a harder Code Lab layer.~~ 🧠 Challenge level built (v1.15 PR).
-13. Owner: build v1.15, try the Challenge puzzles (see the PR), and merge it.
-14. Pick the next Phase 7 item (ideas: Content Pack 2, more Challenge puzzles, new fidgets, a sticker book or a pet).
+13. ~~Owner: build v1.15, try the Challenge puzzles (see the PR), and merge it.~~ Merged.
+14. ~~Pick the next Phase 7 item.~~ New fidgets (v1.16), built (v1.16 PR).
+15. Owner: build v1.16, try the slime, clicker and tilt maze on the tablet (see the PR), and merge it.
+16. Pick the next Phase 7 item (ideas: Content Pack 2, more Challenge puzzles or mazes, a sticker book or a pet).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 9 since v1.13
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 10 since v1.16 (New fidgets:
+  `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
   (Code Lab: `code{level, solved[]}`; v1.14 and v1.15 added level ids only, no new shape). It was 8 in v1.11
   (old swoop hair ids → `swoopBlack` + `look.hairColor`, and `hairc:<colour>` added to `owned`). It was 7 in v1.10
   (Loft + Content Pack 1: `room2` and `fid.popShape`). It was 6 in v1.8

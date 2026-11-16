@@ -4,10 +4,12 @@
    ========================================================= */
 let fidTab='popit';
 function setFidTab(t){
+  if(!FID[t]) t='popit';
   fidTab=t;
   $$('#fidTabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
   $$('.fid').forEach(f=>f.classList.toggle('on',f.id==='fid-'+t));
   if(t==='popit') renderPop();
+  fid2Open(t); // the newer fidgets (section 19)
   renderSkins();
 }
 $('#fidTabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(!b)return;SFX.click();setFidTab(b.dataset.tab);};
@@ -27,7 +29,7 @@ $('#skinRow').onclick=e=>{
   const sb=e.target.closest('[data-shape]');
   if(sb){const p=P(), id=sb.dataset.shape, t=POP_SHAPES[id]; if(t) tryBuy('popshape:'+id,t.price,t.name,()=>{p.fid.popShape=id;save();SFX.click();renderSkins();renderPop();}); return;}
   const b=e.target.closest('[data-skin]'); if(!b) return; const p=P(), F=FID[fidTab], id=b.dataset.skin, t=F.list[id];
-  tryBuy(F.key+':'+id,t.price,t.name,()=>{p.fid[F.key]=id;save();SFX.click();renderSkins();if(fidTab==='popit')renderPop();});
+  tryBuy(F.key+':'+id,t.price,t.name,()=>{p.fid[F.key]=id;save();SFX.click();renderSkins();if(fidTab==='popit')renderPop();fid2Refresh();});
 };
 
 /* ---------- pop-it ---------- */

@@ -71,7 +71,7 @@ stripes, stars, bats), and fidget and squishy toys.
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`.
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`.
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
   optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it.
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
@@ -128,6 +128,7 @@ stripes, stars, bats), and fidget and squishy toys.
   16. `16-room2.js` Cozy Loft, the second room (`loftFurniture`, the `attic` wall)
   17. `17-pack1.js` Content Pack 1 (only adds entries to `CLOSET`, `DECOR`, `WALLS`, `FLOORS`, `SQUISHIES`, `SPINS`, `POP_SHAPES`, `CARD_TAGS`)
   18. `18-codelab.js` Code Lab (`CODE_PUZZLES`, `CODE_LEVELS`, `codeSim`, `clOpen`, `clGo`)
+  19. `19-fidgets2.js` New fidgets: slime (`SLIMES`, `drawSlime`), clicker cube (`CUBES`, `renderCube`), marble maze (`MAZES`, `MARBLES`, `drawMaze`, `mzSensor`)
   99. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -163,6 +164,12 @@ stripes, stars, bats), and fidget and squishy toys.
   arrow = hop a puddle if one is next (since v1.14). The smoke test also proves My Move puzzles need ✨ and If puzzles need ❓,
   and every Challenge puzzle (since v1.15, ids `c1`…) needs ✨ (and ❓ when it has puddles). A level may set its own `coins`/`bonus`. `codeSim()` holds the rules with no drawing; the board is SVG moved by CSS transitions (nothing in the main loop).
   Puzzle ids (`e1`, `m1`, `h1`, `f1`, `i1` …) and level ids (`easy medium hard move if challenge`) are saved in `code.solved`: never rename them. Add new puzzles at the end of a level.
+- New fidgets (since v1.16): three more Fidget Shelf tabs added through `FID` (designs owned as `slime:<id>`, `cube:<id>`,
+  `marble:<id>`). `setFidTab` calls `fid2Open()`. The slime and the maze are drawn by the main loop only on their tab;
+  the clicker cube is plain buttons (no loop). The maze listens to `deviceorientation` only while its tab is on screen
+  (`mzSensor`), takes how the device is held at the start of a maze as flat, and turns the reading with the screen.
+  A finger on the board always works too. Maze ids (`m1`…) are saved in `maze.solved`: never rename them; add new
+  mazes at the end (all mazes are 9×6 text maps: `#` wall, `S` start, `G` star hole, `o` bumper).
 - Every room area is open. To add a locked area for a future feature, put it in `LOCKED` and `handleHot()`.
 - `android/`: Gradle project; `app/src/main/java/com/family/hangoutroom/MainActivity.kt`; `android/README.md` has build/sideload steps.
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.
@@ -173,6 +180,7 @@ stripes, stars, bats), and fidget and squishy toys.
   Soccer: +1 / +2 / +3 per goal (Easy / Medium / Hard), +1 more per goal with 2+ soccer clothes on, +5 for 5/5.
   Stage: 2 / 3 / 4 coins per star (Easy / Medium / Hard), 1–3 stars per song; no stars (and no coins) without a hit.
   Code Lab: +3 per puzzle the first time it is solved, +5 when every puzzle of a level is solved (Challenge: +5 and +10).
+  Fidgets (v1.16): 1 per 5 slime stretches, 1 per 25 clicker clicks, Marble Maze +3 per new maze, +1 per replay, +5 once for all.
   Item prices are 0–40. Keep earning steady and fair.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).
   A new decoration = one entry in `DECOR` with `{name, price, box, d()}` (plus `flat:1` for rugs, `wall:1` for wall items).

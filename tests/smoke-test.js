@@ -140,7 +140,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`doRestore(${JSON.stringify(code)})`); await sleep(800);
   check('restore brings back 2 drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2);
   check('artwork not saved into localStorage', await ev(`!JSON.parse(localStorage.getItem('hangoutRoom.v1')).artwork`));
-  check('DB version is DB_VERSION (9)', (await ev('DB.version'))===9);
+  check('DB version is DB_VERSION (10)', (await ev('DB.version'))===10);
   await ev(`doRestore(${JSON.stringify(oldCode)})`); await sleep(800);
   check('old backup restores and keeps drawings', (await ev(`ArtStore.all().then(l=>l.length)`))===2 && (await ev('DB.profiles.length'))===1);
   await ev(`DB.settings.backupArt=false;backupModal()`); await sleep(400);
@@ -781,7 +781,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const v112Code=await ev(`JSON.stringify(Object.assign({},DB,{version:8,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.code;return q;})}))`);
   const clCode=await ev('JSON.stringify(DB)');
   await ev(`doRestore(${JSON.stringify(v112Code)})`); await sleep(400);
-  check('a v1.12 backup (no Code Lab) restores with nothing solved', await ev(`DB.version===9&&DB.profiles[0].code.level==='easy'&&DB.profiles[0].code.solved.length===0`));
+  check('a v1.12 backup (no Code Lab) restores with nothing solved', await ev(`DB.version===DB_VERSION&&DB.profiles[0].code.level==='easy'&&DB.profiles[0].code.solved.length===0`));
   await ev(`doRestore(${JSON.stringify(clCode)})`); await sleep(400);
   check('a v1.13 backup keeps solved puzzles', await ev(`DB.profiles[0].code.solved.includes('h4')&&DB.profiles[0].code.solved.length===8`));
   await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal();show('room')`);
@@ -888,6 +888,140 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('a v1.15 backup keeps the Challenge level and its solved puzzles', await ev(`DB.profiles[0].code.level==='challenge'&&DB.profiles[0].code.solved.includes('c8')`));
   await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal();show('room')`);
 
+  console.log('New fidgets (v1.16): slime, clicker cube, marble maze');
+  await ev(`closeModal();show('fidget');setFidTab('slime')`); await sleep(400);
+  check('the Fidget Shelf has 6 tabs', await ev(`document.querySelectorAll('#fidTabs .tab').length===6`));
+  // sl(type,id,x,y) touches the slime at x,y in units of its size, from its resting middle
+  await ev(`window.sl=(t,id,x,y)=>{const r=slc.getBoundingClientRect(),g=SL.geo;slc.dispatchEvent(new PointerEvent(t,{pointerId:id,bubbles:true,clientX:r.left+g.cx+x*g.R,clientY:r.top+g.cy+y*g.R}));}`);
+  const fzslPull=async(id,x0,x1)=>{await ev(`sl('pointerdown',${id},${x0},0)`);for(let k=1;k<=6;k++){await ev(`sl('pointermove',${id},${x0+(x1-x0)*k/6},0)`);await sleep(30);}};
+  const slSt0=await ev('P().stats.stretches'), fzsc0=await ev('P().coins');
+  check('a new fidget starts with no stretches', slSt0===0, slSt0);
+  await fzslPull(51,0.5,2.2); await sleep(500);
+  check('pulling stretches the slime out after the finger', await ev(`Math.max(...SL.pts.map(q=>q.x))>1.8`), await ev(`Math.max(...SL.pts.map(q=>q.x))`));
+  check('...and the rest of it gets thinner', await ev(`SL.pts[Math.round(SL.N*3/4)].y>-0.58`), await ev(`SL.pts[Math.round(SL.N*3/4)].y`));
+  await shot('B1-slime-stretch');
+  await ev(`sl('pointerup',51,2.2,0)`); await sleep(100);
+  check('letting go counts one stretch', (await ev('P().stats.stretches'))===1);
+  await sleep(1600);
+  check('it snaps back to a round blob', await ev(`Math.max(...SL.pts.map(q=>q.x))<1.15`), await ev(`Math.max(...SL.pts.map(q=>q.x))`));
+  await ev(`sl('pointerdown',52,-0.2,-0.2)`); await sleep(40); await ev(`sl('pointerup',52,-0.2,-0.2)`); await sleep(80);
+  check('a quick poke leaves a dimple', await ev('SL.dimples.length===1'));
+  check('a poke is not a stretch', (await ev('P().stats.stretches'))===1);
+  await shot('B2-slime-poke');
+  await sleep(1600); check('the dimple fills back in', await ev('SL.dimples.length===0'));
+  await ev(`sl('pointerdown',53,-0.5,0);sl('pointerdown',54,0.5,0)`);
+  for(let k=1;k<=6;k++){await ev(`sl('pointermove',53,${-0.5-k*0.25},0);sl('pointermove',54,${0.5+k*0.25},0)`);await sleep(30);}
+  await sleep(400); await shot('B3-slime-two-fingers');
+  check('two fingers stretch both sides', await ev(`Math.max(...SL.pts.map(q=>q.x))>1.5&&Math.min(...SL.pts.map(q=>q.x))<-1.5`));
+  await ev(`sl('pointerup',53,-2,0)`); await sleep(40); await ev(`sl('pointerup',54,2,0)`); await sleep(100);
+  check('a two-finger stretch counts once', (await ev('P().stats.stretches'))===2);
+  for(let i=0;i<3;i++){await fzslPull(55,0.3,1.4);await ev(`sl('pointerup',55,1.4,0)`);await sleep(80);}
+  check('5 stretches pay 1 coin', (await ev('P().stats.stretches'))===5&&(await ev('P().coins'))===fzsc0+1, [await ev('P().stats.stretches'),await ev('P().coins')-fzsc0]);
+  await ev(`slc.dispatchEvent(new PointerEvent('pointerdown',{pointerId:56,bubbles:true,clientX:slc.getBoundingClientRect().left+4,clientY:slc.getBoundingClientRect().top+4}))`);
+  check('touching outside the slime does nothing', await ev('SL.touches.size===0'));
+  for(const k of await ev('Object.keys(SLIMES)')){await ev(`P().fid.slime='${k}'`);await fzslPull(57,0.4,1.6);await sleep(300);await shot('B4-slime-'+k);await ev(`sl('pointerup',57,1.6,0)`);await sleep(60);}
+  check('every slime design draws', await ev(`cur==='fidget'&&fidTab==='slime'`));
+  await ev(`P().fid.slime='grape'`);
+
+  await ev(`setFidTab('cube')`); await sleep(300); await shot('B5-cube');
+  const fzcb=sel=>`document.querySelector('#cube ${sel}')`;
+  await ev(`window.cbp=(el,t,x,y,id)=>{const r=el.getBoundingClientRect();el.dispatchEvent(new PointerEvent(t,{pointerId:id||61,bubbles:true,clientX:r.left+r.width/2+(x||0),clientY:r.top+r.height/2+(y||0)}));}`);
+  check('clicker cube: buttons are big enough to tap', await ev(`[...document.querySelectorAll('#cube .cb-btn')].every(b=>b.getBoundingClientRect().width>=48)`), await ev(`${fzcb('.cb-btn')}.getBoundingClientRect().width`));
+  check('the cube fits in the shelf', await ev(`(()=>{const c=document.querySelector('#cube').getBoundingClientRect(),s=document.querySelector('.fid-stage').getBoundingClientRect();return c.top>=s.top&&c.bottom<=s.bottom&&c.left>=s.left&&c.right<=s.right;})()`));
+  const fzk0=await ev('P().stats.clicks'), fzkc0=await ev('P().coins');
+  await ev(`cbp(${fzcb('.cb-btn')},'pointerdown')`);
+  check('a button goes down when pressed', await ev(`${fzcb('.cb-btn')}.classList.contains('down')`));
+  await ev(`cbp(${fzcb('.cb-btn')},'pointerup')`);
+  check('...and comes back up: 1 click', await ev(`!${fzcb('.cb-btn')}.classList.contains('down')&&P().stats.clicks===${fzk0}+1`));
+  await ev(`cbp(${fzcb('.cb-sw')},'pointerdown');cbp(${fzcb('.cb-sw')},'pointerup')`);
+  check('the switch flips on (1 click)', await ev(`${fzcb('.cb-sw')}.classList.contains('on')&&P().stats.clicks===${fzk0}+2`));
+  await ev(`cbp(${fzcb('.cb-sw')},'pointerdown');cbp(${fzcb('.cb-sw')},'pointerup')`);
+  check('...and off again', await ev(`!${fzcb('.cb-sw')}.classList.contains('on')&&P().stats.clicks===${fzk0}+3`));
+  await ev(`{const j=${fzcb('.cb-joy')};cbp(j,'pointerdown');cbp(j,'pointermove',60,0);}`); await sleep(50);
+  check('pushing the joystick moves the knob and clicks', await ev(`${fzcb('.cb-joy i')}.style.transform.includes('translate')&&P().stats.clicks===${fzk0}+4`));
+  await ev(`{const j=${fzcb('.cb-joy')};cbp(j,'pointermove',0,-60);cbp(j,'pointerup',0,-60)}`);
+  check('a new direction clicks again, and letting go springs back', await ev(`${fzcb('.cb-joy i')}.style.transform===''&&P().stats.clicks===${fzk0}+5`));
+  await ev(`(()=>{const b=${fzcb('.cb-ball')};cbp(b,'pointerdown',40,0);for(let i=1;i<=24;i++){const a=i/24*Math.PI*2;cbp(b,'pointermove',Math.cos(a)*40,Math.sin(a)*40);}cbp(b,'pointerup',40,0);})()`);
+  check('one turn of the ball: 12 ticks = 3 clicks', (await ev('P().stats.clicks'))===fzk0+8, await ev(`P().stats.clicks-${fzk0}`));
+  await ev(`(()=>{const r=${fzcb('.cb-roll')};cbp(r,'pointerdown');for(let i=1;i<=16;i++)cbp(r,'pointermove',0,i*parseFloat(cubeEl.style.fontSize));cbp(r,'pointerup',0,0);})()`);
+  check('rolling the roller ticks (16 ticks = 4 clicks)', (await ev('P().stats.clicks'))===fzk0+12, await ev(`P().stats.clicks-${fzk0}`));
+  await ev(`(()=>{const b=document.querySelectorAll('#cube .cb-btn')[1];for(let i=0;i<13;i++){cbp(b,'pointerdown');cbp(b,'pointerup');}})()`);
+  check('25 clicks pay 1 coin', (await ev('P().stats.clicks'))===fzk0+25&&(await ev('P().coins'))===fzkc0+1, [await ev(`P().stats.clicks-${fzk0}`),await ev(`P().coins-${fzkc0}`)]);
+  for(const k of await ev('Object.keys(CUBES)')){await ev(`P().fid.cube='${k}';renderCube()`);await sleep(80);await shot('B6-cube-'+k);}
+  check('every cube colour draws', await ev(`getComputedStyle(cubeEl).getPropertyValue('--f').trim()===CUBES.star.face`));
+  await ev(`P().fid.cube='pastel';renderCube()`);
+
+  await ev(`setFidTab('maze')`); await sleep(300); await shot('B7-maze');
+  check('the maze screen shows 6 maze buttons', await ev(`document.querySelectorAll('#mazeBar [data-mz]').length===6`));
+  check('the tilt sensor is listened to only while the maze is on screen', await ev('MZ.listening'));
+  // a path search over each maze: one start, one star hole, all 9 x 6, and the star can be reached
+  await ev(`window.mzPath=i=>{const m=MAZES[i].map,R=m.length,C=m[0].length,key=(c,r)=>r*C+c;let s,g;m.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch==='S')s=[c,r];if(ch==='G')g=[c,r];}));
+    const prev={};prev[key(...s)]=-1;const q=[s];while(q.length){const [c,r]=q.shift();for(const [dc,dr] of [[1,0],[-1,0],[0,1],[0,-1]]){const nc=c+dc,nr=r+dr;if(nc<0||nr<0||nc>=C||nr>=R||'#o'.includes(m[nr][nc]))continue;const k=key(nc,nr);if(k in prev)continue;prev[k]=key(c,r);q.push([nc,nr]);}}
+    const path=[];let k=key(...g);if(!(k in prev))return [];while(k!==-1){path.unshift([k%C+0.5,Math.floor(k/C)+0.5]);k=prev[k];}return path;}`);
+  check('every maze is 9 x 6 with one start and one star hole', await ev(`MAZES.every(z=>z.map.length===6&&z.map.every(r=>r.length===9)&&z.map.join('').split('S').length===2&&z.map.join('').split('G').length===2)`));
+  check('every maze can be solved', await ev(`MAZES.every((z,i)=>mzPath(i).length>4)`));
+  check('maze ids are unique', await ev(`new Set(MAZES.map(z=>z.id)).size===MAZES.length`));
+  check('no tilt button until a tilt sensor is found', await ev(`!document.querySelector('#mzTilt')`));
+  const fzx0=await ev('MZ.x');
+  await ev(`(()=>{const r=mzc.getBoundingClientRect(),G=MZ.geo;mzc.dispatchEvent(new PointerEvent('pointerdown',{pointerId:71,bubbles:true,clientX:r.left+G.mx+G.short*0.4,clientY:r.top+G.my-G.short*0.4}));})()`);
+  await sleep(500); await shot('B8-maze-finger');
+  check('holding a finger to the right rolls the marble right', await ev(`MZ.x>${fzx0}+0.3&&MZ.vx>0`), await ev('MZ.x'));
+  await ev(`mzc.dispatchEvent(new PointerEvent('pointerup',{pointerId:71,bubbles:true}))`);
+  check('letting go stops the push', await ev('MZ.fing===null'));
+  await ev(`window.dispatchEvent(new DeviceOrientationEvent('deviceorientation',{alpha:0,beta:30,gamma:0}))`); await sleep(50);
+  check('a tilt reading shows the 📱 Tilt button', await ev(`!!document.querySelector('#mzTilt')&&MZ.tilt.seen`));
+  await ev(`window.dispatchEvent(new DeviceOrientationEvent('deviceorientation',{alpha:0,beta:30,gamma:-25}))`); await sleep(30);
+  check('how she held it at first counts as flat; tilting left pushes left', await ev(`MZ.tilt.x===-1&&MZ.tilt.y===0`), await ev('JSON.stringify(MZ.tilt)'));
+  // autopilot: follows the path by sending tilt readings (like a real tablet would), checking the marble never enters a wall
+  await ev(`window.mzAuto=()=>new Promise(res=>{const path=mzPath(MZ.i);let k=1,bad=0,n=0;const send=(x,y)=>window.dispatchEvent(new DeviceOrientationEvent('deviceorientation',{alpha:0,beta:y,gamma:x}));
+    const iv=setInterval(()=>{n++;if(mzCell(Math.floor(MZ.x),Math.floor(MZ.y))==='#')bad++;
+      if(!document.querySelector('#modal').classList.contains('hidden')||n>900){clearInterval(iv);res({bad,n,done:MZ.done});return;}
+      if(!MZ.tilt.base){send(0,0);return;}
+      const t=path[k];let dx=t[0]-MZ.x,dy=t[1]-MZ.y;const d=Math.hypot(dx,dy);if(d<0.3&&k<path.length-1){k++;return;}
+      const s=Math.min(2.5,d*3+0.4);const ax=(dx/(d||1)*s-MZ.vx)*6,ay=(dy/(d||1)*s-MZ.vy)*6;
+      send(clamp(ax/MZ_ACC,-1,1)*MZ_TILT,clamp(ay/MZ_ACC,-1,1)*MZ_TILT);},30);})`);
+  const fzmc0=await ev('P().coins');
+  for(let i=0;i<6;i++){
+    await ev(`closeModal();mzStart(${i})`);
+    const r=await ev('mzAuto()');
+    check(`maze ${i+1} solved by tilting, never inside a wall`, r.done&&r.bad===0&&(await ev(`P().maze.solved.includes(MAZES[${i}].id)`)), r);
+    if(i===3) await shot('B9-maze-bumpers-done');
+  }
+  await sleep(900);
+  check('each new maze pays 3, and all 6 pay 5 more', (await ev('P().coins'))===fzmc0+6*3+5, await ev(`P().coins-${fzmc0}`));
+  check('the done box offers Again and Next', (await ev(`document.querySelector('#modalBtns').textContent`)).includes('Again'));
+  await shot('B10-maze-done');
+  await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(100);
+  check('after the last maze, Next goes back to maze 1', await ev(`MZ.i===0&&!MZ.done`));
+  const fzrc0=await ev('P().coins'); const fzrr=await ev('mzAuto()'); await sleep(300);
+  check('a replay pays 1', fzrr.done&&(await ev('P().coins'))===fzrc0+1&&(await ev('P().stats.mazes'))===7, [fzrr,await ev(`P().coins-${fzrc0}`)]);
+  check('solved mazes get a ⭐ on their button', await ev(`[...document.querySelectorAll('#mazeBar [data-mz]')].every(b=>b.textContent.includes('⭐'))`));
+  await ev(`closeModal();document.querySelector('#mzTilt').click()`);
+  check('the Tilt button turns tilt off', await ev(`!MZ.tilt.on&&document.querySelector('#mzTilt').textContent.includes('OFF')`));
+  await ev(`window.dispatchEvent(new DeviceOrientationEvent('deviceorientation',{alpha:0,beta:0,gamma:30}));document.querySelector('#mzTilt').click()`);
+  check('...and on again', await ev(`MZ.tilt.on`));
+  for(const k of await ev('Object.keys(MARBLES)')){await ev(`P().fid.marble='${k}';mzStart(4)`);await sleep(150);await shot('B11-marble-'+k);}
+  await ev(`P().fid.marble='pearl';setFidTab('popit')`); await sleep(100);
+  check('leaving the maze stops listening to the tilt sensor', await ev('!MZ.listening'));
+
+  console.log('New fidgets: buying designs, backups');
+  await ev(`P().coins+=100;updateCoins();setFidTab('slime')`);
+  const fzbc0=await ev('P().coins');
+  for(const [tab,id,key] of [['slime','mint','slime'],['cube','emo','cube'],['maze','galaxy','marble']]){
+    await ev(`setFidTab('${tab}');document.querySelector('#skinRow [data-skin=${id}]').click()`); await sleep(100);
+    await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(100);
+    check(`buying the ${id} ${tab} owns it as ${key}:${id} and uses it`, await ev(`P().owned.includes('${key}:${id}')&&P().fid.${key}==='${id}'`));
+  }
+  check('the three designs cost 10 + 10 + 15', (await ev('P().coins'))===fzbc0-35, await ev(`${fzbc0}-P().coins`));
+  check('a bought cube colour shows straight away', await ev(`getComputedStyle(cubeEl).getPropertyValue('--f').trim()===CUBES.emo.face`));
+  const fzfCode=await ev('JSON.stringify(DB)');
+  const fzv115=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.version=9;d.profiles.forEach(p=>{delete p.maze;['slime','cube','marble'].forEach(k=>delete p.fid[k]);['stretches','clicks','mazes'].forEach(k=>delete p.stats[k]);p.owned=p.owned.filter(o=>!/^(slime|cube|marble):/.test(o));});return JSON.stringify(d);})()`);
+  await ev(`doRestore(${JSON.stringify(fzv115)})`); await sleep(400);
+  check('a v1.15 backup restores with the new fidgets at their defaults', await ev(`DB.version===10&&DB.profiles.every(p=>Array.isArray(p.maze.solved)&&p.maze.solved.length===0&&p.fid.slime==='grape'&&p.fid.cube==='pastel'&&p.fid.marble==='pearl'&&p.stats.clicks===0)`));
+  await ev(`doRestore(${JSON.stringify(fzfCode)})`); await sleep(400);
+  check('a v1.16 backup keeps solved mazes, designs and counts', await ev(`(()=>{const p=DB.profiles.find(q=>q.maze.solved.length===6);return !!p&&p.fid.slime==='mint'&&p.owned.includes('marble:galaxy')&&p.stats.stretches>=5&&p.stats.clicks>=25;})()`));
+  await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal();show('room')`);
+
   console.log('Phone portrait + other screens');
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
   await send('Emulation.setTouchEmulationEnabled',{enabled:true});
@@ -914,6 +1048,12 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('phone: My Move puzzle shows both rows, the board and ▶️ Run', await ev(`(()=>{const r=document.querySelector('#clRun').getBoundingClientRect(),m=document.querySelector('#clMove').getBoundingClientRect(),b=document.querySelector('#clBoard').getBoundingClientRect();return r.bottom<=innerHeight&&m.height>40&&b.height>120;})()`));
   await ev(`show('room')`); await sleep(200); await shot('A10-phone-room-topbar');
   check('phone: the Loft button fits in the top bar', await ev(`(()=>{const r=document.querySelector('#roomGo').getBoundingClientRect(), d=document.querySelector('#setBtn').getBoundingClientRect();return r.width>=48&&d.right<=innerWidth;})()`));
+  await ev(`show('fidget');setFidTab('cube')`); await sleep(300); await shot('B12-phone-cube');
+  check('phone: all 6 fidget tabs fit without scrolling', await ev(`(()=>{const t=document.querySelector('#fidTabs');return t.scrollWidth<=t.clientWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`));
+  check('phone: the clicker cube fits and its buttons are 48 px or more', await ev(`(()=>{const c=cubeEl.getBoundingClientRect(),s=document.querySelector('.fid-stage').getBoundingClientRect(),b=document.querySelector('#cube .cb-btn').getBoundingClientRect();return c.top>=s.top&&c.bottom<=s.bottom&&c.right<=innerWidth&&b.width>=48;})()`));
+  await ev(`setFidTab('maze')`); await sleep(300); await shot('B13-phone-maze');
+  check('phone: the maze board is big enough to play', await ev('MZ.geo.cs>=36'), await ev('MZ.geo.cs'));
+  await ev(`setFidTab('slime')`); await sleep(300); await shot('B14-phone-slime');
   await ev(`show('art')`); await sleep(200);
   await send('Emulation.setDeviceMetricsOverride',{width:860,height:412,deviceScaleFactor:1,mobile:true});
   await ev(`setArtView('pad')`); await sleep(300); await shot('11-phone-landscape');
@@ -928,13 +1068,19 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('landscape: Challenge puzzle fits with ▶️ Run on screen', await ev(`(()=>{const r=document.querySelector('#clRun').getBoundingClientRect(),b=document.querySelector('#clBoard').getBoundingClientRect();return r.bottom<=innerHeight&&r.right<=innerWidth&&b.height>120;})()`));
   await ev(`clOpen('move',4);CL.move=[...'2R2U'];CL.prog=['2','M'];clProg()`); await sleep(200); await shot('A37-phone-landscape-mymove');
   check('landscape: My Move puzzle shows both rows and ▶️ Run', await ev(`(()=>{const r=document.querySelector('#clRun').getBoundingClientRect(),m=document.querySelector('#clMove').getBoundingClientRect();return r.bottom<=innerHeight&&r.right<=innerWidth&&m.height>40;})()`));
+  await ev(`show('fidget');setFidTab('cube')`); await sleep(300); await shot('B15-landscape-cube');
+  check('landscape: all 6 fidget tabs fit without scrolling', await ev(`(()=>{const t=document.querySelector('#fidTabs');return t.scrollWidth<=t.clientWidth;})()`));
+  check('landscape: the clicker cube fits and its buttons are 48 px or more', await ev(`(()=>{const c=cubeEl.getBoundingClientRect(),s=document.querySelector('.fid-stage').getBoundingClientRect(),b=document.querySelector('#cube .cb-btn').getBoundingClientRect();return c.top>=s.top&&c.bottom<=s.bottom&&c.right<=innerWidth&&b.width>=48;})()`));
+  await ev(`setFidTab('maze')`); await sleep(300); await shot('B16-landscape-maze');
+  check('landscape: the maze board is big enough to play', await ev('MZ.geo.cs>=24'), await ev('MZ.geo.cs'));
+  await ev(`setFidTab('slime')`); await sleep(300); await shot('B17-landscape-slime');
   await ev(`show('art')`);
 
   console.log('Every other screen (tablet size)');
   await send('Emulation.setTouchEmulationEnabled',{enabled:false});
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   await ev(`show('room')`); await sleep(250);
-  for(const t of ['popit','squish','spin']){await ev(`show('fidget');setFidTab('${t}')`);await sleep(400);await shot('12-fidget-'+t);}
+  for(const t of ['popit','squish','spin','slime','cube','maze']){await ev(`show('fidget');setFidTab('${t}')`);await sleep(400);await shot('12-fidget-'+t);}
   check('fidget shelf shown', await ev(`cur==='fidget'`));
   const cats=await ev(`Object.keys(CLOSET)`);
   await ev(`show('closet')`);

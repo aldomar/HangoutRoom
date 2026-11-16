@@ -72,14 +72,20 @@
     <div class="coins coinsDisp"></div>
   </div>
   <div class="tabs" id="fidTabs" style="background:var(--panel);justify-content:center">
-    <button class="tab on" data-tab="popit">🫧 Pop-it</button>
-    <button class="tab" data-tab="squish">🍡 Squishy</button>
-    <button class="tab" data-tab="spin">🌀 Spinner</button>
+    <button class="tab on" data-tab="popit">🫧<span> Pop-it</span></button>
+    <button class="tab" data-tab="squish">🍡<span> Squishy</span></button>
+    <button class="tab" data-tab="spin">🌀<span> Spinner</span></button>
+    <button class="tab" data-tab="slime">🧪<span> Slime</span></button>
+    <button class="tab" data-tab="cube">🎛️<span> Clicker</span></button>
+    <button class="tab" data-tab="maze">🔮<span> Maze</span></button>
   </div>
   <div class="fid-stage">
     <div id="fid-popit" class="fid on"><div id="popBoard" class="popboard"></div><div class="fid-tip">Pop them all to flip it over! (swipe works too)</div></div>
     <div id="fid-squish" class="fid"><canvas id="squishCv"></canvas><div class="fid-tip">Squish it anywhere (try two fingers!)… then watch it slowly rise</div></div>
     <div id="fid-spin" class="fid"><canvas id="spinCv"></canvas><div id="rpm" class="rpm"></div><div class="fid-tip">Flick it around to spin!</div></div>
+    <div id="fid-slime" class="fid"><canvas id="slimeCv"></canvas><div class="fid-tip">Grab it and pull! (try two fingers) Tap it for a little poke</div></div>
+    <div id="fid-cube" class="fid"><div id="cube" class="cube"></div><div class="fid-tip">Click, flip, roll, wiggle and spin!</div></div>
+    <div id="fid-maze" class="fid"><div id="mazeBar" class="tabs mz-bar"></div><canvas id="mazeCv"></canvas><div class="fid-tip">Tilt to roll the marble into the ⭐ (or hold a finger where it should roll)</div></div>
   </div>
   <div class="skins" id="skinRow"></div>
 </div>
@@ -275,6 +281,7 @@
 <script src="web/js/16-room2.js"></script>
 <script src="web/js/17-pack1.js"></script>
 <script src="web/js/18-codelab.js"></script>
+<script src="web/js/19-fidgets2.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>
