@@ -26,7 +26,8 @@ function normalize(p){
   p.room=Object.assign({wall:'lavender',floor:'wood',items:[]},p.room||{});
   // The Cozy Loft (v1.10), a second room with its own wall, floor and decorations. My Stuff is shared between rooms.
   p.room2=Object.assign({wall:'attic',floor:'wood',items:[]},p.room2&&typeof p.room2==='object'?p.room2:{});
-  [p.room,p.room2].forEach(r=>{if(!Array.isArray(r.items))r.items=[];r.items=r.items.filter(i=>i&&typeof i==='object');});
+  p.room3=Object.assign({wall:'picket',floor:'grass',items:[]},p.room3&&typeof p.room3==='object'?p.room3:{}); // the Backyard (v1.23)
+  [p.room,p.room2,p.room3].forEach(r=>{if(!Array.isArray(r.items))r.items=[];r.items=r.items.filter(i=>i&&typeof i==='object');});
   p.fid=Object.assign({pop:'rainbow',squish:'mochi',spin:'galaxy',popShape:'classic',slime:'grape',cube:'pastel',marble:'pearl'},p.fid||{}); // popShape: v1.10; slime, cube, marble: v1.16
   // Marble Maze (v1.16): the ids of the mazes solved (each pays +3 once).
   p.maze=Object.assign({},p.maze&&typeof p.maze==='object'&&!Array.isArray(p.maze)?p.maze:{});

@@ -30,6 +30,19 @@ Every room has a second room upstairs: tap **🪜 Loft** at the top of the room 
 The Loft has its own wall, floor and decorations. Things put away in **My Stuff** (🛋️ Decorate) can be placed
 in either room.
 
+## The Backyard (since version 1.23)
+A third room, outside: tap **🌳 Yard** at the top of the room screen. The top bar always has one button for each of
+the other two rooms (on a phone, just their icons), and Back goes to her first room.
+- A sky that shows the season (falling leaves, snow, blossoms or butterflies), a big tree with a swing, a garden shed
+  and a chalkboard easel (it becomes Brain Games in a later update).
+- **Tap the soccer goal to play Soccer** (the same game as the window in her room).
+- In 🛋️ Decorate, the Walls and Floors tabs show **fences** (White Picket free; Garden Hedge, Stone Wall, Rainbow Fence,
+  Bat Night Fence) and **ground** (Grass free; Flower Meadow, Sandy Beach, Stepping Stones, Soccer Stripes). Indoor
+  wallpaper stays indoors. The 🎨 Colours tab paints the shed and the chalkboard.
+- **8 outdoor things** in the Shop (listed first in the Backyard): Trampoline, Slide, Sandbox, Kiddie Pool, Camping Tent,
+  Picnic Blanket, Birdhouse and String Lights. They can go in any room.
+- 2 new stickers: 🌳 Yard Life (5 things in the Backyard) and 🏕️ Happy Camper (3 outdoor things).
+
 ## Where things are
 In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
 (🎨 Art Desk) and the wardrobe (👗 Closet). In the Cozy Loft: the glowing **🎤 Stage** sign (since version 1.12)

@@ -73,7 +73,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`.
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard).
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
   optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it.
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
@@ -140,6 +140,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   24. `24-pack2.js` Content Pack 2 (dinosaurs, space, vehicles, robots/sharks/heroes; only adds entries, each with `p2:<theme>`;
       `p2Have` counts a theme for its 4 stickers)
   25. `25-about.js` About & Gift Story (`ABOUT_DEFAULT`, `GIFT_TIMELINE`, `aboutData`, `renderAbout`, `whatsNew`)
+  26. `26-backyard.js` Backyard, the third room (`YARD_FENCES`, `yardBack`, `yardFurniture`, `yardSeason`, outdoor `DECOR`)
   99. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -165,9 +166,16 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   Old swoop ids (`swoopPurple` …) live on in `LEGACY_HAIR`; always read hair through `hairIds(look)`.
 - Shelves (since v1.11): a wall decoration with `shelf:{w, top}`. Dropped items snap onto a shelf top, and dragging a
   shelf carries its riders (`onShelf`, `snapToShelf` in 09). The room draws flat items, then wall items, then standing items.
-- Two rooms (since v1.10): `roomNo` (1 = `p.room`, 2 = `p.room2`), `curRoom(p)` for the room on screen and `allItems(p)` for
-  both. My Stuff (items with `placed:false`) is shared between rooms; placing a stored item moves it into the room on screen.
-  New code that adds or finds room items must use these, not `p.room` directly (prizes like trophies still go to `p.room`).
+- Three rooms (Loft since v1.10, Backyard since v1.23): `roomNo` (1 = `p.room`, 2 = `p.room2`, 3 = `p.room3`), `curRoom(p)` for
+  the room on screen, `rooms(p)` for all three and `allItems(p)` for every item. My Stuff (items with `placed:false`) is shared
+  between rooms; placing a stored item moves it into the room on screen. New code that adds or finds room items must use
+  these, not `p.room` directly (prizes like trophies still go to `p.room`). The top bar has two buttons (`#roomGo`,
+  `#roomGo2`), one for each of the other rooms; Back goes Loft/Backyard → room → profiles.
+- Backyard (since v1.23, `26-backyard.js`): `yardBack()` draws the sky, the season and the fence; `yardFurniture()` the
+  tree, the `data-hot="goal"` soccer goal (opens Soccer), the shed and the chalkboard easel (Brain Games will use it).
+  Fences and grounds are `WALLS`/`FLOORS` entries with `yard:1`: Decorate lists them only in the Backyard and lists
+  indoor ones only indoors (the Seasons tab shows no walls there). A fence is drawn by `YARD_FENCES[id]()`, so a new
+  fence needs one there too. Outdoor decorations have `yard:1` (allowed in any room, listed first in the Backyard's Shop).
 - Code Lab (since v1.13): the Loft's computer desk (`data-hot="code"`). Puzzles are text recipes in `CODE_PUZZLES`
   (map rows: `.` floor, `F` Fuzzy, `C` carrot, `*` star, `#` toy block, `~` puddle; `max` blocks; `sol` = one answer, which the smoke
   test runs; `move` = the ✨ My Move row of that answer). Blocks: arrows `UDLR`, repeats `2 3 4`, `S` pick up a star,
@@ -207,7 +215,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   on `<body>`. New CSS should use these variables instead of the raw pink/purple hex values, so it tints too.
 - Furniture colours (since v1.20): `furniture()` and `loftFurniture()` take the built-in pieces' colours from
   `furnC(piece)` (classic colours when `p.furn[piece]` is missing or unknown). A new built-in piece that should be
-  recolourable gets a `FURN_PIECES` entry. Piece ids (`desk closet shelf curtain desk2 beams window2 lamp`) and colour ids
+  recolourable gets a `FURN_PIECES` entry. Piece ids (`desk closet shelf curtain desk2 beams window2 lamp shed easel`) and colour ids
   are saved: never rename them.
 - About (since v1.22): ⚙️ Settings → 💌 About (`scr-about`). The personal words (nicknames, letter, secret, per-version
   `why` lines) are in `web/about-local.js`, which is **git-ignored and must never be committed, read into a PR, or

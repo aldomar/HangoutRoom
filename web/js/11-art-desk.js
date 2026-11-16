@@ -257,7 +257,7 @@ function hangArt(r){
   ART_THUMBS[r.id]=r.thumb; save(); SFX.buy(); toast(R===p.room2?'Your poster is in the Loft! 🪜':'Your poster is in your room! Use 🛋️ Decorate to move it.'); renderGallery();
 }
 const postersUp=R=>R.items.filter(i=>i.type==='poster'&&i.placed).length;
-function dropPoster(p,id){[p.room,p.room2].forEach(R=>{R.items=R.items.filter(i=>!(i.type==='poster'&&i.art===id));});}
+function dropPoster(p,id){rooms(p).forEach(R=>{R.items=R.items.filter(i=>!(i.type==='poster'&&i.art===id));});}
 function takeDown(id){const p=P();dropPoster(p,id);save();SFX.whoosh();toast('Poster taken down 📦');renderGallery();}
 function delArt(r){
   modal('Delete this drawing?','It will be gone forever. If it is hanging in your room, the poster comes down too.',[

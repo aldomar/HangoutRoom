@@ -1081,7 +1081,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('53 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21), ids all different, 6 or more per page', await ev(`STICKERS.length===53&&new Set(STICKERS.map(s=>s.id)).size===53&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('55 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23), ids all different, 6 or more per page', await ev(`STICKERS.length===55&&new Set(STICKERS.map(s=>s.id)).size===55&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1304,7 +1304,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const bdCode=await ev('JSON.stringify(DB)');
   const bd119=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.version=12;d.profiles.forEach(p=>{delete p.tint;delete p.furn;delete p.look.kind;delete p.look.face;});return JSON.stringify(d);})()`);
   await ev(`doRestore(${JSON.stringify(bd119)})`); await sleep(400);
-  check('a v1.19 backup restores as bunnies, Sparkly faces, no tint (save version 13)', await ev(`DB.version===DB_VERSION&&DB_VERSION===13&&DB.profiles.every(p=>p.look.kind==='bunny'&&p.look.face==='sparkle'&&p.tint===false&&Object.keys(p.furn).length===0)`));
+  check('a v1.19 backup restores as bunnies, Sparkly faces, no tint (save version 13 and up)', await ev(`DB.version===DB_VERSION&&DB_VERSION>=13&&DB.profiles.every(p=>p.look.kind==='bunny'&&p.look.face==='sparkle'&&p.tint===false&&Object.keys(p.furn).length===0)`));
   const bdBad=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.profiles[0].look.kind='dragon';d.profiles[0].look.face=7;d.profiles[0].tint='yes';d.profiles[0].furn={desk:'rainbow',closet:5};return JSON.stringify(d);})()`);
   await ev(`doRestore(${JSON.stringify(bdBad)})`); await sleep(400);
   check('odd buddy data is made safe', await ev(`(()=>{const p=DB.profiles[0];return p.look.kind==='bunny'&&p.look.face==='sparkle'&&p.tint===true&&p.furn.desk==='rainbow'&&!('closet' in p.furn)&&furniture().length>1000;})()`));
@@ -1380,7 +1380,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`P().fid.squish='mochi';P().fid.spin='galaxy';P().fid.slime='grape';P().fid.cube='pastel';P().fid.marble='pearl';save();show('room')`);
 
   console.log('Content Pack 2: stickers');
-  check('53 stickers; the 4 pack stickers are at the end, on the Room & Style page', await ev(`STICKERS.length===53&&STICKERS.slice(-4).every(s=>s.page==='room'&&/^p2/.test(s.id))`));
+  check('the 4 pack stickers come just before the Backyard ones, on the Room & Style page', await ev(`STICKERS.length===55&&STICKERS.slice(-6,-2).every(s=>s.page==='room'&&/^p2/.test(s.id))`));
   check('pack stickers count what she has: 3 dino things (hoodie, plush, dino board), 3 space (wall, spinner, rocket board), 0 vehicle', await ev(`p2Have(P(),'dino')===3&&p2Have(P(),'space')===3&&p2Have(P(),'ride')===0`), await ev(`[p2Have(P(),'dino'),p2Have(P(),'space'),p2Have(P(),'ride'),p2Have(P(),'hero')]`));
   await ev(`P().owned.push('legs:dinoSocks');P().room.items.push({uid:'p2nest',type:'dinoNest',placed:false})`);
   check('socks and a decoration in My Stuff count too (5 dino things)', await ev(`p2Have(P(),'dino')===5`));
@@ -1484,6 +1484,83 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('APP_VERSION matches Android versionName', appV===gradleV, [appV,gradleV]);
   await ev(`closeModal();show('profiles')`); await sleep(200); await shot('16-profiles');
 
+  console.log('Backyard (v1.23)');
+  await ev(`closeModal();stkPaused=true;P().easy=false;P().coins=500;applyEasy();show('room');goRoom(1)`); await sleep(200);
+  const goBtns=()=>ev(`[...document.querySelectorAll('#roomGo,#roomGo2')].map(b=>b.dataset.go+':'+b.textContent.trim()).join('|')`);
+  check('her room has 🪜 Loft and 🌳 Yard buttons', (await goBtns())==='2:🪜 Loft|3:🌳 Yard', await goBtns());
+  await ev(`document.querySelector('#roomGo2').click()`); await sleep(250); await shot('F01-backyard');
+  check('🌳 Yard opens the Backyard', await ev(`roomNo===3&&cur==='room'&&document.querySelector('#roomTitle').textContent.endsWith("'s Backyard")`));
+  check('the Backyard has 🏠 Room and 🪜 Loft buttons', (await goBtns())==='1:🏠 Room|2:🪜 Loft', await goBtns());
+  check('a new Backyard: White Picket fence, Grass, nothing placed', await ev(`P().room3.wall==='picket'&&P().room3.floor==='grass'&&document.querySelector('[data-fence=picket]')&&!P().room3.items.length`));
+  check('the tree, goal, shed, easel, Fuzzy and the pet are drawn', await ev(`!!(document.querySelector('[data-tree]')&&document.querySelector('[data-hot=goal]')&&document.querySelector('[data-piece=shed]')&&document.querySelector('[data-piece=easel]')&&document.querySelector('#mascotG')&&document.querySelector('[data-hot=pet]'))`));
+  await ev(`document.querySelector('#roomGo2').click()`); await sleep(200);
+  check('the 🪜 Loft button opens the Loft', (await ev('roomNo'))===2);
+  check('…and they are the right ones', (await goBtns())==='1:🏠 Room|3:🌳 Yard', await goBtns());
+  await ev(`goRoom(3)`); await sleep(150);
+  check('Android Back from the Backyard goes to her room', await ev(`window.androidBack()===true&&cur==='room'&&roomNo===1`));
+  await ev(`goRoom(3)`); await sleep(150);
+  await ev(`handleHot('goal')`); await sleep(300);
+  check('tapping the goal opens Soccer', await ev(`cur==='soccer'`));
+  await ev(`document.querySelector('#scr-soccer [data-back]').click()`); await sleep(200);
+  check('Back from Soccer returns to the Backyard', await ev(`cur==='room'&&roomNo===3`));
+  for(const s of ['autumn','winter','spring','summer']){await ev(`seasonTest='${s}';renderRoom()`);await sleep(80);
+    check(`${s}: the sky, the tree and the ground show the season`, await ev(`document.querySelector('#roomSvg [data-season="${s}"]')&&document.querySelector('#roomSvg [data-tree="${s}"]')&&document.querySelector('#roomSvg [data-ground]')`)); await shot('F02-yard-'+s);}
+  await ev(`seasonTest=null;renderRoom()`);
+  // Decorate: fences and ground only outside, indoor walls and floors only inside
+  await ev(`enterDecorate();document.querySelector('[data-dt=wall]').click()`); await sleep(150);
+  check('Walls tab in the Backyard: the 5 fences only', await ev(`(()=>{const k=[...document.querySelectorAll('#decoGrid [data-surf]')].map(t=>t.dataset.surf);return k.length===5&&k.every(id=>WALLS[id].yard);})()`));
+  await ev(`document.querySelector('#decoGrid [data-surf=hedge]').click()`); await sleep(150); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(200);
+  check('buying the Garden Hedge (15) puts it up in the Backyard only', await ev(`P().room3.wall==='hedge'&&P().owned.includes('wall:hedge')&&P().coins===485&&P().room.wall!=='hedge'&&!!document.querySelector('[data-fence=hedge]')`));
+  await ev(`document.querySelector('[data-dt=floor]').click()`); await sleep(150);
+  check('Floors tab in the Backyard: the 5 grounds only', await ev(`(()=>{const k=[...document.querySelectorAll('#decoGrid [data-surf]')].map(t=>t.dataset.surf);return k.length===5&&k.every(id=>FLOORS[id].yard);})()`));
+  await ev(`document.querySelector('#decoGrid [data-surf=sand]').click()`); await sleep(150); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(200);
+  check('buying the Sandy Beach (15) changes the ground', await ev(`P().room3.floor==='sand'&&P().coins===470`)); await shot('F03-yard-hedge-sand');
+  await ev(`document.querySelector('[data-dt=season]').click()`); await sleep(150);
+  check('Seasons tab in the Backyard: decorations, but no indoor walls', await ev(`document.querySelectorAll('#decoGrid [data-buy]').length>=16&&!document.querySelector('#decoGrid [data-kind=wall]')`));
+  await ev(`document.querySelector('[data-dt=shop]').click()`); await sleep(150);
+  const yardFirst=await ev(`[...document.querySelectorAll('#decoGrid [data-buy]')].slice(0,8).map(t=>t.dataset.buy)`);
+  check('the Shop in the Backyard lists the 8 outdoor things first', yardFirst.length===8&&(await ev(`${JSON.stringify(yardFirst)}.every(k=>DECOR[k].yard)`)), yardFirst);
+  await ev(`document.querySelector('#decoGrid [data-buy=trampoline]').click()`); await sleep(150); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(200);
+  check('buying the Trampoline (30) puts it in the Backyard', await ev(`P().room3.items.some(i=>i.type==='trampoline'&&i.placed)&&P().coins===440`));
+  await ev(`document.querySelector('#decoGrid [data-buy=stringLights]').click()`); await sleep(150); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(200);
+  check('String Lights hang on the fence, not up in the sky', await ev(`(()=>{const i=P().room3.items.find(i=>i.type==='stringLights');return i&&i.y>=340&&i.y<=420;})()`));
+  await ev(`document.querySelector('[data-dt=colors]').click()`); await sleep(150);
+  check('Colours tab in the Backyard: the shed and the chalkboard', await ev(`[...document.querySelectorAll('#decoGrid [data-furn]')].every(b=>['shed','easel'].includes(b.dataset.furn))&&document.querySelectorAll('#decoGrid .furn-row').length===2`));
+  await ev(`document.querySelector('#decoGrid [data-furn=shed][data-fc=sky]').click()`); await sleep(150);
+  check('painting the shed Sky is free and shows', await ev(`P().furn.shed==='sky'&&P().coins===425&&yardFurniture().includes(FURN_COLORS.sky.l)`));
+  await ev(`exitDecorate();goRoom(1);enterDecorate();document.querySelector('[data-dt=wall]').click()`); await sleep(150);
+  check('her room\'s Walls tab has no fences', await ev(`document.querySelectorAll('#decoGrid [data-surf]').length>5&&![...document.querySelectorAll('#decoGrid [data-surf]')].some(t=>WALLS[t.dataset.surf].yard)`));
+  await ev(`document.querySelector('[data-dt=floor]').click()`); await sleep(150);
+  check('her room\'s Floors tab has no grounds', await ev(`![...document.querySelectorAll('#decoGrid [data-surf]')].some(t=>FLOORS[t.dataset.surf].yard)`));
+  // My Stuff is shared by all three rooms
+  await ev(`exitDecorate();P().room3.items.find(i=>i.type==='trampoline').placed=false;save();goRoom(2);enterDecorate();document.querySelector('[data-dt=mine]').click()`); await sleep(150);
+  await ev(`document.querySelector('#decoGrid [data-place=trampoline]').click()`); await sleep(150);
+  check('a trampoline put away in the Backyard can be placed in the Loft (it moves there)', await ev(`P().room2.items.some(i=>i.type==='trampoline'&&i.placed)&&!P().room3.items.some(i=>i.type==='trampoline')`));
+  await ev(`exitDecorate();goRoom(3)`);
+  // every outdoor decoration draws
+  const yardKeys=await ev(`Object.keys(DECOR).filter(k=>DECOR[k].yard)`);
+  check('8 outdoor decorations, priced 10-30, not in the Seasons tab', yardKeys.length===8&&(await ev(`Object.keys(DECOR).filter(k=>DECOR[k].yard).every(k=>DECOR[k].price>=10&&DECOR[k].price<=30&&!DECOR[k].season)`)), yardKeys);
+  await ev(`{const R=P().room3;R.items=R.items.filter(i=>!DECOR[i.type].yard);for(const k of ${JSON.stringify(yardKeys)})R.items.push(Object.assign({uid:'yd'+k,type:k,placed:true},spot(k)));}save();renderRoom()`); await sleep(200); await shot('F04-yard-all');
+  check('every outdoor decoration draws in the Backyard', await ev(`${JSON.stringify(yardKeys)}.every(k=>{const g=document.querySelector('#roomSvg .deco[data-uid="yd'+k+'"]');return g&&g.getBBox().width>20;})`));
+  for(const w of ['picket','hedge','stoneWall','rainbowFence','batFence']){await ev(`P().room3.wall='${w}';renderRoom()`);check(`the ${w} fence draws`, await ev(`(()=>{const g=document.querySelector('[data-fence=${w}]');return g&&g.getBBox().width>900;})()`));}
+  await shot('F05-yard-batfence');
+  // stickers
+  check('55 stickers; Yard Life and Happy Camper are at the end, on the Room & Style page', await ev(`STICKERS.length===55&&STICKERS.slice(-2).map(s=>s.id+':'+s.page).join()==='yard5:room,camper:room'`));
+  check('5 things in the Backyard earn Yard Life; 3 outdoor things earn Happy Camper', await ev(`(()=>{const f=id=>stkDone(P(),STICKERS.find(s=>s.id===id));return f('yard5')&&f('camper');})()`));
+  // save data
+  const v22=await ev(`JSON.stringify(Object.assign({},DB,{version:13,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.room3;return q;})}))`);
+  const v23=await ev(`JSON.stringify(DB)`);
+  await ev(`doRestore(${JSON.stringify(v22)})`); await sleep(300);
+  check('a v1.22 backup restores with an empty Backyard (save version 14)', await ev(`DB_VERSION===14&&DB.version===14&&DB.profiles.every(p=>p.room3&&p.room3.wall==='picket'&&p.room3.floor==='grass'&&p.room3.items.length===0)`));
+  await ev(`doRestore(${JSON.stringify(v23)})`); await sleep(300);
+  check('a v1.23 backup keeps the Backyard\'s fence, ground and things', await ev(`(()=>{const p=DB.profiles.find(p=>p.room3.items.length);return p&&p.room3.floor==='sand'&&p.room3.items.some(i=>i.type==='slide')&&p.owned.includes('wall:hedge');})()`));
+  await ev(`closeModal();{const p=DB.profiles[0];p.room3='oops';normalize(p);DB.profiles[0].room3.wall='lavender';DB.profiles[0].room3.floor='nope';}DB.activeId=DB.profiles[0].id;enterRoom();goRoom(3)`); await sleep(200);
+  check('odd Backyard data is made safe (an indoor wall or unknown ground draws the picket fence and grass)', await ev(`typeof P().room3==='object'&&Array.isArray(P().room3.items)&&!!document.querySelector('[data-fence=picket]')&&document.querySelector('#roomSvg').innerHTML.includes('pGrass')`));
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300); await shot('F06-phone-yard');
+  check('phone: the room bar fits both room buttons (icons only)', await ev(`(()=>{const t=document.querySelector('#scr-room .topbar');const a=document.querySelector('#roomGo').getBoundingClientRect(),b=document.querySelector('#roomGo2').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&b.right<=innerWidth&&a.width>=48&&b.width>=48;})()`));
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  await ev(`goRoom(1)`); await sleep(200);
+
   console.log('About & Gift Story (v1.22)');
   check('a new device (no rooms at the start) noted the version without a What\'s New box', await ev(`DB.settings.seenNew===APP_VERSION`));
   await ev(`show('room');settingsModal()`);
@@ -1515,11 +1592,11 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Android Back from About goes to the room', await ev(`window.androidBack()===true&&cur==='room'`));
   await ev(`show('about')`); await ev(`document.querySelector('#scr-about [data-back]').click()`);
   check('⬅ Room from About goes to the room', await ev(`cur==='room'`));
-  await ev(`show('profiles');DB.settings.seenNew='1.21';whatsNew()`); await sleep(200); await shot('C04-whats-new');
+  await ev(`show('profiles');whatsNew.wait=0;DB.settings.seenNew='1.21';whatsNew()`); await sleep(200); await shot('C04-whats-new');
   check('after an update, What\'s New shows this version\'s news once', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#modalTitle').textContent.includes('New')&&document.querySelector('#modalBody').textContent.includes('About')&&DB.settings.seenNew===APP_VERSION`));
   await ev(`closeModal();whatsNew()`);
   check('it does not show again', await ev(`document.querySelector('#modal').classList.contains('hidden')`));
-  await ev(`DB.settings.seenNew='';whatsNew()`);
+  await ev(`DB.settings.seenNew='';whatsNew()`); await sleep(100);
   check('an old save with no seenNew sees only this version\'s news', await ev(`document.querySelectorAll('#modalBody .wn').length===1&&document.querySelector('#modalBody').textContent.includes('v'+APP_VERSION)`));
   await ev(`closeModal()`);
   await ev(`(()=>{const b=JSON.parse(JSON.stringify(DB));b.settings.seenNew='1.0';doRestore(JSON.stringify(b));})()`); await sleep(300);

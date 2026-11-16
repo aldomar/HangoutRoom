@@ -26,7 +26,7 @@ window.androidBack=function(){
   if(cur==='cards'||cur==='soccer'||cur==='stickers'||cur==='about'){show('room');return true;}
   if(cur==='stage'){if(STG.state==='pick')show('room');else stgPickView();return true;} // a song -> the song list -> room
   if(cur==='code'){clBackKey();return true;} // a puzzle -> the puzzle list -> room
-  if(cur==='room'){if(roomNo===2)goRoom(1);else show('profiles');return true;} // Loft -> room -> profiles
+  if(cur==='room'){if(roomNo!==1)goRoom(1);else show('profiles');return true;} // Loft or Backyard -> room -> profiles
   return false;
 };
 document.addEventListener('visibilitychange',()=>{
@@ -36,5 +36,5 @@ document.addEventListener('visibilitychange',()=>{
 
 buildDefs();
 show('profiles');
-setTimeout(whatsNew,600); // ✨ What's New, once per device after an update (section 25)
+whatsNew(); // ✨ What's New, once per device after an update (section 25)
 requestAnimationFrame(loop);

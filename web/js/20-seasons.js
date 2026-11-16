@@ -176,7 +176,7 @@ function seasonGrid(p){
   return seasonOrder().map(s=>{const S=SEASONS[s];
     const decos=easySort(Object.entries(DECOR).filter(([k,d])=>d.season===s),([k,d])=>d.price)
       .map(([k,d])=>`<button class="tile${poorCls(p,false,d.price)}" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div>${priceTag(p,d.price)}</button>`).join('');
-    const walls=Object.entries(WALLS).filter(([k,v])=>v.season===s).map(([k,v])=>surfTile(p,true,k,v,wallNow)).join('');
+    const walls=roomNo===3?'':Object.entries(WALLS).filter(([k,v])=>v.season===s).map(([k,v])=>surfTile(p,true,k,v,wallNow)).join(''); // no indoor walls in the Backyard (v1.23)
     return `<div class="grid-head${s===now?' now':''}">${S.icon} ${S.name}${s===now?' · ✨ In season!':''}</div>`+decos+walls;}).join('');
 }
 seasonTab();
