@@ -227,9 +227,11 @@
     <div class="coins coinsDisp"></div>
   </div>
   <div class="tabs" id="clTabs" style="background:var(--panel);justify-content:center">
-    <button class="tab on" data-lvl="easy">🐣 Easy</button>
-    <button class="tab" data-lvl="medium">🔁 Medium</button>
-    <button class="tab" data-lvl="hard">🌟 Hard</button>
+    <button class="tab on" data-lvl="easy">🐣 <span>Easy</span></button>
+    <button class="tab" data-lvl="medium">🔁 <span>Medium</span></button>
+    <button class="tab" data-lvl="hard">🌟 <span>Hard</span></button>
+    <button class="tab" data-lvl="move">✨ <span>My Move</span></button>
+    <button class="tab" data-lvl="if">❓ <span>If</span></button>
   </div>
   <div class="cl-pick" id="clPick">
     <div class="stg-note" id="clHint"></div>
@@ -239,6 +241,7 @@
     <div class="cl-board"><svg id="clBoard" viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet"></svg></div>
     <div class="cl-side">
       <div class="cl-msg" id="clMsg"></div>
+      <div class="cl-prog hidden" id="clMove"></div>
       <div class="cl-prog" id="clProg"></div>
       <div class="cl-pal" id="clPal"></div>
       <div class="cl-ctl">

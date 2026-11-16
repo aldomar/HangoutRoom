@@ -16,7 +16,9 @@ _Last updated: 2026-11-15_
   - **Cozy Loft + Content Pack 1: done** (v1.10 merged, PR #10). Tried on a device: everything works.
   - **Shelves + Hair Styles: done** (v1.11 merged, PR #11). The owner asked for it before Code Lab.
   - **Stage in the Loft + Easy-only labels: done** (v1.12 merged, PR #12; the owner's request, before Code Lab).
-  - **Code Lab: built, PR open as v1.13** on branch `feature/codelab` (from `main` after #12). Not yet tried on a device.
+  - **Code Lab: done** (v1.13 merged, PR #13). The owner checked it on the device: it all works.
+  - **Code Lab: My Move + If levels: built, PR open as v1.14** on branch `feature/codelab2` (from `main` after #13).
+    Not yet tried on a device.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -38,7 +40,8 @@ _Last updated: 2026-11-15_
 - PR #10 "Cozy Loft + Content Pack 1 (v1.10)": merged.
 - PR #11 "Shelves + Hair Styles (v1.11)": merged.
 - PR #12 "Stage in the Loft (v1.12)": merged.
-- PR "Code Lab (v1.13)" on branch `feature/codelab` (from `main` after #12): open.
+- PR #13 "Code Lab (v1.13)": merged.
+- PR "Code Lab: My Move + If (v1.14)" on branch `feature/codelab2` (from `main` after #13): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -135,6 +138,17 @@ _Last updated: 2026-11-15_
     get a tick; the block limit stops extra blocks; a Hard maze with 2 stars
   - leaving during a run stops it; Back goes puzzle → list → Loft; Easy mode opens on Easy with bigger blocks and no tips
   - restoring a v1.12 backup (no Code Lab) and a v1.13 one; phone portrait and landscape layouts fit the board and ▶️ Run
+- **Code Lab: My Move + If (v1.14)**: 332 checks, all passing, no console errors. New checks:
+  - 5 level tabs; every new puzzle is solved by its stored answer within its block limits; a search through every
+    shorter program proves each My Move puzzle can't be done without ✨ and each If puzzle can't be done without ❓
+  - My Move: the ✨ row is picked first; arrows and 🔁 go into the picked row; ✨ always goes into the program (never
+    inside My Move); ↩️ and tapping a block take blocks out; 🗑️ clears both rows; while running, ✨ and the My Move block
+    it is doing both light up; ✨ with an empty My Move and a bump inside My Move glow the right block
+  - If: walking into a puddle is a "Splash!" oops; ❓ with no arrow after it is an oops; ❓ ➡️ hops over a puddle and
+    just walks when there is none; a hop that would land on a toy block is a bump
+  - coins: 3 per puzzle and the +5 level bonus on both new levels; a backup keeps the new level and solved puzzles; an
+    unknown level falls back to Easy; on a phone the 5 tabs fit (icons only) and both rows, the board and ▶️ Run fit
+  - One run had 3 Soccer checks fail by timing (nothing in Soccer changed); the next full run passed everything.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -257,6 +271,16 @@ _Last updated: 2026-11-15_
   - Coins: 3 per new puzzle, +5 when every puzzle of a level is solved. If puzzles are added to a level later, finishing
     the new ones pays that level bonus again (a small, fair extra).
   - Added a **"First Program!" bonus photocard** (+10, once), like the other games have. Easy to remove if not wanted.
+- Code Lab: My Move + If (agreed 2026-11-15, built as v1.14):
+  - **Two new levels**, after Hard and open from the start: ✨ My Move and ❓ If, 6 hand-made puzzles each (ids `f1`–`f6`,
+    `i1`–`i6`; level ids `move` and `if`). No extra puzzles for the old levels and no new bonus card (owner's choice).
+  - **✨ My Move:** a second row (up to 4 blocks) above the program. She taps a row to pick where blocks go; a My Move
+    puzzle starts with the ✨ row picked. Tapping ✨ always puts it in the program and picks the program row, so My Move
+    can never run itself. The program has room for only 2–4 blocks, so My Move is needed.
+  - **❓ If:** puddles 💧 on the board. Stepping into one is a gentle "Splash!" oops. ❓ goes in front of an arrow: hop over
+    a puddle (2 squares) if one is next, otherwise a normal step. A hop can't land on a toy block, a puddle or off the board.
+  - Same coins as the other levels (3 per new puzzle, +5 per finished level). No save shape change (`DB_VERSION` stays 9);
+    `normalize()` now also accepts `move` and `if` as `code.level`. On a phone the level tabs show only their icons.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -312,14 +336,16 @@ _Last updated: 2026-11-15_
 6. ~~Plan Code Lab and get it agreed.~~ Agreed (see "Decisions made").
 7. ~~Owner: build v1.12, try the Stage in the Loft and the labels, and merge it.~~ Merged.
 8. ~~Build Code Lab (v1.13) on the Loft's computer desk.~~ Built (v1.13 PR).
-9. Owner: build v1.13, try the Code Lab (see the PR), and merge it.
-10. Pick the next Phase 7 item (ideas: Content Pack 2, more Code Lab puzzles or a "my move" block, new fidgets).
+9. ~~Owner: build v1.13, try the Code Lab (see the PR), and merge it.~~ Merged; it all works on the device.
+10. ~~Pick the next Phase 7 item.~~ Code Lab: My Move + If (v1.14), built (v1.14 PR).
+11. Owner: build v1.14, try the ✨ My Move and ❓ If levels (see the PR), and merge it.
+12. Pick the next Phase 7 item (ideas: Content Pack 2, more Code Lab puzzles, new fidgets, a sticker book or a pet).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
 - `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 9 since v1.13
-  (Code Lab: `code{level, solved[]}`). It was 8 in v1.11
+  (Code Lab: `code{level, solved[]}`; v1.14 added level ids only, no new shape). It was 8 in v1.11
   (old swoop hair ids → `swoopBlack` + `look.hairColor`, and `hairc:<colour>` added to `owned`). It was 7 in v1.10
   (Loft + Content Pack 1: `room2` and `fid.popShape`). It was 6 in v1.8
   (Little-sister polish: per-profile `easy`, `color`, `badge`, plus `settings.pin`). It was 5 in v1.7

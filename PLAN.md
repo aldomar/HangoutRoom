@@ -157,7 +157,10 @@ Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a conte
   Easy = arrows only, Medium = 🔁 repeat (with a block limit, so repeat is needed), Hard = toy-block walls and ⭐ stars
   picked up with 🌟. No timers, a bump is a gentle "oops". 3 coins per new puzzle, +5 for a whole level, and a
   "First Program!" bonus card. Puzzles are text recipes in `18-codelab.js`, so more are easy to add.
-  Ideas for later Code Lab updates (not built yet): a "my move" block (functions), a simple "if" block, more puzzles.
+- ✅ **Code Lab: My Move + If (v1.14, the owner's choice):** two new levels, 6 puzzles each, open from the start.
+  ✨ My Move = a second short row of blocks that the ✨ block runs (a first "function"). ❓ If = puddles 💧 and a ❓ block
+  in front of an arrow: hop over a puddle if one is next, otherwise step. Same coins (3 per puzzle, +5 per level).
+  No save changes. Ideas for later: more puzzles at the end of each level.
 - First sketch of Code Lab (kept for the history; the build above is what was agreed):
   - Fuzzy stands on a small grid (for example 5×5) and has to reach a ⭐ or collect treats.
   - She snaps big picture blocks into a row (➡️ ⬅️ ⬆️ ⬇️ moves, 🔁 repeat, later "if"), then presses ▶ Run and
