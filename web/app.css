@@ -325,3 +325,7 @@ body.easy .cube{margin-bottom:0}
 .cb-ball i{width:4.4em;height:4.4em;border-radius:50%;background:conic-gradient(var(--p2) 0 25%,var(--p) 0 50%,var(--p2) 0 75%,var(--p) 0)}
 .cb-ball.free i{transition:transform .9s cubic-bezier(.15,.8,.3,1)}
 .cb-ball::after{content:'';position:absolute;width:4.4em;height:4.4em;border-radius:50%;box-shadow:inset -.4em -.5em .8em rgba(0,0,0,.3),inset .3em .4em .6em rgba(255,255,255,.55);pointer-events:none}
+/* Seasons (v1.17): headings in the Decorate grid, and the deco tabs show only icons on a phone */
+.grid-head{grid-column:1/-1;font-weight:900;font-size:16px;padding:6px 4px 0;color:var(--muted,#cbbbe6)}
+.grid-head.now{color:var(--gold,#ffd166)}
+@media (max-width:620px){#decoTabs .tab span{display:none}#decoTabs .tab{font-size:21px;padding:8px 10px}}

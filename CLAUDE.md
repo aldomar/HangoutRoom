@@ -129,6 +129,7 @@ stripes, stars, bats), and fidget and squishy toys.
   17. `17-pack1.js` Content Pack 1 (only adds entries to `CLOSET`, `DECOR`, `WALLS`, `FLOORS`, `SQUISHIES`, `SPINS`, `POP_SHAPES`, `CARD_TAGS`)
   18. `18-codelab.js` Code Lab (`CODE_PUZZLES`, `CODE_LEVELS`, `codeSim`, `clOpen`, `clGo`)
   19. `19-fidgets2.js` New fidgets: slime (`SLIMES`, `drawSlime`), clicker cube (`CUBES`, `renderCube`), marble maze (`MAZES`, `MARBLES`, `drawMaze`, `mzSensor`)
+  20. `20-seasons.js` Seasons (`SEASONS`, `seasonNow()`, seasonal `DECOR`/`WALLS` with `season:'autumn'…`, `seasonWindow()`, `seasonGrid()` for the 🍂 Seasons tab)
   99. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -170,6 +171,10 @@ stripes, stars, bats), and fidget and squishy toys.
   (`mzSensor`), takes how the device is held at the start of a maze as flat, and turns the reading with the screen.
   A finger on the board always works too. Maze ids (`m1`…) are saved in `maze.solved`: never rename them; add new
   mazes at the end (all mazes are 9×6 text maps: `#` wall, `S` start, `G` star hole, `o` bumper).
+- Seasons (since v1.17): a decoration or wall with `season:<id>` is listed in Decorate's 🍂 Seasons tab (not the Shop;
+  walls show in the Walls tab too). **Seasonal things are for sale all year** (no limited-time pressure); the current
+  season (from the device date, `seasonNow()`) is only listed first. `seasonWindow(n, layer)` draws the season into her
+  room's window (n=1) and the Loft's window (n=2). The smoke test sets `seasonTest` to try each season.
 - Every room area is open. To add a locked area for a future feature, put it in `LOCKED` and `handleHot()`.
 - `android/`: Gradle project; `app/src/main/java/com/family/hangoutroom/MainActivity.kt`; `android/README.md` has build/sideload steps.
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.

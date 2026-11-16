@@ -155,7 +155,15 @@ Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a conte
   1 coin per 5 stretches), 🎛️ Clicker cube (buttons, switch, roller, joystick, spinning ball; 1 coin per 25 clicks) and
   🔮 Marble Maze (tilt the tablet or hold a finger; 6 mazes, +3 each the first time, +1 replay, +5 for all 6).
   Each has a free design and 3 to buy (10–20). Save version 10 (`maze.solved`).
-- Seasonal decorations, a sticker book of achievements, a pet for the mascot.
+- **Seasonal decorations, a sticker book of achievements, a pet for the mascot** (plan agreed 2026-11-16, three PRs):
+  - ✅ **Seasons (v1.17):** a 🍂 Seasons tab in Decorate with 16 decorations and 4 walls (4 + 1 per season), all buyable
+    all year, the current season first ("✨ In season!"). Her room's window and the Loft's window show the season.
+  - **Sticker Book (v1.18):** a 📒 button in the room. About 40 stickers on 6 themed pages, for fixed milestones in every
+    game (most in steps, like 100 → 1,000 → 5,000 pops). +2 coins each, given once; ones already earned arrive on the
+    first open. Unearned stickers show as grey shapes with a hint. Bonus photocards stay as they are.
+  - **Pet (v1.19):** a pet bed next to Fuzzy; pick one of 4 original pets (tiny bat, ghost kitten, cloud puppy, star
+    hamster), all free, switch any time. Tap it to pet it (tricks), give a treat (2 coins) or dress it (5 accessories).
+    Friendship hearts only go up (no hunger, nothing sad); new tricks at 10 / 30 / 60 / 100 hearts. Save version 11.
 - ✅ **Code Lab 💻 (v1.13, the owner's idea):** tap the Loft's computer desk. 18 hand-made puzzles (6 per level):
   Easy = arrows only, Medium = 🔁 repeat (with a block limit, so repeat is needed), Hard = toy-block walls and ⭐ stars
   picked up with 🌟. No timers, a bump is a gentle "oops". 3 coins per new puzzle, +5 for a whole level, and a

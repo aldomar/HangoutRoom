@@ -22,6 +22,7 @@ function loftFurniture(){
   s+=`<circle cx="340" cy="140" r="82" fill="#5b3a99" ${o}/><circle cx="340" cy="140" r="68" fill="url(#gMoonSky)"/>`;
   s+=`<path d="M362 108 A26 26 0 1 0 380 150 A20 20 0 1 1 362 108Z" fill="#fff3c4"/>`;
   s+=`<path d="${starPath(300,110,7)} ${starPath(318,176,5)} ${starPath(388,184,4)}" fill="#ffd166"/><circle cx="292" cy="150" r="2" fill="#fff"/><circle cx="350" cy="96" r="1.8" fill="#fff"/>`;
+  s+=seasonWindow(2,'air'); // the season in the window (section 20, v1.17)
   s+=`<path d="M340 72 V208 M272 140 H408" stroke="#5b3a99" stroke-width="7"/>`;
   // a little pendant lamp
   s+=`<line x1="590" y1="0" x2="590" y2="66" stroke="#3b2f52" stroke-width="3"/><path d="M562 96 Q590 56 618 96Z" fill="#ff8cc6" ${o}/><ellipse cx="590" cy="100" rx="14" ry="6" fill="#fff6c8"/>`;

@@ -186,16 +186,20 @@ function renderDecoGrid(){
     h=stored.filter(i=>DECOR[i.type].art).map(i=>`<button class="tile" data-place-uid="${i.uid}"><div class="tv"><svg viewBox="${DECOR[i.type].box}">${DECOR[i.type].d(i)}</svg></div><div class="tn">${DECOR[i.type].name}</div></button>`).join('')
       +keys.map(k=>`<button class="tile" data-place="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${DECOR[k].name}</div><div class="tp cnt">×${counts[k]}</div></button>`).join('');
     if(!h) h=`<div class="empty">Nothing stored right now! Drag things from your room down here to put them away, or get new stuff in the Shop 🛍️</div>`;
-  } else if(decoTab==='shop'){
-    h=easySort(Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award),([k,d])=>d.price).map(([k,d])=>`<button class="tile${poorCls(p,false,d.price)}" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div>${priceTag(p,d.price)}</button>`).join('');
+  } else if(decoTab==='shop'){ // seasonal things (v1.17) have their own tab
+    h=easySort(Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award&&!d.season),([k,d])=>d.price).map(([k,d])=>`<button class="tile${poorCls(p,false,d.price)}" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div>${priceTag(p,d.price)}</button>`).join('');
+  } else if(decoTab==='season'){
+    h=seasonGrid(p); // section 20
   } else {
     const isW=decoTab==='wall', L=isW?WALLS:FLOORS, curId=isW?curRoom(p).wall:curRoom(p).floor;
-    const own=([k,v])=>!v.price||p.owned.includes((isW?'wall:':'floor:')+k);
-    h=easySort(Object.entries(L),e=>own(e)?0:e[1].price).map(e=>{const [k,v]=e, o=own(e);
-      return `<button class="tile ${k===curId?'on':''} ${o?'':'locked'}${poorCls(p,o,v.price)}" data-surf="${k}"><div class="tv"><svg viewBox="0 0 300 200"><rect width="300" height="200" fill="${v.fill}"/><rect width="300" height="200" fill="url(#${v.pat})"/></svg></div><div class="tn">${v.name}</div>${o?'':priceTag(p,v.price)}</button>`;}).join('');
+    h=easySort(Object.entries(L),e=>surfOwned(p,isW,e[0],e[1])?0:e[1].price).map(([k,v])=>surfTile(p,isW,k,v,curId)).join('');
   }
   $('#decoGrid').innerHTML=h;
+  seasonTab();
 }
+const surfOwned=(p,isW,k,v)=>!v.price||p.owned.includes((isW?'wall:':'floor:')+k);
+function surfTile(p,isW,k,v,curId){const o=surfOwned(p,isW,k,v);
+  return `<button class="tile ${k===curId?'on':''} ${o?'':'locked'}${poorCls(p,o,v.price)}" data-surf="${k}" data-kind="${isW?'wall':'floor'}"><div class="tv"><svg viewBox="0 0 300 200"><rect width="300" height="200" fill="${v.fill}"/><rect width="300" height="200" fill="url(#${v.pat})"/></svg></div><div class="tn">${v.name}</div>${o?'':priceTag(p,v.price)}</button>`;}
 // Posters go on the free bit of wall between the photocard board and the closet.
 // Trophies each get their own clear spot on the floor, so they never hide behind Fuzzy (who stands at x 420-580).
 const TROPHY_SPOTS={trophyBronze:{x:345,y:665},trophySilver:{x:655,y:680},trophyGold:{x:850,y:660},goldenMic:{x:180,y:688}};
@@ -213,7 +217,7 @@ $('#decoGrid').addEventListener('click',e=>{
     const k=t.dataset.buy, d=DECOR[k];
     buyConsumable(d.price,d.name,()=>{curRoom(p).items.push(Object.assign({uid:uid(),type:k,placed:true},spot(k)));save();renderRoom();renderDecoGrid();toast(`${d.name} is in your room! Drag it anywhere ✨`);});
   } else if(t.dataset.surf){
-    const isW=decoTab==='wall', k=t.dataset.surf, v=(isW?WALLS:FLOORS)[k];
+    const isW=t.dataset.kind==='wall', k=t.dataset.surf, v=(isW?WALLS:FLOORS)[k];
     tryBuy((isW?'wall:':'floor:')+k,v.price,v.name,()=>{if(isW)curRoom(p).wall=k;else curRoom(p).floor=k;save();SFX.click();renderRoom();renderDecoGrid();});
   }
 });

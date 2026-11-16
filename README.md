@@ -67,6 +67,14 @@ On the Fidget Shelf (the shelf in her room) there are three more tabs:
   when playing in a car).
 Each one has a free design and more to buy in the row at the bottom.
 
+## Seasons (since version 1.17)
+- In 🛋️ Decorate there is a **Seasons** tab (its icon is the season right now: 🍂 autumn, ❄️ winter, 🌸 spring, ☀️ summer).
+  It has 4 decorations and a wall for each season, such as a Smiley Pumpkin, a Snow Bunny, a Tulip Pot and a Lemonade Stand.
+- **Everything can be bought all year.** The current season is just listed first, marked "✨ In season!". Nothing ever
+  goes away. The seasonal walls are in the Walls tab too.
+- The window in her room and the round window in the Loft change by themselves with the season: falling leaves, snow,
+  blossoms or sunshine. The season comes from the tablet's date (autumn = September to November, and so on).
+
 ## Shelves and hair (since version 1.11)
 - **Shelves:** buy a Little or Long Shelf in the Shop and hang it on the wall. Drag a small thing onto the shelf and it
   sits on top. Move the shelf and everything on it comes along.
