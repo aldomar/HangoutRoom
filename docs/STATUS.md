@@ -10,7 +10,7 @@ _Last updated: 2026-11-16_
 - **Squishy upgrade: done** (v1.6 merged, PR #6).
 - **Phase 5 (Stage rhythm game): done** (v1.7 merged, PR #7).
 - **Phase 6 (little-sister polish): done** (v1.8 merged, PR #8). The owner checked it on the device: everything works.
-- **Phase 7 (content packs): in progress.** Order (agreed 2026-11-15): code split (v1.9) → Cozy Loft + Content Pack 1 (v1.10)
+- **Phase 7 (content packs): done** (v1.9–v1.21, the last one PR #21 merged 2026-11-16). Order (agreed 2026-11-15): code split (v1.9) → Cozy Loft + Content Pack 1 (v1.10)
   → Code Lab (the owner's intro-to-coding game idea, sketched in `PLAN.md`).
   - **Code split: done** (v1.9 merged, PR #9). Built in Android Studio and checked on the device: everything works.
   - **Cozy Loft + Content Pack 1: done** (v1.10 merged, PR #10). Tried on a device: everything works.
@@ -27,7 +27,11 @@ _Last updated: 2026-11-16_
   - **Buddies + Content Pack 2** (plan agreed 2026-11-16, two PRs): options the nieces' younger brothers (5 and 3)
     will like too, while everyone can still use everything.
     - **🐾 Buddies: done** (v1.20 merged, PR #20).
-    - **🦕 Content Pack 2: built, PR #21 open as v1.21** on branch `feature/pack2` (from `main` after #20).
+    - **🦕 Content Pack 2: done** (v1.21 merged, PR #21).
+- **Phase 8 and beyond: roadmap agreed 2026-11-16** (see `PLAN.md`). Order: 💌 About & Gift Story (v1.22) → 🌳 Backyard,
+  a third room (v1.23) → 🧤 Be the Keeper (v1.24) → 📚 Brain Games part 1 (v1.25) → 🎤 song pack (v1.26) → Phase 10
+  (backlog + helpers) → Phase 11 (more games and packs). Each still gets its own detailed plan before building.
+  - **💌 About & Gift Story:** branch `feature/about`, detailed plan waiting for the owner's OK.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -57,7 +61,7 @@ _Last updated: 2026-11-16_
 - PR #18 "Sticker Book (v1.18)": merged.
 - PR #19 "Pet (v1.19)": merged.
 - PR #20 "Buddies (v1.20)": merged.
-- PR #21 "Content Pack 2 (v1.21)" on branch `feature/pack2` (from `main` after #20): open.
+- PR #21 "Content Pack 2 (v1.21)": merged.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -464,6 +468,15 @@ _Last updated: 2026-11-16_
     To let a pack add new squishy shapes and spinner/slime pictures, sections 5, 10 and 19 got two small hooks:
     `SQ_EXTRAS` (a squishy's `extra` drawn behind/in front of its body) and `FID_ICONS` (a spinner or slime `deco`).
 
+- **Phase 8 and beyond (agreed 2026-11-16):** the owner's ideas (an About with a personal message, a Goalie mode, more
+  songs, math and learning games, more items) plus the backlog and Claude's suggestions, all accepted: Read to me, backup
+  reminder, shop theme filters, a speed check, a coin review with "big dream" items, room snapshots, a third room.
+  - **About privacy:** the repo is **public**, so the personal About words use **nicknames only** and live in the
+    git-ignored `web/about-local.js`. A generic About in git fills in anything missing. The APK built on the owner's PC
+    includes the local file.
+  - **The third room (Backyard) comes early** (owner's choice), right after About, to give later games room to grow.
+    Brain Games live at its chalkboard.
+
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
 - $0 beyond the Claude subscription. Use free tiers and free tools only.
@@ -534,7 +547,12 @@ _Last updated: 2026-11-16_
 22. ~~Pick the next item.~~ Buddies + Content Pack 2 (agreed 2026-11-16).
 23. ~~Owner: build v1.20, try the buddies and tints (see the PR), and merge it.~~ Merged.
 24. ~~Build Content Pack 2 (v1.21) from `main` after v1.20 is merged.~~ Built (v1.21 PR).
-25. Owner: build v1.21, try the new things (see the PR), and merge it. That finishes Buddies + Content Pack 2.
+25. ~~Owner: build v1.21, try the new things (see the PR), and merge it.~~ Merged. That finished Phase 7.
+
+## Next steps (Phase 8)
+1. ~~Plan Phase 8 and beyond.~~ Roadmap agreed 2026-11-16 (in `PLAN.md`).
+2. Agree the detailed plan for 💌 About & Gift Story (v1.22), then build it on `feature/about`.
+3. Owner: write `web/about-local.js` (nicknames, letter, secret) from the example file, and keep a copy somewhere safe.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
