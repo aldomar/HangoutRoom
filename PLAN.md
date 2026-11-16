@@ -160,7 +160,10 @@ Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a conte
 - ✅ **Code Lab: My Move + If (v1.14, the owner's choice):** two new levels, 6 puzzles each, open from the start.
   ✨ My Move = a second short row of blocks that the ✨ block runs (a first "function"). ❓ If = puddles 💧 and a ❓ block
   in front of an arrow: hop over a puddle if one is next, otherwise step. Same coins (3 per puzzle, +5 per level).
-  No save changes. Ideas for later: more puzzles at the end of each level.
+  No save changes.
+- ✅ **Code Lab: 🧠 Challenge (v1.15, the owner's request for more challenge):** 8 puzzles using every block at once,
+  mixing the ideas (🌟 and ❓ inside ✨ My Move, walls, puddles, stars, bigger boards, tight block limits). 5 coins each,
+  +10 for the level. Ideas for later: more Challenge puzzles at the end of the level.
 - First sketch of Code Lab (kept for the history; the build above is what was agreed):
   - Fuzzy stands on a small grid (for example 5×5) and has to reach a ⭐ or collect treats.
   - She snaps big picture blocks into a row (➡️ ⬅️ ⬆️ ⬇️ moves, 🔁 repeat, later "if"), then presses ▶ Run and

@@ -48,8 +48,10 @@ and press **▶️ Run**. Fuzzy follows the blocks one at a time (the block that
 - **❓ If** (since version 1.14): puddles 💧 are in the way, and walking into one is a "Splash!" oops. Put ❓ in front of
   an arrow: if a puddle is next, Fuzzy hops over it; if not, Fuzzy just takes a step. 🔁 ×3 ❓ ➡️ handles puddles
   wherever they are.
-- Each puzzle pays 3 coins the first time it is solved, plus 5 more for finishing a whole level. There are 5 levels
-  with 6 puzzles each, all open from the start.
+- **🧠 Challenge** (since version 1.15): 8 harder puzzles that use every block at once. The trick is putting 🌟 and ❓
+  *inside* ✨ My Move, so one move handles puddles and stars wherever they are. Each pays 5 coins, plus 10 for the level.
+- Other puzzles pay 3 coins the first time they are solved, plus 5 more for finishing a whole level. There are 6 levels
+  (6 puzzles each, 8 in Challenge), all open from the start.
 
 ## Shelves and hair (since version 1.11)
 - **Shelves:** buy a Little or Long Shelf in the Shop and hang it on the wall. Drag a small thing onto the shelf and it

@@ -160,8 +160,9 @@ stripes, stars, bats), and fidget and squishy toys.
   (map rows: `.` floor, `F` Fuzzy, `C` carrot, `*` star, `#` toy block, `~` puddle; `max` blocks; `sol` = one answer, which the smoke
   test runs; `move` = the ✨ My Move row of that answer). Blocks: arrows `UDLR`, repeats `2 3 4`, `S` pick up a star,
   `M` ✨ run My Move (levels with `M` show the My Move row, `moveMax` blocks; My Move can't hold `M`), `Q` ❓ in front of an
-  arrow = hop a puddle if one is next (since v1.14). The smoke test also proves My Move puzzles need ✨ and If puzzles need ❓. `codeSim()` holds the rules with no drawing; the board is SVG moved by CSS transitions (nothing in the main loop).
-  Puzzle ids (`e1`, `m1`, `h1`, `f1`, `i1` …) and level ids (`easy medium hard move if`) are saved in `code.solved`: never rename them. Add new puzzles at the end of a level.
+  arrow = hop a puddle if one is next (since v1.14). The smoke test also proves My Move puzzles need ✨ and If puzzles need ❓,
+  and every Challenge puzzle (since v1.15, ids `c1`…) needs ✨ (and ❓ when it has puddles). A level may set its own `coins`/`bonus`. `codeSim()` holds the rules with no drawing; the board is SVG moved by CSS transitions (nothing in the main loop).
+  Puzzle ids (`e1`, `m1`, `h1`, `f1`, `i1` …) and level ids (`easy medium hard move if challenge`) are saved in `code.solved`: never rename them. Add new puzzles at the end of a level.
 - Every room area is open. To add a locked area for a future feature, put it in `LOCKED` and `handleHot()`.
 - `android/`: Gradle project; `app/src/main/java/com/family/hangoutroom/MainActivity.kt`; `android/README.md` has build/sideload steps.
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.
@@ -171,7 +172,7 @@ stripes, stars, bats), and fidget and squishy toys.
   +5 per new drawing (3+ strokes, first 5 a day), +10 per bonus photocard (each milestone once). Making a photocard is free.
   Soccer: +1 / +2 / +3 per goal (Easy / Medium / Hard), +1 more per goal with 2+ soccer clothes on, +5 for 5/5.
   Stage: 2 / 3 / 4 coins per star (Easy / Medium / Hard), 1–3 stars per song; no stars (and no coins) without a hit.
-  Code Lab: +3 per puzzle the first time it is solved, +5 when every puzzle of a level is solved.
+  Code Lab: +3 per puzzle the first time it is solved, +5 when every puzzle of a level is solved (Challenge: +5 and +10).
   Item prices are 0–40. Keep earning steady and fair.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).
   A new decoration = one entry in `DECOR` with `{name, price, box, d()}` (plus `flat:1` for rugs, `wall:1` for wall items).
