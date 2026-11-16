@@ -132,7 +132,7 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
   The PIN stays with the device: restoring a backup never changes it.
 - **Done when:** the younger sister can find her room and play on her own, and old saves and backups still load.
 
-### Phase 7: Content packs (ongoing)
+### ✅ Phase 7: Content packs (v1.9–v1.21, done)
 Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a content pack with a second room (v1.10),
 **3)** Code Lab. Each gets its own plan, agreed before building.
 
@@ -150,7 +150,7 @@ Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a conte
   and Starry Twin Tails, in 10 colours.
 - ✅ **Stage in the Loft (v1.12, the owner's request):** the Stage marquee moved up to the Loft to give her first room
   more space. The pink room labels now only show in Easy mode, so an older child finds things by exploring.
-- More closet items, decorations and squishies (future packs: `18-pack2.js` …).
+- More closet items, decorations and squishies: Content Pack 2 (v1.21); more packs are in Phase 11.
 - ✅ **New fidgets (v1.16):** three more Fidget Shelf tabs. 🧪 Slime (pull to stretch, snaps back, pokes leave a dent;
   1 coin per 5 stretches), 🎛️ Clicker cube (buttons, switch, roller, joystick, spinning ball; 1 coin per 25 clicks) and
   🔮 Marble Maze (tilt the tablet or hold a finger; 6 mazes, +3 each the first time, +1 replay, +5 for all 6).
@@ -201,10 +201,69 @@ Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a conte
   - Original look and art: block coding is a common kind of game, but it must not copy any existing coding app's look,
     characters or levels.
 
+## Phase 8 and beyond (roadmap agreed 2026-11-16)
+The owner picked the order: About → third room → Goalie → first Brain Games → new songs → the rest.
+Each line is one PR with its own detailed plan, agreed before building. Each PR takes the next version number, so the
+numbers after v1.22 are only a guide. The usual rules apply to every new game: all levels open from the start, no
+timers, nothing lost, Easy mode works for the 3- and 5-year-olds, and a few new stickers.
+
+### Phase 8: Made for you + room to grow
+- ✅ **💌 About & Gift Story (v1.22, the owner's idea):** ⚙️ Settings → 💌 About, so the children can show others the app
+  was made just for them:
+  - a dedication letter from the owner with the children's **nicknames** and the date the project started (14 Nov 2026)
+  - a gift timeline: every update with its date and a short "why" line ("v1.5 Soccer Field ⚽: for our soccer star")
+  - a family secret: tap the buddy on the certificate 5 times to see an inside joke only the family knows
+    (built, but switched off until the owner writes a secret into the local file)
+  - an "Edition 1 of 1" certificate, drawn like a gold photocard
+  - a ✨ What's New box, shown once after an update is installed
+  - **Privacy (the repo is public):** the personal words live in `web/about-local.js`, which is **git-ignored**, so it
+    never goes to GitHub. A generic version in git (inside the new `web/js/25-about.js`) is used for anything the local
+    file doesn't fill in, or when the file isn't there at all. `web/about-local.example.js` (in git) shows how to write it.
+    The Android build copies the whole `web/` folder, so the APK built on the owner's PC includes the local file.
+    The owner keeps a copy of `about-local.js` somewhere safe (like the signing key), because git doesn't have it.
+- **🌳 Third room: the Backyard (v1.23, the owner's choice: start it now, to make room to grow):** a free outdoor room
+  next to her room and the Loft, with its own fences (walls), grass and paths (floors) and decorations, and the season
+  in the sky. It has a soccer goal (opens Soccer) and a chalkboard easel, which becomes Brain Games. The 🪜/🏠 room button
+  becomes a three-room switch (still one tap to any room). Save: `room3`, with defaults for old saves.
+
+### Phase 9: Games
+- **🧤 Be the Keeper (v1.24, the owner's idea):** a second Soccer mode where you're the goalie. Original strikers, one per
+  level (a bouncy frog, a robot, a speedy fox). Swipe or tap to dive; Easy sends slow, glowing shots a 3-year-old can stop
+  by tapping the ball. Its own glove trophies and stickers.
+- **📚 Brain Games, part 1 (v1.25):** at the Backyard's chalkboard. Each game has Easy (ages 3–5), Medium (8) and Hard (11),
+  coins for each first solve plus a level bonus (like the Code Lab), never a timer.
+  - 🧁 **Snack Stand:** count cupcakes → add up an order → make change and times tables.
+  - 🃏 **Memory Match:** 6 → 12 → 20 cards, using their own buddies and items.
+  - 🫧 **Number Pop:** pop the 4 → pop pairs that make 10 → pop the factors of 24.
+- **🎤 Stage song pack (v1.26, the owner's idea):** 4–5 new generated songs: a K-pop-style dance track (original), a soccer
+  stadium chant, Dino Stomp (slow and big, for the little ones), Rocket Launch and a calm lullaby. Stickers for them.
+
+### Phase 10: Backlog + helpers
+- **Looks, emotes & night mode:** outfit save slots (switch a whole look in one tap); tap Fuzzy for a wave, dance, laugh
+  or nap; 🌙 lights off, with lamps, fairy lights and stars glowing (drawn once, no animation loop).
+- **Gifts & room presets:** 🎁 give an item or coins to a brother's or sister's room on the same tablet (it arrives as a
+  wrapped box to open; no network); 🏠 save a room layout and switch back later.
+- **🔊 Read to me:** in Easy mode, tapping a button also says its name, using Android's built-in offline voice through the
+  wrapper (no new permission). The browser version stays quiet.
+- **💾 Backup reminder:** Settings shows "Last backup: 12 days ago" for the grown-up. Nothing for the children to worry about.
+- **🔎 Shop filters by theme** (🦇 🦕 🚀 ⚽ ☁️ …) in the Closet and the Shop, which now hold well over 100 things.
+- **⚡ Speed check and tidy-up:** measure how fast the rooms and shops draw on a modest tablet and trim slow spots. Can move
+  earlier if the tablet starts to feel slow.
+- **💰 Coin balance review:** a few "big dream" things to save up for (for example a canopy bed or an arcade machine),
+  which means raising the 40-coin price cap for those.
+- **📷 Room snapshot:** save a picture of a room or a photocard to the tablet, the same way Backup saves a file.
+
+### Phase 11: More games and content (ongoing)
+- **📚 Brain Games, part 2:** 🚂 Pattern Train (colours → shapes → number sequences), 🔤 Word Builder (first letters →
+  3-letter words → spelling from a picture), 🍕 Fraction Bakery (halves → quarters → "⅔ of the pizza"), 🪐 Fact Cards
+  (dinosaurs, space, ocean; right answers unlock collectible fact cards).
+- **🎹 Music Maker (optional):** a beat-and-melody grid for making their own loop.
+- **Content Pack 3:** K-pop-inspired stage outfits (original), cozy anime-style looks, cafe and bakery, ocean and mermaids,
+  matching furniture sets. **Content Pack 4:** basketball, skateboard and karate, farm animals, more trucks and space.
+- More 🧠 Challenge puzzles, more marble mazes, and stickers for every new game.
+
 ## Ideas backlog (not scheduled)
-- Mascot emotes/dances, outfit save slots ("looks"), and room themes saved as presets.
-- Night mode for the room (lights on/off with the lamps glowing).
-- Gift room items between the sisters' profiles on the same device (no network).
+- Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
 
 ## Risks and how we handle them
 | Risk | Plan |

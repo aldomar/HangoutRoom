@@ -67,6 +67,19 @@ On the Fidget Shelf (the shelf in her room) there are three more tabs:
   when playing in a car).
 Each one has a free design and more to buy in the row at the bottom.
 
+## About & Gift Story (since version 1.22)
+**⚙️ Settings → 💌 About** shows that this app was made just for them:
+- a gold **"Edition 1 of 1" certificate** with their buddy, their nicknames, who made it and the start date
+- a **letter** from the grown-up who made it
+- **🎁 The story so far:** every update, with its date and why it was made
+- a hidden **family secret** (tap the buddy on the certificate 5 times), switched off until a secret is written in
+
+After an update, a **✨ What's New** box shows once on the tablet, listing what's new.
+
+**The personal words stay off GitHub.** They are in `web/about-local.js`, which git ignores. To change them, edit that
+file (or copy `web/about-local.example.js` to start one) and build the APK on this computer. Without the file, the About
+shows a friendly generic version. Keep a copy of `about-local.js` somewhere safe.
+
 ## Content Pack 2 (since version 1.21)
 New things themed on dinosaurs 🦕, space and rockets 🚀, trucks, trains and cars 🚂, and robots, sharks and heroes 🤖.
 Like everything else, they are for anyone to use. All are bought with coins she earns by playing (10–30 coins).
