@@ -21,8 +21,9 @@ _Last updated: 2026-11-16_
   - **Code Lab: 🧠 Challenge level: done** (v1.15 merged, PR #15).
   - **New fidgets (🧪 Slime, 🎛️ Clicker cube, 🔮 Marble Maze): done** (v1.16 merged, PR #16).
   - **Seasons, Sticker Book, Pet** (plan agreed 2026-11-16, three PRs in this order):
-    - **🍂 Seasons: built, PR open as v1.17** on branch `feature/seasons` (from `main` after #16).
-    - **📒 Sticker Book (v1.18)** and **🐾 Pet (v1.19)**: next, each on its own branch after the one before is merged.
+    - **🍂 Seasons: done** (v1.17 merged, PR #17). The owner checked it: everything looks good.
+    - **📒 Sticker Book: built, PR open as v1.18** on branch `feature/stickers` (from `main` after #17).
+    - **🐾 Pet (v1.19)**: next, from `main` after v1.18 is merged.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -48,7 +49,8 @@ _Last updated: 2026-11-16_
 - PR #14 "Code Lab: My Move + If (v1.14)": merged.
 - PR #15 "Code Lab: Challenge (v1.15)": merged.
 - PR #16 "New fidgets (v1.16)": merged.
-- PR "Seasons (v1.17)" on branch `feature/seasons` (from `main` after #16): open.
+- PR #17 "Seasons (v1.17)": merged.
+- PR "Sticker Book (v1.18)" on branch `feature/stickers` (from `main` after #17): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -187,6 +189,20 @@ _Last updated: 2026-11-16_
   - for each season: her room's window and the Loft's window show it; tapping the window still opens Soccer
   - every seasonal decoration draws; a backup keeps them; on a phone the 5 Decorate tabs (icons only) and ✔ Done fit
   - Not checked automatically: how the art looks on her tablet.
+- **Sticker Book (v1.18)**: 467 checks, all passing, no console errors. New checks:
+  - 45 stickers on 6 pages (6 or more each), all different ids, every one draws and measures progress
+  - stickers she had already earned (22 in the test room) all arrive the first time, in one box, +2 coins each;
+    never given twice; the dot on 📒; the book's count; earned = colour + name, others = grey + hint + bar; new ones
+    sparkle; a page counts as seen once open; tab dots for other pages; the dot goes once every page is seen
+  - tapping a grey sticker shows what to do and "have / need"; Back goes to the room
+  - the daily gift is counted (`stats.dailies`) and the 7th gives the Gift Box sticker (+10 gift, +2 sticker)
+  - a sticker earned while playing (the clicker) is a message, never a box over the game
+  - Easy mode: bigger stickers, no hint text on grey ones
+  - a v1.17 backup restores with an empty book (save version 11); a v1.18 backup keeps the stickers and gives nothing twice
+  - phone: 📒 and ⚙️ fit in the room's top bar (icon-only 🛋️), the 6 page tabs fit, 3 stickers across
+  - Test change: stickers pay coins, so the test pauses them (`window.STK_TEST_PAUSE`) until their own checks, so the
+    other games' exact coin checks still add up. The test also now waits for the page to finish loading (a cold start
+    right after files changed was sometimes slower than its fixed 1.2 s wait).
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -348,11 +364,14 @@ _Last updated: 2026-11-16_
     listed first. **The windows change by themselves** (owner's choice): leaves, snow, blossoms or sun in her room's
     window; leaves, snow, petals or fireflies in the Loft's night window. Plain drawings, no animation loop.
     Winter has a Snowflake Garland, because Fairy Lights were already in the Shop. No save change.
-  - **Sticker Book (agreed, to build as v1.18):** a 📒 button in the room's top bar. About 40 stickers on 6 themed pages
-    (Fidgets, Art & Cards, Soccer, Stage, Code Lab, Room & Style). Fixed milestones, most in steps. **+2 coins per sticker**
+  - **Sticker Book (built as v1.18):** a 📒 button in the room's top bar. **45 stickers** on 6 themed pages
+    (Fidgets 10, Art & Cards 8, Soccer 6, Stage 6, Code Lab 7, Room & Style 8). Fixed milestones, many in steps (1–3 little stars). **+2 coins per sticker**
     (owner's choice), given once; ones already earned arrive in one message the first time she opens her room.
     Unearned = grey shape + short hint. A new sticker shows a toast and a dot on 📒 (no popup during games).
-    Bonus photocards are unchanged. Save: `p.stickers[]`, `stats.dailies` (a plain count, not a streak).
+    Bonus photocards are unchanged. Save version 11: `p.stickers[]`, `p.stickerNew[]` (not seen yet, for the dot),
+    `stats.dailies` (a plain count, not a streak). Tapping a sticker shows the numbers ("340 / 1,000").
+    Several stickers at once in the room get one box; otherwise a toast. On a phone 🛋️ Decorate shows only its icon.
+    "Best Friend" (renaming the bunny) points to ✏️ in the Closet, where the rename button is.
   - **Pet (agreed, to build as v1.19):** a pet bed next to Fuzzy; "Pick a pet!" with 4 original pets (tiny fluffy bat,
     ghost kitten, cloud puppy, star hamster), **all free and switchable any time** (owner's choice; hearts kept per pet).
     Tap the pet: 🤚 Pet, 🍪 Treat (2 coins), 🎀 Dress-up (5 accessories, 5–15 coins, `petacc:<id>`), ✏️ Name, 🔄 Change.
@@ -421,13 +440,16 @@ _Last updated: 2026-11-16_
 14. ~~Pick the next Phase 7 item.~~ New fidgets (v1.16), built (v1.16 PR).
 15. ~~Owner: build v1.16, try the slime, clicker and tilt maze on the tablet (see the PR), and merge it.~~ Merged.
 16. ~~Pick the next Phase 7 item.~~ Seasons + Sticker Book + Pet, planned and agreed as three PRs.
-17. Owner: build v1.17, try the Seasons tab and the windows (see the PR), and merge it.
-18. Build the Sticker Book (v1.18) from `main` after v1.17 is merged, then the Pet (v1.19).
+17. ~~Owner: build v1.17, try the Seasons tab and the windows (see the PR), and merge it.~~ Merged; everything looks good.
+18. ~~Build the Sticker Book (v1.18).~~ Built (v1.18 PR).
+19. Owner: build v1.18, try the Sticker Book (see the PR), and merge it.
+20. Build the Pet (v1.19) from `main` after v1.18 is merged.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 10 since v1.16 (New fidgets:
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 11 since v1.18 (Sticker Book: `stickers[]`,
+  `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
   (Code Lab: `code{level, solved[]}`; v1.14 and v1.15 added level ids only, no new shape). It was 8 in v1.11
   (old swoop hair ids → `swoopBlack` + `look.hairColor`, and `hairc:<colour>` added to `owned`). It was 7 in v1.10

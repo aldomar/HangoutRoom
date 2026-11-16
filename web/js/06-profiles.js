@@ -18,7 +18,7 @@ function newProfile(name,fur,color,badge){
 function normalize(p){
   if(!p.id) p.id=uid();
   if(!p.name) p.name='Room';
-  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0},p.stats||{});
+  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.look=Object.assign({},DEFAULT_LOOK,p.look||{});
   p.owned=Array.isArray(p.owned)?p.owned:[];
@@ -31,6 +31,9 @@ function normalize(p){
   p.maze=Object.assign({},p.maze&&typeof p.maze==='object'&&!Array.isArray(p.maze)?p.maze:{});
   p.maze.solved=Array.isArray(p.maze.solved)?p.maze.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[];
   if(typeof p.coins!=='number') p.coins=0;
+  // Sticker Book (v1.18): sticker ids she has, and the ones not seen in the book yet.
+  p.stickers=Array.isArray(p.stickers)?p.stickers.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[];
+  p.stickerNew=Array.isArray(p.stickerNew)?p.stickerNew.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i&&p.stickers.includes(x)):[];
   if(!p.mascotName) p.mascotName='Fuzzy';
   // Photocards (v1.4). A card: {id, no, at, look, stage, frame, title, name, s:[cute,spooky,sporty], bonus?}
   p.cards=Array.isArray(p.cards)?p.cards.filter(c=>c&&typeof c==='object'&&typeof c.id==='string'):[];
