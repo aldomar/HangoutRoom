@@ -354,3 +354,41 @@ body.easy .cube{margin-bottom:0}
 body.easy .stk svg{width:110px;height:110px}body.easy .stk.locked .sn{display:none}
 @media (max-width:560px){#decoBtn span{display:none}}
 @media (max-width:760px){#stkTabs .tab span{display:none}#stkTabs .tab{font-size:21px;padding:8px 10px}#stkTabs .tab small{display:none}.stk-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}.stk svg{width:80px;height:80px}.stk-page{margin:6px;padding:8px}}
+/* Pet (v1.19) */
+.pet{cursor:pointer}
+.pet-bob{animation:petBob 2.6s ease-in-out infinite}
+@keyframes petBob{50%{transform:translateY(-3px)}}
+.pet-ask{animation:petAsk 1.6s ease-in-out infinite}
+@keyframes petAsk{50%{transform:translateY(-6px)}}
+.pet-body{transform-box:fill-box;transform-origin:50% 100%}
+.pet-body.t-spin,.pet-body.t-flip{transform-origin:50% 50%}
+.pet-body.t-wiggle{animation:petWiggle .7s ease}
+@keyframes petWiggle{25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+.pet-body.t-spin{animation:petSpin .8s ease}
+@keyframes petSpin{to{transform:rotate(360deg)}}
+.pet-body.t-hop{animation:petHop .7s ease}
+@keyframes petHop{20%{transform:scale(1.1,.9)}50%{transform:translateY(-40px) scale(.95,1.06)}80%{transform:scale(1.06,.94)}}
+.pet-body.t-flip{animation:petFlip .9s ease}
+@keyframes petFlip{50%{transform:translateY(-50px) rotate(180deg)}100%{transform:rotate(360deg)}}
+.pet-body.t-dance{animation:petDance 1.2s ease}
+@keyframes petDance{20%{transform:translateX(-8px) rotate(-12deg)}40%{transform:translateX(8px) rotate(12deg)}60%{transform:translateX(-8px) rotate(-12deg)}80%{transform:translateX(8px) rotate(12deg)}}
+.pet-heart{pointer-events:none;transform-box:fill-box;transform-origin:center;animation:petHeart 1.2s ease-out both}
+@keyframes petHeart{0%{opacity:0;transform:translateY(10px) scale(.4)}20%{opacity:1}100%{opacity:0;transform:translateY(-60px) scale(1.15)}}
+.pet-cookie{pointer-events:none;animation:petCookie 1s ease-in both}
+@keyframes petCookie{0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0}}
+.decorating .pet{pointer-events:none}
+.pet-card{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap}
+.pet-big{width:150px;height:134px;background:#ffffff14;border-radius:20px}
+.pet-info{text-align:center}
+.pet-h{font-size:28px;font-weight:900}
+.pet-sub{color:var(--muted);font-weight:800;font-size:15px}
+.pet-tricks{display:flex;gap:4px;justify-content:center;margin-top:8px}
+.pet-tricks span{display:flex;flex-direction:column;align-items:center;font-size:22px;opacity:.45;min-width:46px}
+.pet-tricks span.on{opacity:1}
+.pet-tricks small{font-size:12px;font-weight:800}
+.pet-acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-top:12px}
+.pet-acts .btn{min-height:52px;font-size:18px}
+.pet-acts small{font-size:13px}
+.pet-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:8px}
+.pet-pick .tile{min-height:48px}
+.pet-ts{font-size:12px;color:var(--muted);font-weight:700;text-align:center}

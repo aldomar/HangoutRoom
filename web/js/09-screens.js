@@ -97,7 +97,7 @@ function renderRoom(){
   // Wall things (posters, shelves…) are drawn behind everything that stands, so things on a shelf show in front of it.
   s+=items.filter(i=>DECOR[i.type].wall&&!DECOR[i.type].flat).sort((a,b)=>a.y-b.y).map(deco).join('');
   const list=items.filter(i=>!DECOR[i.type].flat&&!DECOR[i.type].wall).map(i=>({y:i.y,h:deco(i)}));
-  list.push({y:604,h:mascotG(p)}); list.sort((a,b)=>a.y-b.y);
+  list.push({y:604,h:mascotG(p)}); list.push({y:PET_SPOT.y,h:petG(p)}); list.sort((a,b)=>a.y-b.y); // the pet bed by Fuzzy (section 22)
   s+=list.map(o=>o.h).join('');
   roomSvg.innerHTML=s;
   roomSvg.classList.toggle('decorating',decorating);
@@ -126,6 +126,7 @@ function handleHot(h){
   else if(h==='window'){SFX.click();show('soccer');}
   else if(h==='stage'){SFX.click();show('stage');}
   else if(h==='code'){SFX.click();show('code');}
+  else if(h==='pet'){petTap();} // section 22
   else {SFX.locked();toast(`🔒 ${LOCKED[h]} is coming in a future update!`);}
 }
 roomSvg.addEventListener('click',e=>{

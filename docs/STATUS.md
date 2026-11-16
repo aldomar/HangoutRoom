@@ -22,8 +22,8 @@ _Last updated: 2026-11-16_
   - **New fidgets (🧪 Slime, 🎛️ Clicker cube, 🔮 Marble Maze): done** (v1.16 merged, PR #16).
   - **Seasons, Sticker Book, Pet** (plan agreed 2026-11-16, three PRs in this order):
     - **🍂 Seasons: done** (v1.17 merged, PR #17). The owner checked it: everything looks good.
-    - **📒 Sticker Book: built, PR open as v1.18** on branch `feature/stickers` (from `main` after #17).
-    - **🐾 Pet (v1.19)**: next, from `main` after v1.18 is merged.
+    - **📒 Sticker Book: done** (v1.18 merged, PR #18). The owner checked it: all looks good.
+    - **🐾 Pet: built, PR open as v1.19** on branch `feature/pet` (from `main` after #18).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -50,7 +50,8 @@ _Last updated: 2026-11-16_
 - PR #15 "Code Lab: Challenge (v1.15)": merged.
 - PR #16 "New fidgets (v1.16)": merged.
 - PR #17 "Seasons (v1.17)": merged.
-- PR "Sticker Book (v1.18)" on branch `feature/stickers` (from `main` after #17): open.
+- PR #18 "Sticker Book (v1.18)": merged.
+- PR "Pet (v1.19)" on branch `feature/pet` (from `main` after #18): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -203,6 +204,20 @@ _Last updated: 2026-11-16_
   - Test change: stickers pay coins, so the test pauses them (`window.STK_TEST_PAUSE`) until their own checks, so the
     other games' exact coin checks still add up. The test also now waits for the page to finish loading (a cold start
     right after files changed was sometimes slower than its fixed 1.2 s wait).
+- **Pet (v1.19)**: 500 checks, all passing, no console errors. New checks:
+  - 4 pets, 5 things to wear, 5 tricks; every pet draws with every accessory
+  - the empty bed with 🐾 ? by Fuzzy; tapping it opens "Pick a pet!" (4 pets, free); the Ghost Kitten (Misty) appears in
+    the bed and says hi in Fuzzy's bubble
+  - tapping the pet opens its menu; 🤚 Pet = +1 heart, a floating heart and a trick; patting again at once = a trick but
+    no heart; the pet never earns coins; the 10th heart teaches Spin (shown, and said)
+  - 🍪 Treat: -2 coins, +3 hearts, a cookie; no treat (and no hearts) without the coins
+  - 🎀 Dress: 6 tiles; buying the crown (15) puts it on; off and on again is free; ✏️ Name (Wisp); 🔄 Change to the
+    hamster (Twinkle, 0 hearts, still crowned) and back (Wisp kept her 13 hearts)
+  - every pet drawn in the room; the pet is in the Loft too; while decorating, tapping it does nothing; Back closes its menu
+  - pet stickers: New Friend + Pet Stylist, then Best Buddies + Trick Star at 100 hearts (and Dance)
+  - a v1.18 backup restores with no pet (save version 12); odd pet data (unknown pet, negative hearts) is made safe;
+    a v1.19 backup keeps the pet, name, hearts and crown; Easy mode: big buttons; phone: the menu and Dress-up fit
+  - The sticker count checks now expect 49 stickers (4 new for the pet).
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -372,11 +387,17 @@ _Last updated: 2026-11-16_
     `stats.dailies` (a plain count, not a streak). Tapping a sticker shows the numbers ("340 / 1,000").
     Several stickers at once in the room get one box; otherwise a toast. On a phone 🛋️ Decorate shows only its icon.
     "Best Friend" (renaming the bunny) points to ✏️ in the Closet, where the rename button is.
-  - **Pet (agreed, to build as v1.19):** a pet bed next to Fuzzy; "Pick a pet!" with 4 original pets (tiny fluffy bat,
+  - **Pet (built as v1.19):** a pet bed next to Fuzzy; "Pick a pet!" with 4 original pets (tiny fluffy bat,
     ghost kitten, cloud puppy, star hamster), **all free and switchable any time** (owner's choice; hearts kept per pet).
     Tap the pet: 🤚 Pet, 🍪 Treat (2 coins), 🎀 Dress-up (5 accessories, 5–15 coins, `petacc:<id>`), ✏️ Name, 🔄 Change.
     Friendship hearts only go up (no hunger, nothing sad); tricks at 10 / 30 / 60 / 100 hearts. The pet never earns
-    coins. Save version 11: `p.pet`.
+    coins. Save version 12: `p.pet{kind, acc, names{}, hearts{}}`.
+    As built: the bed sits in front, by Fuzzy's right foot (x 566, y 694). It was first next to Fuzzy's side, but the
+    Silver Trophy's fixed spot hid it. Pets: Nibbles (Tiny Bat), Misty (Ghost Kitten), Puff (Cloud Puppy), Twinkle (Star
+    Hamster). One heart per pat, at most every 2.5 s (so fast tapping doesn't count). A treat = 2 coins, 3 hearts.
+    Accessories, one worn at a time by any pet: Pink Bow 5, Star Collar 8, Cozy Scarf 10, Tiny Witch Hat 12, Little Crown 15.
+    Tricks: Wiggle (from the start), Spin 10, Hop 30, Flip 60, Dance 100. Pet messages appear in Fuzzy's speech bubble.
+    4 pet stickers on the Room & Style page (49 stickers in all).
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -442,14 +463,16 @@ _Last updated: 2026-11-16_
 16. ~~Pick the next Phase 7 item.~~ Seasons + Sticker Book + Pet, planned and agreed as three PRs.
 17. ~~Owner: build v1.17, try the Seasons tab and the windows (see the PR), and merge it.~~ Merged; everything looks good.
 18. ~~Build the Sticker Book (v1.18).~~ Built (v1.18 PR).
-19. Owner: build v1.18, try the Sticker Book (see the PR), and merge it.
-20. Build the Pet (v1.19) from `main` after v1.18 is merged.
+19. ~~Owner: build v1.18, try the Sticker Book (see the PR), and merge it.~~ Merged; all looks good.
+20. ~~Build the Pet (v1.19).~~ Built (v1.19 PR).
+21. Owner: build v1.19, try the pet (see the PR), and merge it. That finishes Seasons + Sticker Book + Pet.
+22. Pick the next Phase 7 item (ideas: Content Pack 2, more Challenge puzzles or mazes, the pet on photocards).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 11 since v1.18 (Sticker Book: `stickers[]`,
-  `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 12 since v1.19 (Pet: `pet{kind, acc, names{},
+  hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
   (Code Lab: `code{level, solved[]}`; v1.14 and v1.15 added level ids only, no new shape). It was 8 in v1.11
   (old swoop hair ids → `swoopBlack` + `look.hairColor`, and `hairc:<colour>` added to `owned`). It was 7 in v1.10

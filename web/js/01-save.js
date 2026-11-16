@@ -8,9 +8,9 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.18';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.19';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=11;          // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=12;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
 // pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
 const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:''};
@@ -59,7 +59,9 @@ const MIGRATIONS={
   10: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.maze||typeof p.maze!=='object')) p.maze={solved:[]}; }); },
   // v1.18 Sticker Book: stickers[] (sticker ids she has), stickerNew[] (not seen in the book yet) and stats.dailies
   // (daily gifts opened). normalize() fills them in; stickers she had already earned are given the next time she plays.
-  11: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&!Array.isArray(p.stickers)) p.stickers=[]; }); }
+  11: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&!Array.isArray(p.stickers)) p.stickers=[]; }); },
+  // v1.19 Pet: pet {kind ('' until she picks one), acc, names{kind:name}, hearts{kind:n}}. normalize() fills it in.
+  12: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.pet||typeof p.pet!=='object')) p.pet={kind:'',acc:'none',names:{},hearts:{}}; }); }
 };
 
 // Hair ids from before v1.11 (one closet item per colour) -> the colour they had. They stay readable forever:
