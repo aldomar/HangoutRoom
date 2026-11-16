@@ -66,7 +66,7 @@ const STICKERS=[
   stk('seasons','room','🍂','All Year','cloud','Get a decoration from every season',4,stkSeasonal),
   stk('rich100','room','🪙','Piggy Bank','circle','Save up 100 coins',100,p=>p.coins),
   stk('daily7','room','🎁','Gift Box','circle','Open the daily gift 7 times',7,p=>p.stats.dailies),
-  stk('rename','room','🐰','Best Friend','heart','Give your bunny a new name (✏️ in the Closet)',1,p=>p.mascotName!=='Fuzzy'?1:0)
+  stk('rename','room','🐰','Best Friend','heart','Give your buddy a new name (✏️ in the Closet)',1,p=>p.mascotName!=='Fuzzy'?1:0)
 ];
 const stkNeed=s=>typeof s.need==='function'?s.need():s.need;
 const stkHave=(p,s)=>Math.max(0,Math.min(stkNeed(s),Number(s.have(p))||0));

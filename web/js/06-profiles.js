@@ -4,11 +4,11 @@
    ========================================================= */
 // Each room has a colour and a badge, so a child who can't read yet can still find her own room.
 // Colour ids and badges are saved: never rename or remove them (new ones can be added).
-const ROOM_COLORS={pink:'#ff8cc6',purple:'#a97cff',mint:'#8ff0d0',gold:'#ffd166',sky:'#7fc8ff',peach:'#ffab7a'};
+const ROOM_COLORS={pink:'#ff8cc6',purple:'#a97cff',mint:'#8ff0d0',gold:'#ffd166',sky:'#7fc8ff',peach:'#ffab7a',green:'#7ee08a',blue:'#6c8cff'}; // green, blue: v1.20
 const ROOM_BADGES=['🐰','⭐','💜','🦇','⚽','🎤','🎨','☁️'];
-function newProfile(name,fur,color,badge){
+function newProfile(name,fur,color,badge,look){
   const p={id:uid(),name,color,badge,mascotName:'Fuzzy',coins:25,created:Date.now(),lastDaily:'',seenTip:false,
-    stats:{pops:0,flips:0,squish:0,spins:0,bestRpm:0},look:Object.assign({},DEFAULT_LOOK,{fur}),owned:[],
+    stats:{pops:0,flips:0,squish:0,spins:0,bestRpm:0},look:Object.assign({},DEFAULT_LOOK,look||{},{fur}),owned:[],tint:true,
     room:{wall:'lavender',floor:'wood',items:[]},fid:{pop:'rainbow',squish:'mochi',spin:'galaxy',slime:'grape',cube:'pastel',marble:'pearl'}};
   p.room.items.push({uid:uid(),type:'starRug',x:500,y:665,placed:true});
   p.room.items.push({uid:uid(),type:'plant',x:705,y:560,placed:true});
@@ -21,6 +21,7 @@ function normalize(p){
   p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.look=Object.assign({},DEFAULT_LOOK,p.look||{});
+  if(!BUDDIES[p.look.kind]) p.look.kind='bunny'; if(!FACES[p.look.face]) p.look.face='sparkle'; // v1.20
   p.owned=Array.isArray(p.owned)?p.owned:[];
   p.room=Object.assign({wall:'lavender',floor:'wood',items:[]},p.room||{});
   // The Cozy Loft (v1.10), a second room with its own wall, floor and decorations. My Stuff is shared between rooms.
@@ -63,6 +64,11 @@ function normalize(p){
   p.stage.mic=!!p.stage.mic;
   // Little-sister polish (v1.8): Easy mode, and the room's colour + badge on the profile screen.
   p.easy=!!p.easy;
+  // Buddies (v1.20): the room's colour also colours the buttons and bars. New rooms start with it on; rooms made
+  // before v1.20 start with it off, so they look the same as before (it can be switched on with ✏️ under the room).
+  p.tint=!!p.tint;
+  // Furniture colours (v1.20): {piece: colour id}. Section 23 checks the ids when drawing; this only checks the types.
+  p.furn=Object.fromEntries(Object.entries(p.furn&&typeof p.furn==='object'&&!Array.isArray(p.furn)?p.furn:{}).filter(([k,v])=>typeof v==='string'));
   if(!ROOM_COLORS[p.color]){const ks=Object.keys(ROOM_COLORS);p.color=ks[[...p.id].reduce((a,c)=>a+c.charCodeAt(0),0)%ks.length];}
   if(!ROOM_BADGES.includes(p.badge)) p.badge=ROOM_BADGES[0];
   // Code Lab (v1.13): chosen level and the ids of the puzzles solved (each puzzle pays once).

@@ -7,7 +7,8 @@ branches/PRs, decisions already made, and the owner's working preferences.
 Update it at the end of each phase (or whenever something important changes).
 
 ## Project
-Hangout Room: a personal gift app for the owner's 11-year-old niece, and later her younger sister.
+Hangout Room: a personal gift app for the owner's 11-year-old niece and her younger sister (8), and since v1.20 also
+their younger brothers (5 and 3).
 It's a cozy virtual bedroom with an original fuzzy emo bunny mascot, a fidget shelf (pop-it, squishy,
 spinner), a closet for dress-up, coins and room decorating.
 
@@ -17,7 +18,8 @@ spinner), a closet for dress-up, coins and room decorating.
 
 Her interests (use these for themes): K-pop (currently ILLIT and Hearts2Hearts), soccer, Roblox, art,
 anime (Demon Slayer, Hatsune Miku, Cinnamoroll), an emo style drift (fuzzy leg warmers, arm warmers,
-stripes, stars, bats), and fidget and squishy toys.
+stripes, stars, bats), and fidget and squishy toys. For the brothers (since v1.20): dinosaurs, space and rockets, trucks/trains/cars, robots,
+sharks and (original) heroes. Every item stays open to every child: no "boy"/"girl" labels anywhere.
 
 ## Rules
 - **Never commit to `main`.** Work on a feature branch and open a pull request on `aldomar/HangoutRoom`.
@@ -71,7 +73,7 @@ stripes, stars, bats), and fidget and squishy toys.
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`.
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`.
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
   optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it.
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
@@ -132,6 +134,8 @@ stripes, stars, bats), and fidget and squishy toys.
   20. `20-seasons.js` Seasons (`SEASONS`, `seasonNow()`, seasonal `DECOR`/`WALLS` with `season:'autumn'…`, `seasonWindow()`, `seasonGrid()` for the 🍂 Seasons tab)
   21. `21-stickers.js` Sticker Book (`STICKERS`, `STK_PAGES`, `stickerSVG`, `checkStickers`, `renderStickers`)
   22. `22-pet.js` Pet (`PETS`, `PET_ACC`, `PET_TRICKS`, `petG` drawn by `renderRoom`, `petTap`, `petMenu`, `petPat`, `petTreat`)
+  23. `23-buddies.js` Buddies (`STARTERS` for New Room, `starterRow`, `giveStarter`; room colour tints `TINTS`, `applyTint`;
+      furniture colours `FURN_COLORS`, `FURN_PIECES`, `furnC`, `furnGrid`; `ROOM_START` for a new room's wall and colours)
   99. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -188,6 +192,19 @@ stripes, stars, bats), and fidget and squishy toys.
   accessory ids (owned as `petacc:<id>`) are saved: never rename them. `normalize()` runs while file 06 loads, so it only
   checks types; read the pet through `petKind/petName/petHearts/petAcc`. Hearts only go up; the pet never earns coins.
   In the room, pet messages use Fuzzy's speech bubble (`say`), because a toast would cover the pet.
+- Buddies (since v1.20): `BUDDIES` (`bunny bear puppy dino fox`) and `FACES` (`sparkle bright cheeky`) live in section 3,
+  because `mascotSVG` draws them. Every buddy shares one body, so clothes never need a per-buddy version: a buddy only
+  adds `back` (ears behind the head), `front` (over the head) and `tail` (behind the body). They are Closet
+  categories `kind` and `face` (price 0); "Surprise me" never changes kind, face or fur. Old looks with no kind/face
+  draw the bunny with the Sparkly face, exactly as before. Buddy and face ids are saved: never rename them.
+  Never label anything "boy" or "girl"; New Room shows `STARTERS` as pictures only.
+- Room tints (since v1.20): when `p.tint` is on and the room colour has a `TINTS` entry, `applyTint()` (called by
+  `applyEasy()`) sets the CSS variables `--pink --pink-dk --pink-ink --purple --purple-dk --bg --panel --panel2 --line --hi`
+  on `<body>`. New CSS should use these variables instead of the raw pink/purple hex values, so it tints too.
+- Furniture colours (since v1.20): `furniture()` and `loftFurniture()` take the built-in pieces' colours from
+  `furnC(piece)` (classic colours when `p.furn[piece]` is missing or unknown). A new built-in piece that should be
+  recolourable gets a `FURN_PIECES` entry. Piece ids (`desk closet shelf curtain desk2 beams window2 lamp`) and colour ids
+  are saved: never rename them.
 - Every room area is open. To add a locked area for a future feature, put it in `LOCKED` and `handleHot()`.
 - `android/`: Gradle project; `app/src/main/java/com/family/hangoutroom/MainActivity.kt`; `android/README.md` has build/sideload steps.
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.

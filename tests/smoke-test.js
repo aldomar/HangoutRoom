@@ -672,7 +672,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Hair styles + colours');
   await ev(`P().coins=500;show('closet');document.querySelector('[data-cat=hair]').click()`); await sleep(150);
-  check('hair tab shows 8 styles', (await ev(`document.querySelectorAll('#closetGrid .tile').length`))===8, await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id)`));
+  check('hair tab shows 11 styles (8, and 3 short ones since v1.20)', (await ev(`document.querySelectorAll('#closetGrid .tile').length`))===11, await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id)`));
   check('and 10 colour swatches', await ev(`!document.querySelector('#hairCols').classList.contains('hidden')&&document.querySelectorAll('#hairCols [data-hc]').length===10`));
   check('no old coloured swoops in the closet', await ev(`!document.querySelector('#closetGrid [data-id=swoopPurple]')&&!document.querySelector('#closetGrid [data-id=swoopCandy]')`));
   await ev(`document.querySelector('#hairCols [data-hc=pink]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
@@ -1209,7 +1209,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const ptCode=await ev('JSON.stringify(DB)'), ptId=await ev('P().id');
   const pt118=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.version=11;d.profiles.forEach(p=>{delete p.pet;p.owned=p.owned.filter(o=>!/^petacc:/.test(o));});return JSON.stringify(d);})()`);
   await ev(`doRestore(${JSON.stringify(pt118)})`); await sleep(400);
-  check('a v1.18 backup restores with no pet yet (save version 12)', await ev(`DB.version===12&&DB.profiles.every(p=>p.pet.kind===''&&p.pet.acc==='none'&&Object.keys(p.pet.hearts).length===0)`));
+  check('a v1.18 backup restores with no pet yet (save version 12+)', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.pet.kind===''&&p.pet.acc==='none'&&Object.keys(p.pet.hearts).length===0)`));
   const ptBad=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.profiles[0].pet={kind:'dragon',acc:'cape',names:{bat:7,ghostCat:'Wisp'},hearts:{bat:-5,ghostCat:'12'}};return JSON.stringify(d);})()`);
   await ev(`doRestore(${JSON.stringify(ptBad)})`); await sleep(400);
   check('odd pet data is made safe (unknown pet = the empty bed)', await ev(`(()=>{const p=DB.profiles[0];return p.pet.hearts.bat===0&&p.pet.hearts.ghostCat===12&&!('bat' in p.pet.names)&&petKind(p)===''&&petAcc(p)==='none';})()`));
@@ -1219,6 +1219,99 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`P().easy=true;applyEasy();petMenu()`); await sleep(150); await shot('E10-pet-menu-easy');
   check('Easy mode: the pet menu buttons are big', await ev(`[...document.querySelectorAll('#modalBody [data-pa]')].every(b=>b.getBoundingClientRect().height>=52)`));
   await ev(`closeModal();P().easy=false;applyEasy()`);
+
+  console.log('Buddies (v1.20): animal buddies, faces, starter looks, room colour tints');
+  await ev(`stkPaused=true`);
+  check('5 buddies, 3 faces, 6 starter looks', await ev(`Object.keys(BUDDIES).join()==='bunny,bear,puppy,dino,fox'&&Object.keys(FACES).join()==='sparkle,bright,cheeky'&&Object.keys(STARTERS).length===6`));
+  check('every buddy draws with every face and fur', await ev(`Object.keys(BUDDIES).every(k=>Object.keys(FACES).every(fc=>Object.keys(FUR).every(fu=>{const s=mascotSVG(Object.assign({},DEFAULT_LOOK,{kind:k,face:fc,fur:fu}));return s.length>2000&&!/undefined|NaN/.test(s);})))`));
+  check('every starter look uses real closet items', await ev(`Object.keys(STARTERS).every(k=>{const L=starterLook(k);return Object.keys(CLOSET).every(c=>CLOSET[c].items.some(i=>i.id===L[c]))&&FUR[STARTERS[k].fur];})`));
+  check('an old look (no buddy, no face) draws exactly like before: a bunny with the Sparkly face', await ev(`(()=>{const o=Object.assign({},DEFAULT_LOOK);delete o.kind;delete o.face;return mascotSVG(o)===mascotSVG(DEFAULT_LOOK)&&mascotSVG(Object.assign({},o,{kind:'dragon',face:'x'}))===mascotSVG(DEFAULT_LOOK);})()`));
+  check('the new short hair, tee, shorts, high-tops and cap draw', await ev(`['hair:buzz','hair:messy','hair:sidePart','top:stripeTee','bottom:cargo','shoes:hightops','acc:capBack'].every(k=>{const [c,i]=k.split(':');return CLOSET[c].items.some(x=>x.id===i)&&!/undefined|NaN/.test(mascotSVG(Object.assign({},DEFAULT_LOOK,{[c]:i})));})`));
+  check('hair colours work on the new hair', await ev(`mascotSVG(Object.assign({},DEFAULT_LOOK,{hair:'messy',hairColor:'streak'})).includes('#ff6fae')`));
+  // the Closet: 🐾 Buddy is the first tab, and buddies and faces are free
+  await ev(`closeModal();show('closet')`); await sleep(200);
+  check('the Closet starts with 🐾 Buddy and has a 😊 Face tab', await ev(`(()=>{const t=[...document.querySelectorAll('#closetTabs [data-cat]')].map(b=>b.dataset.cat);return t[0]==='kind'&&t.includes('face');})()`));
+  const bc0=await ev('P().coins'), bLook=await ev('JSON.stringify(P().look)');
+  await ev(`document.querySelector('#closetTabs [data-cat=kind]').click()`); await sleep(150);
+  check('the Buddy tab shows 5 buddies, all free', await ev(`document.querySelectorAll('#closetGrid .tile').length===5&&!document.querySelector('#closetGrid .tile.locked')`));
+  await ev(`document.querySelector('#closetGrid [data-id=dino]').click()`); await sleep(150);
+  await ev(`document.querySelector('#closetTabs [data-cat=face]').click()`); await sleep(150);
+  await ev(`document.querySelector('#closetGrid [data-id=cheeky]').click()`); await sleep(150); await shot('F1-closet-dino');
+  check('picking Little Dino and Cheeky Grin: free, and the rest of the outfit stays', await ev(`(()=>{const L=P().look,o=${bLook};return L.kind==='dino'&&L.face==='cheeky'&&L.top===o.top&&L.hair===o.hair&&P().coins===${bc0};})()`));
+  check('the Closet picture is a dino now', await ev(`document.querySelector('#closetMascot').innerHTML.includes('M89 45 L100 10')`));
+  await ev(`document.querySelector('#randomBtn').click()`); await sleep(100);
+  check('Surprise me keeps the buddy, face and fur', await ev(`P().look.kind==='dino'&&P().look.face==='cheeky'&&P().look.fur===${JSON.stringify(JSON.parse(bLook).fur)}`));
+  for(const k of Object.keys(await ev('BUDDIES'))){await ev(`P().look.kind='${k}';renderCloset()`); await sleep(80); await shot('F2-buddy-'+k);}
+  await ev(`P().look.kind='dino';save();show('room')`); await sleep(250); await shot('F3-room-dino');
+  check('the room shows the dino too', await ev(`document.querySelector('#mascotG').innerHTML.includes('M89 45 L100 10')`));
+  check('the pet still sits by the dino', await ev(`!!document.querySelector('#petG')`));
+  check('a room with no furniture colours has the classic pink desk, purple wardrobe and curtains', await ev(`(()=>{const k=P().furn;P().furn={};const f=furniture();P().furn=k;return ['#ffb3d9','#e48fbf','#6b46b8','#7d58cc','#a97cff','#ff8cc6'].every(c=>f.includes(c));})()`));
+  check('the Loft has its classic wood beams and lavender desk', await ev(`(()=>{const k=P().furn;P().furn={};const f=loftFurniture();P().furn=k;return ['#9b6a42','#c9a7ff','#5b3a99'].every(c=>f.includes(c));})()`));
+  check('rooms from before v1.20 get the tint OFF (save step 13)', await ev(`(()=>{const d={profiles:[{},{tint:true}]};MIGRATIONS[13](d);return d.profiles[0].tint===false&&d.profiles[1].tint===true;})()`));
+  // make a new room from a starter look
+  const nRooms=await ev('DB.profiles.length'), prevId=await ev('P().id');
+  await ev(`show('profiles')`); await sleep(150);
+  check('the profile screen shows three buddies', await ev(`document.querySelectorAll('#profHero svg').length===3`));
+  await ev(`roomModal(null)`); await sleep(150); await shot('F4-new-room');
+  check('the New Room box shows 6 buddy pictures (no words), the classic bunny picked', await ev(`(()=>{const b=[...document.querySelectorAll('#npStart [data-start]')];return b.length===6&&b.every(x=>x.children.length===1&&x.firstElementChild.tagName==='svg')&&b[0].classList.contains('on')&&b[0].dataset.start==='emo';})()`));
+  check('every buddy picture is at least 48 px', await ev(`[...document.querySelectorAll('#npStart button')].every(b=>{const r=b.getBoundingClientRect();return r.width>=48&&r.height>=48;})`));
+  await ev(`document.querySelector('#npStart [data-start=dino]').click()`); await sleep(100);
+  check('picking the dino picks Mint fur', await ev(`document.querySelector('#npFur .on').dataset.fur==='mint'`));
+  await ev(`document.querySelector('#npFur [data-fur=sky]').click()`); await sleep(100);
+  check('picking Sky fur shows every buddy in Sky, the dino still picked', await ev(`document.querySelector('#npStart .on').dataset.start==='dino'&&document.querySelector('#npStart').innerHTML.split('#c4e2ff').length>6`));
+  await ev(`document.querySelector('#npCol [data-col=green]').click();document.querySelector('#npName').value='Rexy';[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(700);
+  check('the new room has the dino starter look in Sky', await ev(`(()=>{const p=P(),L=p.look;return p.name==='Rexy'&&L.kind==='dino'&&L.face==='cheeky'&&L.fur==='sky'&&L.top==='hoodie'&&L.bottom==='cargo'&&L.shoes==='hightops';})()`));
+  check('the starter clothes are hers for free (no coins spent, hoodie owned)', await ev(`[25,35].includes(P().coins)&&P().owned.includes('top:hoodie')`));
+  check('a new room is tinted: green buttons and bars', await ev(`P().tint===true&&document.body.classList.contains('tint')&&document.body.style.getPropertyValue('--pink')==='#7ee08a'`));
+  check('a green room starts with the Leafy Green wall (given free) and green furniture', await ev(`(()=>{const p=P();return p.room.wall==='leafDots'&&p.owned.includes('wall:leafDots')&&['desk','closet','shelf','curtain','desk2','window2','lamp'].every(k=>p.furn[k]==='green')&&!p.furn.beams&&p.room2.wall==='attic';})()`));
+  check('the green furniture is drawn in the room', await ev(`document.querySelector('#roomSvg').innerHTML.includes('#62c470')&&!furniture().includes('#6b46b8')`));
+  check('the room labels take the room colour', await ev(`(()=>{const r=document.querySelector('#roomSvg .sign rect');return r&&(r.getAttribute('style')||'').includes('var(--pink)')&&getComputedStyle(r).fill==='rgb(126, 224, 138)';})()`));
+  await ev(`enterDecorate();document.querySelector('[data-dt=colors]').click()`); await sleep(150); await shot('F9-colours-tab');
+  check('Decorate has a 🎨 Colours tab: 4 pieces, 11 swatches each (Classic + 10)', await ev(`document.querySelectorAll('#decoGrid .furn-row').length===4&&[...document.querySelectorAll('#decoGrid .furn-row')].every(r=>r.querySelectorAll('[data-fc]').length===11)`));
+  const fcc0=await ev('P().coins');
+  await ev(`document.querySelector('[data-furn=desk][data-fc=sky]').click()`); await sleep(100);
+  check('tapping Sky paints the desk sky blue, free', await ev(`P().furn.desk==='sky'&&document.querySelector('#roomSvg').innerHTML.includes('#c6e6ff')&&document.querySelector('[data-furn=desk][data-fc=sky]').classList.contains('on')&&P().coins===${fcc0}`));
+  await ev(`document.querySelector('[data-furn=closet][data-fc=classic]').click()`); await sleep(100);
+  check('Classic gives the wardrobe its old purple back', await ev(`!('closet' in P().furn)&&furniture().includes('#6b46b8')`));
+  check('every swatch is at least 48 px', await ev(`[...document.querySelectorAll('#decoGrid [data-fc]')].every(b=>b.getBoundingClientRect().width>=48)`));
+  await ev(`goRoom(2)`); await sleep(200); await ev(`decorating||enterDecorate();document.querySelector('[data-dt=colors]').click()`); await sleep(150);
+  check('in the Loft the Colours tab lists the Loft pieces', await ev(`[...document.querySelectorAll('#decoGrid [data-fc=classic]')].map(b=>b.dataset.furn).join()==='desk2,beams,window2,lamp'`));
+  await ev(`document.querySelector('[data-furn=beams][data-fc=white]').click()`); await sleep(100); await shot('F10-loft-colours');
+  check('white beams in the Loft', await ev(`P().furn.beams==='white'&&loftFurniture().includes('#ddd5e8')`));
+  await ev(`exitDecorate();goRoom(1)`); await sleep(150);
+  check('a tinted button really is green', await ev(`(()=>{const b=document.createElement('button');b.className='btn pink';document.body.appendChild(b);const c=getComputedStyle(b).backgroundColor;b.remove();return c==='rgb(126, 224, 138)';})()`));
+  await shot('F5-green-room'); await ev(`show('closet')`); await sleep(200); await shot('F6-green-closet');
+  await ev(`show('profiles')`); await sleep(150);
+  check('the profile screen is never tinted', await ev(`!document.body.classList.contains('tint')&&!document.body.style.getPropertyValue('--pink')`));
+  // switch the tint off (✏️ under the room) and back
+  const rexId=await ev('P().id');
+  await ev(`roomModal(P())`); await sleep(150);
+  check('the Change Room box has the tint switch (ON) and no buddy pictures', await ev(`document.querySelector('#npTint b').textContent==='ON'&&!document.querySelector('#npStart')`));
+  await ev(`document.querySelector('#npTint').click();[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(200);
+  await ev(`document.querySelector('.pcard[data-id="${rexId}"]').click()`); await sleep(500); await ev(`closeModal();show('room')`);
+  check('tint OFF: the classic pink and purple', await ev(`P().tint===false&&!document.body.classList.contains('tint')`));
+  await ev(`P().tint=true;P().color='pink';applyEasy()`);
+  check('a pink room with the tint on looks classic', await ev(`!document.body.classList.contains('tint')`));
+  for(const c of ['mint','gold','sky','peach','green','blue']){await ev(`P().color='${c}';applyEasy()`); await sleep(60); await shot('F7-tint-'+c);}
+  check('every room colour tints', await ev(`Object.keys(ROOM_COLORS).filter(c=>c!=='pink'&&c!=='purple').every(c=>TINTS[c])`));
+  await ev(`P().color='green';applyEasy();P().easy=true;applyEasy()`);
+  check('Easy mode and the tint work together', await ev(`document.body.classList.contains('tint')&&document.body.classList.contains('easy')`));
+  await ev(`P().easy=false;applyEasy()`);
+  // photocards: an old card (no buddy in its look) still draws a bunny; a new card shows the dino
+  check('an old photocard look draws a bunny; a dino card draws a dino', await ev(`(()=>{const o=Object.assign({},DEFAULT_LOOK);delete o.kind;delete o.face;const old=cardSVG({no:1,at:0,look:o,stage:'spot',frame:'sparkle',title:'Best Bunny',name:'Test'}),dn=cardSVG({no:2,at:0,look:P().look,stage:'spot',frame:'sparkle',title:'Best Bunny',name:'Test'});return old.includes('rotate(-14 74 70)')&&dn.includes('M89 45 L100 10');})()`));
+  console.log('Buddies in backups');
+  const bdCode=await ev('JSON.stringify(DB)');
+  const bd119=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.version=12;d.profiles.forEach(p=>{delete p.tint;delete p.furn;delete p.look.kind;delete p.look.face;});return JSON.stringify(d);})()`);
+  await ev(`doRestore(${JSON.stringify(bd119)})`); await sleep(400);
+  check('a v1.19 backup restores as bunnies, Sparkly faces, no tint (save version 13)', await ev(`DB.version===DB_VERSION&&DB_VERSION===13&&DB.profiles.every(p=>p.look.kind==='bunny'&&p.look.face==='sparkle'&&p.tint===false&&Object.keys(p.furn).length===0)`));
+  const bdBad=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.profiles[0].look.kind='dragon';d.profiles[0].look.face=7;d.profiles[0].tint='yes';d.profiles[0].furn={desk:'rainbow',closet:5};return JSON.stringify(d);})()`);
+  await ev(`doRestore(${JSON.stringify(bdBad)})`); await sleep(400);
+  check('odd buddy data is made safe', await ev(`(()=>{const p=DB.profiles[0];return p.look.kind==='bunny'&&p.look.face==='sparkle'&&p.tint===true&&p.furn.desk==='rainbow'&&!('closet' in p.furn)&&furniture().length>1000;})()`));
+  await ev(`doRestore(${JSON.stringify(bdCode)})`); await sleep(400);
+  check('a v1.20 backup keeps the dino and the tint', await ev(`(()=>{const p=DB.profiles.find(q=>q.id==='${rexId}');return p&&p.look.kind==='dino'&&p.look.face==='cheeky'&&p.tint===true&&p.furn.desk==='sky'&&p.furn.beams==='white';})()`));
+  // tidy up: remove the test room and go back to the earlier one
+  await ev(`closeModal();DB.profiles=DB.profiles.filter(p=>p.id!=='${rexId}');DB.activeId='${prevId}';P().look.kind='bunny';P().look.face='sparkle';save();show('room')`); await sleep(200);
+  check('back to the earlier room', await ev(`DB.profiles.length===${nRooms}&&P().id==='${prevId}'`));
 
   console.log('Phone portrait + other screens');
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
@@ -1247,7 +1340,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`show('room')`); await sleep(200); await shot('A10-phone-room-topbar');
   check('phone: the Loft button fits in the top bar', await ev(`(()=>{const r=document.querySelector('#roomGo').getBoundingClientRect(), d=document.querySelector('#setBtn').getBoundingClientRect();return r.width>=48&&d.right<=innerWidth;})()`));
   await ev(`show('room');enterDecorate();document.querySelector('[data-dt=season]').click()`); await sleep(200); await shot('C5-phone-seasons');
-  check('phone: all 5 Decorate tabs and ✔ Done fit without scrolling', await ev(`(()=>{const t=document.querySelector('#decoTabs'),d=document.querySelector('#decoDone').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&d.right<=innerWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`), await ev(`(()=>{const t=document.querySelector('#decoTabs');return [t.scrollWidth,t.clientWidth,document.querySelector('#decoDone').getBoundingClientRect().right,[...t.children].map(b=>Math.round(b.getBoundingClientRect().height))];})()`));
+  check('phone: all 6 Decorate tabs and ✔ Done fit without scrolling', await ev(`(()=>{const t=document.querySelector('#decoTabs'),d=document.querySelector('#decoDone').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&d.right<=innerWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`), await ev(`(()=>{const t=document.querySelector('#decoTabs');return [t.scrollWidth,t.clientWidth,document.querySelector('#decoDone').getBoundingClientRect().right,[...t.children].map(b=>Math.round(b.getBoundingClientRect().height))];})()`));
   await ev(`exitDecorate()`);
   check('phone: the 📒 Sticker Book button and ⚙️ fit in the room top bar', await ev(`(()=>{const b=document.querySelector('#stkBtn').getBoundingClientRect(),s=document.querySelector('#setBtn').getBoundingClientRect(),t=document.querySelector('#roomTitle').getBoundingClientRect();return b.width>=44&&s.right<=innerWidth&&t.width>=60;})()`));
   await ev(`openStickers('fidget')`); await sleep(250); await shot('D6-phone-stickers');
@@ -1256,6 +1349,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('phone: the whole pet menu fits on screen', await ev(`[...document.querySelectorAll('#modalBody [data-pa],#modalBtns button')].every(b=>{const r=b.getBoundingClientRect();return r.bottom<=innerHeight&&r.right<=innerWidth&&r.left>=0&&(r.height>=48||!b.dataset.pa);})`));
   await ev(`petDress()`); await sleep(150); await shot('E12-phone-pet-dress');
   check('phone: the Dress-up tiles and Done fit', await ev(`(()=>{const d=[...document.querySelectorAll('#modalBtns button')].pop().getBoundingClientRect();return d.bottom<=innerHeight&&[...document.querySelectorAll('#modalBody [data-acc]')].every(b=>b.getBoundingClientRect().right<=innerWidth);})()`));
+  await ev(`closeModal();show('profiles');roomModal(null)`); await sleep(200); await shot('F8-phone-new-room');
+  check('phone: the New Room buddy pictures fit across', await ev(`[...document.querySelectorAll('#npStart button')].every(b=>{const r=b.getBoundingClientRect();return r.right<=innerWidth&&r.left>=0&&r.height>=48;})`));
   await ev(`closeModal();show('room')`);
   await ev(`show('fidget');setFidTab('cube')`); await sleep(300); await shot('B12-phone-cube');
   check('phone: all 6 fidget tabs fit without scrolling', await ev(`(()=>{const t=document.querySelector('#fidTabs');return t.scrollWidth<=t.clientWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`));
