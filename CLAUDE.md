@@ -157,9 +157,11 @@ stripes, stars, bats), and fidget and squishy toys.
   both. My Stuff (items with `placed:false`) is shared between rooms; placing a stored item moves it into the room on screen.
   New code that adds or finds room items must use these, not `p.room` directly (prizes like trophies still go to `p.room`).
 - Code Lab (since v1.13): the Loft's computer desk (`data-hot="code"`). Puzzles are text recipes in `CODE_PUZZLES`
-  (map rows: `.` floor, `F` Fuzzy, `C` carrot, `*` star, `#` toy block; `max` blocks; `sol` = one answer, which the smoke
-  test runs). `codeSim()` holds the rules with no drawing; the board is SVG moved by CSS transitions (nothing in the main loop).
-  Puzzle ids (`e1`, `m1`, `h1` …) and level ids are saved in `code.solved`: never rename them. Add new puzzles at the end of a level.
+  (map rows: `.` floor, `F` Fuzzy, `C` carrot, `*` star, `#` toy block, `~` puddle; `max` blocks; `sol` = one answer, which the smoke
+  test runs; `move` = the ✨ My Move row of that answer). Blocks: arrows `UDLR`, repeats `2 3 4`, `S` pick up a star,
+  `M` ✨ run My Move (levels with `M` show the My Move row, `moveMax` blocks; My Move can't hold `M`), `Q` ❓ in front of an
+  arrow = hop a puddle if one is next (since v1.14). The smoke test also proves My Move puzzles need ✨ and If puzzles need ❓. `codeSim()` holds the rules with no drawing; the board is SVG moved by CSS transitions (nothing in the main loop).
+  Puzzle ids (`e1`, `m1`, `h1`, `f1`, `i1` …) and level ids (`easy medium hard move if`) are saved in `code.solved`: never rename them. Add new puzzles at the end of a level.
 - Every room area is open. To add a locked area for a future feature, put it in `LOCKED` and `handleHot()`.
 - `android/`: Gradle project; `app/src/main/java/com/family/hangoutroom/MainActivity.kt`; `android/README.md` has build/sideload steps.
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.

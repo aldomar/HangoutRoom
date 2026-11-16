@@ -257,6 +257,13 @@ body.easy .hcol{width:56px;height:56px}
 .clb{width:56px;height:56px;border-radius:14px;background:var(--purple);box-shadow:0 4px 0 #6a45c0;font-size:28px;line-height:1;display:flex;align-items:center;justify-content:center;gap:1px;transition:transform .12s}
 .clb:active{transform:translateY(3px);box-shadow:0 1px 0 #6a45c0}
 .clb.rep{background:var(--mint);box-shadow:0 4px 0 #3fae8c;color:#173d33}
+.clb.fn{background:var(--gold);box-shadow:0 4px 0 #c99a2e}
+.clb.cond{background:#5fb4ff;box-shadow:0 4px 0 #2f7fc4}
+.cl-prog.on{border-style:solid;border-color:var(--gold);background:#3a2d52}
+.cl-tag{display:flex;align-items:center;justify-content:center;width:34px;font-size:24px;flex:0 0 auto}
+.clhop.jump{animation:clJump .38s ease;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes clJump{50%{transform:translateY(-38px)}}
+@media (max-width:560px){#clTabs .tab span{display:none}#clTabs .tab{font-size:22px;padding:8px 16px}}
 .clb small{font-size:16px;font-weight:900}
 .cl-pal .clb{width:64px;height:64px;font-size:32px}
 .clslot{width:56px;height:56px;border-radius:14px;border:3px dashed #5a4a78}

@@ -42,7 +42,14 @@ and press **▶️ Run**. Fuzzy follows the blocks one at a time (the block that
   so she has to use them. **Hard:** adds toy blocks in the way and ⭐ stars to pick up with the 🌟 block.
 - If Fuzzy bumps into something, the block that went wrong glows yellow. Nothing is lost: tap a block to take it out,
   fix the program and run it again. There is no timer.
-- Each puzzle pays 3 coins the first time it is solved, plus 5 more for finishing a whole level.
+- **✨ My Move** (since version 1.14): a second short row of blocks, **✨ My Move**. Each ✨ block in the program does
+  everything in My Move. Tap a row to choose where new blocks go (it gets a gold border). For example: My Move = ➡️ ⬆️
+  and the program = 🔁 ×3 ✨ climbs a staircase. The program has room for only a few blocks, so My Move is needed.
+- **❓ If** (since version 1.14): puddles 💧 are in the way, and walking into one is a "Splash!" oops. Put ❓ in front of
+  an arrow: if a puddle is next, Fuzzy hops over it; if not, Fuzzy just takes a step. 🔁 ×3 ❓ ➡️ handles puddles
+  wherever they are.
+- Each puzzle pays 3 coins the first time it is solved, plus 5 more for finishing a whole level. There are 5 levels
+  with 6 puzzles each, all open from the start.
 
 ## Shelves and hair (since version 1.11)
 - **Shelves:** buy a Little or Long Shelf in the Shop and hang it on the wall. Drag a small thing onto the shelf and it

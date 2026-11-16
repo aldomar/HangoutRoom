@@ -55,6 +55,6 @@ function normalize(p){
   // Code Lab (v1.13): chosen level and the ids of the puzzles solved (each puzzle pays once).
   p.code=Object.assign({level:'easy'},p.code&&typeof p.code==='object'&&!Array.isArray(p.code)?p.code:{});
   p.code.solved=Array.isArray(p.code.solved)?p.code.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[];
-  if(!['easy','medium','hard'].includes(p.code.level)) p.code.level='easy';
+  if(!['easy','medium','hard','move','if'].includes(p.code.level)) p.code.level='easy';
 }
 DB.profiles.forEach(normalize);
