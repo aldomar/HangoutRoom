@@ -31,6 +31,13 @@ function normalize(p){
   p.maze=Object.assign({},p.maze&&typeof p.maze==='object'&&!Array.isArray(p.maze)?p.maze:{});
   p.maze.solved=Array.isArray(p.maze.solved)?p.maze.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[];
   if(typeof p.coins!=='number') p.coins=0;
+  // Pet (v1.19): which pet is out (a PETS id, or '' before she picks one), what it wears, and a name and
+  // friendship hearts for each kind of pet she has had. Section 22 checks the ids; this only checks the types.
+  p.pet=Object.assign({kind:'',acc:'none'},p.pet&&typeof p.pet==='object'&&!Array.isArray(p.pet)?p.pet:{});
+  if(typeof p.pet.kind!=='string') p.pet.kind=''; if(typeof p.pet.acc!=='string') p.pet.acc='none';
+  const petObj=o=>o&&typeof o==='object'&&!Array.isArray(o)?o:{};
+  p.pet.names=Object.fromEntries(Object.entries(petObj(p.pet.names)).filter(([k,v])=>typeof v==='string'&&v.trim()).map(([k,v])=>[k,v.slice(0,12)]));
+  p.pet.hearts=Object.fromEntries(Object.entries(petObj(p.pet.hearts)).map(([k,v])=>[k,Math.max(0,Math.floor(Number(v)||0))]));
   // Sticker Book (v1.18): sticker ids she has, and the ones not seen in the book yet.
   p.stickers=Array.isArray(p.stickers)?p.stickers.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[];
   p.stickerNew=Array.isArray(p.stickerNew)?p.stickerNew.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i&&p.stickers.includes(x)):[];

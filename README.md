@@ -67,6 +67,18 @@ On the Fidget Shelf (the shelf in her room) there are three more tabs:
   when playing in a car).
 Each one has a free design and more to buy in the row at the bottom.
 
+## A pet for Fuzzy (since version 1.19)
+- A little pet bed with a 🐾 ? sits by Fuzzy's feet. Tap it and pick a pet: a Tiny Bat, a Ghost Kitten, a Cloud Puppy
+  or a Star Hamster. **They are all free**, and she can switch any time (each pet keeps its own name and hearts).
+- The pet goes wherever Fuzzy is, in her room and in the Loft. Tap the pet for its menu:
+  - **🤚 Pet:** a heart ❤️ and a trick (one heart every few seconds, so tapping fast doesn't count extra).
+  - **🍪 Treat:** 2 coins, 3 hearts.
+  - **🎀 Dress:** a bow, a star collar, a scarf, a tiny witch hat or a crown (5–15 coins, bought once, worn by any pet).
+  - **✏️ Name** and **🔄 Change** (pick another pet).
+- **Hearts only go up.** The pet never gets hungry or sad, and nothing is lost if she doesn't play with it.
+  New tricks come at 10, 30, 60 and 100 hearts (Spin, Hop, Flip, Dance). The pet doesn't earn coins.
+- There are 4 pet stickers in the Sticker Book (🏠 Room & Style page).
+
 ## Sticker Book (since version 1.18)
 - Tap **📒** at the top of the room. The book has 6 pages (🫧 Fidgets, 🎨 Art & Cards, ⚽ Soccer, 🎤 Stage, 💻 Code Lab,
   🏠 Room & Style) with 45 stickers in all.
