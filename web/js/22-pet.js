@@ -162,7 +162,7 @@ function petRename(){
 /* ---------- stickers for the pet (Room & Style page, section 21) ---------- */
 const petBest=p=>Math.max(0,...Object.values(p.pet.hearts).map(n=>Number(n)||0));
 STICKERS.push(
-  stk('pet1','room','🐾','New Friend','heart','Pick a pet (tap the pet bed by your bunny)',1,p=>petKind(p)?1:0),
+  stk('pet1','room','🐾','New Friend','heart','Pick a pet (tap the pet bed by your buddy)',1,p=>petKind(p)?1:0),
   stk('petLove','room','💞','Best Buddies','heart','Get 30 hearts with one pet',30,petBest),
   stk('petTricks','room','🎪','Trick Star','star','Teach a pet every trick (100 hearts)',100,petBest),
   stk('petDress','room','🎀','Pet Stylist','scallop','Get something for your pet to wear',1,p=>p.owned.some(k=>String(k).startsWith('petacc:'))?1:0)

@@ -28,7 +28,7 @@ function show(n){
 
 /* ---------- profiles ---------- */
 function renderProfiles(){
-  $('#profHero').innerHTML=mascotSVG(DEFAULT_LOOK);
+  $('#profHero').innerHTML=profHeroSVG();
   $('#profList').innerHTML=DB.profiles.map(p=>{const c=ROOM_COLORS[p.color];
     return `<div class="pcard" data-id="${p.id}" style="border-color:${c};background:linear-gradient(${c}66,var(--panel) 65%)"><div class="pbadge">${p.badge}</div><div class="pm">${mascotSVG(p.look,'10 0 180 270')}</div><div class="pn">${esc(p.name)}</div><div class="pc">🪙 ${p.coins}${p.easy?' <span class="ptag">· 🐣 Easy</span>':''}</div><div class="pa"><button class="btn small ghost" data-act="edit">✏️</button><button class="btn small ghost" data-act="del">🗑️</button></div></div>`;}).join('')||'<div class="empty">No rooms yet — make one to start! 💜</div>';
   $('#newProfBtn').classList.toggle('hidden',DB.profiles.length>=6);
@@ -44,19 +44,25 @@ $('#newProfBtn').onclick=()=>askPin(()=>roomModal(null));
 // Make a new room (p = null) or change a room's name, colour and badge.
 function roomModal(p){
   const used=DB.profiles.map(x=>x.color), free=Object.keys(ROOM_COLORS).find(k=>!used.includes(k));
-  let fur='white', color=p?p.color:(free||'purple'), badge=p?p.badge:ROOM_BADGES[0];
+  let fur='white', start='emo', tint=p?p.tint:true, color=p?p.color:(free||'purple'), badge=p?p.badge:ROOM_BADGES[0];
   modal(p?'✏️ Change Room':'✨ New Room ✨',`<input id="npName" class="inp" maxlength="16" placeholder="Your name" autocomplete="off" value="${p?esc(p.name):''}">`
-    +(p?'':`<div class="pick-lbl">Bunny fur</div><div class="furpick" id="npFur">${Object.entries(FUR).filter(([k,v])=>!v.price).map(([k,v])=>`<button data-fur="${k}" style="background:${v.c}" class="${k===fur?'on':''}" title="${v.name}"></button>`).join('')}</div>`)
+    +(p?'':`<div class="pick-lbl">Pick a buddy</div><div class="startpick" id="npStart">${starterRow(start)}</div>`
+      +`<div class="pick-lbl">Fur</div><div class="furpick" id="npFur">${Object.entries(FUR).filter(([k,v])=>!v.price).map(([k,v])=>`<button data-fur="${k}" style="background:${v.c}" class="${k===fur?'on':''}" title="${v.name}"></button>`).join('')}</div>`)
     +`<div class="pick-lbl">Room colour</div><div class="furpick" id="npCol">${Object.entries(ROOM_COLORS).map(([k,c])=>`<button data-col="${k}" style="background:${c}" class="${k===color?'on':''}"></button>`).join('')}</div>`
-    +`<div class="pick-lbl">Badge</div><div class="badgepick" id="npBadge">${ROOM_BADGES.map(b=>`<button data-badge="${b}" class="${b===badge?'on':''}">${b}</button>`).join('')}</div>`,
+    +`<div class="pick-lbl">Badge</div><div class="badgepick" id="npBadge">${ROOM_BADGES.map(b=>`<button data-badge="${b}" class="${b===badge?'on':''}">${b}</button>`).join('')}</div>`
+    +`<button class="btn small ghost tintbtn" id="npTint">🎨 Colour the buttons too: <b>${tint?'ON':'OFF'}</b></button>`,
     [{text:'Cancel',cls:'ghost'},{text:p?'Save':'Make it!',cls:'pink',keep:true,on:()=>{
       const n=$('#npName').value.trim(); if(!n){toast('Type a name first!');return;}
       closeModal();
-      if(p){p.name=n;p.color=color;p.badge=badge;save();SFX.happy();renderProfiles();return;}
-      const q=newProfile(n,fur,color,badge); DB.profiles.push(q); DB.activeId=q.id; save(); SFX.buy(); enterRoom();
+      if(p){p.name=n;p.color=color;p.badge=badge;p.tint=tint;save();SFX.happy();renderProfiles();return;}
+      const q=newProfile(n,fur,color,badge,starterLook(start,fur)); q.tint=tint; giveStarter(q); DB.profiles.push(q); DB.activeId=q.id; save(); SFX.buy(); enterRoom();
     }}]);
   const pick=(sel,attr,set)=>{const row=$(sel);if(row)row.onclick=e=>{const b=e.target.closest(`[data-${attr}]`);if(!b)return;set(b.dataset[attr]);$$(sel+' button').forEach(x=>x.classList.toggle('on',x===b));SFX.click();};};
-  pick('#npFur','fur',v=>fur=v); pick('#npCol','col',v=>color=v); pick('#npBadge','badge',v=>badge=v);
+  // Picking a buddy also picks its fur; picking a fur shows every buddy in it.
+  pick('#npStart','start',v=>{start=v;fur=STARTERS[v].fur;$$('#npFur button').forEach(x=>x.classList.toggle('on',x.dataset.fur===fur));});
+  pick('#npFur','fur',v=>{fur=v;$('#npStart').innerHTML=starterRow(start,fur);});
+  pick('#npCol','col',v=>color=v); pick('#npBadge','badge',v=>badge=v);
+  $('#npTint').onclick=()=>{tint=!tint;$('#npTint b').textContent=tint?'ON':'OFF';SFX.click();};
   if(!p) setTimeout(()=>{const i=$('#npName');if(i)i.focus();},60);
 }
 function renameModal(p,field,title){
@@ -115,7 +121,7 @@ function mascotTap(){
   const g=$('#mascotG'); if(!g) return;
   g.classList.remove('hop'); void g.getBoundingClientRect(); g.classList.add('hop'); setTimeout(()=>g.classList.remove('hop'),650);
   SFX.happy(); vibrate(10);
-  const p=P(); const lines=[`Hi ${p.name}! 💜`,'Squish time? 🍡','Love your style ✨',`I'm ${p.mascotName}!`,'*happy bunny noises*',"Let's play dress-up!",'Pop pop pop! 🫧',"You're the best!",'Fuzzy and cozy 🧦','Dance break! 💃','Stay spooky-cute 🦇'];
+  const p=P(); const lines=[`Hi ${p.name}! 💜`,'Squish time? 🍡','Love your style ✨',`I'm ${p.mascotName}!`,`*happy ${(BUDDIES[p.look.kind]||BUDDIES.bunny).name.toLowerCase()} noises*`,"Let's play dress-up!",'Pop pop pop! 🫧',"You're the best!",'Fuzzy and cozy 🧦','Dance break! 💃','Stay spooky-cute 🦇'];
   say(lines[Math.floor(Math.random()*lines.length)]);
 }
 function handleHot(h){
@@ -242,7 +248,7 @@ function settingsModal(){
   $('#sPin').onclick=pinSettings;
 }
 // Easy mode belongs to a room, so it is on only while that room is open (never on the profile screen).
-function applyEasy(){const p=cur==='profiles'?null:P();document.body.classList.toggle('easy',!!(p&&p.easy));}
+function applyEasy(){const p=cur==='profiles'?null:P();document.body.classList.toggle('easy',!!(p&&p.easy));applyTint();}
 
 /* ---------- grown-up PIN ---------- */
 // Optional 4-digit PIN in DB.settings.pin. When it is set, making / changing / deleting a room and restoring
@@ -362,9 +368,9 @@ $('#closetGrid').onclick=e=>{
 };
 $('#randomBtn').onclick=()=>{
   const p=P();
-  for(const cat of Object.keys(CLOSET)){if(cat==='fur')continue;const own=CLOSET[cat].items.filter(i=>isOwned(p,cat,i));p.look[cat]=own[Math.floor(Math.random()*own.length)].id;}
+  for(const cat of Object.keys(CLOSET)){if(cat==='fur'||cat==='kind'||cat==='face')continue;/* Surprise me keeps the buddy, fur and face */const own=CLOSET[cat].items.filter(i=>isOwned(p,cat,i));p.look[cat]=own[Math.floor(Math.random()*own.length)].id;}
   const cols=Object.keys(HAIR_COLORS).filter(k=>hcOwned(p,k)); p.look.hairColor=cols[Math.floor(Math.random()*cols.length)];
   save();SFX.happy();renderCloset();hopCloset();
 };
-$('#mascotNameBtn').onclick=()=>renameModal(P(),'mascotName',"Name your bunny");
+$('#mascotNameBtn').onclick=()=>renameModal(P(),'mascotName',"Name your buddy");
 $$('[data-back]').forEach(b=>b.onclick=()=>{SFX.click();show('room');});

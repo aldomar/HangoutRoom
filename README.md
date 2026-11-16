@@ -2,7 +2,7 @@
 Mini game app for niblings: a cozy virtual bedroom with a fuzzy emo bunny, fidget toys,
 dress-up, decorating, an Art Desk for drawing, a Photocard Wall for making collectible bunny cards,
 a Fidget Shelf (pop-it, squishy, spinner, slime, clicker cube and a tilt marble maze), a Soccer Field for penalty kicks,
-a Stage where the bunny performs to original songs (tap to the beat),
+a Stage where the bunny performs to original songs (tap to the beat), five animal buddies to choose from,
 and a Code Lab where she "programs" the bunny with arrow blocks (a first taste of coding).
 A family gift; not for sale or public sharing.
 
@@ -66,6 +66,19 @@ On the Fidget Shelf (the shelf in her room) there are three more tabs:
   solved, +1 for playing it again, +5 once for solving all 6. **📱 Tilt ON/OFF** switches tilting off (for example
   when playing in a car).
 Each one has a free design and more to buy in the row at the bottom.
+
+## Buddies (since version 1.20)
+- Fuzzy doesn't have to be a bunny any more. In the Closet, the **🐾 Buddy** tab has a Bunny, Bear Cub, Puppy,
+  Little Dino and Fox, and the **😊 Face** tab has three faces (Sparkly, Bright Smile, Cheeky Grin). They are all free and
+  can be changed any time. Every outfit fits every buddy, and anyone can wear anything.
+- New short hair (Buzz Cut, Messy Mop, Side Part), and free basics: a Sky Stripe Tee, Cargo Shorts, High-tops and a
+  Backwards Cap. Three more fur colours: Sky, Ginger and Stone.
+- **Making a room:** tap one of 6 buddy pictures to start from (a classic emo bunny, a sporty bunny, a dino, a bear, a fox
+  and a soccer puppy). The pictures have no words, so a child who can't read yet can pick. The clothes in the
+  picture are free.
+- **Room colours:** a room's colour (now also green and blue) can colour the buttons and bars too, so a blue room looks
+  blue. New rooms have this on. Rooms made before version 1.20 look the same as before; switch it on with ✏️ under the
+  room on the first screen. Pink and purple rooms always have the classic look.
 
 ## A pet for Fuzzy (since version 1.19)
 - A little pet bed with a 🐾 ? sits by Fuzzy's feet. Tap it and pick a pet: a Tiny Bat, a Ghost Kitten, a Cloud Puppy

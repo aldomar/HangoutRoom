@@ -23,7 +23,11 @@ _Last updated: 2026-11-16_
   - **Seasons, Sticker Book, Pet** (plan agreed 2026-11-16, three PRs in this order):
     - **🍂 Seasons: done** (v1.17 merged, PR #17). The owner checked it: everything looks good.
     - **📒 Sticker Book: done** (v1.18 merged, PR #18). The owner checked it: all looks good.
-    - **🐾 Pet: built, PR open as v1.19** on branch `feature/pet` (from `main` after #18).
+    - **🐾 Pet: done** (v1.19 merged, PR #19).
+  - **Buddies + Content Pack 2** (plan agreed 2026-11-16, two PRs): options the nieces' younger brothers (5 and 3)
+    will like too, while everyone can still use everything.
+    - **🐾 Buddies: built, PR open as v1.20** on branch `feature/buddies` (from `main` after #19).
+    - **Content Pack 2 (v1.21)**: next, from `main` after v1.20 is merged.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -51,7 +55,8 @@ _Last updated: 2026-11-16_
 - PR #16 "New fidgets (v1.16)": merged.
 - PR #17 "Seasons (v1.17)": merged.
 - PR #18 "Sticker Book (v1.18)": merged.
-- PR "Pet (v1.19)" on branch `feature/pet` (from `main` after #18): open.
+- PR #19 "Pet (v1.19)": merged.
+- PR "Buddies (v1.20)" on branch `feature/buddies` (from `main` after #19): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -218,13 +223,28 @@ _Last updated: 2026-11-16_
   - a v1.18 backup restores with no pet (save version 12); odd pet data (unknown pet, negative hearts) is made safe;
     a v1.19 backup keeps the pet, name, hearts and crown; Easy mode: big buttons; phone: the menu and Dress-up fit
   - The sticker count checks now expect 49 stickers (4 new for the pet).
+- **Buddies (v1.20)**: 535 checks, all passing, no console errors. New checks:
+  - 5 buddies × 3 faces × every fur draw cleanly; every starter look uses real closet items
+  - an old look (no buddy or face saved) draws exactly the same picture as before; unknown ids fall back to the bunny
+  - the new short hair, Sky Stripe Tee, Cargo Shorts, High-tops and Backwards Cap draw, and hair colours work on them
+  - Closet: 🐾 Buddy is the first tab, 😊 Face is there, both free; picking a dino keeps the outfit; Surprise me keeps
+    the buddy, face and fur; the room and the pet bed show with every buddy
+  - New Room: 6 buddy pictures (no words, each 48 px+), the classic bunny picked; picking the dino picks Mint fur;
+    picking Sky fur redraws every picture; the room is made with the dino look in Sky, the starter clothes free
+  - tint: a new green room has green buttons and bars; the profile screen is never tinted; ✏️ under a room switches it
+    off and on; pink rooms look classic; every room colour has a tint; Easy mode and the tint work together
+  - photocards: an old card still draws a bunny, a new one the dino
+  - a v1.19 backup restores as bunnies with the tint off (save version 13); odd buddy data is made safe; a v1.20
+    backup keeps the dino and the tint; phone: the New Room pictures fit
+  - The Closet hair check now expects 11 styles.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
 - One web page (works offline, no server) plus a WebView APK wrapper. The same code serves both.
   Since v1.9 it is `index.html` + `web/app.css` + `web/js/` (one file per section), split because it passed 210 KB.
 - No SQLite; localStorage is enough for v1. IndexedDB comes later for drawings.
-- Mascot: original fuzzy emo bunny, default name "Fuzzy" (renamable). Starter look: emo swoop bangs,
+- Mascot: original fuzzy emo bunny, default name "Fuzzy" (renamable). Since v1.20 it can also be a Bear Cub, Puppy,
+  Little Dino or Fox, with a choice of 3 faces (see Buddies below). Starter look: emo swoop bangs,
   band tee, plaid skirt, black/purple striped leg warmers, platform boots, star clips.
 - Locked room areas became updates: Art Desk (v1.3), Photocard Wall (v1.4), Soccer Field (v1.5). Every area is now open.
 - Android: AGP 9.5.1 with built-in Kotlin, Gradle 9.6.0 (Android Studio's Upgrade Assistant raised them from
@@ -398,6 +418,21 @@ _Last updated: 2026-11-16_
     Accessories, one worn at a time by any pet: Pink Bow 5, Star Collar 8, Cozy Scarf 10, Tiny Witch Hat 12, Little Crown 15.
     Tricks: Wiggle (from the start), Spin 10, Hop 30, Flip 60, Dance 100. Pet messages appear in Fuzzy's speech bubble.
     4 pet stickers on the Room & Style page (49 stickers in all).
+- **Buddies + Content Pack 2 (agreed 2026-11-16, the owner's request):** the nieces have two younger brothers (5 and 3).
+  Add options boys might like, while every option stays open to everyone. Two PRs:
+  - **Buddies (built as v1.20):** one shared body, so every outfit fits every buddy. `look.kind`: Bunny, Bear Cub, Puppy,
+    Little Dino, Fox (ears and a tail change). `look.face`: Sparkly (the old face, with lashes), Bright Smile, Cheeky Grin.
+    All free, in the Closet's new 🐾 Buddy and 😊 Face tabs. A boy bunny = the bunny with a Bright or Cheeky face and
+    short hair (new: Buzz Cut free, Messy Mop 10, Side Part 15). New free basics: Sky Stripe Tee, Cargo Shorts,
+    High-tops, Backwards Cap. Three more free furs: Sky, Ginger, Stone.
+    New Room shows 6 starter looks as **pictures only** (no "boy"/"girl" words): classic emo bunny, sporty bunny, dino,
+    bear, fox, soccer puppy. The starter's priced clothes are given free. Surprise me never changes buddy, face or fur.
+  - **Room colour tints (v1.20):** `p.tint`. The room's colour (plus new Green and Blue) replaces the pink and purple of
+    the buttons, tabs and bars, and the dark panels take a hint of it (`TINTS` in section 23). On for new rooms, off for
+    rooms made before v1.20 (so the girls' rooms look the same); switch with ✏️ under the room. Pink and purple rooms
+    always look classic. The profile screen is never tinted.
+  - **Content Pack 2 (to build as v1.21):** themes dinosaurs, space and rockets, trucks/trains/cars, robots/sharks/heroes:
+    about 16 clothes, 12 decorations, walls and floors, fidget designs, photocard tags and a few stickers.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -465,13 +500,16 @@ _Last updated: 2026-11-16_
 18. ~~Build the Sticker Book (v1.18).~~ Built (v1.18 PR).
 19. ~~Owner: build v1.18, try the Sticker Book (see the PR), and merge it.~~ Merged; all looks good.
 20. ~~Build the Pet (v1.19).~~ Built (v1.19 PR).
-21. Owner: build v1.19, try the pet (see the PR), and merge it. That finishes Seasons + Sticker Book + Pet.
-22. Pick the next Phase 7 item (ideas: Content Pack 2, more Challenge puzzles or mazes, the pet on photocards).
+21. ~~Owner: build v1.19, try the pet (see the PR), and merge it.~~ Merged. That finished Seasons + Sticker Book + Pet.
+22. ~~Pick the next item.~~ Buddies + Content Pack 2 (agreed 2026-11-16).
+23. Owner: build v1.20, try the buddies and tints (see the PR), and merge it.
+24. Build Content Pack 2 (v1.21) from `main` after v1.20 is merged.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 12 since v1.19 (Pet: `pet{kind, acc, names{},
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 13 since v1.20 (Buddies: `look.kind`, `look.face`, `tint`).
+  It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
   (Code Lab: `code{level, solved[]}`; v1.14 and v1.15 added level ids only, no new shape). It was 8 in v1.11
