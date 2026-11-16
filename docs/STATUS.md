@@ -19,8 +19,10 @@ _Last updated: 2026-11-16_
   - **Code Lab: done** (v1.13 merged, PR #13). The owner checked it on the device: it all works.
   - **Code Lab: My Move + If levels: done** (v1.14 merged, PR #14). The owner tried it: it worked great.
   - **Code Lab: 🧠 Challenge level: done** (v1.15 merged, PR #15).
-  - **New fidgets (🧪 Slime, 🎛️ Clicker cube, 🔮 Marble Maze): built, PR open as v1.16** on branch `feature/fidgets`
-    (from `main` after #15). Not yet tried on a device (tilting needs a real tablet).
+  - **New fidgets (🧪 Slime, 🎛️ Clicker cube, 🔮 Marble Maze): done** (v1.16 merged, PR #16).
+  - **Seasons, Sticker Book, Pet** (plan agreed 2026-11-16, three PRs in this order):
+    - **🍂 Seasons: built, PR open as v1.17** on branch `feature/seasons` (from `main` after #16).
+    - **📒 Sticker Book (v1.18)** and **🐾 Pet (v1.19)**: next, each on its own branch after the one before is merged.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -45,7 +47,8 @@ _Last updated: 2026-11-16_
 - PR #13 "Code Lab (v1.13)": merged.
 - PR #14 "Code Lab: My Move + If (v1.14)": merged.
 - PR #15 "Code Lab: Challenge (v1.15)": merged.
-- PR "New fidgets (v1.16)" on branch `feature/fidgets` (from `main` after #15): open.
+- PR #16 "New fidgets (v1.16)": merged.
+- PR "Seasons (v1.17)" on branch `feature/seasons` (from `main` after #16): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -173,6 +176,17 @@ _Last updated: 2026-11-16_
     (save version 10); a v1.16 backup keeps solved mazes, designs and counts; phone portrait and landscape layouts
   - Not tested automatically: how tilting feels on the real tablet, and whether auto-rotate turns the screen
     while she tilts it (if it does, turn on the tablet's rotation lock, or use 📱 Tilt OFF and a finger).
+
+- **Seasons (v1.17)**: 440 checks, all passing, no console errors. New checks:
+  - the season from the date (Sep–Nov autumn, Dec–Feb winter, Mar–May spring, Jun–Aug summer); 4 decorations and a wall
+    per season; seasonal things are not in the normal Shop
+  - for each season: the Seasons tab lists it first with "✨ In season!" and its icon on the tab; all 16 decorations and
+    4 walls are always listed (also in Easy mode)
+  - buying the Smiley Pumpkin (15) puts it in the room; buying a seasonal wall in the Seasons tab owns it and puts it up;
+    seasonal walls are in the Walls tab too; the Walls and Floors tabs still change the right thing
+  - for each season: her room's window and the Loft's window show it; tapping the window still opens Soccer
+  - every seasonal decoration draws; a backup keeps them; on a phone the 5 Decorate tabs (icons only) and ✔ Done fit
+  - Not checked automatically: how the art looks on her tablet.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -326,6 +340,25 @@ _Last updated: 2026-11-16_
     +5 once for all 6. Moon Pearl free; Candy Swirl 10, Galaxy 15, Soccer Ball 15.
   - Save version 10: `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`.
 
+- Seasons, Sticker Book, Pet (plan agreed 2026-11-16): **three PRs** (owner's choice), Seasons v1.17 → Sticker Book
+  v1.18 → Pet v1.19.
+  - **Seasons:** 🍂 Autumn (Sep–Nov), ❄️ Winter (Dec–Feb), 🌸 Spring (Mar–May), ☀️ Summer (Jun–Aug), from the device date.
+    16 decorations (4 per season, 10–30 coins) and 4 walls (20 each) in a new **Seasons tab** in Decorate (the tab's icon
+    is the current season). **No limited-time pressure:** everything can be bought all year; the current season is only
+    listed first. **The windows change by themselves** (owner's choice): leaves, snow, blossoms or sun in her room's
+    window; leaves, snow, petals or fireflies in the Loft's night window. Plain drawings, no animation loop.
+    Winter has a Snowflake Garland, because Fairy Lights were already in the Shop. No save change.
+  - **Sticker Book (agreed, to build as v1.18):** a 📒 button in the room's top bar. About 40 stickers on 6 themed pages
+    (Fidgets, Art & Cards, Soccer, Stage, Code Lab, Room & Style). Fixed milestones, most in steps. **+2 coins per sticker**
+    (owner's choice), given once; ones already earned arrive in one message the first time she opens her room.
+    Unearned = grey shape + short hint. A new sticker shows a toast and a dot on 📒 (no popup during games).
+    Bonus photocards are unchanged. Save: `p.stickers[]`, `stats.dailies` (a plain count, not a streak).
+  - **Pet (agreed, to build as v1.19):** a pet bed next to Fuzzy; "Pick a pet!" with 4 original pets (tiny fluffy bat,
+    ghost kitten, cloud puppy, star hamster), **all free and switchable any time** (owner's choice; hearts kept per pet).
+    Tap the pet: 🤚 Pet, 🍪 Treat (2 coins), 🎀 Dress-up (5 accessories, 5–15 coins, `petacc:<id>`), ✏️ Name, 🔄 Change.
+    Friendship hearts only go up (no hunger, nothing sad); tricks at 10 / 30 / 60 / 100 hearts. The pet never earns
+    coins. Save version 11: `p.pet`.
+
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
 - $0 beyond the Claude subscription. Use free tiers and free tools only.
@@ -386,8 +419,10 @@ _Last updated: 2026-11-16_
 12. ~~Next: a harder Code Lab layer.~~ 🧠 Challenge level built (v1.15 PR).
 13. ~~Owner: build v1.15, try the Challenge puzzles (see the PR), and merge it.~~ Merged.
 14. ~~Pick the next Phase 7 item.~~ New fidgets (v1.16), built (v1.16 PR).
-15. Owner: build v1.16, try the slime, clicker and tilt maze on the tablet (see the PR), and merge it.
-16. Pick the next Phase 7 item (ideas: Content Pack 2, more Challenge puzzles or mazes, a sticker book or a pet).
+15. ~~Owner: build v1.16, try the slime, clicker and tilt maze on the tablet (see the PR), and merge it.~~ Merged.
+16. ~~Pick the next Phase 7 item.~~ Seasons + Sticker Book + Pet, planned and agreed as three PRs.
+17. Owner: build v1.17, try the Seasons tab and the windows (see the PR), and merge it.
+18. Build the Sticker Book (v1.18) from `main` after v1.17 is merged, then the Pet (v1.19).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

@@ -1022,6 +1022,58 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('a v1.16 backup keeps solved mazes, designs and counts', await ev(`(()=>{const p=DB.profiles.find(q=>q.maze.solved.length===6);return !!p&&p.fid.slime==='mint'&&p.owned.includes('marble:galaxy')&&p.stats.stretches>=5&&p.stats.clicks>=25;})()`));
   await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal();show('room')`);
 
+  console.log('Seasons (v1.17): seasonal decorations, walls and windows');
+  await ev(`closeModal();P().easy=false;seasonTest=null;show('room');goRoom(1);applyEasy()`); await sleep(150);
+  check('the season comes from the date (Nov = autumn, Dec/Jan = winter, Mar = spring, Jul = summer, Sep = autumn)', await ev(`[[10,'autumn'],[11,'winter'],[0,'winter'],[2,'spring'],[6,'summer'],[8,'autumn']].every(([m,s])=>seasonNow(new Date(2026,m,15))===s)`));
+  check('4 seasonal decorations and 1 wall for each season', await ev(`Object.keys(SEASONS).every(s=>Object.values(DECOR).filter(d=>d.season===s).length===4&&Object.values(WALLS).filter(w=>w.season===s).length===1)`));
+  check('all 16 seasonal decorations exist', await ev(`['pumpkin','ghostGarland','leafPile','owlPlush','snowBunny','snowGarland','giftStack','pineTree','tulipPot','rainbowArch','eggBasket','butterflies','beachBall','donutFloat','lemonade','sunLamp'].every(k=>DECOR[k]&&DECOR[k].season)`));
+  await ev(`P().coins=500;updateCoins();enterDecorate();document.querySelector('[data-dt=shop]').click()`); await sleep(150);
+  check('seasonal things are not in the normal Shop', await ev(`!Object.keys(DECOR).filter(k=>DECOR[k].season).some(k=>document.querySelector('#decoGrid [data-buy='+k+']'))`));
+  for(const s of ['autumn','winter','spring','summer']){
+    await ev(`seasonTest='${s}';document.querySelector('[data-dt=season]').click()`); await sleep(120);
+    check(`${s}: the Seasons tab lists ${s} first, marked "In season!"`, await ev(`(()=>{const h=document.querySelector('#decoGrid .grid-head');return h.classList.contains('now')&&h.textContent.includes(SEASONS['${s}'].name)&&h.textContent.includes('In season')&&document.querySelectorAll('#decoGrid .grid-head.now').length===1;})()`));
+    check(`${s}: the Seasons tab shows the ${s} icon`, await ev(`document.querySelector('[data-dt=season]').textContent.startsWith(SEASONS['${s}'].icon)`));
+    await shot('C1-seasons-tab-'+s);
+  }
+  check('the Seasons tab has all 16 decorations and 4 walls, all year', await ev(`document.querySelectorAll('#decoGrid [data-buy]').length===16&&document.querySelectorAll('#decoGrid [data-surf][data-kind=wall]').length===4&&document.querySelectorAll('#decoGrid .grid-head').length===4`));
+  await ev(`seasonTest='autumn';document.querySelector('[data-dt=season]').click()`); await sleep(100);
+  const ssc0=await ev('P().coins');
+  await ev(`document.querySelector('#decoGrid [data-buy=pumpkin]').click()`); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(150);
+  check('buying the Smiley Pumpkin puts it in the room for 15 coins', (await ev(`P().room.items.some(i=>i.type==='pumpkin'&&i.placed)`))&&(await ev('P().coins'))===ssc0-15, await ev('P().coins'));
+  await ev(`document.querySelector('#decoGrid [data-surf=winterSnow]').click()`); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(150);
+  check('a seasonal wall bought in the Seasons tab is owned and goes up', await ev(`P().owned.includes('wall:winterSnow')&&P().room.wall==='winterSnow'`));
+  check('the wall in use is marked in the Seasons tab', await ev(`document.querySelector('#decoGrid [data-surf=winterSnow]').classList.contains('on')`));
+  await ev(`document.querySelector('[data-dt=wall]').click()`); await sleep(100);
+  check('seasonal walls are in the Walls tab too', await ev(`['autumnLeaves','winterSnow','springBloom','summerWaves'].every(k=>document.querySelector('#decoGrid [data-surf='+k+']'))`));
+  await ev(`document.querySelector('#decoGrid [data-surf=lavender]').click()`); await sleep(100);
+  await ev(`document.querySelector('[data-dt=floor]').click()`); await sleep(100);
+  await ev(`document.querySelector('#decoGrid [data-surf=wood]').click()`); await sleep(100);
+  check('the Walls and Floors tabs still change the right thing', await ev(`P().room.wall==='lavender'&&P().room.floor==='wood'`));
+  await ev(`P().easy=true;applyEasy();document.querySelector('[data-dt=season]').click()`); await sleep(100);
+  check('Easy mode: the Seasons tab still lists every season and item', await ev(`document.querySelectorAll('#decoGrid .grid-head').length===4&&document.querySelectorAll('#decoGrid [data-buy]').length===16`));
+  await shot('C1-seasons-tab-easy');
+  await ev(`P().easy=false;applyEasy();exitDecorate()`);
+  for(const s of ['autumn','winter','spring','summer']){
+    await ev(`seasonTest='${s}';goRoom(1)`); await sleep(120);
+    check(`${s}: her room's window shows ${s}`, await ev(`document.querySelectorAll('#roomSvg [data-hot=window] [data-season=${s}]').length===2`));
+    await shot('C2-window-'+s);
+    await ev(`goRoom(2)`); await sleep(120);
+    check(`${s}: the Loft's round window shows ${s}`, await ev(`document.querySelectorAll('#roomSvg [data-season=${s}]').length===1`));
+    await shot('C3-loft-window-'+s);
+  }
+  await ev(`goRoom(1)`); await sleep(100);
+  await ev(`document.querySelector('#roomSvg [data-hot=window] [data-season]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(150);
+  check('tapping the seasonal window still opens the Soccer Field', await ev(`cur==='soccer'`));
+  await ev(`show('room');goRoom(2);{const R=P().room2;R.items=R.items.filter(i=>!DECOR[i.type].season);for(const k of Object.keys(DECOR).filter(k=>DECOR[k].season))R.items.push(Object.assign({uid:uid(),type:k,placed:true},spot(k)));}save();renderRoom()`); await sleep(200);
+  check('every seasonal decoration draws in the room', await ev(`Object.keys(DECOR).filter(k=>DECOR[k].season).every(k=>{const i=P().room2.items.find(x=>x.type===k);const g=document.querySelector('#roomSvg .deco[data-uid="'+i.uid+'"]');return g&&g.getBBox().width>20;})`));
+  check('the Donut Float lies flat; the garlands and rainbow hang on the wall', await ev(`!!DECOR.donutFloat.flat&&['ghostGarland','snowGarland','rainbowArch','butterflies'].every(k=>DECOR[k].wall)`));
+  await shot('C4-loft-all-seasonal');
+  await ev(`{const R=P().room2;R.items=R.items.filter(i=>!DECOR[i.type].season);}seasonTest=null;save();goRoom(1)`);
+  const ssCode=await ev('JSON.stringify(DB)'), ssId=await ev('P().id');
+  await ev(`doRestore(${JSON.stringify(ssCode)})`); await sleep(400);
+  check('a backup keeps seasonal decorations and walls', await ev(`(()=>{const p=DB.profiles.find(q=>q.id==='${ssId}');return !!p&&p.owned.includes('wall:winterSnow')&&p.room.items.some(i=>i.type==='pumpkin');})()`));
+  await ev(`closeModal();document.querySelector('.pcard[data-id="${ssId}"]').click()`); await sleep(1300); await ev(`closeModal();show('room')`);
+
   console.log('Phone portrait + other screens');
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
   await send('Emulation.setTouchEmulationEnabled',{enabled:true});
@@ -1048,6 +1100,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('phone: My Move puzzle shows both rows, the board and ▶️ Run', await ev(`(()=>{const r=document.querySelector('#clRun').getBoundingClientRect(),m=document.querySelector('#clMove').getBoundingClientRect(),b=document.querySelector('#clBoard').getBoundingClientRect();return r.bottom<=innerHeight&&m.height>40&&b.height>120;})()`));
   await ev(`show('room')`); await sleep(200); await shot('A10-phone-room-topbar');
   check('phone: the Loft button fits in the top bar', await ev(`(()=>{const r=document.querySelector('#roomGo').getBoundingClientRect(), d=document.querySelector('#setBtn').getBoundingClientRect();return r.width>=48&&d.right<=innerWidth;})()`));
+  await ev(`show('room');enterDecorate();document.querySelector('[data-dt=season]').click()`); await sleep(200); await shot('C5-phone-seasons');
+  check('phone: all 5 Decorate tabs and ✔ Done fit without scrolling', await ev(`(()=>{const t=document.querySelector('#decoTabs'),d=document.querySelector('#decoDone').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&d.right<=innerWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`), await ev(`(()=>{const t=document.querySelector('#decoTabs');return [t.scrollWidth,t.clientWidth,document.querySelector('#decoDone').getBoundingClientRect().right,[...t.children].map(b=>Math.round(b.getBoundingClientRect().height))];})()`));
+  await ev(`exitDecorate()`);
   await ev(`show('fidget');setFidTab('cube')`); await sleep(300); await shot('B12-phone-cube');
   check('phone: all 6 fidget tabs fit without scrolling', await ev(`(()=>{const t=document.querySelector('#fidTabs');return t.scrollWidth<=t.clientWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`));
   check('phone: the clicker cube fits and its buttons are 48 px or more', await ev(`(()=>{const c=cubeEl.getBoundingClientRect(),s=document.querySelector('.fid-stage').getBoundingClientRect(),b=document.querySelector('#cube .cb-btn').getBoundingClientRect();return c.top>=s.top&&c.bottom<=s.bottom&&c.right<=innerWidth&&b.width>=48;})()`));
@@ -1087,7 +1142,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   for(const c of cats){await ev(`document.querySelector('[data-cat=${c}]').click()`);await sleep(120);}
   await shot('13-closet'); check('closet has items', (await ev(`document.querySelectorAll('#closetGrid .tile').length`))>0);
   await ev(`show('room');enterDecorate()`);
-  for(const t of ['mine','shop','wall','floor']){await ev(`document.querySelector('[data-dt=${t}]').click()`);await sleep(150);}
+  for(const t of ['mine','shop','wall','floor','season']){await ev(`document.querySelector('[data-dt=${t}]').click()`);await sleep(150);}
   check('shop has no poster for sale', await ev(`!document.querySelector('#decoGrid [data-buy=poster]')`));
   await shot('14-decorate-floors'); await ev(`exitDecorate()`);
   await ev(`settingsModal()`); await shot('15-settings');
