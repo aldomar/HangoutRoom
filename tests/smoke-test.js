@@ -1245,6 +1245,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`P().look.kind='dino';save();show('room')`); await sleep(250); await shot('F3-room-dino');
   check('the room shows the dino too', await ev(`document.querySelector('#mascotG').innerHTML.includes('M89 45 L100 10')`));
   check('the pet still sits by the dino', await ev(`!!document.querySelector('#petG')`));
+  check('a room with no furniture colours has the classic pink desk, purple wardrobe and curtains', await ev(`(()=>{const k=P().furn;P().furn={};const f=furniture();P().furn=k;return ['#ffb3d9','#e48fbf','#6b46b8','#7d58cc','#a97cff','#ff8cc6'].every(c=>f.includes(c));})()`));
+  check('the Loft has its classic wood beams and lavender desk', await ev(`(()=>{const k=P().furn;P().furn={};const f=loftFurniture();P().furn=k;return ['#9b6a42','#c9a7ff','#5b3a99'].every(c=>f.includes(c));})()`));
   check('rooms from before v1.20 get the tint OFF (save step 13)', await ev(`(()=>{const d={profiles:[{},{tint:true}]};MIGRATIONS[13](d);return d.profiles[0].tint===false&&d.profiles[1].tint===true;})()`));
   // make a new room from a starter look
   const nRooms=await ev('DB.profiles.length'), prevId=await ev('P().id');
@@ -1261,6 +1263,22 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('the new room has the dino starter look in Sky', await ev(`(()=>{const p=P(),L=p.look;return p.name==='Rexy'&&L.kind==='dino'&&L.face==='cheeky'&&L.fur==='sky'&&L.top==='hoodie'&&L.bottom==='cargo'&&L.shoes==='hightops';})()`));
   check('the starter clothes are hers for free (no coins spent, hoodie owned)', await ev(`[25,35].includes(P().coins)&&P().owned.includes('top:hoodie')`));
   check('a new room is tinted: green buttons and bars', await ev(`P().tint===true&&document.body.classList.contains('tint')&&document.body.style.getPropertyValue('--pink')==='#7ee08a'`));
+  check('a green room starts with the Leafy Green wall (given free) and green furniture', await ev(`(()=>{const p=P();return p.room.wall==='leafDots'&&p.owned.includes('wall:leafDots')&&['desk','closet','shelf','curtain','desk2','window2','lamp'].every(k=>p.furn[k]==='green')&&!p.furn.beams&&p.room2.wall==='attic';})()`));
+  check('the green furniture is drawn in the room', await ev(`document.querySelector('#roomSvg').innerHTML.includes('#62c470')&&!furniture().includes('#6b46b8')`));
+  check('the room labels take the room colour', await ev(`(()=>{const r=document.querySelector('#roomSvg .sign rect');return r&&(r.getAttribute('style')||'').includes('var(--pink)')&&getComputedStyle(r).fill==='rgb(126, 224, 138)';})()`));
+  await ev(`enterDecorate();document.querySelector('[data-dt=colors]').click()`); await sleep(150); await shot('F9-colours-tab');
+  check('Decorate has a 🎨 Colours tab: 4 pieces, 11 swatches each (Classic + 10)', await ev(`document.querySelectorAll('#decoGrid .furn-row').length===4&&[...document.querySelectorAll('#decoGrid .furn-row')].every(r=>r.querySelectorAll('[data-fc]').length===11)`));
+  const fcc0=await ev('P().coins');
+  await ev(`document.querySelector('[data-furn=desk][data-fc=sky]').click()`); await sleep(100);
+  check('tapping Sky paints the desk sky blue, free', await ev(`P().furn.desk==='sky'&&document.querySelector('#roomSvg').innerHTML.includes('#c6e6ff')&&document.querySelector('[data-furn=desk][data-fc=sky]').classList.contains('on')&&P().coins===${fcc0}`));
+  await ev(`document.querySelector('[data-furn=closet][data-fc=classic]').click()`); await sleep(100);
+  check('Classic gives the wardrobe its old purple back', await ev(`!('closet' in P().furn)&&furniture().includes('#6b46b8')`));
+  check('every swatch is at least 48 px', await ev(`[...document.querySelectorAll('#decoGrid [data-fc]')].every(b=>b.getBoundingClientRect().width>=48)`));
+  await ev(`goRoom(2)`); await sleep(200); await ev(`decorating||enterDecorate();document.querySelector('[data-dt=colors]').click()`); await sleep(150);
+  check('in the Loft the Colours tab lists the Loft pieces', await ev(`[...document.querySelectorAll('#decoGrid [data-fc=classic]')].map(b=>b.dataset.furn).join()==='desk2,beams,window2,lamp'`));
+  await ev(`document.querySelector('[data-furn=beams][data-fc=white]').click()`); await sleep(100); await shot('F10-loft-colours');
+  check('white beams in the Loft', await ev(`P().furn.beams==='white'&&loftFurniture().includes('#ddd5e8')`));
+  await ev(`exitDecorate();goRoom(1)`); await sleep(150);
   check('a tinted button really is green', await ev(`(()=>{const b=document.createElement('button');b.className='btn pink';document.body.appendChild(b);const c=getComputedStyle(b).backgroundColor;b.remove();return c==='rgb(126, 224, 138)';})()`));
   await shot('F5-green-room'); await ev(`show('closet')`); await sleep(200); await shot('F6-green-closet');
   await ev(`show('profiles')`); await sleep(150);
@@ -1283,14 +1301,14 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('an old photocard look draws a bunny; a dino card draws a dino', await ev(`(()=>{const o=Object.assign({},DEFAULT_LOOK);delete o.kind;delete o.face;const old=cardSVG({no:1,at:0,look:o,stage:'spot',frame:'sparkle',title:'Best Bunny',name:'Test'}),dn=cardSVG({no:2,at:0,look:P().look,stage:'spot',frame:'sparkle',title:'Best Bunny',name:'Test'});return old.includes('rotate(-14 74 70)')&&dn.includes('M89 45 L100 10');})()`));
   console.log('Buddies in backups');
   const bdCode=await ev('JSON.stringify(DB)');
-  const bd119=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.version=12;d.profiles.forEach(p=>{delete p.tint;delete p.look.kind;delete p.look.face;});return JSON.stringify(d);})()`);
+  const bd119=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.version=12;d.profiles.forEach(p=>{delete p.tint;delete p.furn;delete p.look.kind;delete p.look.face;});return JSON.stringify(d);})()`);
   await ev(`doRestore(${JSON.stringify(bd119)})`); await sleep(400);
-  check('a v1.19 backup restores as bunnies, Sparkly faces, no tint (save version 13)', await ev(`DB.version===DB_VERSION&&DB_VERSION===13&&DB.profiles.every(p=>p.look.kind==='bunny'&&p.look.face==='sparkle'&&p.tint===false)`));
-  const bdBad=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.profiles[0].look.kind='dragon';d.profiles[0].look.face=7;d.profiles[0].tint='yes';return JSON.stringify(d);})()`);
+  check('a v1.19 backup restores as bunnies, Sparkly faces, no tint (save version 13)', await ev(`DB.version===DB_VERSION&&DB_VERSION===13&&DB.profiles.every(p=>p.look.kind==='bunny'&&p.look.face==='sparkle'&&p.tint===false&&Object.keys(p.furn).length===0)`));
+  const bdBad=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.profiles[0].look.kind='dragon';d.profiles[0].look.face=7;d.profiles[0].tint='yes';d.profiles[0].furn={desk:'rainbow',closet:5};return JSON.stringify(d);})()`);
   await ev(`doRestore(${JSON.stringify(bdBad)})`); await sleep(400);
-  check('odd buddy data is made safe', await ev(`(()=>{const p=DB.profiles[0];return p.look.kind==='bunny'&&p.look.face==='sparkle'&&p.tint===true;})()`));
+  check('odd buddy data is made safe', await ev(`(()=>{const p=DB.profiles[0];return p.look.kind==='bunny'&&p.look.face==='sparkle'&&p.tint===true&&p.furn.desk==='rainbow'&&!('closet' in p.furn)&&furniture().length>1000;})()`));
   await ev(`doRestore(${JSON.stringify(bdCode)})`); await sleep(400);
-  check('a v1.20 backup keeps the dino and the tint', await ev(`(()=>{const p=DB.profiles.find(q=>q.id==='${rexId}');return p&&p.look.kind==='dino'&&p.look.face==='cheeky'&&p.tint===true;})()`));
+  check('a v1.20 backup keeps the dino and the tint', await ev(`(()=>{const p=DB.profiles.find(q=>q.id==='${rexId}');return p&&p.look.kind==='dino'&&p.look.face==='cheeky'&&p.tint===true&&p.furn.desk==='sky'&&p.furn.beams==='white';})()`));
   // tidy up: remove the test room and go back to the earlier one
   await ev(`closeModal();DB.profiles=DB.profiles.filter(p=>p.id!=='${rexId}');DB.activeId='${prevId}';P().look.kind='bunny';P().look.face='sparkle';save();show('room')`); await sleep(200);
   check('back to the earlier room', await ev(`DB.profiles.length===${nRooms}&&P().id==='${prevId}'`));
@@ -1322,7 +1340,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`show('room')`); await sleep(200); await shot('A10-phone-room-topbar');
   check('phone: the Loft button fits in the top bar', await ev(`(()=>{const r=document.querySelector('#roomGo').getBoundingClientRect(), d=document.querySelector('#setBtn').getBoundingClientRect();return r.width>=48&&d.right<=innerWidth;})()`));
   await ev(`show('room');enterDecorate();document.querySelector('[data-dt=season]').click()`); await sleep(200); await shot('C5-phone-seasons');
-  check('phone: all 5 Decorate tabs and ✔ Done fit without scrolling', await ev(`(()=>{const t=document.querySelector('#decoTabs'),d=document.querySelector('#decoDone').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&d.right<=innerWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`), await ev(`(()=>{const t=document.querySelector('#decoTabs');return [t.scrollWidth,t.clientWidth,document.querySelector('#decoDone').getBoundingClientRect().right,[...t.children].map(b=>Math.round(b.getBoundingClientRect().height))];})()`));
+  check('phone: all 6 Decorate tabs and ✔ Done fit without scrolling', await ev(`(()=>{const t=document.querySelector('#decoTabs'),d=document.querySelector('#decoDone').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&d.right<=innerWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`), await ev(`(()=>{const t=document.querySelector('#decoTabs');return [t.scrollWidth,t.clientWidth,document.querySelector('#decoDone').getBoundingClientRect().right,[...t.children].map(b=>Math.round(b.getBoundingClientRect().height))];})()`));
   await ev(`exitDecorate()`);
   check('phone: the 📒 Sticker Book button and ⚙️ fit in the room top bar', await ev(`(()=>{const b=document.querySelector('#stkBtn').getBoundingClientRect(),s=document.querySelector('#setBtn').getBoundingClientRect(),t=document.querySelector('#roomTitle').getBoundingClientRect();return b.width>=44&&s.right<=innerWidth&&t.width>=60;})()`));
   await ev(`openStickers('fidget')`); await sleep(250); await shot('D6-phone-stickers');

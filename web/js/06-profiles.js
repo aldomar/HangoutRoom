@@ -67,6 +67,8 @@ function normalize(p){
   // Buddies (v1.20): the room's colour also colours the buttons and bars. New rooms start with it on; rooms made
   // before v1.20 start with it off, so they look the same as before (it can be switched on with ✏️ under the room).
   p.tint=!!p.tint;
+  // Furniture colours (v1.20): {piece: colour id}. Section 23 checks the ids when drawing; this only checks the types.
+  p.furn=Object.fromEntries(Object.entries(p.furn&&typeof p.furn==='object'&&!Array.isArray(p.furn)?p.furn:{}).filter(([k,v])=>typeof v==='string'));
   if(!ROOM_COLORS[p.color]){const ks=Object.keys(ROOM_COLORS);p.color=ks[[...p.id].reduce((a,c)=>a+c.charCodeAt(0),0)%ks.length];}
   if(!ROOM_BADGES.includes(p.badge)) p.badge=ROOM_BADGES[0];
   // Code Lab (v1.13): chosen level and the ids of the puzzles solved (each puzzle pays once).

@@ -171,7 +171,8 @@ Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a conte
     (Sparkly, Bright Smile, Cheeky Grin), in the Closet's new 🐾 Buddy and 😊 Face tabs. Short hair (Buzz Cut, Messy Mop,
     Side Part), free basics (Sky Stripe Tee, Cargo Shorts, High-tops, Backwards Cap) and 3 more furs. A new room starts
     from one of 6 starter looks, picked by picture. The room's colour (now also Green and Blue) can tint the buttons and
-    bars. Save version 13.
+    bars, and a new room starts with a matching wall and furniture. Decorate's 🎨 Colours tab recolours the built-in
+    furniture of both rooms (10 free swatches). Save version 13.
   - **Content Pack 2 (v1.21):** dinosaurs, space and rockets, trucks/trains/cars, robots/sharks/heroes: clothes,
     decorations, walls and floors, fidget designs, photocard tags and a few stickers.
 - ✅ **Code Lab 💻 (v1.13, the owner's idea):** tap the Loft's computer desk. 18 hand-made puzzles (6 per level):

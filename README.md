@@ -79,6 +79,11 @@ Each one has a free design and more to buy in the row at the bottom.
 - **Room colours:** a room's colour (now also green and blue) can colour the buttons and bars too, so a blue room looks
   blue. New rooms have this on. Rooms made before version 1.20 look the same as before; switch it on with ✏️ under the
   room on the first screen. Pink and purple rooms always have the classic look.
+- **A new room starts in its colour:** a matching pastel wall and furniture to match (for example a green room gets a pale
+  green wall, and a green desk, wardrobe, shelf and curtains).
+- **Furniture colours:** in 🛋️ Decorate, the **🎨 Colours** tab lets her paint the desk, wardrobe, shelf and curtains (and,
+  in the Loft, the computer desk, roof beams, round window and lamp). There are 10 colours, all free; the first circle
+  (Classic) puts the original colours back.
 
 ## A pet for Fuzzy (since version 1.19)
 - A little pet bed with a 🐾 ? sits by Fuzzy's feet. Tap it and pick a pet: a Tiny Bat, a Ghost Kitten, a Cloud Puppy

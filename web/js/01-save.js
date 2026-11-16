@@ -62,8 +62,8 @@ const MIGRATIONS={
   11: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&!Array.isArray(p.stickers)) p.stickers=[]; }); },
   // v1.19 Pet: pet {kind ('' until she picks one), acc, names{kind:name}, hearts{kind:n}}. normalize() fills it in.
   12: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.pet||typeof p.pet!=='object')) p.pet={kind:'',acc:'none',names:{},hearts:{}}; }); },
-  // v1.20 Buddies: look.kind / look.face (a bunny with the Sparkly face, filled in by normalize) and p.tint
-  // (off for rooms made before v1.20, so they look the same).
+  // v1.20 Buddies: look.kind / look.face (a bunny with the Sparkly face, filled in by normalize), p.tint
+  // (off for rooms made before v1.20, so they look the same) and p.furn (furniture colours; empty = the classic colours).
   13: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&typeof p.tint!=='boolean') p.tint=false; }); }
 };
 

@@ -223,7 +223,7 @@ _Last updated: 2026-11-16_
   - a v1.18 backup restores with no pet (save version 12); odd pet data (unknown pet, negative hearts) is made safe;
     a v1.19 backup keeps the pet, name, hearts and crown; Easy mode: big buttons; phone: the menu and Dress-up fit
   - The sticker count checks now expect 49 stickers (4 new for the pet).
-- **Buddies (v1.20)**: 535 checks, all passing, no console errors. New checks:
+- **Buddies (v1.20)**: 546 checks, all passing, no console errors. New checks:
   - 5 buddies × 3 faces × every fur draw cleanly; every starter look uses real closet items
   - an old look (no buddy or face saved) draws exactly the same picture as before; unknown ids fall back to the bunny
   - the new short hair, Sky Stripe Tee, Cargo Shorts, High-tops and Backwards Cap draw, and hair colours work on them
@@ -236,7 +236,11 @@ _Last updated: 2026-11-16_
   - photocards: an old card still draws a bunny, a new one the dino
   - a v1.19 backup restores as bunnies with the tint off (save version 13); odd buddy data is made safe; a v1.20
     backup keeps the dino and the tint; phone: the New Room pictures fit
-  - The Closet hair check now expects 11 styles.
+  - furniture colours: with none saved, both rooms draw their classic colours; a new green room gets the Leafy Green
+    wall (free) and green furniture in both rooms (the Loft's beams stay wood); the room labels take the room colour;
+    Decorate's 🎨 Colours tab has 4 pieces × 11 swatches (48 px+); Sky paints the desk, free; Classic brings the old
+    wardrobe back; the Loft tab lists the Loft's pieces; white beams; backups keep the colours, odd ones are made safe
+  - The Closet hair check now expects 11 styles; the phone Decorate check now expects 6 tabs.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -430,7 +434,14 @@ _Last updated: 2026-11-16_
   - **Room colour tints (v1.20):** `p.tint`. The room's colour (plus new Green and Blue) replaces the pink and purple of
     the buttons, tabs and bars, and the dark panels take a hint of it (`TINTS` in section 23). On for new rooms, off for
     rooms made before v1.20 (so the girls' rooms look the same); switch with ✏️ under the room. Pink and purple rooms
-    always look classic. The profile screen is never tinted.
+    always look classic. The profile screen is never tinted. The Easy-mode room labels take the room colour too
+    (the owner found them still pink in a green room on the first try).
+  - **Furniture colours + matching new rooms (v1.20, the owner's request after trying it):** `p.furn {piece: colour}`.
+    Decorate's 🎨 Colours tab: Art Desk, Wardrobe, Shelf, Curtains (her room) and Computer Desk, Roof Beams, Round Window,
+    Lamp (the Loft), each with Classic + 10 free swatches (`FURN_COLORS`). Nothing saved = the classic colours, so
+    older rooms look the same. A new room starts in its colour: a matching wall (given free; new Lemon Dots, Leafy Green
+    and Blue Dots walls) and furniture in both rooms, except the Loft's beams. Changing a room's colour later with ✏️
+    doesn't repaint anything she chose.
   - **Content Pack 2 (to build as v1.21):** themes dinosaurs, space and rockets, trucks/trains/cars, robots/sharks/heroes:
     about 16 clothes, 12 decorations, walls and floors, fidget designs, photocard tags and a few stickers.
 
@@ -508,7 +519,7 @@ _Last updated: 2026-11-16_
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 13 since v1.20 (Buddies: `look.kind`, `look.face`, `tint`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 13 since v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

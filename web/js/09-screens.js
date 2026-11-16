@@ -55,7 +55,7 @@ function roomModal(p){
       const n=$('#npName').value.trim(); if(!n){toast('Type a name first!');return;}
       closeModal();
       if(p){p.name=n;p.color=color;p.badge=badge;p.tint=tint;save();SFX.happy();renderProfiles();return;}
-      const q=newProfile(n,fur,color,badge,starterLook(start,fur)); q.tint=tint; giveStarter(q); DB.profiles.push(q); DB.activeId=q.id; save(); SFX.buy(); enterRoom();
+      const q=newProfile(n,fur,color,badge,starterLook(start,fur)); q.tint=tint; giveStarter(q); roomStart(q); DB.profiles.push(q); DB.activeId=q.id; save(); SFX.buy(); enterRoom();
     }}]);
   const pick=(sel,attr,set)=>{const row=$(sel);if(row)row.onclick=e=>{const b=e.target.closest(`[data-${attr}]`);if(!b)return;set(b.dataset[attr]);$$(sel+' button').forEach(x=>x.classList.toggle('on',x===b));SFX.click();};};
   // Picking a buddy also picks its fur; picking a fur shows every buddy in it.
@@ -200,6 +200,8 @@ function renderDecoGrid(){
     h=easySort(Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award&&!d.season),([k,d])=>d.price).map(([k,d])=>`<button class="tile${poorCls(p,false,d.price)}" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div>${priceTag(p,d.price)}</button>`).join('');
   } else if(decoTab==='season'){
     h=seasonGrid(p); // section 20
+  } else if(decoTab==='colors'){
+    h=furnGrid(p); // furniture colours (v1.20, section 23)
   } else {
     const isW=decoTab==='wall', L=isW?WALLS:FLOORS, curId=isW?curRoom(p).wall:curRoom(p).floor;
     h=easySort(Object.entries(L),e=>surfOwned(p,isW,e[0],e[1])?0:e[1].price).map(([k,v])=>surfTile(p,isW,k,v,curId)).join('');
