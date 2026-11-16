@@ -31,7 +31,8 @@ _Last updated: 2026-11-16_
 - **Phase 8 and beyond: roadmap agreed 2026-11-16** (see `PLAN.md`). Order: 💌 About & Gift Story (v1.22) → 🌳 Backyard,
   a third room (v1.23) → 🧤 Be the Keeper (v1.24) → 📚 Brain Games part 1 (v1.25) → 🎤 song pack (v1.26) → Phase 10
   (backlog + helpers) → Phase 11 (more games and packs). Each still gets its own detailed plan before building.
-  - **💌 About & Gift Story: built, PR #22 open as v1.22** on branch `feature/about` (from `main` after #21).
+  - **💌 About & Gift Story: done** (v1.22 merged, PR #22).
+  - **🌳 Backyard: built, PR open as v1.23** on branch `feature/backyard` (from `main` after #22).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -62,7 +63,8 @@ _Last updated: 2026-11-16_
 - PR #19 "Pet (v1.19)": merged.
 - PR #20 "Buddies (v1.20)": merged.
 - PR #21 "Content Pack 2 (v1.21)": merged.
-- PR #22 "About & Gift Story (v1.22)" on branch `feature/about` (from `main` after #21): open.
+- PR #22 "About & Gift Story (v1.22)": merged.
+- PR "Backyard (v1.23)" on branch `feature/backyard` (from `main` after #22): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -273,6 +275,22 @@ _Last updated: 2026-11-16_
   - 5 taps on the buddy show nothing with no secret and show the secret when there is one
   - Back and ⬅ Room go to the room; What's New shows once after an update, not again, only this version's news for an
     old save, and restoring a backup doesn't bring it back; on a phone the certificate and letter fit the width
+
+- **Backyard (v1.23)**: 656 checks, all passing, no console errors. New checks:
+  - the room bar's two buttons in each room (Room: Loft + Yard; Loft: Room + Yard; Backyard: Room + Loft); 🌳 Yard opens
+    "…'s Backyard" with the White Picket fence and Grass; the tree, goal, shed, easel, Fuzzy and the pet are drawn
+  - Back goes Backyard → room; the goal opens Soccer and Back from Soccer returns to the Backyard
+  - each season shows in the sky, on the tree and on the ground
+  - Walls/Floors tabs: only the 5 fences / 5 grounds outside, none of them inside; buying the Garden Hedge (15) and Sandy
+    Beach (15) changes only the Backyard; the Seasons tab has decorations but no walls outside
+  - the Shop lists the 8 outdoor things first outside; buying the Trampoline (30); String Lights land on the fence
+  - Colours: shed + chalkboard rows; painting the shed Sky is free
+  - My Stuff: a trampoline put away outside can be placed in the Loft; all 8 outdoor decorations and all 5 fences draw
+  - stickers: 55, the two new ones at the end; 5 things outside and 3 outdoor things earn them
+  - a v1.22 backup restores with an empty Backyard (save version 14); a v1.23 backup keeps it; odd Backyard data
+    (not an object, an indoor wall, an unknown ground) is made safe; on a phone both room buttons fit (48 px+)
+  - Test changes: sticker counts now 55; the Buddies backup check accepts save version 13 and up; the What's New checks
+    set `whatsNew.wait=0`.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -505,6 +523,24 @@ _Last updated: 2026-11-16_
     (`DB_VERSION` stays 13: the new setting is filled in by `DEFAULT_SETTINGS`).
   - **Every PR from now on adds its own `GIFT_TIMELINE` entry with `news`** (the smoke test checks the last entry is
     `APP_VERSION`).
+  - Fixed in v1.23: deciding "brand-new device" now happens straight away at startup (only the box waits 0.6 s). With a
+    timer, a slow start could show the box to a brand-new device after a room had just been made.
+- **Backyard (agreed 2026-11-16, built as v1.23):** a third free room for every profile (`p.room3`, `roomNo` 3,
+  `26-backyard.js`).
+  - The single 🪜/🏠 button became **two buttons, one for each other room** ("🌳 Yard", "🪜 Loft", "🏠 Room"; icons only on
+    a phone, where the room bar is a little tighter). Back from the Loft or the Backyard goes to her room.
+  - Sky with clouds and a sun, and the season in the air, on the tree and on the ground (no animation loop). A tree with a
+    rope swing, a garden shed (both plain, spots for later games), a **soccer goal that opens Soccer**, and a chalkboard
+    easel (plain until Brain Games).
+  - **Fences and grounds only outside, indoor walls and floors only inside** (owner's choice). Fences: White Picket (free),
+    Garden Hedge 15, Stone Wall 15, Rainbow Fence 20, Bat Night Fence 20. Grounds: Grass (free), Flower Meadow 15, Sandy
+    Beach 15, Stepping Stones 15, Soccer Stripes 20. The Seasons tab shows no walls in the Backyard.
+  - **8 outdoor decorations** (`yard:1`), allowed in any room and listed first in the Backyard's Shop: Trampoline 30,
+    Slide 30, Sandbox 20, Kiddie Pool 20 (a flat rug-like item), Camping Tent 25, Picnic Blanket 10 (flat), Birdhouse 15,
+    String Lights 15 (hang on the fence).
+  - 🎨 Colours: the Garden Shed and the Chalkboard (`shed`, `easel`); a new room starts with them in its colour too.
+  - Stickers: 🌳 Yard Life (5 things in the Backyard) and 🏕️ Happy Camper (3 different outdoor things). 55 in all.
+  - Save version 14: `room3 {wall:'picket', floor:'grass', items:[]}`, filled in for old saves and old backups.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -583,13 +619,15 @@ _Last updated: 2026-11-16_
 2. ~~Agree the detailed plan for 💌 About & Gift Story (v1.22), then build it on `feature/about`.~~ Built (v1.22 PR).
 3. Owner: read the drafted letter in `web/about-local.js` and change anything; keep a copy of the file somewhere safe.
    Later, if a family secret comes to mind, put it in `secret:` there.
-4. Owner: build v1.22, try the About and the What's New box (see the PR), and merge it.
-5. Plan the 🌳 Backyard (v1.23) in detail and get it agreed.
+4. ~~Owner: build v1.22, try the About and the What's New box (see the PR), and merge it.~~ Merged.
+5. ~~Plan the 🌳 Backyard (v1.23) in detail and get it agreed.~~ Agreed and built (v1.23 PR).
+6. Owner: build v1.23, try the Backyard (see the PR), and merge it.
+7. Plan 🧤 Be the Keeper (v1.24) in detail and get it agreed.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 13 since v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 14 since v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

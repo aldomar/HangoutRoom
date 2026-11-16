@@ -46,7 +46,11 @@ const GIFT_TIMELINE=[
   {v:'1.21',d:'2026-11-16',i:'🚀',n:'Dinos, space + trucks',why:'For the dino and rocket fans'},
   {v:'1.22',d:'2026-11-16',i:'💌',n:'About & Gift Story',why:'So everyone knows this was made just for you',
     news:['💌 An About page in ⚙️ Settings: a letter, a gold certificate and the story of every update',
-          '✨ This box! It shows what is new after each update']}
+          '✨ This box! It shows what is new after each update']},
+  {v:'1.23',d:'2026-11-16',i:'🌳',n:'The Backyard',why:'A third room, with room to grow',
+    news:['🌳 A Backyard! Tap 🌳 Yard at the top of your room',
+          '⚽ Tap the soccer goal to play Soccer',
+          '🏕️ Fences, grass and 8 outdoor things in 🛋️ Decorate: a trampoline, a tent, a slide and more']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -110,7 +114,8 @@ function whatsNew(){
   if(seen===APP_VERSION)return;
   const list=GIFT_TIMELINE.filter(t=>t.news&&(seen?verNum(t.v)>verNum(seen):t.v===APP_VERSION)&&verNum(t.v)<=verNum(APP_VERSION)).slice(-3);
   s.seenNew=APP_VERSION; save();
-  if(!DB.profiles.length||!list.length)return;
-  modal('✨ What\'s New!',list.map(t=>`<div class="wn"><div class="wn-t">${t.i} ${esc(t.n)} <span>v${t.v}</span></div><ul>${t.news.map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`).join(''),
-    [{text:'Yay! ✨',cls:'pink'}]);
+  if(!DB.profiles.length||!list.length)return; // decided straight away at startup; only the box waits a moment
+  setTimeout(()=>modal('✨ What\'s New!',list.map(t=>`<div class="wn"><div class="wn-t">${t.i} ${esc(t.n)} <span>v${t.v}</span></div><ul>${t.news.map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`).join(''),
+    [{text:'Yay! ✨',cls:'pink'}]),whatsNew.wait);
 }
+whatsNew.wait=600;

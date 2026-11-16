@@ -99,5 +99,5 @@ const ROOM_START={pink:['bubblegum','pink'],purple:['lavender','purple'],mint:['
 function roomStart(p){
   const r=ROOM_START[p.color]; if(!r) return;
   const [wall,fc]=r; p.room.wall=wall; if(WALLS[wall].price&&!p.owned.includes('wall:'+wall)) p.owned.push('wall:'+wall);
-  ['desk','closet','shelf','curtain','desk2','window2','lamp'].forEach(k=>p.furn[k]=fc);
+  ['desk','closet','shelf','curtain','desk2','window2','lamp','shed','easel'].forEach(k=>p.furn[k]=fc);
 }

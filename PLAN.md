@@ -221,10 +221,12 @@ timers, nothing lost, Easy mode works for the 3- and 5-year-olds, and a few new 
     file doesn't fill in, or when the file isn't there at all. `web/about-local.example.js` (in git) shows how to write it.
     The Android build copies the whole `web/` folder, so the APK built on the owner's PC includes the local file.
     The owner keeps a copy of `about-local.js` somewhere safe (like the signing key), because git doesn't have it.
-- **🌳 Third room: the Backyard (v1.23, the owner's choice: start it now, to make room to grow):** a free outdoor room
+- ✅ **🌳 Third room: the Backyard (v1.23, the owner's choice: start it now, to make room to grow):** a free outdoor room
   next to her room and the Loft, with its own fences (walls), grass and paths (floors) and decorations, and the season
   in the sky. It has a soccer goal (opens Soccer) and a chalkboard easel, which becomes Brain Games. The 🪜/🏠 room button
   becomes a three-room switch (still one tap to any room). Save: `room3`, with defaults for old saves.
+  As built: 🌳 Yard / 🪜 Loft / 🏠 Room buttons (one for each other room); a tree with a swing and a garden shed (spots
+  for later); 5 fences and 5 grounds (only listed outside); 8 outdoor decorations (10–30); 2 stickers. Save version 14.
 
 ### Phase 9: Games
 - **🧤 Be the Keeper (v1.24, the owner's idea):** a second Soccer mode where you're the goalie. Original strikers, one per

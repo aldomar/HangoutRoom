@@ -87,17 +87,22 @@ const roomSvg=$('#roomSvg');
 let decorating=false,decoTab='mine',drag=null;
 // Two rooms (v1.10): 1 = her room (p.room), 2 = the Cozy Loft (p.room2, drawn in 16-room2.js). Each has its own wall,
 // floor and items; My Stuff (items with placed:false) is shared, so a stored thing can be placed in either room.
+// Since v1.23 there is a third: 3 = the Backyard (p.room3, drawn in 26-backyard.js). rooms(p) lists all three.
 let roomNo=1;
-const curRoom=p=>roomNo===2?p.room2:p.room;
-const allItems=p=>p.room.items.concat(p.room2.items);
+const curRoom=p=>roomNo===3?p.room3:roomNo===2?p.room2:p.room;
+const rooms=p=>[p.room,p.room2,p.room3];
+const allItems=p=>rooms(p).reduce((a,r)=>a.concat(r.items),[]);
+const ROOM_BTNS={1:'🏠 <span>Room</span>',2:'🪜 <span>Loft</span>',3:'🌳 <span>Yard</span>'};
+const ROOM_NAMES={1:'Room',2:'Loft',3:'Backyard'};
 function goRoom(n){roomNo=n;drag=null;SFX.whoosh();renderRoom();if(decorating)renderDecoGrid();}
 function mascotG(p){return `<g id="mascotG" class="mascot"><ellipse cx="500" cy="604" rx="62" ry="12" fill="#00000030"/>${mascotSVG(p.look,null,'x="420" y="396" width="160" height="216"')}</g>`;}
 function renderRoom(){
   const p=P(); if(!p) return;
   const R=curRoom(p), W=WALLS[R.wall]||WALLS.lavender, F=FLOORS[R.floor]||FLOORS.wood;
-  let s=`<rect width="1000" height="470" fill="${W.fill}"/><rect width="1000" height="470" fill="url(#${W.pat})"/>`;
-  s+=`<rect y="470" width="1000" height="230" fill="${F.fill}"/><rect y="470" width="1000" height="230" fill="url(#${F.pat})"/><rect y="458" width="1000" height="16" fill="#00000026"/>`;
-  s+=roomNo===2?loftFurniture():furniture();
+  let s=roomNo===3?yardBack(R):`<rect width="1000" height="470" fill="${W.fill}"/><rect width="1000" height="470" fill="url(#${W.pat})"/>`; // the Backyard: sky + fence (section 26)
+  const G=roomNo===3?FLOORS[yardFloor(R)]:F;
+  s+=`<rect y="470" width="1000" height="230" fill="${G.fill}"/><rect y="470" width="1000" height="230" fill="url(#${G.pat})"/><rect y="458" width="1000" height="16" fill="#00000026"/>`;
+  s+=roomNo===3?yardFurniture():roomNo===2?loftFurniture():furniture();
   const items=R.items.filter(i=>i.placed&&DECOR[i.type]);
   const deco=i=>`<g class="deco" data-uid="${i.uid}" transform="translate(${Math.round(i.x)} ${Math.round(i.y)})">${DECOR[i.type].d(i)}</g>`;
   s+=items.filter(i=>DECOR[i.type].flat).map(deco).join('');
@@ -108,8 +113,9 @@ function renderRoom(){
   s+=list.map(o=>o.h).join('');
   roomSvg.innerHTML=s;
   roomSvg.classList.toggle('decorating',decorating);
-  $('#roomTitle').textContent=roomNo===2?`${p.name}'s Loft`:`${p.name}'s Room`;
-  $('#roomGo').innerHTML=roomNo===2?'🏠 <span>Room</span>':'🪜 <span>Loft</span>';
+  $('#roomTitle').textContent=`${p.name}'s ${ROOM_NAMES[roomNo]}`;
+  const other=[1,2,3].filter(n=>n!==roomNo); // one button for each of the other two rooms
+  [$('#roomGo'),$('#roomGo2')].forEach((b,k)=>{b.dataset.go=other[k];b.innerHTML=ROOM_BTNS[other[k]];});
   updateCoins();
 }
 function say(text){
@@ -130,7 +136,7 @@ function handleHot(h){
   else if(h==='closet'){SFX.click();show('closet');}
   else if(h==='desk'){SFX.click();show('art');}
   else if(h==='photo'){SFX.click();show('cards');}
-  else if(h==='window'){SFX.click();show('soccer');}
+  else if(h==='window'||h==='goal'){SFX.click();show('soccer');} // goal: the Backyard's soccer goal (v1.23)
   else if(h==='stage'){SFX.click();show('stage');}
   else if(h==='code'){SFX.click();show('code');}
   else if(h==='pet'){petTap();} // section 22
@@ -181,7 +187,7 @@ function snapToShelf(it){ // drop a standing thing near a shelf top and it sits 
 function enterDecorate(){decorating=true;$('#decoPanel').classList.remove('hidden');$('#decoBtn').innerHTML='✔<span> Done</span>';renderRoom();renderDecoGrid();SFX.click();}
 function exitDecorate(silent){decorating=false;drag=null;$('#decoPanel').classList.add('hidden');$('#decoBtn').innerHTML='🛋️<span> Decorate</span>';if(!silent)renderRoom();}
 $('#decoBtn').onclick=()=>decorating?exitDecorate():enterDecorate();
-$('#roomGo').onclick=()=>goRoom(roomNo===2?1:2);
+$('#roomGo').onclick=$('#roomGo2').onclick=e=>goRoom(+e.currentTarget.dataset.go);
 $('#decoDone').onclick=()=>exitDecorate();
 $('#decoTabs').onclick=e=>{const b=e.target.closest('[data-dt]');if(!b)return;decoTab=b.dataset.dt;SFX.click();renderDecoGrid();};
 const decoPrev=k=>`<svg viewBox="${DECOR[k].box}">${DECOR[k].d()}</svg>`;
@@ -198,33 +204,35 @@ function renderDecoGrid(){
       +keys.map(k=>`<button class="tile" data-place="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${DECOR[k].name}</div><div class="tp cnt">×${counts[k]}</div></button>`).join('');
     if(!h) h=`<div class="empty">Nothing stored right now! Drag things from your room down here to put them away, or get new stuff in the Shop 🛍️</div>`;
   } else if(decoTab==='shop'){ // seasonal things (v1.17) have their own tab
-    h=easySort(Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award&&!d.season),([k,d])=>d.price).map(([k,d])=>`<button class="tile${poorCls(p,false,d.price)}" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div>${priceTag(p,d.price)}</button>`).join('');
+    const yd=([k,d])=>roomNo===3&&d.yard?0:1; // the Backyard lists outdoor things first (v1.23)
+    h=easySort(Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award&&!d.season).sort((a,b)=>yd(a)-yd(b)),([k,d])=>d.price).map(([k,d])=>`<button class="tile${poorCls(p,false,d.price)}" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div>${priceTag(p,d.price)}</button>`).join('');
   } else if(decoTab==='season'){
     h=seasonGrid(p); // section 20
   } else if(decoTab==='colors'){
     h=furnGrid(p); // furniture colours (v1.20, section 23)
   } else {
     const isW=decoTab==='wall', L=isW?WALLS:FLOORS, curId=isW?curRoom(p).wall:curRoom(p).floor;
-    h=easySort(Object.entries(L),e=>surfOwned(p,isW,e[0],e[1])?0:e[1].price).map(([k,v])=>surfTile(p,isW,k,v,curId)).join('');
+    // fences and grounds (yard:1) only in the Backyard, indoor walls and floors only indoors (v1.23)
+    h=easySort(Object.entries(L).filter(([k,v])=>!v.yard===(roomNo!==3)),e=>surfOwned(p,isW,e[0],e[1])?0:e[1].price).map(([k,v])=>surfTile(p,isW,k,v,curId)).join('');
   }
   $('#decoGrid').innerHTML=h;
   seasonTab();
 }
 const surfOwned=(p,isW,k,v)=>!v.price||p.owned.includes((isW?'wall:':'floor:')+k);
 function surfTile(p,isW,k,v,curId){const o=surfOwned(p,isW,k,v);
-  return `<button class="tile ${k===curId?'on':''} ${o?'':'locked'}${poorCls(p,o,v.price)}" data-surf="${k}" data-kind="${isW?'wall':'floor'}"><div class="tv"><svg viewBox="0 0 300 200"><rect width="300" height="200" fill="${v.fill}"/><rect width="300" height="200" fill="url(#${v.pat})"/></svg></div><div class="tn">${v.name}</div>${o?'':priceTag(p,v.price)}</button>`;}
+  return `<button class="tile ${k===curId?'on':''} ${o?'':'locked'}${poorCls(p,o,v.price)}" data-surf="${k}" data-kind="${isW?'wall':'floor'}"><div class="tv">${isW&&v.yard?ydTile(k):`<svg viewBox="0 0 300 200"><rect width="300" height="200" fill="${v.fill}"/><rect width="300" height="200" fill="url(#${v.pat})"/></svg>`}</div><div class="tn">${v.name}</div>${o?'':priceTag(p,v.price)}</button>`;}
 // Posters go on the free bit of wall between the photocard board and the closet.
 // Trophies each get their own clear spot on the floor, so they never hide behind Fuzzy (who stands at x 420-580).
 const TROPHY_SPOTS={trophyBronze:{x:345,y:665},trophySilver:{x:655,y:680},trophyGold:{x:850,y:660},goldenMic:{x:180,y:688}};
 // In the Loft, posters go on the wall left of the skylight instead.
-function spot(type){if(TROPHY_SPOTS[type])return Object.assign({},TROPHY_SPOTS[type]);if(type==='poster')return roomNo===2?{x:170+Math.random()*12,y:230+Math.random()*12}:{x:686+Math.random()*12,y:200+Math.random()*12};return DECOR[type].wall?{x:380+Math.random()*240,y:200+Math.random()*60}:{x:400+Math.random()*200,y:560+Math.random()*90};}
+function spot(type){if(TROPHY_SPOTS[type])return Object.assign({},TROPHY_SPOTS[type]);if(type==='poster')return roomNo===2?{x:170+Math.random()*12,y:230+Math.random()*12}:{x:686+Math.random()*12,y:200+Math.random()*12};return DECOR[type].wall?{x:380+Math.random()*240,y:roomNo===3?360+Math.random()*40:200+Math.random()*60}:{x:400+Math.random()*200,y:560+Math.random()*90};}
 $('#decoGrid').addEventListener('click',e=>{
   const t=e.target.closest('.tile'); if(!t) return; const p=P();
   if(t.dataset.place||t.dataset.placeUid){
     const it=allItems(p).find(i=>!i.placed&&(t.dataset.placeUid?i.uid===t.dataset.placeUid:i.type===t.dataset.place));
     if(!it) return; const R=curRoom(p);
     if(it.type==='poster'&&postersUp(R)>=MAX_POSTERS){SFX.locked();toast(`This room has ${MAX_POSTERS} posters already!`);return;}
-    if(!R.items.includes(it)){[p.room,p.room2].forEach(r=>{r.items=r.items.filter(i=>i!==it);});R.items.push(it);} // moving it to this room
+    if(!R.items.includes(it)){rooms(p).forEach(r=>{r.items=r.items.filter(i=>i!==it);});R.items.push(it);} // moving it to this room
     Object.assign(it,spot(it.type),{placed:true});save();SFX.pop();renderRoom();renderDecoGrid();
   } else if(t.dataset.buy){
     const k=t.dataset.buy, d=DECOR[k];
