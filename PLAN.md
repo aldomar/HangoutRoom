@@ -173,8 +173,9 @@ Order agreed 2026-11-15: **1)** split the code into files (v1.9), **2)** a conte
     from one of 6 starter looks, picked by picture. The room's colour (now also Green and Blue) can tint the buttons and
     bars, and a new room starts with a matching wall and furniture. Decorate's 🎨 Colours tab recolours the built-in
     furniture of both rooms (10 free swatches). Save version 13.
-  - **Content Pack 2 (v1.21):** dinosaurs, space and rockets, trucks/trains/cars, robots/sharks/heroes: clothes,
-    decorations, walls and floors, fidget designs, photocard tags and a few stickers.
+  - ✅ **Content Pack 2 (v1.21):** dinosaurs, space and rockets, trucks/trains/cars, robots/sharks/heroes: 16 clothes,
+    12 decorations, 4 walls, 3 floors, 17 fidget designs (pop-it colours and Rocket/Dino boards, squishies, spinners,
+    slimes, clicker cubes, marbles), photocard tags and 4 theme stickers. Prices 10–30. No save changes.
 - ✅ **Code Lab 💻 (v1.13, the owner's idea):** tap the Loft's computer desk. 18 hand-made puzzles (6 per level):
   Easy = arrows only, Medium = 🔁 repeat (with a block limit, so repeat is needed), Hard = toy-block walls and ⭐ stars
   picked up with 🌟. No timers, a bump is a gentle "oops". 3 coins per new puzzle, +5 for a whole level, and a

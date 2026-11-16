@@ -26,8 +26,8 @@ _Last updated: 2026-11-16_
     - **🐾 Pet: done** (v1.19 merged, PR #19).
   - **Buddies + Content Pack 2** (plan agreed 2026-11-16, two PRs): options the nieces' younger brothers (5 and 3)
     will like too, while everyone can still use everything.
-    - **🐾 Buddies: built, PR open as v1.20** on branch `feature/buddies` (from `main` after #19).
-    - **Content Pack 2 (v1.21)**: next, from `main` after v1.20 is merged.
+    - **🐾 Buddies: done** (v1.20 merged, PR #20).
+    - **🦕 Content Pack 2: built, PR #21 open as v1.21** on branch `feature/pack2` (from `main` after #20).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -56,7 +56,8 @@ _Last updated: 2026-11-16_
 - PR #17 "Seasons (v1.17)": merged.
 - PR #18 "Sticker Book (v1.18)": merged.
 - PR #19 "Pet (v1.19)": merged.
-- PR "Buddies (v1.20)" on branch `feature/buddies` (from `main` after #19): open.
+- PR #20 "Buddies (v1.20)": merged.
+- PR #21 "Content Pack 2 (v1.21)" on branch `feature/pack2` (from `main` after #20): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -241,6 +242,20 @@ _Last updated: 2026-11-16_
     Decorate's 🎨 Colours tab has 4 pieces × 11 swatches (48 px+); Sky paints the desk, free; Classic brings the old
     wardrobe back; the Loft tab lists the Loft's pieces; white beams; backups keep the colours, odd ones are made safe
   - The Closet hair check now expects 11 styles; the phone Decorate check now expects 6 tabs.
+- **Content Pack 2 (v1.21)**: 593 checks, all passing, no console errors. New checks:
+  - 16 new clothes, each with a theme; each one draws on every buddy with no broken numbers and is in the Closet;
+    buying the Dino Spike Hoodie (20) and wearing it; the new clothes count on photocard stats (Sporty 5)
+  - nothing in the whole app is named "boy" or "girl"
+  - 12 new decorations in the Shop; buying the Dino Plush (20) puts it in her room; 4 new walls and 3 floors (Outer Space
+    bought and put up); all 12 decorations drawn in the Loft with the new walls and floors
+  - fidgets: 3 pop-it colours and the Rocket and Dino boards (sensible bubble counts; popping them all flips the board);
+    every squishy extra, spinner picture and slime picture exists; the new squishies, spinners, slimes, cubes and marbles
+    are listed and draw; buying the Rocket spinner
+  - stickers: 53 in all; the theme counts include clothes, walls, fidget designs and decorations (also in My Stuff);
+    3 dino and 3 space things give Dino Fan and Space Cadet (+2 each), not Road Trip or Hero Squad
+  - a backup keeps the pack clothes, wall, spinner, plush and sticker
+  - Test changes: the sticker count check now expects 53; the clicker check now uses the last cube in the list.
+  - One early run stopped at the Art Desk reload step (a slow page load, nothing to do with this change); the next runs passed.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -442,8 +457,12 @@ _Last updated: 2026-11-16_
     older rooms look the same. A new room starts in its colour: a matching wall (given free; new Lemon Dots, Leafy Green
     and Blue Dots walls) and furniture in both rooms, except the Loft's beams. Changing a room's colour later with ✏️
     doesn't repaint anything she chose.
-  - **Content Pack 2 (to build as v1.21):** themes dinosaurs, space and rockets, trucks/trains/cars, robots/sharks/heroes:
-    about 16 clothes, 12 decorations, walls and floors, fidget designs, photocard tags and a few stickers.
+  - **Content Pack 2 (built as v1.21):** themes dinosaurs, space and rockets, trucks/trains/cars, robots/sharks/heroes,
+    in the new `24-pack2.js`. 16 clothes, 12 decorations, 4 walls, 3 floors, 17 fidget designs, photocard tags, prices
+    10–30. Each entry has `p2:` its theme. 4 stickers (Dino Fan, Space Cadet, Road Trip, Hero Squad) for owning 3 things
+    of a theme (a decoration counts while it is in either room or in My Stuff). No save changes (save version stays 13).
+    To let a pack add new squishy shapes and spinner/slime pictures, sections 5, 10 and 19 got two small hooks:
+    `SQ_EXTRAS` (a squishy's `extra` drawn behind/in front of its body) and `FID_ICONS` (a spinner or slime `deco`).
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -513,8 +532,9 @@ _Last updated: 2026-11-16_
 20. ~~Build the Pet (v1.19).~~ Built (v1.19 PR).
 21. ~~Owner: build v1.19, try the pet (see the PR), and merge it.~~ Merged. That finished Seasons + Sticker Book + Pet.
 22. ~~Pick the next item.~~ Buddies + Content Pack 2 (agreed 2026-11-16).
-23. Owner: build v1.20, try the buddies and tints (see the PR), and merge it.
-24. Build Content Pack 2 (v1.21) from `main` after v1.20 is merged.
+23. ~~Owner: build v1.20, try the buddies and tints (see the PR), and merge it.~~ Merged.
+24. ~~Build Content Pack 2 (v1.21) from `main` after v1.20 is merged.~~ Built (v1.21 PR).
+25. Owner: build v1.21, try the new things (see the PR), and merge it. That finishes Buddies + Content Pack 2.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

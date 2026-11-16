@@ -67,6 +67,21 @@ On the Fidget Shelf (the shelf in her room) there are three more tabs:
   when playing in a car).
 Each one has a free design and more to buy in the row at the bottom.
 
+## Content Pack 2 (since version 1.21)
+New things themed on dinosaurs 🦕, space and rockets 🚀, trucks, trains and cars 🚂, and robots, sharks and heroes 🤖.
+Like everything else, they are for anyone to use. All are bought with coins she earns by playing (10–30 coins).
+- **Closet (16):** Dino Spike Hoodie, Rocket Tee, Robot Suit, Star Hero Suit, Dino Shorts, Racing Pants, Dino Scale Socks,
+  Space Socks, Robot Arm Warmers, Rocket Boots, Dino Feet, Space Helmet, Builder Hat, Shark Hat, Robot Antennae, Hero Mask.
+  They count towards the Cute / Spooky / Sporty numbers on photocards.
+- **Decorations (12, in the 🛋️ Decorate Shop):** Dino Plush, Dino Egg Nest, Volcano Lamp, Toy Rocket, Planet Mobile,
+  Telescope, Train Track Rug, Dump Truck, Traffic Light Lamp, Robot Pal, Shark Beanbag, Hero Badge.
+- **Walls:** Jungle Leaves, Outer Space, Ocean Waves, Robot Panels. **Floors:** Road, Moon Craters, Dino Dig Sand.
+- **Fidget Shelf:** Dino, Space and Traffic Lights pop-it colours; Rocket and Dino pop-it boards; Dino Squish, Sharky and
+  Little Planet squishies; Rocket, Robo Gear and Dino spinners; Dino Slime and Rocket Goo; Robot and Dino clicker
+  cubes; Little Earth and Tyre marbles.
+- **4 stickers** on the 🏠 Room & Style page of the Sticker Book: Dino Fan, Space Cadet, Road Trip and Hero Squad, each for
+  having 3 things from that theme (clothes, walls, floors, fidget designs or decorations, also ones put away in My Stuff).
+
 ## Buddies (since version 1.20)
 - Fuzzy doesn't have to be a bunny any more. In the Closet, the **🐾 Buddy** tab has a Bunny, Bear Cub, Puppy,
   Little Dino and Fox, and the **😊 Face** tab has three faces (Sparkly, Bright Smile, Cheeky Grin). They are all free and

@@ -24,4 +24,7 @@ const SPINS={
 // Pop-it board shapes (v1.10). 'classic' is the square board; content packs add more (with a 100 x 100 outline path).
 // Saved in p.fid.popShape and owned as popshape:<id>: never rename the ids.
 const POP_SHAPES={classic:{name:'⬜ Square Board',price:0}};
+// Hooks for content packs (v1.21): FID_ICONS[name](ctx,x,y,size) draws a small picture for a spinner `deco` or a slime `deco`;
+// SQ_EXTRAS[name] = {back(ctx,at,cx,cy,R,T), front(ctx,at,cx,cy,R,T)} draws a squishy's `extra` behind / in front of its body.
+const FID_ICONS={}, SQ_EXTRAS={};
 const FID={popit:{key:'pop',list:POP_THEMES},squish:{key:'squish',list:SQUISHIES},spin:{key:'spin',list:SPINS}};
