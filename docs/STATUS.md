@@ -32,7 +32,7 @@ _Last updated: 2026-11-16_
   a third room (v1.23) → 🧤 Be the Keeper (v1.24) → 📚 Brain Games part 1 (v1.25) → 🎤 song pack (v1.26) → Phase 10
   (backlog + helpers) → Phase 11 (more games and packs). Each still gets its own detailed plan before building.
   - **💌 About & Gift Story: done** (v1.22 merged, PR #22).
-  - **🌳 Backyard: built, PR open as v1.23** on branch `feature/backyard` (from `main` after #22).
+  - **🌳 Backyard: built, PR #23 open as v1.23** on branch `feature/backyard` (from `main` after #22).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -64,7 +64,7 @@ _Last updated: 2026-11-16_
 - PR #20 "Buddies (v1.20)": merged.
 - PR #21 "Content Pack 2 (v1.21)": merged.
 - PR #22 "About & Gift Story (v1.22)": merged.
-- PR "Backyard (v1.23)" on branch `feature/backyard` (from `main` after #22): open.
+- PR #23 "Backyard (v1.23)" on branch `feature/backyard` (from `main` after #22): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
