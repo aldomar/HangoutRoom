@@ -8,9 +8,9 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.23';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.24';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=14;          // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=15;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
 // pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
 const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:'',seenNew:''}; // seenNew (v1.22): last version whose What's New was shown
@@ -66,7 +66,10 @@ const MIGRATIONS={
   // (off for rooms made before v1.20, so they look the same) and p.furn (furniture colours; empty = the classic colours).
   13: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&typeof p.tint!=='boolean') p.tint=false; }); },
   // v1.23 Backyard: room3 {wall, floor, items} (empty, with the White Picket fence and Grass). normalize() fills it in too.
-  14: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.room3||typeof p.room3!=='object')) p.room3={wall:'picket',floor:'grass',items:[]}; }); }
+  14: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.room3||typeof p.room3!=='object')) p.room3={wall:'picket',floor:'grass',items:[]}; }); },
+  // v1.24 Be the Keeper: soccer.mode ('kick'|'keep'), soccer.keep {level, best{easy,medium,hard}, gloves[]} and
+  // stats.saves. normalize() fills them in; this step adds the keeper record.
+  15: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&p.soccer&&typeof p.soccer==='object'&&!p.soccer.keep) p.soccer.keep={level:'easy',best:{easy:0,medium:0,hard:0},gloves:[]}; }); }
 };
 
 // Hair ids from before v1.11 (one closet item per colour) -> the colour they had. They stay readable forever:

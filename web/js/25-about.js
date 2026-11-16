@@ -50,7 +50,11 @@ const GIFT_TIMELINE=[
   {v:'1.23',d:'2026-11-16',i:'🌳',n:'The Backyard',why:'A third room, with room to grow',
     news:['🌳 A Backyard! Tap 🌳 Yard at the top of your room',
           '⚽ Tap the soccer goal to play Soccer',
-          '🏕️ Fences, grass and 8 outdoor things in 🛋️ Decorate: a trampoline, a tent, a slide and more']}
+          '🏕️ Fences, grass and 8 outdoor things in 🛋️ Decorate: a trampoline, a tent, a slide and more']},
+  {v:'1.24',d:'2026-11-16',i:'🧤',n:'Be the Keeper',why:'Now you can be the goalie too',
+    news:['🧤 Soccer has a new Keep mode: your buddy goes in goal!',
+          '🐸 Hop, 🤖 Bolt and 🦊 Zip take the shots. Tap where the ball goes (on Easy, just tap the ball)',
+          '🥇 Save all 5 to win a keeper glove for your Backyard']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

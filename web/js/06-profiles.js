@@ -18,7 +18,7 @@ function newProfile(name,fur,color,badge,look){
 function normalize(p){
   if(!p.id) p.id=uid();
   if(!p.name) p.name='Room';
-  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
+  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.look=Object.assign({},DEFAULT_LOOK,p.look||{});
   if(!BUDDIES[p.look.kind]) p.look.kind='bunny'; if(!FACES[p.look.face]) p.look.face='sparkle'; // v1.20
@@ -56,6 +56,13 @@ function normalize(p){
   p.soccer.best=Object.assign({easy:0,medium:0,hard:0},p.soccer.best&&typeof p.soccer.best==='object'?p.soccer.best:{});
   p.soccer.trophies=Array.isArray(p.soccer.trophies)?p.soccer.trophies.filter(l=>['easy','medium','hard'].includes(l)):[]; // levels whose trophy she has won
   if(!['easy','medium','hard'].includes(p.soccer.level)) p.soccer.level='easy';
+  // Be the Keeper (v1.24): ⚽ Kick or 🧤 Keep (the last one used), and the keeper's level, best saves and gloves won.
+  if(p.soccer.mode!=='keep') p.soccer.mode='kick';
+  const kp=p.soccer.keep&&typeof p.soccer.keep==='object'&&!Array.isArray(p.soccer.keep)?p.soccer.keep:{};
+  p.soccer.keep={level:['easy','medium','hard'].includes(kp.level)?kp.level:'easy',
+    best:Object.assign({easy:0,medium:0,hard:0},kp.best&&typeof kp.best==='object'?kp.best:{}),
+    gloves:Array.isArray(kp.gloves)?kp.gloves.filter((l,i,a)=>['easy','medium','hard'].includes(l)&&a.indexOf(l)===i):[]};
+  ['easy','medium','hard'].forEach(l=>{p.soccer.keep.best[l]=clamp(Math.floor(Number(p.soccer.keep.best[l])||0),0,5);});
   // Stage (v1.7): chosen level, best {stars, score} per song and level, and whether the Golden Mic was given.
   p.stage=Object.assign({level:'easy',mic:false},p.stage&&typeof p.stage==='object'?p.stage:{});
   if(!p.stage.best||typeof p.stage.best!=='object'||Array.isArray(p.stage.best)) p.stage.best={};

@@ -1,7 +1,8 @@
 # HangoutRoom
 Mini game app for niblings: a cozy virtual bedroom with a fuzzy emo bunny, fidget toys,
 dress-up, decorating, an Art Desk for drawing, a Photocard Wall for making collectible bunny cards,
-a Fidget Shelf (pop-it, squishy, spinner, slime, clicker cube and a tilt marble maze), a Soccer Field for penalty kicks,
+a Fidget Shelf (pop-it, squishy, spinner, slime, clicker cube and a tilt marble maze), a Soccer Field for penalty kicks
+(or being the goalie),
 a Stage where the bunny performs to original songs (tap to the beat), five animal buddies to choose from,
 and a Code Lab where she "programs" the bunny with arrow blocks (a first taste of coding).
 A family gift; not for sale or public sharing.
@@ -23,7 +24,7 @@ Since version 1.3 a backup also holds the drawings from the Art Desk (you can sw
 to make the file smaller). Restoring an older backup without drawings leaves the drawings on the device alone.
 Photocards (since version 1.4) are always in the backup. They are tiny, because each card is saved as a
 short description (outfit, stage, frame, title) instead of a picture.
-Soccer, Stage and Code Lab progress (best scores, trophies, the Golden Mic, puzzles solved) are in the backup too.
+Soccer, Stage and Code Lab progress (best scores, trophies, keeper gloves, the Golden Mic, puzzles solved) are in the backup too.
 
 ## The Cozy Loft (since version 1.10)
 Every room has a second room upstairs: tap **🪜 Loft** at the top of the room screen (and **🏠 Room** to go back).
@@ -42,6 +43,20 @@ the other two rooms (on a phone, just their icons), and Back goes to her first r
 - **8 outdoor things** in the Shop (listed first in the Backyard): Trampoline, Slide, Sandbox, Kiddie Pool, Camping Tent,
   Picnic Blanket, Birdhouse and String Lights. They can go in any room.
 - 2 new stickers: 🌳 Yard Life (5 things in the Backyard) and 🏕️ Happy Camper (3 outdoor things).
+
+## Be the Keeper (since version 1.24)
+The Soccer Field has two buttons at the top: **⚽ Kick** (taking penalties, as before) and **🧤 Keep** (being the goalie).
+It remembers which one was played last.
+- In 🧤 Keep, your own buddy (in today's outfit, with keeper gloves) stands in goal and a striker takes 5 shots:
+  🐸 **Hop** the bouncy frog (Easy), 🤖 **Bolt** the robot (Medium) and 🦊 **Zip** the speedy fox (Hard).
+- **Tap where the ball is going** (or swipe left or right) and the buddy dives there. If the ball hits the buddy, it's a save.
+- **Easy is made for the little ones:** the shots are slow and the ball glows, and just tapping the ball catches it.
+  They can also change their mind while the ball is flying. On Medium and Hard there is one dive per shot.
+  Bolt shows a dotted arrow where the shot will go; Zip sometimes leans one way and shoots the other.
+- The shots are the same every time (three sets of 5 per level, taken in turn), so practice pays off. Nothing is lost on a goal.
+- Coins: +1 / +2 / +3 per save (Easy / Medium / Hard), +1 more per save with the team kit on, +5 for 5 out of 5.
+- Saving all 5 wins that level's **Bronze, Silver or Gold Glove** once. It stands in the Backyard, next to the goal.
+- 3 new stickers on the Soccer page: 🧤 First Save, 🧤 Safe Hands (25 saves) and 🥇 Glove Case (all 3 gloves).
 
 ## Where things are
 In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk

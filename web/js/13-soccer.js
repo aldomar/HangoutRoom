@@ -5,6 +5,7 @@
    Goal coordinates: u = across the goal (-0.5 left post .. 0.5 right post), v = height (0 grass .. 1 crossbar).
    A match is 5 kicks. Swipe up from the ball (direction = aim, speed = power and height, a bent swipe curves it),
    or tap a spot in the goal for an easy shot. Level ids (easy/medium/hard) are saved: never rename them.
+   Since v1.24 the same screen has a 🧤 Keep mode (section 27); socField / socNet / socPosts / ballPos are shared.
    ========================================================= */
 const SOC_KICKS=5, PERFECT_COINS=5, KEEP_H=0.74; // KEEP_H = how tall the keeper covers, arms included (goal heights)
 // react = seconds before moving, speed = goal widths per second, reach = half-width covered,
@@ -20,6 +21,8 @@ let SOC={state:'aim',kicks:[],shot:null,t:0,time:0,keeper:{x:0,lift:0,tilt:0},sw
 const socCv=$('#socCv');
 const LVL_KEYS=Object.keys(KEEPERS);
 const socLevel=()=>KEEPERS[P().soccer.level]||KEEPERS.easy;
+// ⚽ Kick (this section) or 🧤 Keep (section 27, v1.24). The mode is saved per room in soccer.mode.
+const socKeep=()=>{const p=P();return !!p&&p.soccer.mode==='keep';};
 
 function socGeo(W,H){
   const GW=Math.min(W*0.66,H*0.36*2.4), GH=GW/2.4;
@@ -28,13 +31,21 @@ function socGeo(W,H){
 const toScr=(g,u,v)=>({x:g.cx+u*g.GW,y:g.gy-v*g.GH});
 
 function renderSoccer(){
-  const p=P(); if(!p) return;
-  $$('#socTabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.lvl===p.soccer.level));
+  const p=P(); if(!p) return; const keep=socKeep(), lvl=keep?p.soccer.keep.level:p.soccer.level;
+  $$('#socTabs [data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===(keep?'keep':'kick')));
+  $$('#socTabs [data-lvl]').forEach(b=>{b.classList.toggle('on',b.dataset.lvl===lvl);b.querySelector('i').textContent=(keep?STRIKERS:KEEPERS)[b.dataset.lvl].icon;});
+  $('#socTitle').textContent=keep?'🧤 Be the Keeper':'⚽ Soccer Field';
+  $('#socMascot').classList.toggle('hidden',keep);
+  if(keep){clearTimeout(SOC.next);SOC.swipe=null;$('#kitBadge').classList.toggle('hidden',!hasKit(p));kpRender();return;}
+  kpStop();
   $('#socMascot').innerHTML=mascotSVG(p.look);
   $('#kitBadge').classList.toggle('hidden',!hasKit(p));
   newMatch(); SFX.whistle();
 }
-$('#socTabs').onclick=e=>{const b=e.target.closest('[data-lvl]');if(!b)return;P().soccer.level=b.dataset.lvl;save();SFX.click();renderSoccer();};
+$('#socTabs').onclick=e=>{const b=e.target.closest('[data-lvl],[data-mode]');if(!b)return;const p=P();
+  if(b.dataset.mode){if(p.soccer.mode===b.dataset.mode)return;p.soccer.mode=b.dataset.mode;}
+  else if(socKeep()) p.soccer.keep.level=b.dataset.lvl; else p.soccer.level=b.dataset.lvl;
+  save();SFX.click();renderSoccer();};
 function newMatch(){clearTimeout(SOC.next);SOC.kicks=[];$('#socMsg').classList.remove('on');resetKick();renderSocScore();}
 function resetKick(){SOC.state='aim';SOC.shot=null;SOC.t=0;SOC.keeper={x:0,lift:0,tilt:0};}
 function renderSocScore(){
@@ -110,12 +121,13 @@ function endMatch(){
 
 // Touch: a short tap aims at that spot in the goal; a swipe up shoots along its direction.
 socCv.addEventListener('pointerdown',e=>{
+  if(socKeep()){kpDown(e);return;}
   if(SOC.state==='done'){newMatch();SFX.whistle();return;}
   if(SOC.state!=='aim') return;
   const r=socCv.getBoundingClientRect(); SOC.swipe=[[e.clientX-r.left,e.clientY-r.top,performance.now()]];
   try{socCv.setPointerCapture(e.pointerId);}catch(_){}
 });
-socCv.addEventListener('pointermove',e=>{if(!SOC.swipe)return;const r=socCv.getBoundingClientRect();SOC.swipe.push([e.clientX-r.left,e.clientY-r.top,performance.now()]);});
+socCv.addEventListener('pointermove',e=>{if(socKeep()){kpMove(e);return;}if(!SOC.swipe)return;const r=socCv.getBoundingClientRect();SOC.swipe.push([e.clientX-r.left,e.clientY-r.top,performance.now()]);});
 function socRelease(){
   const sw=SOC.swipe, g=SOC.g; SOC.swipe=null; if(!sw||!g||SOC.state!=='aim') return;
   const a=sw[0], b=sw[sw.length-1], dx=b[0]-a[0], dy=b[1]-a[1], len=Math.hypot(dx,dy);
@@ -137,10 +149,11 @@ function socRelease(){
   socShoot(u,v,power,clamp((m[0]-lineX)/g.GW*1.5,-0.5,0.5));
 }
 socCv.addEventListener('pointerup',e=>{ // add where the finger lifted, then shoot
+  if(socKeep()){kpUp(e);return;}
   if(SOC.swipe){const r=socCv.getBoundingClientRect();SOC.swipe.push([e.clientX-r.left,e.clientY-r.top,performance.now()]);}
   socRelease();
 });
-socCv.addEventListener('pointercancel',()=>{SOC.swipe=null;});
+socCv.addEventListener('pointercancel',()=>{SOC.swipe=null;KP.swipe=null;});
 
 // Where the ball is at time t (0 = on the spot, 1 = at the goal, >1 = what happens after).
 function ballPos(g,s,t){
@@ -218,6 +231,7 @@ function drawKeeper(ctx,kind,x,y,s,tilt,pose,time,awake){
 }
 
 function drawSoccer(dt){
+  if(socKeep()){drawKeep(dt);return;} // 🧤 Keep mode (section 27)
   const {ctx,W,H}=fit(socCv), g=socGeo(W,H), L=socLevel(), k=SOC.keeper, s=SOC.shot; SOC.g=g; SOC.time+=dt;
   // keeper + ball movement
   if(s&&(SOC.state==='fly'||SOC.state==='result')){
@@ -226,16 +240,36 @@ function drawSoccer(dt){
       const f=Math.min(1,dt*8); k.lift+=(s.lift-k.lift)*f; k.tilt+=(clamp(s.dive/0.32,-1,1)*0.85-k.tilt)*f;}
     if(SOC.state==='fly'&&SOC.t>=1) resolveShot();
   } else {const f=Math.min(1,dt*5);k.x-=k.x*f;k.lift-=k.lift*f;k.tilt-=k.tilt*f;}
+  socField(ctx,g,W,H,SOC.time,SOC.time-SOC.cheer<1.6);
+  // goal: net (shakes after a goal), keeper, then posts in front
+  const inNet=s&&s.res==='goal'&&SOC.t>1, shake=inNet?Math.sin(SOC.time*30)*Math.max(0,1-(SOC.t-1)*1.2)*g.GH*0.03:0;
+  socNet(ctx,g,shake,inNet?()=>drawBall(ctx,ballPos(g,s,SOC.t),SOC.t*12):null);
+  const kx=g.cx+k.x*g.GW, ky=g.gy-k.lift*g.GH, ks=g.GH*0.62, pose=clamp(Math.max(Math.abs(k.tilt)/0.85,k.lift/0.15),0,1);
+  ctx.fillStyle='#00000030'; ctx.beginPath(); ctx.ellipse(kx,g.gy,ks*0.4,ks*0.08,0,0,TAU); ctx.fill();
+  drawKeeper(ctx,L.kind,kx,ky,ks,k.tilt,pose,SOC.time,SOC.state!=='aim'||L.kind!=='cat');
+  if(L.kind==='cat'&&SOC.state==='aim'){const z=(SOC.time*0.6)%1;ctx.globalAlpha=1-z;ctx.fillStyle='#fff';ctx.font=`900 ${Math.round(ks*0.18)}px sans-serif`;ctx.fillText('z',kx+ks*0.3+z*ks*0.15,ky-ks*1.1-z*ks*0.3);ctx.globalAlpha=1;}
+  socPosts(ctx,g);
+  // ball (plus a pulsing ring and an aim line while she is getting ready)
+  if(!s){
+    ctx.strokeStyle='#ffd166'; ctx.lineWidth=3; ctx.globalAlpha=0.5+0.4*Math.sin(SOC.time*4);
+    ctx.beginPath(); ctx.arc(g.bx,g.by,g.rb*(1.6+0.15*Math.sin(SOC.time*4)),0,TAU); ctx.stroke(); ctx.globalAlpha=1;
+    const sw=SOC.swipe; if(sw&&sw.length>1){const a=sw[0],b=sw[sw.length-1];
+      if(b[1]<a[1]-10){ctx.setLineDash([8,8]);ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(g.bx,g.by);ctx.lineTo(g.bx+(b[0]-a[0])*1.5,g.by+(b[1]-a[1])*1.5);ctx.stroke();ctx.setLineDash([]);}}
+    drawBall(ctx,{gx:g.bx,gy:g.by,x:g.bx,y:g.by,r:g.rb,a:1},0);
+  } else if(!inNet) drawBall(ctx,ballPos(g,s,SOC.t),Math.min(SOC.t,1.6)*12);
+}
+// The stadium, grass, pitch lines and penalty spot (shared by ⚽ Kick and 🧤 Keep). cheering = the crowd jumps.
+function socField(ctx,g,W,H,time,cheering){
   // sky, sun, clouds
   const sky=ctx.createLinearGradient(0,0,0,g.hy); sky.addColorStop(0,'#7fd0ff'); sky.addColorStop(1,'#e0f6ff');
   ctx.fillStyle=sky; ctx.fillRect(0,0,W,g.hy);
   ctx.fillStyle='#ffe066'; ctx.beginPath(); ctx.arc(W*0.86,g.hy*0.3,Math.min(W,H)*0.05,0,TAU); ctx.fill();
-  ctx.fillStyle='#ffffffdd'; [[0.18,0.25],[0.55,0.15]].forEach(([fx,fy])=>{const cx=W*fx+Math.sin(SOC.time*0.1)*20,cy=g.hy*fy+10,r=Math.min(W,H)*0.035;[[-1.2,0.3,1],[0,0,1.3],[1.2,0.3,0.9]].forEach(([ox,oy,k2])=>{ctx.beginPath();ctx.arc(cx+ox*r,cy+oy*r,r*k2,0,TAU);ctx.fill();});});
+  ctx.fillStyle='#ffffffdd'; [[0.18,0.25],[0.55,0.15]].forEach(([fx,fy])=>{const cx=W*fx+Math.sin(time*0.1)*20,cy=g.hy*fy+10,r=Math.min(W,H)*0.035;[[-1.2,0.3,1],[0,0,1.3],[1.2,0.3,0.9]].forEach(([ox,oy,k2])=>{ctx.beginPath();ctx.arc(cx+ox*r,cy+oy*r,r*k2,0,TAU);ctx.fill();});});
   // stands with a cheering crowd (just coloured dots)
-  const y0=g.hy-g.GH*0.55, cr=(g.hy-y0)/7, cheering=SOC.time-SOC.cheer<1.6, cols=['#ff8cc6','#a97cff','#8ff0d0','#ffd166','#4dabf7','#ff6b8a'];
+  const y0=g.hy-g.GH*0.55, cr=(g.hy-y0)/7, cols=['#ff8cc6','#a97cff','#8ff0d0','#ffd166','#4dabf7','#ff6b8a'];
   ctx.fillStyle='#4a3d63'; ctx.fillRect(0,y0,W,g.hy-y0);
   for(let row=0;row<3;row++) for(let i=0,x=cr*(row%2?2.2:1.2);x<W;i++,x+=cr*2.4){
-    const jump=cheering?Math.abs(Math.sin(SOC.time*12+i*1.7))*cr*0.8:0;
+    const jump=cheering?Math.abs(Math.sin(time*12+i*1.7))*cr*0.8:0;
     ctx.fillStyle=cols[(i*7+row*3)%cols.length]; ctx.beginPath(); ctx.arc(x,y0+cr*(1.4+row*2)-jump,cr*0.85,0,TAU); ctx.fill();}
   // grass with stripes that get wider toward you, and the pitch lines
   ctx.fillStyle='#5cb85f'; ctx.fillRect(0,g.hy,W,H-g.hy);
@@ -246,25 +280,18 @@ function drawSoccer(dt){
   ctx.moveTo(g.cx-g.GW*1.15,g.gy); ctx.lineTo(g.cx-g.GW*1.7,fy); ctx.lineTo(g.cx+g.GW*1.7,fy); ctx.lineTo(g.cx+g.GW*1.15,g.gy);
   ctx.moveTo(g.cx-g.GW*0.7,g.gy); ctx.lineTo(g.cx-g.GW*0.8,g.gy+(H-g.gy)*0.18); ctx.lineTo(g.cx+g.GW*0.8,g.gy+(H-g.gy)*0.18); ctx.lineTo(g.cx+g.GW*0.7,g.gy); ctx.stroke();
   ctx.fillStyle='#ffffffcc'; ctx.beginPath(); ctx.ellipse(g.bx,g.by+g.rb*0.9,g.rb*0.5,g.rb*0.18,0,0,TAU); ctx.fill();
-  // goal: net (shakes after a goal), keeper, then posts in front
-  const gl=g.cx-g.GW/2, gt=g.gy-g.GH, inNet=s&&s.res==='goal'&&SOC.t>1, shake=inNet?Math.sin(SOC.time*30)*Math.max(0,1-(SOC.t-1)*1.2)*g.GH*0.03:0;
+}
+// The goal's back and net (with a ball inside after a goal, via inside()), then the posts in front of the keeper.
+function socNet(ctx,g,shake,inside){
+  const gl=g.cx-g.GW/2, gt=g.gy-g.GH;
   ctx.fillStyle='#ffffff26'; ctx.fillRect(gl,gt,g.GW,g.GH);
-  if(inNet) drawBall(ctx,ballPos(g,s,SOC.t),SOC.t*12);
+  if(inside) inside();
   ctx.strokeStyle='#ffffff99'; ctx.lineWidth=1.2; ctx.beginPath();
   for(let i=1;i<14;i++){const x=gl+g.GW*i/14;ctx.moveTo(x,gt);ctx.lineTo(x+shake,g.gy);}
   for(let i=1;i<6;i++){const y=gt+g.GH*i/6;ctx.moveTo(gl,y+shake);ctx.lineTo(gl+g.GW,y+shake);} ctx.stroke();
-  const kx=g.cx+k.x*g.GW, ky=g.gy-k.lift*g.GH, ks=g.GH*0.62, pose=clamp(Math.max(Math.abs(k.tilt)/0.85,k.lift/0.15),0,1);
-  ctx.fillStyle='#00000030'; ctx.beginPath(); ctx.ellipse(kx,g.gy,ks*0.4,ks*0.08,0,0,TAU); ctx.fill();
-  drawKeeper(ctx,L.kind,kx,ky,ks,k.tilt,pose,SOC.time,SOC.state!=='aim'||L.kind!=='cat');
-  if(L.kind==='cat'&&SOC.state==='aim'){const z=(SOC.time*0.6)%1;ctx.globalAlpha=1-z;ctx.fillStyle='#fff';ctx.font=`900 ${Math.round(ks*0.18)}px sans-serif`;ctx.fillText('z',kx+ks*0.3+z*ks*0.15,ky-ks*1.1-z*ks*0.3);ctx.globalAlpha=1;}
+}
+function socPosts(ctx,g){
+  const gl=g.cx-g.GW/2, gt=g.gy-g.GH;
   ctx.strokeStyle='#fff'; ctx.lineWidth=Math.max(4,g.GH*0.06); ctx.lineJoin='round';
   ctx.beginPath(); ctx.moveTo(gl,g.gy); ctx.lineTo(gl,gt); ctx.lineTo(gl+g.GW,gt); ctx.lineTo(gl+g.GW,g.gy); ctx.stroke();
-  // ball (plus a pulsing ring and an aim line while she is getting ready)
-  if(!s){
-    ctx.strokeStyle='#ffd166'; ctx.lineWidth=3; ctx.globalAlpha=0.5+0.4*Math.sin(SOC.time*4);
-    ctx.beginPath(); ctx.arc(g.bx,g.by,g.rb*(1.6+0.15*Math.sin(SOC.time*4)),0,TAU); ctx.stroke(); ctx.globalAlpha=1;
-    const sw=SOC.swipe; if(sw&&sw.length>1){const a=sw[0],b=sw[sw.length-1];
-      if(b[1]<a[1]-10){ctx.setLineDash([8,8]);ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(g.bx,g.by);ctx.lineTo(g.bx+(b[0]-a[0])*1.5,g.by+(b[1]-a[1])*1.5);ctx.stroke();ctx.setLineDash([]);}}
-    drawBall(ctx,{gx:g.bx,gy:g.by,x:g.bx,y:g.by,r:g.rb,a:1},0);
-  } else if(!inNet) drawBall(ctx,ballPos(g,s,SOC.t),Math.min(SOC.t,1.6)*12);
 }

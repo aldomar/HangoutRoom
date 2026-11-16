@@ -229,9 +229,14 @@ timers, nothing lost, Easy mode works for the 3- and 5-year-olds, and a few new 
   for later); 5 fences and 5 grounds (only listed outside); 8 outdoor decorations (10–30); 2 stickers. Save version 14.
 
 ### Phase 9: Games
-- **🧤 Be the Keeper (v1.24, the owner's idea):** a second Soccer mode where you're the goalie. Original strikers, one per
+Detailed plan for all three agreed 2026-11-16 (built one PR after another, each branch on top of the one before).
+- ✅ **🧤 Be the Keeper (v1.24, the owner's idea):** a second Soccer mode where you're the goalie. Original strikers, one per
   level (a bouncy frog, a robot, a speedy fox). Swipe or tap to dive; Easy sends slow, glowing shots a 3-year-old can stop
   by tapping the ball. Its own glove trophies and stickers.
+  As built: ⚽ Kick / 🧤 Keep buttons on the Soccer screen (remembered per room); her own buddy and outfit in goal;
+  Hop 🐸, Bolt 🤖 (a hint arrow) and Zip 🦊 (sometimes fakes); 15 fixed shots per level, 5 per match, taken in turn;
+  +1/+2/+3 per save (+1 with the kit), +5 for 5/5; Bronze/Silver/Gold Gloves stand in the Backyard by the goal;
+  3 stickers. Save version 15 (`soccer.mode`, `soccer.keep`, `stats.saves`).
 - **📚 Brain Games, part 1 (v1.25):** at the Backyard's chalkboard. Each game has Easy (ages 3–5), Medium (8) and Hard (11),
   coins for each first solve plus a level bonus (like the Code Lab), never a timer.
   - 🧁 **Snack Stand:** count cupcakes → add up an order → make change and times tables.
