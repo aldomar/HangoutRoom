@@ -135,6 +135,16 @@ jump to any puzzle, and solved ones turn green.
 - A new sticker on the Room & Style page: 🌈 Dream Come True (get a big dream).
 - The dream you're saving for is in the backup too.
 
+## Grown-up helpers (since version 1.30)
+- **📷 Pictures:** the round 📷 button under 🌙 in each room saves a picture of the room (a PNG file). On a photocard
+  (📸 Photocards → binder → tap a card), "📷 Save picture" saves the card. In the Android app a save picker opens,
+  so you choose where the picture goes. New sticker: 📷 Say Cheese!
+- **🔊 Read to me** (Android app only): tapping a button also says its name out loud, with the tablet's own voice.
+  It's on by default in Easy mode and off otherwise. ⚙️ Settings → 🔊 Read to me switches it for each room.
+  It stays quiet during a Stage song.
+- **💾 Backup reminder:** ⚙️ Settings shows "Last backup: today / 12 days ago / never" at the bottom, for the grown-ups.
+  There are no pop-ups and nothing for the children to worry about.
+
 ## Where things are
 In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
 (🎨 Art Desk) and the wardrobe (👗 Closet). In the Cozy Loft: the glowing **🎤 Stage** sign (since version 1.12)

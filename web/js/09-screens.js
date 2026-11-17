@@ -259,12 +259,15 @@ function settingsModal(){
   const p=P();
   modal('⚙️ Settings',`<div class="setlist"><button class="btn ghost" id="sSound">${s.sound?'🔊 Sounds: ON':'🔇 Sounds: OFF'}</button><button class="btn ghost" id="sMusic">${s.music?'🎵 Music: ON':'🎵 Music: OFF'}</button>`
     +(p?`<button class="btn ghost" id="sEasy">${p.easy?'🐣 Easy mode: ON':'🐣 Easy mode: OFF'}</button>`:'')
+    +(p&&canSpeak()?`<button class="btn ghost" id="sSpeak">${readOn(p)?'🔊 Read to me: ON':'🔈 Read to me: OFF'}</button>`:'') // section 34
     +(p?`<button class="btn ghost" id="sGift">🎁 Give a gift</button>`:'')
     +`<button class="btn ghost" id="sSwitch">👥 Switch Room</button><button class="btn ghost" id="sBackup">💾 Backup &amp; Restore</button><button class="btn ghost" id="sPin">${s.pin?'🔒 Grown-up PIN: ON':'🔓 Grown-up PIN: OFF'}</button><button class="btn ghost" id="sAbout">💌 About</button></div><p class="about">🐰 Hangout Room · version ${APP_VERSION}</p>`,[{text:'Close',cls:'pink'}]);
   $('#sSound').onclick=()=>{s.sound=!s.sound;save();SFX.click();settingsModal();};
   $('#sMusic').onclick=()=>{s.music=!s.music;save();if(s.music)startMusic();else stopMusic();settingsModal();};
   if(p) $('#sEasy').onclick=()=>{p.easy=!p.easy;save();SFX.click();applyEasy();if(cur==='room')renderRoom();settingsModal();};
   if(p) $('#sGift').onclick=giveModal; // section 32
+  if(p&&canSpeak()) $('#sSpeak').onclick=()=>{p.speak=!readOn(p);save();SFX.click();settingsModal();};
+  $('#modalBody').insertAdjacentHTML('beforeend',`<p class="bk-last" id="bkLast">${lastBackupText()}</p>`); // for the grown-up (section 34)
   $('#sSwitch').onclick=()=>{closeModal();show('profiles');};
   $('#sBackup').onclick=backupModal;
   $('#sPin').onclick=pinSettings;
@@ -331,14 +334,14 @@ function backupModal(){
 }
 function copyText(txt){
   const fallback=()=>{const ta=document.createElement('textarea');ta.className='inp';ta.value=txt;ta.style.cssText='position:fixed;left:-9999px;top:0';document.body.appendChild(ta);ta.select();
-    let ok=false;try{ok=document.execCommand('copy');}catch(e){}ta.remove();toast(ok?'Copied! 📋':'Copying did not work here, use Save file');};
-  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(()=>toast('Copied! 📋'),fallback); else fallback();
+    let ok=false;try{ok=document.execCommand('copy');}catch(e){}ta.remove();if(ok)backupSaved();toast(ok?'Copied! 📋':'Copying did not work here, use Save file');};
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(()=>{backupSaved();toast('Copied! 📋');},fallback); else fallback();
 }
 function downloadFile(txt){
   const name='hangout-room-backup-'+new Date().toISOString().slice(0,10)+'.json';
   // Inside the Android app, the wrapper opens a "save file" picker for us.
   if(window.AndroidBridge&&window.AndroidBridge.saveBackup){window.AndroidBridge.saveBackup(txt,name);return;}
-  try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);toast('Backup file saved 💾');}
+  try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);toast('Backup file saved 💾');backupSaved();}
   catch(e){toast('Saving files is not supported here — use Copy code');}
 }
 function restoreModal(){
@@ -355,7 +358,8 @@ function doRestore(txt){
     art=Array.isArray(d.artwork)?d.artwork.filter(okArt):null; delete d.artwork; // drawings go to IndexedDB, not localStorage
     d=fixDB(d);d.profiles.forEach(normalize);
     d.settings.pin=DB.settings.pin||''; // the PIN belongs to this device, so a backup can't change or remove it
-    d.settings.seenNew=DB.settings.seenNew||'';} // so is "What's New seen" (section 25)
+    d.settings.seenNew=DB.settings.seenNew||''; // so is "What's New seen" (section 25)
+    d.settings.lastBackup=DB.settings.lastBackup||0;} // and when this device last made a backup (section 34)
   catch(e){toast('Hmm, that backup code did not work.');return;}
   const done=msg=>{DB=d;save();ART.owner=null;closeModal();toast(msg);show('profiles');};
   // No drawings in the backup: keep the drawings already on this device.

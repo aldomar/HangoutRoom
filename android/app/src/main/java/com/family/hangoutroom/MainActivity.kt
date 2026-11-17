@@ -8,6 +8,8 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Base64
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
@@ -23,13 +25,17 @@ import org.json.JSONObject
 /**
  * A full-screen WebView that runs the Hangout Room web app from the APK's assets.
  * Everything fun happens in index.html; this file only handles the Android bits:
- * saving (localStorage), back button, full screen, and backup file save/restore.
+ * saving (localStorage), back button, full screen, backup file save/restore,
+ * saving pictures (📷 snapshots) and reading button names aloud (🔊 Read to me, Android's built-in voice).
  */
 class MainActivity : Activity() {
 
     private lateinit var web: WebView
     private var fileCallback: ValueCallback<Array<Uri>>? = null   // waiting "Restore from file" picker
     private var pendingBackup: String? = null                      // backup text waiting to be saved
+    private var pendingImage: ByteArray? = null                    // PNG picture waiting to be saved
+    private var tts: TextToSpeech? = null                          // the phone's own offline voice
+    @Volatile private var ttsReady = false
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +86,9 @@ class MainActivity : Activity() {
 
         web.addJavascriptInterface(Bridge(), "AndroidBridge")
 
+        // 🔊 Read to me: the built-in text-to-speech engine. No permission and no internet needed.
+        tts = TextToSpeech(this) { status -> ttsReady = status == TextToSpeech.SUCCESS }
+
         // Back button / back gesture on Android 13+.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             onBackInvokedDispatcher.registerOnBackInvokedCallback(
@@ -90,7 +99,7 @@ class MainActivity : Activity() {
         web.loadUrl("file:///android_asset/index.html")
     }
 
-    /** Called from JavaScript as AndroidBridge.saveBackup(text, fileName). */
+    /** Called from JavaScript as AndroidBridge.saveBackup(text, fileName), .saveImage(base64, fileName) and .speak(text). */
     inner class Bridge {
         @JavascriptInterface
         fun saveBackup(text: String, fileName: String) {
@@ -108,6 +117,30 @@ class MainActivity : Activity() {
                     toastInPage("Saving files isn't supported here - use Copy code")
                 }
             }
+        }
+
+        @JavascriptInterface
+        fun saveImage(base64: String, fileName: String) {
+            val bytes = try { Base64.decode(base64, Base64.DEFAULT) } catch (e: IllegalArgumentException) { return }
+            runOnUiThread {
+                pendingImage = bytes
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "image/png"
+                    putExtra(Intent.EXTRA_TITLE, fileName)
+                }
+                try {
+                    startActivityForResult(intent, REQ_SAVE_IMAGE)
+                } catch (e: ActivityNotFoundException) {
+                    pendingImage = null
+                    toastInPage("Saving pictures isn't supported here")
+                }
+            }
+        }
+
+        @JavascriptInterface
+        fun speak(text: String) {
+            if (ttsReady) tts?.speak(text.take(200), TextToSpeech.QUEUE_FLUSH, null, "hangout")
         }
     }
 
@@ -127,8 +160,22 @@ class MainActivity : Activity() {
                     try {
                         contentResolver.openOutputStream(uri)?.use { it.write(text.toByteArray(Charsets.UTF_8)) }
                         toastInPage("Backup file saved 💾")
+                        web.evaluateJavascript("typeof backupSaved==='function' && backupSaved()", null)
                     } catch (e: Exception) {
                         toastInPage("Hmm, could not save the backup file")
+                    }
+                }
+            }
+            REQ_SAVE_IMAGE -> {
+                val bytes = pendingImage
+                pendingImage = null
+                val uri = data?.data
+                if (resultCode == RESULT_OK && uri != null && bytes != null) {
+                    try {
+                        contentResolver.openOutputStream(uri)?.use { it.write(bytes) }
+                        toastInPage("Picture saved 📷")
+                    } catch (e: Exception) {
+                        toastInPage("Hmm, could not save the picture")
                     }
                 }
             }
@@ -186,6 +233,7 @@ class MainActivity : Activity() {
     }
 
     override fun onDestroy() {
+        tts?.shutdown()
         web.destroy()
         super.onDestroy()
     }
@@ -193,5 +241,6 @@ class MainActivity : Activity() {
     companion object {
         private const val REQ_OPEN_BACKUP = 41
         private const val REQ_SAVE_BACKUP = 42
+        private const val REQ_SAVE_IMAGE = 43
     }
 }

@@ -42,7 +42,9 @@ _Last updated: 2026-11-16_
   Grown-up helpers (v1.30) → Speed check (v1.31).
   - **👗 Looks, emotes & night mode: done** (v1.27 merged, PR #27). The owner tested it on the device.
   - **🎁 Gifts & room layouts: done** (v1.28 merged, PR #28).
-  - **🔎 Shop filters & big dreams: built, PR #29 open as v1.29** on branch `feature/shop` (from `main` after #28).
+  - **🔎 Shop filters & big dreams: done** (v1.29 merged, PR #29).
+  - **🧑‍🔧 Grown-up helpers: built, PR #30 open as v1.30** on branch `feature/helpers` (from `main` after #29). Needs an
+    Android Studio build (the wrapper changed).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -80,7 +82,8 @@ _Last updated: 2026-11-16_
 - PR #26 "Stage song pack (v1.26)": merged.
 - PR #27 "Looks, emotes & night mode (v1.27)": merged.
 - PR #28 "Gifts & room layouts (v1.28)": merged.
-- PR #29 "Shop filters & big dreams (v1.29)" on branch `feature/shop` (from `main` after #28): open.
+- PR #29 "Shop filters & big dreams (v1.29)": merged.
+- PR #30 "Grown-up helpers (v1.30)" on branch `feature/helpers` (from `main` after #29): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -398,6 +401,20 @@ _Last updated: 2026-11-16_
     waits inside the page and dives on the first frame the ball flies, so a busy PC can't make it miss (that was the
     flaky failure seen in v1.28).
   Not tested automatically: how the dream items look on the tablet.
+- **Grown-up helpers (v1.30)**: 872 checks, all passing, no console errors. New checks (with a pretend Android bridge
+  that records what it's asked to say and save):
+  - save version 20; "Last backup: never", then today after saving a file, "12 days ago", "yesterday"; restoring keeps
+    this device's time; on Android the time waits for the wrapper's `backupSaved()`
+  - no Read to me switch in the browser; on Android it's off with Easy mode off, on by default in Easy mode, and the
+    switch turns it off and on; Decorate says "Decorate" (no emoji), a Shop tile its name, a hotspot "Closet";
+    nothing during a song, a double tap once, nothing when off
+  - the 📷 button under 🌙 (48 px, hidden while decorating); it saves a real 1500 × 1050 PNG of the room (checked by
+    reading pixels back); Say Cheese!; a photocard's 📷 Save picture saves the card and keeps the box open
+  - a v1.29 backup restores with Read to me following Easy mode; odd data made safe; phone: 📷 and the backup line fit
+  - The saved room picture is written to `tests/shots/I02-room-snapshot.png` so it can be looked at.
+  - Test changes: sticker count 72; the v1.29 checks accept save version 19 or later.
+  Not tested automatically (needs the tablet): the real voice, the save picker for pictures, and that the PNG opens in
+  the Gallery or Files app.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -673,6 +690,22 @@ _Last updated: 2026-11-16_
   and the speed check stays last (the app is fast today; it's there to catch slowness the new features might add);
   gifts are **decorations and coins only, with no PIN check**; 5 big-dream items at 60–100 coins are fine (more can be
   added later); 🔊 Read to me is **on by default in Easy mode**, off otherwise.
+- **Grown-up helpers (built as v1.30, `34-helpers.js`, the only Phase 10 PR that changes `android/`):**
+  - 💾 `settings.lastBackup` (ms, belongs to the device: `doRestore()` keeps it) is set when a backup file is saved or
+    the code is copied. On Android, the wrapper calls `backupSaved()` only after the save picker really wrote the file.
+    ⚙️ Settings shows "💾 Last backup: never / today / yesterday / N days ago" in small text under the version.
+  - 🔊 Read to me: a capture-phase click listener speaks the tapped button's `aria-label`, its `.tn` text or its text
+    (emoji stripped, max 60 letters), or a hotspot's name (`HOT_WORDS`), through `AndroidBridge.speak`. Never during a
+    Stage song; the same words twice within 0.8 s are said once. `p.speak` is null (follow Easy mode) until someone
+    uses the ⚙️ switch, which only shows when the wrapper can speak (the browser has no switch and stays quiet).
+  - 📷 A round button under 🌙 (hidden while decorating, id `roomSnapBtn`: the card maker already has `snapBtn`)
+    saves the room at 1500 × 1050; "📷 Save picture" in a photocard's box saves the card at 3× size. The SVG is copied
+    with the shared `#gdefs` (patterns, fuzz), without the speech bubble, emotes and Easy-mode labels (they use CSS
+    colours), drawn into a canvas and saved via `AndroidBridge.saveImage` (save picker) or a download.
+  - Android: `TextToSpeech` started in `onCreate` and shut down in `onDestroy`; `saveImage` (request 43); a
+    `<queries>` entry for `TTS_SERVICE` in the manifest (needed on Android 11+, not a permission). No new permissions.
+  - Sticker: 📷 Say Cheese! (Art & Cards page). 72 in all.
+  - Save version 20: `speak`, `stats.snaps`.
 - **Shop filters & big dreams (built as v1.29, `33-shopplus.js`):**
   - Theme chips are the first row inside the Closet grid and the Decorate Shop grid (`themeFilter(where, list)`).
     An item's themes: `THEME_IDS` (older items, by `category:id` or `decor:<key>`), plus `p2`, `yard:1` → Outdoor and
@@ -820,13 +853,14 @@ _Last updated: 2026-11-16_
 ## Next steps (Phase 10)
 1. ~~Build 👗 Looks, emotes & night mode (v1.27) on `feature/looks`.~~ Built (PR #27); the owner tested it.
 2. ~~Build 🎁 Gifts & room presets (v1.28) on `feature/gifts` (on top of `feature/looks`).~~ Merged (PR #28).
-3. ~~Build 🔎 Shop filters + 💰 big dreams (v1.29) on `feature/shop`.~~ Built (PR #29); owner: try it and merge.
-4. Build 🧑‍🔧 Grown-up helpers (v1.30, needs an Android Studio build), then ⚡ Speed check (v1.31), each on top of the one before.
+3. ~~Build 🔎 Shop filters + 💰 big dreams (v1.29) on `feature/shop`.~~ Merged (PR #29).
+4. ~~Build 🧑‍🔧 Grown-up helpers (v1.30).~~ Built (PR #30); owner: build the APK in Android Studio, try it and merge.
+5. Build ⚡ Speed check & tidy-up (v1.31), the last Phase 10 PR.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 19 since v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 20 since v1.30 (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
