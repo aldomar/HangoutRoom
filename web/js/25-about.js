@@ -99,7 +99,11 @@ const GIFT_TIMELINE=[
   {v:'1.35',d:'2026-11-17',i:'🎀',n:'Content Pack 3',why:'So there are stage outfits, cozy looks, a little cafe and the sea to decorate with',
     news:['🎤 Stage outfits: idol buns, a headset mic and glitter boots',
           '🧁 A cafe set, 🐚 a seashell set and 🍵 cozy things for your rooms',
-          '🫧 New fidgets: a cupcake squishy, a jellyfish, milk tea slime and more']}
+          '🫧 New fidgets: a cupcake squishy, a jellyfish, milk tea slime and more']},
+  {v:'1.36',d:'2026-11-17',i:'🦖',n:'Content Pack 4',why:'So there are hoops to shoot, farm friends, big trucks and a dino nugget to cuddle',
+    news:['🦖 A Dino Nugget Plush (it fits on a little shelf!) and a Dino Nugget squishy',
+          '🏀 Basketball, skate and karate clothes, a hoop and a skate ramp',
+          '🐮 A farm set: a toy barn, cow and sheep plushies, a tractor and a hay bale']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

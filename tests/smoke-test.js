@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('80 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35), ids all different, 6 or more per page', await ev(`STICKERS.length===80&&new Set(STICKERS.map(s=>s.id)).size===80&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('84 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36), ids all different, 6 or more per page', await ev(`STICKERS.length===84&&new Set(STICKERS.map(s=>s.id)).size===84&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1546,7 +1546,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`exitDecorate();goRoom(3)`);
   // every outdoor decoration draws
   const yardKeys=await ev(`Object.keys(DECOR).filter(k=>DECOR[k].yard)`);
-  check('8 outdoor decorations, priced 10-30, not in the Seasons tab', yardKeys.length===8&&(await ev(`Object.keys(DECOR).filter(k=>DECOR[k].yard).every(k=>DECOR[k].price>=10&&DECOR[k].price<=30&&!DECOR[k].season)`)), yardKeys);
+  check('10 outdoor decorations (8, and the Hay Bale and Toy Tractor since v1.36), priced 10-30, not in the Seasons tab', yardKeys.length===10&&(await ev(`Object.keys(DECOR).filter(k=>DECOR[k].yard).every(k=>DECOR[k].price>=10&&DECOR[k].price<=30&&!DECOR[k].season)`)), yardKeys);
   await ev(`{const R=P().room3;R.items=R.items.filter(i=>!DECOR[i.type].yard);for(const k of ${JSON.stringify(yardKeys)})R.items.push(Object.assign({uid:'yd'+k,type:k,placed:true},spot(k)));}save();renderRoom()`); await sleep(200); await shot('F04-yard-all');
   check('every outdoor decoration draws in the Backyard', await ev(`${JSON.stringify(yardKeys)}.every(k=>{const g=document.querySelector('#roomSvg .deco[data-uid="yd'+k+'"]');return g&&g.getBBox().width>20;})`));
   for(const w of ['picket','hedge','stoneWall','rainbowFence','batFence']){await ev(`P().room3.wall='${w}';renderRoom()`);check(`the ${w} fence draws`, await ev(`(()=>{const g=document.querySelector('[data-fence=${w}]');return g&&g.getBBox().width>900;})()`));}
@@ -2006,7 +2006,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`document.querySelector('#closetGrid [data-theme=emo]').click()`); await sleep(100); await shot('H01-closet-emo');
   check('🦇 Emo shows only the emo tops', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).sort().join()==='batSweater,tee,zip'&&document.querySelector('#closetGrid [data-theme=emo]').classList.contains('on')`), await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).join()`));
   await ev(`document.querySelector('#closetGrid [data-theme=dino]').click()`); await sleep(50);
-  check('🦕 Dino shows the dino hoodie (from Pack 2)', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).join()==='dinoHoodie'`));
+  check('🦕 Dino shows the dino hoodie (Pack 2) and the Dino Nugget Tee (Pack 4)', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).sort().join()==='dinoHoodie,nuggetTee'`));
   await ev(`[...document.querySelectorAll('#closetTabs [data-cat]')].find(b=>b.dataset.cat==='arms').click()`); await sleep(50);
   check('a tab with nothing of that theme goes back to All', await ev(`themePick.closet==='all'&&document.querySelectorAll('#closetGrid .tile').length===CLOSET.arms.items.length`));
   await ev(`closetCat='top';themePick.closet='all';renderCloset()`);
@@ -2350,7 +2350,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('every new piece of clothing draws on every buddy, with no broken numbers', await ev(`(()=>{const items=Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p3).map(i=>[c,i.id]));return items.every(([c,id])=>Object.keys(BUDDIES).every(k=>{const s=mascotSVG(Object.assign({},DEFAULT_LOOK,{kind:k,[c]:id}));return s.length>500&&!/NaN|undefined/.test(s);}));})()`));
   check('nothing in the pack says "boy" or "girl", and every price is 10–40', await ev(`(()=>{const L=[...Object.values(CLOSET).flatMap(c=>c.items),...Object.values(DECOR),...Object.values(WALLS),...Object.values(FLOORS),...Object.values(POP_THEMES),...Object.values(POP_SHAPES),...Object.values(SQUISHIES),...Object.values(SPINS),...Object.values(SLIMES),...Object.values(CUBES),...Object.values(MARBLES)].filter(x=>x.p3);return L.length>=50&&L.every(x=>!/\\b(boy|girl)s?\\b/i.test(x.name)&&x.price>=10&&x.price<=40);})()`));
   check('every new item is on a photocard row (cute, spooky or sporty)', await ev(`Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p3).map(i=>c+':'+i.id)).every(k=>Object.values(CARD_TAGS).some(t=>t.includes(k)))`));
-  check('Cozy, Cafe and Ocean chips sit before Outdoor and Dreams', await ev(`Object.keys(THEMES).slice(-5).join()==='cozy,cafe,ocean,yard,dream'`));
+  check('Cozy, Cafe and Ocean chips sit before Outdoor and Dreams', await ev(`(()=>{const k=Object.keys(THEMES);return k.slice(-2).join()==='yard,dream'&&['cozy','cafe','ocean'].every(t=>k.indexOf(t)>=0&&k.indexOf(t)<k.indexOf('yard'));})()`));
   await ev(`show('closet')`);
   for(const [c,i] of p3Clothes){await ev(`document.querySelector('[data-cat=${c}]').click()`);
     check(`closet has ${c}:${i}`, await ev(`!!document.querySelector('#closetGrid [data-id=${i}] svg')`));}
@@ -2440,6 +2440,112 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
   await ev(`closetCat='top';themePick.closet='all';show('closet')`); await sleep(250); await shot('M15-phone-closet');
   check('phone: the closet has its chips and nothing makes the page scroll sideways', await ev(`!!document.querySelector('#closetGrid .chips')&&document.documentElement.scrollWidth<=innerWidth+1`));
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  await ev(`closeModal();show('room')`);
+
+  console.log('Content Pack 4 (v1.36): sport, farm, trucks, space and the dino nugget');
+  await ev(`closeModal();stkPaused=true;P().easy=false;P().coins=600;applyEasy();show('room');goRoom(1)`); await sleep(200);
+  const p4Wall=await ev('P().room.wall'), p4Look=await ev('JSON.stringify(P().look)');
+  const p4Clothes=JSON.parse(await ev(`JSON.stringify(Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p4).map(i=>[c,i.id])))`));
+  check('17 new clothes, each with a theme', p4Clothes.length===17&&await ev(`Object.values(CLOSET).every(c=>c.items.filter(i=>i.p4).every(i=>P4_THEMES[i.p4]&&!i.p2&&!i.p3))`), p4Clothes.length);
+  check('every new piece of clothing draws on every buddy, with no broken numbers', await ev(`(()=>{const items=Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p4).map(i=>[c,i.id]));return items.every(([c,id])=>Object.keys(BUDDIES).every(k=>{const s=mascotSVG(Object.assign({},DEFAULT_LOOK,{kind:k,[c]:id}));return s.length>500&&!/NaN|undefined/.test(s);}));})()`));
+  check('nothing in the pack says "boy" or "girl", and every price is 10–40', await ev(`(()=>{const L=[...Object.values(CLOSET).flatMap(c=>c.items),...Object.values(DECOR),...Object.values(WALLS),...Object.values(FLOORS),...Object.values(POP_THEMES),...Object.values(POP_SHAPES),...Object.values(SQUISHIES),...Object.values(SPINS),...Object.values(SLIMES),...Object.values(CUBES),...Object.values(MARBLES)].filter(x=>x.p4);return L.length>=50&&L.every(x=>!/\\b(boy|girl)s?\\b/i.test(x.name)&&x.price>=10&&x.price<=40);})()`));
+  check('every new item is on a photocard row', await ev(`Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p4).map(i=>c+':'+i.id)).every(k=>Object.values(CARD_TAGS).some(t=>t.includes(k)))`));
+  check('the 🐮 Farm chip sits before Outdoor and Dreams', await ev(`Object.keys(THEMES).slice(-3).join()==='farm,yard,dream'`));
+  await ev(`show('closet')`);
+  for(const [c,i] of p4Clothes){await ev(`document.querySelector('[data-cat=${c}]').click()`);
+    check(`closet has ${c}:${i}`, await ev(`!!document.querySelector('#closetGrid [data-id=${i}] svg')`));}
+  await ev(`document.querySelector('[data-cat=top]').click()`); await sleep(100);
+  await ev(`document.querySelector('#closetGrid [data-theme=sport]').click()`); await sleep(100);
+  check('⚽ Sport tops: the soccer jersey, Hoops Jersey and Karate Gi', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).sort().join()==='hoopJersey,jersey,karateGi'`), await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).join()`));
+  await ev(`document.querySelector('#closetGrid [data-theme=farm]').click()`); await sleep(100);
+  check('🐮 Farm tops: the overalls', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).join()==='overalls'`));
+  await ev(`themePick.closet='all';renderCloset();document.querySelector('#closetGrid [data-id=nuggetTee]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
+  check('bought and wearing the Dino Nugget Tee (15)', await ev(`P().look.top==='nuggetTee'&&P().owned.includes('top:nuggetTee')&&P().coins===585`), await ev('P().coins'));
+  check('new clothes count on photocard stats (sporty)', (await ev(`cardStats(Object.assign({},DEFAULT_LOOK,{top:'hoopJersey',bottom:'hoopShorts',legs:'kneePads',arms:'wristbands',shoes:'skateShoes',acc:'skateHelmet'}))[2]`))===5);
+  await ev(`P().look=Object.assign({},P().look,{kind:'bear',hair:'buzz',top:'hoopJersey',bottom:'hoopShorts',legs:'kneePads',arms:'wristbands',shoes:'skateShoes',acc:'sportBand'});renderCloset()`); await sleep(100); await shot('N1-pack4-hoops');
+  await ev(`P().look=Object.assign({},P().look,{kind:'fox',hair:'messy',top:'karateGi',bottom:'none',legs:'none',arms:'none',shoes:'none',acc:'skateHelmet'});renderCloset()`); await sleep(100); await shot('N2-pack4-karate');
+  await ev(`P().look=Object.assign({},P().look,{kind:'puppy',hair:'pigtails',top:'overalls',bottom:'jeans',shoes:'rainBoots',acc:'strawHat'});renderCloset()`); await sleep(100); await shot('N3-pack4-farm');
+  await ev(`P().look=Object.assign({},P().look,{kind:'dino',hair:'none',top:'fireTop',bottom:'cargo',shoes:'hightops',acc:'fireHelmet'});renderCloset()`); await sleep(100); await shot('N4-pack4-fire');
+  await ev(`P().look=Object.assign({},P().look,{kind:'bunny',hair:'swoopBlack',top:'alienTee',bottom:'plaid',shoes:'boots',acc:'starVisor'});renderCloset()`); await sleep(100); await shot('N5-pack4-alien');
+  await ev(`P().look=Object.assign({},P().look,{top:'nuggetTee',acc:'chickClip'});renderCloset()`); await sleep(100); await shot('N6-pack4-nugget');
+  await ev(`P().look=${p4Look};P().look.top='nuggetTee';save();show('room')`);
+  const p4Decor=['dinoNugget','hoop','skateRamp','karateMat','skateRack','barn','cowPlush','sheepPlush','hayBale','tractor','fireTruck','carBed','ufoLamp','alienPlush'];
+  check('14 new decorations, each with a theme', (await ev(`Object.entries(DECOR).filter(([k,d])=>d.p4).map(([k])=>k).join()`))===p4Decor.join());
+  await ev(`enterDecorate();document.querySelector('[data-dt=shop]').click()`); await sleep(150);
+  check('the Shop has all 14 new decorations', await ev(`${JSON.stringify(p4Decor)}.every(k=>document.querySelector('#decoGrid [data-buy='+k+']'))`));
+  await ev(`document.querySelector('#decoGrid [data-theme=farm]').click()`); await sleep(100);
+  check('🐮 Farm in the Shop shows the farm set', await ev(`[...document.querySelectorAll('#decoGrid [data-buy]')].map(b=>b.dataset.buy).sort().join()==='barn,cowPlush,hayBale,sheepPlush,tractor'`), await ev(`[...document.querySelectorAll('#decoGrid [data-buy]')].map(b=>b.dataset.buy).join()`));
+  await shot('N7-pack4-shop-farm');
+  await ev(`themePick.shop='dino';renderDecoGrid()`); await sleep(100);
+  await ev('checkBonus()'); await sleep(100); const p4c0=await ev('P().coins');
+  await ev(`document.querySelector('#decoGrid [data-buy=dinoNugget]').click()`); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(150);
+  check('buying the Dino Nugget Plush (15) puts it in her room', await ev(`P().room.items.some(i=>i.type==='dinoNugget'&&i.placed)&&P().coins===${p4c0-15}`), [p4c0,await ev('P().coins')]);
+  // 🦖 it sits on a Little Shelf: put a shelf up, drop the plush just above its top, and it snaps on
+  await ev(`{const R=P().room;R.items.push({uid:'p4shelf',type:'shelfS',placed:true,x:820,y:330});const n=R.items.find(i=>i.type==='dinoNugget');n.x=826;n.y=330-44-18;snapToShelf(n);save();renderRoom();}`); await sleep(150);
+  check('🦖 the plush snaps onto a Little Shelf and rides along with it', await ev(`(()=>{const R=P().room,n=R.items.find(i=>i.type==='dinoNugget'),s=R.items.find(i=>i.uid==='p4shelf');return n.y===s.y-44&&onShelf(s).includes(n);})()`));
+  check('...and fits on it (narrower than the shelf)', await ev(`(()=>{const b=DECOR.dinoNugget.box.split(' ').map(Number);return b[2]<=DECOR.shelfS.shelf.w;})()`));
+  await ev(`exitDecorate();renderRoom()`); await sleep(150); await shot('N8-pack4-nugget-shelf');
+  await ev(`enterDecorate();themePick.shop='all';document.querySelector('[data-dt=wall]').click()`); await sleep(100);
+  check('3 new walls', await ev(`['gymWall','barnWood','nebula'].every(k=>document.querySelector('#decoGrid [data-surf='+k+']'))`));
+  await ev(`document.querySelector('[data-dt=floor]').click()`); await sleep(100);
+  check('3 new floors', await ev(`['court','hayFloor','roadMat'].every(k=>document.querySelector('#decoGrid [data-surf='+k+']'))`));
+  await ev(`exitDecorate()`);
+  await ev(`goRoom(2);for(const k of ${JSON.stringify(p4Decor)})P().room2.items.push(Object.assign({uid:'p4'+k,type:k,placed:true},spot(k)));P().room2.floor='court';P().room2.wall='gymWall';save();renderRoom()`); await sleep(200);
+  await shot('N9-pack4-loft');
+  check('every new decoration draws in the Loft, with no broken numbers', await ev(`(()=>{const h=document.querySelector('#roomSvg').innerHTML;return ${JSON.stringify(p4Decor)}.every(k=>P().room2.items.some(i=>i.type===k))&&document.querySelectorAll('#roomSvg .deco').length>=14&&!/NaN|undefined/.test(h);})()`));
+  for(const [w,f] of [['barnWood','hayFloor'],['nebula','roadMat']]){await ev(`P().room2.wall='${w}';P().room2.floor='${f}';renderRoom()`); await sleep(100); await shot('N10-pack4-'+w);}
+  await ev(`P().night={2:true};renderRoom()`); await sleep(150); await shot('N11-pack4-night');
+  await ev(`P().night={};P().room2.items=P().room2.items.filter(i=>!String(i.uid).startsWith('p4'));P().room2.wall='attic';save();goRoom(3)`); await sleep(150);
+  await ev(`for(const k of ['hayBale','tractor','barn'])P().room3.items.push(Object.assign({uid:'p4y'+k,type:k,placed:true},spot(k)));renderRoom()`); await sleep(150); await shot('N12-pack4-yard');
+  await ev(`P().room3.items=P().room3.items.filter(i=>!String(i.uid).startsWith('p4y'));save();goRoom(1)`);
+
+  console.log('Content Pack 4: fidget designs');
+  await ev(`show('fidget');setFidTab('popit')`); await sleep(200);
+  check('3 new pop-it colours and 2 new board shapes', await ev(`['hoops','farm','nebula'].every(k=>document.querySelector('#skinRow [data-skin='+k+']'))&&['bball','nugget'].every(k=>document.querySelector('#skinRow [data-shape='+k+']'))`));
+  for(const sh of ['bball','nugget']){
+    await ev(`P().fid.pop='${sh==='bball'?'hoops':'farm'}';document.querySelector('#skinRow [data-shape=${sh}]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(200);
+    const n=await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').length`);
+    check(`the ${sh} board has a sensible number of bubbles`, n>=12&&n<36, n); await shot('N13-pop-'+sh);
+    const fl=await ev('P().stats.flips'); await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').forEach(b=>popAt(b))`); await sleep(1300);
+    check(`popping every ${sh} bubble flips the board`, (await ev('P().stats.flips'))===fl+1);
+  }
+  await ev(`P().fid.pop='nebula';P().fid.popShape='classic';renderPop()`); await sleep(100); await shot('N14-pop-nebula');
+  await ev(`P().fid.pop='rainbow';renderPop()`);
+  check('every new squishy extra and picture has a drawing', await ev(`['nugget','chick','seams'].every(k=>SQ_EXTRAS[k]&&(SQ_EXTRAS[k].front||SQ_EXTRAS[k].back))&&['ufo','flower'].every(k=>typeof FID_ICONS[k]==='function')`));
+  for(const [tab,ids] of [['squish',['nugget','chick','bball']],['spin',['hoops','ufo']],['slime',['meadow','nebula']],['cube',['hoops','farm']],['maze',['bball','egg']]]){
+    await ev(`setFidTab('${tab}')`); await sleep(150);
+    check(`new ${tab} designs are listed`, await ev(`${JSON.stringify(ids)}.every(k=>document.querySelector('#skinRow [data-skin='+k+']'))`));
+    for(const id of ids){await ev(`P().fid[FID['${tab}'].key]='${id}';fid2Open('${tab}');${tab==='spin'?'SP.w=12;':''}`);
+      if(tab==='squish'){await ev(`sq('pointerdown',51,0.2,0.1)`); await sleep(450); await shot(`N15-${tab}-${id}`); await ev(`sq('pointerup',51,0.2,0.1)`); await sleep(400); await shot(`N15-${tab}-${id}-rest`);}
+      else {await sleep(350); await shot(`N15-${tab}-${id}`);}}
+  }
+  await ev(`P().fid.squish='mochi';setFidTab('squish');document.querySelector('#skinRow [data-skin=nugget]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
+  check('bought the Dino Nugget squishy (owned as squish:nugget)', await ev(`P().fid.squish==='nugget'&&P().owned.includes('squish:nugget')`));
+  await ev(`P().fid.squish='mochi';P().fid.spin='galaxy';P().fid.slime='grape';P().fid.cube='pastel';P().fid.marble='pearl';save();show('room')`);
+
+  console.log('Content Pack 4: stickers');
+  check('4 new stickers on the Room & Style page', await ev(`['p4sport','p4farm','p4go','p4nug'].every(id=>STICKERS.some(s=>s.id===id&&s.page==='room'))`));
+  check('Nugget Buddy counts the plush and the squishy (2 of 2)', await ev(`p4Nuggets(P())===2`));
+  check('no farm things bought yet (0)', await ev(`p4Have(P(),'farm')===0`), await ev(`[p4Have(P(),'sport'),p4Have(P(),'farm'),p4Have(P(),'ride'),p4Have(P(),'space'),p4Have(P(),'dino')]`));
+  check('older soccer things count for All-Star (Soccer Jersey, Soccer Socks)', await ev(`p4Have(Object.assign({},P(),{owned:['top:jersey','legs:soccer']}),'sport')-p4Have(Object.assign({},P(),{owned:[]}),'sport')===2`));
+  await ev(`P().owned.push('wall:barnWood','marble:egg');P().room.items.push({uid:'p4cow',type:'cowPlush',placed:false})`);
+  check('a wall, a marble and a plush in My Stuff make 3 farm things', await ev(`p4Have(P(),'farm')===3`));
+  const p4s0=await ev('P().coins');
+  await ev(`stkPaused=false`); const p4Got=await ev(`checkStickers().map(s=>s.id).filter(id=>/^p4/.test(id)).sort().join()`); const p4s1=await ev('P().coins'); await ev(`stkPaused=true;closeModal()`);
+  check('Farm Friend and Nugget Buddy arrive', p4Got.split(',').includes('p4farm')&&p4Got.split(',').includes('p4nug'), p4Got);
+  check('...and they pay +2 each (with any other sticker that came at the same time)', p4s1>=p4s0+4&&(p4s1-p4s0)%2===0, [p4s0,p4s1]);
+  await ev(`P().room.items=P().room.items.filter(i=>i.uid!=='p4cow');save()`);
+
+  console.log('Content Pack 4 in backups');
+  const p4Id=await ev('P().id'), p4Code=await ev('JSON.stringify(DB)');
+  await ev(`doRestore(${JSON.stringify(p4Code)})`); await sleep(400);
+  check('a backup keeps the tee, the squishy, the plush on its shelf and the sticker', await ev(`(()=>{const p=DB.profiles.find(q=>q.id==='${p4Id}');return !!p&&p.owned.includes('top:nuggetTee')&&p.owned.includes('squish:nugget')&&p.stickers.includes('p4nug')&&p.room.items.some(i=>i.type==='dinoNugget')&&p.room.items.some(i=>i.uid==='p4shelf');})()`));
+  await ev(`closeModal();document.querySelector('.pcard[data-id="${p4Id}"]').click()`); await sleep(1300);
+  await ev(`closeModal();{const p=P();p.room.wall='${p4Wall}';p.room.items=p.room.items.filter(i=>i.type!=='dinoNugget'&&i.uid!=='p4shelf');p.look=${p4Look};}save();show('room')`);
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
+  await ev(`closetCat='acc';themePick.closet='all';show('closet')`); await sleep(250); await shot('N16-phone-closet');
+  check('phone: nothing makes the closet scroll sideways', await ev(`document.documentElement.scrollWidth<=innerWidth+1`));
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   await ev(`closeModal();show('room')`);
 

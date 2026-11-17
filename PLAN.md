@@ -298,7 +298,10 @@ Detailed plan agreed 2026-11-17: six PRs in this order, each branch on top of th
   As built: 🎤 stage, 🍵 cozy, 🧁 cafe and 🐚 ocean themes. 18 clothes (with the Idol Buns hair style), 14 decorations in
   4 matching sets, 4 walls, 4 floors, 14 fidget designs (3 new squishies: Cupcake, Jellyfish, Rice Ball). New 🍵 Cozy,
   🧁 Cafe and 🐚 Ocean chips. No save change.
-- **🏀 Content Pack 4 (v1.36):** `38-pack4.js`, with the 🦖 dino nugget plush (a decoration that sits on shelves + a squishy). 4 stickers.
+- ✅ **🏀 Content Pack 4 (v1.36):** `38-pack4.js`, with the 🦖 dino nugget plush (a decoration that sits on shelves + a squishy). 4 stickers.
+  As built: 🏀 basketball/skate/karate, 🐮 farm, 🚒 trucks and 🚀 space, and 🦖 the dino nugget (plush, squishy, tee and a
+  pop-it board). 17 clothes, 14 decorations (Hay Bale and Toy Tractor are outdoor), 3 walls, 3 floors, 14 fidget designs.
+  A new 🐮 Farm chip. No save change.
 - **🧩 Extras (v1.37):** about 6 more 🧠 Challenge puzzles and about 6 more marble mazes, added at the end, plus stickers.
 - **🎹 Music Maker (v1.38, last):** an 8-step beat-and-melody grid on the Loft's speaker, 3 saved loops, the main loop only
   while it is on screen. A sticker. Save version 22 (`music`).

@@ -98,6 +98,23 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   the games on the Brain Games menu). Tap a card to read it again; tap a ❓ to play the puzzle that unlocks it.
 - 2 new stickers on the **Code & Brain** page: 🍕 Fraction Baker (8 puzzles) and 📇 Fact Finder (12 fact cards).
 
+## Content Pack 4 (since version 1.36)
+More things to buy with coins (10–40 each), open to everyone.
+- 🦖 **Dino nugget:** a Dino Nugget Plush, small enough to sit on a Little Shelf (drop it just above the shelf), plus a
+  Dino Nugget squishy, a Dino Nugget Tee and a 🦖 Nugget pop-it board.
+- 🏀 **Sport:** Hoops Jersey and Shorts, Karate Gi, Knee Pads, Wristbands, Skate Shoes, Skate Helmet and a Sports
+  Headband; a Basketball Hoop, Mini Skate Ramp, Karate Mat and Skateboard Rack; Sports Gym wall and Basketball Court floor.
+- 🐮 **Farm:** Farm Overalls, Rain Boots, Straw Hat and Chick Clip; a Toy Barn, Cow and Sheep plushies, and a Hay Bale
+  Seat and Toy Tractor (both outdoor too); Red Barn Boards wall and Hay Floor.
+- 🚒 **Trucks** and 🚀 **space:** Fire Rescue Jacket and Fire Helmet, Little Alien Tee and Star Visor; a Toy Fire Truck,
+  a Race Car Bed, a UFO Lamp (glows at night) and an Alien Plush; Nebula Swirl wall and Town Play Mat floor.
+- 🫧 **Fidgets:** pop-it colours (Hoops, Farm Day, Nebula) and boards (🏀 Ball, 🦖 Nugget); squishies (Dino Nugget,
+  Chicky, Bouncy Ball); spinners (Hoops, UFO); slimes (Meadow, Nebula Goo); clicker cubes (Hoops, Farm); marbles
+  (Mini Ball, Speckled Egg).
+- A new 🐮 Farm chip in the Closet and the Shop.
+- 4 new stickers on the **Room & Style** page: 🏀 All-Star (3 sport things; soccer things count too), 🐮 Farm Friend,
+  🚒 Big Adventures (5 truck, car or space things) and 🦖 Nugget Buddy (the plush and the squishy).
+
 ## Content Pack 3 (since version 1.35)
 Lots of new things to buy with coins (10–40 each). Everything is open to everyone.
 - 🎤 **Stage:** Idol Buns hair, Sparkle Stage Top, Star Pleat Skirt, Sparkle Gloves, Glitter Boots and a Headset Mic;
