@@ -36,7 +36,7 @@ _Last updated: 2026-11-16_
 - **Phase 9 (Games): detailed plan agreed 2026-11-16** for all three PRs, built one after another, each branch on top
   of the one before (the owner merges them in order). See "Phase 9 plan" under Decisions.
   - **🧤 Be the Keeper: built, PR #24 open as v1.24** on branch `feature/keeper` (from `main` after #23).
-  - **📚 Brain Games part 1: built as v1.25** on branch `feature/brain` (on top of `feature/keeper`).
+  - **📚 Brain Games part 1: built, PR #25 open as v1.25** on branch `feature/brain` (on top of `feature/keeper`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -70,7 +70,7 @@ _Last updated: 2026-11-16_
 - PR #22 "About & Gift Story (v1.22)": merged.
 - PR #23 "Backyard (v1.23)": merged.
 - PR #24 "Be the Keeper (v1.24)" on branch `feature/keeper` (from `main` after #23): open.
-- PR "Brain Games (v1.25)" on branch `feature/brain` (on top of `feature/keeper`, so it shows #24's changes until #24 is merged): open.
+- PR #25 "Brain Games (v1.25)" on branch `feature/brain` (on top of `feature/keeper`, so it shows #24's changes until #24 is merged): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
