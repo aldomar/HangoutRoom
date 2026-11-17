@@ -45,7 +45,7 @@ _Last updated: 2026-11-16_
   - **🔎 Shop filters & big dreams: done** (v1.29 merged, PR #29).
   - **🧑‍🔧 Grown-up helpers: done** (v1.30 merged, PR #30).
   - **🛋️ Room tweaks: done** (v1.31 merged, PR #31). The owner asked for it on 2026-11-17.
-  - **⚡ Speed check & tidy-up: built, PR open as v1.32** on branch `feature/speed` (from `main` after #31). This is the last
+  - **⚡ Speed check & tidy-up: built, PR #32 open as v1.32** on branch `feature/speed` (from `main` after #31). This is the last
     Phase 10 PR: once it is merged, Phase 10 is done. The numbers are under "What has been tested".
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -87,7 +87,7 @@ _Last updated: 2026-11-16_
 - PR #29 "Shop filters & big dreams (v1.29)": merged.
 - PR #30 "Grown-up helpers (v1.30)": merged.
 - PR #31 "Room tweaks (v1.31)": merged.
-- PR "Speed check (v1.32)" on branch `feature/speed` (from `main` after #31): open.
+- PR #32 "Speed check (v1.32)" on branch `feature/speed` (from `main` after #31): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -905,7 +905,7 @@ _Last updated: 2026-11-16_
 3. ~~Build 🔎 Shop filters + 💰 big dreams (v1.29) on `feature/shop`.~~ Merged (PR #29).
 4. ~~Build 🧑‍🔧 Grown-up helpers (v1.30).~~ Merged (PR #30).
 5. ~~🛋️ Room tweaks (v1.31).~~ Merged (PR #31).
-6. ~~Build ⚡ Speed check & tidy-up (v1.32), the last Phase 10 PR.~~ Built (v1.32 PR).
+6. ~~Build ⚡ Speed check & tidy-up (v1.32), the last Phase 10 PR.~~ Built (PR #32).
 7. Owner: build v1.32 and check that the room still feels alive (buddy breathing, lava lamp, fairy lights, speaker
    notes, gift wiggle) and that the tablet stays cooler; then merge it. That finishes Phase 10.
 8. Plan Phase 11 (more games and content, see `PLAN.md`) in detail and get it agreed before building.
