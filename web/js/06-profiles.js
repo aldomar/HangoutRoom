@@ -94,7 +94,7 @@ function normalize(p){
   if(!['easy','medium','hard','move','if','challenge'].includes(p.code.level)) p.code.level='easy';
   // Brain Games (v1.25): the last game played, the level picked in each game, and the puzzle ids solved (each pays once).
   const br=p.brain&&typeof p.brain==='object'&&!Array.isArray(p.brain)?p.brain:{}, brL=br.level&&typeof br.level==='object'&&!Array.isArray(br.level)?br.level:{};
-  const brG=['snack','memory','pop','train','word']; // v1.33: + Pattern Train, Word Builder
+  const brG=['snack','memory','pop','train','word','bake','facts']; // v1.33: + Pattern Train, Word Builder; v1.34: + Fraction Bakery, Fact Cards
   p.brain={game:brG.includes(br.game)?br.game:'snack',level:{},solved:Array.isArray(br.solved)?br.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[]};
   brG.forEach(g=>{p.brain.level[g]=['easy','medium','hard'].includes(brL[g])?brL[g]:'easy';});
 }

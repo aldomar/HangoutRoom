@@ -55,7 +55,8 @@ _Last updated: 2026-11-17_
   Decisions and `PLAN.md`): Brain 2a (v1.33) → Brain 2b (v1.34) → Content Pack 3 (v1.35) → Content Pack 4 (v1.36) →
   Extras (v1.37) → Music Maker (v1.38).
   - **🚂 Pattern Train & 🔤 Word Builder: built, PR #33 open as v1.33** on branch `feature/brain2` (from `main` after #32).
-    It also makes bonus photocards undeletable (the owner's request, 2026-11-17).
+    It also makes bonus photocards undeletable (the owner's request, 2026-11-17). **Merged** (PR #33); the owner checked it.
+  - **🍕 Fraction Bakery & 🪐 Fact Cards: built, PR open as v1.34** on branch `feature/brain3` (from `main` after #33).
   - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -98,7 +99,8 @@ _Last updated: 2026-11-17_
 - PR #30 "Grown-up helpers (v1.30)": merged.
 - PR #31 "Room tweaks (v1.31)": merged.
 - PR #32 "Speed check (v1.32)": merged.
-- PR #33 "Pattern Train & Word Builder (v1.33)" on branch `feature/brain2` (from `main` after #32): open.
+- PR #33 "Pattern Train & Word Builder (v1.33)": merged.
+- PR "Fraction Bakery & Fact Cards (v1.34)" on branch `feature/brain3` (from `main` after #33): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -485,6 +487,15 @@ _Last updated: 2026-11-17_
   the next full run passed.
   Not tested automatically: Read to me saying the words on the tablet (the browser has no voice), and how small the
   8-wagon trains look on a real phone (they fit; the choice wagons are big).
+- **Fraction Bakery & Fact Cards (v1.34):** `tests/smoke-test.js` has 941 checks, all passing, no console errors. New checks:
+  7 games and the 📇 button on the menu; every Easy treat has the right number of pieces and the uneven cuts really are
+  uneven; Medium fractions are whole numbers of pieces; the Hard answers; every fact puzzle has 3 different answers in
+  a fixed order, a full card, all 3 topics on every level, and the answer moves around; playing Easy/Medium/Hard of the
+  Bakery (wrong tries explain, toppings toggle, the counter, ✔); Fact Cards Easy and Medium, the new card in the win
+  box, the binder (24 slots, found cards open, a ❓ offers ▶ Play it), Android Back from the binder; phone fit; stickers;
+  saved levels for the new games. One bug found by the test and fixed: the binder slots used the class `empty`, which
+  already means "span the whole row" in the app's CSS, so they are `fc-none` now.
+  Not tested automatically: tapping pizza slices with a finger on the tablet.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -841,6 +852,11 @@ _Last updated: 2026-11-17_
   of their own room things/buddies (`memPic`); emoji newer than Android 8 were avoided. Medium shows faint letters in the
   slots; Hard does not. Brain Champ was changed to count only `snack memory pop`, so it keeps meaning "all 3 games".
   No save version change.
+- **Fraction Bakery & Fact Cards (built as v1.34, `36-brain4.js`):** game ids `bake` and `facts`. Fact cards are unlocked by
+  `brain.solved` (no `facts[]` field, unlike the plan: simpler, and backups can't get out of step). The binder is a
+  view of the Brain Games screen (`BR.view='facts'`, `factBinder()`), opened by a button that section 28 adds through
+  `BR_MENU_EXTRA`; a game may give `winExtra(pz,l,idx,first)` for extra HTML in its win box. Facts were checked for
+  accuracy and kept simple; the topics are 5 dinosaur, 9 space and 10 ocean cards. No save version change.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -943,13 +959,15 @@ _Last updated: 2026-11-17_
 
 ## Next steps (Phase 11)
 1. ~~Build 🚂 Pattern Train & 🔤 Word Builder (v1.33) on `feature/brain2`.~~ Built (PR #33).
-2. Owner: build v1.33, try the two new games (see the PR), and merge it.
-3. Build 🍕 Fraction Bakery & 🪐 Fact Cards (v1.34) on `feature/brain3` (on top of `feature/brain2`).
+2. ~~Owner: build v1.33, try the two new games (see the PR), and merge it.~~ Merged.
+3. ~~Build 🍕 Fraction Bakery & 🪐 Fact Cards (v1.34) on `feature/brain3`.~~ Built (PR open).
+4. Owner: build v1.34, try the two new games and the 📇 binder (see the PR), and merge it.
+5. Build 🎀 Content Pack 3 (v1.35).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 20 since v1.30 (v1.33 added game ids only, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 20 since v1.30 (v1.33 and v1.34 added game ids only, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

@@ -88,6 +88,16 @@ Two more Brain Games at the Backyard chalkboard (5 in all), with the same 🐣 /
 - **Bonus photocards can't be deleted any more.** They are won only once, so a deleted one could never come back.
   The binder no longer shows 🗑️ Delete on them (cards you made can still be deleted).
 
+## Fraction Bakery and Fact Cards (since version 1.34)
+Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
+- 🍕 **Fraction Bakery:** Easy = tap the treat cut into equal pieces for the bunnies shown (2, 3 or 4; the uneven ones
+  say "Those pieces are not the same size"). Medium = tap slices of a pizza or cake to put toppings on ½, ¾, ⅔, ⅝ …,
+  then ✔ Done (a counter shows how many are done so far). Hard = fractions of a number ("⅔ of 9 cupcakes are pink").
+- 🪐 **Fact Cards:** questions about 🦕 dinosaurs, 🚀 space and 🐠 the ocean, with 3 answers (pictures on Easy).
+  Every puzzle solved unlocks a **fact card**, shown in the win box and kept in **📇 My Fact Cards** (the button under
+  the games on the Brain Games menu). Tap a card to read it again; tap a ❓ to play the puzzle that unlocks it.
+- 2 new stickers on the **Code & Brain** page: 🍕 Fraction Baker (8 puzzles) and 📇 Fact Finder (12 fact cards).
+
 ## Stage song pack (since version 1.26)
 - The 🎤 Stage now has **8 songs** (it had 3). Like the first ones, every new song is made by code inside the app:
   no recordings, and nothing copied from real songs.
