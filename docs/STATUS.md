@@ -54,7 +54,7 @@ _Last updated: 2026-11-17_
 - **Phase 11 (More games and content): detailed plan agreed 2026-11-17** (six PRs, stacked; see "Phase 11 plan" under
   Decisions and `PLAN.md`): Brain 2a (v1.33) → Brain 2b (v1.34) → Content Pack 3 (v1.35) → Content Pack 4 (v1.36) →
   Extras (v1.37) → Music Maker (v1.38).
-  - **🚂 Pattern Train & 🔤 Word Builder: built, PR open as v1.33** on branch `feature/brain2` (from `main` after #32).
+  - **🚂 Pattern Train & 🔤 Word Builder: built, PR #33 open as v1.33** on branch `feature/brain2` (from `main` after #32).
     It also makes bonus photocards undeletable (the owner's request, 2026-11-17).
   - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
@@ -98,7 +98,7 @@ _Last updated: 2026-11-17_
 - PR #30 "Grown-up helpers (v1.30)": merged.
 - PR #31 "Room tweaks (v1.31)": merged.
 - PR #32 "Speed check (v1.32)": merged.
-- PR "Pattern Train & Word Builder (v1.33)" on branch `feature/brain2` (from `main` after #32): open.
+- PR #33 "Pattern Train & Word Builder (v1.33)" on branch `feature/brain2` (from `main` after #32): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -942,7 +942,7 @@ _Last updated: 2026-11-17_
 8. ~~Plan Phase 11 (more games and content, see `PLAN.md`) in detail and get it agreed before building.~~ Agreed 2026-11-17.
 
 ## Next steps (Phase 11)
-1. ~~Build 🚂 Pattern Train & 🔤 Word Builder (v1.33) on `feature/brain2`.~~ Built (PR open).
+1. ~~Build 🚂 Pattern Train & 🔤 Word Builder (v1.33) on `feature/brain2`.~~ Built (PR #33).
 2. Owner: build v1.33, try the two new games (see the PR), and merge it.
 3. Build 🍕 Fraction Bakery & 🪐 Fact Cards (v1.34) on `feature/brain3` (on top of `feature/brain2`).
 
