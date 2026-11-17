@@ -58,7 +58,7 @@ _Last updated: 2026-11-17_
     It also makes bonus photocards undeletable (the owner's request, 2026-11-17). **Merged** (PR #33); the owner checked it.
   - **🍕 Fraction Bakery & 🪐 Fact Cards: done** (v1.34 merged, PR #34).
   - **🎀 Content Pack 3: built, PR #35 open as v1.35** on branch `feature/pack3` (from `main` after #34).
-  - **🏀 Content Pack 4: built, PR open as v1.36** on branch `feature/pack4` (stacked on `feature/pack3`; merge #35 first).
+  - **🏀 Content Pack 4: built, PR #36 open as v1.36** on branch `feature/pack4` (stacked on `feature/pack3`; merge #35 first).
     It has the owner's 🦖 dino nugget wish: a plush that sits on a Little Shelf, and a matching squishy.
   - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
@@ -105,7 +105,7 @@ _Last updated: 2026-11-17_
 - PR #33 "Pattern Train & Word Builder (v1.33)": merged.
 - PR #34 "Fraction Bakery & Fact Cards (v1.34)": merged.
 - PR #35 "Content Pack 3 (v1.35)" on branch `feature/pack3` (from `main` after #34): open.
-- PR "Content Pack 4 (v1.36)" on branch `feature/pack4` (on top of `feature/pack3`): open. Merge #35 first.
+- PR #36 "Content Pack 4 (v1.36)" on branch `feature/pack4` (on top of `feature/pack3`): open. Merge #35 first.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -998,7 +998,7 @@ _Last updated: 2026-11-17_
 4. ~~Owner: build v1.34, try the two new games and the 📇 binder (see the PR), and merge it.~~ Merged.
 5. ~~Build 🎀 Content Pack 3 (v1.35) on `feature/pack3`.~~ Built (PR #35).
 6. Owner: build v1.35, try the new clothes, decorations and fidgets (see the PR), and merge it.
-7. ~~Build 🏀 Content Pack 4 (v1.36), with the 🦖 dino nugget plush.~~ Built (PR open, on top of #35).
+7. ~~Build 🏀 Content Pack 4 (v1.36), with the 🦖 dino nugget plush.~~ Built (PR #36, on top of #35).
 8. Owner: merge #35 first, then build v1.36, try the dino nugget on a shelf and the new things (see the PR), and merge it.
 9. Build 🧩 Extras (v1.37): more 🧠 Challenge puzzles and marble mazes.
 
