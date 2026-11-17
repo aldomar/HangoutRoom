@@ -294,7 +294,10 @@ Detailed plan agreed 2026-11-17: six PRs in this order, each branch on top of th
 - ✅ **🍕 Brain Games 2b (v1.34):** Fraction Bakery + Fact Cards in `36-brain4.js`. Right answers unlock fact cards, kept in their
   own 📇 binder inside Brain Games. 2 stickers. As built: a card is unlocked when its puzzle is solved, so there is no
   new save field (the planned `facts[]` wasn't needed) and no save version change.
-- **🎀 Content Pack 3 (v1.35):** `37-pack3.js`, only adds entries; every item gets a theme chip and photocard tags. 4 stickers.
+- ✅ **🎀 Content Pack 3 (v1.35):** `37-pack3.js`, only adds entries; every item gets a theme chip and photocard tags. 4 stickers.
+  As built: 🎤 stage, 🍵 cozy, 🧁 cafe and 🐚 ocean themes. 18 clothes (with the Idol Buns hair style), 14 decorations in
+  4 matching sets, 4 walls, 4 floors, 14 fidget designs (3 new squishies: Cupcake, Jellyfish, Rice Ball). New 🍵 Cozy,
+  🧁 Cafe and 🐚 Ocean chips. No save change.
 - **🏀 Content Pack 4 (v1.36):** `38-pack4.js`, with the 🦖 dino nugget plush (a decoration that sits on shelves + a squishy). 4 stickers.
 - **🧩 Extras (v1.37):** about 6 more 🧠 Challenge puzzles and about 6 more marble mazes, added at the end, plus stickers.
 - **🎹 Music Maker (v1.38, last):** an 8-step beat-and-melody grid on the Loft's speaker, 3 saved loops, the main loop only

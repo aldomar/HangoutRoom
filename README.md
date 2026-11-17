@@ -98,6 +98,23 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   the games on the Brain Games menu). Tap a card to read it again; tap a ❓ to play the puzzle that unlocks it.
 - 2 new stickers on the **Code & Brain** page: 🍕 Fraction Baker (8 puzzles) and 📇 Fact Finder (12 fact cards).
 
+## Content Pack 3 (since version 1.35)
+Lots of new things to buy with coins (10–40 each). Everything is open to everyone.
+- 🎤 **Stage:** Idol Buns hair, Sparkle Stage Top, Star Pleat Skirt, Sparkle Gloves, Glitter Boots and a Headset Mic;
+  a Stage Vanity (it glows at night), a Star Mic Stand and a Cheer Banner; Stage Lights wall and Stage Floor.
+- 🍵 **Cozy:** Comfy Big Sweater, Sailor Collar Top, Cozy Knit Socks and a Kitty Beret; a Cozy Blanket Table, a Happy
+  Lantern (glows) and a Kitty Cushion; Blossom Branches wall and Woven Mat floor.
+- 🧁 **Cafe:** Cafe Apron, Strawberry Shoes, Little Chef Hat and Cupcake Clip; a Cafe Counter, Cafe Table, Cupcake
+  Tower and Cafe Menu Board; Cafe Stripes wall and Cafe Tiles floor.
+- 🐚 **Ocean:** Mermaid Scale Top, Mermaid Tail Skirt, Pearl Bracelets and a Seashell Tiara; a Seashell Bed, Seashell
+  Chair, Coral Lamp (glows) and Starfish Rug; Under the Sea wall and Sandy Sea Floor.
+- 🫧 **Fidgets:** pop-it colours (Idol Lights, Macarons, Under the Sea) and boards (🐚 Shell, 🧁 Cupcake); squishies
+  (Cupcake, Jellyfish, Rice Ball); spinners (Seashell, Idol Note); slimes (Milk Tea, Mermaid); clicker cubes (Macaron,
+  Idol Stage); marbles (Sea Bubble, Boba Pearl).
+- New 🍵 Cozy, 🧁 Cafe and 🐚 Ocean chips in the Closet and the Shop (🎤 Stage already existed and now shows the new things too).
+- 4 new stickers on the **Room & Style** page: 🎤 Stage Star, 🍵 Cozy Day, 🧁 Cafe Owner and 🐚 Mermaid Friend
+  (3 things of that theme each; older stage things count for Stage Star too).
+
 ## Stage song pack (since version 1.26)
 - The 🎤 Stage now has **8 songs** (it had 3). Like the first ones, every new song is made by code inside the app:
   no recordings, and nothing copied from real songs.

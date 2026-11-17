@@ -95,7 +95,11 @@ const GIFT_TIMELINE=[
   {v:'1.34',d:'2026-11-17',i:'🍕',n:'Fraction Bakery & Fact Cards',why:'So there are treats to share fairly and amazing facts to collect',
     news:['🍕 Fraction Bakery: cut treats fairly and put toppings on part of a pizza',
           '🪐 Fact Cards: answer questions about dinosaurs, space and the ocean',
-          '📇 Every right answer unlocks a fact card for your binder']}
+          '📇 Every right answer unlocks a fact card for your binder']},
+  {v:'1.35',d:'2026-11-17',i:'🎀',n:'Content Pack 3',why:'So there are stage outfits, cozy looks, a little cafe and the sea to decorate with',
+    news:['🎤 Stage outfits: idol buns, a headset mic and glitter boots',
+          '🧁 A cafe set, 🐚 a seashell set and 🍵 cozy things for your rooms',
+          '🫧 New fidgets: a cupcake squishy, a jellyfish, milk tea slime and more']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

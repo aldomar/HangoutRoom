@@ -680,7 +680,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Hair styles + colours');
   await ev(`P().coins=500;show('closet');document.querySelector('[data-cat=hair]').click()`); await sleep(150);
-  check('hair tab shows 11 styles (8, and 3 short ones since v1.20)', (await ev(`document.querySelectorAll('#closetGrid .tile').length`))===11, await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id)`));
+  check('hair tab shows 12 styles (8, 3 short ones since v1.20, Idol Buns since v1.35)', (await ev(`document.querySelectorAll('#closetGrid .tile').length`))===12, await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id)`));
   check('and 10 colour swatches', await ev(`!document.querySelector('#hairCols').classList.contains('hidden')&&document.querySelectorAll('#hairCols [data-hc]').length===10`));
   check('no old coloured swoops in the closet', await ev(`!document.querySelector('#closetGrid [data-id=swoopPurple]')&&!document.querySelector('#closetGrid [data-id=swoopCandy]')`));
   await ev(`document.querySelector('#hairCols [data-hc=pink]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('76 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34), ids all different, 6 or more per page', await ev(`STICKERS.length===76&&new Set(STICKERS.map(s=>s.id)).size===76&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('80 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35), ids all different, 6 or more per page', await ev(`STICKERS.length===80&&new Set(STICKERS.map(s=>s.id)).size===80&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1602,7 +1602,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await kpTap(-N3.u-0.1,0.3);
   check('Easy: tapping the goal dives there', await ev(`!!KP.tgt&&Math.abs(KP.tgt.x-clamp(${-N3.u-0.1},-0.42,0.42))<0.02`));
   await kpTap(N3.u,N3.v);
-  check('Easy: she can change her mind (a second tap moves the dive)', await ev(`Math.abs(KP.tgt.x-${N3.u})<0.02`));
+  check('Easy: she can change her mind (a second tap moves the dive)', await ev(`Math.abs(KP.tgt.x-(${N3.u}))<0.02`));
   await kpTo('result');
   check('…and that saves it', await ev(`KP.saves[2]===true`));
   // dive on the first frame the ball flies (waiting inside the page, so a busy PC can't miss the short flight)
@@ -2260,7 +2260,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`brPuzzle('word','hard',7)`); await sleep(200); await shot('K08-phone-word');
   check('phone: no tile spills off the screen', await ev(`[...document.querySelectorAll('.wb-tile')].every(b=>b.getBoundingClientRect().right<=innerWidth)`));
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
-  check('2 new stickers on the Code & Brain page', await ev(`STICKERS.slice(-4,-2).map(s=>s.id+':'+s.page).join()==='train8:code,word8:code'`));
+  check('2 new stickers on the Code & Brain page', await ev(`STICKERS.filter(s=>s.page==='code').slice(-4,-2).map(s=>s.id+':'+s.page).join()==='train8:code,word8:code'`));
   check('Brain Champ still counts only the first 3 games', await ev(`(()=>{const p=JSON.parse(JSON.stringify(P()));p.brain.solved=[];BRAIN_LVLS.forEach(l=>['train','word'].forEach(g=>BRAIN_GAMES[g].puzzles[l].forEach((z,i)=>p.brain.solved.push(brId(g,l,i)))));return stkHave(p,STICKERS.find(s=>s.id==='brainChamp'))===0;})()`));
   await ev(`{const p=DB.profiles[0];p.brain={game:'word',level:{snack:'hard',train:'medium',word:'nope'},solved:['word:e1']};normalize(p);}`);
   check('saved game and levels for the new games are kept; odd ones are made safe', await ev(`(()=>{const b=DB.profiles[0].brain;return b.game==='word'&&b.level.train==='medium'&&b.level.word==='easy'&&b.level.snack==='hard';})()`));
@@ -2337,9 +2337,110 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`brPuzzle('facts','hard',5)`); await sleep(200); await shot('L10-phone-facts-hard');
   check('phone: long answers fit', await ev(`[...document.querySelectorAll('.fc-ans')].every(e=>e.getBoundingClientRect().right<=innerWidth&&e.scrollWidth<=e.clientWidth+1)`));
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
-  check('2 new stickers at the end of the Code & Brain page', await ev(`STICKERS.slice(-2).map(s=>s.id+':'+s.page).join()==='bake8:code,facts12:code'`));
+  check('2 new stickers at the end of the Code & Brain page', await ev(`STICKERS.filter(s=>s.page==='code').slice(-2).map(s=>s.id+':'+s.page).join()==='bake8:code,facts12:code'`));
   await ev(`{const p=DB.profiles[0];p.brain={game:'facts',level:{bake:'hard',facts:'medium'},solved:['facts:e1']};normalize(p);}`);
   check('saved game and levels for the new games are kept', await ev(`(()=>{const b=DB.profiles[0].brain;return b.game==='facts'&&b.level.bake==='hard'&&b.level.facts==='medium'&&b.level.train==='easy';})()`));
+  await ev(`closeModal();show('room')`);
+
+  console.log('Content Pack 3 (v1.35): stage, cozy, cafe, ocean');
+  await ev(`closeModal();stkPaused=true;P().easy=false;P().coins=500;applyEasy();show('room');goRoom(1)`); await sleep(200);
+  const p3Wall=await ev('P().room.wall'), p3Look=await ev('JSON.stringify(P().look)');
+  const p3Clothes=JSON.parse(await ev(`JSON.stringify(Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p3).map(i=>[c,i.id])))`));
+  check('18 new clothes (one a hair style), each with a theme', p3Clothes.length===18&&p3Clothes.some(([c])=>c==='hair')&&await ev(`Object.values(CLOSET).every(c=>c.items.filter(i=>i.p3).every(i=>P3_THEMES[i.p3]&&!i.p2))`), p3Clothes.length);
+  check('every new piece of clothing draws on every buddy, with no broken numbers', await ev(`(()=>{const items=Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p3).map(i=>[c,i.id]));return items.every(([c,id])=>Object.keys(BUDDIES).every(k=>{const s=mascotSVG(Object.assign({},DEFAULT_LOOK,{kind:k,[c]:id}));return s.length>500&&!/NaN|undefined/.test(s);}));})()`));
+  check('nothing in the pack says "boy" or "girl", and every price is 10–40', await ev(`(()=>{const L=[...Object.values(CLOSET).flatMap(c=>c.items),...Object.values(DECOR),...Object.values(WALLS),...Object.values(FLOORS),...Object.values(POP_THEMES),...Object.values(POP_SHAPES),...Object.values(SQUISHIES),...Object.values(SPINS),...Object.values(SLIMES),...Object.values(CUBES),...Object.values(MARBLES)].filter(x=>x.p3);return L.length>=50&&L.every(x=>!/\\b(boy|girl)s?\\b/i.test(x.name)&&x.price>=10&&x.price<=40);})()`));
+  check('every new item is on a photocard row (cute, spooky or sporty)', await ev(`Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p3).map(i=>c+':'+i.id)).every(k=>Object.values(CARD_TAGS).some(t=>t.includes(k)))`));
+  check('Cozy, Cafe and Ocean chips sit before Outdoor and Dreams', await ev(`Object.keys(THEMES).slice(-5).join()==='cozy,cafe,ocean,yard,dream'`));
+  await ev(`show('closet')`);
+  for(const [c,i] of p3Clothes){await ev(`document.querySelector('[data-cat=${c}]').click()`);
+    check(`closet has ${c}:${i}`, await ev(`!!document.querySelector('#closetGrid [data-id=${i}] svg')`));}
+  await ev(`document.querySelector('[data-cat=top]').click()`); await sleep(100);
+  check('Closet tops show the 🎤 Stage, 🍵 Cozy, 🧁 Cafe and 🐚 Ocean chips', await ev(`['stage','cozy','cafe','ocean'].every(t=>document.querySelector('#closetGrid [data-theme='+t+']'))`));
+  await ev(`document.querySelector('#closetGrid [data-theme=cozy]').click()`); await sleep(100);
+  check('🍵 Cozy shows the sweater and the sailor top', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).sort().join()==='bigSweater,sailorTop'`), await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).join()`));
+  await ev(`document.querySelector('#closetGrid [data-theme=stage]').click()`); await sleep(100);
+  check('🎤 Stage shows the old Idol Stage Jacket and the new Sparkle Stage Top', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).sort().join()==='idolCrop,stage'`));
+  await ev(`themePick.closet='all';renderCloset();document.querySelector('#closetGrid [data-id=scaleTop]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
+  check('bought and wearing the Mermaid Scale Top (20)', await ev(`P().look.top==='scaleTop'&&P().owned.includes('top:scaleTop')&&P().coins===480`), await ev('P().coins'));
+  check('new clothes count on photocard stats (cute)', (await ev(`cardStats(Object.assign({},DEFAULT_LOOK,{hair:'idolBuns',top:'cafeApron',bottom:'mermaidTail',legs:'knitSocks',arms:'pearlBands',shoes:'berryShoes',acc:'shellCrown'}))[0]`))===5);
+  await ev(`P().look=Object.assign({},P().look,{kind:'bunny',hair:'idolBuns',hairColor:'pink',top:'idolCrop',bottom:'starPleats',legs:'none',arms:'sparkleGloves',shoes:'glitterBoots',acc:'headsetMic'});renderCloset()`); await sleep(100); await shot('M1-pack3-stage');
+  await ev(`P().look=Object.assign({},P().look,{kind:'bear',hair:'messy',top:'bigSweater',bottom:'cargo',legs:'knitSocks',arms:'none',shoes:'slippers',acc:'catBeret'});renderCloset()`); await sleep(100); await shot('M2-pack3-cozy');
+  await ev(`P().look=Object.assign({},P().look,{kind:'fox',hair:'bob',top:'sailorTop',bottom:'plaid',legs:'none',shoes:'maryjanes',acc:'none'});renderCloset()`); await sleep(100); await shot('M3-pack3-sailor');
+  await ev(`P().look=Object.assign({},P().look,{kind:'puppy',hair:'tuft',top:'cafeApron',bottom:'shorts',legs:'none',shoes:'berryShoes',acc:'chefHat'});renderCloset()`); await sleep(100); await shot('M4-pack3-cafe');
+  await ev(`P().look=Object.assign({},P().look,{kind:'dino',hair:'waves',hairColor:'sky',top:'scaleTop',bottom:'mermaidTail',arms:'pearlBands',shoes:'none',acc:'shellCrown'});renderCloset()`); await sleep(100); await shot('M5-pack3-ocean');
+  await ev(`P().look=Object.assign({},P().look,{kind:'bunny',hair:'swoopBlack',hairColor:'black',top:'tee',bottom:'plaid',arms:'none',shoes:'boots',acc:'cupcakeClip'});renderCloset()`); await sleep(100); await shot('M6-pack3-clip');
+  await ev(`P().look=${p3Look};P().look.top='scaleTop';save();show('room')`);
+  const p3Decor=['idolVanity','micStand','cheerBanner','kotatsu','paperLantern','catCushion','cafeCounter','cafeTable','cupcakeTower','menuBoard','shellBed','shellChair','coralLamp','starfishRug'];
+  check('14 new decorations in 4 matching sets, each with a theme', (await ev(`Object.entries(DECOR).filter(([k,d])=>d.p3).map(([k])=>k).join()`))===p3Decor.join());
+  check('the 3 new lamps glow at night', await ev(`['idolVanity','paperLantern','coralLamp'].every(k=>NIGHT_GLOW[k]&&NIGHT_COLS[NIGHT_GLOW[k].c])`));
+  await ev(`enterDecorate();document.querySelector('[data-dt=shop]').click()`); await sleep(150);
+  check('the Shop has all 14 new decorations', await ev(`${JSON.stringify(p3Decor)}.every(k=>document.querySelector('#decoGrid [data-buy='+k+']'))`));
+  await ev(`document.querySelector('#decoGrid [data-theme=ocean]').click()`); await sleep(100);
+  check('🐚 Ocean in the Shop shows the seashell set', await ev(`[...document.querySelectorAll('#decoGrid [data-buy]')].map(b=>b.dataset.buy).sort().join()==='coralLamp,shellBed,shellChair,starfishRug'`), await ev(`[...document.querySelectorAll('#decoGrid [data-buy]')].map(b=>b.dataset.buy).join()`));
+  await shot('M7-pack3-shop-ocean');
+  await ev('checkBonus()'); await sleep(100); const p3Bed0=await ev('P().coins'); // a bonus photocard (+10) may be due from the closet buys
+  await ev(`document.querySelector('#decoGrid [data-buy=shellBed]').click()`); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(150);
+  check('buying the Seashell Bed (40) puts it in her room', await ev(`P().room.items.some(i=>i.type==='shellBed'&&i.placed)&&P().coins===${p3Bed0-40}`), [p3Bed0,await ev('P().coins')]);
+  await ev(`themePick.shop='all';document.querySelector('[data-dt=wall]').click()`); await sleep(100);
+  check('4 new walls', await ev(`['stageLights','blossom','cafeStripe','underSea'].every(k=>document.querySelector('#decoGrid [data-surf='+k+']'))`));
+  await ev(`document.querySelector('#decoGrid [data-surf=underSea]').click()`); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(150);
+  check('bought and put up the Under the Sea wall', await ev(`P().room.wall==='underSea'&&P().owned.includes('wall:underSea')`));
+  await ev(`document.querySelector('[data-dt=floor]').click()`); await sleep(100);
+  check('4 new floors', await ev(`['stageFloor','wovenMat','cafeTiles','seaFloor'].every(k=>document.querySelector('#decoGrid [data-surf='+k+']'))`));
+  await ev(`exitDecorate();P().room.floor='seaFloor';renderRoom()`); await sleep(150); await shot('M8-pack3-ocean-room');
+  await ev(`goRoom(2);for(const k of ${JSON.stringify(p3Decor)})P().room2.items.push(Object.assign({uid:'p3'+k,type:k,placed:true},spot(k)));P().room2.floor='cafeTiles';P().room2.wall='cafeStripe';save();renderRoom()`); await sleep(200);
+  await shot('M9-pack3-loft');
+  check('every new decoration draws in the Loft, with no broken numbers', await ev(`(()=>{const h=document.querySelector('#roomSvg').innerHTML;return ${JSON.stringify(p3Decor)}.every(k=>P().room2.items.some(i=>i.type===k))&&document.querySelectorAll('#roomSvg .deco').length>=14&&!/NaN|undefined/.test(h);})()`));
+  for(const [w,f] of [['stageLights','stageFloor'],['blossom','wovenMat']]){await ev(`P().room2.wall='${w}';P().room2.floor='${f}';renderRoom()`); await sleep(100); await shot('M10-pack3-'+w);}
+  await ev(`P().night={2:true};renderRoom()`); await sleep(150); await shot('M11-pack3-night');
+  await ev(`P().night={};P().room2.items=P().room2.items.filter(i=>!String(i.uid).startsWith('p3'));P().room2.wall='attic';save();goRoom(1)`);
+
+  console.log('Content Pack 3: fidget designs');
+  await ev(`show('fidget');setFidTab('popit')`); await sleep(200);
+  check('3 new pop-it colours and 2 new board shapes', await ev(`['idol','macaron','sea'].every(k=>document.querySelector('#skinRow [data-skin='+k+']'))&&['shell','cupcake'].every(k=>document.querySelector('#skinRow [data-shape='+k+']'))`));
+  for(const sh of ['shell','cupcake']){
+    await ev(`P().fid.pop='${sh==='shell'?'sea':'macaron'}';document.querySelector('#skinRow [data-shape=${sh}]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(200);
+    const n=await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').length`);
+    check(`the ${sh} board has a sensible number of bubbles`, n>=12&&n<36, n); await shot('M12-pop-'+sh);
+    const fl=await ev('P().stats.flips'); await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').forEach(b=>popAt(b))`); await sleep(1300);
+    check(`popping every ${sh} bubble flips the board`, (await ev('P().stats.flips'))===fl+1);
+  }
+  await ev(`P().fid.pop='idol';P().fid.popShape='classic';renderPop()`); await sleep(100); await shot('M13-pop-idol');
+  await ev(`P().fid.pop='rainbow';renderPop()`);
+  check('every new squishy extra, spinner and slime picture has a drawing', await ev(`['frosting','tentacles','nori'].every(k=>SQ_EXTRAS[k]&&(SQ_EXTRAS[k].front||SQ_EXTRAS[k].back))&&['shell','note','boba'].every(k=>typeof FID_ICONS[k]==='function')`));
+  for(const [tab,ids] of [['squish',['cupcake','jelly','riceBall']],['spin',['seashell','idolNote']],['slime',['milkTea','mermaid']],['cube',['macaron','idol']],['maze',['seaBubble','boba']]]){
+    await ev(`setFidTab('${tab}')`); await sleep(150);
+    check(`new ${tab} designs are listed`, await ev(`${JSON.stringify(ids)}.every(k=>document.querySelector('#skinRow [data-skin='+k+']'))`));
+    for(const id of ids){await ev(`P().fid[FID['${tab}'].key]='${id}';fid2Open('${tab}');${tab==='spin'?'SP.w=12;':''}`);
+      if(tab==='squish'){await ev(`sq('pointerdown',51,0.2,0.1)`); await sleep(450); await shot(`M14-${tab}-${id}`); await ev(`sq('pointerup',51,0.2,0.1)`); await sleep(400); await shot(`M14-${tab}-${id}-rest`);}
+      else {await sleep(350); await shot(`M14-${tab}-${id}`);}}
+  }
+  await ev(`P().fid.marble='pearl';setFidTab('maze');document.querySelector('#skinRow [data-skin=seaBubble]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
+  check('bought the Sea Bubble marble (owned as marble:seaBubble)', await ev(`P().fid.marble==='seaBubble'&&P().owned.includes('marble:seaBubble')`));
+  await ev(`P().fid.squish='mochi';P().fid.spin='galaxy';P().fid.slime='grape';P().fid.cube='pastel';P().fid.marble='pearl';save();show('room')`);
+
+  console.log('Content Pack 3: stickers');
+  check('4 new stickers on the Room & Style page', await ev(`['p3stage','p3cozy','p3cafe','p3ocean'].every(id=>STICKERS.some(s=>s.id===id&&s.page==='room'))`));
+  check('ocean things count: the top, the bed, the wall, the marble and the shell board (5); cafe: the cupcake board (1)', await ev(`p3Have(P(),'ocean')===5&&p3Have(P(),'cafe')===1`), await ev(`[p3Have(P(),'stage'),p3Have(P(),'cozy'),p3Have(P(),'cafe'),p3Have(P(),'ocean')]`));
+  check('older stage things (Idol Stage Jacket, Idol Tiara) count for Stage Star too', await ev(`p3Have(Object.assign({},P(),{owned:['top:stage','acc:tiara']}),'stage')-p3Have(Object.assign({},P(),{owned:[]}),'stage')===2`));
+  await ev(`P().owned.push('slime:milkTea','squish:cupcake');P().room.items.push({uid:'p3cc',type:'cupcakeTower',placed:false})`);
+  check('fidgets and a decoration in My Stuff count too (4 cafe things)', await ev(`p3Have(P(),'cafe')===4`));
+  const p3c0=await ev('P().coins'), p3Had=await ev(`JSON.stringify(P().stickers.filter(id=>/^p3/.test(id)))`);
+  await ev(`stkPaused=false`); const p3Got=await ev(`checkStickers().map(s=>s.id).filter(id=>/^p3/.test(id)).sort().join()`); const p3c1=await ev('P().coins'); await ev(`stkPaused=true;closeModal()`);
+  check('3+ ocean and 3 cafe things give Mermaid Friend and Cafe Owner, not Cozy Day', p3Got.split(',').includes('p3ocean')&&p3Got.split(',').includes('p3cafe')&&!p3Got.includes('p3cozy'), [p3Had,p3Got]);
+  check('...and they pay +2 each (with any other sticker that came at the same time)', p3c1>=p3c0+4&&(p3c1-p3c0)%2===0, [p3c0,p3c1]);
+  await ev(`P().room.items=P().room.items.filter(i=>i.uid!=='p3cc');save()`);
+
+  console.log('Content Pack 3 in backups');
+  const p3Id=await ev('P().id'), p3Code=await ev('JSON.stringify(DB)');
+  await ev(`doRestore(${JSON.stringify(p3Code)})`); await sleep(400);
+  check('a backup keeps the pack top, wall, marble, bed and sticker', await ev(`(()=>{const p=DB.profiles.find(q=>q.id==='${p3Id}');return !!p&&p.owned.includes('top:scaleTop')&&p.owned.includes('wall:underSea')&&p.owned.includes('marble:seaBubble')&&p.stickers.includes('p3ocean')&&p.room.items.some(i=>i.type==='shellBed');})()`));
+  await ev(`closeModal();document.querySelector('.pcard[data-id="${p3Id}"]').click()`); await sleep(1300);
+  await ev(`closeModal();{const p=P();p.room.wall='${p3Wall}';p.room.items=p.room.items.filter(i=>i.type!=='shellBed');p.look=${p3Look};}save();show('room')`);
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
+  await ev(`closetCat='top';themePick.closet='all';show('closet')`); await sleep(250); await shot('M15-phone-closet');
+  check('phone: the closet has its chips and nothing makes the page scroll sideways', await ev(`!!document.querySelector('#closetGrid .chips')&&document.documentElement.scrollWidth<=innerWidth+1`));
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   await ev(`closeModal();show('room')`);
 
   console.log(`\n${ok} passed, ${bad} failed`);
