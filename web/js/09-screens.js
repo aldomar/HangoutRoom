@@ -27,6 +27,7 @@ function show(n){
   if(n==='room') stkDot();
   if(n!=='profiles') setTimeout(checkStickers,400); // new stickers (section 21)
   updateCoins();
+  if(typeof wakeLoop==='function') wakeLoop(); // the main loop runs only on game screens (section 99, v1.32)
 }
 
 /* ---------- profiles ---------- */
@@ -176,7 +177,8 @@ function endDrag(e){
   if(!drag) return;
   if(e.clientY>$('#decoPanel').getBoundingClientRect().top){drag.it.placed=false;SFX.whoosh();toast('Put away in My Stuff 📦');}
   else if(snapToShelf(drag.it)) SFX.pop();
-  drag=null; save(); $('#decoPanel').classList.remove('drop'); renderRoom(); renderDecoGrid();
+  const away=!drag.it.placed; drag=null; save(); $('#decoPanel').classList.remove('drop'); renderRoom();
+  if(away||decoTab==='mine') renderDecoGrid(); // the Shop and the other tabs don't change when a thing moves (v1.32, speed)
 }
 roomSvg.addEventListener('pointerup',endDrag);
 roomSvg.addEventListener('pointercancel',endDrag);
@@ -397,7 +399,15 @@ $('#closetTabs').onclick=e=>{const b=e.target.closest('[data-cat]');if(!b)return
 $('#closetGrid').onclick=e=>{
   const t=e.target.closest('.tile'); if(!t) return; const p=P(); const it=itemOf(closetCat,t.dataset.id);
   const equip=()=>{p.look[closetCat]=it.id;save();SFX.happy();const st=$('#closetGrid').scrollTop;renderCloset();$('#closetGrid').scrollTop=st;hopCloset();};
-  if(isOwned(p,closetCat,it)) equip(); else tryBuy(closetCat+':'+it.id,it.price,it.name,equip);
+  if(isOwned(p,closetCat,it)) closetWear(p,it); else tryBuy(closetCat+':'+it.id,it.price,it.name,equip);
+};
+// Wearing something she owns (v1.32, speed): every tile in this tab shows its own item in this slot, so no tile picture
+// changes. Only the big buddy, the ✔ outline and My Looks are redrawn, instead of the whole grid (much faster).
+function closetWear(p,it){
+  p.look[closetCat]=it.id; save(); SFX.happy();
+  $('#closetMascot').innerHTML=mascotSVG(p.look); renderLooks();
+  $$('#closetGrid .tile[data-id]').forEach(t=>t.classList.toggle('on',t.dataset.id===it.id));
+  hopCloset();
 };
 $('#randomBtn').onclick=()=>{
   const p=P();

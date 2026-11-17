@@ -280,8 +280,12 @@ in order). The speed check comes last on purpose: the app is fast enough today, 
   Stage song. Save version 20 (`speak`, `stats.snaps`; `settings.lastBackup` belongs to the device).
 - ✅ **🛋️ Room tweaks (v1.31, the owner's request):** on a phone the room's top bar is two rows (name + coins, then the
   buttons), so the name isn't squeezed; while decorating, the thing touched last comes to the front.
-- **⚡ Speed check & tidy-up (v1.32):** the smoke test slows the CPU 4–6× and times the rooms, the Shop, the Closet and the
+- ✅ **⚡ Speed check & tidy-up (v1.32):** the smoke test slows the CPU 4–6× and times the rooms, the Shop, the Closet and the
   Sticker Book; fix the slowest spots and write the numbers in STATUS. Split `09-screens.js` if it's needed.
+  As built: the biggest cost was a room doing nothing (the breathing buddy, the pet and moving decorations redrew the
+  whole room 60 times a second). Idle animations now step 5 times a second, all together (SVG `<animate>` became CSS),
+  and the main loop only runs on Soccer, the Stage and the Fidget Shelf. Wearing an owned item redraws only the buddy;
+  moving things doesn't rebuild the Shop. `09-screens.js` is 35 KB, so it was not split. Numbers are in STATUS.
 
 ### Phase 11: More games and content (ongoing)
 - **📚 Brain Games, part 2:** 🚂 Pattern Train (colours → shapes → number sequences), 🔤 Word Builder (first letters →

@@ -2145,6 +2145,62 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   check('tablet: the room bar is still one row', await ev(`(()=>{const t=document.querySelector('#roomTitle').getBoundingClientRect(),b=document.querySelector('#setBtn').getBoundingClientRect();return Math.abs(t.top+t.height/2-(b.top+b.height/2))<8;})()`));
 
+  console.log('Speed check (v1.32)');
+  // A busy test room: 30 things in each room, with every moving decoration, so the numbers are a worst case.
+  await ev(`(()=>{const p=P();p.easy=false;p.night={};const keys=Object.keys(DECOR).filter(k=>!DECOR[k].art&&!DECOR[k].award);
+    rooms(p).forEach((R,ri)=>{for(let i=0;i<30;i++){const k=i<4?['lava','lights','lightstick','speaker'][i]:keys[(i*7+ri*11)%keys.length];
+      R.items.push({uid:'sp'+ri+'_'+i,type:k,x:100+(i*29)%800,y:DECOR[k].wall?200:560,placed:true});}});save();show('room');goRoom(1);})()`); await sleep(300);
+  check('no decoration or room uses SVG <animate> (it redraws the whole room every frame)',
+    await ev(`Object.keys(DECOR).every(k=>!/<animate/.test(DECOR[k].d({})))&&!/<animate/.test(furniture()+loftFurniture()+yardFurniture())&&!roomSvg.querySelector('animate,animateTransform,animateMotion')`));
+  const idleAnims=`document.getAnimations().filter(a=>a.effect&&a.effect.getComputedTiming().iterations===Infinity&&a.effect.target&&roomSvg.contains(a.effect.target))`;
+  // (the separate rotate/scale/translate properties make Chrome redraw every frame even when stepped: use transform)
+  check('every endless animation in the room moves in steps (only a few redraws a second), with transform or opacity',
+    await ev(`(()=>{const A=${idleAnims};return A.length>=6&&A.every(a=>/^steps\\(/.test(getComputedStyle(a.effect.target).animationTimingFunction)
+      &&a.effect.getKeyframes().every(k=>!('rotate' in k||'scale' in k||'translate' in k)));})()`),
+    await ev(`${idleAnims}.map(a=>a.animationName+':'+getComputedStyle(a.effect.target).animationTimingFunction)`));
+  const blob=()=>ev(`getComputedStyle(roomSvg.querySelector('.an-lava1')).transform`);
+  const lava1=await blob(); await sleep(1000);
+  check('…and the lava lamp still bubbles', lava1!==await blob(), lava1);
+  check('Shop tiles stay still (no moving pictures in the grid)', await ev(`(enterDecorate(),decoTab='shop',renderDecoGrid(),!document.getAnimations().some(a=>document.querySelector('#decoGrid').contains(a.effect&&a.effect.target)))`));
+  await ev(`$('#decoGrid').firstElementChild.dataset.mark='1'`);
+  await ev(`dragDeco('sp0_5',420,520)`); await sleep(100);
+  check('moving a thing while the Shop is open does not rebuild the Shop', await ev(`$('#decoGrid').firstElementChild.dataset.mark==='1'&&Math.round(P().room.items.find(i=>i.uid==='sp0_5').x)===420`));
+  await ev(`exitDecorate()`); await sleep(100);
+  check('the main loop rests on the room screen', await ev(`loopOn===false`));
+  await ev(`show('soccer')`); await sleep(150);
+  check('…and runs again on a game screen', await ev(`loopOn===true`));
+  await ev(`show('room')`); await sleep(150);
+  check('…and rests again after it', await ev(`loopOn===false`));
+  await ev(`closetCat='top';show('closet')`); await sleep(150);
+  const wearId=await ev(`(()=>{const p=P();const it=CLOSET.top.items.find(i=>isOwned(p,'top',i)&&i.id!==p.look.top);return it&&it.id;})()`);
+  await ev(`$('#closetGrid').querySelector('.tile').dataset.mark='1';$('#closetGrid').querySelector('[data-id="${wearId}"]').click()`); await sleep(100);
+  check('wearing something you own only redraws the buddy (not every tile)', await ev(`P().look.top==='${wearId}'&&$('#closetGrid').querySelector('.tile').dataset.mark==='1'&&$('#closetGrid').querySelector('.tile.on').dataset.id==='${wearId}'&&$('#closetMascot').innerHTML===Object.assign(document.createElement('div'),{innerHTML:mascotSVG(P().look)}).innerHTML`));
+  await ev(`show('room')`);
+  // Timings with the CPU slowed 6× (about a modest tablet). Each is the middle of 5 tries, from the call to the next
+  // drawn frame. The limits are loose on purpose: they catch a big slowdown, not small changes between runs.
+  await send('Performance.enable'); await send('Emulation.setCPUThrottlingRate',{rate:6});
+  await ev(`window.__t=async f=>{const t=performance.now();f();await new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));return performance.now()-t;}`);
+  const timed=[['Room',`goRoom(1)`,`goRoom(2)`],['Loft',`goRoom(2)`,`goRoom(1)`],['Backyard',`goRoom(3)`,`goRoom(1)`],
+    ['Closet (open)',`show('closet')`,`show('room')`],['Closet (change tab)',`closetCat=closetCat==='top'?'legs':'top';renderCloset()`,`show('closet')`],
+    ['Closet (wear an item)',`$('#closetGrid').querySelector('.tile:not(.on):not(.locked)').click()`,`show('closet')`],
+    ['Shop (open Decorate)',`decoTab='shop';enterDecorate()`,`show('room');exitDecorate()`],['Shop (change tab)',`decoTab=decoTab==='shop'?'mine':'shop';renderDecoGrid()`,`show('room');if(!decorating)enterDecorate()`],
+    ['Sticker Book',`show('stickers')`,`exitDecorate();show('room')`]];
+  const speed=[];
+  for(const [name,run,setup] of timed){const ts=[];for(let i=0;i<5;i++){await ev(setup);await sleep(80);ts.push(await ev(`__t(()=>{${run}})`));}
+    ts.sort((a,b)=>a-b);speed.push([name,Math.round(ts[2])]);}
+  const busy=async setup=>{await ev(setup);await sleep(700);const m=async()=>(await send('Performance.getMetrics')).metrics.find(x=>x.name==='TaskDuration').value;
+    const a=await m();await sleep(2500);return Math.round((await m()-a)*1000/2.5);};
+  const idleRoom=await busy(`show('room');goRoom(1)`);
+  // what keeps the page busy, shown if the check below fails
+  const idleWhy=await ev(`({music:!!DB.settings.music,loop:loopOn,anims:document.getAnimations().filter(a=>a.playState==='running').map(a=>(a.animationName||a.constructor.name)+'@'+(a.effect&&a.effect.target?(a.effect.target.id||a.effect.target.getAttribute('class')||a.effect.target.tagName):'?'))})`);
+  const idleCloset=await busy(`show('closet')`);
+  await send('Emulation.setCPUThrottlingRate',{rate:1}); await ev(`show('room')`);
+  console.log('     CPU slowed 6×:'); speed.forEach(([n,t])=>console.log(`       ${n.padEnd(24)} ${t} ms`));
+  console.log(`       Room, doing nothing      ${idleRoom} ms of work per second`); console.log(`       Closet, doing nothing    ${idleCloset} ms of work per second`);
+  check('every screen above opens in under 1.5 s with the CPU slowed 6×', speed.every(([n,t])=>t<1500), speed);
+  check('a room doing nothing keeps the CPU mostly free (under 500 ms of work per second, slowed 6×)', idleRoom<500&&idleCloset<500, {idleRoom,idleCloset,idleWhy});
+  await ev(`(()=>{const p=P();rooms(p).forEach(R=>{R.items=R.items.filter(i=>!/^sp\\d_/.test(i.uid));});save();goRoom(1);})()`);
+
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');
   ws.close(); ch.kill(); setTimeout(()=>{try{fs.rmSync(prof,{recursive:true,force:true});}catch(e){} process.exit(bad||errors.length?1:0);},800);

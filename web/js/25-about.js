@@ -83,7 +83,10 @@ const GIFT_TIMELINE=[
           '💾 Grown-ups: Settings now shows when the last backup was']},
   {v:'1.31',d:'2026-11-17',i:'🛋️',n:'Room Tweaks',why:'So decorating does what you expect, and your name fits on a phone',
     news:['🛋️ Decorating: the thing you touch last comes to the front',
-          '📱 On a phone, your room name has its own row again']}
+          '📱 On a phone, your room name has its own row again']},
+  {v:'1.32',d:'2026-11-17',i:'⚡',n:'Speed Check',why:'So everything stays quick and the tablet stays cool',
+    news:['⚡ Rooms rest when nothing is happening, so the tablet stays cool',
+          '👗 Trying on clothes is quicker']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
