@@ -72,7 +72,11 @@ const GIFT_TIMELINE=[
   {v:'1.28',d:'2026-11-16',i:'🎁',n:'Gifts & Layouts',why:'So you can surprise each other, and keep your favourite room',
     news:['🎁 Give coins or a decoration to a brother or sister',
           '📦 A gift for you? Tap the wrapped box in your room!',
-          '🏠 Save your room layout in 🛋️ Decorate and put it back any time']}
+          '🏠 Save your room layout in 🛋️ Decorate and put it back any time']},
+  {v:'1.29',d:'2026-11-16',i:'⭐',n:'Shop Filters & Big Dreams',why:'To find your favourite things fast, and something big to save up for',
+    news:['🔎 Theme buttons in the Closet and the Shop: 🦇 ☁️ ⚽ 🎤 🦕 🚀 …',
+          '⭐ 5 big dreams to save up for: Canopy Bed, Arcade, Castle Bunk Bed, Rocket Playhouse, Aquarium',
+          '🌈 A new sticker: Dream Come True']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

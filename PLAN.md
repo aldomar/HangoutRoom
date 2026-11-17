@@ -266,10 +266,12 @@ in order). The speed check comes last on purpose: the app is fast enough today, 
   🏠 Save up to 3 layouts per room and load one later (things no longer owned are skipped). 2 stickers.
   As built (`32-gifts.js`): 🎁 from Settings or the top of My Stuff (what → who → ✔); the gift pile sits on the floor of
   every room; 🏠 Layouts is a new Decorate tab; things moved to another room come back when a layout loads. Save version 18.
-- **🔎 Shop filters + 💰 big dreams (v1.29):** theme chips above the Closet and the Shop (All · 🦇 Emo · ☁️ Cute · ⚽ Sport ·
+- ✅ **🔎 Shop filters + 💰 big dreams (v1.29):** theme chips above the Closet and the Shop (All · 🦇 Emo · ☁️ Cute · ⚽ Sport ·
   🎤 Stage · 🦕 Dino · 🚀 Space · 🚗 Ride · 🤖 Hero · 🌳 Outdoor · 🍂 Season); older items get their theme from a list in the
   new file, so no ids change. 5 "big dream" decorations at **60–100 coins** (Canopy Bed, Arcade Cabinet, Castle Bunk Bed,
   Rocket Playhouse, Aquarium), with a "⭐ Saving for…" bar. More dream items can come later. A sticker.
+  As built (`33-shopplus.js`): no 🍂 Season chip (seasonal things have their own tab, so it would be empty); a ⭐ Dreams
+  chip instead. Tapping a dream she can't afford offers "⭐ Save up for it?". Save version 19 (`dream`).
 - **🧑‍🔧 Grown-up helpers (v1.30), the only one that changes `android/`:** 💾 "Last backup: 12 days ago" in Settings
   (grown-up text only); 🔊 Read to me, a switch per room, **on by default in Easy mode** (owner's choice), off otherwise,
   using Android's built-in `TextToSpeech` through the wrapper (no new permission; the browser stays quiet);

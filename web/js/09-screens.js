@@ -211,7 +211,8 @@ function renderDecoGrid(){
     if(h===giveTile(p)) h+=`<div class="empty">Nothing stored right now! Drag things from your room down here to put them away, or get new stuff in the Shop 🛍️</div>`;
   } else if(decoTab==='shop'){ // seasonal things (v1.17) have their own tab
     const yd=([k,d])=>roomNo===3&&d.yard?0:1; // the Backyard lists outdoor things first (v1.23)
-    h=easySort(Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award&&!d.season).sort((a,b)=>yd(a)-yd(b)),([k,d])=>d.price).map(([k,d])=>`<button class="tile${poorCls(p,false,d.price)}" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div>${priceTag(p,d.price)}</button>`).join('');
+    const tf=themeFilter('shop',Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award&&!d.season).sort((a,b)=>yd(a)-yd(b)).map(([k,d])=>['decor:'+k,d])); // 🔎 theme chips + ⭐ dreams (section 33)
+    h=dreamBar(p)+tf.chips+easySort(tf.list.map(([k,d])=>[k.slice(6),d]),([k,d])=>d.price).map(([k,d])=>`<button class="tile${d.dream?' dream':''}${poorCls(p,false,d.price)}" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div>${priceTag(p,d.price)}</button>`).join('');
   } else if(decoTab==='season'){
     h=seasonGrid(p); // section 20
   } else if(decoTab==='layouts'){
@@ -243,8 +244,8 @@ $('#decoGrid').addEventListener('click',e=>{
     if(!R.items.includes(it)){rooms(p).forEach(r=>{r.items=r.items.filter(i=>i!==it);});R.items.push(it);} // moving it to this room
     Object.assign(it,spot(it.type),{placed:true});save();SFX.pop();renderRoom();renderDecoGrid();
   } else if(t.dataset.buy){
-    const k=t.dataset.buy, d=DECOR[k];
-    buyConsumable(d.price,d.name,()=>{curRoom(p).items.push(Object.assign({uid:uid(),type:k,placed:true},spot(k)));save();renderRoom();renderDecoGrid();toast(`${d.name} is in your room! Drag it anywhere ✨`);});
+    const k=t.dataset.buy, d=DECOR[k]; if(dreamTap(p,k)) return; // a big dream she can't afford yet (section 33)
+    buyConsumable(d.price,d.name,()=>{if(p.dream===k)p.dream='';curRoom(p).items.push(Object.assign({uid:uid(),type:k,placed:true},spot(k)));save();renderRoom();renderDecoGrid();toast(`${d.name} is in your room! Drag it anywhere ✨`);});
   } else if(t.dataset.surf){
     const isW=t.dataset.kind==='wall', k=t.dataset.surf, v=(isW?WALLS:FLOORS)[k];
     tryBuy((isW?'wall:':'floor:')+k,v.price,v.name,()=>{if(isW)curRoom(p).wall=k;else curRoom(p).floor=k;save();SFX.click();renderRoom();renderDecoGrid();});
@@ -372,7 +373,8 @@ function renderCloset(){
   renderLooks(); // ⭐ My Looks (section 31)
   $('#closetTabs').innerHTML=Object.entries(CLOSET).map(([k,c])=>`<button class="tab ${k===closetCat?'on':''}" data-cat="${k}">${c.icon} ${c.label}</button>`).join('');
   const C=CLOSET[closetCat];
-  $('#closetGrid').innerHTML=easySort(C.items,it=>isOwned(p,closetCat,it)?0:it.price).map(it=>{const own=isOwned(p,closetCat,it),on=p.look[closetCat]===it.id;
+  const tf=themeFilter('closet',C.items.map(it=>[closetCat+':'+it.id,it])); // 🔎 theme chips (section 33)
+  $('#closetGrid').innerHTML=tf.chips+easySort(tf.list.map(x=>x[1]),it=>isOwned(p,closetCat,it)?0:it.price).map(it=>{const own=isOwned(p,closetCat,it),on=p.look[closetCat]===it.id;
     return `<button class="tile ${on?'on':''} ${own?'':'locked'}${poorCls(p,own,it.price)}" data-id="${it.id}"><div class="tv">${mascotSVG(Object.assign({},p.look,{[closetCat]:it.id}),C.vb)}</div><div class="tn">${it.name}</div>${own?'':priceTag(p,it.price)}</button>`;}).join('');
   // Hair colours: a row of swatches above the styles (bought once, for every style)
   const hc=$('#hairCols'); hc.classList.toggle('hidden',closetCat!=='hair');

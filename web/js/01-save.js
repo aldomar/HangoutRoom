@@ -8,9 +8,9 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.28';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.29';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=18;          // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=19;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
 // pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
 const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:'',seenNew:''}; // seenNew (v1.22): last version whose What's New was shown
@@ -75,7 +75,9 @@ const MIGRATIONS={
   // v1.27 Looks + night mode: looks[4] (saved outfits, null = empty) and night {'1'|'2'|'3': true}. normalize() fills them in.
   17: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&!Array.isArray(p.looks)) p.looks=[null,null,null,null]; }); },
   // v1.28 Gifts + layouts: gifts[] (wrapped gifts waiting to be opened) and presets {'1'|'2'|'3': 3 saved layouts}. normalize() fills them in.
-  18: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&!Array.isArray(p.gifts)) p.gifts=[]; }); }
+  18: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&!Array.isArray(p.gifts)) p.gifts=[]; }); },
+  // v1.29 Big dreams: dream ('' or the DECOR key she is saving up for). normalize() fills it in too.
+  19: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&typeof p.dream!=='string') p.dream=''; }); }
 };
 
 // Hair ids from before v1.11 (one closet item per colour) -> the colour they had. They stay readable forever:

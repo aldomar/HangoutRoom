@@ -50,6 +50,7 @@ function normalize(p){
   p.gifts=(Array.isArray(p.gifts)?p.gifts:[]).filter(g=>g&&typeof g==='object'&&typeof g.id==='string'&&(g.kind==='coins'&&Number(g.n)>0||g.kind==='decor'&&typeof g.type==='string')).map(g=>Object.assign(g,{from:String(g.from||'').slice(0,24),badge:typeof g.badge==='string'?g.badge:'🎁'},g.kind==='coins'?{n:Math.min(100,Math.floor(Number(g.n)))}:{}));
   const pr=p.presets&&typeof p.presets==='object'&&!Array.isArray(p.presets)?p.presets:{}, lay=L=>L&&typeof L==='object'&&typeof L.wall==='string'&&typeof L.floor==='string'&&Array.isArray(L.items)?Object.assign(L,{items:L.items.filter(i=>i&&typeof i.uid==='string'&&typeof i.type==='string').map(i=>({uid:i.uid,type:i.type,x:Number(i.x)||0,y:Number(i.y)||0}))}):null;
   p.presets={1:0,2:0,3:0}; Object.keys(p.presets).forEach(k=>{const a=Array.isArray(pr[k])?pr[k]:[];p.presets[k]=[0,1,2].map(i=>lay(a[i]));});
+  if(typeof p.dream!=='string') p.dream=''; // v1.29: the big dream she is saving up for (a DECOR key, or '')
   p.night=Object.fromEntries(Object.entries(p.night&&typeof p.night==='object'&&!Array.isArray(p.night)?p.night:{}).filter(([k,v])=>['1','2','3'].includes(k)&&v===true));
   // Photocards (v1.4). A card: {id, no, at, look, stage, frame, title, name, s:[cute,spooky,sporty], bonus?}
   p.cards=Array.isArray(p.cards)?p.cards.filter(c=>c&&typeof c==='object'&&typeof c.id==='string'):[];
