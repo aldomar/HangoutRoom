@@ -56,7 +56,7 @@ _Last updated: 2026-11-17_
   Extras (v1.37) → Music Maker (v1.38).
   - **🚂 Pattern Train & 🔤 Word Builder: built, PR #33 open as v1.33** on branch `feature/brain2` (from `main` after #32).
     It also makes bonus photocards undeletable (the owner's request, 2026-11-17). **Merged** (PR #33); the owner checked it.
-  - **🍕 Fraction Bakery & 🪐 Fact Cards: built, PR open as v1.34** on branch `feature/brain3` (from `main` after #33).
+  - **🍕 Fraction Bakery & 🪐 Fact Cards: built, PR #34 open as v1.34** on branch `feature/brain3` (from `main` after #33).
   - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -100,7 +100,7 @@ _Last updated: 2026-11-17_
 - PR #31 "Room tweaks (v1.31)": merged.
 - PR #32 "Speed check (v1.32)": merged.
 - PR #33 "Pattern Train & Word Builder (v1.33)": merged.
-- PR "Fraction Bakery & Fact Cards (v1.34)" on branch `feature/brain3` (from `main` after #33): open.
+- PR #34 "Fraction Bakery & Fact Cards (v1.34)" on branch `feature/brain3` (from `main` after #33): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -960,7 +960,7 @@ _Last updated: 2026-11-17_
 ## Next steps (Phase 11)
 1. ~~Build 🚂 Pattern Train & 🔤 Word Builder (v1.33) on `feature/brain2`.~~ Built (PR #33).
 2. ~~Owner: build v1.33, try the two new games (see the PR), and merge it.~~ Merged.
-3. ~~Build 🍕 Fraction Bakery & 🪐 Fact Cards (v1.34) on `feature/brain3`.~~ Built (PR open).
+3. ~~Build 🍕 Fraction Bakery & 🪐 Fact Cards (v1.34) on `feature/brain3`.~~ Built (PR #34).
 4. Owner: build v1.34, try the two new games and the 📇 binder (see the PR), and merge it.
 5. Build 🎀 Content Pack 3 (v1.35).
 
