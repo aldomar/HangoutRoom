@@ -879,6 +879,9 @@ _Last updated: 2026-11-17_
   long-neck dinosaur in golden crumbs (no brand or packaging), drawn once by `p4Nug()` and reused by the plush, the tee
   and (in canvas) the squishy. The plush needed no new shelf code: any standing decoration snaps onto a shelf, and it is
   about 125 wide, so it fits the Little Shelf (160). Big Adventures needs 5 (ride + space), a step up from Pack 2's 3.
+  Also (owner's request): the 🚀 rocket picture used by Rocket Goo and the Rocket spinner (`FID_ICONS.rocket`, section 24)
+  was redrawn: a rounder nose, slanted fins, a porthole and an orange flame under a narrow nozzle, in place of the flat
+  bottom that looked odd. The 🚀 Rocket pop-it board shape was not changed.
   No save version change.
 - **Content Pack 3 (built as v1.35, `37-pack3.js`):** themes are a new field `p3` ('stage' 'cozy' 'cafe' 'ocean'), not `p2`,
   so Pack 2's checks and stickers stay the same; `themesOf()` reads it. 🎤 Stage reuses the existing chip; 🍵 Cozy,

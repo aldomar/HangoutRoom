@@ -114,6 +114,7 @@ More things to buy with coins (10–40 each), open to everyone.
 - A new 🐮 Farm chip in the Closet and the Shop.
 - 4 new stickers on the **Room & Style** page: 🏀 All-Star (3 sport things; soccer things count too), 🐮 Farm Friend,
   🚒 Big Adventures (5 truck, car or space things) and 🦖 Nugget Buddy (the plush and the squishy).
+- The little rockets in 🚀 Rocket Goo and on the Rocket spinner were redrawn: they now blast off with a flame.
 
 ## Content Pack 3 (since version 1.35)
 Lots of new things to buy with coins (10–40 each). Everything is open to everyone.
