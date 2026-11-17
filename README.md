@@ -75,6 +75,19 @@ jump to any puzzle, and solved ones turn green.
 - 4 new stickers on the Sticker Book's **Code & Brain** page: 🧁 Snack Shop, 🃏 Sharp Memory, 🫧 Number Popper (8 puzzles
   each) and 🎓 Brain Champ (every level of all 3 games).
 
+## Pattern Train and Word Builder (since version 1.33)
+Two more Brain Games at the Backyard chalkboard (5 in all), with the same 🐣 / 🌟 / 🧠 levels, 8 puzzles each and coins.
+- 🚂 **Pattern Train:** a little train whose wagons follow a pattern, with one ❓ wagon. Pick the wagon that fits:
+  colours (Easy), shapes, where later the colour counts too (Medium), or number sequences like 2, 4, 6, 8 … (Hard).
+  On Hard, a wrong answer shows a 💡 hint ("Each wagon is 2 more.").
+- 🔤 **Word Builder:** tap the first letter of the picture (Easy), tap letters in order to build a 3-letter word with
+  faint letters to help (Medium), or spell a bigger word from the picture (Hard). There are a few extra letters to make
+  it tricky. With 🔊 Read to me on, tapping the picture or a letter says it out loud, and so does a 🔊 button.
+- 2 new stickers on the **Code & Brain** page: 🚂 Pattern Pro and 🔤 Word Wizard (8 puzzles each). 🎓 Brain Champ still
+  means every level of the first 3 games, so nobody loses progress towards it.
+- **Bonus photocards can't be deleted any more.** They are won only once, so a deleted one could never come back.
+  The binder no longer shows 🗑️ Delete on them (cards you made can still be deleted).
+
 ## Stage song pack (since version 1.26)
 - The 🎤 Stage now has **8 songs** (it had 3). Like the first ones, every new song is made by code inside the app:
   no recordings, and nothing copied from real songs.

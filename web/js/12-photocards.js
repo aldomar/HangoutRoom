@@ -204,9 +204,9 @@ $('#binderGrid').onclick=e=>{const b=e.target.closest('[data-card]');if(!b)retur
 
 function cardModal(c,isNew){
   const p=P(), pinned=p.cardPins.includes(c.id), no=String(c.no).padStart(3,'0');
-  const btns=[{text:pinned?'Unpin':'📌 Pin to wall',cls:pinned?'ghost':'pink',on:()=>togglePin(c)},{text:'🗑️ Delete',cls:'ghost',on:()=>delCard(c)},{text:'📷 Save picture',cls:'ghost',keep:true,on:()=>snapCard(c)}]; // section 34
+  const btns=[{text:pinned?'Unpin':'📌 Pin to wall',cls:pinned?'ghost':'pink',on:()=>togglePin(c)},c.bonus?null:{text:'🗑️ Delete',cls:'ghost',on:()=>delCard(c)},{text:'📷 Save picture',cls:'ghost',keep:true,on:()=>snapCard(c)}]; // section 34
   btns.push(isNew?{text:'Make another',cls:'ghost'}:{text:'Close',cls:'ghost'});
-  modal(isNew?`📸 Card #${no} is in your binder!`:`Card #${no}`,`<div class="card-modal">${cardSVG(c)}</div>`,btns);
+  modal(isNew?`📸 Card #${no} is in your binder!`:`Card #${no}`,`<div class="card-modal">${cardSVG(c)}</div>`,btns.filter(Boolean)); // bonus cards are won once: no Delete (v1.33)
 }
 function togglePin(c){
   const p=P(), i=p.cardPins.indexOf(c.id);
@@ -219,6 +219,7 @@ function togglePin(c){
   save(); SFX.pop(); if(cur==='cards'&&CARD.view==='binder') renderBinder();
 }
 function delCard(c){
+  if(c.bonus){toast('Bonus cards stay in your binder for good ⭐');return;}
   modal(`Delete card #${String(c.no).padStart(3,'0')}?`,'It will be gone for good.',[{text:'Keep it',cls:'pink'},{text:'Delete',cls:'ghost',on:()=>{
     const p=P(); p.cards=p.cards.filter(x=>x.id!==c.id); p.cardPins=p.cardPins.filter(id=>id!==c.id);
     save(); SFX.whoosh(); toast('Card deleted'); if(cur==='cards'&&CARD.view==='binder') renderBinder();}}]);

@@ -139,5 +139,5 @@ STICKERS.push(
   stk('snack8','code','🧁','Snack Shop','circle','Solve 8 Snack Stand puzzles (📚 Brain Games)',8,p=>brCount(p,'snack')),
   stk('memory8','code','🃏','Sharp Memory','heart','Solve 8 Memory Match puzzles',8,p=>brCount(p,'memory')),
   stk('pop8','code','🫧','Number Popper','cloud','Solve 8 Number Pop puzzles',8,p=>brCount(p,'pop')),
-  stk('brainChamp','code','🎓','Brain Champ','star','Solve every level of all 3 Brain Games',9,p=>Object.keys(BRAIN_GAMES).reduce((a,g)=>a+BRAIN_LVLS.filter(l=>brLevelDone(p,g,l)).length,0))
+  stk('brainChamp','code','🎓','Brain Champ','star','Solve every level of all 3 Brain Games',9,p=>['snack','memory','pop'].reduce((a,g)=>a+BRAIN_LVLS.filter(l=>brLevelDone(p,g,l)).length,0))
 );

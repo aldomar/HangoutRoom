@@ -1,6 +1,6 @@
 # Status / handover
 
-_Last updated: 2026-11-16_
+_Last updated: 2026-11-17_
 
 ## Where we are
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
@@ -50,6 +50,12 @@ _Last updated: 2026-11-16_
     It also fixes a night-mode bug the owner found: the 🌙 window sky (and the wall glow stars) were drawn on top of
     everything, hiding the Loft window's bars and covering decorations. They are now drawn by `nightBack()` right after
     the furniture, and the dark layer lets moonlight through the windows. The Backyard's night sky is unchanged.
+- **Phase 10: done** (PR #32 merged 2026-11-17).
+- **Phase 11 (More games and content): detailed plan agreed 2026-11-17** (six PRs, stacked; see "Phase 11 plan" under
+  Decisions and `PLAN.md`): Brain 2a (v1.33) → Brain 2b (v1.34) → Content Pack 3 (v1.35) → Content Pack 4 (v1.36) →
+  Extras (v1.37) → Music Maker (v1.38).
+  - **🚂 Pattern Train & 🔤 Word Builder: built, PR #33 open as v1.33** on branch `feature/brain2` (from `main` after #32).
+    It also makes bonus photocards undeletable (the owner's request, 2026-11-17).
   - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -91,7 +97,8 @@ _Last updated: 2026-11-16_
 - PR #29 "Shop filters & big dreams (v1.29)": merged.
 - PR #30 "Grown-up helpers (v1.30)": merged.
 - PR #31 "Room tweaks (v1.31)": merged.
-- PR #32 "Speed check (v1.32)" on branch `feature/speed` (from `main` after #31): open.
+- PR #32 "Speed check (v1.32)": merged.
+- PR #33 "Pattern Train & Word Builder (v1.33)" on branch `feature/brain2` (from `main` after #32): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -468,6 +475,16 @@ _Last updated: 2026-11-16_
   Not tested automatically: how the stepped movements look on the tablet (the buddy and pet move only 2–6 px, so they
   should look the same; the lava blobs and speaker notes now hop about 4 px at a time, which may look a little less
   smooth) and how warm the tablet gets.
+- **Pattern Train & Word Builder (v1.33):** `tests/smoke-test.js` has 914 checks, all passing, no console errors. New checks:
+  every wagon code is a known colour/shape/number with one ❓; on Easy and Medium only the answer makes the train repeat
+  (the pattern shows at least twice); the Hard answers and hints; Word Builder letters, word lengths, pictures and tiles
+  (the same order every time, every letter there); playing Easy/Medium/Hard of both games (wrong tries wobble, right
+  ones pay +2); SOCCER with two Cs; phone fit; the 2 stickers; Brain Champ still counts only the first 3 games; saved
+  levels for the new games kept and odd ones made safe; a bonus photocard has no Delete and `delCard` refuses it.
+  The early Art Desk "draft survives" check crashed once because the page reloaded slower than its 1.5 s wait (busy PC);
+  the next full run passed.
+  Not tested automatically: Read to me saying the words on the tablet (the browser has no voice), and how small the
+  8-wagon trains look on a real phone (they fit; the choice wagons are big).
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -814,6 +831,16 @@ _Last updated: 2026-11-16_
   Stand), cards (Memory) or floating bubbles (Number Pop). Medium Number Pop does pairs that make 10, then 20. Memory
   pictures: her buddy, the 5 buddies in her outfit, the 4 pets and room things. The Sticker Book's Code Lab page is now
   called "Code & Brain" and holds the 4 new stickers (Brain Champ needs all 9 levels).
+- **Phase 11 plan (agreed 2026-11-17):** six PRs in the order of `PLAN.md`, stacked. Owner's answers: games first
+  (Brain 2a → 2b → Pack 3 → Pack 4 → Extras → Music Maker); include the Music Maker, last; Fact Cards get their own 🪐 binder.
+- **Bonus photocards can't be deleted (v1.33, owner's request):** they are won once (`bonusGot`), so a deleted one was
+  gone for good. `cardModal` leaves out 🗑️ Delete for a card with `bonus`, and `delCard` refuses one.
+- **Pattern Train & Word Builder (built as v1.33, `35-brain3.js`):** game ids `train` and `word` (puzzle ids `train:e1`…,
+  `word:e1`…); `normalize()` knows the 5 game ids. Wagons are short codes (Easy colour `r`, Medium shape+colour `Sy`,
+  Hard numbers); the train is drawn once in SVG (no loop) and the engine is at the front. Word pictures are an emoji or one
+  of their own room things/buddies (`memPic`); emoji newer than Android 8 were avoided. Medium shows faint letters in the
+  slots; Hard does not. Brain Champ was changed to count only `snack memory pop`, so it keeps meaning "all 3 games".
+  No save version change.
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -912,12 +939,17 @@ _Last updated: 2026-11-16_
 6. ~~Build ⚡ Speed check & tidy-up (v1.32), the last Phase 10 PR.~~ Built (PR #32).
 7. Owner: build v1.32 and check that the room still feels alive (buddy breathing, lava lamp, fairy lights, speaker
    notes, gift wiggle) and that the tablet stays cooler; then merge it. That finishes Phase 10.
-8. Plan Phase 11 (more games and content, see `PLAN.md`) in detail and get it agreed before building.
+8. ~~Plan Phase 11 (more games and content, see `PLAN.md`) in detail and get it agreed before building.~~ Agreed 2026-11-17.
+
+## Next steps (Phase 11)
+1. ~~Build 🚂 Pattern Train & 🔤 Word Builder (v1.33) on `feature/brain2`.~~ Built (PR #33).
+2. Owner: build v1.33, try the two new games (see the PR), and merge it.
+3. Build 🍕 Fraction Bakery & 🪐 Fact Cards (v1.34) on `feature/brain3` (on top of `feature/brain2`).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 20 since v1.30 (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 20 since v1.30 (v1.33 added game ids only, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

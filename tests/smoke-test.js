@@ -231,6 +231,11 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('backup brings cards and pins back', (await ev('DB.profiles[0].cards.length'))===nCards && (await ev('DB.profiles[0].cardPins.length'))===2);
   await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal()`);
   check('no repeat bonus after restore', (await ev(`P().cards.filter(c=>c.bonus).length`))===3);
+  await ev(`cardModal(P().cards.find(c=>c.bonus))`);
+  check('a bonus card has no Delete button (it can never be won again, v1.33)', await ev(`![...document.querySelectorAll('#modalBtns button')].some(b=>b.textContent.includes('Delete'))`));
+  await ev(`closeModal();delCard(P().cards.find(c=>c.bonus))`);
+  check('…and delCard leaves it alone', await ev(`P().cards.filter(c=>c.bonus).length===3&&!document.querySelector('#modalTitle').textContent.includes('Delete')`));
+  await ev(`closeModal()`);
 
   console.log('Soccer Field');
   // The keeper guesses with Math.random. 0.99 = "guess a side, the right one" (dives to u=+0.32), so tests are repeatable.
@@ -1083,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('72 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30), ids all different, 6 or more per page', await ev(`STICKERS.length===72&&new Set(STICKERS.map(s=>s.id)).size===72&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('74 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33), ids all different, 6 or more per page', await ev(`STICKERS.length===74&&new Set(STICKERS.map(s=>s.id)).size===74&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1669,9 +1674,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();P().coins=100;save();show('room');goRoom(3)`); await sleep(250);
   check('the Backyard chalkboard is now a hotspot', await ev(`!!document.querySelector('#roomSvg [data-hot=brain][data-piece=easel]')`));
   await ev(`handleHot('brain')`); await sleep(300); await shot('H01-brain-menu');
-  check('it opens the Brain Games menu with 3 games, 0 / 24 each', await ev(`cur==='brain'&&BR.view==='menu'&&[...document.querySelectorAll('#brMenu [data-game]')].map(b=>b.dataset.game).join()==='snack,memory,pop'&&[...document.querySelectorAll('#brMenu .br-n')].every(n=>n.textContent.includes('0 / 24'))`));
+  check('it opens the Brain Games menu with 5 games (2 more since v1.33), 0 / 24 each', await ev(`cur==='brain'&&BR.view==='menu'&&[...document.querySelectorAll('#brMenu [data-game]')].map(b=>b.dataset.game).join()==='snack,memory,pop,train,word'&&[...document.querySelectorAll('#brMenu .br-n')].every(n=>n.textContent.includes('0 / 24'))`));
   // the puzzle recipes
-  check('every game has 8 puzzles on each level, with different ids', await ev(`Object.keys(BRAIN_GAMES).every(g=>BRAIN_LVLS.every(l=>BRAIN_GAMES[g].puzzles[l].length===8))&&new Set(Object.keys(BRAIN_GAMES).flatMap(g=>BRAIN_LVLS.flatMap(l=>BRAIN_GAMES[g].puzzles[l].map((z,i)=>brId(g,l,i))))).size===72`));
+  check('every game has 8 puzzles on each level, with different ids', await ev(`Object.keys(BRAIN_GAMES).every(g=>BRAIN_LVLS.every(l=>BRAIN_GAMES[g].puzzles[l].length===8))&&new Set(Object.keys(BRAIN_GAMES).flatMap(g=>BRAIN_LVLS.flatMap(l=>BRAIN_GAMES[g].puzzles[l].map((z,i)=>brId(g,l,i))))).size===120`));
   check('Snack Stand: every answer is one of the choices; choices are different whole numbers (3 on Easy, 4 after)', await ev(`BRAIN_LVLS.every(l=>BRAIN_GAMES.snack.puzzles[l].every((z,i)=>{const o=BRAIN_GAMES.snack.options(z,l,i),a=BRAIN_GAMES.snack.answer(z,l);return o.includes(a)&&new Set(o).size===o.length&&o.every(n=>Number.isInteger(n)&&n>=1)&&o.length===(l==='easy'?3:4);}))`));
   check('Snack Stand: Easy counts up to 10; the answer is not always in the same place', await ev(`BRAIN_GAMES.snack.puzzles.easy.every(z=>z.n>=1&&z.n<=10)&&BRAIN_LVLS.every(l=>new Set(BRAIN_GAMES.snack.puzzles[l].map((z,i)=>BRAIN_GAMES.snack.options(z,l,i).indexOf(BRAIN_GAMES.snack.answer(z,l)))).size>=2)`));
   check('Snack Stand: the Hard answers are right (boxes, change, prices)', await ev(`BRAIN_GAMES.snack.puzzles.hard.map(z=>z.a).join()==='18,7,28,14,48,19,63,6'`));
@@ -1768,7 +1773,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const bv24=await ev(`JSON.stringify(Object.assign({},DB,{version:15,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.brain;return q;})}))`);
   const bv25=await ev(`JSON.stringify(DB)`);
   await ev(`doRestore(${JSON.stringify(bv24)})`); await sleep(300);
-  check('a v1.24 backup restores with Brain Games at the start (save version 16 or later)', await ev(`DB_VERSION>=16&&DB.version===DB_VERSION&&DB.profiles.every(p=>p.brain&&p.brain.game==='snack'&&p.brain.solved.length===0&&Object.values(p.brain.level).join()==='easy,easy,easy')`));
+  check('a v1.24 backup restores with Brain Games at the start (save version 16 or later)', await ev(`DB_VERSION>=16&&DB.version===DB_VERSION&&DB.profiles.every(p=>p.brain&&p.brain.game==='snack'&&p.brain.solved.length===0&&Object.values(p.brain.level).every(l=>l==='easy')&&Object.keys(p.brain.level).length===Object.keys(BRAIN_GAMES).length)`));
   await ev(`doRestore(${JSON.stringify(bv25)})`); await sleep(300);
   check('a v1.25 backup keeps the puzzles solved and the levels', await ev(`(()=>{const p=DB.profiles.find(p=>p.brain.solved.length);return p&&p.brain.solved.length===12&&p.brain.solved.includes('pop:h1')&&p.brain.level.memory==='hard';})()`));
   await ev(`closeModal();{const p=DB.profiles[0];p.brain={game:'chess',level:{snack:'super',pop:7},solved:['snack:e1','snack:e1',5]};normalize(p);}`);
@@ -2098,7 +2103,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('📷 saves the room as a PNG picture through the wrapper', !!img&&img.head==='iVBORw0K'&&img.len>20000&&/^hangout-.+-room-\d{4}-\d\d-\d\d\.png$/.test(img.n), img&&[img.n,img.len,img.head]);
   check('the picture really shows the room (not blank), 1500 × 1050', await ev(`new Promise(r=>{const i=new Image();i.onload=()=>{const c=document.createElement('canvas');c.width=i.width;c.height=i.height;const g=c.getContext('2d');g.drawImage(i,0,0);const d=g.getImageData(750,200,1,1).data,w=g.getImageData(30,30,1,1).data;r(i.width===1500&&i.height===1050&&!(d[0]===35&&d[1]===27&&d[2]===46)&&!(w[0]===35&&w[1]===27&&w[2]===46));};i.onerror=()=>r(false);i.src='data:image/png;base64,'+window._img.b;})`));
   fs.writeFileSync(OUT+'/I02-room-snapshot.png',Buffer.from(await ev(`window._img.b`),'base64')); // the saved picture itself
-  check('Say Cheese! is earned', await ev(`P().stats.snaps===1&&stkDone(P(),STICKERS.find(s=>s.id==='snap1'))&&STICKERS[STICKERS.length-1].id==='snap1'&&STICKERS[STICKERS.length-1].page==='art'`));
+  check('Say Cheese! is earned', await ev(`P().stats.snaps===1&&stkDone(P(),STICKERS.find(s=>s.id==='snap1'))&&STICKERS[71].id==='snap1'&&STICKERS[71].page==='art'`));
   await ev(`window._img=null;{const p=P();if(!p.cards.length){p.cards.push({id:'tc1',no:1,at:Date.now(),look:Object.assign({},p.look),stage:'spot',frame:'sparkle',title:'',name:'Fuzzy'});}cardModal(p.cards[0]);}`); await sleep(100);
   check('a photocard has 📷 Save picture', await ev(`[...document.querySelectorAll('#modalBtns .btn')].some(b=>b.textContent.includes('Save picture'))`));
   await ev(`[...document.querySelectorAll('#modalBtns .btn')].find(b=>b.textContent.includes('Save picture')).click()`); for(let i=0;i<40&&!(await ev(`!!window._img`));i++) await sleep(100);
@@ -2200,6 +2205,66 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('every screen above opens in under 1.5 s with the CPU slowed 6×', speed.every(([n,t])=>t<1500), speed);
   check('a room doing nothing keeps the CPU mostly free (under 500 ms of work per second, slowed 6×)', idleRoom<500&&idleCloset<500, {idleRoom,idleCloset,idleWhy});
   await ev(`(()=>{const p=P();rooms(p).forEach(R=>{R.items=R.items.filter(i=>!/^sp\\d_/.test(i.uid));});save();goRoom(1);})()`);
+
+  console.log('Pattern Train + Word Builder (v1.33)');
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  await ev(`P().easy=false;applyEasy();show('brain')`); await sleep(200);
+  check('Pattern Train: every wagon is a known colour / shape / number, one ❓ per train, the answer is a choice, choices are different',
+    await ev(`BRAIN_LVLS.every(l=>TR_PUZ[l].every(z=>{const q=trList(z.s),o=trList(z.o);const ok=t=>l==='easy'?!!TR_COLORS[t]:l==='medium'?t.length===2&&!!TR_SHAPES[t[0]]&&!!TR_COLORS[t[1]]:/^\\d+$/.test(t);
+      return q.filter(t=>t==='?').length===1&&q.every(t=>t==='?'||ok(t))&&o.every(ok)&&o.includes(z.a)&&new Set(o).size===o.length&&o.length>=3;}))`));
+  check('Pattern Train: on Easy and Medium only the answer makes the train repeat', await ev(`['easy','medium'].every(l=>TR_PUZ[l].every(z=>{const q=trList(z.s);
+    const per=a=>{const f=q.map(t=>t==='?'?a:t);for(let p=1;p<=f.length/2;p++)if(f.every((t,i)=>i<p||t===f[i-p]))return p;return 0;};
+    return per(z.a)>0&&trList(z.o).filter(a=>a!==z.a).every(a=>!per(a));}))`));
+  check('Pattern Train: the Hard answers are right, 4 choices each, each has a hint', await ev(`TR_PUZ.hard.map(z=>z.a).join()==='10,10,18,32,36,18,13,6'&&TR_PUZ.hard.every(z=>z.h&&trList(z.o).length===4)`));
+  check('Word Builder: Easy shows the first letter among 3; Medium words have 3 letters; Hard 5 or more; every picture draws',
+    await ev(`WB_PUZ.easy.every(z=>{const o=trList(z.o);return o.length===3&&new Set(o).size===3&&o.includes(z.w[0]);})&&WB_PUZ.medium.every(z=>z.w.length===3)&&WB_PUZ.hard.every(z=>z.w.length>=5)
+      &&BRAIN_LVLS.every(l=>WB_PUZ[l].every(z=>/^[A-Z]+$/.test(z.w)&&wbPic(z.pic).length>(/^[a-z]:/.test(z.pic)?80:20)))`));
+  check('Word Builder: the tiles hold every letter of the word plus the extras, the same order every time',
+    await ev(`['medium','hard'].every(l=>WB_PUZ[l].every((z,i)=>{const t=wbTiles(z,l,i);return t.join()===wbTiles(z,l,i).join()&&t.length===z.w.length+z.x.length&&[...z.w].every(c=>t.filter(x=>x===c).length>=[...z.w].filter(x=>x===c).length);}))`));
+  // play Pattern Train Easy 1: a wrong wagon, then the right one
+  await ev(`document.querySelector('#brMenu [data-game=train]').click()`); await sleep(200);
+  const tc0=await ev('P().coins');
+  check('Pattern Train opens on Easy puzzle 1 with a train and 3 wagons to pick', await ev(`BR.game==='train'&&BR.lvl==='easy'&&BR.idx===0&&!!document.querySelector('#brQ .tr-train')&&document.querySelectorAll('#brBoard .tr-ch').length===3&&document.querySelector('.tr-ch[data-t=b]').getAttribute('aria-label')==='blue'`));
+  await shot('K01-pattern-train-easy');
+  await ev(`document.querySelector('.tr-ch[data-t=y]').click()`); await sleep(100);
+  check('a wrong wagon only wobbles', await ev(`!BR.won&&!P().brain.solved.includes('train:e1')`));
+  await ev(`document.querySelector('.tr-ch[data-t=b]').click()`); await sleep(150);
+  check('the right wagon solves it (+2) and fills the gap', await ev(`BR.won&&P().brain.solved.includes('train:e1')&&P().coins===${tc0+2}&&!document.querySelector('#brQ .tr-train').textContent.includes('?')`));
+  await ev(`closeModal();brPuzzle('train','medium',6)`); await sleep(150); await shot('K02-pattern-train-medium');
+  await ev(`brPuzzle('train','hard',3)`); await sleep(150);
+  await ev(`document.querySelector('.br-ch[data-t="24"]').click()`); await sleep(100);
+  check('Hard: a wrong number shows a hint', await ev(`document.querySelector('#brMsg').textContent.includes('double')`));
+  await shot('K03-pattern-train-hard');
+  // Word Builder
+  await ev(`show('brain');document.querySelector('#brMenu [data-game=word]').click()`); await sleep(200);
+  const wc0=await ev('P().coins');
+  check('Word Builder opens on Easy: a picture and 3 letters', await ev(`BR.game==='word'&&BR.lvl==='easy'&&document.querySelectorAll('#brBoard .wb-tile').length===3&&document.querySelector('#brQ .wb-pic').getAttribute('aria-label')==='apple'`));
+  await shot('K04-word-easy');
+  await ev(`document.querySelector('.wb-tile[data-c=M]').click()`); await sleep(80);
+  await ev(`document.querySelector('.wb-tile[data-c=A]').click()`); await sleep(150);
+  check('the first letter solves it (+2) and shows the word', await ev(`BR.won&&P().brain.solved.includes('word:e1')&&P().coins===${wc0+2}&&document.querySelector('.wb-word').textContent==='Apple'`));
+  await ev(`closeModal();brPuzzle('word','medium',0)`); await sleep(150);
+  check('Medium: 3 slots and 5 tiles', await ev(`document.querySelectorAll('.wb-slot').length===3&&document.querySelectorAll('.wb-tile').length===5`));
+  await ev(`document.querySelector('.wb-tile[data-c=A]').click()`); await sleep(80);
+  check('a letter out of order wobbles and fills nothing', await ev(`WB.got===0&&!document.querySelector('.wb-slot.on')`));
+  for(const c of 'CAT'){await ev(`document.querySelector('.wb-tile[data-c=${c}]:not(.used)').click()`); await sleep(60);}
+  check('C-A-T spells it and solves it', await ev(`BR.won&&P().brain.solved.includes('word:m1')&&[...document.querySelectorAll('.wb-slot')].map(x=>x.textContent).join('')==='CAT'`));
+  await shot('K05-word-medium');
+  await ev(`closeModal();brPuzzle('word','hard',5)`); await sleep(150);
+  for(const c of 'SOCCER'){await ev(`document.querySelector('.wb-tile[data-c=${c}]:not(.used)').click()`); await sleep(60);}
+  check('Hard: SOCCER (two Cs) spells and solves', await ev(`BR.won&&P().brain.solved.includes('word:h6')`));
+  await ev(`closeModal();brPuzzle('word','hard',7)`); await sleep(150); await shot('K06-word-hard');
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
+  await ev(`brPuzzle('train','easy',7)`); await sleep(200); await shot('K07-phone-train');
+  check('phone: the train fits the screen', await ev(`document.querySelector('#brQ .tr-train').getBoundingClientRect().right<=innerWidth`));
+  await ev(`brPuzzle('word','hard',7)`); await sleep(200); await shot('K08-phone-word');
+  check('phone: no tile spills off the screen', await ev(`[...document.querySelectorAll('.wb-tile')].every(b=>b.getBoundingClientRect().right<=innerWidth)`));
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  check('2 new stickers at the end of the Code & Brain page', await ev(`STICKERS.slice(-2).map(s=>s.id+':'+s.page).join()==='train8:code,word8:code'`));
+  check('Brain Champ still counts only the first 3 games', await ev(`(()=>{const p=JSON.parse(JSON.stringify(P()));p.brain.solved=[];BRAIN_LVLS.forEach(l=>['train','word'].forEach(g=>BRAIN_GAMES[g].puzzles[l].forEach((z,i)=>p.brain.solved.push(brId(g,l,i)))));return stkHave(p,STICKERS.find(s=>s.id==='brainChamp'))===0;})()`));
+  await ev(`{const p=DB.profiles[0];p.brain={game:'word',level:{snack:'hard',train:'medium',word:'nope'},solved:['word:e1']};normalize(p);}`);
+  check('saved game and levels for the new games are kept; odd ones are made safe', await ev(`(()=>{const b=DB.profiles[0].brain;return b.game==='word'&&b.level.train==='medium'&&b.level.word==='easy'&&b.level.snack==='hard';})()`));
+  await ev(`show('room')`);
 
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');
