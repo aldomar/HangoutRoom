@@ -278,7 +278,9 @@ in order). The speed check comes last on purpose: the app is fast enough today, 
   📷 Room snapshot, a PNG of a room or a photocard saved with Android's save picker (`AndroidBridge.saveImage`).
   As built (`34-helpers.js`): the 📷 button sits under 🌙; a 📷 Say Cheese! sticker; Read to me stays quiet during a
   Stage song. Save version 20 (`speak`, `stats.snaps`; `settings.lastBackup` belongs to the device).
-- **⚡ Speed check & tidy-up (v1.31):** the smoke test slows the CPU 4–6× and times the rooms, the Shop, the Closet and the
+- ✅ **🛋️ Room tweaks (v1.31, the owner's request):** on a phone the room's top bar is two rows (name + coins, then the
+  buttons), so the name isn't squeezed; while decorating, the thing touched last comes to the front.
+- **⚡ Speed check & tidy-up (v1.32):** the smoke test slows the CPU 4–6× and times the rooms, the Shop, the Closet and the
   Sticker Book; fix the slowest spots and write the numbers in STATUS. Split `09-screens.js` if it's needed.
 
 ### Phase 11: More games and content (ongoing)

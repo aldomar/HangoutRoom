@@ -39,12 +39,13 @@ _Last updated: 2026-11-16_
   - **🎤 Stage song pack: done** (v1.26 merged, PR #26).
 - **Phase 10 (Backlog + helpers): detailed plan agreed 2026-11-16** (five PRs, stacked; see "Phase 10 plan" under
   Decisions and `PLAN.md`): Looks & night (v1.27) → Gifts & presets (v1.28) → Shop filters + big dreams (v1.29) →
-  Grown-up helpers (v1.30) → Speed check (v1.31).
+  Grown-up helpers (v1.30) → Room tweaks (v1.31, added at the owner's request) → Speed check (v1.32).
   - **👗 Looks, emotes & night mode: done** (v1.27 merged, PR #27). The owner tested it on the device.
   - **🎁 Gifts & room layouts: done** (v1.28 merged, PR #28).
   - **🔎 Shop filters & big dreams: done** (v1.29 merged, PR #29).
-  - **🧑‍🔧 Grown-up helpers: built, PR #30 open as v1.30** on branch `feature/helpers` (from `main` after #29). Needs an
-    Android Studio build (the wrapper changed).
+  - **🧑‍🔧 Grown-up helpers: done** (v1.30 merged, PR #30).
+  - **🛋️ Room tweaks: built, PR #31 open as v1.31** on branch `feature/room-tweaks` (from `main` after #30). The owner asked
+    for it on 2026-11-17: the room name was squeezed on a phone, and the last touched decoration should come to the front.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -83,7 +84,8 @@ _Last updated: 2026-11-16_
 - PR #27 "Looks, emotes & night mode (v1.27)": merged.
 - PR #28 "Gifts & room layouts (v1.28)": merged.
 - PR #29 "Shop filters & big dreams (v1.29)": merged.
-- PR #30 "Grown-up helpers (v1.30)" on branch `feature/helpers` (from `main` after #29): open.
+- PR #30 "Grown-up helpers (v1.30)": merged.
+- PR #31 "Room tweaks (v1.31)" on branch `feature/room-tweaks` (from `main` after #30): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -416,6 +418,12 @@ _Last updated: 2026-11-16_
   - Test changes: sticker count 72; the v1.29 checks accept save version 19 or later.
   Not tested automatically (needs the tablet): the real voice, the save picker for pictures, and that the PNG opens in
   the Gallery or Files app.
+- **Room tweaks (v1.31)**: 881 checks, all passing, no console errors. New checks: touching the back decoration brings
+  it to the front (drawn last and saved last), the same for a wall thing (still behind standing things), the buddy
+  stays in front, placing from My Stuff puts it in front; on phones (360 px, 360 px Easy, 412 px) the room name shows in
+  full and the buttons stay 48 px+ and on screen; on the tablet the bar is still one row. Screenshot
+  `tests/shots/J01-phone-room-bar.png`. Also fixed: the y-sort of standing things had been commented out by mistake
+  (since v1.28), so they were already drawn in list order; now that order is on purpose.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -855,8 +863,9 @@ _Last updated: 2026-11-16_
 1. ~~Build 👗 Looks, emotes & night mode (v1.27) on `feature/looks`.~~ Built (PR #27); the owner tested it.
 2. ~~Build 🎁 Gifts & room presets (v1.28) on `feature/gifts` (on top of `feature/looks`).~~ Merged (PR #28).
 3. ~~Build 🔎 Shop filters + 💰 big dreams (v1.29) on `feature/shop`.~~ Merged (PR #29).
-4. ~~Build 🧑‍🔧 Grown-up helpers (v1.30).~~ Built (PR #30); owner: build the APK in Android Studio, try it and merge.
-5. Build ⚡ Speed check & tidy-up (v1.31), the last Phase 10 PR.
+4. ~~Build 🧑‍🔧 Grown-up helpers (v1.30).~~ Merged (PR #30).
+5. ~~🛋️ Room tweaks (v1.31).~~ Built (PR #31); owner: try it on the phone and merge.
+6. Build ⚡ Speed check & tidy-up (v1.32), the last Phase 10 PR.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

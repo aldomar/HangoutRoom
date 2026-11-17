@@ -109,10 +109,10 @@ function renderRoom(){
   const deco=i=>`<g class="deco" data-uid="${i.uid}" transform="translate(${Math.round(i.x)} ${Math.round(i.y)})">${DECOR[i.type].d(i)}</g>`;
   s+=items.filter(i=>DECOR[i.type].flat).map(deco).join('');
   // Wall things (posters, shelves…) are drawn behind everything that stands, so things on a shelf show in front of it.
-  s+=items.filter(i=>DECOR[i.type].wall&&!DECOR[i.type].flat).sort((a,b)=>a.y-b.y).map(deco).join('');
-  const list=items.filter(i=>!DECOR[i.type].flat&&!DECOR[i.type].wall).map(i=>({y:i.y,h:deco(i)}));
-  list.push({y:604,h:mascotG(p)}); list.push({y:PET_SPOT.y,h:petG(p)}); list.push({y:GIFT_SPOT.y,h:giftG(p)}); // wrapped gifts (section 32) list.sort((a,b)=>a.y-b.y); // the pet bed by Fuzzy (section 22)
-  s+=list.map(o=>o.h).join('');
+  // Inside each layer things are drawn in list order, and the one touched last moves to the end (toFront, v1.31).
+  s+=items.filter(i=>DECOR[i.type].wall&&!DECOR[i.type].flat).map(deco).join('');
+  s+=items.filter(i=>!DECOR[i.type].flat&&!DECOR[i.type].wall).map(deco).join('');
+  s+=mascotG(p)+petG(p)+giftG(p); // the buddy, the pet bed (section 22) and wrapped gifts (section 32) stay in front
   s+=nightLayer(p,R); // 🌙 night mode (section 31, v1.27)
   roomSvg.innerHTML=s; emoteBar(false); nightBtn();
   roomSvg.classList.toggle('decorating',decorating);
@@ -160,8 +160,10 @@ roomSvg.addEventListener('pointerdown',e=>{
   const pt=toSvg(e); drag={it,g,dx:it.x-pt.x,dy:it.y-pt.y,riders:[]};
   try{roomSvg.setPointerCapture(e.pointerId);}catch(_){}
   g.classList.add('dragging'); roomSvg.appendChild(g); SFX.click(); e.preventDefault();
+  const R=curRoom(P()), riders=DECOR[it.type].shelf?onShelf(it):[];
+  toFront(R,it); riders.forEach(r=>toFront(R,r)); // the thing touched last sits in front (v1.31); riders stay on their shelf
   // a shelf takes the things sitting on it along
-  if(DECOR[it.type].shelf) drag.riders=onShelf(it).map(r=>{const rg=roomSvg.querySelector(`.deco[data-uid="${r.uid}"]`);if(rg)roomSvg.appendChild(rg);return {r,g:rg,dx:r.x-it.x,dy:r.y-it.y};});
+  drag.riders=riders.map(r=>{const rg=roomSvg.querySelector(`.deco[data-uid="${r.uid}"]`);if(rg)roomSvg.appendChild(rg);return {r,g:rg,dx:r.x-it.x,dy:r.y-it.y};});
 });
 roomSvg.addEventListener('pointermove',e=>{
   if(!drag) return;
@@ -178,6 +180,7 @@ function endDrag(e){
 }
 roomSvg.addEventListener('pointerup',endDrag);
 roomSvg.addEventListener('pointercancel',endDrag);
+function toFront(R,it){const k=R.items.indexOf(it);if(k>=0)R.items.splice(k,1);R.items.push(it);} // drawn last = in front of its layer
 // Shelves: the top of shelf s is at y = s.y - top, from s.x - w/2 to s.x + w/2. Nothing about it is saved.
 const standing=i=>i.placed&&DECOR[i.type]&&!DECOR[i.type].wall&&!DECOR[i.type].flat;
 function onShelf(s){const S=DECOR[s.type].shelf, top=s.y-S.top;
@@ -241,7 +244,7 @@ $('#decoGrid').addEventListener('click',e=>{
     const it=allItems(p).find(i=>!i.placed&&(t.dataset.placeUid?i.uid===t.dataset.placeUid:i.type===t.dataset.place));
     if(!it) return; const R=curRoom(p);
     if(it.type==='poster'&&postersUp(R)>=MAX_POSTERS){SFX.locked();toast(`This room has ${MAX_POSTERS} posters already!`);return;}
-    if(!R.items.includes(it)){rooms(p).forEach(r=>{r.items=r.items.filter(i=>i!==it);});R.items.push(it);} // moving it to this room
+    rooms(p).forEach(r=>{r.items=r.items.filter(i=>i!==it);}); R.items.push(it); // into this room, in front (v1.31)
     Object.assign(it,spot(it.type),{placed:true});save();SFX.pop();renderRoom();renderDecoGrid();
   } else if(t.dataset.buy){
     const k=t.dataset.buy, d=DECOR[k]; if(dreamTap(p,k)) return; // a big dream she can't afford yet (section 33)

@@ -145,6 +145,11 @@ jump to any puzzle, and solved ones turn green.
 - **💾 Backup reminder:** ⚙️ Settings shows "Last backup: today / 12 days ago / never" at the bottom, for the grown-ups.
   There are no pop-ups and nothing for the children to worry about.
 
+## Room tweaks (since version 1.31)
+- **🛋️ Decorating:** the thing you touch (or place from 📦 My Stuff) last comes to the front, so you can choose what
+  sits in front when things overlap. Wall things stay behind standing things, and the buddy stays in front.
+- **📱 Phones:** the room's top bar uses two rows, so the room's name fits: name and coins on top, buttons below.
+
 ## Where things are
 In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
 (🎨 Art Desk) and the wardrobe (👗 Closet). In the Cozy Loft: the glowing **🎤 Stage** sign (since version 1.12)

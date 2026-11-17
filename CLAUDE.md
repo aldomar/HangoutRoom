@@ -192,7 +192,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   bought once for all styles). Hair items take `d(f, line, H)` and an optional back layer `b(f, line, H)`, where `H` is the colour.
   Old swoop ids (`swoopPurple` …) live on in `LEGACY_HAIR`; always read hair through `hairIds(look)`.
 - Shelves (since v1.11): a wall decoration with `shelf:{w, top}`. Dropped items snap onto a shelf top, and dragging a
-  shelf carries its riders (`onShelf`, `snapToShelf` in 09). The room draws flat items, then wall items, then standing items.
+  shelf carries its riders (`onShelf`, `snapToShelf` in 09). The room draws flat items, then wall items, then standing items,
+  then the buddy, pet and gifts. Inside each layer items are drawn in `R.items` order; since v1.31 touching an item while
+  decorating (or placing it from My Stuff) moves it to the end with `toFront(R, it)`, so the last touched sits in front.
 - Three rooms (Loft since v1.10, Backyard since v1.23): `roomNo` (1 = `p.room`, 2 = `p.room2`, 3 = `p.room3`), `curRoom(p)` for
   the room on screen, `rooms(p)` for all three and `allItems(p)` for every item. My Stuff (items with `placed:false`) is shared
   between rooms; placing a stored item moves it into the room on screen. New code that adds or finds room items must use
