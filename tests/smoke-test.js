@@ -881,7 +881,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`P().easy=false;P().code.level='if';show('code')`); await sleep(200);
   check('6 level tabs, the last is 🧠 Challenge', await ev(`[...document.querySelectorAll('#clTabs [data-lvl]')].map(b=>b.dataset.lvl).join()==='easy,medium,hard,move,if,challenge'`));
   await ev(`document.querySelector('#clTabs [data-lvl=challenge]').click()`); await sleep(150);
-  check('Challenge tab is saved and shows 8 puzzles', await ev(`P().code.level==='challenge'&&document.querySelectorAll('#clList [data-pz]').length===8`));
+  check('Challenge tab is saved and shows all 14 puzzles (8 + 6 since v1.37)', await ev(`P().code.level==='challenge'&&CODE_PUZZLES.challenge.length===14&&document.querySelectorAll('#clList [data-pz]').length===14`));
   await shot('A40-code-challenge-list');
   const ch0=await ev('P().coins');
   await ev(`document.querySelector('#clList [data-pz="0"]').click()`); await sleep(150);
@@ -891,8 +891,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`document.querySelector('#clRun').click()`); await sleep(1300);
   check('🌟 inside My Move picks up both stars and solves it: +5 coins', await ev(`P().code.solved.includes('c1')&&document.querySelectorAll('#clBoard .clstar.got').length===2&&P().coins===${ch0}+5`), await ev('P().coins-'+ch0));
   await ev(`closeModal()`);
-  for(let i=1;i<8;i++){await ev(`clSolve('challenge',${i})`);await sleep(i===7?2600:2000);if(i===7)await shot('A41-code-challenge-final');await ev(`closeModal()`);}
-  check('every Challenge puzzle solved: 5 coins each + 10 level bonus', await ev(`CODE_PUZZLES.challenge.every(q=>P().code.solved.includes(q.id))&&P().coins===${ch0}+8*5+10`), await ev('P().coins-'+ch0));
+  for(let i=1;i<14;i++){await ev(`clSolve('challenge',${i})`);await sleep(i===7||i===13?2600:2000);if(i===7)await shot('A41-code-challenge-final');if(i===13)await shot('A41b-code-challenge-c14');await ev(`closeModal()`);}
+  check('every Challenge puzzle solved: 5 coins each + 10 level bonus', await ev(`CODE_PUZZLES.challenge.every(q=>P().code.solved.includes(q.id))&&P().coins===${ch0}+14*5+10`), await ev('P().coins-'+ch0));
   check('the other levels still pay 3 a puzzle and 5 a level', await ev(`codeCoins('easy')===3&&codeBonus('if')===5&&codeCoins('challenge')===5&&codeBonus('challenge')===10`));
   await ev(`clOpen('challenge',7);CL.move=[...'QRQUS'];CL.prog=['4','M'];clProg()`); await sleep(200); await shot('A42-code-challenge-board');
   const chCode=await ev('JSON.stringify(DB)');
@@ -964,7 +964,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`P().fid.cube='pastel';renderCube()`);
 
   await ev(`setFidTab('maze')`); await sleep(300); await shot('B7-maze');
-  check('the maze screen shows 6 maze buttons', await ev(`document.querySelectorAll('#mazeBar [data-mz]').length===6`));
+  check('the maze screen shows 12 maze buttons (6 + 6 since v1.37)', await ev(`MAZES.length===12&&document.querySelectorAll('#mazeBar [data-mz]').length===12`));
   check('the tilt sensor is listened to only while the maze is on screen', await ev('MZ.listening'));
   // a path search over each maze: one start, one star hole, all 9 x 6, and the star can be reached
   await ev(`window.mzPath=i=>{const m=MAZES[i].map,R=m.length,C=m[0].length,key=(c,r)=>r*C+c;let s,g;m.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch==='S')s=[c,r];if(ch==='G')g=[c,r];}));
@@ -993,20 +993,20 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
       const s=Math.min(2.5,d*3+0.4);const ax=(dx/(d||1)*s-MZ.vx)*6,ay=(dy/(d||1)*s-MZ.vy)*6;
       send(clamp(ax/MZ_ACC,-1,1)*MZ_TILT,clamp(ay/MZ_ACC,-1,1)*MZ_TILT);},30);})`);
   const fzmc0=await ev('P().coins');
-  for(let i=0;i<6;i++){
+  for(let i=0;i<12;i++){
     await ev(`closeModal();mzStart(${i})`);
     const r=await ev('mzAuto()');
     check(`maze ${i+1} solved by tilting, never inside a wall`, r.done&&r.bad===0&&(await ev(`P().maze.solved.includes(MAZES[${i}].id)`)), r);
     if(i===3) await shot('B9-maze-bumpers-done');
   }
   await sleep(900);
-  check('each new maze pays 3, and all 6 pay 5 more', (await ev('P().coins'))===fzmc0+6*3+5, await ev(`P().coins-${fzmc0}`));
+  check('each new maze pays 3, and all 12 pay 5 more', (await ev('P().coins'))===fzmc0+12*3+5, await ev(`P().coins-${fzmc0}`));
   check('the done box offers Again and Next', (await ev(`document.querySelector('#modalBtns').textContent`)).includes('Again'));
   await shot('B10-maze-done');
   await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(100);
   check('after the last maze, Next goes back to maze 1', await ev(`MZ.i===0&&!MZ.done`));
   const fzrc0=await ev('P().coins'); const fzrr=await ev('mzAuto()'); await sleep(300);
-  check('a replay pays 1', fzrr.done&&(await ev('P().coins'))===fzrc0+1&&(await ev('P().stats.mazes'))===7, [fzrr,await ev(`P().coins-${fzrc0}`)]);
+  check('a replay pays 1', fzrr.done&&(await ev('P().coins'))===fzrc0+1&&(await ev('P().stats.mazes'))===13, [fzrr,await ev(`P().coins-${fzrc0}`)]);
   check('solved mazes get a ⭐ on their button', await ev(`[...document.querySelectorAll('#mazeBar [data-mz]')].every(b=>b.textContent.includes('⭐'))`));
   await ev(`closeModal();document.querySelector('#mzTilt').click()`);
   check('the Tilt button turns tilt off', await ev(`!MZ.tilt.on&&document.querySelector('#mzTilt').textContent.includes('OFF')`));
@@ -1031,7 +1031,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`doRestore(${JSON.stringify(fzv115)})`); await sleep(400);
   check('a v1.15 backup restores with the new fidgets at their defaults', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>Array.isArray(p.maze.solved)&&p.maze.solved.length===0&&p.fid.slime==='grape'&&p.fid.cube==='pastel'&&p.fid.marble==='pearl'&&p.stats.clicks===0)`));
   await ev(`doRestore(${JSON.stringify(fzfCode)})`); await sleep(400);
-  check('a v1.16 backup keeps solved mazes, designs and counts', await ev(`(()=>{const p=DB.profiles.find(q=>q.maze.solved.length===6);return !!p&&p.fid.slime==='mint'&&p.owned.includes('marble:galaxy')&&p.stats.stretches>=5&&p.stats.clicks>=25;})()`));
+  check('a v1.16 backup keeps solved mazes, designs and counts', await ev(`(()=>{const p=DB.profiles.find(q=>q.maze.solved.length===12);return !!p&&p.fid.slime==='mint'&&p.owned.includes('marble:galaxy')&&p.stats.stretches>=5&&p.stats.clicks>=25;})()`));
   await ev(`closeModal();document.querySelector('.pcard').click()`); await sleep(1300); await ev(`closeModal();show('room')`);
 
   console.log('Seasons (v1.17): seasonal decorations, walls and windows');
@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('84 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36), ids all different, 6 or more per page', await ev(`STICKERS.length===84&&new Set(STICKERS.map(s=>s.id)).size===84&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('87 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37), ids all different, 6 or more per page', await ev(`STICKERS.length===87&&new Set(STICKERS.map(s=>s.id)).size===87&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -2260,7 +2260,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`brPuzzle('word','hard',7)`); await sleep(200); await shot('K08-phone-word');
   check('phone: no tile spills off the screen', await ev(`[...document.querySelectorAll('.wb-tile')].every(b=>b.getBoundingClientRect().right<=innerWidth)`));
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
-  check('2 new stickers on the Code & Brain page', await ev(`STICKERS.filter(s=>s.page==='code').slice(-4,-2).map(s=>s.id+':'+s.page).join()==='train8:code,word8:code'`));
+  check('2 new stickers on the Code & Brain page', await ev(`(a=>a.slice(a.indexOf('train8'),a.indexOf('train8')+2).join())(STICKERS.filter(s=>s.page==='code').map(s=>s.id))==='train8,word8'`));
   check('Brain Champ still counts only the first 3 games', await ev(`(()=>{const p=JSON.parse(JSON.stringify(P()));p.brain.solved=[];BRAIN_LVLS.forEach(l=>['train','word'].forEach(g=>BRAIN_GAMES[g].puzzles[l].forEach((z,i)=>p.brain.solved.push(brId(g,l,i)))));return stkHave(p,STICKERS.find(s=>s.id==='brainChamp'))===0;})()`));
   await ev(`{const p=DB.profiles[0];p.brain={game:'word',level:{snack:'hard',train:'medium',word:'nope'},solved:['word:e1']};normalize(p);}`);
   check('saved game and levels for the new games are kept; odd ones are made safe', await ev(`(()=>{const b=DB.profiles[0].brain;return b.game==='word'&&b.level.train==='medium'&&b.level.word==='easy'&&b.level.snack==='hard';})()`));
@@ -2337,7 +2337,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`brPuzzle('facts','hard',5)`); await sleep(200); await shot('L10-phone-facts-hard');
   check('phone: long answers fit', await ev(`[...document.querySelectorAll('.fc-ans')].every(e=>e.getBoundingClientRect().right<=innerWidth&&e.scrollWidth<=e.clientWidth+1)`));
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
-  check('2 new stickers at the end of the Code & Brain page', await ev(`STICKERS.filter(s=>s.page==='code').slice(-2).map(s=>s.id+':'+s.page).join()==='bake8:code,facts12:code'`));
+  check('2 new stickers on the Code & Brain page', await ev(`STICKERS.filter(s=>s.page==='code').slice(-4,-2).map(s=>s.id+':'+s.page).join()==='bake8:code,facts12:code'`));
   await ev(`{const p=DB.profiles[0];p.brain={game:'facts',level:{bake:'hard',facts:'medium'},solved:['facts:e1']};normalize(p);}`);
   check('saved game and levels for the new games are kept', await ev(`(()=>{const b=DB.profiles[0].brain;return b.game==='facts'&&b.level.bake==='hard'&&b.level.facts==='medium'&&b.level.train==='easy';})()`));
   await ev(`closeModal();show('room')`);
@@ -2571,6 +2571,45 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('odd saved fidPay is made safe', await ev(`(()=>{const f=DB.profiles[0].fidPay;return f&&f.day===''&&f.n===0;})()`));
   check('save version 21 adds fidPay to older saves', await ev(`DB_VERSION===21&&(()=>{const d={profiles:[{name:'Old'}]};MIGRATIONS[21](d);return d.profiles[0].fidPay.n===0;})()`));
   await ev(`P().fidPay={day:'',n:0};save();show('room')`);
+
+  console.log('Extras (v1.37): Challenge puzzles, marble mazes, stickers');
+  check('6 new Challenge puzzles c9-c14, added at the end', await ev(`CODE_PUZZLES.challenge.map(q=>q.id).join()==='c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14'`));
+  check('Code Lab puzzle ids are all different (44 puzzles)', await ev(`(()=>{const ids=CODE_LVL_IDS.flatMap(l=>CODE_PUZZLES[l].map(q=>q.id));return ids.length===44&&new Set(ids).size===44;})()`));
+  check('every new answer fits its block limits and wins', await ev(`CODE_PUZZLES.challenge.slice(8).every(q=>q.sol.length<=codeMax('challenge',q)&&q.move.length<=(q.moveMax||CODE_LEVELS.challenge.moveMax)&&codeSim(q,[...q.sol],[...q.move]).end==='win')`));
+  check('the new puzzles use new ideas: ⬅️/⬇️, 🔁 inside ✨, and ✨ mixed with other blocks', await ev(`(()=>{const c=CODE_PUZZLES.challenge;return /L/.test(c[8].move)&&/[234]/.test(c[9].move)&&c[12].sol.length>2&&/[234]Q/.test(c[13].move);})()`));
+  check('6 new mazes m7-m12, added at the end, each 9 x 6', await ev(`MAZES.map(z=>z.id).join()==='m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12'&&MAZES.every(z=>z.map.length===6&&z.map.every(r=>r.length===9))`));
+  check('the new mazes are longer than the first one', await ev(`MAZES.slice(6).every((z,i)=>mzPath(6+i).length>=mzPath(0).length)`), await ev(`MAZES.map((z,i)=>mzPath(i).length).join()`));
+  check('3 new stickers: Marble Marathon (Fidgets), Level Collector and Code Master (Code & Brain)', await ev(`STICKERS.slice(-3).map(s=>s.id+':'+s.page).join()==='maze25:fidget,codeLevels:code,codeAll:code'`));
+  check('Code Master needs every Code Lab puzzle; unknown ids in a save do not count', await ev(`(()=>{const s=STICKERS.find(x=>x.id==='codeAll'),p=JSON.parse(JSON.stringify(P()));p.code.solved=['e1','zz9','c99'];return stkNeed(s)===44&&stkHave(p,s)===1;})()`));
+  check('Level Collector counts finished levels', await ev(`(()=>{const s=STICKERS.find(x=>x.id==='codeLevels'),p=JSON.parse(JSON.stringify(P()));p.code.solved=[...CODE_PUZZLES.easy,...CODE_PUZZLES.if].map(q=>q.id);return stkHave(p,s)===2&&!stkDone(p,s);})()`));
+  check('Marble Marathon counts every maze rolled in, replays too', await ev(`(()=>{const s=STICKERS.find(x=>x.id==='maze25'),p=JSON.parse(JSON.stringify(P()));p.stats.mazes=25;return stkDone(p,s);})()`));
+  // a v1.36 player who finished all 8 Challenge puzzles and all 6 mazes: the new ones pay, and the level bonus once more
+  await ev(`P().code.solved=P().code.solved.filter(id=>!/^c(9|1[0-4])$/.test(id));P().maze.solved=MAZES.slice(0,6).map(z=>z.id);P().easy=false;save();show('code')`); await sleep(200);
+  check('an old full Challenge level shows 8 of 14 solved', await ev(`P().code.level==='challenge'&&document.querySelector('#clHint').textContent.includes('8 of 14')`));
+  await shot('X01-extras-challenge-list');
+  const ex0=await ev('P().coins');
+  for(let i=8;i<14;i++){await ev(`clSolve('challenge',${i})`);await sleep(2000);if(i===10)await shot('X02-extras-c11');await ev(`closeModal()`);}
+  check('the 6 new puzzles pay 5 each, and finishing the level again pays its +10 once', await ev(`P().coins===${ex0}+6*5+10`), await ev('P().coins-'+ex0));
+  await ev(`show('fidget');setFidTab('maze');closeModal();mzStart(6)`); await sleep(300); await shot('X03-extras-maze7');
+  for(const i of [8,11]){await ev(`closeModal();mzStart(${i})`);await sleep(250);await shot('X0'+(i===8?4:5)+'-extras-maze'+(i+1));}
+  const exm0=await ev('P().coins');
+  for(let i=6;i<12;i++){await ev(`closeModal();mzStart(${i})`);const r=await ev('mzAuto()');check(`new maze ${i+1} (${await ev(`MAZES[${i}].name`)}) solved by tilting, never inside a wall`,r.done&&r.bad===0,r);}
+  await sleep(900);
+  check('the 6 new mazes pay 3 each, and every maze solved pays +5 once more', (await ev('P().coins'))===exm0+6*3+5, await ev(`P().coins-${exm0}`));
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
+  await ev(`closeModal();mzStart(11)`); await sleep(300); await shot('X06-phone-maze12');
+  check('phone: 12 maze buttons still leave a big board', await ev('MZ.geo.cs>=36'), await ev('MZ.geo.cs'));
+  await send('Emulation.setDeviceMetricsOverride',{width:860,height:412,deviceScaleFactor:1,mobile:true});
+  await ev(`mzStart(11)`); await sleep(300); await shot('X07-landscape-maze12');
+  check('landscape: 12 maze buttons still leave a playable board', await ev('MZ.geo.cs>=24'), await ev('MZ.geo.cs'));
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
+  await ev(`show('code');clOpen('challenge',10)`); await sleep(200); await shot('X08-phone-c11');
+  check('phone: the 7-wide c11 board fits the screen', await ev(`document.querySelector('#clBoard').getBoundingClientRect().right<=innerWidth`));
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  const exB=await ev('JSON.stringify(DB)');
+  await ev(`doRestore(${JSON.stringify(exB)})`); await sleep(400);
+  check('a v1.37 backup keeps the new puzzles and mazes', await ev(`DB.profiles.some(p=>p.code.solved.includes('c14')&&p.maze.solved.includes('m12'))`));
+  await ev(`closeModal();show('room')`);
 
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');

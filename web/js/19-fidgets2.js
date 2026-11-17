@@ -212,6 +212,8 @@ function mzBar(){
   const p=P(); if(!p) return;
   $('#mazeBar').innerHTML=MAZES.map((m,i)=>`<button class="tab mzb${i===MZ.i?' on':''}" data-mz="${i}">${i+1}${p.maze.solved.includes(m.id)?' ⭐':''}</button>`).join('')
     +(MZ.tilt.seen?`<button class="tab mzb" id="mzTilt">📱 ${MZ.tilt.on?'Tilt ON':'Tilt OFF'}</button>`:'');
+  const on=$('#mazeBar .mzb.on'), bar=$('#mazeBar'); // (v1.37) a scrolling bar keeps the current maze in view
+  if(on&&bar.scrollWidth>bar.clientWidth) bar.scrollLeft=on.offsetLeft-(bar.clientWidth-on.offsetWidth)/2;
 }
 $('#mazeBar').onclick=e=>{
   if(e.target.closest('#mzTilt')){MZ.tilt.on=!MZ.tilt.on;MZ.tilt.base=null;SFX.click();mzBar();return;}

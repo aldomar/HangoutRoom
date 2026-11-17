@@ -303,7 +303,10 @@ Detailed plan agreed 2026-11-17: six PRs in this order, each branch on top of th
   pop-it board). 17 clothes, 14 decorations (Hay Bale and Toy Tractor are outdoor), 3 walls, 3 floors, 14 fidget designs.
   A new 🐮 Farm chip. Also (owner's requests): the Rocket Goo rocket redrawn with a flame, and a **30-a-day fidget coin
   allowance** (pop-it swipes earned coins too fast). Save version 21 (`fidPay`).
-- **🧩 Extras (v1.37):** about 6 more 🧠 Challenge puzzles and about 6 more marble mazes, added at the end, plus stickers.
+- ✅ **🧩 Extras (v1.37):** about 6 more 🧠 Challenge puzzles and about 6 more marble mazes, added at the end, plus stickers.
+  As built: `39-extras.js` adds Challenge puzzles c9–c14 (14 in all) and mazes m7–m12 (12 in all), and 3 stickers
+  (Marble Marathon, Level Collector, Code Master). Finishing the bigger list pays the level bonus once more. On a short
+  screen the maze buttons scroll in one row. No save change.
 - **🎹 Music Maker (v1.38, last):** an 8-step beat-and-melody grid on the Loft's speaker, 3 saved loops, the main loop only
   while it is on screen. A sticker. Save version 22 (`music`).
 

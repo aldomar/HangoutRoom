@@ -104,7 +104,11 @@ const GIFT_TIMELINE=[
     news:['🦖 A Dino Nugget Plush (it fits on a little shelf!) and a Dino Nugget squishy',
           '🏀 Basketball, skate and karate clothes, a hoop and a skate ramp',
           '🐮 A farm set: a toy barn, cow and sheep plushies, a tractor and a hay bale',
-          '🫧 Fidgets now give up to 30 coins a day (then they are just for fun)']}
+          '🫧 Fidgets now give up to 30 coins a day (then they are just for fun)']},
+  {v:'1.37',d:'2026-11-17',i:'🧩',n:'Extras',why:'So there are new puzzles to crack and new mazes to roll through',
+    news:['🧠 6 new Challenge puzzles in the Code Lab',
+          '🔮 6 new marble mazes, from Bumper Alley to the Long Way Home',
+          '📒 3 new stickers to collect']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

@@ -60,6 +60,8 @@ _Last updated: 2026-11-17_
   - **🎀 Content Pack 3: built, PR #35 open as v1.35** on branch `feature/pack3` (from `main` after #34).
   - **🏀 Content Pack 4: built, PR #36 open as v1.36** on branch `feature/pack4` (stacked on `feature/pack3`; merge #35 first).
     It has the owner's 🦖 dino nugget wish: a plush that sits on a Little Shelf, and a matching squishy.
+  - **🧩 Extras: built as v1.37** on branch `feature/extras` (stacked on `feature/pack4`; merge #35 and #36 first).
+    6 more 🧠 Challenge puzzles, 6 more marble mazes and 3 stickers.
   - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -106,6 +108,7 @@ _Last updated: 2026-11-17_
 - PR #34 "Fraction Bakery & Fact Cards (v1.34)": merged.
 - PR #35 "Content Pack 3 (v1.35)" on branch `feature/pack3` (from `main` after #34): open.
 - PR #36 "Content Pack 4 (v1.36)" on branch `feature/pack4` (on top of `feature/pack3`): open. Merge #35 first.
+- PR "Extras (v1.37)" on branch `feature/extras` (on top of `feature/pack4`): open. Merge #35 and #36 first.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -885,6 +888,16 @@ _Last updated: 2026-11-17_
   toast says "Fidget coins are full for today! Keep playing for fun ✨ Games still give coins." (once per room per day,
   no countdown, no "come back" message). It refills quietly when the date changes. The marble maze and games are
   not included. Save version 21: `fidPay{day,n}` per profile (normalize + MIGRATIONS[21]). The flip bonus stays +5.
+- **Extras (built as v1.37, `39-extras.js`):** the new file only pushes onto `CODE_PUZZLES.challenge` (c9–c14),
+  `MAZES` (m7–m12) and `STICKERS`. Each Challenge puzzle was checked by a full search (no answer without ✨, or
+  without ❓ when it has puddles); two first drafts had shortcuts and got extra puddles and blocks. New ideas:
+  ⬅️/⬇️ in My Move (c9, c12), 🔁 + ❓ inside My Move (c10, c14), a 5-block My Move (c11, c14) and ✨ mixed with
+  other blocks in the program (c13). The level bonus (Challenge +10, all mazes +5) is paid once more when the bigger
+  list is finished: it was always "when every puzzle is solved", and keeping it that way was simpler and fair.
+  Stickers: Marble Marathon (`stats.mazes` 25, replays count), Level Collector (3 Code Lab levels done) and Code
+  Master (all 44 Code Lab puzzles; it counts only known ids). With 12 maze buttons, a short screen (phone sideways)
+  squashed the board, so under 500 px tall the bar is one row that scrolls and keeps the current maze in view.
+  No save version change.
 - **Content Pack 4 (built as v1.36, `38-pack4.js`):** themes are a new field `p4` ('sport' 'farm' 'ride' 'space' 'dino');
   only 🐮 Farm is a new chip, the rest reuse ⚽ Sport, 🚗 Ride, 🚀 Space and 🦕 Dino. The dino nugget is an original chunky
   long-neck dinosaur in golden crumbs (no brand or packaging), drawn once by `p4Nug()` and reused by the plush, the tee
@@ -1014,12 +1027,14 @@ _Last updated: 2026-11-17_
 6. Owner: build v1.35, try the new clothes, decorations and fidgets (see the PR), and merge it.
 7. ~~Build 🏀 Content Pack 4 (v1.36), with the 🦖 dino nugget plush.~~ Built (PR #36, on top of #35).
 8. Owner: merge #35 first, then build v1.36, try the dino nugget on a shelf and the new things (see the PR), and merge it.
-9. Build 🧩 Extras (v1.37): more 🧠 Challenge puzzles and marble mazes.
+9. ~~Build 🧩 Extras (v1.37): more 🧠 Challenge puzzles and marble mazes.~~ Built (on top of #36).
+10. Owner: merge #35 and #36 first, then build v1.37, try the new puzzles and mazes (see the PR), and merge it.
+11. Plan details and build 🎹 Music Maker (v1.38), the last Phase 11 PR.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 21 since v1.36 (Fidget allowance: `fidPay`). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 21 since v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
