@@ -5,8 +5,8 @@
    The "wall" is a fence in front of the sky, the "floor" is the ground. Fences and grounds have yard:1 and are only
    listed in the Backyard; indoor walls and floors are only listed indoors. Decorations go anywhere; the 8 outdoor
    ones (yard:1) are listed first in the Backyard's Shop.
-   Built in: a tree with a swing, a soccer goal (opens Soccer), a garden shed and a chalkboard easel (Brain Games
-   later). The season shows in the sky, on the tree and on the ground (seasonNow, section 20). No animation loop.
+   Built in: a tree with a swing, a soccer goal (opens Soccer), a garden shed and a chalkboard easel (opens Brain Games,
+   since v1.25). The season shows in the sky, on the tree and on the ground (seasonNow, section 20). No animation loop.
    Wall, floor and decoration ids are saved: never rename them.
    ========================================================= */
 EXTRA_DEFS.push(`<linearGradient id="gYardSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#d9f1ff"/></linearGradient>`
@@ -95,11 +95,11 @@ function yardFurniture(){
   s+=`<g class="hot" data-hot="goal"><rect x="262" y="370" width="148" height="118" fill="#ffffff2a"/><path d="${net}" stroke="#fff" stroke-width="2" opacity=".75"/>`
     +`<rect x="252" y="358" width="12" height="134" rx="4" fill="#fff" ${o}/><rect x="408" y="358" width="12" height="134" rx="4" fill="#fff" ${o}/><rect x="252" y="356" width="168" height="12" rx="4" fill="#fff" ${o}/>`
     +`<circle cx="372" cy="520" r="17" fill="#fff" stroke="#2b2235" stroke-width="3"/><path d="${starPath(372,520,8,5)}" fill="#2b2235"/>${sign(336,330,'⚽ Soccer')}</g>`;
-  // the chalkboard easel (it becomes Brain Games later)
-  s+=`<g data-piece="easel"><path d="M712 612 L770 384 M848 612 L790 384 M780 384 L784 600" stroke="${ez}" stroke-width="10" stroke-linecap="round"/>`
+  // the chalkboard easel: 📚 Brain Games (v1.25, section 28)
+  s+=`<g class="hot" data-hot="brain" data-piece="easel"><path d="M712 612 L770 384 M848 612 L790 384 M780 384 L784 600" stroke="${ez}" stroke-width="10" stroke-linecap="round"/>`
     +`<rect x="694" y="400" width="172" height="124" rx="8" fill="#2f5d50" stroke="${ez}" stroke-width="10"/><rect x="694" y="400" width="172" height="124" rx="8" fill="none" stroke="#2b2235" stroke-width="3"/>`
     +`<text x="716" y="446" font-size="24" font-weight="800" fill="#fff" opacity=".9">1+2=3</text><text x="760" y="500" font-size="22" font-weight="800" fill="#ffd1ea" opacity=".9">A B C</text>`
-    +`<path d="${starPath(840,430,9)}" fill="none" stroke="#ffe066" stroke-width="2.5"/><rect x="690" y="522" width="180" height="10" rx="4" fill="${ez}" ${o}/></g>`;
+    +`<path d="${starPath(840,430,9)}" fill="none" stroke="#ffe066" stroke-width="2.5"/><rect x="690" y="522" width="180" height="10" rx="4" fill="${ez}" ${o}/>${sign(780,372,'📚 Brain Games')}</g>`;
   return s;
 }
 

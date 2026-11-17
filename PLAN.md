@@ -237,11 +237,14 @@ Detailed plan for all three agreed 2026-11-16 (built one PR after another, each 
   Hop 🐸, Bolt 🤖 (a hint arrow) and Zip 🦊 (sometimes fakes); 15 fixed shots per level, 5 per match, taken in turn;
   +1/+2/+3 per save (+1 with the kit), +5 for 5/5; Bronze/Silver/Gold Gloves stand in the Backyard by the goal;
   3 stickers. Save version 15 (`soccer.mode`, `soccer.keep`, `stats.saves`).
-- **📚 Brain Games, part 1 (v1.25):** at the Backyard's chalkboard. Each game has Easy (ages 3–5), Medium (8) and Hard (11),
+- ✅ **📚 Brain Games, part 1 (v1.25):** at the Backyard's chalkboard. Each game has Easy (ages 3–5), Medium (8) and Hard (11),
   coins for each first solve plus a level bonus (like the Code Lab), never a timer.
   - 🧁 **Snack Stand:** count cupcakes → add up an order → make change and times tables.
   - 🃏 **Memory Match:** 6 → 12 → 20 cards, using their own buddies and items.
   - 🫧 **Number Pop:** pop the 4 → pop pairs that make 10 → pop the factors of 24.
+  As built: a menu of the 3 games; a game opens on its first unsolved puzzle, with level tabs and 8 numbered puzzle
+  buttons; 8 fixed puzzles per level (72 in all), +2 per first solve, +5 per level; Medium Number Pop goes on to pairs
+  that make 20; 4 stickers. Save version 16 (`brain`).
 - **🎤 Stage song pack (v1.26, the owner's idea):** 4–5 new generated songs: a K-pop-style dance track (original), a soccer
   stadium chant, Dino Stomp (slow and big, for the little ones), Rocket Launch and a calm lullaby. Stickers for them.
 

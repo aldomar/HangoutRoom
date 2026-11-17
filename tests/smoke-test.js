@@ -289,8 +289,10 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Hard has Flap, kit badge gone', await ev(`P().soccer.level==='hard'&&document.querySelector('#socTip').textContent.includes('Flap')&&document.querySelector('#kitBadge').classList.contains('hidden')`));
   await shot('47-soccer-hard');
   const sc2=await ev('P().coins');
-  for(let i=0;i<5;i++){await ev(`socShoot(-0.35,0.5,1.2,0)`);await sleep(i<4?kickWait:1300);}
-  await sleep(1500);
+  // each kick waits until the field is ready again (a slow run could otherwise shoot while the last kick is still showing)
+  for(let i=0;i<5;i++){for(let w=0;w<60&&!(await ev(`SOC.state==='aim'`));w++) await sleep(100);await ev(`socShoot(-0.35,0.5,1.2,0)`);await sleep(1300);}
+  for(let w=0;w<60&&!(await ev(`SOC.state==='done'`));w++) await sleep(100);
+  await sleep(300);
   check('perfect 5/5 on Hard: 5×3 + 5 coins, +10 for the bonus card', (await ev('P().coins'))===sc2+30 && (await ev('P().stats.perfects'))===1, [sc2, await ev('P().coins')]);
   check('Perfect 5/5 bonus card', await ev(`P().bonusGot.includes('perfect1')`));
   check('perfect on Hard wins the Gold Trophy (in the room)', await ev(`P().soccer.trophies.includes('hard')&&P().room.items.filter(i=>i.type==='trophyGold'&&i.placed).length===1`));
@@ -1081,7 +1083,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('58 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24), ids all different, 6 or more per page', await ev(`STICKERS.length===58&&new Set(STICKERS.map(s=>s.id)).size===58&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('62 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25), ids all different, 6 or more per page', await ev(`STICKERS.length===62&&new Set(STICKERS.map(s=>s.id)).size===62&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1380,7 +1382,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`P().fid.squish='mochi';P().fid.spin='galaxy';P().fid.slime='grape';P().fid.cube='pastel';P().fid.marble='pearl';save();show('room')`);
 
   console.log('Content Pack 2: stickers');
-  check('the 4 pack stickers come just before the Backyard ones, on the Room & Style page', await ev(`STICKERS.length===58&&STICKERS.slice(-9,-5).every(s=>s.page==='room'&&/^p2/.test(s.id))`));
+  check('the 4 pack stickers come just before the Backyard ones, on the Room & Style page', await ev(`STICKERS.length===62&&STICKERS.slice(-13,-9).every(s=>s.page==='room'&&/^p2/.test(s.id))`));
   check('pack stickers count what she has: 3 dino things (hoodie, plush, dino board), 3 space (wall, spinner, rocket board), 0 vehicle', await ev(`p2Have(P(),'dino')===3&&p2Have(P(),'space')===3&&p2Have(P(),'ride')===0`), await ev(`[p2Have(P(),'dino'),p2Have(P(),'space'),p2Have(P(),'ride'),p2Have(P(),'hero')]`));
   await ev(`P().owned.push('legs:dinoSocks');P().room.items.push({uid:'p2nest',type:'dinoNest',placed:false})`);
   check('socks and a decoration in My Stuff count too (5 dino things)', await ev(`p2Have(P(),'dino')===5`));
@@ -1545,7 +1547,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   for(const w of ['picket','hedge','stoneWall','rainbowFence','batFence']){await ev(`P().room3.wall='${w}';renderRoom()`);check(`the ${w} fence draws`, await ev(`(()=>{const g=document.querySelector('[data-fence=${w}]');return g&&g.getBBox().width>900;})()`));}
   await shot('F05-yard-batfence');
   // stickers
-  check('Yard Life and Happy Camper come just before the keeper stickers, on the Room & Style page', await ev(`STICKERS.length===58&&STICKERS.slice(-5,-3).map(s=>s.id+':'+s.page).join()==='yard5:room,camper:room'`));
+  check('Yard Life and Happy Camper come just before the keeper stickers, on the Room & Style page', await ev(`STICKERS.length===62&&STICKERS.slice(-9,-7).map(s=>s.id+':'+s.page).join()==='yard5:room,camper:room'`));
   check('5 things in the Backyard earn Yard Life; 3 outdoor things earn Happy Camper', await ev(`(()=>{const f=id=>stkDone(P(),STICKERS.find(s=>s.id===id));return f('yard5')&&f('camper');})()`));
   // save data
   const v22=await ev(`JSON.stringify(Object.assign({},DB,{version:13,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.room3;return q;})}))`);
@@ -1642,7 +1644,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Easy mode opens Keep on Easy', await ev(`P().soccer.keep.level==='easy'&&document.querySelector('#socTip').textContent.includes('Hop')`));
   await ev(`P().easy=false;applyEasy();renderSoccer()`);
   // stickers
-  check('3 keeper stickers at the end of the list, on the Soccer page', await ev(`STICKERS.slice(-3).map(s=>s.id+':'+s.page).join()==='save1:soccer,save25:soccer,gloves:soccer'`));
+  check('3 keeper stickers come before the Brain Games ones, on the Soccer page', await ev(`STICKERS.slice(-7,-4).map(s=>s.id+':'+s.page).join()==='save1:soccer,save25:soccer,gloves:soccer'`));
   check('First Save is earned; Glove Case shows 2 of 3', await ev(`(()=>{const f=id=>STICKERS.find(s=>s.id===id);return stkDone(P(),f('save1'))&&stkHave(P(),f('gloves'))===2&&!stkDone(P(),f('gloves'));})()`));
   // phone
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(500); await shot('G08-phone-keep');
@@ -1654,11 +1656,121 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const kv23=await ev(`JSON.stringify(Object.assign({},DB,{version:14,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.soccer.keep;delete q.soccer.mode;delete q.stats.saves;return q;})}))`);
   await ev(`P().soccer.mode='keep';save()`); const kv24=await ev(`JSON.stringify(DB)`);
   await ev(`doRestore(${JSON.stringify(kv23)})`); await sleep(300);
-  check('a v1.23 backup restores with Kick mode and no keeper record (save version 15)', await ev(`DB_VERSION===15&&DB.version===15&&DB.profiles.every(p=>p.soccer.mode==='kick'&&p.soccer.keep.level==='easy'&&p.soccer.keep.best.hard===0&&p.soccer.keep.gloves.length===0&&p.stats.saves===0)`));
+  check('a v1.23 backup restores with Kick mode and no keeper record (save version 15 or newer)', await ev(`DB_VERSION>=15&&DB.version===DB_VERSION&&DB.profiles.every(p=>p.soccer.mode==='kick'&&p.soccer.keep.level==='easy'&&p.soccer.keep.best.hard===0&&p.soccer.keep.gloves.length===0&&p.stats.saves===0)`));
   await ev(`doRestore(${JSON.stringify(kv24)})`); await sleep(300);
   check('a v1.24 backup keeps Keep mode, best saves, gloves and the saves count', await ev(`(()=>{const p=DB.profiles.find(p=>p.soccer.keep.gloves.length);return p&&p.soccer.mode==='keep'&&p.soccer.keep.best.hard===5&&p.soccer.keep.gloves.length===2&&p.stats.saves>=10;})()`));
   await ev(`closeModal();{const p=DB.profiles[0];p.soccer.keep='oops';p.soccer.mode=7;normalize(p);p.soccer.keep.best.hard=99;p.soccer.keep.gloves=['hard','hard','x'];normalize(p);}`);
   check('odd keeper data is made safe', await ev(`(()=>{const k=DB.profiles[0].soccer;return k.mode==='kick'&&k.keep.level==='easy'&&k.keep.best.hard===5&&k.keep.gloves.join()==='hard';})()`));
+  await ev(`DB.activeId=DB.profiles[0].id;enterRoom();show('room')`); await sleep(200);
+
+  console.log('Brain Games (v1.25)');
+  await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();P().coins=100;save();show('room');goRoom(3)`); await sleep(250);
+  check('the Backyard chalkboard is now a hotspot', await ev(`!!document.querySelector('#roomSvg [data-hot=brain][data-piece=easel]')`));
+  await ev(`handleHot('brain')`); await sleep(300); await shot('H01-brain-menu');
+  check('it opens the Brain Games menu with 3 games, 0 / 24 each', await ev(`cur==='brain'&&BR.view==='menu'&&[...document.querySelectorAll('#brMenu [data-game]')].map(b=>b.dataset.game).join()==='snack,memory,pop'&&[...document.querySelectorAll('#brMenu .br-n')].every(n=>n.textContent.includes('0 / 24'))`));
+  // the puzzle recipes
+  check('every game has 8 puzzles on each level, with different ids', await ev(`Object.keys(BRAIN_GAMES).every(g=>BRAIN_LVLS.every(l=>BRAIN_GAMES[g].puzzles[l].length===8))&&new Set(Object.keys(BRAIN_GAMES).flatMap(g=>BRAIN_LVLS.flatMap(l=>BRAIN_GAMES[g].puzzles[l].map((z,i)=>brId(g,l,i))))).size===72`));
+  check('Snack Stand: every answer is one of the choices; choices are different whole numbers (3 on Easy, 4 after)', await ev(`BRAIN_LVLS.every(l=>BRAIN_GAMES.snack.puzzles[l].every((z,i)=>{const o=BRAIN_GAMES.snack.options(z,l,i),a=BRAIN_GAMES.snack.answer(z,l);return o.includes(a)&&new Set(o).size===o.length&&o.every(n=>Number.isInteger(n)&&n>=1)&&o.length===(l==='easy'?3:4);}))`));
+  check('Snack Stand: Easy counts up to 10; the answer is not always in the same place', await ev(`BRAIN_GAMES.snack.puzzles.easy.every(z=>z.n>=1&&z.n<=10)&&BRAIN_LVLS.every(l=>new Set(BRAIN_GAMES.snack.puzzles[l].map((z,i)=>BRAIN_GAMES.snack.options(z,l,i).indexOf(BRAIN_GAMES.snack.answer(z,l)))).size>=2)`));
+  check('Snack Stand: the Hard answers are right (boxes, change, prices)', await ev(`BRAIN_GAMES.snack.puzzles.hard.map(z=>z.a).join()==='18,7,28,14,48,19,63,6'`));
+  check('Memory Match: 3 / 6 / 10 different pictures; every picture draws; her own buddy never sits with the other buddies', await ev(`BRAIN_LVLS.every((l,k)=>MEM_SETS[l].every(s=>s.length===[3,6,10][k]&&new Set(s).size===s.length&&s.every(id=>memPic(id).length>60)&&!(s.includes('me')&&s.some(x=>x.startsWith('b:')))))`));
+  check('Memory Match: each board is the same every time (fixed shuffle) and holds every picture twice', await ev(`BRAIN_LVLS.every(l=>MEM_SETS[l].every((s,i)=>{const a=memDeck(l,i),b=memDeck(l,i);return a.join()===b.join()&&a.length===s.length*2&&s.every(id=>a.filter(x=>x===id).length===2);}))&&memDeck('easy',0).join()!==[...MEM_SETS.easy[0],...MEM_SETS.easy[0]].join()`));
+  check('Number Pop: Easy has 3+ bubbles to pop; Hard has every factor and nothing bigger than the number', await ev(`POP_SETS.easy.every(z=>popNeed(z,'easy')>=3)&&POP_SETS.hard.every(z=>z.b.every(n=>n<=z.t)&&popNeed(z,'hard')>=6&&popNeed(z,'hard')===Array.from({length:z.t},(_,i)=>i+1).filter(n=>z.t%n===0).length)`));
+  check('Number Pop: Medium pairs always work out (a lone decoy never has a partner), 2+ pairs each', await ev(`POP_SETS.medium.every(z=>{const c={};z.b.forEach(n=>c[n]=(c[n]||0)+1);return popNeed(z,'medium')>=4&&Object.keys(c).every(k=>{const n=+k,m=z.t-n;return n===m?c[n]%2===0||c[n]===1:!c[m]||c[m]===c[n];});})`));
+  // Snack Stand: Easy
+  await ev(`document.querySelector('#brMenu [data-game=snack]').click()`); await sleep(250); await shot('H02-snack-easy');
+  check('Snack Stand opens on Easy puzzle 1 with 8 puzzle buttons and 3 answers', await ev(`BR.view==='play'&&BR.game==='snack'&&BR.lvl==='easy'&&BR.idx===0&&document.querySelectorAll('#brDots .br-dot').length===8&&document.querySelectorAll('.br-ch').length===3&&document.querySelector('#brQ').textContent.includes('How many')`));
+  const sc0b=await ev('P().coins');
+  const snackRight=`document.querySelector('.br-ch[data-n="'+BRAIN_GAMES.snack.answer(BRAIN_GAMES.snack.puzzles[BR.lvl][BR.idx],BR.lvl)+'"]')`;
+  await ev(`document.querySelector('.br-ch:not([data-n="'+BRAIN_GAMES.snack.answer(BRAIN_GAMES.snack.puzzles.easy[0],'easy')+'"])').click()`); await sleep(150);
+  check('a wrong answer wobbles and says try again (nothing lost)', await ev(`!BR.won&&document.querySelector('.br-ch.wob')&&document.querySelector('#brMsg').textContent.includes('Try again')&&P().coins===${sc0b}`));
+  await ev(`${snackRight}.click()`); await sleep(150);
+  check('the right answer solves it: +2 coins, the puzzle button turns green', await ev(`BR.won&&P().brain.solved.includes('snack:e1')&&P().coins===${sc0b+2}&&document.querySelector('#brDots [data-pz="0"]').classList.contains('done')`));
+  await sleep(1000); await shot('H03-snack-solved');
+  check('then a box with Next', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#modalTitle').textContent.includes('Puzzle 1 solved')`));
+  await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(200);
+  check('Next opens puzzle 2', await ev(`BR.idx===1&&!BR.won`));
+  for(let i=1;i<8;i++){await ev(`${snackRight}.click()`);await sleep(80);if(i<7){await ev(`brPuzzle('snack','easy',${i+1})`);await sleep(60);}}
+  check('all 8 Easy puzzles: 8 × 2 + the 5 level bonus', (await ev('P().coins'))===sc0b+21, await ev('P().coins'));
+  await sleep(1000);
+  check('the last box says every Easy puzzle is solved', await ev(`document.querySelector('#modalBody').textContent.includes('Every Easy puzzle solved')`));
+  await ev(`closeModal();brPuzzle('snack','easy',0)`); await sleep(100); await ev(`${snackRight}.click()`); await sleep(100);
+  check('replaying a solved puzzle is free practice (no coins)', (await ev('P().coins'))===sc0b+21);
+  // Snack Stand: Medium and Hard
+  await ev(`document.querySelector('#brTabs [data-lvl=medium]').click()`); await sleep(200); await shot('H04-snack-medium');
+  check('the Medium tab: an order to add up, 4 answers, saved as this game\'s level', await ev(`BR.lvl==='medium'&&P().brain.level.snack==='medium'&&document.querySelectorAll('.br-ch').length===4&&document.querySelectorAll('#brQ .br-grp').length===2`));
+  await ev(`document.querySelector('#brTabs [data-lvl=hard]').click()`); await sleep(200); await shot('H05-snack-hard');
+  check('the Hard tab: a word problem', await ev(`BR.lvl==='hard'&&document.querySelector('#brQ').textContent.includes('boxes of 6')`));
+  // Memory Match
+  await ev(`brMenu()`); await sleep(150);
+  check('the menu shows Snack Stand\'s Easy level done', await ev(`document.querySelector('[data-game=snack] .br-pips i').classList.contains('on')&&document.querySelector('[data-game=snack] .br-n').textContent.includes('8 / 24')`));
+  await ev(`document.querySelector('#brMenu [data-game=memory]').click()`); await sleep(250);
+  check('Memory Match Easy: 6 cards face down', await ev(`BR.game==='memory'&&document.querySelectorAll('.mem-card').length===6&&!document.querySelector('.mem-card.open')`));
+  const pairOf=`(i=>MEM.cards.findIndex((c,k)=>k!==i&&c.id===MEM.cards[i].id))`;
+  const notPair=await ev(`MEM.cards.findIndex(c=>c.id!==MEM.cards[0].id)`);
+  await ev(`document.querySelector('.mem-card[data-c="0"]').click();document.querySelector('.mem-card[data-c="${notPair}"]').click()`); await sleep(150); await shot('H06-memory-miss');
+  check('two different cards stay open for a moment…', await ev(`document.querySelectorAll('.mem-card.open').length===2&&MEM.lock`));
+  await ev(`document.querySelector('.mem-card[data-c="${notPair===1?2:1}"]').click()`);
+  check('…(a third tap waits)…', await ev(`document.querySelectorAll('.mem-card.open').length===2`));
+  await sleep(1000);
+  check('…then turn back over', await ev(`!document.querySelector('.mem-card.open')&&!MEM.lock`));
+  const mc1=await ev('P().coins');
+  await ev(`(()=>{for(let i=0;i<MEM.cards.length;i++){if(MEM.cards[i].got)continue;const j=${pairOf}(i);document.querySelector('.mem-card[data-c="'+i+'"]').click();document.querySelector('.mem-card[data-c="'+j+'"]').click();}})()`); await sleep(150); await shot('H07-memory-done');
+  check('finding all 3 pairs solves it (+2)', await ev(`BR.won&&P().brain.solved.includes('memory:e1')&&P().coins===${mc1+2}&&document.querySelectorAll('.mem-card.got').length===6`));
+  await ev(`closeModal();document.querySelector('#brTabs [data-lvl=hard]').click()`); await sleep(300); await shot('H08-memory-hard');
+  check('Memory Hard: 20 cards in 5 columns', await ev(`document.querySelectorAll('.mem-card').length===20&&getComputedStyle(document.querySelector('.mem-grid')).gridTemplateColumns.split(' ').length===5`));
+  // Number Pop
+  await ev(`brMenu();document.querySelector('#brMenu [data-game=pop]').click()`); await sleep(250); await shot('H09-pop-easy');
+  check('Number Pop Easy: pop every 2 (shown with dots)', await ev(`BR.game==='pop'&&document.querySelector('.pop-target b').textContent==='2'&&document.querySelectorAll('.nbub').length===7&&!!document.querySelector('.nbub .br-dots')`));
+  await ev(`[...document.querySelectorAll('.nbub')].find(b=>b.querySelector('b').textContent!=='2').click()`); await sleep(100);
+  check('a wrong bubble wobbles and stays', await ev(`!!document.querySelector('.nbub.wob:not(.popped)')&&POP.popped===0`));
+  const pcb0=await ev('P().coins');
+  await ev(`[...document.querySelectorAll('.nbub')].filter(b=>b.querySelector('b').textContent==='2').forEach(b=>b.click())`); await sleep(150);
+  check('popping all four 2s solves it (+2)', await ev(`BR.won&&POP.popped===4&&P().brain.solved.includes('pop:e1')&&P().coins===${pcb0+2}`));
+  await ev(`closeModal();document.querySelector('#brTabs [data-lvl=medium]').click()`); await sleep(250);
+  const bub=v=>`[...document.querySelectorAll('.nbub:not(.popped)')].find(b=>b.querySelector('b').textContent==='${v}')`;
+  await ev(`${bub(3)}.click()`);
+  check('Medium: the first bubble is picked (glows)', await ev(`document.querySelectorAll('.nbub.sel').length===1`));
+  await ev(`${bub(6)}.click()`); await sleep(100);
+  check('3 + 6 isn\'t 10: both wobble, the sum is shown, nothing pops', await ev(`POP.popped===0&&!document.querySelector('.nbub.sel')&&document.querySelector('#brMsg').textContent.includes('3 + 6 = 9')`));
+  await ev(`${bub(3)}.click();${bub(7)}.click()`); await sleep(100);
+  check('3 + 7 = 10 pops both', await ev(`POP.popped===2&&!BR.won`));
+  await ev(`${bub(6)}.click();${bub(4)}.click()`); await sleep(100); await shot('H10-pop-medium');
+  check('6 + 4 pops the last pair and solves it (the lone 5 is a decoy)', await ev(`BR.won&&P().brain.solved.includes('pop:m1')`));
+  await ev(`closeModal();document.querySelector('#brTabs [data-lvl=hard]').click()`); await sleep(250);
+  await ev(`${bub(5)}.click()`); await sleep(100);
+  check('Hard: 5 is not a factor of 12 (it says what is left over)', await ev(`POP.popped===0&&document.querySelector('#brMsg').textContent.includes('leaves 2 over')`));
+  await ev(`[...document.querySelectorAll('.nbub')].filter(b=>12%Number(b.querySelector('b').textContent)===0).forEach(b=>b.click())`); await sleep(150); await shot('H11-pop-hard');
+  check('popping 1, 2, 3, 4, 6 and 12 solves it', await ev(`BR.won&&POP.popped===6&&P().brain.solved.includes('pop:h1')`));
+  // back, Easy mode, stickers
+  await ev(`closeModal()`);
+  check('Android Back: puzzle → menu', await ev(`window.androidBack()===true&&cur==='brain'&&BR.view==='menu'`));
+  check('…→ the Backyard', await ev(`window.androidBack()===true&&cur==='room'&&roomNo===3`));
+  await ev(`show('brain');document.querySelector('#brMenu [data-game=pop]').click()`); await sleep(150);
+  await ev(`document.querySelector('#brBack').click()`); await sleep(100);
+  check('⬅ Games goes back to the menu, ⬅ Room to the room', await ev(`BR.view==='menu'&&document.querySelector('#brBack').textContent.includes('Room')`)&&await ev(`(document.querySelector('#brBack').click(),cur==='room')`));
+  await ev(`P().easy=true;applyEasy();show('brain')`); await sleep(200);
+  check('Easy mode: every game opens on Easy, with no reading needed', await ev(`Object.values(P().brain.level).every(l=>l==='easy')`)&&await ev(`(document.querySelector('#brMenu [data-game=snack]').click(),BR.lvl==='easy'&&!document.querySelector('#brQ').textContent.includes('How many'))`));
+  await shot('H12-brain-easy-mode');
+  await ev(`P().easy=false;applyEasy();show('room')`);
+  check('4 Brain Games stickers at the end, on the Code & Brain page', await ev(`STICKERS.slice(-4).map(s=>s.id+':'+s.page).join()==='snack8:code,memory8:code,pop8:code,brainChamp:code'&&STK_PAGES.code.name==='Code & Brain'`));
+  check('8 Snack Stand puzzles earn Snack Shop; Brain Champ shows 1 of 9 levels', await ev(`(()=>{const f=id=>STICKERS.find(s=>s.id===id);return stkDone(P(),f('snack8'))&&!stkDone(P(),f('pop8'))&&stkHave(P(),f('brainChamp'))===1;})()`));
+  // phone
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await ev(`show('brain')`); await sleep(400); await shot('H13-phone-brain-menu');
+  check('phone: the 3 games fit (no sideways scroll)', await ev(`(()=>{const m=document.querySelector('#brMenu');return m.scrollWidth<=m.clientWidth&&[...document.querySelectorAll('.br-game')].every(b=>b.getBoundingClientRect().right<=innerWidth);})()`));
+  await ev(`P().brain.level.memory='hard';brOpen('memory')`); await sleep(300); await shot('H14-phone-memory-hard');
+  check('phone: 20 Memory cards and the puzzle buttons fit the width; buttons are 48 px', await ev(`(()=>{const s=document.querySelector('.br-scroll');return s.scrollWidth<=s.clientWidth&&[...document.querySelectorAll('.mem-card')].every(c=>c.getBoundingClientRect().right<=innerWidth&&c.getBoundingClientRect().width>=56)&&document.querySelector('.br-dot').getBoundingClientRect().width>=48;})()`));
+  await ev(`P().brain.level.snack='easy';brOpen('snack')`); await sleep(200); await shot('H15-phone-snack');
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await ev(`show('room')`); await sleep(200);
+  // save data
+  const bv24=await ev(`JSON.stringify(Object.assign({},DB,{version:15,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.brain;return q;})}))`);
+  const bv25=await ev(`JSON.stringify(DB)`);
+  await ev(`doRestore(${JSON.stringify(bv24)})`); await sleep(300);
+  check('a v1.24 backup restores with Brain Games at the start (save version 16)', await ev(`DB_VERSION===16&&DB.version===16&&DB.profiles.every(p=>p.brain&&p.brain.game==='snack'&&p.brain.solved.length===0&&Object.values(p.brain.level).join()==='easy,easy,easy')`));
+  await ev(`doRestore(${JSON.stringify(bv25)})`); await sleep(300);
+  check('a v1.25 backup keeps the puzzles solved and the levels', await ev(`(()=>{const p=DB.profiles.find(p=>p.brain.solved.length);return p&&p.brain.solved.length===12&&p.brain.solved.includes('pop:h1')&&p.brain.level.memory==='hard';})()`));
+  await ev(`closeModal();{const p=DB.profiles[0];p.brain={game:'chess',level:{snack:'super',pop:7},solved:['snack:e1','snack:e1',5]};normalize(p);}`);
+  check('odd Brain Games data is made safe', await ev(`(()=>{const b=DB.profiles[0].brain;return b.game==='snack'&&b.level.snack==='easy'&&b.level.pop==='easy'&&b.level.memory==='easy'&&b.solved.join()==='snack:e1';})()`));
   await ev(`DB.activeId=DB.profiles[0].id;enterRoom();show('room')`); await sleep(200);
 
   console.log('About & Gift Story (v1.22)');
@@ -1693,7 +1805,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`show('about')`); await ev(`document.querySelector('#scr-about [data-back]').click()`);
   check('⬅ Room from About goes to the room', await ev(`cur==='room'`));
   await ev(`show('profiles');whatsNew.wait=0;DB.settings.seenNew='1.21';whatsNew()`); await sleep(200); await shot('C04-whats-new');
-  check('after an update, What\'s New shows this version\'s news once', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#modalTitle').textContent.includes('New')&&document.querySelector('#modalBody').textContent.includes('About')&&DB.settings.seenNew===APP_VERSION`));
+  check('after an update, What\'s New shows the news once (the last 3 updates at most, the newest included)', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#modalTitle').textContent.includes('New')&&document.querySelectorAll('#modalBody .wn').length===Math.min(3,GIFT_TIMELINE.filter(t=>verNum(t.v)>verNum('1.21')).length)&&document.querySelector('#modalBody').textContent.includes(GIFT_TIMELINE[GIFT_TIMELINE.length-1].n)&&DB.settings.seenNew===APP_VERSION`));
   await ev(`closeModal();whatsNew()`);
   check('it does not show again', await ev(`document.querySelector('#modal').classList.contains('hidden')`));
   await ev(`DB.settings.seenNew='';whatsNew()`); await sleep(100);

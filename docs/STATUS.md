@@ -36,6 +36,7 @@ _Last updated: 2026-11-16_
 - **Phase 9 (Games): detailed plan agreed 2026-11-16** for all three PRs, built one after another, each branch on top
   of the one before (the owner merges them in order). See "Phase 9 plan" under Decisions.
   - **🧤 Be the Keeper: built, PR #24 open as v1.24** on branch `feature/keeper` (from `main` after #23).
+  - **📚 Brain Games part 1: built, PR #25 open as v1.25** on branch `feature/brain` (on top of `feature/keeper`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -69,6 +70,7 @@ _Last updated: 2026-11-16_
 - PR #22 "About & Gift Story (v1.22)": merged.
 - PR #23 "Backyard (v1.23)": merged.
 - PR #24 "Be the Keeper (v1.24)" on branch `feature/keeper` (from `main` after #23): open.
+- PR #25 "Brain Games (v1.25)" on branch `feature/brain` (on top of `feature/keeper`, so it shows #24's changes until #24 is merged): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -312,6 +314,26 @@ _Last updated: 2026-11-16_
     odd keeper data is made safe
   - Test changes: sticker counts now 58; the Backyard backup check accepts save version 14 and up.
   Not tested automatically: how diving feels with a finger on the real tablet.
+- **Brain Games (v1.25)**: 743 checks, all passing, no console errors. New checks:
+  - the Backyard chalkboard is a hotspot and opens the menu (3 games, 0 / 24 each)
+  - all 72 puzzles: 8 per level, ids all different; every Snack Stand answer is among its choices (3 on Easy, 4 after,
+    whole numbers, the answer not always in the same place, the Hard answers right); every Memory set has 3 / 6 / 10
+    different pictures that all draw, never her own buddy next to the other buddies, the same board every time; Number
+    Pop: Easy has 3+ to pop, Hard has every factor and nothing bigger, Medium pairs always work out
+  - Snack Stand: a wrong answer wobbles (nothing lost), the right one pays +2, turns its button green and shows Next;
+    all 8 Easy pay 8 × 2 + 5; a replay pays nothing; the Medium and Hard tabs
+  - Memory Match: two different cards turn back over (a third tap waits meanwhile); all pairs solve it (+2); Hard is 20
+    cards in 5 columns
+  - Number Pop: a wrong bubble wobbles; Easy pops every 2; Medium picks one, a wrong pair shows its sum, right pairs pop;
+    Hard says what is left over and pops the factors of 12
+  - Back: puzzle → menu → Backyard; Easy mode opens every game on Easy with no reading; 4 stickers at the end (Code &
+    Brain page); phone layouts fit (20 cards, 48 px puzzle buttons)
+  - a v1.24 backup restores with Brain Games at the start (save version 16); a v1.25 backup keeps solved puzzles and
+    levels; odd Brain Games data is made safe
+  - Test changes: sticker counts now 62; the keeper backup check accepts save version 15 and up; the What's New check
+    allows for the box showing only the last 3 updates; the Hard perfect kick test waits for each kick to finish
+    (it could miss a kick on a slow run). Brain Games sits last in `index.html`, so older checks that click the first
+    `[data-lvl]` tab still find Soccer's.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -583,6 +605,11 @@ _Last updated: 2026-11-16_
     Stadium Clap, Dino Stomp (slow, sparse notes), Rocket Launch, Moon Lullaby. The song list becomes a grid that fits 8.
     Golden Mic and Encore! rules unchanged; new song ids only, so no save version change. Stickers: Dino Stomper, Lift-off,
     Sweet Dreams, Whole Setlist (all 8).
+- **Brain Games (built as v1.25):** a game opens straight on its first unsolved puzzle (one tap from the menu), with level
+  tabs and 8 numbered puzzle buttons to jump around; the level is remembered per game. Answers are big buttons (Snack
+  Stand), cards (Memory) or floating bubbles (Number Pop). Medium Number Pop does pairs that make 10, then 20. Memory
+  pictures: her buddy, the 5 buddies in her outfit, the 4 pets and room things. The Sticker Book's Code Lab page is now
+  called "Code & Brain" and holds the 4 new stickers (Brain Champ needs all 9 levels).
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -668,13 +695,13 @@ _Last updated: 2026-11-16_
 
 ## Next steps (Phase 9)
 1. Owner: build v1.24, try 🧤 Keep (see the PR), and merge it.
-2. Build 📚 Brain Games part 1 (v1.25) on `feature/brain` (on top of `feature/keeper`).
+2. ~~Build 📚 Brain Games part 1 (v1.25) on `feature/brain` (on top of `feature/keeper`).~~ Built; owner: try it and merge after #24.
 3. Build the 🎤 song pack (v1.26) on `feature/songs` (on top of `feature/brain`).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 15 since v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 16 since v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

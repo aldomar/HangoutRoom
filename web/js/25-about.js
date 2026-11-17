@@ -54,7 +54,12 @@ const GIFT_TIMELINE=[
   {v:'1.24',d:'2026-11-16',i:'🧤',n:'Be the Keeper',why:'Now you can be the goalie too',
     news:['🧤 Soccer has a new Keep mode: your buddy goes in goal!',
           '🐸 Hop, 🤖 Bolt and 🦊 Zip take the shots. Tap where the ball goes (on Easy, just tap the ball)',
-          '🥇 Save all 5 to win a keeper glove for your Backyard']}
+          '🥇 Save all 5 to win a keeper glove for your Backyard']},
+  {v:'1.25',d:'2026-11-16',i:'📚',n:'Brain Games',why:'Puzzles to grow clever together',
+    news:['📚 Tap the chalkboard in the Backyard for Brain Games',
+          '🧁 Snack Stand: count, add up and give change',
+          '🃏 Memory Match with your own buddies, and 🫧 Number Pop',
+          '🐣 Easy, 🌟 Medium and 🧠 Hard: every puzzle pays 🪙 the first time']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

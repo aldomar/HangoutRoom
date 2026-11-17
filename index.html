@@ -19,7 +19,7 @@
                   -> 05 fidget data -> 06 profiles -> 07 sound/music -> 08 UI basics -> 09 screens/wiring
                   -> 10 fidget shelf -> 11 art desk -> 12 photocards -> 13 soccer -> 14 stage -> 16 loft -> 17 pack 1
                   -> 18 code lab -> 19 fidgets 2 -> 20 seasons -> 21 stickers -> 22 pet -> 23 buddies -> 24 pack 2
-                  -> 25 about -> 26 backyard -> 27 keeper -> 99 main loop + startup (always last)
+                  -> 25 about -> 26 backyard -> 27 keeper -> 28-29 brain games -> 99 main loop + startup (always last)
   Drawings are kept in IndexedDB ("hangoutRoomArt"), not localStorage, because they are big.
 -->
 <link rel="stylesheet" href="web/app.css">
@@ -288,6 +288,29 @@
   </div>
 </div>
 
+<!-- BRAIN GAMES (v1.25, the Backyard's chalkboard) -->
+<div id="scr-brain" class="screen">
+  <div class="topbar">
+    <button class="btn small ghost" id="brBack">⬅ Room</button>
+    <div class="title" id="brTitle">📚 Brain Games</div>
+    <div class="coins coinsDisp"></div>
+  </div>
+  <div class="br-menu" id="brMenu"></div>
+  <div class="br-play hidden" id="brPlay">
+    <div class="tabs" id="brTabs" style="background:var(--panel);justify-content:center">
+      <button class="tab on" data-lvl="easy">🐣 <span>Easy</span></button>
+      <button class="tab" data-lvl="medium">🌟 <span>Medium</span></button>
+      <button class="tab" data-lvl="hard">🧠 <span>Hard</span></button>
+    </div>
+    <div class="br-scroll">
+      <div class="br-dotrow" id="brDots"></div>
+      <div class="br-q" id="brQ"></div>
+      <div class="br-msg" id="brMsg"></div>
+      <div class="br-board" id="brBoard"></div>
+    </div>
+  </div>
+</div>
+
 <div id="modal" class="modal hidden"><div class="modal-card"><div id="modalTitle"></div><div id="modalBody"></div><div id="modalBtns"></div></div></div>
 <div id="toast"></div>
 <div id="flash"></div>
@@ -321,6 +344,8 @@
 <script src="web/about-local.js"></script>
 <script src="web/js/26-backyard.js"></script>
 <script src="web/js/27-keeper.js"></script>
+<script src="web/js/28-brain.js"></script>
+<script src="web/js/29-brain2.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>
