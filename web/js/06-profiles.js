@@ -20,6 +20,7 @@ function normalize(p){
   if(!p.name) p.name='Room';
   p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
+  p.fidPay=Object.assign({day:'',n:0},p.fidPay&&typeof p.fidPay==='object'?p.fidPay:{}); if(typeof p.fidPay.n!=='number'||!(p.fidPay.n>=0)) p.fidPay.n=0; // v1.36: fidget coins paid today (see FID_DAILY)
   p.look=Object.assign({},DEFAULT_LOOK,p.look||{});
   if(!BUDDIES[p.look.kind]) p.look.kind='bunny'; if(!FACES[p.look.face]) p.look.face='sparkle'; // v1.20
   p.owned=Array.isArray(p.owned)?p.owned:[];

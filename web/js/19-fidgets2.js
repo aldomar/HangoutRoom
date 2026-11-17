@@ -63,7 +63,7 @@ function slUp(e){
   const t=SL.touches.get(e.pointerId); if(!t) return; SL.touches.delete(e.pointerId);
   if(t.max<0.15&&performance.now()-t.at<300){SL.dimples.push({x:t.gx,y:t.gy,d:1});if(SL.dimples.length>6)SL.dimples.shift();tone(260,0.12,'sine',0.14,520);}
   else if(t.max>0.3){tone(520,0.22,'sine',0.13,150);noise(0.16,0.18,1400,250);}
-  if(!SL.touches.size&&SL.maxPull>0.5){SL.maxPull=0;const p=P();p.stats.stretches++;if(p.stats.stretches%5===0)earn(1);else saveSoon();} // one stretch per pull
+  if(!SL.touches.size&&SL.maxPull>0.5){SL.maxPull=0;const p=P();p.stats.stretches++;if(p.stats.stretches%5===0)fidEarn(1);else saveSoon();} // one stretch per pull
 }
 slc.addEventListener('pointerup',slUp); slc.addEventListener('pointercancel',slUp);
 
@@ -141,7 +141,7 @@ function cbFit(){ // pick the tall or wide layout, whichever makes the parts big
   cubeEl.style.width=(isWide?30.5:18)*em+'px'; cubeEl.style.height=(isWide?9.5:15.5)*em+'px';
 }
 window.addEventListener('resize',()=>{if(cur==='fidget'&&fidTab==='cube')cbFit();});
-function cbClick(){const p=P();p.stats.clicks++;if(p.stats.clicks%25===0)earn(1);else saveSoon();}
+function cbClick(){const p=P();p.stats.clicks++;if(p.stats.clicks%25===0)fidEarn(1);else saveSoon();}
 function cbTick(){tone(2600,0.014,'square',0.03);if(++CB.ticks%4===0)cbClick();}
 const cbSnd={
   btn:i=>{tone([1900,1600,2200][i]||1900,0.03,'square',0.06,1200);noise(0.03,0.12,5000,1800);},

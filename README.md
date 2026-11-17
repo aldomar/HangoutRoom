@@ -115,6 +115,9 @@ More things to buy with coins (10–40 each), open to everyone.
 - 4 new stickers on the **Room & Style** page: 🏀 All-Star (3 sport things; soccer things count too), 🐮 Farm Friend,
   🚒 Big Adventures (5 truck, car or space things) and 🦖 Nugget Buddy (the plush and the squishy).
 - The little rockets in 🚀 Rocket Goo and on the Rocket spinner were redrawn: they now blast off with a flame.
+- **Fidget coins: 30 a day.** The pop-it, squishy, spinner, slime and clicker share 30 coins a day (a quick swipe across
+  a pop-it used to earn coins very fast). After that they keep working just for fun, with one friendly note, and the
+  coins come back the next day. Games, puzzles, the marble maze and drawing pay as before.
 
 ## Content Pack 3 (since version 1.35)
 Lots of new things to buy with coins (10–40 each). Everything is open to everyone.

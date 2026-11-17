@@ -103,7 +103,8 @@ const GIFT_TIMELINE=[
   {v:'1.36',d:'2026-11-17',i:'🦖',n:'Content Pack 4',why:'So there are hoops to shoot, farm friends, big trucks and a dino nugget to cuddle',
     news:['🦖 A Dino Nugget Plush (it fits on a little shelf!) and a Dino Nugget squishy',
           '🏀 Basketball, skate and karate clothes, a hoop and a skate ramp',
-          '🐮 A farm set: a toy barn, cow and sheep plushies, a tractor and a hay bale']}
+          '🐮 A farm set: a toy barn, cow and sheep plushies, a tractor and a hay bale',
+          '🫧 Fidgets now give up to 30 coins a day (then they are just for fun)']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

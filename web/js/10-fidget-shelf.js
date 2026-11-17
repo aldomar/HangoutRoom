@@ -2,6 +2,17 @@
 /* =========================================================
    10. FIDGET SHELF
    ========================================================= */
+// Fidget allowance (v1.36): pop-it, squishy, spinner, slime and clicker coins share FID_DAILY coins a day (p.fidPay,
+// like the Art Desk's ART_DAILY). After that they still work, just for fun, with one gentle note. It refills quietly
+// the next day (no countdown). The marble maze is a puzzle and pays as before; games are not affected.
+const FID_DAILY=30; let fidToldDay='';
+function fidEarn(n,label,x,y){
+  const p=P(); if(!p) return; const today=new Date().toDateString();
+  if(p.fidPay.day!==today) p.fidPay={day:today,n:0};
+  const give=Math.max(0,Math.min(n,FID_DAILY-p.fidPay.n));
+  if(give){p.fidPay.n+=give;earn(give,label,x,y);} else saveSoon();
+  if(p.fidPay.n>=FID_DAILY&&fidToldDay!==p.id+today){fidToldDay=p.id+today;toast('Fidget coins are full for today! Keep playing for fun ✨ Games still give coins.');}
+}
 let fidTab='popit';
 function setFidTab(t){
   if(!FID[t]) t='popit';
@@ -62,13 +73,13 @@ function popAt(el){
   const i=+el.dataset.i; if(popState.down[i]) return;
   popState.down[i]=true; el.classList.add('down'); SFX.pop(); vibrate(8);
   const p=P(); p.stats.pops++;
-  if(p.stats.pops%10===0) earn(1); else saveSoon();
+  if(p.stats.pops%10===0) fidEarn(1); else saveSoon();
   if(popState.down.every(Boolean)){
     popState.flipping=true;
     setTimeout(()=>{
       board.classList.add('flip'); SFX.flip();
       setTimeout(()=>{popState.down=popMask(popState.shape||'classic').slice();renderPop();},320);
-      setTimeout(()=>{board.classList.remove('flip');popState.flipping=false;p.stats.flips++;const r=board.getBoundingClientRect();earn(5,'Flip bonus!',r.left+r.width/2,r.top+r.height/2);},680);
+      setTimeout(()=>{board.classList.remove('flip');popState.flipping=false;p.stats.flips++;const r=board.getBoundingClientRect();fidEarn(5,'Flip bonus!',r.left+r.width/2,r.top+r.height/2);},680);
     },250);
   }
 }
@@ -114,7 +125,7 @@ function sqUp(e){
   SQ.dents.push({u:t.u,v:t.v,d:t.d,quick}); if(SQ.dents.length>SQ_MEMORY) SQ.dents.shift();
   if(quick){SQ.wv-=1.2+t.d;tone(300,0.15,'sine',0.12,520);} else SFX.unsquish();
   if(held>90) SQ.long=true;
-  if(!SQ.touches.size&&SQ.long){const p=P();p.stats.squish++;if(p.stats.squish%5===0)earn(1);else saveSoon();} // one squish per squeeze
+  if(!SQ.touches.size&&SQ.long){const p=P();p.stats.squish++;if(p.stats.squish%5===0)fidEarn(1);else saveSoon();} // one squish per squeeze
 }
 sqc.addEventListener('pointerup',sqUp); sqc.addEventListener('pointercancel',sqUp);
 const hexRgb=h=>{const n=parseInt(h.slice(1),16);return `${n>>16},${(n>>8)&255},${n&255}`;};
@@ -234,7 +245,7 @@ function spUp(){if(!SP.drag)return;SP.drag=false;SP.w=(performance.now()-SP.last
 spc.addEventListener('pointerup',spUp); spc.addEventListener('pointercancel',spUp);
 function addRot(d){
   SP.acc+=Math.abs(d);
-  while(SP.acc>=TAU){SP.acc-=TAU;const p=P();p.stats.spins++;if(p.stats.spins%25===0){const r=spc.getBoundingClientRect();earn(1,null,r.left+r.width/2,r.top+r.height*0.2);}}
+  while(SP.acc>=TAU){SP.acc-=TAU;const p=P();p.stats.spins++;if(p.stats.spins%25===0){const r=spc.getBoundingClientRect();fidEarn(1,null,r.left+r.width/2,r.top+r.height*0.2);}}
 }
 function cStar(ctx,x,y,r){ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;ctx.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr);}ctx.closePath();ctx.fill();}
 function cBat(ctx,x,y,s){ctx.beginPath();ctx.moveTo(x-1.6*s,y);ctx.quadraticCurveTo(x-s,y-s,x-.4*s,y-.4*s);ctx.quadraticCurveTo(x,y-s,x+.4*s,y-.4*s);ctx.quadraticCurveTo(x+s,y-s,x+1.6*s,y);

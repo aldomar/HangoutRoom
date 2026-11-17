@@ -2052,7 +2052,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Grown-up helpers (v1.30)');
   await ev(`closeModal();delete window.AndroidBridge;DB.activeId=DB.profiles[0].id;{const p=P();p.easy=false;p.speak=null;p.stats.snaps=0;}DB.settings.lastBackup=0;save();roomNo=1;show('room')`); await sleep(200);
-  check('save version 20: Read to me follows Easy mode everywhere; the device has a last-backup time', await ev(`DB_VERSION===20&&DB.version===20&&DB.profiles.every(p=>p.speak===null||typeof p.speak==='boolean')&&typeof DB.settings.lastBackup==='number'`));
+  check('save version 20 or newer: Read to me follows Easy mode everywhere; the device has a last-backup time', await ev(`DB_VERSION>=20&&DB.version===DB_VERSION&&DB.profiles.every(p=>p.speak===null||typeof p.speak==='boolean')&&typeof DB.settings.lastBackup==='number'`));
   await ev(`settingsModal()`);
   check('Settings shows "Last backup: never" for the grown-up', await ev(`document.querySelector('#bkLast').textContent==='💾 Last backup: never'`));
   check('in the browser there is no Read to me switch (it cannot speak)', await ev(`!document.querySelector('#sSpeak')`));
@@ -2112,7 +2112,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   // save data
   const hv29=await ev(`JSON.stringify(Object.assign({},DB,{version:19,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.speak;return q;})}))`);
   await ev(`doRestore(${JSON.stringify(hv29)})`); await sleep(300);
-  check('a v1.29 backup restores with Read to me following Easy mode (save version 20)', await ev(`DB.version===20&&DB.profiles.every(p=>p.speak===null)`));
+  check('a v1.29 backup restores with Read to me following Easy mode (save version 20 or newer)', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.speak===null)`));
   await ev(`closeModal();{const p=DB.profiles[0];p.speak='yes';normalize(p);}`);
   check('odd Read to me data is made safe', await ev(`DB.profiles[0].speak===null`));
   await ev(`DB.activeId=DB.profiles[0].id;show('room')`);
@@ -2548,6 +2548,29 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('phone: nothing makes the closet scroll sideways', await ev(`document.documentElement.scrollWidth<=innerWidth+1`));
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   await ev(`closeModal();show('room')`);
+
+  console.log('Fidget allowance (v1.36): 30 fidget coins a day');
+  await ev(`closeModal();show('room');{const p=P();p.fidPay={day:'',n:0};p.coins=100;fidToldDay='';}`); await sleep(100);
+  check('fidget coins share an allowance of 30 a day', await ev(`FID_DAILY===30`));
+  await ev(`for(let k=0;k<6;k++)fidEarn(5)`); await sleep(100);
+  check('the first 30 fidget coins are paid as usual', await ev(`P().coins===130&&P().fidPay.n===30&&P().fidPay.day===new Date().toDateString()`), await ev('[P().coins,P().fidPay.n]'));
+  check('…and a gentle note says they are full for today (no countdown)', await ev(`/full for today/.test(document.querySelector('#toast')?.textContent||document.body.textContent)&&!/tomorrow|hours|minutes/i.test(document.querySelector('#toast')?.textContent||'')`));
+  await ev(`fidEarn(1);fidEarn(5)`); await sleep(100);
+  check('after that, fidgets pay nothing more today', await ev(`P().coins===130&&P().fidPay.n===30`));
+  await ev(`P().fidPay={day:new Date().toDateString(),n:28};fidEarn(5)`); await sleep(100);
+  check('a flip bonus near the limit pays only what is left (2 of 5)', await ev(`P().coins===132&&P().fidPay.n===30`));
+  await ev(`P().fidPay={day:'Mon Jan 01 2001',n:30};fidEarn(1)`); await sleep(100);
+  check('a new day refills it quietly', await ev(`P().coins===133&&P().fidPay.n===1`));
+  // a real pop-it board when the allowance is used up: it still pops and flips, it just pays nothing
+  await ev(`P().fidPay={day:new Date().toDateString(),n:30};P().fid.pop='rainbow';P().fid.popShape='classic';show('fidget');setFidTab('popit')`); await sleep(250);
+  const fa0=await ev('P().coins'), ff0=await ev('P().stats.flips'), fp0=await ev('P().stats.pops');
+  await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').forEach(b=>popAt(b))`); await sleep(1300);
+  check('with the allowance used, the pop-it still pops and flips (counted for stickers) but pays nothing', await ev(`P().stats.flips===${ff0}+1&&P().stats.pops>${fp0}&&P().coins===${fa0}`), [fa0,await ev('P().coins')]);
+  check('the marble maze and games are not part of the allowance', await ev(`!/fidEarn/.test(String(mzWin||''))&&typeof earn==='function'`));
+  await ev(`{const p=DB.profiles[0];p.fidPay='odd';normalize(p);}`);
+  check('odd saved fidPay is made safe', await ev(`(()=>{const f=DB.profiles[0].fidPay;return f&&f.day===''&&f.n===0;})()`));
+  check('save version 21 adds fidPay to older saves', await ev(`DB_VERSION===21&&(()=>{const d={profiles:[{name:'Old'}]};MIGRATIONS[21](d);return d.profiles[0].fidPay.n===0;})()`));
+  await ev(`P().fidPay={day:'',n:0};save();show('room')`);
 
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');
