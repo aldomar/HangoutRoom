@@ -32,7 +32,10 @@ _Last updated: 2026-11-16_
   a third room (v1.23) → 🧤 Be the Keeper (v1.24) → 📚 Brain Games part 1 (v1.25) → 🎤 song pack (v1.26) → Phase 10
   (backlog + helpers) → Phase 11 (more games and packs). Each still gets its own detailed plan before building.
   - **💌 About & Gift Story: done** (v1.22 merged, PR #22).
-  - **🌳 Backyard: built, PR #23 open as v1.23** on branch `feature/backyard` (from `main` after #22).
+  - **🌳 Backyard: done** (v1.23 merged, PR #23).
+- **Phase 9 (Games): detailed plan agreed 2026-11-16** for all three PRs, built one after another, each branch on top
+  of the one before (the owner merges them in order). See "Phase 9 plan" under Decisions.
+  - **🧤 Be the Keeper: built, PR #24 open as v1.24** on branch `feature/keeper` (from `main` after #23).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -64,7 +67,8 @@ _Last updated: 2026-11-16_
 - PR #20 "Buddies (v1.20)": merged.
 - PR #21 "Content Pack 2 (v1.21)": merged.
 - PR #22 "About & Gift Story (v1.22)": merged.
-- PR #23 "Backyard (v1.23)" on branch `feature/backyard` (from `main` after #22): open.
+- PR #23 "Backyard (v1.23)": merged.
+- PR #24 "Be the Keeper (v1.24)" on branch `feature/keeper` (from `main` after #23): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -291,6 +295,23 @@ _Last updated: 2026-11-16_
     (not an object, an indoor wall, an unknown ground) is made safe; on a phone both room buttons fit (48 px+)
   - Test changes: sticker counts now 55; the Buddies backup check accepts save version 13 and up; the What's New checks
     set `whatsNew.wait=0`.
+- **Be the Keeper (v1.24)**: 696 checks, all passing, no console errors. New checks:
+  - Soccer still opens in Kick mode; the ⚽ Kick / 🧤 Keep buttons; Keep changes the title and the level tabs (🐸 🤖 🦊)
+    and hides the kicker; the buddy in goal is drawn from her own look
+  - all 45 shots are inside the goal and each one is saved by diving to it; on Medium and Hard, standing still saves at
+    most 2 of 15; Easy shots are much slower than Hard ones
+  - Easy: tapping the flying ball dives to it and saves (+1 coin, 🧤 dot, saves count); no dive = a goal, nothing lost;
+    tapping the goal dives there and a second tap changes the dive; the result box after 5 shots; the next match uses the
+    next 5 shots
+  - Medium: one dive per shot; a save with the team kit pays 2 + 1; the Kick level is not changed
+  - Hard: a perfect 5/5 pays 5×3 + 5 and wins the Gold Glove, which stands in the Backyard at its own spot; an earlier
+    5/5 on Medium gives the Silver Glove; never twice; both draw; not in the Shop
+  - Back goes to the room; Soccer remembers Keep; Easy mode opens Keep on Easy; back to Kick shows the kicker and Mochi
+  - 3 stickers at the end of the list; First Save earned, Glove Case 2 of 3; on a phone the 5 tabs fit
+  - a v1.23 backup restores in Kick mode with no keeper record (save version 15); a v1.24 backup keeps everything;
+    odd keeper data is made safe
+  - Test changes: sticker counts now 58; the Backyard backup check accepts save version 14 and up.
+  Not tested automatically: how diving feels with a finger on the real tablet.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -541,6 +562,27 @@ _Last updated: 2026-11-16_
   - 🎨 Colours: the Garden Shed and the Chalkboard (`shed`, `easel`); a new room starts with them in its colour too.
   - Stickers: 🌳 Yard Life (5 things in the Backyard) and 🏕️ Happy Camper (3 different outdoor things). 55 in all.
   - Save version 14: `room3 {wall:'picket', floor:'grass', items:[]}`, filled in for old saves and old backups.
+- **Phase 9 plan (agreed 2026-11-16):** three PRs, stacked (each branch on top of the one before).
+  - **🧤 Be the Keeper (v1.24, built):** ⚽ Kick / 🧤 Keep buttons on the Soccer screen; **it remembers the last mode**
+    (owner's choice, saved per room). Her own buddy and outfit stand in goal, with mint keeper gloves. Strikers: Hop the
+    bouncy frog (Easy: slow glowing shots; tapping the ball catches it; she can change her dive), Bolt the robot (Medium: a
+    dotted arrow hints the side) and Zip the speedy fox (Hard: fast, some curve, sometimes leans the wrong way). One dive per
+    shot on Medium and Hard. 15 fixed shots per level, 5 per match, taken in turn (the turn isn't saved; it starts again
+    when the app opens). Coins like Kick: +1/+2/+3 per save, +1 with the team kit, +5 for 5/5. Bronze / Silver / Gold
+    **Gloves** (awards) stand in the **Backyard**, by the goal, because her first room's floor is full. Keeper matches count
+    as matches (Team Player sticker) and a 5/5 counts as a perfect. Stickers: First Save, Safe Hands (25), Glove Case.
+    Save version 15.
+  - **📚 Brain Games part 1 (v1.25, next):** the Backyard chalkboard opens a menu of 3 games, each with Easy / Medium / Hard
+    and **8 fixed puzzles per level** (owner's choice; ids saved like the Code Lab). +2 coins per puzzle the first time,
+    +5 when a level is done; replays are free practice. No timers; a wrong answer is a gentle "Try again!". 🧁 Snack Stand
+    (count cupcakes → add up an order → change from 20 and times tables), 🃏 Memory Match (6 → 12 → 20 cards with their
+    buddies and items, drawn without the fuzz filter), 🫧 Number Pop (pop the 4s → pairs that make 10 → factors). Easy works
+    without reading. Stickers: one per game + Brain Champ. Save `brain{game, level{}, solved[]}`, version 16. Files
+    `28-brain.js` (menu + Snack Stand) and `29-brain2.js` (Memory + Number Pop).
+  - **🎤 Stage song pack (v1.26):** 5 new generated songs in `30-songs2.js`: Neon Hearts (K-pop-style dance, original),
+    Stadium Clap, Dino Stomp (slow, sparse notes), Rocket Launch, Moon Lullaby. The song list becomes a grid that fits 8.
+    Golden Mic and Encore! rules unchanged; new song ids only, so no save version change. Stickers: Dino Stomper, Lift-off,
+    Sweet Dreams, Whole Setlist (all 8).
 
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
@@ -621,13 +663,18 @@ _Last updated: 2026-11-16_
    Later, if a family secret comes to mind, put it in `secret:` there.
 4. ~~Owner: build v1.22, try the About and the What's New box (see the PR), and merge it.~~ Merged.
 5. ~~Plan the 🌳 Backyard (v1.23) in detail and get it agreed.~~ Agreed and built (v1.23 PR).
-6. Owner: build v1.23, try the Backyard (see the PR), and merge it.
-7. Plan 🧤 Be the Keeper (v1.24) in detail and get it agreed.
+6. ~~Owner: build v1.23, try the Backyard (see the PR), and merge it.~~ Merged.
+7. ~~Plan 🧤 Be the Keeper (v1.24) in detail and get it agreed.~~ Phase 9 plan agreed; v1.24 built.
+
+## Next steps (Phase 9)
+1. Owner: build v1.24, try 🧤 Keep (see the PR), and merge it.
+2. Build 📚 Brain Games part 1 (v1.25) on `feature/brain` (on top of `feature/keeper`).
+3. Build the 🎤 song pack (v1.26) on `feature/songs` (on top of `feature/brain`).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 14 since v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 15 since v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

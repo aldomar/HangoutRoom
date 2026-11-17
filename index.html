@@ -18,7 +18,8 @@
                   01 save data (+ drawings store) -> 02 art helpers -> 03 mascot + closet items -> 04 room + decor
                   -> 05 fidget data -> 06 profiles -> 07 sound/music -> 08 UI basics -> 09 screens/wiring
                   -> 10 fidget shelf -> 11 art desk -> 12 photocards -> 13 soccer -> 14 stage -> 16 loft -> 17 pack 1
-                  -> 18 code lab -> 99 main loop + startup (always last)
+                  -> 18 code lab -> 19 fidgets 2 -> 20 seasons -> 21 stickers -> 22 pet -> 23 buddies -> 24 pack 2
+                  -> 25 about -> 26 backyard -> 27 keeper -> 99 main loop + startup (always last)
   Drawings are kept in IndexedDB ("hangoutRoomArt"), not localStorage, because they are big.
 -->
 <link rel="stylesheet" href="web/app.css">
@@ -207,14 +208,17 @@
 <div id="scr-soccer" class="screen">
   <div class="topbar">
     <button class="btn small ghost" data-back>⬅ Room</button>
-    <div class="title">⚽ Soccer Field</div>
+    <div class="title" id="socTitle">⚽ Soccer Field</div>
     <div class="kit hidden" id="kitBadge">⚽ Team kit +1</div>
     <div class="coins coinsDisp"></div>
   </div>
   <div class="tabs" id="socTabs" style="background:var(--panel);justify-content:center">
-    <button class="tab on" data-lvl="easy">😺 Easy</button>
-    <button class="tab" data-lvl="medium">👻 Medium</button>
-    <button class="tab" data-lvl="hard">🦇 Hard</button>
+    <button class="tab mode on" data-mode="kick">⚽ Kick</button>
+    <button class="tab mode" data-mode="keep">🧤 Keep</button>
+    <span class="soc-gap"></span>
+    <button class="tab on" data-lvl="easy"><i>😺</i> <span>Easy</span></button>
+    <button class="tab" data-lvl="medium"><i>👻</i> <span>Medium</span></button>
+    <button class="tab" data-lvl="hard"><i>🦇</i> <span>Hard</span></button>
   </div>
   <div class="soc-stage" id="socStage">
     <canvas id="socCv"></canvas>
@@ -316,6 +320,7 @@
      If it is missing, the About uses the generic words in 25-about.js. See web/about-local.example.js. -->
 <script src="web/about-local.js"></script>
 <script src="web/js/26-backyard.js"></script>
+<script src="web/js/27-keeper.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

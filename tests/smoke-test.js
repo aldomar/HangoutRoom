@@ -1081,7 +1081,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('55 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23), ids all different, 6 or more per page', await ev(`STICKERS.length===55&&new Set(STICKERS.map(s=>s.id)).size===55&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('58 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24), ids all different, 6 or more per page', await ev(`STICKERS.length===58&&new Set(STICKERS.map(s=>s.id)).size===58&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1380,7 +1380,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`P().fid.squish='mochi';P().fid.spin='galaxy';P().fid.slime='grape';P().fid.cube='pastel';P().fid.marble='pearl';save();show('room')`);
 
   console.log('Content Pack 2: stickers');
-  check('the 4 pack stickers come just before the Backyard ones, on the Room & Style page', await ev(`STICKERS.length===55&&STICKERS.slice(-6,-2).every(s=>s.page==='room'&&/^p2/.test(s.id))`));
+  check('the 4 pack stickers come just before the Backyard ones, on the Room & Style page', await ev(`STICKERS.length===58&&STICKERS.slice(-9,-5).every(s=>s.page==='room'&&/^p2/.test(s.id))`));
   check('pack stickers count what she has: 3 dino things (hoodie, plush, dino board), 3 space (wall, spinner, rocket board), 0 vehicle', await ev(`p2Have(P(),'dino')===3&&p2Have(P(),'space')===3&&p2Have(P(),'ride')===0`), await ev(`[p2Have(P(),'dino'),p2Have(P(),'space'),p2Have(P(),'ride'),p2Have(P(),'hero')]`));
   await ev(`P().owned.push('legs:dinoSocks');P().room.items.push({uid:'p2nest',type:'dinoNest',placed:false})`);
   check('socks and a decoration in My Stuff count too (5 dino things)', await ev(`p2Have(P(),'dino')===5`));
@@ -1545,13 +1545,13 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   for(const w of ['picket','hedge','stoneWall','rainbowFence','batFence']){await ev(`P().room3.wall='${w}';renderRoom()`);check(`the ${w} fence draws`, await ev(`(()=>{const g=document.querySelector('[data-fence=${w}]');return g&&g.getBBox().width>900;})()`));}
   await shot('F05-yard-batfence');
   // stickers
-  check('55 stickers; Yard Life and Happy Camper are at the end, on the Room & Style page', await ev(`STICKERS.length===55&&STICKERS.slice(-2).map(s=>s.id+':'+s.page).join()==='yard5:room,camper:room'`));
+  check('Yard Life and Happy Camper come just before the keeper stickers, on the Room & Style page', await ev(`STICKERS.length===58&&STICKERS.slice(-5,-3).map(s=>s.id+':'+s.page).join()==='yard5:room,camper:room'`));
   check('5 things in the Backyard earn Yard Life; 3 outdoor things earn Happy Camper', await ev(`(()=>{const f=id=>stkDone(P(),STICKERS.find(s=>s.id===id));return f('yard5')&&f('camper');})()`));
   // save data
   const v22=await ev(`JSON.stringify(Object.assign({},DB,{version:13,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.room3;return q;})}))`);
   const v23=await ev(`JSON.stringify(DB)`);
   await ev(`doRestore(${JSON.stringify(v22)})`); await sleep(300);
-  check('a v1.22 backup restores with an empty Backyard (save version 14)', await ev(`DB_VERSION===14&&DB.version===14&&DB.profiles.every(p=>p.room3&&p.room3.wall==='picket'&&p.room3.floor==='grass'&&p.room3.items.length===0)`));
+  check('a v1.22 backup restores with an empty Backyard (save version 14 or newer)', await ev(`DB_VERSION>=14&&DB.version===DB_VERSION&&DB.profiles.every(p=>p.room3&&p.room3.wall==='picket'&&p.room3.floor==='grass'&&p.room3.items.length===0)`));
   await ev(`doRestore(${JSON.stringify(v23)})`); await sleep(300);
   check('a v1.23 backup keeps the Backyard\'s fence, ground and things', await ev(`(()=>{const p=DB.profiles.find(p=>p.room3.items.length);return p&&p.room3.floor==='sand'&&p.room3.items.some(i=>i.type==='slide')&&p.owned.includes('wall:hedge');})()`));
   await ev(`closeModal();{const p=DB.profiles[0];p.room3='oops';normalize(p);DB.profiles[0].room3.wall='lavender';DB.profiles[0].room3.floor='nope';}DB.activeId=DB.profiles[0].id;enterRoom();goRoom(3)`); await sleep(200);
@@ -1560,6 +1560,106 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('phone: the room bar fits both room buttons (icons only)', await ev(`(()=>{const t=document.querySelector('#scr-room .topbar');const a=document.querySelector('#roomGo').getBoundingClientRect(),b=document.querySelector('#roomGo2').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&b.right<=innerWidth&&a.width>=48&&b.width>=48;})()`));
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   await ev(`goRoom(1)`); await sleep(200);
+
+  console.log('Be the Keeper (v1.24)');
+  // kpTo(state) skips the pauses (and the run-up, unless we want to dive during it) until the match reaches that state
+  const kpTo=async st=>{const skip=st==='wind'?['ready','result']:['ready','wind','result'];
+    for(let i=0;i<120&&(await ev('KP.state'))!==st;i++){await ev(`${JSON.stringify(skip)}.includes(KP.state)&&(KP.timer=99)`);await sleep(50);}return ev('KP.state');};
+  const kpTap=async(u,v)=>{const p=await ev(`(()=>{const r=socCv.getBoundingClientRect(),p=toScr(KP.g,${u},${v});return [r.left+p.x,r.top+p.y];})()`);
+    await mouse('mousePressed',p[0],p[1]); await mouse('mouseReleased',p[0],p[1]); await sleep(50);};
+  await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();P().coins=100;save();show('room');goRoom(1)`); await sleep(200);
+  const kickLvl=await ev('P().soccer.level');
+  await ev(`handleHot('window')`); await sleep(400);
+  check('Soccer still opens in ⚽ Kick mode, with ⚽ Kick and 🧤 Keep buttons', await ev(`cur==='soccer'&&P().soccer.mode==='kick'&&document.querySelector('[data-mode=kick]').classList.contains('on')&&!!document.querySelector('[data-mode=keep]')`));
+  check('Kick mode: Mochi, Boo and Flap on the level tabs', await ev(`[...document.querySelectorAll('#socTabs [data-lvl] i')].map(i=>i.textContent).join('')==='😺👻🦇'`));
+  await ev(`document.querySelector('[data-mode=keep]').click()`); await sleep(300);
+  check('🧤 Keep: saved, the title changes, Hop / Bolt / Zip on the tabs, the kicker is hidden', await ev(`P().soccer.mode==='keep'&&document.querySelector('#socTitle').textContent.includes('Keeper')&&[...document.querySelectorAll('#socTabs [data-lvl] i')].map(i=>i.textContent).join('')==='🐸🤖🦊'&&document.querySelector('#socMascot').classList.contains('hidden')&&document.querySelector('#socTip').textContent.includes('Hop')`));
+  for(let i=0;i<30&&!(await ev(`KP.img&&KP.img!=='none'`));i++) await sleep(100);
+  check('the buddy in goal is a picture of her own buddy and outfit', await ev(`KP.img instanceof HTMLCanvasElement&&KP.imgKey===JSON.stringify(P().look)`));
+  check('15 fixed shots per level, all inside the goal; Zip has some fakes', await ev(`['easy','medium','hard'].every(l=>KEEP_SHOTS[l].length===15&&KEEP_SHOTS[l].every(([u,v])=>Math.abs(u)<=0.42&&v>0.05&&v<0.95))&&KEEP_SHOTS.hard.some(s=>s[3])`));
+  check('every shot is saved by diving to it', await ev(`['easy','medium','hard'].every(l=>KEEP_SHOTS[l].every(([u,v])=>{const x=clamp(u,-0.42,0.42),lift=clamp(v-0.5,0,0.35);return Math.abs(u-x)<STRIKERS[l].reach+0.035&&v>lift-0.035&&v<lift+KEEP_H2+0.035;}))`));
+  check('on Medium and Hard, standing still saves at most 2 of 15 shots', await ev(`['medium','hard'].every(l=>KEEP_SHOTS[l].filter(([u,v])=>Math.abs(u)<STRIKERS[l].reach+0.035&&v<KEEP_H2+0.035).length<=2)`));
+  check('Easy shots are slow (Hop), Hard shots are fast (Zip)', await ev(`STRIKERS.easy.T>2*STRIKERS.hard.T&&STRIKERS.easy.ballTap&&!STRIKERS.hard.ballTap`));
+  const kc0=await ev('P().coins');
+  await kpTo('fly');
+  check('shot 1 is the first Easy shot', await ev(`KP.shot.u===KEEP_SHOTS.easy[0][0]&&KP.shot.v===KEEP_SHOTS.easy[0][1]`));
+  await sleep(600);
+  const bp=await ev(`(()=>{const r=socCv.getBoundingClientRect(),b=ballPos(KP.g,KP.shot,KP.t);return [r.left+b.x,r.top+b.y];})()`);
+  await mouse('mousePressed',bp[0],bp[1]); await mouse('mouseReleased',bp[0],bp[1]); await sleep(150);
+  check('Easy: tapping the flying ball dives right to it', await ev(`!!KP.tgt&&KP.tgt.x===KP.shot.u`)); await shot('G01-keep-easy-dive');
+  await kpTo('result'); await sleep(150); await shot('G02-keep-saved');
+  check('a save: a 🧤 dot, +1 coin and a saves count', await ev(`KP.saves[0]===true&&P().stats.saves===1&&document.querySelector('#socScore .dot').textContent==='🧤'&&P().coins===${kc0+1}`), await ev('P().coins'));
+  await kpTo('fly'); await kpTo('result');
+  check('no dive: Hop scores, and nothing is lost', await ev(`KP.saves[1]===false&&KP.shot.res==='goal'&&P().coins===${kc0+1}&&P().stats.saves===1`));
+  await kpTo('wind'); const n3=await ev('JSON.stringify(KP.next)'); const N3=JSON.parse(n3);
+  await kpTap(-N3.u-0.1,0.3);
+  check('Easy: tapping the goal dives there', await ev(`!!KP.tgt&&Math.abs(KP.tgt.x-clamp(${-N3.u-0.1},-0.42,0.42))<0.02`));
+  await kpTap(N3.u,N3.v);
+  check('Easy: she can change her mind (a second tap moves the dive)', await ev(`Math.abs(KP.tgt.x-${N3.u})<0.02`));
+  await kpTo('result');
+  check('…and that saves it', await ev(`KP.saves[2]===true`));
+  for(let i=3;i<5;i++){await kpTo('fly');await ev(`kpDive(KP.shot.u,KP.shot.v)`);await kpTo('result');}
+  await kpTo('done'); await sleep(200); await shot('G03-keep-result');
+  check('after 5 shots: the result box, best saves, a match counted', await ev(`document.querySelector('#modalTitle').textContent.includes('4 / 5 saves')&&P().soccer.keep.best.easy===4&&KP.round.easy===1`));
+  check('+1 coin for each of the 4 saves', (await ev('P().coins'))===kc0+4, await ev('P().coins'));
+  await ev(`closeModal();socCv.dispatchEvent(new PointerEvent('pointerdown',{clientX:5,clientY:5}))`);
+  check('a tap after the match starts a new one, with the next 5 shots', await ev(`KP.state==='ready'&&KP.saves.length===0&&KP.next.u===KEEP_SHOTS.easy[5][0]&&KP.next.v===KEEP_SHOTS.easy[5][1]`));
+  // Medium: one dive per shot, the team kit adds +1
+  await ev(`document.querySelector('[data-lvl=medium]').click()`); await sleep(300);
+  check('Medium has Bolt; the Kick level is untouched', await ev(`P().soccer.keep.level==='medium'&&P().soccer.level==='${kickLvl}'&&document.querySelector('#socTip').textContent.includes('Bolt')`));
+  const kLook=await ev('JSON.stringify(P().look)');
+  await ev(`P().look.top='jersey';P().look.bottom='shorts';renderSoccer()`); await sleep(200);
+  const kc1=await ev('P().coins');
+  await kpTo('wind'); await sleep(700); await shot('G04-keep-medium-hint');
+  check('Medium: the first dive counts, a second one is ignored', await ev(`kpDive(KP.next.u,KP.next.v)===true&&kpDive(-KP.next.u,0.2)===false`));
+  await kpTo('result');
+  check('a Medium save with the team kit pays 2 + 1', await ev(`KP.saves[0]===true&&P().coins===${kc1+3}`), await ev('P().coins'));
+  await ev(`P().look=JSON.parse(${JSON.stringify(kLook)});save()`);
+  // Hard: a perfect 5/5 wins the Gold Glove (in the Backyard)
+  await ev(`document.querySelector('[data-lvl=hard]').click()`); await sleep(300);
+  check('Hard has Zip', await ev(`P().soccer.keep.level==='hard'&&document.querySelector('#socTip').textContent.includes('Zip')`));
+  await kpTo('wind'); await sleep(500); await shot('G05-keep-hard');
+  const kc2=await ev('P().coins'), perf0=await ev('P().stats.perfects');
+  for(let i=0;i<5;i++){await kpTo('wind');await ev(`kpDive(KP.next.u,KP.next.v)`);await kpTo('result');}
+  await kpTo('done'); await sleep(300); await shot('G06-keep-perfect');
+  check('perfect 5/5 on Hard: 5×3 + 5 coins', (await ev('P().coins'))===kc2+20&&(await ev('P().stats.perfects'))===perf0+1, [kc2, await ev('P().coins')]);
+  check('…wins the Gold Glove, shown in the result box', await ev(`P().soccer.keep.gloves.includes('hard')&&document.querySelector('#modalBody').textContent.includes('Gold Glove')`));
+  check('the Gold Glove stands in the Backyard, in its own spot', await ev(`(()=>{const g=P().room3.items.filter(i=>i.type==='gloveGold');return g.length===1&&g[0].placed&&g[0].x===TROPHY_SPOTS.gloveGold.x&&!P().room.items.some(i=>/^glove/.test(i.type));})()`));
+  check('no trophy or glove spot is behind the buddy', await ev(`Object.values(TROPHY_SPOTS).every(p=>p.x+70<420||p.x-70>580||p.y>604)`));
+  await ev(`closeModal()`);
+  check('Android Back from Keep goes to the room', await ev(`window.androidBack()===true&&cur==='room'`));
+  await ev(`P().soccer.keep.best.medium=5;show('room')`); await sleep(300);
+  check('an earlier 5/5 on Medium gives the Silver Glove', await ev(`P().soccer.keep.gloves.includes('medium')&&P().room3.items.some(i=>i.type==='gloveSilver')`));
+  await ev(`show('soccer')`); await sleep(200); await ev(`show('room')`); await sleep(200);
+  check('gloves are given only once', await ev(`P().room3.items.filter(i=>/^glove/.test(i.type)).length===2&&!P().soccer.keep.gloves.includes('easy')`));
+  await ev(`closeModal();goRoom(3)`); await sleep(300); await shot('G07-yard-gloves');
+  check('both gloves draw in the Backyard', await ev(`P().room3.items.filter(i=>/^glove/.test(i.type)).every(i=>{const g=document.querySelector('#roomSvg .deco[data-uid="'+i.uid+'"]');return g&&g.getBBox().width>40;})`));
+  await ev(`enterDecorate();document.querySelector('[data-dt=shop]').click()`);
+  check('gloves are not in the Shop', await ev(`!document.querySelector('#decoGrid [data-buy^=glove]')`)); await ev(`exitDecorate();goRoom(1)`);
+  await ev(`show('soccer')`); await sleep(300);
+  check('Soccer remembers Keep mode', await ev(`P().soccer.mode==='keep'&&document.querySelector('[data-mode=keep]').classList.contains('on')&&KP.state!=='off'`));
+  await ev(`P().easy=true;applyEasy();P().soccer.keep.level='hard';show('room');show('soccer')`); await sleep(200);
+  check('Easy mode opens Keep on Easy', await ev(`P().soccer.keep.level==='easy'&&document.querySelector('#socTip').textContent.includes('Hop')`));
+  await ev(`P().easy=false;applyEasy();renderSoccer()`);
+  // stickers
+  check('3 keeper stickers at the end of the list, on the Soccer page', await ev(`STICKERS.slice(-3).map(s=>s.id+':'+s.page).join()==='save1:soccer,save25:soccer,gloves:soccer'`));
+  check('First Save is earned; Glove Case shows 2 of 3', await ev(`(()=>{const f=id=>STICKERS.find(s=>s.id===id);return stkDone(P(),f('save1'))&&stkHave(P(),f('gloves'))===2&&!stkDone(P(),f('gloves'));})()`));
+  // phone
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(500); await shot('G08-phone-keep');
+  check('phone: Kick, Keep and the 3 level tabs fit (icons only on the levels)', await ev(`(()=>{const t=document.querySelector('#socTabs');return t.scrollWidth<=t.clientWidth&&getComputedStyle(document.querySelector('#socTabs [data-lvl] span')).display==='none'&&document.querySelector('[data-mode=keep]').getBoundingClientRect().height>=40;})()`));
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(200);
+  await ev(`document.querySelector('[data-mode=kick]').click()`); await sleep(300);
+  check('back to ⚽ Kick: the kicker shows and the keeper is Mochi, Boo or Flap again', await ev(`P().soccer.mode==='kick'&&!document.querySelector('#socMascot').classList.contains('hidden')&&document.querySelector('#socTip').textContent.includes(KEEPERS[P().soccer.level].name)&&document.querySelector('#socTitle').textContent.includes('Soccer Field')`));
+  // save data
+  const kv23=await ev(`JSON.stringify(Object.assign({},DB,{version:14,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.soccer.keep;delete q.soccer.mode;delete q.stats.saves;return q;})}))`);
+  await ev(`P().soccer.mode='keep';save()`); const kv24=await ev(`JSON.stringify(DB)`);
+  await ev(`doRestore(${JSON.stringify(kv23)})`); await sleep(300);
+  check('a v1.23 backup restores with Kick mode and no keeper record (save version 15)', await ev(`DB_VERSION===15&&DB.version===15&&DB.profiles.every(p=>p.soccer.mode==='kick'&&p.soccer.keep.level==='easy'&&p.soccer.keep.best.hard===0&&p.soccer.keep.gloves.length===0&&p.stats.saves===0)`));
+  await ev(`doRestore(${JSON.stringify(kv24)})`); await sleep(300);
+  check('a v1.24 backup keeps Keep mode, best saves, gloves and the saves count', await ev(`(()=>{const p=DB.profiles.find(p=>p.soccer.keep.gloves.length);return p&&p.soccer.mode==='keep'&&p.soccer.keep.best.hard===5&&p.soccer.keep.gloves.length===2&&p.stats.saves>=10;})()`));
+  await ev(`closeModal();{const p=DB.profiles[0];p.soccer.keep='oops';p.soccer.mode=7;normalize(p);p.soccer.keep.best.hard=99;p.soccer.keep.gloves=['hard','hard','x'];normalize(p);}`);
+  check('odd keeper data is made safe', await ev(`(()=>{const k=DB.profiles[0].soccer;return k.mode==='kick'&&k.keep.level==='easy'&&k.keep.best.hard===5&&k.keep.gloves.join()==='hard';})()`));
+  await ev(`DB.activeId=DB.profiles[0].id;enterRoom();show('room')`); await sleep(200);
 
   console.log('About & Gift Story (v1.22)');
   check('a new device (no rooms at the start) noted the version without a What\'s New box', await ev(`DB.settings.seenNew===APP_VERSION`));
