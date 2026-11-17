@@ -85,7 +85,8 @@ _Last updated: 2026-11-16_
 - PR #29 "Shop filters & big dreams (v1.29)": merged.
 - PR #30 "Grown-up helpers (v1.30)" on branch `feature/helpers` (from `main` after #29): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
-  `android/app/build/`, `android/local.properties`) are ignored.
+  `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
+  puts the APK) are ignored.
 
 ## What has been tested
 - `index.html` was tested in headless Chrome at tablet (1180×820) and phone (412×860) sizes:
