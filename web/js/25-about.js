@@ -64,7 +64,11 @@ const GIFT_TIMELINE=[
     news:['🎤 5 new songs on the Stage: 8 in all',
           '💖 Neon Hearts, 👏 Stadium Clap and 🚀 Rocket Launch',
           '🦖 Dino Stomp (slow and big) and 🌙 Moon Lullaby (calm)',
-          '📒 4 new Stage stickers, like 🎶 Whole Setlist']}
+          '📒 4 new Stage stickers, like 🎶 Whole Setlist']},
+  {v:'1.27',d:'2026-11-16',i:'⭐',n:'Looks & Night Mode',why:'Your favourite outfits in one tap, and a cozy room at night',
+    news:['⭐ My Looks in the Closet: keep 4 outfits, wear one with a tap',
+          '👋 Tap your buddy to wave, dance, laugh or nap',
+          '🌙 Turn the lights off: lamps glow and stars come out']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

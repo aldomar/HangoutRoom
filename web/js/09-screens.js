@@ -113,7 +113,8 @@ function renderRoom(){
   const list=items.filter(i=>!DECOR[i.type].flat&&!DECOR[i.type].wall).map(i=>({y:i.y,h:deco(i)}));
   list.push({y:604,h:mascotG(p)}); list.push({y:PET_SPOT.y,h:petG(p)}); list.sort((a,b)=>a.y-b.y); // the pet bed by Fuzzy (section 22)
   s+=list.map(o=>o.h).join('');
-  roomSvg.innerHTML=s;
+  s+=nightLayer(p,R); // 🌙 night mode (section 31, v1.27)
+  roomSvg.innerHTML=s; emoteBar(false); nightBtn();
   roomSvg.classList.toggle('decorating',decorating);
   $('#roomTitle').textContent=`${p.name}'s ${ROOM_NAMES[roomNo]}`;
   const other=[1,2,3].filter(n=>n!==roomNo); // one button for each of the other two rooms
@@ -129,7 +130,7 @@ function say(text){
 function mascotTap(){
   const g=$('#mascotG'); if(!g) return;
   g.classList.remove('hop'); void g.getBoundingClientRect(); g.classList.add('hop'); setTimeout(()=>g.classList.remove('hop'),650);
-  SFX.happy(); vibrate(10);
+  SFX.happy(); vibrate(10); emoteBar(true); // the 4 emote buttons (section 31)
   const p=P(); const lines=[`Hi ${p.name}! 💜`,'Squish time? 🍡','Love your style ✨',`I'm ${p.mascotName}!`,`*happy ${(BUDDIES[p.look.kind]||BUDDIES.bunny).name.toLowerCase()} noises*`,"Let's play dress-up!",'Pop pop pop! 🫧',"You're the best!",'Fuzzy and cozy 🧦','Dance break! 💃','Stay spooky-cute 🦇'];
   say(lines[Math.floor(Math.random()*lines.length)]);
 }
@@ -362,6 +363,7 @@ function renderCloset(){
   const p=P(); if(!p) return;
   $('#closetMascot').innerHTML=mascotSVG(p.look);
   $('#mascotNameBtn').textContent=p.mascotName+' ✏️';
+  renderLooks(); // ⭐ My Looks (section 31)
   $('#closetTabs').innerHTML=Object.entries(CLOSET).map(([k,c])=>`<button class="tab ${k===closetCat?'on':''}" data-cat="${k}">${c.icon} ${c.label}</button>`).join('');
   const C=CLOSET[closetCat];
   $('#closetGrid').innerHTML=easySort(C.items,it=>isOwned(p,closetCat,it)?0:it.price).map(it=>{const own=isOwned(p,closetCat,it),on=p.look[closetCat]===it.id;
