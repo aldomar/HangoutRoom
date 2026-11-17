@@ -260,10 +260,12 @@ in order). The speed check comes last on purpose: the app is fast enough today, 
   - 🌙 Night mode per room (the round button in the room's corner): one dark layer with soft light around lamps, lights
     and the buddy; the window (or the Backyard sky) shows the moon and stars. Drawn once, no animation; off while decorating.
   - 2 stickers (⭐ Fashionista, 🌙 Night Owl). Save version 17 (`looks`, `night`, `stats.nights`).
-- **🎁 Gifts & room presets (v1.28):** 🎁 give a decoration from My Stuff (it leaves your stuff) or coins (5 / 10 / 20,
+- ✅ **🎁 Gifts & room presets (v1.28):** 🎁 give a decoration from My Stuff (it leaves your stuff) or coins (5 / 10 / 20,
   never more than you have) to another room on the same tablet. **No PIN check** (owner's choice). It arrives as a
   wrapped box in their room; tapping it opens it with confetti and says who it's from. Clothes and fidgets can't be given.
   🏠 Save up to 3 layouts per room and load one later (things no longer owned are skipped). 2 stickers.
+  As built (`32-gifts.js`): 🎁 from Settings or the top of My Stuff (what → who → ✔); the gift pile sits on the floor of
+  every room; 🏠 Layouts is a new Decorate tab; things moved to another room come back when a layout loads. Save version 18.
 - **🔎 Shop filters + 💰 big dreams (v1.29):** theme chips above the Closet and the Shop (All · 🦇 Emo · ☁️ Cute · ⚽ Sport ·
   🎤 Stage · 🦕 Dino · 🚀 Space · 🚗 Ride · 🤖 Hero · 🌳 Outdoor · 🍂 Season); older items get their theme from a list in the
   new file, so no ids change. 5 "big dream" decorations at **60–100 coins** (Canopy Bed, Arcade Cabinet, Castle Bunk Bed,

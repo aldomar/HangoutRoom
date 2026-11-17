@@ -335,7 +335,7 @@ body.easy .cube{margin-bottom:0}
 /* Seasons (v1.17): headings in the Decorate grid, and the deco tabs show only icons on a phone */
 .grid-head{grid-column:1/-1;font-weight:900;font-size:16px;padding:6px 4px 0;color:var(--muted,#cbbbe6)}
 .grid-head.now{color:var(--gold,#ffd166)}
-@media (max-width:620px){#decoTabs .tab span{display:none}#decoTabs{gap:4px;padding:8px 4px}#decoTabs .tab{font-size:21px;padding:8px 0;min-width:48px}}
+@media (max-width:620px){#decoTabs .tab span{display:none}#decoDone span{display:none}#decoDone{min-width:52px}#decoTabs{gap:2px;padding:8px 2px}#decoTabs .tab{font-size:21px;padding:8px 0;min-width:46px}}
 /* Sticker Book (v1.18) */
 #stkBtn{position:relative;min-width:48px}#decoBtn{min-width:48px}
 .stk-dot{position:absolute;top:-3px;right:-3px;width:14px;height:14px;border-radius:50%;background:#ff4f8b;border:2px solid var(--panel)}
@@ -527,3 +527,30 @@ body.easy .em-btn{min-width:76px;min-height:76px;font-size:36px}
 .lk-ask{display:flex;align-items:center;justify-content:center;gap:10px;font-size:28px}.lk-ask svg{height:120px}
 body.easy .lk-label span{display:none}
 @media (max-width:620px){.lk-label span{display:none}.lk-slot,.lk-save{width:48px;height:56px}}
+/* 32. Gifts + room layouts (v1.28) */
+.gv-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));max-height:52vh;overflow:auto;padding:4px}
+.gv-coin{font-size:34px;flex-direction:column;line-height:1}
+.gv-coin b{font-size:20px;color:var(--gold)}
+.tile.gv.poor{opacity:.5}
+.gv-tile .tv{font-size:46px}
+.gv-note{text-align:center;color:var(--muted);font-weight:700;margin:8px 0 0}
+.gv-who{display:flex;flex-direction:column;gap:10px}
+.gv-who .btn{min-height:60px;font-size:20px;display:flex;align-items:center;gap:12px;border-width:3px;border-style:solid}
+.gv-who .btn span{font-size:30px}
+.gv-ask{display:flex;align-items:center;justify-content:center;gap:14px;font-size:40px;font-weight:900;color:var(--gold)}
+.gv-ask svg{height:130px;max-width:160px}
+.gv-ask span{color:var(--ink);font-size:30px}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:12px;height:18px;border-radius:3px;animation:confFall 2.2s ease-in forwards}
+@keyframes confFall{to{top:105%;transform:rotate(540deg) translateX(40px)}}
+.gift-pile{cursor:pointer;animation:giftWiggle 2.4s ease-in-out infinite;transform-box:fill-box}
+@keyframes giftWiggle{0%,80%,100%{rotate:0deg}85%{rotate:-4deg}90%{rotate:4deg}95%{rotate:-2deg}}
+.lay-hint{grid-column:1/-1}
+.tile.lay{cursor:default;grid-column:span 2}
+button.tile.lay{cursor:pointer}
+.lay-empty{font-size:40px;color:var(--purple);background:#ffffff12!important}
+.lay-btns{display:flex;gap:6px;width:100%}
+.lay-btns .btn{flex:1;min-height:48px}
+.lay-btns .btn.ghost{flex:0 0 52px}
+@media (max-width:620px){.tile.lay{grid-column:span 1}.lay-btns{gap:4px}.lay-btns .btn{padding:6px 4px}.lay-btns .btn.ghost{flex:0 0 44px}}
+.lay-ask svg{width:100%;max-width:320px;display:block;margin:0 auto;border-radius:12px;border:3px solid var(--line)}

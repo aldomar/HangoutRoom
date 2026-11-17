@@ -68,7 +68,11 @@ const GIFT_TIMELINE=[
   {v:'1.27',d:'2026-11-16',i:'⭐',n:'Looks & Night Mode',why:'Your favourite outfits in one tap, and a cozy room at night',
     news:['⭐ My Looks in the Closet: keep 4 outfits, wear one with a tap',
           '👋 Tap your buddy to wave, dance, laugh or nap',
-          '🌙 Turn the lights off: lamps glow and stars come out']}
+          '🌙 Turn the lights off: lamps glow and stars come out']},
+  {v:'1.28',d:'2026-11-16',i:'🎁',n:'Gifts & Layouts',why:'So you can surprise each other, and keep your favourite room',
+    news:['🎁 Give coins or a decoration to a brother or sister',
+          '📦 A gift for you? Tap the wrapped box in your room!',
+          '🏠 Save your room layout in 🛋️ Decorate and put it back any time']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
