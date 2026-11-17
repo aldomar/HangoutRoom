@@ -7,7 +7,7 @@ function show(n){
   if(n!=='room'&&decorating) exitDecorate(true);
   cur=n; $$('.screen').forEach(s=>s.classList.toggle('on',s.id==='scr-'+n));
   const ep=n==='profiles'?null:P(); applyEasy();
-  if(ep&&ep.easy){if(n==='soccer'){ep.soccer.level='easy';ep.soccer.keep.level='easy';}if(n==='stage')ep.stage.level='easy';if(n==='code')ep.code.level='easy';} // Easy mode opens games on Easy
+  if(ep&&ep.easy){if(n==='soccer'){ep.soccer.level='easy';ep.soccer.keep.level='easy';}if(n==='stage')ep.stage.level='easy';if(n==='code')ep.code.level='easy';if(n==='brain')Object.keys(ep.brain.level).forEach(g=>{ep.brain.level[g]='easy';});} // Easy mode opens games on Easy
   if(n==='room'||n==='cards') checkBonus(); // gives any milestone cards she has earned (section 12)
   if(n==='room'||n==='soccer'){const t=giveTrophies();if(t.length)setTimeout(()=>toast(`🏆 ${t.join(' and ')} added to your room!`),400); // section 13
     const gl=giveGloves();if(gl.length)setTimeout(()=>toast(`🧤 ${gl.join(' and ')} added to your Backyard!`),t.length?2400:400);} // section 27
@@ -21,6 +21,7 @@ function show(n){
   if(n==='room'||n==='stage'){if(giveMic())setTimeout(()=>toast('🎤 The Golden Mic is in your room!'),400);} // section 14
   if(n==='stage') renderStage(); else stgStop();
   if(n==='code') renderCode(); else codeStop(); // section 18
+  if(n==='brain') renderBrain(); else brStop(); // section 28
   if(n==='stickers') renderStickers(); // section 21
   if(n==='about') renderAbout(); // section 25
   if(n==='room') stkDot();
@@ -140,6 +141,7 @@ function handleHot(h){
   else if(h==='window'||h==='goal'){SFX.click();show('soccer');} // goal: the Backyard's soccer goal (v1.23)
   else if(h==='stage'){SFX.click();show('stage');}
   else if(h==='code'){SFX.click();show('code');}
+  else if(h==='brain'){SFX.click();show('brain');} // the Backyard's chalkboard (v1.25)
   else if(h==='pet'){petTap();} // section 22
   else {SFX.locked();toast(`🔒 ${LOCKED[h]} is coming in a future update!`);}
 }

@@ -83,5 +83,9 @@ function normalize(p){
   p.code=Object.assign({level:'easy'},p.code&&typeof p.code==='object'&&!Array.isArray(p.code)?p.code:{});
   p.code.solved=Array.isArray(p.code.solved)?p.code.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[];
   if(!['easy','medium','hard','move','if','challenge'].includes(p.code.level)) p.code.level='easy';
+  // Brain Games (v1.25): the last game played, the level picked in each game, and the puzzle ids solved (each pays once).
+  const br=p.brain&&typeof p.brain==='object'&&!Array.isArray(p.brain)?p.brain:{}, brL=br.level&&typeof br.level==='object'&&!Array.isArray(br.level)?br.level:{};
+  p.brain={game:['snack','memory','pop'].includes(br.game)?br.game:'snack',level:{},solved:Array.isArray(br.solved)?br.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[]};
+  ['snack','memory','pop'].forEach(g=>{p.brain.level[g]=['easy','medium','hard'].includes(brL[g])?brL[g]:'easy';});
 }
 DB.profiles.forEach(normalize);

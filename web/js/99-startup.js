@@ -26,6 +26,7 @@ window.androidBack=function(){
   if(cur==='cards'||cur==='soccer'||cur==='stickers'||cur==='about'){show('room');return true;}
   if(cur==='stage'){if(STG.state==='pick')show('room');else stgPickView();return true;} // a song -> the song list -> room
   if(cur==='code'){clBackKey();return true;} // a puzzle -> the puzzle list -> room
+  if(cur==='brain'){brBackKey();return true;} // a puzzle -> the Brain Games menu -> room
   if(cur==='room'){if(roomNo!==1)goRoom(1);else show('profiles');return true;} // Loft or Backyard -> room -> profiles
   return false;
 };

@@ -438,3 +438,59 @@ body.easy .stk svg{width:110px;height:110px}body.easy .stk.locked .sn{display:no
 #socTabs .tab.mode.on{background:var(--gold);color:#2b2235}
 .soc-gap{flex:0 0 10px}
 @media (max-width:620px){#socTabs [data-lvl] span{display:none}#socTabs [data-lvl]{font-size:21px;padding:6px 12px}#socTabs{gap:5px;padding:8px 4px}}
+
+/* Brain Games (v1.25): menu, puzzle screen, Snack Stand, Memory Match, Number Pop */
+.br-menu{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:16px;padding:16px;padding-bottom:max(16px,env(safe-area-inset-bottom))}
+.br-games{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;width:min(860px,100%)}
+.br-game{background:var(--panel2);border:4px solid var(--gc);border-radius:24px;padding:18px 14px;box-shadow:0 6px 0 #1a1424;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:200px;color:var(--ink,#fff)}
+.br-game:active{transform:translateY(3px);box-shadow:0 3px 0 #1a1424}
+.br-gi{font-size:64px;line-height:1.1}
+.br-game b{font-size:22px}
+.br-game small.hint{font-size:15px;padding:0}
+.br-pips{display:flex;gap:8px}.br-pips i{font-style:normal;font-size:22px;opacity:.3;filter:grayscale(1)}.br-pips i.on{opacity:1;filter:none}
+.br-n{font-weight:900;color:var(--gold);font-size:16px}
+.br-play{flex:1;min-height:0;display:flex;flex-direction:column}
+.br-scroll{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 12px;padding-bottom:max(16px,env(safe-area-inset-bottom))}
+.br-dotrow{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.br-dot{width:48px;height:48px;border-radius:50%;background:var(--panel2);border:3px solid var(--line);font-weight:900;font-size:18px;position:relative}
+.br-dot.on{border-color:var(--gold);box-shadow:0 0 0 3px #ffd16666}
+.br-dot.done{background:var(--mint);color:#2b2235}
+.br-q{width:min(760px,100%);display:flex;justify-content:center}
+.br-card{background:#2f5d50;border:6px solid #c98b52;border-radius:18px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;box-shadow:0 5px 0 #1a1424}
+.br-ask{font-size:20px;font-weight:900;text-align:center;line-height:1.35}
+.br-pic{max-width:100%;height:auto}
+.br-big{font-size:34px}
+.br-pic2{font-size:30px;letter-spacing:2px;text-align:center}
+.br-order{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px}
+.br-grp{display:flex;flex-direction:column;align-items:center;background:#ffffff14;border-radius:14px;padding:6px 8px}
+.br-grp b{font-size:26px}.br-grp .br-pic{width:110px!important}
+.br-plus{font-size:32px;font-weight:900}
+.br-msg{min-height:26px;font-weight:900;font-size:18px;color:var(--gold);text-align:center}
+.br-msg.pop{animation:brPop .5s ease}
+@keyframes brPop{0%{transform:scale(.6)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+.wob{animation:shake .4s ease}
+.br-board{width:min(860px,100%);display:flex;justify-content:center}
+.br-choices{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+.br-ch{min-width:96px;min-height:96px;border-radius:22px;background:var(--panel2);border:4px solid var(--line);box-shadow:0 5px 0 #1a1424;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 12px}
+.br-ch b{font-size:34px}
+.br-ch.right{background:var(--mint);color:#2b2235;border-color:#fff}
+.br-dots{display:block;font-size:12px;letter-spacing:1px;max-width:84px;line-height:1.1;color:var(--gold);word-break:break-all;text-align:center}
+.mem-grid{display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:10px;width:min(100%,calc(var(--cols) * var(--cw,128px)))}
+.mem-card{aspect-ratio:3/4;border-radius:16px;background:var(--purple);border:4px solid #fff;box-shadow:0 4px 0 #1a1424;position:relative;padding:0;overflow:hidden}
+.mem-back{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:34px}
+.mem-face{position:absolute;inset:0;background:#fff6fb;display:none;align-items:center;justify-content:center;padding:6px}
+.mem-face svg{width:100%;height:100%}
+.mem-card.open .mem-face{display:flex}.mem-card.open .mem-back{display:none}
+.mem-card.open{animation:brPop .25s ease}
+.mem-card.got{border-color:var(--mint);box-shadow:0 0 0 4px #8ff0d066}
+.pop-target{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;background:var(--gold);color:#2b2235;border-radius:999px;padding:4px 16px;margin:0 4px}
+.pop-target b{font-size:28px}.pop-target .br-dots{color:#2b2235}
+.pop-field{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;max-width:640px}
+.nbub{width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#ffffffee 0 12%,#bfefff 30%,#7fc8ffcc 75%);border:3px solid #fff;color:#2b2235;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:bubFloat 3s ease-in-out infinite;animation-delay:calc(var(--d) * -1)}
+.nbub b{font-size:28px}
+.nbub .br-dots{color:#5b3a99;font-size:14px;max-width:60px}
+.nbub.sel{background:radial-gradient(circle at 32% 28%,#fff 0 12%,#ffe9a8 30%,#ffd166 75%);box-shadow:0 0 0 5px #ffd16688}
+.nbub.popped{visibility:hidden}
+@keyframes bubFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+body.easy .br-ch{min-width:120px;min-height:120px}body.easy .nbub{width:96px;height:96px}
+@media (max-width:620px){.br-games{grid-template-columns:1fr}.br-game{min-height:0;flex-direction:row;flex-wrap:wrap;justify-content:center;padding:12px}.br-gi{font-size:44px}.mem-grid{gap:6px}.nbub{width:66px;height:66px}.br-ch{min-width:80px;min-height:80px}.br-ask{font-size:18px}}

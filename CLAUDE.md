@@ -73,7 +73,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`.
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`.
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
   optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it.
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
@@ -142,6 +142,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   25. `25-about.js` About & Gift Story (`ABOUT_DEFAULT`, `GIFT_TIMELINE`, `aboutData`, `renderAbout`, `whatsNew`)
   26. `26-backyard.js` Backyard, the third room (`YARD_FENCES`, `yardBack`, `yardFurniture`, `yardSeason`, outdoor `DECOR`)
   27. `27-keeper.js` Be the Keeper, Soccer's 🧤 Keep mode (`STRIKERS`, `KEEP_SHOTS`, `KP`, `kpDive`, `drawKeep`, `drawStriker`, `GLOVES`)
+  28. `28-brain.js` Brain Games: menu and puzzle screen (`BRAIN_GAMES`, `brId`, `brOpen`, `brPuzzle`, `brWin`, `brChoices`) + 🧁 Snack Stand
+  29. `29-brain2.js` Brain Games: 🃏 Memory Match (`MEM_SETS`, `memPic`, `memDeck`, `memTap`) and 🫧 Number Pop (`POP_SETS`, `popNeed`, `popTap`)
   99. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -160,6 +162,12 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   saveable). The match runs from the main loop only (no timers). Her buddy is drawn once into a small canvas (`kpArt`),
   so the `#fuzz` filter isn't redrawn every frame. A 5/5 gives that level's glove once (`giveGloves()`): `gloveBronze` /
   `gloveSilver` / `gloveGold` (`award:1`), placed in the **Backyard** (`p.room3`) at their `TROPHY_SPOTS`. Glove ids are saved.
+- Brain Games (since v1.25, `28-brain.js` + `29-brain2.js`): the Backyard chalkboard (`data-hot="brain"`) opens `scr-brain`.
+  A game is one `BRAIN_GAMES` entry `{icon, name, desc, color, puzzles{easy,medium,hard}, start(pz, lvl, idx)}`; `start` fills
+  `#brQ` and `#brBoard` and calls `brWin()` when solved (`brOops(el)` for a wrong try). Puzzle ids are `<game>:<e|m|h><n>`
+  (`brId`), made from the place in the list, and saved in `brain.solved`: never reorder or remove puzzles, add new ones at
+  the end of a level. All puzzles are fixed (Memory boards use a shuffle seeded by the id). The smoke test checks every
+  answer, choice list, pair set and picture. Number Pop's bubbles are `.nbub` (`.bub` is the pop-it's).
 - Stage: the marquee (`stageMarquee()` in 04) hangs on the Cozy Loft's wall since v1.12 (it was above the closet). Songs are generated from small text recipes in `SONGS` (scale, chords, melody, drum patterns). `buildSong(id, level)`
   turns a recipe into audio events and a fixed note chart (no randomness). Song time comes from the audio clock
   (`stSongT()`), so taps line up with what she hears. Song ids `starlight/bats/sugar` and level ids are saved: never rename them.
@@ -240,6 +248,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   +5 per new drawing (3+ strokes, first 5 a day), +10 per bonus photocard (each milestone once). Making a photocard is free.
   Soccer: +1 / +2 / +3 per goal (Easy / Medium / Hard), +1 more per goal with 2+ soccer clothes on, +5 for 5/5.
   Be the Keeper (v1.24): the same per save (+1 / +2 / +3, +1 with the kit), +5 for 5/5 saves.
+  Brain Games (v1.25): +2 per puzzle the first time it is solved, +5 when every puzzle of a level is solved.
   Stage: 2 / 3 / 4 coins per star (Easy / Medium / Hard), 1–3 stars per song; no stars (and no coins) without a hit.
   Code Lab: +3 per puzzle the first time it is solved, +5 when every puzzle of a level is solved (Challenge: +5 and +10).
   Fidgets (v1.16): 1 per 5 slime stretches, 1 per 25 clicker clicks, Marble Maze +3 per new maze, +1 per replay, +5 once for all.

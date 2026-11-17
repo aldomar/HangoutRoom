@@ -4,7 +4,8 @@ dress-up, decorating, an Art Desk for drawing, a Photocard Wall for making colle
 a Fidget Shelf (pop-it, squishy, spinner, slime, clicker cube and a tilt marble maze), a Soccer Field for penalty kicks
 (or being the goalie),
 a Stage where the bunny performs to original songs (tap to the beat), five animal buddies to choose from,
-and a Code Lab where she "programs" the bunny with arrow blocks (a first taste of coding).
+a Code Lab where she "programs" the bunny with arrow blocks (a first taste of coding), and Brain Games (counting,
+memory and number puzzles).
 A family gift; not for sale or public sharing.
 
 ## Try it on a computer
@@ -24,7 +25,7 @@ Since version 1.3 a backup also holds the drawings from the Art Desk (you can sw
 to make the file smaller). Restoring an older backup without drawings leaves the drawings on the device alone.
 Photocards (since version 1.4) are always in the backup. They are tiny, because each card is saved as a
 short description (outfit, stage, frame, title) instead of a picture.
-Soccer, Stage and Code Lab progress (best scores, trophies, keeper gloves, the Golden Mic, puzzles solved) are in the backup too.
+Soccer, Stage, Code Lab and Brain Games progress (best scores, trophies, keeper gloves, the Golden Mic, puzzles solved) are in the backup too.
 
 ## The Cozy Loft (since version 1.10)
 Every room has a second room upstairs: tap **🪜 Loft** at the top of the room screen (and **🏠 Room** to go back).
@@ -35,7 +36,7 @@ in either room.
 A third room, outside: tap **🌳 Yard** at the top of the room screen. The top bar always has one button for each of
 the other two rooms (on a phone, just their icons), and Back goes to her first room.
 - A sky that shows the season (falling leaves, snow, blossoms or butterflies), a big tree with a swing, a garden shed
-  and a chalkboard easel (it becomes Brain Games in a later update).
+  and a chalkboard easel (📚 Brain Games, since version 1.25).
 - **Tap the soccer goal to play Soccer** (the same game as the window in her room).
 - In 🛋️ Decorate, the Walls and Floors tabs show **fences** (White Picket free; Garden Hedge, Stone Wall, Rainbow Fence,
   Bat Night Fence) and **ground** (Grass free; Flower Meadow, Sandy Beach, Stepping Stones, Soccer Stripes). Indoor
@@ -57,6 +58,22 @@ It remembers which one was played last.
 - Coins: +1 / +2 / +3 per save (Easy / Medium / Hard), +1 more per save with the team kit on, +5 for 5 out of 5.
 - Saving all 5 wins that level's **Bronze, Silver or Gold Glove** once. It stands in the Backyard, next to the goal.
 - 3 new stickers on the Soccer page: 🧤 First Save, 🧤 Safe Hands (25 saves) and 🥇 Glove Case (all 3 gloves).
+
+## Brain Games (since version 1.25)
+Tap the **chalkboard in the Backyard**. There are three games, each with 🐣 Easy (ages 3–5), 🌟 Medium (about 8) and
+🧠 Hard (about 11), and 8 puzzles on every level. A game opens on the first puzzle not solved yet; the numbered buttons
+jump to any puzzle, and solved ones turn green.
+- 🧁 **Snack Stand:** count the treats (Easy, with dots on the answers), add up an order (Medium), or work out change and
+  times tables (Hard).
+- 🃏 **Memory Match:** find the pairs: 6 cards, 12 cards or 20 cards. The pictures are your own buddy, the other buddies,
+  the pets and room things.
+- 🫧 **Number Pop:** pop every bubble with the number shown (Easy), pop two bubbles that make 10 or 20 (Medium), or pop
+  all the factors of a number (Hard).
+- **No timers, nothing lost.** A wrong answer just wobbles and says "Try again!".
+- Coins: +2 for each puzzle the first time it is solved, +5 more when a whole level is done. Playing again is free practice.
+- In Easy mode every game opens on Easy, and the questions are pictures, numbers and dots (no reading).
+- 4 new stickers on the Sticker Book's **Code & Brain** page: 🧁 Snack Shop, 🃏 Sharp Memory, 🫧 Number Popper (8 puzzles
+  each) and 🎓 Brain Champ (every level of all 3 games).
 
 ## Where things are
 In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk

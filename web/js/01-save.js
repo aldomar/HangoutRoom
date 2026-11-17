@@ -8,9 +8,9 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.24';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.25';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=15;          // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=16;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
 // pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
 const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:'',seenNew:''}; // seenNew (v1.22): last version whose What's New was shown
@@ -69,7 +69,9 @@ const MIGRATIONS={
   14: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.room3||typeof p.room3!=='object')) p.room3={wall:'picket',floor:'grass',items:[]}; }); },
   // v1.24 Be the Keeper: soccer.mode ('kick'|'keep'), soccer.keep {level, best{easy,medium,hard}, gloves[]} and
   // stats.saves. normalize() fills them in; this step adds the keeper record.
-  15: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&p.soccer&&typeof p.soccer==='object'&&!p.soccer.keep) p.soccer.keep={level:'easy',best:{easy:0,medium:0,hard:0},gloves:[]}; }); }
+  15: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&p.soccer&&typeof p.soccer==='object'&&!p.soccer.keep) p.soccer.keep={level:'easy',best:{easy:0,medium:0,hard:0},gloves:[]}; }); },
+  // v1.25 Brain Games: brain {game, level{snack,memory,pop}, solved[]} (puzzle ids like 'snack:e1'). normalize() fills it in.
+  16: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.brain||typeof p.brain!=='object')) p.brain={game:'snack',level:{snack:'easy',memory:'easy',pop:'easy'},solved:[]}; }); }
 };
 
 // Hair ids from before v1.11 (one closet item per colour) -> the colour they had. They stay readable forever:
