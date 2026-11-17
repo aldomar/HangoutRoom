@@ -41,6 +41,8 @@ _Last updated: 2026-11-16_
   Decisions and `PLAN.md`): Looks & night (v1.27) → Gifts & presets (v1.28) → Shop filters + big dreams (v1.29) →
   Grown-up helpers (v1.30) → Speed check (v1.31).
   - **👗 Looks, emotes & night mode: built, PR #27 open as v1.27** on branch `feature/looks` (from `main` after #26).
+    The owner tested it and is merging it.
+  - **🎁 Gifts & room layouts: built, PR #28 open as v1.28** on branch `feature/gifts` (on top of `feature/looks`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -76,7 +78,8 @@ _Last updated: 2026-11-16_
 - PR #24 "Be the Keeper (v1.24)": merged.
 - PR #25 "Brain Games (v1.25)": merged.
 - PR #26 "Stage song pack (v1.26)": merged.
-- PR #27 "Looks, emotes & night mode (v1.27)" on branch `feature/looks` (from `main` after #26): open.
+- PR #27 "Looks, emotes & night mode (v1.27)" on branch `feature/looks` (from `main` after #26): open (tested by the owner).
+- PR #28 "Gifts & room layouts (v1.28)" on branch `feature/gifts` (on top of `feature/looks`, so it shows #27's changes until #27 is merged): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -363,6 +366,22 @@ _Last updated: 2026-11-16_
   - Test changes: the sticker count is 68; the "comes before" sticker checks now find their place by sticker id instead of
     counting from the end, so new stickers no longer break them; the Brain Games restore check accepts save version 16 or later.
   Not tested automatically: how the emotes and the night glow look and feel on the real tablet.
+- **Gifts & room layouts (v1.28)**: 817 checks, all passing, no console errors. New checks:
+  - save version 18; Settings' 🎁 button; 5 / 10 / 20 coins; posters and prizes can't be given; "who" lists every other
+    room (not this one) with big buttons; nothing is sent before ✔; ✔ moves 10 coins into the other room's inbox; Kind Heart;
+    coins she doesn't have can't be given; the 🎁 tile in My Stuff; giving a decoration takes it out of her stuff
+  - the other room shows the gift pile with a 2; tapping opens the first gift (who from, confetti, coins added); the
+    decoration gift lands in the room; a gift from a newer app waits unseen
+  - 🏠 Layouts: 3 empty slots; saving keeps wall, floor and spots; picture + 📂 Load; Interior Designer; loading asks first,
+    puts spots and the wall back and brings a thing back from the Loft; newer things go to My Stuff; a thing given away
+    is skipped (she's told); saving over asks first; each room has its own layouts
+  - a v1.27 backup restores with no gifts and empty layouts; a v1.28 backup keeps them; odd data is made safe
+  - phone: the give box fits; the Layouts tab and slots fit
+  - Test changes: sticker count 70; the looks checks accept save version 17 or later; the phone Decorate-tabs check is now
+    for 7 tabs.
+  - Note: the 🧤 keeper checks are timing-sensitive. They failed twice while Android Studio was busy on the PC, then passed
+    with no change to that code.
+  Not tested automatically: how the gift opening feels, and passing the tablet between two children.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -638,6 +657,25 @@ _Last updated: 2026-11-16_
   and the speed check stays last (the app is fast today; it's there to catch slowness the new features might add);
   gifts are **decorations and coins only, with no PIN check**; 5 big-dream items at 60–100 coins are fine (more can be
   added later); 🔊 Read to me is **on by default in Easy mode**, off otherwise.
+- **Gifts & room layouts (built as v1.28, `32-gifts.js`):**
+  - 🎁 Give opens from ⚙️ Settings and from a 🎁 tile at the start of My Stuff (only when there is another room on the
+    tablet). Three steps, each a modal: what (🪙 5 / 10 / 20, or one tile per kind of decoration in My Stuff; no posters
+    or `award` prizes) → who (every other room, as big buttons with its badge and colour) → ✔ / ✖. **No PIN** (owner's
+    choice). The giver's coins or the item leave at once; the gift goes into the other room's `gifts[]` inbox as
+    `{id, from, badge, kind:'coins', n}` or `{…, kind:'decor', type}` (a new item uid is made when it's opened).
+  - The inbox shows as a wrapped gift pile (`data-hot="gift"`, with a count) at `GIFT_SPOT` (262, 690) in every room,
+    clear of the trophies, the pet and the buddy. Tapping it opens the oldest gift: confetti, "A gift from …", coins
+    added or the decoration placed in the room on screen. A gift of a decoration this app doesn't know (from a newer
+    backup) waits unopened and isn't drawn.
+  - 🏠 Layouts: a 7th Decorate tab. 3 slots per room (`presets['1'|'2'|'3']`), each `{wall, floor, items:[{uid,type,x,y}],
+    at}` with a small picture. Saving over a slot and loading both ask first. Loading puts what's in the room now into
+    My Stuff, then moves each saved item (found by uid in My Stuff or any room) back to its spot; items gone since
+    (given away) are skipped and she's told how many. The wall and floor come back only if still owned and of the right
+    kind (fence/ground in the Backyard).
+  - On a phone, Decorate's ✔ Done shows just ✔ so the 7 tabs fit.
+  - Stickers: 🎁 Kind Heart (`stats.gifts`), 🏠 Interior Designer (a layout saved). 70 in all.
+  - Save version 18: `gifts[]`, `presets{}`, `stats.gifts`.
+
 - **Looks, emotes & night mode (built as v1.27, `31-looks.js`):**
   - ⭐ My Looks: a row under the buddy in the Closet with 4 slots and 💾. Empty slot = keep the outfit there; full slot =
     wear it; 💾 then a full slot = replace it (a ✔/✖ box with before and after pictures). A look is every `look` key except
@@ -749,15 +787,15 @@ _Last updated: 2026-11-16_
 4. ~~Plan Phase 10 (backlog + helpers) in detail and get it agreed.~~ Agreed 2026-11-16.
 
 ## Next steps (Phase 10)
-1. ~~Build 👗 Looks, emotes & night mode (v1.27) on `feature/looks`.~~ Built (PR #27); owner: try it on the tablet and merge.
-2. Build 🎁 Gifts & room presets (v1.28) on `feature/gifts` (on top of `feature/looks`).
+1. ~~Build 👗 Looks, emotes & night mode (v1.27) on `feature/looks`.~~ Built (PR #27); the owner tested it.
+2. ~~Build 🎁 Gifts & room presets (v1.28) on `feature/gifts` (on top of `feature/looks`).~~ Built (PR #28); owner: try it and merge after #27.
 3. Build 🔎 Shop filters + 💰 big dreams (v1.29), then 🧑‍🔧 Grown-up helpers (v1.30, needs an Android Studio build),
    then ⚡ Speed check (v1.31), each on top of the one before.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 17 since v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 18 since v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

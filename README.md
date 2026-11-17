@@ -105,6 +105,21 @@ jump to any puzzle, and solved ones turn green.
 - 2 new stickers on the Room & Style page: ⭐ Fashionista (fill all 4 look spots) and 🌙 Night Owl (turn the lights off).
 - Looks and night settings are in the backup too.
 
+## Gifts & room layouts (since version 1.28)
+- **🎁 Give a gift** to a brother's or sister's room on the same tablet (no internet needed):
+  - Open it from ⚙️ Settings → 🎁 Give a gift, or from the 🎁 tile at the start of 🛋️ Decorate → 📦 My Stuff.
+  - Pick 🪙 5, 10 or 20 coins (never more than you have), or a decoration from My Stuff. Posters and prizes
+    (trophies, gloves, the Golden Mic) can't be given.
+  - Then pick whose room it's for, and tap ✔ to send it. The coins or the decoration leave your room straight away.
+- **Getting a gift:** a wrapped box (with a number if there are more) waits on the floor of their room. Tap it to open
+  it, with confetti and who it's from. Coins are added, and a decoration appears in the room (drag it anywhere in Decorate).
+- **🏠 Layouts** (🛋️ Decorate → 🏠 Layouts): keep up to 3 looks of each room (Room, Loft, Backyard).
+  - Tap "💾 Save room here" to keep where everything is, plus the wall and the floor.
+  - Tap 📂 Load to put it all back (it asks first). Things in the room now go to My Stuff.
+  - Things moved to another room come back. Things given away since are skipped.
+- 2 new stickers on the Room & Style page: 🎁 Kind Heart (give a gift) and 🏠 Interior Designer (save a layout).
+- Waiting gifts and saved layouts are in the backup too.
+
 ## Where things are
 In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
 (🎨 Art Desk) and the wardrobe (👗 Closet). In the Cozy Loft: the glowing **🎤 Stage** sign (since version 1.12)

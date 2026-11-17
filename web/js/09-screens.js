@@ -111,7 +111,7 @@ function renderRoom(){
   // Wall things (posters, shelves…) are drawn behind everything that stands, so things on a shelf show in front of it.
   s+=items.filter(i=>DECOR[i.type].wall&&!DECOR[i.type].flat).sort((a,b)=>a.y-b.y).map(deco).join('');
   const list=items.filter(i=>!DECOR[i.type].flat&&!DECOR[i.type].wall).map(i=>({y:i.y,h:deco(i)}));
-  list.push({y:604,h:mascotG(p)}); list.push({y:PET_SPOT.y,h:petG(p)}); list.sort((a,b)=>a.y-b.y); // the pet bed by Fuzzy (section 22)
+  list.push({y:604,h:mascotG(p)}); list.push({y:PET_SPOT.y,h:petG(p)}); list.push({y:GIFT_SPOT.y,h:giftG(p)}); // wrapped gifts (section 32) list.sort((a,b)=>a.y-b.y); // the pet bed by Fuzzy (section 22)
   s+=list.map(o=>o.h).join('');
   s+=nightLayer(p,R); // 🌙 night mode (section 31, v1.27)
   roomSvg.innerHTML=s; emoteBar(false); nightBtn();
@@ -144,6 +144,7 @@ function handleHot(h){
   else if(h==='code'){SFX.click();show('code');}
   else if(h==='brain'){SFX.click();show('brain');} // the Backyard's chalkboard (v1.25)
   else if(h==='pet'){petTap();} // section 22
+  else if(h==='gift'){giftOpen();} // section 32
   else {SFX.locked();toast(`🔒 ${LOCKED[h]} is coming in a future update!`);}
 }
 roomSvg.addEventListener('click',e=>{
@@ -206,12 +207,15 @@ function renderDecoGrid(){
     // posters are each different, so they get one tile each
     h=stored.filter(i=>DECOR[i.type].art).map(i=>`<button class="tile" data-place-uid="${i.uid}"><div class="tv"><svg viewBox="${DECOR[i.type].box}">${DECOR[i.type].d(i)}</svg></div><div class="tn">${DECOR[i.type].name}</div></button>`).join('')
       +keys.map(k=>`<button class="tile" data-place="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${DECOR[k].name}</div><div class="tp cnt">×${counts[k]}</div></button>`).join('');
-    if(!h) h=`<div class="empty">Nothing stored right now! Drag things from your room down here to put them away, or get new stuff in the Shop 🛍️</div>`;
+    h=giveTile(p)+h; // 🎁 Give (section 32)
+    if(h===giveTile(p)) h+=`<div class="empty">Nothing stored right now! Drag things from your room down here to put them away, or get new stuff in the Shop 🛍️</div>`;
   } else if(decoTab==='shop'){ // seasonal things (v1.17) have their own tab
     const yd=([k,d])=>roomNo===3&&d.yard?0:1; // the Backyard lists outdoor things first (v1.23)
     h=easySort(Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award&&!d.season).sort((a,b)=>yd(a)-yd(b)),([k,d])=>d.price).map(([k,d])=>`<button class="tile${poorCls(p,false,d.price)}" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div>${priceTag(p,d.price)}</button>`).join('');
   } else if(decoTab==='season'){
     h=seasonGrid(p); // section 20
+  } else if(decoTab==='layouts'){
+    h=layoutGrid(p); // 🏠 room layouts (section 32)
   } else if(decoTab==='colors'){
     h=furnGrid(p); // furniture colours (v1.20, section 23)
   } else {
@@ -254,10 +258,12 @@ function settingsModal(){
   const p=P();
   modal('⚙️ Settings',`<div class="setlist"><button class="btn ghost" id="sSound">${s.sound?'🔊 Sounds: ON':'🔇 Sounds: OFF'}</button><button class="btn ghost" id="sMusic">${s.music?'🎵 Music: ON':'🎵 Music: OFF'}</button>`
     +(p?`<button class="btn ghost" id="sEasy">${p.easy?'🐣 Easy mode: ON':'🐣 Easy mode: OFF'}</button>`:'')
+    +(p?`<button class="btn ghost" id="sGift">🎁 Give a gift</button>`:'')
     +`<button class="btn ghost" id="sSwitch">👥 Switch Room</button><button class="btn ghost" id="sBackup">💾 Backup &amp; Restore</button><button class="btn ghost" id="sPin">${s.pin?'🔒 Grown-up PIN: ON':'🔓 Grown-up PIN: OFF'}</button><button class="btn ghost" id="sAbout">💌 About</button></div><p class="about">🐰 Hangout Room · version ${APP_VERSION}</p>`,[{text:'Close',cls:'pink'}]);
   $('#sSound').onclick=()=>{s.sound=!s.sound;save();SFX.click();settingsModal();};
   $('#sMusic').onclick=()=>{s.music=!s.music;save();if(s.music)startMusic();else stopMusic();settingsModal();};
   if(p) $('#sEasy').onclick=()=>{p.easy=!p.easy;save();SFX.click();applyEasy();if(cur==='room')renderRoom();settingsModal();};
+  if(p) $('#sGift').onclick=giveModal; // section 32
   $('#sSwitch').onclick=()=>{closeModal();show('profiles');};
   $('#sBackup').onclick=backupModal;
   $('#sPin').onclick=pinSettings;
