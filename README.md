@@ -3,7 +3,7 @@ Mini game app for niblings: a cozy virtual bedroom with a fuzzy emo bunny, fidge
 dress-up, decorating, an Art Desk for drawing, a Photocard Wall for making collectible bunny cards,
 a Fidget Shelf (pop-it, squishy, spinner, slime, clicker cube and a tilt marble maze), a Soccer Field for penalty kicks
 (or being the goalie),
-a Stage where the bunny performs to original songs (tap to the beat), five animal buddies to choose from,
+a Stage where the bunny performs to 8 original songs (tap to the beat), five animal buddies to choose from,
 a Code Lab where she "programs" the bunny with arrow blocks (a first taste of coding), and Brain Games (counting,
 memory and number puzzles).
 A family gift; not for sale or public sharing.
@@ -74,6 +74,20 @@ jump to any puzzle, and solved ones turn green.
 - In Easy mode every game opens on Easy, and the questions are pictures, numbers and dots (no reading).
 - 4 new stickers on the Sticker Book's **Code & Brain** page: 🧁 Snack Shop, 🃏 Sharp Memory, 🫧 Number Popper (8 puzzles
   each) and 🎓 Brain Champ (every level of all 3 games).
+
+## Stage song pack (since version 1.26)
+- The 🎤 Stage now has **8 songs** (it had 3). Like the first ones, every new song is made by code inside the app:
+  no recordings, and nothing copied from real songs.
+  - 💖 **Neon Hearts:** a sparkly dance track.
+  - 👏 **Stadium Clap:** clap along with the crowd, like at a soccer match.
+  - 🦖 **Dino Stomp:** slow and big, good for the little ones.
+  - 🚀 **Rocket Launch:** fast and bright.
+  - 🌙 **Moon Lullaby:** calm and cosy, with a soft echo.
+- The song list is now a grid (4 across on the tablet, 2 across on a phone).
+- Nothing else changed: the 🎙️ Golden Mic is still 3 stars on Hard on any song, and the 📸 Encore! card is still a star
+  on each of the first 3 songs.
+- 4 new stickers on the Stage page: 🦖 Dino Stomper, 🚀 Lift-off!, 🌙 Sweet Dreams (a star on that song) and
+  🎶 Whole Setlist (3 stars on every song). "Every Song" now means all 8 songs; anyone who already has it keeps it.
 
 ## Where things are
 In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
@@ -172,7 +186,7 @@ Like everything else, they are for anyone to use. All are bought with coins she 
 
 ## Sticker Book (since version 1.18)
 - Tap **📒** at the top of the room. The book has 6 pages (🫧 Fidgets, 🎨 Art & Cards, ⚽ Soccer, 🎤 Stage, 💻 Code Lab,
-  🏠 Room & Style) with 45 stickers in all.
+  🏠 Room & Style) with 66 stickers in all.
 - Each sticker is for doing something, for example popping 1,000 bubbles, scoring 25 goals, solving a ✨ My Move
   puzzle, or putting 5 things in the Loft. Many come in steps (1, 2 or 3 little stars on the sticker).
 - Stickers she hasn't got yet are grey, with what to do and a bar that shows how far she is. Tap one to see the numbers.

@@ -80,7 +80,7 @@ const BONUS=[
   // v1.7 Stage
   {id:'show1',name:'First Show!',ok:p=>p.stats.shows>=1},
   {id:'combo1',name:'Full Combo',ok:p=>p.stats.fullCombos>=1},
-  {id:'encore',name:'Encore!',ok:p=>SONG_IDS.every(s=>Object.values(p.stage.best[s]||{}).some(r=>r.stars>0))},
+  {id:'encore',name:'Encore!',ok:p=>['starlight','bats','sugar'].every(s=>Object.values(p.stage.best[s]||{}).some(r=>r.stars>0))},
   {id:'superstar',name:'Superstar',ok:p=>SONG_IDS.some(s=>((p.stage.best[s]||{}).hard||{}).stars>=3)}
 ];
 

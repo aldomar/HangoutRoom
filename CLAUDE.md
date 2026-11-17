@@ -144,6 +144,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   27. `27-keeper.js` Be the Keeper, Soccer's 🧤 Keep mode (`STRIKERS`, `KEEP_SHOTS`, `KP`, `kpDive`, `drawKeep`, `drawStriker`, `GLOVES`)
   28. `28-brain.js` Brain Games: menu and puzzle screen (`BRAIN_GAMES`, `brId`, `brOpen`, `brPuzzle`, `brWin`, `brChoices`) + 🧁 Snack Stand
   29. `29-brain2.js` Brain Games: 🃏 Memory Match (`MEM_SETS`, `memPic`, `memDeck`, `memTap`) and 🫧 Number Pop (`POP_SETS`, `popNeed`, `popTap`)
+  30. `30-songs2.js` Stage song pack (5 more `SONGS` recipes, pushed onto `SONG_IDS`; 4 song stickers)
   99. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -170,7 +171,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   answer, choice list, pair set and picture. Number Pop's bubbles are `.nbub` (`.bub` is the pop-it's).
 - Stage: the marquee (`stageMarquee()` in 04) hangs on the Cozy Loft's wall since v1.12 (it was above the closet). Songs are generated from small text recipes in `SONGS` (scale, chords, melody, drum patterns). `buildSong(id, level)`
   turns a recipe into audio events and a fixed note chart (no randomness). Song time comes from the audio clock
-  (`stSongT()`), so taps line up with what she hears. Song ids `starlight/bats/sugar` and level ids are saved: never rename them.
+  (`stSongT()`), so taps line up with what she hears. Song ids `starlight/bats/sugar` (and since v1.26 `neon/clap/dino/rocket/lullaby`, in `30-songs2.js`) and level ids are saved: never rename them.
+  `SONG_IDS` is made when 14 loads, so a song file must push its new ids onto it. A new song must pass the smoke test's chart rules
+  (55–75 s long, Easy < Medium < Hard notes, so keep 3–4 melody notes in most bars). Encore! is pinned to the first 3 songs.
   3 stars on Hard gives the Golden Mic (`goldenMic`, `award:1`) once (`stage.mic`). Background music pauses during a song.
 - Easy mode (per profile, `p.easy`): `applyEasy()` puts `easy` on `<body>` while that room is open; CSS under `body.easy`
   makes things bigger and hides tips. The pink room labels (`sign()`, class `sign`) only show under `body.easy` (since v1.12). Shop grids go through `easySort()`, `poorCls()` and `priceTag()`; buying goes through
