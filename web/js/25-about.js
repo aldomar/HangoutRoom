@@ -80,7 +80,10 @@ const GIFT_TIMELINE=[
   {v:'1.30',d:'2026-11-16',i:'📷',n:'Read to Me & Snapshots',why:'So the little ones can hear the buttons, and you can keep pictures of your rooms',
     news:['📷 Take a picture of your room (the button under 🌙) or a photocard',
           '🔊 Read to me: buttons say their names (⚙️ Settings, on in Easy mode)',
-          '💾 Grown-ups: Settings now shows when the last backup was']}
+          '💾 Grown-ups: Settings now shows when the last backup was']},
+  {v:'1.31',d:'2026-11-17',i:'🛋️',n:'Room Tweaks',why:'So decorating does what you expect, and your name fits on a phone',
+    news:['🛋️ Decorating: the thing you touch last comes to the front',
+          '📱 On a phone, your room name has its own row again']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

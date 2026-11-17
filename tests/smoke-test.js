@@ -2118,6 +2118,33 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   await ev(`show('room')`);
 
+  console.log('Room tweaks (v1.31)');
+  // two standing things and two wall things, overlapping; the one touched last must come to the front
+  await ev(`(()=>{const p=P(),R=p.room;p.coins=500;goRoom(1);R.items.push({uid:'tfA',type:'plant',x:300,y:600,placed:true},{uid:'tfB',type:'lava',x:310,y:600,placed:true},
+    {uid:'tfC',type:'lights',x:300,y:200,placed:true},{uid:'tfD',type:'lights',x:310,y:205,placed:true});enterDecorate();})()`); await sleep(150);
+  const decoOrder=()=>ev(`[...roomSvg.querySelectorAll('.deco')].map(g=>g.dataset.uid).filter(u=>/^tf/.test(u)).join()`);
+  check('things start in list order', (await decoOrder())==='tfC,tfD,tfA,tfB', await decoOrder());
+  await ev(`dragDeco('tfA',300,600)`); await sleep(100);
+  check('touching the back thing brings it to the front (drawn last, saved last)', (await decoOrder())==='tfC,tfD,tfB,tfA'&&await ev(`P().room.items[P().room.items.length-1].uid==='tfA'&&JSON.parse(localStorage.getItem('hangoutRoom.v1')).profiles.find(q=>q.id===DB.activeId).room.items.pop().uid==='tfA'`), await decoOrder());
+  await ev(`dragDeco('tfC',300,200)`); await sleep(100);
+  check('…and a wall thing too (still behind the standing things)', (await decoOrder())==='tfD,tfC,tfB,tfA', await decoOrder());
+  check('the buddy is still drawn in front of decorations', await ev(`(()=>{const k=[...roomSvg.children];return k.indexOf(document.querySelector('#mascotG'))>k.indexOf(roomSvg.querySelector('.deco[data-uid="tfA"]'));})()`));
+  // put tfB away and move it to the start of the list, so My Stuff's lava tile finds it first
+  await ev(`(()=>{const R=P().room,it=R.items.find(i=>i.uid==='tfB');it.placed=false;R.items.splice(R.items.indexOf(it),1);R.items.unshift(it);renderRoom();document.querySelector('[data-dt=mine]').click();})()`); await sleep(100);
+  await ev(`document.querySelector('#decoGrid [data-place="lava"]').click()`); await sleep(100);
+  check('placing from My Stuff puts it in front', (await decoOrder())==='tfD,tfC,tfA,tfB', await decoOrder());
+  await ev(`exitDecorate();P().room.items=P().room.items.filter(i=>!/^tf/.test(i.uid));save();renderRoom()`);
+  for(const [w,h,easy] of [[360,740,false],[360,740,true],[412,860,false]]){
+    await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:true});
+    await ev(`P().easy=${easy};P().name='Testy';goRoom(2);applyEasy()`); await sleep(300);
+    const bar=await ev(`(()=>{const t=document.querySelector('#roomTitle'),bs=[...document.querySelectorAll('#scr-room .topbar .btn')].map(b=>b.getBoundingClientRect());return {tw:Math.round(t.getBoundingClientRect().width),full:t.scrollWidth<=t.clientWidth,minB:Math.round(Math.min(...bs.map(b=>b.width))),fit:bs.every(b=>b.right<=innerWidth)};})()`);
+    check(`phone ${w}px${easy?' (Easy)':''}: the room name shows in full and the buttons are 48 px+`, bar.full&&bar.tw>=150&&bar.minB>=48&&bar.fit, bar);
+    if(w===360&&!easy) await shot('J01-phone-room-bar');
+  }
+  await ev(`P().easy=false;goRoom(1);applyEasy()`);
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  check('tablet: the room bar is still one row', await ev(`(()=>{const t=document.querySelector('#roomTitle').getBoundingClientRect(),b=document.querySelector('#setBtn').getBoundingClientRect();return Math.abs(t.top+t.height/2-(b.top+b.height/2))<8;})()`));
+
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');
   ws.close(); ch.kill(); setTimeout(()=>{try{fs.rmSync(prof,{recursive:true,force:true});}catch(e){} process.exit(bad||errors.length?1:0);},800);
