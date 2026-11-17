@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('74 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33), ids all different, 6 or more per page', await ev(`STICKERS.length===74&&new Set(STICKERS.map(s=>s.id)).size===74&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('76 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34), ids all different, 6 or more per page', await ev(`STICKERS.length===76&&new Set(STICKERS.map(s=>s.id)).size===76&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1674,9 +1674,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();P().coins=100;save();show('room');goRoom(3)`); await sleep(250);
   check('the Backyard chalkboard is now a hotspot', await ev(`!!document.querySelector('#roomSvg [data-hot=brain][data-piece=easel]')`));
   await ev(`handleHot('brain')`); await sleep(300); await shot('H01-brain-menu');
-  check('it opens the Brain Games menu with 5 games (2 more since v1.33), 0 / 24 each', await ev(`cur==='brain'&&BR.view==='menu'&&[...document.querySelectorAll('#brMenu [data-game]')].map(b=>b.dataset.game).join()==='snack,memory,pop,train,word'&&[...document.querySelectorAll('#brMenu .br-n')].every(n=>n.textContent.includes('0 / 24'))`));
+  check('it opens the Brain Games menu with 7 games (2 more since v1.33, 2 more since v1.34), 0 / 24 each', await ev(`cur==='brain'&&BR.view==='menu'&&[...document.querySelectorAll('#brMenu [data-game]')].map(b=>b.dataset.game).join()==='snack,memory,pop,train,word,bake,facts'&&[...document.querySelectorAll('#brMenu .br-n')].every(n=>n.textContent.includes('0 / 24'))`));
   // the puzzle recipes
-  check('every game has 8 puzzles on each level, with different ids', await ev(`Object.keys(BRAIN_GAMES).every(g=>BRAIN_LVLS.every(l=>BRAIN_GAMES[g].puzzles[l].length===8))&&new Set(Object.keys(BRAIN_GAMES).flatMap(g=>BRAIN_LVLS.flatMap(l=>BRAIN_GAMES[g].puzzles[l].map((z,i)=>brId(g,l,i))))).size===120`));
+  check('every game has 8 puzzles on each level, with different ids', await ev(`Object.keys(BRAIN_GAMES).every(g=>BRAIN_LVLS.every(l=>BRAIN_GAMES[g].puzzles[l].length===8))&&new Set(Object.keys(BRAIN_GAMES).flatMap(g=>BRAIN_LVLS.flatMap(l=>BRAIN_GAMES[g].puzzles[l].map((z,i)=>brId(g,l,i))))).size===168`));
   check('Snack Stand: every answer is one of the choices; choices are different whole numbers (3 on Easy, 4 after)', await ev(`BRAIN_LVLS.every(l=>BRAIN_GAMES.snack.puzzles[l].every((z,i)=>{const o=BRAIN_GAMES.snack.options(z,l,i),a=BRAIN_GAMES.snack.answer(z,l);return o.includes(a)&&new Set(o).size===o.length&&o.every(n=>Number.isInteger(n)&&n>=1)&&o.length===(l==='easy'?3:4);}))`));
   check('Snack Stand: Easy counts up to 10; the answer is not always in the same place', await ev(`BRAIN_GAMES.snack.puzzles.easy.every(z=>z.n>=1&&z.n<=10)&&BRAIN_LVLS.every(l=>new Set(BRAIN_GAMES.snack.puzzles[l].map((z,i)=>BRAIN_GAMES.snack.options(z,l,i).indexOf(BRAIN_GAMES.snack.answer(z,l)))).size>=2)`));
   check('Snack Stand: the Hard answers are right (boxes, change, prices)', await ev(`BRAIN_GAMES.snack.puzzles.hard.map(z=>z.a).join()==='18,7,28,14,48,19,63,6'`));
@@ -2260,11 +2260,87 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`brPuzzle('word','hard',7)`); await sleep(200); await shot('K08-phone-word');
   check('phone: no tile spills off the screen', await ev(`[...document.querySelectorAll('.wb-tile')].every(b=>b.getBoundingClientRect().right<=innerWidth)`));
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
-  check('2 new stickers at the end of the Code & Brain page', await ev(`STICKERS.slice(-2).map(s=>s.id+':'+s.page).join()==='train8:code,word8:code'`));
+  check('2 new stickers on the Code & Brain page', await ev(`STICKERS.slice(-4,-2).map(s=>s.id+':'+s.page).join()==='train8:code,word8:code'`));
   check('Brain Champ still counts only the first 3 games', await ev(`(()=>{const p=JSON.parse(JSON.stringify(P()));p.brain.solved=[];BRAIN_LVLS.forEach(l=>['train','word'].forEach(g=>BRAIN_GAMES[g].puzzles[l].forEach((z,i)=>p.brain.solved.push(brId(g,l,i)))));return stkHave(p,STICKERS.find(s=>s.id==='brainChamp'))===0;})()`));
   await ev(`{const p=DB.profiles[0];p.brain={game:'word',level:{snack:'hard',train:'medium',word:'nope'},solved:['word:e1']};normalize(p);}`);
   check('saved game and levels for the new games are kept; odd ones are made safe', await ev(`(()=>{const b=DB.profiles[0].brain;return b.game==='word'&&b.level.train==='medium'&&b.level.word==='easy'&&b.level.snack==='hard';})()`));
   await ev(`show('room')`);
+
+  console.log('Fraction Bakery + Fact Cards (v1.34)');
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  await ev(`closeModal();P().easy=false;applyEasy();show('brain')`); await sleep(200);
+  check('the menu shows 7 games and a 📇 My Fact Cards button (0 / 24)', await ev(`[...document.querySelectorAll('#brMenu [data-game]')].map(b=>b.dataset.game).join()==='snack,memory,pop,train,word,bake,facts'&&document.querySelector('#factsBtn').textContent.includes('0 / 24')`));
+  check('Fraction Bakery Easy: the answer is a choice, 3 different choices, each treat has the right number of pieces, and the uneven ones really are uneven',
+    await ev(`FB_PUZ.easy.every(z=>{const o=fbOpts(z);return o.length===3&&new Set(o).size===3&&o.includes(String(z.n))&&o.every(x=>(fbTreat(z.k,parseInt(x,10),!x.endsWith('u')).match(/data-sl=/g)||[]).length===parseInt(x,10));})
+      &&[2,3,4].every(n=>{const a=FB_UNEVEN.round[n],s=a.map((x,i)=>(i+1<n?a[i+1]:a[0]+360)-x),c=[0,...FB_UNEVEN.bar[n],1],w=c.slice(1).map((x,i)=>x-c[i]);
+        return a.length===n&&s.every(x=>x>0)&&s.reduce((p,x)=>p+x,0)===360&&new Set(s).size>1&&w.length===n&&w.every(x=>x>0)&&new Set(w.map(x=>x.toFixed(3))).size>1;})`));
+  check('Fraction Bakery Medium: a/b of n pieces is always a whole number of pieces; Hard answers are right',
+    await ev(`FB_PUZ.medium.every(z=>z.a>0&&z.a<z.b&&Number.isInteger(z.a*z.n/z.b))&&FB_PUZ.hard.map(z=>z.a).join()==='5,3,6,12,6,2,12,25'`));
+  check('Fact Cards: every puzzle has a topic, 3 different answers (in a fixed order) and a full card; the answer moves around',
+    await ev(`BRAIN_LVLS.every(l=>FACT_PUZ[l].every((z,i)=>{const o=factOpts(z,l,i);return FACT_TOPICS[z.t]&&o.length===3&&new Set(o).size===3&&o.includes(z.a)&&o.join()===factOpts(z,l,i).join()&&z.card.i&&z.card.n&&z.card.f.length>20;})
+      &&new Set(FACT_PUZ[l].map((z,i)=>factOpts(z,l,i).indexOf(z.a))).size>=2)&&FACT_PUZ.easy.every((z,i)=>factOpts(z,'easy',i).every(x=>factPic(x).length>20))`));
+  check('…all 3 topics appear on every level', await ev(`BRAIN_LVLS.every(l=>Object.keys(FACT_TOPICS).every(t=>FACT_PUZ[l].some(z=>z.t===t)))`));
+  // Fraction Bakery Easy 1
+  await ev(`document.querySelector('#brMenu [data-game=bake]').click()`); await sleep(200);
+  const fb0=await ev('P().coins');
+  check('Fraction Bakery opens on Easy with 2 bunnies and 3 treats', await ev(`BR.game==='bake'&&BR.lvl==='easy'&&document.querySelector('.fb-friends').textContent==='🐰🐰'&&document.querySelectorAll('.fb-ch').length===3`));
+  await shot('L01-bakery-easy');
+  await ev(`document.querySelector('.fb-ch[data-o=\"2u\"]').click()`); await sleep(100);
+  check('the uneven treat wobbles and says why', await ev(`!BR.won&&document.querySelector('#brMsg').textContent.includes('not the same size')`));
+  await ev(`document.querySelector('.fb-ch[data-o=\"2\"]').click()`); await sleep(150);
+  check('the even halves solve it (+2)', await ev(`BR.won&&P().brain.solved.includes('bake:e1')&&P().coins===${fb0+2}`));
+  // Medium 3: toppings on 3/4
+  await ev(`closeModal();brPuzzle('bake','medium',2)`); await sleep(150);
+  check('Medium: a pizza in 4 pieces and ✔ Done', await ev(`document.querySelectorAll('.fb-big [data-sl]').length===4&&!!document.querySelector('#fbDone')`));
+  const tapSl=i=>ev(`document.querySelector('.fb-big [data-sl="${i}"] path').dispatchEvent(new MouseEvent('click',{bubbles:true}))`);
+  await tapSl(0); await tapSl(1); await ev(`document.querySelector('#fbDone').click()`); await sleep(100);
+  check('2 of 4 is not ¾: it asks for a little more', await ev(`!BR.won&&document.querySelector('#brMsg').textContent.includes('3/4')`));
+  await tapSl(1); await tapSl(1); await tapSl(3); await sleep(50); await shot('L02-bakery-medium');
+  check('tapping a piece twice takes the topping off again; the counter shows 3 / 4', await ev(`FB.on.filter(Boolean).length===3&&document.querySelector('.fb-count').textContent==='34'`));
+  await ev(`document.querySelector('#fbDone').click()`); await sleep(150);
+  check('3 of 4 pieces solves ¾', await ev(`BR.won&&P().brain.solved.includes('bake:m3')`));
+  await ev(`closeModal();brPuzzle('bake','medium',7)`); await sleep(150); await shot('L03-bakery-medium-8');
+  await ev(`brPuzzle('bake','hard',2)`); await sleep(150);
+  await ev(`document.querySelector('.br-ch[data-n="6"]').click()`); await sleep(150);
+  check('Hard: ⅔ of 9 is 6', await ev(`BR.won&&P().brain.solved.includes('bake:h3')`));
+  // Fact Cards
+  await ev(`closeModal();show('brain');document.querySelector('#brMenu [data-game=facts]').click()`); await sleep(200);
+  const fc0=await ev('P().coins');
+  check('Fact Cards opens on Easy: a topic, a question and 3 pictures', await ev(`BR.game==='facts'&&BR.lvl==='easy'&&!!document.querySelector('.fc-topic')&&document.querySelectorAll('.fc-pic').length===3`));
+  await shot('L04-facts-easy');
+  const factBtn=right=>ev(`(()=>{const z=FACT_PUZ[BR.lvl][BR.idx],o=factOpts(z,BR.lvl,BR.idx);const i=o.findIndex(x=>${right?'x===z.a':'x!==z.a'});document.querySelector('#brBoard [data-i="'+i+'"]').click();})()`);
+  await factBtn(false); await sleep(100);
+  check('a wrong answer wobbles', await ev(`!BR.won`));
+  await factBtn(true); await sleep(1200);
+  check('the right answer pays +2 and the win box shows the new fact card', await ev(`BR.won&&P().brain.solved.includes('facts:e1')&&P().coins===${fc0+2}&&document.querySelector('#modalBody .fc-card')&&document.querySelector('#modalBody').textContent.includes('Octopus')`));
+  await shot('L05-facts-win');
+  await ev(`closeModal();brPuzzle('facts','medium',1)`); await sleep(150);
+  check('Medium: 3 word answers', await ev(`document.querySelectorAll('.fc-ans').length===3`)); await shot('L06-facts-medium');
+  await factBtn(true); await sleep(150);
+  await ev(`closeModal();show('brain')`); await sleep(150);
+  check('the menu button now says 2 / 24', await ev(`document.querySelector('#factsBtn').textContent.includes('2 / 24')`));
+  await ev(`document.querySelector('#factsBtn').click()`); await sleep(200);
+  check('📇 the binder: 3 topics, 24 slots, 2 cards found', await ev(`BR.view==='facts'&&document.querySelectorAll('.fc-sec').length===3&&document.querySelectorAll('.fc-slot').length===24&&document.querySelectorAll('.fc-slot:not(.fc-none)').length===2`));
+  await shot('L07-facts-binder');
+  await ev(`document.querySelector('.fc-slot[data-fc="facts:m2"]').click()`); await sleep(150);
+  check('tapping a found card shows it', await ev(`document.querySelector('#modalBody').textContent.includes('Jupiter')`));
+  await ev(`closeModal();document.querySelector('.fc-slot[data-fc="facts:h1"]').click()`); await sleep(150);
+  check('tapping a missing card offers ▶ Play it…', await ev(`document.querySelector('#modalTitle').textContent.includes('Not found')`));
+  await ev(`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes('Play')).click()`); await sleep(200);
+  check('…which opens that puzzle', await ev(`BR.view==='play'&&BR.game==='facts'&&BR.lvl==='hard'&&BR.idx===0`));
+  await ev(`show('brain');factBinder()`); await sleep(100);
+  check('Android Back: binder → menu', await ev(`window.androidBack()===true&&BR.view==='menu'`));
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
+  await ev(`factBinder()`); await sleep(200); await shot('L08-phone-binder');
+  await ev(`brPuzzle('bake','medium',7)`); await sleep(200); await shot('L09-phone-bakery');
+  check('phone: the pizza and ✔ fit the screen', await ev(`[...document.querySelectorAll('.fb-big,#fbDone')].every(e=>e.getBoundingClientRect().right<=innerWidth)`));
+  await ev(`brPuzzle('facts','hard',5)`); await sleep(200); await shot('L10-phone-facts-hard');
+  check('phone: long answers fit', await ev(`[...document.querySelectorAll('.fc-ans')].every(e=>e.getBoundingClientRect().right<=innerWidth&&e.scrollWidth<=e.clientWidth+1)`));
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  check('2 new stickers at the end of the Code & Brain page', await ev(`STICKERS.slice(-2).map(s=>s.id+':'+s.page).join()==='bake8:code,facts12:code'`));
+  await ev(`{const p=DB.profiles[0];p.brain={game:'facts',level:{bake:'hard',facts:'medium'},solved:['facts:e1']};normalize(p);}`);
+  check('saved game and levels for the new games are kept', await ev(`(()=>{const b=DB.profiles[0].brain;return b.game==='facts'&&b.level.bake==='hard'&&b.level.facts==='medium'&&b.level.train==='easy';})()`));
+  await ev(`closeModal();show('room')`);
 
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');

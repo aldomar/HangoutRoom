@@ -91,7 +91,11 @@ const GIFT_TIMELINE=[
   {v:'1.33',d:'2026-11-17',i:'🚂',n:'Pattern Train & Word Builder',why:'So there are patterns to spot and words to build, for every age',
     news:['🚂 Pattern Train: which wagon comes next? (📚 Brain Games, at the Backyard chalkboard)',
           '🔤 Word Builder: first letters, little words and big words to spell',
-          '⭐ Bonus photocards stay in your binder for good']}
+          '⭐ Bonus photocards stay in your binder for good']},
+  {v:'1.34',d:'2026-11-17',i:'🍕',n:'Fraction Bakery & Fact Cards',why:'So there are treats to share fairly and amazing facts to collect',
+    news:['🍕 Fraction Bakery: cut treats fairly and put toppings on part of a pizza',
+          '🪐 Fact Cards: answer questions about dinosaurs, space and the ocean',
+          '📇 Every right answer unlocks a fact card for your binder']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

@@ -528,6 +528,28 @@ body.easy .br-ch{min-width:120px;min-height:120px}body.easy .nbub{width:96px;hei
 .wb-slot i{font-style:normal;opacity:.3}.wb-slot.on{border-style:solid;background:var(--mint);color:#2b2235;animation:brPop .3s ease}
 .wb-tile b{font-size:38px}.wb-tile small{font-size:18px;opacity:.75}.wb-tile.used{visibility:hidden}
 .wb-tiles .br-ch{min-width:72px;min-height:72px}
+/* v1.34 Fraction Bakery + Fact Cards (36-brain4.js) */
+.fb-treat{display:block;width:100%;height:auto}
+.fb-ch{width:150px;padding:10px}.fb-friends{font-size:40px;letter-spacing:6px;line-height:1.1}
+.fb-med{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:18px}
+.fb-big{width:min(320px,80vw)}.fb-big .fb-sl{cursor:pointer}
+.fb-side{display:flex;flex-direction:column;align-items:center;gap:12px}.fb-count .frac{font-size:30px}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1;font-weight:900;margin:0 4px}
+.frac b{border-bottom:3px solid currentColor;padding:0 4px 2px}.frac i{font-style:normal;padding-top:2px}
+.fc-topic{background:var(--tc);color:#2b2235;font-weight:900;border-radius:999px;padding:4px 14px;font-size:16px}
+.fc-pic{width:130px;height:130px;padding:8px;background:#fff6fb}.fc-pic .wb-emo{font-size:76px}
+.fc-words{flex-direction:column;align-items:stretch;width:min(520px,100%)}.fc-ans{min-height:64px}.fc-ans b{font-size:20px}
+.fc-win{margin-top:8px;font-size:16px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.fc-card{width:220px;background:#fffaf2;color:#2b2235;border:6px solid var(--tc);border-radius:18px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 5px 0 #1a1424;margin:0 auto;text-align:center}
+.fc-card .fc-i{width:90px;height:90px;display:flex;align-items:center;justify-content:center}.fc-card .wb-emo{font-size:64px}
+.fc-card b{font-size:20px}.fc-card p{margin:0;font-size:16px;line-height:1.35}.fc-card small{font-weight:900;opacity:.7}
+.fc-card.locked{background:#3a3048;color:#fff}.fc-card.locked .fc-i{font-size:54px}
+.fc-open{font-size:18px;min-height:56px}.fc-open b{color:var(--gold)}
+.fc-sec{width:min(860px,100%)}.fc-sec h3{margin:6px 0}.fc-sec h3 small{color:var(--gold)}
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.fc-slot{min-height:130px;border-radius:16px;background:#fffaf2;color:#2b2235;border:4px solid #fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px}
+.fc-slot .fc-i{width:64px;height:64px;display:flex;align-items:center;justify-content:center;font-size:40px}.fc-slot .wb-emo{font-size:48px}.fc-slot b{font-size:15px}
+.fc-slot.fc-none{background:var(--panel2);color:#fff;border-style:dashed}
 @media (max-width:620px){.br-games{grid-template-columns:1fr}.br-game{min-height:0;flex-direction:row;flex-wrap:wrap;justify-content:center;padding:12px}.br-gi{font-size:44px}.mem-grid{gap:6px}.nbub{width:66px;height:66px}.br-ch{min-width:80px;min-height:80px}.br-ask{font-size:18px}.wb-slot{width:40px;height:48px;font-size:24px}.wb-tiles .br-ch{min-width:60px;min-height:60px}.wb-pic{width:120px;height:120px}.wb-emo{font-size:76px}}
 /* 31. Looks, emotes + night mode (v1.27) */
 .room-stage{position:relative}

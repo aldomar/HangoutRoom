@@ -11,6 +11,7 @@
    ========================================================= */
 const BRAIN_COINS=2, BRAIN_BONUS=5, BRAIN_LVLS=['easy','medium','hard'];
 const BRAIN_GAMES={};
+const BR_MENU_EXTRA=[]; // v1.34: functions p => HTML added under the games on the menu (the 🪐 Fact Cards binder button)
 const brId=(g,l,i)=>`${g}:${l[0]}${i+1}`;
 let BR={view:'menu',game:'snack',lvl:'easy',idx:0,won:false,timer:0,tok:0};
 const brSolved=(p,g,l)=>BRAIN_GAMES[g].puzzles[l].filter((z,i)=>p.brain.solved.includes(brId(g,l,i))).length;
@@ -28,7 +29,7 @@ function brMenu(){
       const n=BRAIN_LVLS.reduce((a,l)=>a+brSolved(p,g,l),0), all=BRAIN_LVLS.reduce((a,l)=>a+G.puzzles[l].length,0);
       return `<button class="br-game" data-game="${g}" style="--gc:${G.color}"><span class="br-gi">${G.icon}</span><b>${G.name}</b>`
         +`<small class="hint">${G.desc}</small><span class="br-pips">${BRAIN_LVLS.map(l=>`<i class="${brLevelDone(p,g,l)?'on':''}">${l==='easy'?'🐣':l==='medium'?'🌟':'🧠'}</i>`).join('')}</span>`
-        +`<span class="br-n">⭐ ${n} / ${all}</span></button>`;}).join('')+`</div>`;
+        +`<span class="br-n">⭐ ${n} / ${all}</span></button>`;}).join('')+`</div>`+BR_MENU_EXTRA.map(f=>f(p)).join('');
 }
 $('#brMenu').onclick=e=>{const b=e.target.closest('[data-game]');if(b){SFX.click();brOpen(b.dataset.game);}};
 function brOpen(g){
@@ -38,7 +39,7 @@ function brOpen(g){
   brPuzzle(g,l,first<0?0:first); // the first puzzle not solved yet
 }
 $('#brBack').onclick=()=>{SFX.click();brBackKey();};
-function brBackKey(){if(BR.view==='play')brMenu();else show('room');} // Android Back: a puzzle -> the menu -> room
+function brBackKey(){if(BR.view!=='menu')brMenu();else show('room');} // Android Back: a puzzle -> the menu -> room
 
 /* ---------- the puzzle screen: level tabs, 8 puzzle buttons, the question and the board ---------- */
 function brPuzzle(g,l,idx){
@@ -73,6 +74,7 @@ function brWin(){
     if(cur!=='brain'||BR.view!=='play'||BR.tok!==tok) return;
     modal(`${G.icon} Puzzle ${idx+1} solved!`,
       `<div style="text-align:center;font-size:18px">🎉${coins?` +${coins} 🪙`:''}`
+      +(G.winExtra?G.winExtra(G.puzzles[l][idx],l,idx,first):'')
       +(all?`<br>Every ${l[0].toUpperCase()+l.slice(1)} puzzle solved! (+${BRAIN_BONUS} bonus) 🏆`:first||p.easy?'':'<br>Practice makes perfect ✨')+'</div>',
       [{text:'📚 Games',cls:'ghost',on:brMenu},next?{text:'Next ▶',cls:'pink',on:()=>brPuzzle(g,l,idx+1)}:{text:'Yay! ✨',cls:'pink',on:brMenu}]);
   },900);
