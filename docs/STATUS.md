@@ -44,7 +44,7 @@ _Last updated: 2026-11-16_
   - **🎁 Gifts & room layouts: done** (v1.28 merged, PR #28).
   - **🔎 Shop filters & big dreams: done** (v1.29 merged, PR #29).
   - **🧑‍🔧 Grown-up helpers: done** (v1.30 merged, PR #30).
-  - **🛋️ Room tweaks: built, PR open as v1.31** on branch `feature/room-tweaks` (from `main` after #30). The owner asked
+  - **🛋️ Room tweaks: built, PR #31 open as v1.31** on branch `feature/room-tweaks` (from `main` after #30). The owner asked
     for it on 2026-11-17: the room name was squeezed on a phone, and the last touched decoration should come to the front.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -85,7 +85,7 @@ _Last updated: 2026-11-16_
 - PR #28 "Gifts & room layouts (v1.28)": merged.
 - PR #29 "Shop filters & big dreams (v1.29)": merged.
 - PR #30 "Grown-up helpers (v1.30)": merged.
-- PR "Room tweaks (v1.31)" on branch `feature/room-tweaks` (from `main` after #30): open.
+- PR #31 "Room tweaks (v1.31)" on branch `feature/room-tweaks` (from `main` after #30): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -864,7 +864,7 @@ _Last updated: 2026-11-16_
 2. ~~Build 🎁 Gifts & room presets (v1.28) on `feature/gifts` (on top of `feature/looks`).~~ Merged (PR #28).
 3. ~~Build 🔎 Shop filters + 💰 big dreams (v1.29) on `feature/shop`.~~ Merged (PR #29).
 4. ~~Build 🧑‍🔧 Grown-up helpers (v1.30).~~ Merged (PR #30).
-5. ~~🛋️ Room tweaks (v1.31).~~ Built; owner: try it on the phone and merge.
+5. ~~🛋️ Room tweaks (v1.31).~~ Built (PR #31); owner: try it on the phone and merge.
 6. Build ⚡ Speed check & tidy-up (v1.32), the last Phase 10 PR.
 
 ## How versions and save upgrades work (since v1.2)
