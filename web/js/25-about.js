@@ -87,7 +87,11 @@ const GIFT_TIMELINE=[
   {v:'1.32',d:'2026-11-17',i:'⚡',n:'Speed Check',why:'So everything stays quick and the tablet stays cool',
     news:['⚡ Rooms rest when nothing is happening, so the tablet stays cool',
           '👗 Trying on clothes is quicker',
-          '🌙 At night, the windows stay behind your things']}
+          '🌙 At night, the windows stay behind your things']},
+  {v:'1.33',d:'2026-11-17',i:'🚂',n:'Pattern Train & Word Builder',why:'So there are patterns to spot and words to build, for every age',
+    news:['🚂 Pattern Train: which wagon comes next? (📚 Brain Games, at the Backyard chalkboard)',
+          '🔤 Word Builder: first letters, little words and big words to spell',
+          '⭐ Bonus photocards stay in your binder for good']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

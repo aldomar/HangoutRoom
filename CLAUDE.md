@@ -157,6 +157,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   32. `32-gifts.js` Gifts + room layouts (`giveModal`, `sendGift`, `giftG`, `giftOpen`, `GIFT_SPOT`, `layoutGrid`, `layoutSave`, `layoutLoad`)
   33. `33-shopplus.js` Shop filters + big dreams (`THEMES`, `THEME_IDS`, `themesOf`, `themeFilter`, the 5 `dream:1` decorations, `dreamBar`, `dreamTap`)
   34. `34-helpers.js` Grown-up helpers (`backupSaved`, `lastBackupText`, `readOn`, `canSpeak`, `speakLabel`, `svgPng`, `snapRoom`, `snapCard`)
+  35. `35-brain3.js` Brain Games 3: 🚂 Pattern Train (`TR_PUZ`, `trTrain`, `trWagon`) and 🔤 Word Builder (`WB_PUZ`, `wbTiles`, `wbTap`)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -181,6 +182,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   (`brId`), made from the place in the list, and saved in `brain.solved`: never reorder or remove puzzles, add new ones at
   the end of a level. All puzzles are fixed (Memory boards use a shuffle seeded by the id). The smoke test checks every
   answer, choice list, pair set and picture. Number Pop's bubbles are `.nbub` (`.bub` is the pop-it's).
+  Since v1.33 there are 5 games (+ `train`, `word` in `35-brain3.js`); a new game id must also go in `normalize()`'s list
+  (`brG` in 06). Brain Champ counts only the first 3 games. Bonus photocards (`c.bonus`) can't be deleted.
 - Stage: the marquee (`stageMarquee()` in 04) hangs on the Cozy Loft's wall since v1.12 (it was above the closet). Songs are generated from small text recipes in `SONGS` (scale, chords, melody, drum patterns). `buildSong(id, level)`
   turns a recipe into audio events and a fixed note chart (no randomness). Song time comes from the audio clock
   (`stSongT()`), so taps line up with what she hears. Song ids `starlight/bats/sugar` (and since v1.26 `neon/clap/dino/rocket/lullaby`, in `30-songs2.js`) and level ids are saved: never rename them.

@@ -287,7 +287,19 @@ in order). The speed check comes last on purpose: the app is fast enough today, 
   and the main loop only runs on Soccer, the Stage and the Fidget Shelf. Wearing an owned item redraws only the buddy;
   moving things doesn't rebuild the Shop. `09-screens.js` is 35 KB, so it was not split. Numbers are in STATUS.
 
-### Phase 11: More games and content (ongoing)
+### Phase 11: More games and content
+Detailed plan agreed 2026-11-17: six PRs in this order, each branch on top of the one before (the owner merges them in order).
+- ✅ **🚂 Brain Games 2a (v1.33):** Pattern Train + Word Builder in `35-brain3.js`. 8 fixed puzzles per level, +2 / +5 like
+  part 1, 2 stickers. No save change. Also: bonus photocards can't be deleted (the owner's request).
+- **🍕 Brain Games 2b (v1.34):** Fraction Bakery + Fact Cards in `36-brain4.js`. Right answers unlock fact cards, kept in their
+  own 🪐 binder inside Brain Games. 2 stickers. Save version 21 (`facts[]`).
+- **🎀 Content Pack 3 (v1.35):** `37-pack3.js`, only adds entries; every item gets a theme chip and photocard tags. 4 stickers.
+- **🏀 Content Pack 4 (v1.36):** `38-pack4.js`, with the 🦖 dino nugget plush (a decoration that sits on shelves + a squishy). 4 stickers.
+- **🧩 Extras (v1.37):** about 6 more 🧠 Challenge puzzles and about 6 more marble mazes, added at the end, plus stickers.
+- **🎹 Music Maker (v1.38, last):** an 8-step beat-and-melody grid on the Loft's speaker, 3 saved loops, the main loop only
+  while it is on screen. A sticker. Save version 22 (`music`).
+
+The first ideas list:
 - **📚 Brain Games, part 2:** 🚂 Pattern Train (colours → shapes → number sequences), 🔤 Word Builder (first letters →
   3-letter words → spelling from a picture), 🍕 Fraction Bakery (halves → quarters → "⅔ of the pizza"), 🪐 Fact Cards
   (dinosaurs, space, ocean; right answers unlock collectible fact cards).

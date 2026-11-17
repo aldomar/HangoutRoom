@@ -515,7 +515,20 @@ body.easy .stk svg{width:110px;height:110px}body.easy .stk.locked .sn{display:no
 .nbub.popped{visibility:hidden}
 @keyframes bubFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 body.easy .br-ch{min-width:120px;min-height:120px}body.easy .nbub{width:96px;height:96px}
-@media (max-width:620px){.br-games{grid-template-columns:1fr}.br-game{min-height:0;flex-direction:row;flex-wrap:wrap;justify-content:center;padding:12px}.br-gi{font-size:44px}.mem-grid{gap:6px}.nbub{width:66px;height:66px}.br-ch{min-width:80px;min-height:80px}.br-ask{font-size:18px}}
+/* v1.33 Pattern Train + Word Builder (35-brain3.js) */
+.tr-train{height:auto;max-width:100%}
+.tr-train.go{animation:trGo 1s ease-in-out}
+@keyframes trGo{0%{transform:translateX(0)}35%{transform:translateX(14px)}70%{transform:translateX(-4px)}100%{transform:translateX(0)}}
+.tr-ch{padding:6px}.tr-ch svg{display:block}
+.wb-pic{background:#fff6fb;border:4px solid #fff;border-radius:22px;width:150px;height:150px;display:flex;align-items:center;justify-content:center;padding:10px;box-shadow:0 4px 0 #1a1424}
+.wb-emo{font-size:96px;line-height:1}.wb-art{width:100%;height:100%;display:flex}.wb-art svg{width:100%;height:100%}
+.wb-word{font-size:34px;font-weight:900;letter-spacing:4px}.wb-word i{font-style:normal;opacity:.5}.wb-word b{color:var(--gold)}
+.wb-slots{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.wb-slot{width:48px;height:56px;border-radius:12px;border:3px dashed #fff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900}
+.wb-slot i{font-style:normal;opacity:.3}.wb-slot.on{border-style:solid;background:var(--mint);color:#2b2235;animation:brPop .3s ease}
+.wb-tile b{font-size:38px}.wb-tile small{font-size:18px;opacity:.75}.wb-tile.used{visibility:hidden}
+.wb-tiles .br-ch{min-width:72px;min-height:72px}
+@media (max-width:620px){.br-games{grid-template-columns:1fr}.br-game{min-height:0;flex-direction:row;flex-wrap:wrap;justify-content:center;padding:12px}.br-gi{font-size:44px}.mem-grid{gap:6px}.nbub{width:66px;height:66px}.br-ch{min-width:80px;min-height:80px}.br-ask{font-size:18px}.wb-slot{width:40px;height:48px;font-size:24px}.wb-tiles .br-ch{min-width:60px;min-height:60px}.wb-pic{width:120px;height:120px}.wb-emo{font-size:76px}}
 /* 31. Looks, emotes + night mode (v1.27) */
 .room-stage{position:relative}
 .night-btn{position:absolute;left:10px;top:10px;width:56px;height:56px;border-radius:50%;border:3px solid var(--line);background:var(--panel);font-size:28px;cursor:pointer;box-shadow:0 3px 0 #0003;z-index:2}
