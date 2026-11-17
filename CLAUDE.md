@@ -73,9 +73,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for).
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`.
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
-  optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it.
+  optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it. So does `settings.lastBackup` (ms, since v1.30).
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
   (`top:zip`, `legs:pinkFuzz`, `pop:emo`, `squish:bat`, `spin:emo`, `wall:midnight`, `floor:galaxy`).
   Room items reference `DECOR` keys. Prices and names may change; ids may not.
@@ -89,7 +89,11 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   AGP 9.5.1 (built-in Kotlin, no Kotlin plugin), Gradle 9.6.0, compile/target SDK 36, min SDK 26.
   Android Studio 2026.x runs Gradle on a new Java, so Gradle must stay at 9.1 or newer.
 - JS ↔ Android contract (keep both working, and feature-detect so the browser version still works):
-  - `window.AndroidBridge.saveBackup(text, fileName)` opens Android's save picker (SAF `ACTION_CREATE_DOCUMENT`).
+  - `window.AndroidBridge.saveBackup(text, fileName)` opens Android's save picker (SAF `ACTION_CREATE_DOCUMENT`); after the
+    file is written the wrapper calls `backupSaved()` (since v1.30).
+  - `window.AndroidBridge.saveImage(base64Png, fileName)` saves a PNG the same way (📷, since v1.30).
+  - `window.AndroidBridge.speak(text)` says text with Android's `TextToSpeech` (🔊 Read to me, since v1.30). The manifest's
+    `<queries>` entry for `TTS_SERVICE` is needed on Android 11+ (it is not a permission).
   - `window.androidBack()` returns `true` if the web app handled Back (popup → room → profiles), otherwise the app exits.
   - The wrapper calls `save()` on pause and `toast(msg)` for messages.
 - No new permissions without asking. Never add `INTERNET`.
@@ -148,6 +152,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   31. `31-looks.js` Looks, emotes + night mode (`renderLooks`, `wearLook`, `EMOTES`, `playEmote`, `emoteBar`, `NIGHT_GLOW`, `nightLayer`, `nightBtn`)
   32. `32-gifts.js` Gifts + room layouts (`giveModal`, `sendGift`, `giftG`, `giftOpen`, `GIFT_SPOT`, `layoutGrid`, `layoutSave`, `layoutLoad`)
   33. `33-shopplus.js` Shop filters + big dreams (`THEMES`, `THEME_IDS`, `themesOf`, `themeFilter`, the 5 `dream:1` decorations, `dreamBar`, `dreamTap`)
+  34. `34-helpers.js` Grown-up helpers (`backupSaved`, `lastBackupText`, `readOn`, `canSpeak`, `speakLabel`, `svgPng`, `snapRoom`, `snapCard`)
   99. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -255,6 +260,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 - Theme chips + dreams (since v1.29, `33-shopplus.js`): an item's themes come from `p2`, `yard`, `dream` and `THEME_IDS`.
   **A new closet item or decoration should get a theme** (a `p2`-style field or a `THEME_IDS` entry), so the chips find it.
   Big dreams have `dream:1` and are the only items allowed above 40 coins.
+- Helpers (since v1.30, `34-helpers.js`): Read to me speaks a tapped button's `aria-label`, `.tn` text or text (emoji
+  stripped), or a hotspot's `HOT_WORDS` name; give icon-only buttons an `aria-label`. Snapshots copy an SVG with the
+  `#gdefs` patterns into a canvas, so room drawings should not depend on CSS (labels with `.sign` are left out).
 - Every room area is open. To add a locked area for a future feature, put it in `LOCKED` and `handleHot()`.
 - `android/`: Gradle project; `app/src/main/java/com/family/hangoutroom/MainActivity.kt`; `android/README.md` has build/sideload steps.
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.

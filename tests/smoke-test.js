@@ -1083,7 +1083,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('71 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29), ids all different, 6 or more per page', await ev(`STICKERS.length===71&&new Set(STICKERS.map(s=>s.id)).size===71&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('72 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30), ids all different, 6 or more per page', await ev(`STICKERS.length===72&&new Set(STICKERS.map(s=>s.id)).size===72&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1994,7 +1994,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Shop filters & big dreams (v1.29)');
   await ev(`closeModal();DB.activeId=DB.profiles[0].id;{const p=P();p.easy=false;p.dream='';}roomNo=1;closetCat='top';themePick.closet='all';themePick.shop='all';show('closet')`); await sleep(200);
-  check('save version 19: every room has a dream goal (none yet)', await ev(`DB_VERSION===19&&DB.version===19&&DB.profiles.every(p=>typeof p.dream==='string')`));
+  check('save version 19: every room has a dream goal (none yet)', await ev(`DB_VERSION>=19&&DB.version===DB_VERSION&&DB.profiles.every(p=>typeof p.dream==='string')`));
   check('every theme in the list names a real item', await ev(`Object.keys(THEME_OF).every(k=>{const [c,id]=k.split(':');return c==='decor'?!!DECOR[id]:!!(CLOSET[c]&&CLOSET[c].items.some(i=>i.id===id));})`));
   check('Closet tops show theme chips (All first, Emo and Dino among them, no Dreams), all big enough', await ev(`(()=>{const c=[...document.querySelectorAll('#closetGrid [data-theme]')].map(b=>b.dataset.theme);return c[0]==='all'&&c.includes('emo')&&c.includes('dino')&&!c.includes('dream')&&document.querySelector('#closetGrid [data-theme=all]').classList.contains('on')&&[...document.querySelectorAll('#closetGrid .chip')].every(b=>b.getBoundingClientRect().height>=48);})()`));
   const allTops=await ev(`document.querySelectorAll('#closetGrid .tile').length`);
@@ -2028,20 +2028,93 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('then tapping it is a normal buy', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#modalTitle').textContent.includes('Arcade')`));
   await ev(`[...document.querySelectorAll('#modalBtns .btn')].pop().click()`); await sleep(150);
   check('buying it puts it in the room, costs 80 and clears the goal', await ev(`P().coins===120&&curRoom(P()).items.some(i=>i.type==='arcade'&&i.placed)&&P().dream===''`));
-  check('Dream Come True is earned (the last sticker, Room & Style page)', await ev(`stkDone(P(),STICKERS.find(s=>s.id==='dream1'))&&STICKERS[STICKERS.length-1].id==='dream1'&&STICKERS[STICKERS.length-1].page==='room'`));
+  check('Dream Come True is earned (Room & Style page)', await ev(`stkDone(P(),STICKERS.find(s=>s.id==='dream1'))&&STICKERS.find(s=>s.id==='dream1').page==='room'`));
   await ev(`exitDecorate()`); await sleep(100); await shot('H04-arcade-room');
   await ev(`P().easy=true;applyEasy();enterDecorate();decoTab='shop';renderDecoGrid()`); await sleep(100);
   check('Easy mode: chips are icons only, 56 px', await ev(`(()=>{const c=document.querySelector('#decoGrid .chip');return getComputedStyle(c.querySelector('span')).display==='none'&&c.getBoundingClientRect().height>=56;})()`));
   await ev(`exitDecorate();P().easy=false;applyEasy()`);
   const hv28=await ev(`JSON.stringify(Object.assign({},DB,{version:18,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.dream;return q;})}))`);
   await ev(`doRestore(${JSON.stringify(hv28)})`); await sleep(300);
-  check('a v1.28 backup restores with no dream goal (save version 19)', await ev(`DB.version===19&&DB.profiles.every(p=>p.dream==='')`));
+  check('a v1.28 backup restores with no dream goal (save version 19 or later)', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.dream==='')`));
   await ev(`closeModal();{const p=DB.profiles[0];p.dream=5;normalize(p);window._d1=p.dream;p.dream='noSuchThing';}`);
   check('odd dream data is made safe', await ev(`window._d1===''&&dreamOf(DB.profiles[0])===''`));
   await ev(`DB.profiles[0].dream='aquarium';DB.activeId=DB.profiles[0].id;show('room');enterDecorate();decoTab='shop';renderDecoGrid()`);
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300); await shot('H05-phone-shop');
   check('phone: the chips and the Saving for bar fit the width', await ev(`(()=>{const c=document.querySelector('#decoGrid .chips').getBoundingClientRect(),b=document.querySelector('#decoGrid .dream-bar').getBoundingClientRect();return c.right<=innerWidth&&b.right<=innerWidth&&b.left>=0;})()`));
   await ev(`exitDecorate();DB.profiles[0].dream=''`);
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  await ev(`show('room')`);
+
+  console.log('Grown-up helpers (v1.30)');
+  await ev(`closeModal();delete window.AndroidBridge;DB.activeId=DB.profiles[0].id;{const p=P();p.easy=false;p.speak=null;p.stats.snaps=0;}DB.settings.lastBackup=0;save();roomNo=1;show('room')`); await sleep(200);
+  check('save version 20: Read to me follows Easy mode everywhere; the device has a last-backup time', await ev(`DB_VERSION===20&&DB.version===20&&DB.profiles.every(p=>p.speak===null||typeof p.speak==='boolean')&&typeof DB.settings.lastBackup==='number'`));
+  await ev(`settingsModal()`);
+  check('Settings shows "Last backup: never" for the grown-up', await ev(`document.querySelector('#bkLast').textContent==='💾 Last backup: never'`));
+  check('in the browser there is no Read to me switch (it cannot speak)', await ev(`!document.querySelector('#sSpeak')`));
+  await ev(`closeModal();downloadFile('{}')`); await sleep(200);
+  check('saving a backup file notes the time', await ev(`Date.now()-DB.settings.lastBackup<5000`));
+  await ev(`settingsModal()`);
+  check('…and Settings says today', await ev(`document.querySelector('#bkLast').textContent==='💾 Last backup: today'`));
+  await ev(`closeModal();DB.settings.lastBackup=Date.now()-12*86400000-1000;settingsModal()`);
+  check('12 days later it says 12 days ago', await ev(`document.querySelector('#bkLast').textContent==='💾 Last backup: 12 days ago'`));
+  await ev(`closeModal();DB.settings.lastBackup=Date.now()-86400000-1000;settingsModal()`);
+  check('one day later it says yesterday', await ev(`document.querySelector('#bkLast').textContent.endsWith('yesterday')`));
+  const lb=await ev(`DB.settings.lastBackup`);
+  await ev(`closeModal();(()=>{const b=JSON.parse(JSON.stringify(DB));b.settings.lastBackup=5;doRestore(JSON.stringify(b));})()`); await sleep(300);
+  check('restoring a backup keeps the last-backup time of this device', await ev(`DB.settings.lastBackup===${lb}`));
+  // a pretend Android wrapper
+  await ev(`closeModal();window._said=[];window._img=null;window._bk=null;window.AndroidBridge={speak(t){window._said.push(t);},saveImage(b,n){window._img={b,n};},saveBackup(t,n){window._bk=n;}};DB.settings.lastBackup=0;DB.activeId=DB.profiles[0].id;show('room')`); await sleep(150);
+  await ev(`downloadFile('{}')`);
+  check('on Android, the backup time waits until the file is really saved', await ev(`window._bk&&DB.settings.lastBackup===0`));
+  await ev(`backupSaved()`);
+  check('…and is noted when the wrapper says it was saved', await ev(`DB.settings.lastBackup>0`));
+  await ev(`settingsModal()`);
+  check('on Android, Settings has 🔊 Read to me; off when Easy mode is off', await ev(`document.querySelector('#sSpeak').textContent.includes('OFF')`));
+  await ev(`closeModal();P().easy=true;applyEasy();settingsModal()`);
+  check('Read to me is on by default in Easy mode', await ev(`document.querySelector('#sSpeak').textContent.includes('ON')&&readOn(P())`));
+  await ev(`window._said=[];document.querySelector('#sSpeak').click()`); await sleep(50);
+  check('the switch turns it off (and stays off in Easy mode)', await ev(`P().speak===false&&!readOn(P())&&document.querySelector('#sSpeak').textContent.includes('OFF')`));
+  await ev(`document.querySelector('#sSpeak').click()`); await sleep(50);
+  check('…and on again', await ev(`P().speak===true&&readOn(P())`));
+  await ev(`closeModal();P().easy=false;applyEasy();window._said=[];document.querySelector('#decoBtn').click()`); await sleep(50);
+  check('with it on, tapping 🛋️ Decorate says "Decorate" (no emoji)', await ev(`window._said[window._said.length-1]==='Decorate'`), await ev(`JSON.stringify(window._said)`));
+  await ev(`decoTab='shop';themePick.shop='all';renderDecoGrid();document.querySelector('#decoGrid [data-buy=plant]').click()`); await sleep(50);
+  check('a Shop tile says its name', await ev(`window._said.includes('Happy Plant')`));
+  await ev(`closeModal();exitDecorate();window._said=[];document.querySelector('#roomSvg [data-hot=closet]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(100);
+  check('a room hotspot says what it is', await ev(`window._said[0]==='Closet'`));
+  await ev(`show('room');document.body.insertAdjacentHTML('beforeend','<button id="tSpk">✨ Hello</button>');window._said=[];const s=STG.state;cur='stage';STG.state='play';document.querySelector('#tSpk').click();STG.state=s;cur='room'`);
+  check('it never talks during a song', await ev(`window._said.length===0`));
+  await ev(`document.querySelector('#tSpk').click();document.querySelector('#tSpk').click()`);
+  check('a double tap says it once', await ev(`window._said.join()==='Hello'`));
+  await ev(`P().speak=false;window._said=[];document.querySelector('#tSpk').click();document.querySelector('#tSpk').remove()`);
+  check('with it off, nothing is said', await ev(`window._said.length===0`));
+  // snapshots
+  check('the 📷 button sits under 🌙, big enough', await ev(`(()=>{const a=document.querySelector('#nightBtn').getBoundingClientRect(),b=document.querySelector('#roomSnapBtn').getBoundingClientRect();return b.top>=a.bottom&&b.width>=48&&b.height>=48&&!document.querySelector('#roomSnapBtn').classList.contains('hidden');})()`));
+  await ev(`enterDecorate()`);
+  check('decorating hides 📷', await ev(`document.querySelector('#roomSnapBtn').classList.contains('hidden')`));
+  await ev(`exitDecorate();mascotTap()`);
+  await ev(`document.querySelector('#roomSnapBtn').click()`); for(let i=0;i<40&&!(await ev(`!!window._img`));i++) await sleep(100);
+  const img=await ev(`window._img&&{n:window._img.n,len:window._img.b.length,head:window._img.b.slice(0,8)}`);
+  check('📷 saves the room as a PNG picture through the wrapper', !!img&&img.head==='iVBORw0K'&&img.len>20000&&/^hangout-.+-room-\d{4}-\d\d-\d\d\.png$/.test(img.n), img&&[img.n,img.len,img.head]);
+  check('the picture really shows the room (not blank), 1500 × 1050', await ev(`new Promise(r=>{const i=new Image();i.onload=()=>{const c=document.createElement('canvas');c.width=i.width;c.height=i.height;const g=c.getContext('2d');g.drawImage(i,0,0);const d=g.getImageData(750,200,1,1).data,w=g.getImageData(30,30,1,1).data;r(i.width===1500&&i.height===1050&&!(d[0]===35&&d[1]===27&&d[2]===46)&&!(w[0]===35&&w[1]===27&&w[2]===46));};i.onerror=()=>r(false);i.src='data:image/png;base64,'+window._img.b;})`));
+  fs.writeFileSync(OUT+'/I02-room-snapshot.png',Buffer.from(await ev(`window._img.b`),'base64')); // the saved picture itself
+  check('Say Cheese! is earned', await ev(`P().stats.snaps===1&&stkDone(P(),STICKERS.find(s=>s.id==='snap1'))&&STICKERS[STICKERS.length-1].id==='snap1'&&STICKERS[STICKERS.length-1].page==='art'`));
+  await ev(`window._img=null;{const p=P();if(!p.cards.length){p.cards.push({id:'tc1',no:1,at:Date.now(),look:Object.assign({},p.look),stage:'spot',frame:'sparkle',title:'',name:'Fuzzy'});}cardModal(p.cards[0]);}`); await sleep(100);
+  check('a photocard has 📷 Save picture', await ev(`[...document.querySelectorAll('#modalBtns .btn')].some(b=>b.textContent.includes('Save picture'))`));
+  await ev(`[...document.querySelectorAll('#modalBtns .btn')].find(b=>b.textContent.includes('Save picture')).click()`); for(let i=0;i<40&&!(await ev(`!!window._img`));i++) await sleep(100);
+  check('…which saves the card as a PNG, and the card stays open', await ev(`!!window._img&&window._img.b.startsWith('iVBORw0K')&&/^hangout-card-\\d{3}-/.test(window._img.n)&&!document.querySelector('#modal').classList.contains('hidden')`), await ev(`window._img&&window._img.n`));
+  await ev(`closeModal();delete window.AndroidBridge`);
+  // save data
+  const hv29=await ev(`JSON.stringify(Object.assign({},DB,{version:19,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.speak;return q;})}))`);
+  await ev(`doRestore(${JSON.stringify(hv29)})`); await sleep(300);
+  check('a v1.29 backup restores with Read to me following Easy mode (save version 20)', await ev(`DB.version===20&&DB.profiles.every(p=>p.speak===null)`));
+  await ev(`closeModal();{const p=DB.profiles[0];p.speak='yes';normalize(p);}`);
+  check('odd Read to me data is made safe', await ev(`DB.profiles[0].speak===null`));
+  await ev(`DB.activeId=DB.profiles[0].id;show('room')`);
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300);
+  await ev(`settingsModal()`); await sleep(100); await shot('I01-phone-settings');
+  check('phone: the 📷 button and the last-backup line fit', await ev(`(()=>{const b=document.querySelector('#roomSnapBtn').getBoundingClientRect(),t=document.querySelector('#bkLast').getBoundingClientRect();return b.right<=innerWidth&&b.bottom<=innerHeight&&t.right<=innerWidth;})()`));
+  await ev(`closeModal()`);
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   await ev(`show('room')`);
 

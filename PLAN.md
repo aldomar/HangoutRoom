@@ -272,10 +272,12 @@ in order). The speed check comes last on purpose: the app is fast enough today, 
   Rocket Playhouse, Aquarium), with a "⭐ Saving for…" bar. More dream items can come later. A sticker.
   As built (`33-shopplus.js`): no 🍂 Season chip (seasonal things have their own tab, so it would be empty); a ⭐ Dreams
   chip instead. Tapping a dream she can't afford offers "⭐ Save up for it?". Save version 19 (`dream`).
-- **🧑‍🔧 Grown-up helpers (v1.30), the only one that changes `android/`:** 💾 "Last backup: 12 days ago" in Settings
+- ✅ **🧑‍🔧 Grown-up helpers (v1.30), the only one that changes `android/`:** 💾 "Last backup: 12 days ago" in Settings
   (grown-up text only); 🔊 Read to me, a switch per room, **on by default in Easy mode** (owner's choice), off otherwise,
   using Android's built-in `TextToSpeech` through the wrapper (no new permission; the browser stays quiet);
   📷 Room snapshot, a PNG of a room or a photocard saved with Android's save picker (`AndroidBridge.saveImage`).
+  As built (`34-helpers.js`): the 📷 button sits under 🌙; a 📷 Say Cheese! sticker; Read to me stays quiet during a
+  Stage song. Save version 20 (`speak`, `stats.snaps`; `settings.lastBackup` belongs to the device).
 - **⚡ Speed check & tidy-up (v1.31):** the smoke test slows the CPU 4–6× and times the rooms, the Shop, the Closet and the
   Sticker Book; fix the slowest spots and write the numbers in STATUS. Split `09-screens.js` if it's needed.
 

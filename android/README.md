@@ -36,3 +36,10 @@ An APK built from a fresh copy of the repo (without the file) shows a generic Ab
 - Saves use the WebView's localStorage (kept with the app's data).
 - Android back button: closes popups, then goes Room -> Profiles, then exits.
 - Settings > Backup > "Save file" opens Android's save picker; "Restore" can pick that file.
+  Once the file is really saved, the app notes the time (Settings shows "Last backup: …", since version 1.30).
+- 📷 Pictures (since version 1.30): the 📷 button in a room, or "📷 Save picture" on a photocard, opens the same kind of
+  save picker for a PNG picture.
+- 🔊 Read to me (since version 1.30): buttons can say their names using the tablet's own text-to-speech voice
+  (Android's built-in `TextToSpeech`). It needs no permission and no internet. The manifest has a `<queries>` entry
+  for the speech engine, which Android 11 and newer need so the app can find it; it is **not** a permission.
+  If nothing is heard, check the tablet's Settings → Accessibility → Text-to-speech output (a voice must be installed).
