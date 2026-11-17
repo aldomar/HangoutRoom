@@ -33,11 +33,14 @@ _Last updated: 2026-11-16_
   (backlog + helpers) → Phase 11 (more games and packs). Each still gets its own detailed plan before building.
   - **💌 About & Gift Story: done** (v1.22 merged, PR #22).
   - **🌳 Backyard: done** (v1.23 merged, PR #23).
-- **Phase 9 (Games): detailed plan agreed 2026-11-16** for all three PRs, built one after another, each branch on top
-  of the one before (the owner merges them in order). See "Phase 9 plan" under Decisions.
-  - **🧤 Be the Keeper: built, PR #24 open as v1.24** on branch `feature/keeper` (from `main` after #23).
-  - **📚 Brain Games part 1: built, PR #25 open as v1.25** on branch `feature/brain` (on top of `feature/keeper`).
-  - **🎤 Stage song pack: built, PR #26 open as v1.26** on branch `feature/songs` (on top of `feature/brain`).
+- **Phase 9 (Games): done** (v1.24–v1.26 merged, PRs #24–#26). See "Phase 9 plan" under Decisions.
+  - **🧤 Be the Keeper: done** (v1.24 merged, PR #24).
+  - **📚 Brain Games part 1: done** (v1.25 merged, PR #25).
+  - **🎤 Stage song pack: done** (v1.26 merged, PR #26).
+- **Phase 10 (Backlog + helpers): detailed plan agreed 2026-11-16** (five PRs, stacked; see "Phase 10 plan" under
+  Decisions and `PLAN.md`): Looks & night (v1.27) → Gifts & presets (v1.28) → Shop filters + big dreams (v1.29) →
+  Grown-up helpers (v1.30) → Speed check (v1.31).
+  - **👗 Looks, emotes & night mode: built, PR #27 open as v1.27** on branch `feature/looks` (from `main` after #26).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -70,9 +73,10 @@ _Last updated: 2026-11-16_
 - PR #21 "Content Pack 2 (v1.21)": merged.
 - PR #22 "About & Gift Story (v1.22)": merged.
 - PR #23 "Backyard (v1.23)": merged.
-- PR #24 "Be the Keeper (v1.24)" on branch `feature/keeper` (from `main` after #23): open.
-- PR #25 "Brain Games (v1.25)" on branch `feature/brain` (on top of `feature/keeper`, so it shows #24's changes until #24 is merged): open.
-- PR #26 "Stage song pack (v1.26)" on branch `feature/songs` (on top of `feature/brain`, so it shows #24's and #25's changes until they are merged): open.
+- PR #24 "Be the Keeper (v1.24)": merged.
+- PR #25 "Brain Games (v1.25)": merged.
+- PR #26 "Stage song pack (v1.26)": merged.
+- PR #27 "Looks, emotes & night mode (v1.27)" on branch `feature/looks` (from `main` after #26): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -346,6 +350,19 @@ _Last updated: 2026-11-16_
     Sweet Dreams earned; Whole Setlist needs 3 stars on all 8
   - Test changes: sticker counts now 66; the song-list count check now expects 8.
   Not tested automatically: how the new songs sound on the tablet.
+- **Looks, emotes & night mode (v1.27)**: 786 checks, all passing, no console errors. New checks:
+  - save version 17; the Closet's ⭐ My Looks row (4 slots + 💾, all 48 px or more); keeping a look (without buddy, face or
+    fur); wearing it back (the buddy stays); 💾 + a full slot asks first, ✔ replaces; a look with unknown ids changes nothing
+  - Fashionista with 4 looks; the 2 new stickers at the end of the Room & Style page
+  - tapping the buddy shows 4 big emote buttons; Dance and Nap play (one at a time) and end by themselves
+  - 🌙 turns the lights off in one room only and is saved; the dark layer, the night window and a lamp's glow are drawn;
+    taps still go through; Night Owl; the Loft's own setting and its lamp; the Backyard's sky; decorating lifts the dark;
+    ☀️ turns it back on; decorating hides 🌙 and the emote buttons
+  - a v1.26 backup restores with empty looks and lights on; a v1.27 backup keeps them; odd data is made safe
+  - phone: the looks row, the emote buttons and 🌙 fit on the screen
+  - Test changes: the sticker count is 68; the "comes before" sticker checks now find their place by sticker id instead of
+    counting from the end, so new stickers no longer break them; the Brain Games restore check accepts save version 16 or later.
+  Not tested automatically: how the emotes and the night glow look and feel on the real tablet.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -617,6 +634,24 @@ _Last updated: 2026-11-16_
     Stadium Clap, Dino Stomp (slow, sparse notes), Rocket Launch, Moon Lullaby. The song list becomes a grid that fits 8.
     Golden Mic and Encore! rules unchanged; new song ids only, so no save version change. Stickers: Dino Stomper, Lift-off,
     Sweet Dreams, Whole Setlist (all 8).
+- **Phase 10 plan (agreed 2026-11-16):** five PRs in the order of `PLAN.md`, stacked. Owner's answers: the order is fine
+  and the speed check stays last (the app is fast today; it's there to catch slowness the new features might add);
+  gifts are **decorations and coins only, with no PIN check**; 5 big-dream items at 60–100 coins are fine (more can be
+  added later); 🔊 Read to me is **on by default in Easy mode**, off otherwise.
+- **Looks, emotes & night mode (built as v1.27, `31-looks.js`):**
+  - ⭐ My Looks: a row under the buddy in the Closet with 4 slots and 💾. Empty slot = keep the outfit there; full slot =
+    wear it; 💾 then a full slot = replace it (a ✔/✖ box with before and after pictures). A look is every `look` key except
+    `kind`, `face` and `fur`; wearing it only puts on things she owns (and ignores unknown ids).
+  - Emotes: tapping the buddy still hops and says a line, and also shows a bar of 4 big buttons at the bottom of the room
+    (👋 Wave, 💃 Dance, 😂 Laugh, 💤 Nap). It hides after 6 s, when the room redraws, and while decorating. Each emote
+    is one CSS animation class on `#mascotG` (1.5–3.2 s), floating emoji, a generated sound and a speech bubble.
+  - 🌙 Night: a round button in the room's top-left corner (hidden while decorating), saved per room in `p.night`.
+    `nightLayer()` (called by `renderRoom`) adds one dark rectangle with an SVG mask that has soft holes around the buddy,
+    the Loft's pendant lamp and every placed `NIGHT_GLOW` decoration, plus a coloured halo for each lamp. Windows get a
+    night sky and moon; indoor walls get glow-in-the-dark stars; the Backyard gets a moon over the sun and stars. It has
+    `pointer-events:none`, so every hotspot still works in the dark. No animation.
+  - Stickers: ⭐ Fashionista (4 looks kept), 🌙 Night Owl (`stats.nights`, lights turned off at least once). 68 in all.
+  - Save version 17: `looks` (4 × null or an outfit), `night {'1'|'2'|'3': true}`, `stats.nights`.
 - **Song pack (built as v1.26):** the song list is a grid (4 across on the tablet, 2 on a phone, descriptions hidden on a
   phone). Encore! is pinned to `starlight/bats/sugar`; the Every Song sticker now needs all 8 (stickers already earned stay).
 - **Brain Games (built as v1.25):** a game opens straight on its first unsolved puzzle (one tap from the menu), with level
@@ -708,15 +743,21 @@ _Last updated: 2026-11-16_
 7. ~~Plan 🧤 Be the Keeper (v1.24) in detail and get it agreed.~~ Phase 9 plan agreed; v1.24 built.
 
 ## Next steps (Phase 9)
-1. Owner: build v1.24, try 🧤 Keep (see the PR), and merge it.
-2. ~~Build 📚 Brain Games part 1 (v1.25) on `feature/brain` (on top of `feature/keeper`).~~ Built; owner: try it and merge after #24.
-3. ~~Build the 🎤 song pack (v1.26) on `feature/songs` (on top of `feature/brain`).~~ Built; owner: listen to the 5 songs and merge after #25.
-4. Next: plan Phase 10 (backlog + helpers) in detail and get it agreed.
+1. ~~Owner: build v1.24, try 🧤 Keep (see the PR), and merge it.~~ Merged.
+2. ~~Build 📚 Brain Games part 1 (v1.25) on `feature/brain` (on top of `feature/keeper`).~~ Merged.
+3. ~~Build the 🎤 song pack (v1.26) on `feature/songs` (on top of `feature/brain`).~~ Merged.
+4. ~~Plan Phase 10 (backlog + helpers) in detail and get it agreed.~~ Agreed 2026-11-16.
+
+## Next steps (Phase 10)
+1. ~~Build 👗 Looks, emotes & night mode (v1.27) on `feature/looks`.~~ Built (PR #27); owner: try it on the tablet and merge.
+2. Build 🎁 Gifts & room presets (v1.28) on `feature/gifts` (on top of `feature/looks`).
+3. Build 🔎 Shop filters + 💰 big dreams (v1.29), then 🧑‍🔧 Grown-up helpers (v1.30, needs an Android Studio build),
+   then ⚡ Speed check (v1.31), each on top of the one before.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 16 since v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 17 since v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

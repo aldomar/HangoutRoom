@@ -1083,7 +1083,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('66 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26), ids all different, 6 or more per page', await ev(`STICKERS.length===66&&new Set(STICKERS.map(s=>s.id)).size===66&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('68 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27), ids all different, 6 or more per page', await ev(`STICKERS.length===68&&new Set(STICKERS.map(s=>s.id)).size===68&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1382,7 +1382,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`P().fid.squish='mochi';P().fid.spin='galaxy';P().fid.slime='grape';P().fid.cube='pastel';P().fid.marble='pearl';save();show('room')`);
 
   console.log('Content Pack 2: stickers');
-  check('the 4 pack stickers come just before the Backyard ones, on the Room & Style page', await ev(`STICKERS.length===66&&STICKERS.slice(-17,-13).every(s=>s.page==='room'&&/^p2/.test(s.id))`));
+  check('the 4 pack stickers come just before the Backyard ones, on the Room & Style page', await ev(`STICKERS.slice(STICKERS.findIndex(s=>s.id==='yard5')-4,STICKERS.findIndex(s=>s.id==='yard5')).every(s=>s.page==='room'&&/^p2/.test(s.id))`));
   check('pack stickers count what she has: 3 dino things (hoodie, plush, dino board), 3 space (wall, spinner, rocket board), 0 vehicle', await ev(`p2Have(P(),'dino')===3&&p2Have(P(),'space')===3&&p2Have(P(),'ride')===0`), await ev(`[p2Have(P(),'dino'),p2Have(P(),'space'),p2Have(P(),'ride'),p2Have(P(),'hero')]`));
   await ev(`P().owned.push('legs:dinoSocks');P().room.items.push({uid:'p2nest',type:'dinoNest',placed:false})`);
   check('socks and a decoration in My Stuff count too (5 dino things)', await ev(`p2Have(P(),'dino')===5`));
@@ -1547,7 +1547,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   for(const w of ['picket','hedge','stoneWall','rainbowFence','batFence']){await ev(`P().room3.wall='${w}';renderRoom()`);check(`the ${w} fence draws`, await ev(`(()=>{const g=document.querySelector('[data-fence=${w}]');return g&&g.getBBox().width>900;})()`));}
   await shot('F05-yard-batfence');
   // stickers
-  check('Yard Life and Happy Camper come just before the keeper stickers, on the Room & Style page', await ev(`STICKERS.length===66&&STICKERS.slice(-13,-11).map(s=>s.id+':'+s.page).join()==='yard5:room,camper:room'`));
+  check('Yard Life and Happy Camper come just before the keeper stickers, on the Room & Style page', await ev(`STICKERS.slice(STICKERS.findIndex(s=>s.id==='save1')-2,STICKERS.findIndex(s=>s.id==='save1')).map(s=>s.id+':'+s.page).join()==='yard5:room,camper:room'`));
   check('5 things in the Backyard earn Yard Life; 3 outdoor things earn Happy Camper', await ev(`(()=>{const f=id=>stkDone(P(),STICKERS.find(s=>s.id===id));return f('yard5')&&f('camper');})()`));
   // save data
   const v22=await ev(`JSON.stringify(Object.assign({},DB,{version:13,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.room3;return q;})}))`);
@@ -1644,7 +1644,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Easy mode opens Keep on Easy', await ev(`P().soccer.keep.level==='easy'&&document.querySelector('#socTip').textContent.includes('Hop')`));
   await ev(`P().easy=false;applyEasy();renderSoccer()`);
   // stickers
-  check('3 keeper stickers come before the Brain Games ones, on the Soccer page', await ev(`STICKERS.slice(-11,-8).map(s=>s.id+':'+s.page).join()==='save1:soccer,save25:soccer,gloves:soccer'`));
+  check('3 keeper stickers come before the Brain Games ones, on the Soccer page', await ev(`STICKERS.slice(STICKERS.findIndex(s=>s.id==='snack8')-3,STICKERS.findIndex(s=>s.id==='snack8')).map(s=>s.id+':'+s.page).join()==='save1:soccer,save25:soccer,gloves:soccer'`));
   check('First Save is earned; Glove Case shows 2 of 3', await ev(`(()=>{const f=id=>STICKERS.find(s=>s.id===id);return stkDone(P(),f('save1'))&&stkHave(P(),f('gloves'))===2&&!stkDone(P(),f('gloves'));})()`));
   // phone
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(500); await shot('G08-phone-keep');
@@ -1753,7 +1753,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Easy mode: every game opens on Easy, with no reading needed', await ev(`Object.values(P().brain.level).every(l=>l==='easy')`)&&await ev(`(document.querySelector('#brMenu [data-game=snack]').click(),BR.lvl==='easy'&&!document.querySelector('#brQ').textContent.includes('How many'))`));
   await shot('H12-brain-easy-mode');
   await ev(`P().easy=false;applyEasy();show('room')`);
-  check('4 Brain Games stickers before the song ones, on the Code & Brain page', await ev(`STICKERS.slice(-8,-4).map(s=>s.id+':'+s.page).join()==='snack8:code,memory8:code,pop8:code,brainChamp:code'&&STK_PAGES.code.name==='Code & Brain'`));
+  check('4 Brain Games stickers before the song ones, on the Code & Brain page', await ev(`STICKERS.slice(STICKERS.findIndex(s=>s.id==='songDino')-4,STICKERS.findIndex(s=>s.id==='songDino')).map(s=>s.id+':'+s.page).join()==='snack8:code,memory8:code,pop8:code,brainChamp:code'&&STK_PAGES.code.name==='Code & Brain'`));
   check('8 Snack Stand puzzles earn Snack Shop; Brain Champ shows 1 of 9 levels', await ev(`(()=>{const f=id=>STICKERS.find(s=>s.id===id);return stkDone(P(),f('snack8'))&&!stkDone(P(),f('pop8'))&&stkHave(P(),f('brainChamp'))===1;})()`));
   // phone
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await ev(`show('brain')`); await sleep(400); await shot('H13-phone-brain-menu');
@@ -1766,7 +1766,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const bv24=await ev(`JSON.stringify(Object.assign({},DB,{version:15,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.brain;return q;})}))`);
   const bv25=await ev(`JSON.stringify(DB)`);
   await ev(`doRestore(${JSON.stringify(bv24)})`); await sleep(300);
-  check('a v1.24 backup restores with Brain Games at the start (save version 16)', await ev(`DB_VERSION===16&&DB.version===16&&DB.profiles.every(p=>p.brain&&p.brain.game==='snack'&&p.brain.solved.length===0&&Object.values(p.brain.level).join()==='easy,easy,easy')`));
+  check('a v1.24 backup restores with Brain Games at the start (save version 16 or later)', await ev(`DB_VERSION>=16&&DB.version===DB_VERSION&&DB.profiles.every(p=>p.brain&&p.brain.game==='snack'&&p.brain.solved.length===0&&Object.values(p.brain.level).join()==='easy,easy,easy')`));
   await ev(`doRestore(${JSON.stringify(bv25)})`); await sleep(300);
   check('a v1.25 backup keeps the puzzles solved and the levels', await ev(`(()=>{const p=DB.profiles.find(p=>p.brain.solved.length);return p&&p.brain.solved.length===12&&p.brain.solved.includes('pop:h1')&&p.brain.level.memory==='hard';})()`));
   await ev(`closeModal();{const p=DB.profiles[0];p.brain={game:'chess',level:{snack:'super',pop:7},solved:['snack:e1','snack:e1',5]};normalize(p);}`);
@@ -1791,7 +1791,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();show('stage')`); await sleep(200);
   check('the song list shows the new stars', await ev(`document.querySelectorAll('[data-song=lullaby] .ss span:not(.off)').length===3&&document.querySelectorAll('[data-song=neon] .ss span:not(.off)').length===0`));
   check('Encore! still means the first 3 songs (not all 8)', await ev(`(()=>{const e=BONUS.find(b=>b.id==='encore'),one={easy:{stars:1}};return e.ok({stage:{best:{starlight:one,bats:one,sugar:one}}})&&!e.ok({stage:{best:{starlight:one,bats:one}}});})()`));
-  check('4 song stickers at the end, on the Stage page', await ev(`STICKERS.slice(-4).map(s=>s.id+':'+s.page).join()==='songDino:stage,songRocket:stage,songMoon:stage,setlist:stage'`));
+  check('4 song stickers after the Brain Games ones, on the Stage page', await ev(`STICKERS.slice(STICKERS.findIndex(s=>s.id==='songDino'),STICKERS.findIndex(s=>s.id==='songDino')+4).map(s=>s.id+':'+s.page).join()==='songDino:stage,songRocket:stage,songMoon:stage,setlist:stage'`));
   check('Dino Stomper, Lift-off! and Sweet Dreams are earned; Whole Setlist needs 3 stars on all 8', await ev(`(()=>{const f=id=>STICKERS.find(s=>s.id===id),p=P();return ['songDino','songRocket','songMoon'].every(id=>stkDone(p,f(id)))&&stkNeed(f('setlist'))===8&&!stkDone(p,f('setlist'))&&stkHave(p,f('setlist'))>=3;})()`));
   check('Whole Setlist is earned with 3 stars on every song', await ev(`(()=>{const q={stage:{best:{}}};SONG_IDS.forEach(id=>q.stage.best[id]={hard:{stars:3,score:1}});return stkDone(q,STICKERS.find(s=>s.id==='setlist'));})()`));
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await ev(`stgPickView()`); await sleep(300); await shot('S03-phone-songs');
@@ -1841,6 +1841,76 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();DB.activeId=DB.profiles[0].id;show('about')`);
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300); await shot('C05-phone-about');
   check('phone: the certificate and letter fit the width (no sideways scroll)', await ev(`(()=>{const pg=document.querySelector('#abPage'),c=document.querySelector('#abCert').getBoundingClientRect();return pg.scrollWidth<=pg.clientWidth&&c.right<=innerWidth&&c.left>=0&&c.width>300;})()`));
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  await ev(`show('room')`);
+
+  console.log('Looks, emotes & night mode (v1.27)');
+  await ev(`closeModal();DB.activeId=DB.profiles[0].id;{const p=P();p.looks=[null,null,null,null];p.night={};p.stats.nights=0;p.easy=false;}show('closet')`); await sleep(200);
+  check('save version 17: every room has 4 empty look slots and the lights on', await ev(`DB_VERSION===17&&DB.version===17&&DB.profiles.every(p=>Array.isArray(p.looks)&&p.looks.length===4&&p.night&&typeof p.night==='object')`));
+  check('the Closet shows ⭐ My Looks: 4 slots and a 💾 button, all big enough', await ev(`(()=>{const s=[...document.querySelectorAll('#looksRow .lk-slot')],b=document.querySelector('#lookSave');return s.length===4&&!!b&&s.concat(b).every(x=>{const r=x.getBoundingClientRect();return r.width>=48&&r.height>=48;});})()`));
+  await ev(`P().look.kind='bunny';document.querySelector('[data-look="0"]').click()`); await sleep(100);
+  check('tapping an empty slot keeps the outfit there (not the buddy, face or fur)', await ev(`(()=>{const p=P(),L=p.looks[0];return !!L&&L.top===p.look.top&&L.hair===p.look.hair&&!('kind' in L)&&!('face' in L)&&!('fur' in L);})()`));
+  const top0=await ev(`P().looks[0].top`);
+  const otherTop=await ev(`(()=>{const p=P(),it=CLOSET.top.items.find(i=>i.id!==p.look.top);if(!p.owned.includes('top:'+it.id))p.owned.push('top:'+it.id);return it.id;})()`);
+  await ev(`P().look.top=${JSON.stringify(otherTop)};P().look.kind='dino';renderCloset()`);
+  await ev(`document.querySelector('[data-look="0"]').click()`); await sleep(100);
+  check('tapping a full slot wears that look; the buddy stays the same', await ev(`P().look.top===${JSON.stringify(top0)}&&P().look.kind==='dino'`));
+  await shot('L01-closet-looks');
+  await ev(`P().look.top=${JSON.stringify(otherTop)};renderCloset();document.querySelector('#lookSave').click()`); await sleep(50);
+  check('💾 makes the slots ready to save', await ev(`document.querySelector('#looksRow').classList.contains('saving')`));
+  await ev(`document.querySelector('[data-look="0"]').click()`); await sleep(100);
+  check('saving over a full slot asks first', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&P().looks[0].top===${JSON.stringify(top0)}`));
+  await ev(`[...document.querySelectorAll('#modalBtns .btn')].pop().click()`); await sleep(100);
+  check('✔ Yes replaces the look', await ev(`P().looks[0].top===${JSON.stringify(otherTop)}&&!document.querySelector('#looksRow').classList.contains('saving')`));
+  await ev(`P().looks[1]={top:'noSuchTop',hairColor:'noSuchColour'};window._lk=[P().look.top,P().look.hairColor];renderCloset();document.querySelector('[data-look="1"]').click()`);
+  check('a look with things that do not exist changes nothing', await ev(`P().look.top===window._lk[0]&&P().look.hairColor===window._lk[1]`));
+  await ev(`P().looks[1]=null;renderCloset();[1,2,3].forEach(i=>document.querySelector('[data-look="'+i+'"]').click())`);
+  check('Fashionista is earned with 4 looks kept', await ev(`P().looks.every(Boolean)&&stkDone(P(),STICKERS.find(s=>s.id==='looks4'))`));
+  check('2 looks stickers at the end, on the Room & Style page', await ev(`STICKERS.slice(-2).map(s=>s.id+':'+s.page).join()==='looks4:room,night1:room'`));
+  await ev(`P().look.kind='bunny';roomNo=1;show('room')`); await sleep(200);
+  await ev(`mascotTap()`); await sleep(100);
+  check('tapping the buddy shows 4 big emote buttons', await ev(`(()=>{const b=[...document.querySelectorAll('#emoteBar [data-emote]')];return !document.querySelector('#emoteBar').classList.contains('hidden')&&b.map(x=>x.dataset.emote).join()==='wave,dance,laugh,nap'&&b.every(x=>x.getBoundingClientRect().height>=48&&x.getBoundingClientRect().width>=48);})()`));
+  await ev(`document.querySelector('[data-emote=dance]').click()`); await sleep(150); await shot('L02-emote-dance');
+  check('💃 Dance makes the buddy dance and say so', await ev(`document.querySelector('#mascotG').classList.contains('em-dance')&&document.querySelector('#bubble').textContent.includes('Dance')&&!!document.querySelector('#emoteFx')`));
+  await ev(`document.querySelector('[data-emote=nap]').click()`); await sleep(100);
+  check('💤 Nap switches to the nap (one emote at a time)', await ev(`(()=>{const c=document.querySelector('#mascotG').classList;return c.contains('em-nap')&&!c.contains('em-dance');})()`));
+  await sleep(3400);
+  check('the emote ends by itself', await ev(`![...document.querySelector('#mascotG').classList].some(c=>c.startsWith('em-'))`));
+  await ev(`enterDecorate()`);
+  check('decorating hides the emote buttons and the 🌙 button', await ev(`document.querySelector('#emoteBar').classList.contains('hidden')&&document.querySelector('#nightBtn').classList.contains('hidden')`));
+  await ev(`exitDecorate()`);
+  check('the 🌙 button is in the room corner, big enough', await ev(`(()=>{const r=document.querySelector('#nightBtn').getBoundingClientRect();return !document.querySelector('#nightBtn').classList.contains('hidden')&&r.width>=48&&r.height>=48;})()`));
+  await ev(`{const p=P();p.room.items.push({uid:'lavaT',type:'lava',x:700,y:560,placed:true});}document.querySelector('#nightBtn').click()`); await sleep(200); await shot('L03-night-room');
+  check('🌙 turns the lights off in this room only, and is saved', await ev(`P().night[1]===true&&!P().night[2]&&JSON.parse(localStorage.getItem(SAVE_KEY)).profiles.find(q=>q.id===P().id).night[1]===true`));
+  check('the room is dimmed, with the window at night and a lamp glowing', await ev(`!!document.querySelector('#roomSvg .night mask')&&!!document.querySelector('#roomSvg .night [fill="url(#ngGlow-pink)"]')&&document.querySelector('#nightBtn').textContent==='☀️'`));
+  check('the dark layer lets taps through to the room', await ev(`getComputedStyle(document.querySelector('#roomSvg .night')).pointerEvents==='none'`));
+  check('Night Owl is earned', await ev(`P().stats.nights===1&&stkDone(P(),STICKERS.find(s=>s.id==='night1'))`));
+  await ev(`goRoom(2)`); await sleep(150);
+  check('the Loft still has the lights on', await ev(`!document.querySelector('#roomSvg .night')&&document.querySelector('#nightBtn').textContent==='🌙'`));
+  await ev(`document.querySelector('#nightBtn').click()`); await sleep(150); await shot('L04-night-loft');
+  check('the Loft at night: its pendant lamp glows', await ev(`!!document.querySelector('#roomSvg .night [fill="url(#ngGlow-warm)"]')`));
+  await ev(`goRoom(3);document.querySelector('#nightBtn').click()`); await sleep(150); await shot('L05-night-yard');
+  check('the Backyard at night has the moon and stars', await ev(`!!document.querySelector('#roomSvg .night')&&P().night[3]===true`));
+  await ev(`goRoom(1)`); await sleep(100);
+  check('back in her room, it is still night', await ev(`!!document.querySelector('#roomSvg .night')`));
+  await ev(`enterDecorate()`);
+  check('decorating turns the dark off while moving things', await ev(`!document.querySelector('#roomSvg .night')`));
+  await ev(`exitDecorate();document.querySelector('#nightBtn').click()`); await sleep(100);
+  check('☀️ turns the lights back on', await ev(`!P().night[1]&&!document.querySelector('#roomSvg .night')`));
+  await ev(`{const p=P();p.room.items=p.room.items.filter(i=>i.uid!=='lavaT');}save()`);
+  const bv26=await ev(`JSON.stringify(Object.assign({},DB,{version:16,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.looks;delete q.night;return q;})}))`);
+  const bv27=await ev(`JSON.stringify(DB)`);
+  await ev(`doRestore(${JSON.stringify(bv26)})`); await sleep(300);
+  check('a v1.26 backup restores with empty looks and the lights on (save version 17)', await ev(`DB.version===17&&DB.profiles.every(p=>p.looks.length===4&&p.looks.every(l=>l===null)&&Object.keys(p.night).length===0)`));
+  await ev(`closeModal();doRestore(${JSON.stringify(bv27)})`); await sleep(300);
+  check('a v1.27 backup keeps the looks and the night rooms', await ev(`(()=>{const p=DB.profiles[0];return p.looks.every(Boolean)&&p.night[2]===true&&p.night[3]===true;})()`));
+  await ev(`closeModal();{const p=DB.profiles[0];p.looks='lots';p.night={1:'yes',2:true,7:true};normalize(p);}`);
+  check('odd looks and night data are made safe', await ev(`(()=>{const p=DB.profiles[0];return p.looks.length===4&&p.looks.every(l=>l===null)&&JSON.stringify(p.night)==='{"2":true}';})()`));
+  await ev(`DB.activeId=DB.profiles[0].id;roomNo=1;show('closet')`);
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300); await shot('L06-phone-closet');
+  check('phone: the looks row fits the width', await ev(`[...document.querySelectorAll('#looksRow > *')].every(x=>{const r=x.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth;})`));
+  await ev(`show('room');mascotTap()`); await sleep(200); await shot('L07-phone-emotes');
+  check('phone: the emote buttons and 🌙 fit on the screen', await ev(`[...document.querySelectorAll('#emoteBar .em-btn'),document.querySelector('#nightBtn')].every(x=>{const r=x.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.bottom<=innerHeight&&r.height>=48;})`));
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   await ev(`show('room')`);
 

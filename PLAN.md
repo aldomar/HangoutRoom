@@ -251,19 +251,29 @@ Detailed plan for all three agreed 2026-11-16 (built one PR after another, each 
   the song list is a grid; Encore! stays "the first 3 songs"; 4 stickers. No save change (new song ids only).
 
 ### Phase 10: Backlog + helpers
-- **Looks, emotes & night mode:** outfit save slots (switch a whole look in one tap); tap Fuzzy for a wave, dance, laugh
-  or nap; 🌙 lights off, with lamps, fairy lights and stars glowing (drawn once, no animation loop).
-- **Gifts & room presets:** 🎁 give an item or coins to a brother's or sister's room on the same tablet (it arrives as a
-  wrapped box to open; no network); 🏠 save a room layout and switch back later.
-- **🔊 Read to me:** in Easy mode, tapping a button also says its name, using Android's built-in offline voice through the
-  wrapper (no new permission). The browser version stays quiet.
-- **💾 Backup reminder:** Settings shows "Last backup: 12 days ago" for the grown-up. Nothing for the children to worry about.
-- **🔎 Shop filters by theme** (🦇 🦕 🚀 ⚽ ☁️ …) in the Closet and the Shop, which now hold well over 100 things.
-- **⚡ Speed check and tidy-up:** measure how fast the rooms and shops draw on a modest tablet and trim slow spots. Can move
-  earlier if the tablet starts to feel slow.
-- **💰 Coin balance review:** a few "big dream" things to save up for (for example a canopy bed or an arcade machine),
-  which means raising the 40-coin price cap for those.
-- **📷 Room snapshot:** save a picture of a room or a photocard to the tablet, the same way Backup saves a file.
+Detailed plan agreed 2026-11-16: five PRs in this order, each branch on top of the one before (the owner merges them
+in order). The speed check comes last on purpose: the app is fast enough today, and it should measure everything added here.
+- ✅ **👗 Looks, emotes & night mode (v1.27):** in `31-looks.js`.
+  - ⭐ My Looks: 4 outfit slots in the Closet. Tap an empty slot to keep the outfit, a full one to wear it; 💾 then a slot
+    replaces one (it asks first). A look keeps clothes and hair, never the buddy kind, face or fur.
+  - Tap the buddy for 4 big emote buttons: 👋 wave, 💃 dance, 😂 laugh, 💤 nap (short CSS animations, no loop).
+  - 🌙 Night mode per room (the round button in the room's corner): one dark layer with soft light around lamps, lights
+    and the buddy; the window (or the Backyard sky) shows the moon and stars. Drawn once, no animation; off while decorating.
+  - 2 stickers (⭐ Fashionista, 🌙 Night Owl). Save version 17 (`looks`, `night`, `stats.nights`).
+- **🎁 Gifts & room presets (v1.28):** 🎁 give a decoration from My Stuff (it leaves your stuff) or coins (5 / 10 / 20,
+  never more than you have) to another room on the same tablet. **No PIN check** (owner's choice). It arrives as a
+  wrapped box in their room; tapping it opens it with confetti and says who it's from. Clothes and fidgets can't be given.
+  🏠 Save up to 3 layouts per room and load one later (things no longer owned are skipped). 2 stickers.
+- **🔎 Shop filters + 💰 big dreams (v1.29):** theme chips above the Closet and the Shop (All · 🦇 Emo · ☁️ Cute · ⚽ Sport ·
+  🎤 Stage · 🦕 Dino · 🚀 Space · 🚗 Ride · 🤖 Hero · 🌳 Outdoor · 🍂 Season); older items get their theme from a list in the
+  new file, so no ids change. 5 "big dream" decorations at **60–100 coins** (Canopy Bed, Arcade Cabinet, Castle Bunk Bed,
+  Rocket Playhouse, Aquarium), with a "⭐ Saving for…" bar. More dream items can come later. A sticker.
+- **🧑‍🔧 Grown-up helpers (v1.30), the only one that changes `android/`:** 💾 "Last backup: 12 days ago" in Settings
+  (grown-up text only); 🔊 Read to me, a switch per room, **on by default in Easy mode** (owner's choice), off otherwise,
+  using Android's built-in `TextToSpeech` through the wrapper (no new permission; the browser stays quiet);
+  📷 Room snapshot, a PNG of a room or a photocard saved with Android's save picker (`AndroidBridge.saveImage`).
+- **⚡ Speed check & tidy-up (v1.31):** the smoke test slows the CPU 4–6× and times the rooms, the Shop, the Closet and the
+  Sticker Book; fix the slowest spots and write the numbers in STATUS. Split `09-screens.js` if it's needed.
 
 ### Phase 11: More games and content (ongoing)
 - **📚 Brain Games, part 2:** 🚂 Pattern Train (colours → shapes → number sequences), 🔤 Word Builder (first letters →

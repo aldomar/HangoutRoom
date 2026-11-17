@@ -51,7 +51,9 @@
     <button class="btn small ghost" id="decoBtn">🛋️<span> Decorate</span></button>
     <button class="btn small ghost" id="setBtn">⚙️</button>
   </div>
-  <div class="stage"><svg id="roomSvg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet"></svg></div>
+  <div class="stage room-stage"><svg id="roomSvg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet"></svg>
+    <button class="night-btn" id="nightBtn" aria-label="Lights off">🌙</button>
+    <div class="emote-bar hidden" id="emoteBar"></div></div>
   <div id="decoPanel" class="deco-panel hidden">
     <div class="deco-head">
       <div class="tabs" id="decoTabs">
@@ -129,6 +131,7 @@
         <button class="btn small ghost" id="mascotNameBtn">Fuzzy ✏️</button>
         <button class="btn small ghost" id="randomBtn">🎲 Surprise me</button>
       </div>
+      <div class="looks-row" id="looksRow"></div>
     </div>
     <div class="closet-shop">
       <div class="tabs" id="closetTabs"></div>
@@ -347,6 +350,7 @@
 <script src="web/js/28-brain.js"></script>
 <script src="web/js/29-brain2.js"></script>
 <script src="web/js/30-songs2.js"></script>
+<script src="web/js/31-looks.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

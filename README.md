@@ -4,8 +4,8 @@ dress-up, decorating, an Art Desk for drawing, a Photocard Wall for making colle
 a Fidget Shelf (pop-it, squishy, spinner, slime, clicker cube and a tilt marble maze), a Soccer Field for penalty kicks
 (or being the goalie),
 a Stage where the bunny performs to 8 original songs (tap to the beat), five animal buddies to choose from,
-a Code Lab where she "programs" the bunny with arrow blocks (a first taste of coding), and Brain Games (counting,
-memory and number puzzles).
+a Code Lab where she "programs" the bunny with arrow blocks (a first taste of coding), Brain Games (counting,
+memory and number puzzles), saved outfits, buddy emotes and a 🌙 night mode.
 A family gift; not for sale or public sharing.
 
 ## Try it on a computer
@@ -25,7 +25,7 @@ Since version 1.3 a backup also holds the drawings from the Art Desk (you can sw
 to make the file smaller). Restoring an older backup without drawings leaves the drawings on the device alone.
 Photocards (since version 1.4) are always in the backup. They are tiny, because each card is saved as a
 short description (outfit, stage, frame, title) instead of a picture.
-Soccer, Stage, Code Lab and Brain Games progress (best scores, trophies, keeper gloves, the Golden Mic, puzzles solved) are in the backup too.
+Soccer, Stage, Code Lab and Brain Games progress (best scores, trophies, keeper gloves, the Golden Mic, puzzles solved), saved looks and night settings are in the backup too.
 
 ## The Cozy Loft (since version 1.10)
 Every room has a second room upstairs: tap **🪜 Loft** at the top of the room screen (and **🏠 Room** to go back).
@@ -88,6 +88,22 @@ jump to any puzzle, and solved ones turn green.
   on each of the first 3 songs.
 - 4 new stickers on the Stage page: 🦖 Dino Stomper, 🚀 Lift-off!, 🌙 Sweet Dreams (a star on that song) and
   🎶 Whole Setlist (3 stars on every song). "Every Song" now means all 8 songs; anyone who already has it keeps it.
+
+## Looks, emotes & night mode (since version 1.27)
+- **⭐ My Looks** (in the 👗 Closet, under the buddy): 4 spots for favourite outfits.
+  - Tap an empty spot (➕) to keep the outfit you have on.
+  - Tap a full spot to wear that outfit again in one tap.
+  - To change a full spot, tap 💾 and then the spot (it asks first).
+  - A look keeps the clothes and the hair. It never changes the buddy, the face or the fur.
+- **Emotes:** tap your buddy in the room and 4 big buttons appear at the bottom: 👋 Wave, 💃 Dance, 😂 Laugh and
+  💤 Nap. They go away by themselves after a few seconds.
+- **🌙 Night mode:** the round 🌙 button in the room's top-left corner turns the lights off in that room; ☀️ turns them
+  back on. Each room (Room, Loft, Backyard) remembers its own setting.
+  - At night, lamps and lights glow: the Lava Lamp, Fairy Lights, Neon Heart, Moon Lamp, Disco Ball, Volcano Lamp and more.
+  - The window shows the moon and stars, and glow-in-the-dark stars appear on the wall. The Backyard gets a moon and a starry sky.
+  - The lights come back on while you decorate, so you can see what you're moving.
+- 2 new stickers on the Room & Style page: ⭐ Fashionista (fill all 4 look spots) and 🌙 Night Owl (turn the lights off).
+- Looks and night settings are in the backup too.
 
 ## Where things are
 In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
