@@ -293,7 +293,9 @@ in order). The speed check comes last on purpose: the app is fast enough today, 
   (dinosaurs, space, ocean; right answers unlock collectible fact cards).
 - **🎹 Music Maker (optional):** a beat-and-melody grid for making their own loop.
 - **Content Pack 3:** K-pop-inspired stage outfits (original), cozy anime-style looks, cafe and bakery, ocean and mermaids,
-  matching furniture sets. **Content Pack 4:** basketball, skateboard and karate, farm animals, more trucks and space.
+  matching furniture sets. **Content Pack 4:** basketball, skateboard and karate, farm animals, more trucks and space,
+  and a 🦖 **dino nugget plush** (an original dinosaur-shaped nugget plushie: a room decoration that can sit on shelves,
+  plus a matching squishy for the Fidget Shelf; no real brand names or packaging).
 - More 🧠 Challenge puzzles, more marble mazes, and stickers for every new game.
 
 ## Ideas backlog (not scheduled)

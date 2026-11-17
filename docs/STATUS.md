@@ -47,6 +47,10 @@ _Last updated: 2026-11-16_
   - **🛋️ Room tweaks: done** (v1.31 merged, PR #31). The owner asked for it on 2026-11-17.
   - **⚡ Speed check & tidy-up: built, PR #32 open as v1.32** on branch `feature/speed` (from `main` after #31). This is the last
     Phase 10 PR: once it is merged, Phase 10 is done. The numbers are under "What has been tested".
+    It also fixes a night-mode bug the owner found: the 🌙 window sky (and the wall glow stars) were drawn on top of
+    everything, hiding the Loft window's bars and covering decorations. They are now drawn by  right after
+    the furniture, and the dark layer lets moonlight through the windows. The Backyard's night sky is unchanged.
+  - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see ).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.

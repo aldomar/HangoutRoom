@@ -86,7 +86,8 @@ const GIFT_TIMELINE=[
           '📱 On a phone, your room name has its own row again']},
   {v:'1.32',d:'2026-11-17',i:'⚡',n:'Speed Check',why:'So everything stays quick and the tablet stays cool',
     news:['⚡ Rooms rest when nothing is happening, so the tablet stays cool',
-          '👗 Trying on clothes is quicker']}
+          '👗 Trying on clothes is quicker',
+          '🌙 At night, the windows stay behind your things']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

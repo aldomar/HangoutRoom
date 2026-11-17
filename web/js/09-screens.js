@@ -106,6 +106,7 @@ function renderRoom(){
   const G=roomNo===3?FLOORS[yardFloor(R)]:F;
   s+=`<rect y="470" width="1000" height="230" fill="${G.fill}"/><rect y="470" width="1000" height="230" fill="url(#${G.pat})"/><rect y="458" width="1000" height="16" fill="#00000026"/>`;
   s+=roomNo===3?yardFurniture():roomNo===2?loftFurniture():furniture();
+  s+=nightBack(p); // 🌙 the night window + wall stars, behind the room's things (section 31, v1.32)
   const items=R.items.filter(i=>i.placed&&DECOR[i.type]);
   const deco=i=>`<g class="deco" data-uid="${i.uid}" transform="translate(${Math.round(i.x)} ${Math.round(i.y)})">${DECOR[i.type].d(i)}</g>`;
   s+=items.filter(i=>DECOR[i.type].flat).map(deco).join('');
