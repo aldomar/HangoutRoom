@@ -59,7 +59,12 @@ const GIFT_TIMELINE=[
     news:['📚 Tap the chalkboard in the Backyard for Brain Games',
           '🧁 Snack Stand: count, add up and give change',
           '🃏 Memory Match with your own buddies, and 🫧 Number Pop',
-          '🐣 Easy, 🌟 Medium and 🧠 Hard: every puzzle pays 🪙 the first time']}
+          '🐣 Easy, 🌟 Medium and 🧠 Hard: every puzzle pays 🪙 the first time']},
+  {v:'1.26',d:'2026-11-16',i:'🎶',n:'Song Pack',why:'More songs to sing and tap along to',
+    news:['🎤 5 new songs on the Stage: 8 in all',
+          '💖 Neon Hearts, 👏 Stadium Clap and 🚀 Rocket Launch',
+          '🦖 Dino Stomp (slow and big) and 🌙 Moon Lullaby (calm)',
+          '📒 4 new Stage stickers, like 🎶 Whole Setlist']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

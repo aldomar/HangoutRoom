@@ -37,6 +37,7 @@ _Last updated: 2026-11-16_
   of the one before (the owner merges them in order). See "Phase 9 plan" under Decisions.
   - **🧤 Be the Keeper: built, PR #24 open as v1.24** on branch `feature/keeper` (from `main` after #23).
   - **📚 Brain Games part 1: built, PR #25 open as v1.25** on branch `feature/brain` (on top of `feature/keeper`).
+  - **🎤 Stage song pack: built, PR #26 open as v1.26** on branch `feature/songs` (on top of `feature/brain`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -71,6 +72,7 @@ _Last updated: 2026-11-16_
 - PR #23 "Backyard (v1.23)": merged.
 - PR #24 "Be the Keeper (v1.24)" on branch `feature/keeper` (from `main` after #23): open.
 - PR #25 "Brain Games (v1.25)" on branch `feature/brain` (on top of `feature/keeper`, so it shows #24's changes until #24 is merged): open.
+- PR #26 "Stage song pack (v1.26)" on branch `feature/songs` (on top of `feature/brain`, so it shows #24's and #25's changes until they are merged): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -334,6 +336,16 @@ _Last updated: 2026-11-16_
     allows for the box showing only the last 3 updates; the Hard perfect kick test waits for each kick to finish
     (it could miss a kick on a slow run). Brain Games sits last in `index.html`, so older checks that click the first
     `[data-lvl]` tab still find Soccer's.
+- **Stage song pack (v1.26)**: 755 checks, all passing, no console errors. New checks:
+  - 8 songs in order (the first 3, then the 5 new ones), each a complete recipe; the older chart checks now cover all 8
+    (fixed, in their lanes, never too close, busier on harder levels, 55–75 s long)
+  - the song list shows all 8 with no scrolling on the tablet, big buttons; 2 across on a phone, fitting the width
+  - Dino Stomp plays and pays 3 × 2 coins for 3 stars; Hard Rocket Launch has 3 lanes and saves 3 stars, with still just
+    one Golden Mic; the song list shows the new stars
+  - Encore! still means the first 3 songs; 4 song stickers at the end (Stage page); Dino Stomper, Lift-off! and
+    Sweet Dreams earned; Whole Setlist needs 3 stars on all 8
+  - Test changes: sticker counts now 66; the song-list count check now expects 8.
+  Not tested automatically: how the new songs sound on the tablet.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -594,7 +606,7 @@ _Last updated: 2026-11-16_
     **Gloves** (awards) stand in the **Backyard**, by the goal, because her first room's floor is full. Keeper matches count
     as matches (Team Player sticker) and a 5/5 counts as a perfect. Stickers: First Save, Safe Hands (25), Glove Case.
     Save version 15.
-  - **📚 Brain Games part 1 (v1.25, next):** the Backyard chalkboard opens a menu of 3 games, each with Easy / Medium / Hard
+  - **📚 Brain Games part 1 (v1.25):** the Backyard chalkboard opens a menu of 3 games, each with Easy / Medium / Hard
     and **8 fixed puzzles per level** (owner's choice; ids saved like the Code Lab). +2 coins per puzzle the first time,
     +5 when a level is done; replays are free practice. No timers; a wrong answer is a gentle "Try again!". 🧁 Snack Stand
     (count cupcakes → add up an order → change from 20 and times tables), 🃏 Memory Match (6 → 12 → 20 cards with their
@@ -605,6 +617,8 @@ _Last updated: 2026-11-16_
     Stadium Clap, Dino Stomp (slow, sparse notes), Rocket Launch, Moon Lullaby. The song list becomes a grid that fits 8.
     Golden Mic and Encore! rules unchanged; new song ids only, so no save version change. Stickers: Dino Stomper, Lift-off,
     Sweet Dreams, Whole Setlist (all 8).
+- **Song pack (built as v1.26):** the song list is a grid (4 across on the tablet, 2 on a phone, descriptions hidden on a
+  phone). Encore! is pinned to `starlight/bats/sugar`; the Every Song sticker now needs all 8 (stickers already earned stay).
 - **Brain Games (built as v1.25):** a game opens straight on its first unsolved puzzle (one tap from the menu), with level
   tabs and 8 numbered puzzle buttons to jump around; the level is remembered per game. Answers are big buttons (Snack
   Stand), cards (Memory) or floating bubbles (Number Pop). Medium Number Pop does pairs that make 10, then 20. Memory
@@ -696,7 +710,8 @@ _Last updated: 2026-11-16_
 ## Next steps (Phase 9)
 1. Owner: build v1.24, try 🧤 Keep (see the PR), and merge it.
 2. ~~Build 📚 Brain Games part 1 (v1.25) on `feature/brain` (on top of `feature/keeper`).~~ Built; owner: try it and merge after #24.
-3. Build the 🎤 song pack (v1.26) on `feature/songs` (on top of `feature/brain`).
+3. ~~Build the 🎤 song pack (v1.26) on `feature/songs` (on top of `feature/brain`).~~ Built; owner: listen to the 5 songs and merge after #25.
+4. Next: plan Phase 10 (backlog + helpers) in detail and get it agreed.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

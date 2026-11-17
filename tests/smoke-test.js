@@ -329,7 +329,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('stage marquee on the Loft wall', await ev(`(()=>{const m=document.querySelector('[data-hot=stage] rect');if(!m)return false;const r=m.getBoundingClientRect(),w=document.querySelector('[data-hot=stage]').ownerSVGElement.getBoundingClientRect();return r.width>50&&r.left>w.left&&r.right<w.right&&r.top>w.top;})()`));
   await shot('69-loft-stage');
   await ev(`document.querySelector('[data-hot=stage] rect').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(400);
-  check('marquee opens the Stage on Easy with 3 songs', await ev(`cur==='stage'&&STG.state==='pick'&&P().stage.level==='easy'&&document.querySelectorAll('#stgSongs [data-song]').length===3`));
+  check('marquee opens the Stage on Easy with every song', await ev(`cur==='stage'&&STG.state==='pick'&&P().stage.level==='easy'&&document.querySelectorAll('#stgSongs [data-song]').length===SONG_IDS.length&&SONG_IDS.length===8`));
   check('Back from the song list goes to the Loft', await ev(`window.androidBack()&&cur==='room'&&roomNo===2`));
   await ev(`goRoom(1);show('stage')`); await sleep(300);
   await shot('70-stage-songs');
@@ -1083,7 +1083,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('62 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25), ids all different, 6 or more per page', await ev(`STICKERS.length===62&&new Set(STICKERS.map(s=>s.id)).size===62&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('66 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26), ids all different, 6 or more per page', await ev(`STICKERS.length===66&&new Set(STICKERS.map(s=>s.id)).size===66&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1382,7 +1382,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`P().fid.squish='mochi';P().fid.spin='galaxy';P().fid.slime='grape';P().fid.cube='pastel';P().fid.marble='pearl';save();show('room')`);
 
   console.log('Content Pack 2: stickers');
-  check('the 4 pack stickers come just before the Backyard ones, on the Room & Style page', await ev(`STICKERS.length===62&&STICKERS.slice(-13,-9).every(s=>s.page==='room'&&/^p2/.test(s.id))`));
+  check('the 4 pack stickers come just before the Backyard ones, on the Room & Style page', await ev(`STICKERS.length===66&&STICKERS.slice(-17,-13).every(s=>s.page==='room'&&/^p2/.test(s.id))`));
   check('pack stickers count what she has: 3 dino things (hoodie, plush, dino board), 3 space (wall, spinner, rocket board), 0 vehicle', await ev(`p2Have(P(),'dino')===3&&p2Have(P(),'space')===3&&p2Have(P(),'ride')===0`), await ev(`[p2Have(P(),'dino'),p2Have(P(),'space'),p2Have(P(),'ride'),p2Have(P(),'hero')]`));
   await ev(`P().owned.push('legs:dinoSocks');P().room.items.push({uid:'p2nest',type:'dinoNest',placed:false})`);
   check('socks and a decoration in My Stuff count too (5 dino things)', await ev(`p2Have(P(),'dino')===5`));
@@ -1547,7 +1547,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   for(const w of ['picket','hedge','stoneWall','rainbowFence','batFence']){await ev(`P().room3.wall='${w}';renderRoom()`);check(`the ${w} fence draws`, await ev(`(()=>{const g=document.querySelector('[data-fence=${w}]');return g&&g.getBBox().width>900;})()`));}
   await shot('F05-yard-batfence');
   // stickers
-  check('Yard Life and Happy Camper come just before the keeper stickers, on the Room & Style page', await ev(`STICKERS.length===62&&STICKERS.slice(-9,-7).map(s=>s.id+':'+s.page).join()==='yard5:room,camper:room'`));
+  check('Yard Life and Happy Camper come just before the keeper stickers, on the Room & Style page', await ev(`STICKERS.length===66&&STICKERS.slice(-13,-11).map(s=>s.id+':'+s.page).join()==='yard5:room,camper:room'`));
   check('5 things in the Backyard earn Yard Life; 3 outdoor things earn Happy Camper', await ev(`(()=>{const f=id=>stkDone(P(),STICKERS.find(s=>s.id===id));return f('yard5')&&f('camper');})()`));
   // save data
   const v22=await ev(`JSON.stringify(Object.assign({},DB,{version:13,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.room3;return q;})}))`);
@@ -1644,7 +1644,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Easy mode opens Keep on Easy', await ev(`P().soccer.keep.level==='easy'&&document.querySelector('#socTip').textContent.includes('Hop')`));
   await ev(`P().easy=false;applyEasy();renderSoccer()`);
   // stickers
-  check('3 keeper stickers come before the Brain Games ones, on the Soccer page', await ev(`STICKERS.slice(-7,-4).map(s=>s.id+':'+s.page).join()==='save1:soccer,save25:soccer,gloves:soccer'`));
+  check('3 keeper stickers come before the Brain Games ones, on the Soccer page', await ev(`STICKERS.slice(-11,-8).map(s=>s.id+':'+s.page).join()==='save1:soccer,save25:soccer,gloves:soccer'`));
   check('First Save is earned; Glove Case shows 2 of 3', await ev(`(()=>{const f=id=>STICKERS.find(s=>s.id===id);return stkDone(P(),f('save1'))&&stkHave(P(),f('gloves'))===2&&!stkDone(P(),f('gloves'));})()`));
   // phone
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(500); await shot('G08-phone-keep');
@@ -1753,7 +1753,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Easy mode: every game opens on Easy, with no reading needed', await ev(`Object.values(P().brain.level).every(l=>l==='easy')`)&&await ev(`(document.querySelector('#brMenu [data-game=snack]').click(),BR.lvl==='easy'&&!document.querySelector('#brQ').textContent.includes('How many'))`));
   await shot('H12-brain-easy-mode');
   await ev(`P().easy=false;applyEasy();show('room')`);
-  check('4 Brain Games stickers at the end, on the Code & Brain page', await ev(`STICKERS.slice(-4).map(s=>s.id+':'+s.page).join()==='snack8:code,memory8:code,pop8:code,brainChamp:code'&&STK_PAGES.code.name==='Code & Brain'`));
+  check('4 Brain Games stickers before the song ones, on the Code & Brain page', await ev(`STICKERS.slice(-8,-4).map(s=>s.id+':'+s.page).join()==='snack8:code,memory8:code,pop8:code,brainChamp:code'&&STK_PAGES.code.name==='Code & Brain'`));
   check('8 Snack Stand puzzles earn Snack Shop; Brain Champ shows 1 of 9 levels', await ev(`(()=>{const f=id=>STICKERS.find(s=>s.id===id);return stkDone(P(),f('snack8'))&&!stkDone(P(),f('pop8'))&&stkHave(P(),f('brainChamp'))===1;})()`));
   // phone
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await ev(`show('brain')`); await sleep(400); await shot('H13-phone-brain-menu');
@@ -1772,6 +1772,31 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();{const p=DB.profiles[0];p.brain={game:'chess',level:{snack:'super',pop:7},solved:['snack:e1','snack:e1',5]};normalize(p);}`);
   check('odd Brain Games data is made safe', await ev(`(()=>{const b=DB.profiles[0].brain;return b.game==='snack'&&b.level.snack==='easy'&&b.level.pop==='easy'&&b.level.memory==='easy'&&b.solved.join()==='snack:e1';})()`));
   await ev(`DB.activeId=DB.profiles[0].id;enterRoom();show('room')`); await sleep(200);
+
+  console.log('Stage song pack (v1.26)');
+  check('8 songs: the first 3, then Neon Hearts, Stadium Clap, Dino Stomp, Rocket Launch, Moon Lullaby', await ev(`SONG_IDS.join()==='starlight,bats,sugar,neon,clap,dino,rocket,lullaby'&&SONG_IDS.every(id=>{const S=SONGS[id];return S.name&&S.icon&&S.desc&&S.scale.length===10&&S.mel.A.length===32&&S.mel.B.length===32&&/^[AB]+$/.test(S.form);})`));
+  await ev(`closeModal();P().stage.level='easy';show('stage')`); await sleep(400); await shot('S01-stage-8-songs');
+  check('the song list shows all 8, with no scrolling on the tablet; every button is big', await ev(`(()=>{const b=[...document.querySelectorAll('#stgSongs [data-song]')],k=document.querySelector('#stgPick');return b.length===8&&k.scrollHeight<=k.clientHeight&&b.every(x=>x.getBoundingClientRect().height>=80&&x.getBoundingClientRect().width>=180);})()`));
+  const sp0=await ev('P().coins'), spb0=await ev('P().bonusGot.length');
+  await ev(`document.querySelector('[data-song=dino]').click()`); await sleep(300);
+  check('tapping a new song starts it', await ev(`STG.state==='play'&&STG.song==='dino'`));
+  await sleep(1500); await shot('S02-stage-dino');
+  await ev('stAll()'); await ev('stSkip()'); await sleep(500);
+  check('Dino Stomp: every note Perfect = 3 stars, 3 × 2 coins (+10 per new card)', await ev(`P().stage.best.dino.easy.stars===3&&document.querySelector('#modalTitle').textContent.includes('Dino Stomp')`)&&(await ev('P().coins'))===sp0+6+10*((await ev('P().bonusGot.length'))-spb0), [sp0, spb0, await ev('P().coins')]);
+  await ev(`closeModal();P().stage.level='hard';stStart('rocket')`); await sleep(200);
+  check('Hard Rocket Launch has 3 lanes', await ev(`STG.g.n===3`));
+  await ev('stAll()'); await ev('stSkip()'); await sleep(500);
+  check('3 stars on Hard on a new song is saved (the Golden Mic stays one)', await ev(`P().stage.best.rocket.hard.stars===3&&allItems(P()).filter(i=>i.type==='goldenMic').length===1`));
+  await ev(`closeModal();P().stage.level='medium';stStart('lullaby')`); await sleep(200); await ev('stAll()'); await ev('stSkip()'); await sleep(500);
+  await ev(`closeModal();show('stage')`); await sleep(200);
+  check('the song list shows the new stars', await ev(`document.querySelectorAll('[data-song=lullaby] .ss span:not(.off)').length===3&&document.querySelectorAll('[data-song=neon] .ss span:not(.off)').length===0`));
+  check('Encore! still means the first 3 songs (not all 8)', await ev(`(()=>{const e=BONUS.find(b=>b.id==='encore'),one={easy:{stars:1}};return e.ok({stage:{best:{starlight:one,bats:one,sugar:one}}})&&!e.ok({stage:{best:{starlight:one,bats:one}}});})()`));
+  check('4 song stickers at the end, on the Stage page', await ev(`STICKERS.slice(-4).map(s=>s.id+':'+s.page).join()==='songDino:stage,songRocket:stage,songMoon:stage,setlist:stage'`));
+  check('Dino Stomper, Lift-off! and Sweet Dreams are earned; Whole Setlist needs 3 stars on all 8', await ev(`(()=>{const f=id=>STICKERS.find(s=>s.id===id),p=P();return ['songDino','songRocket','songMoon'].every(id=>stkDone(p,f(id)))&&stkNeed(f('setlist'))===8&&!stkDone(p,f('setlist'))&&stkHave(p,f('setlist'))>=3;})()`));
+  check('Whole Setlist is earned with 3 stars on every song', await ev(`(()=>{const q={stage:{best:{}}};SONG_IDS.forEach(id=>q.stage.best[id]={hard:{stars:3,score:1}});return stkDone(q,STICKERS.find(s=>s.id==='setlist'));})()`));
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await ev(`stgPickView()`); await sleep(300); await shot('S03-phone-songs');
+  check('phone: the songs are 2 across and fit the width', await ev(`(()=>{const b=[...document.querySelectorAll('#stgSongs [data-song]')].map(x=>x.getBoundingClientRect());return b[0].top===b[1].top&&b[1].top<b[2].top&&b.every(r=>r.right<=innerWidth&&r.height>=48);})()`));
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await ev(`show('room')`); await sleep(200);
 
   console.log('About & Gift Story (v1.22)');
   check('a new device (no rooms at the start) noted the version without a What\'s New box', await ev(`DB.settings.seenNew===APP_VERSION`));

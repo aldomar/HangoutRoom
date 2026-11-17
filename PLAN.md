@@ -245,8 +245,10 @@ Detailed plan for all three agreed 2026-11-16 (built one PR after another, each 
   As built: a menu of the 3 games; a game opens on its first unsolved puzzle, with level tabs and 8 numbered puzzle
   buttons; 8 fixed puzzles per level (72 in all), +2 per first solve, +5 per level; Medium Number Pop goes on to pairs
   that make 20; 4 stickers. Save version 16 (`brain`).
-- **🎤 Stage song pack (v1.26, the owner's idea):** 4–5 new generated songs: a K-pop-style dance track (original), a soccer
+- ✅ **🎤 Stage song pack (v1.26, the owner's idea):** 4–5 new generated songs: a K-pop-style dance track (original), a soccer
   stadium chant, Dino Stomp (slow and big, for the little ones), Rocket Launch and a calm lullaby. Stickers for them.
+  As built: 5 songs in `30-songs2.js` (Neon Hearts, Stadium Clap, Dino Stomp, Rocket Launch, Moon Lullaby), 8 in all;
+  the song list is a grid; Encore! stays "the first 3 songs"; 4 stickers. No save change (new song ids only).
 
 ### Phase 10: Backlog + helpers
 - **Looks, emotes & night mode:** outfit save slots (switch a whole look in one tap); tap Fuzzy for a wave, dance, laugh
