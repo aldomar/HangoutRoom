@@ -150,6 +150,16 @@ jump to any puzzle, and solved ones turn green.
   sits in front when things overlap. Wall things stay behind standing things, and the buddy stays in front.
 - **📱 Phones:** the room's top bar uses two rows, so the room's name fits: name and coins on top, buttons below.
 
+## Speed check (since version 1.32)
+Nothing new to see; the app just does less work, so the tablet stays cooler and the battery lasts longer.
+- **Resting rooms:** a room where nothing is happening used to keep the tablet busy redrawing it 60 times a second
+  (the buddy breathing, a lava lamp…). Now those small movements step 5 times a second, all at the same moment,
+  and the game loop only runs on the game screens (Soccer, Stage, Fidget Shelf).
+- **👗 Closet:** trying on something you already own only redraws the buddy, not every picture in the Closet.
+- **🛋️ Decorating:** moving things around no longer rebuilds the Shop each time.
+- The smoke test now has a ⚡ Speed check. It slows the computer down 6 times (about a modest tablet) and prints how
+  long each screen takes to open.
+
 ## Where things are
 In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
 (🎨 Art Desk) and the wardrobe (👗 Closet). In the Cozy Loft: the glowing **🎤 Stage** sign (since version 1.12)

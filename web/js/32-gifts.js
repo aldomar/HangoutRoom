@@ -50,9 +50,9 @@ function giftBox(x,y,c,k){return `<g transform="translate(${x} ${y})"><rect x="-
 function giftG(p){
   const gs=p.gifts.filter(canOpen); if(!gs.length) return '';
   const cols=['#ff8cc6','#8ff0d0','#a97cff'], n=gs.length;
-  return `<g class="hot gift-pile" data-hot="gift" transform="translate(${GIFT_SPOT.x} ${GIFT_SPOT.y})"><ellipse cx="0" cy="-2" rx="${n>1?60:44}" ry="9" fill="#00000030"/>`
+  return `<g class="hot gift-pile" data-hot="gift" transform="translate(${GIFT_SPOT.x} ${GIFT_SPOT.y})"><g class="gift-wig"><ellipse cx="0" cy="-2" rx="${n>1?60:44}" ry="9" fill="#00000030"/>`
     +(n>2?giftBox(26,-6,cols[2],0):'')+(n>1?giftBox(-26,-4,cols[1],0):'')+giftBox(0,0,cols[0],1)
-    +(n>1?`<circle cx="44" cy="-74" r="18" fill="#ff4fa3" stroke="#fff" stroke-width="3"/><text x="44" y="-67" text-anchor="middle" font-size="20" font-weight="900" fill="#fff">${n}</text>`:'')+`</g>`;
+    +(n>1?`<circle cx="44" cy="-74" r="18" fill="#ff4fa3" stroke="#fff" stroke-width="3"/><text x="44" y="-67" text-anchor="middle" font-size="20" font-weight="900" fill="#fff">${n}</text>`:'')+`</g></g>`;
 }
 function giftConfetti(){
   const d=document.createElement('div'); d.className='confetti';

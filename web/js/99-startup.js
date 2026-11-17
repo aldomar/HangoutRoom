@@ -2,7 +2,13 @@
 /* =========================================================
    15. MAIN LOOP + STARTUP
    ========================================================= */
+// The loop only runs on screens that draw every frame (v1.32, speed): a waiting frame request alone makes the browser
+// redo its frame work 60 times a second. show() wakes it again with wakeLoop().
+const LOOP_SCREENS=['soccer','stage','fidget'];
+let loopOn=false;
+function wakeLoop(){if(loopOn||!LOOP_SCREENS.includes(cur))return;loopOn=true;loop.last=0;requestAnimationFrame(loop);}
 function loop(t){
+  if(!LOOP_SCREENS.includes(cur)){loopOn=false;if(humG&&AC)humG.gain.setTargetAtTime(0,AC.currentTime,0.05);mzSensor(false);return;}
   const dt=Math.min(0.05,(t-(loop.last||t))/1000); loop.last=t;
   if(cur==='soccer'&&P()) drawSoccer(dt);
   if(cur==='stage'&&STG.state!=='pick'&&P()) drawStage(dt); // keeps dancing behind the result box
@@ -38,4 +44,4 @@ document.addEventListener('visibilitychange',()=>{
 buildDefs();
 show('profiles');
 whatsNew(); // ✨ What's New, once per device after an update (section 25)
-requestAnimationFrame(loop);
+wakeLoop();

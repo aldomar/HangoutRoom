@@ -44,8 +44,13 @@ _Last updated: 2026-11-16_
   - **🎁 Gifts & room layouts: done** (v1.28 merged, PR #28).
   - **🔎 Shop filters & big dreams: done** (v1.29 merged, PR #29).
   - **🧑‍🔧 Grown-up helpers: done** (v1.30 merged, PR #30).
-  - **🛋️ Room tweaks: built, PR #31 open as v1.31** on branch `feature/room-tweaks` (from `main` after #30). The owner asked
-    for it on 2026-11-17: the room name was squeezed on a phone, and the last touched decoration should come to the front.
+  - **🛋️ Room tweaks: done** (v1.31 merged, PR #31). The owner asked for it on 2026-11-17.
+  - **⚡ Speed check & tidy-up: built, PR #32 open as v1.32** on branch `feature/speed` (from `main` after #31). This is the last
+    Phase 10 PR: once it is merged, Phase 10 is done. The numbers are under "What has been tested".
+    It also fixes a night-mode bug the owner found: the 🌙 window sky (and the wall glow stars) were drawn on top of
+    everything, hiding the Loft window's bars and covering decorations. They are now drawn by `nightBack()` right after
+    the furniture, and the dark layer lets moonlight through the windows. The Backyard's night sky is unchanged.
+  - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -85,7 +90,8 @@ _Last updated: 2026-11-16_
 - PR #28 "Gifts & room layouts (v1.28)": merged.
 - PR #29 "Shop filters & big dreams (v1.29)": merged.
 - PR #30 "Grown-up helpers (v1.30)": merged.
-- PR #31 "Room tweaks (v1.31)" on branch `feature/room-tweaks` (from `main` after #30): open.
+- PR #31 "Room tweaks (v1.31)": merged.
+- PR #32 "Speed check (v1.32)" on branch `feature/speed` (from `main` after #31): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -424,6 +430,44 @@ _Last updated: 2026-11-16_
   full and the buttons stay 48 px+ and on screen; on the tablet the bar is still one row. Screenshot
   `tests/shots/J01-phone-room-bar.png`. Also fixed: the y-sort of standing things had been commented out by mistake
   (since v1.28), so they were already drawn in list order; now that order is on purpose.
+- **Speed check (v1.32)**: 892 checks, all passing, no console errors. Measured in headless Chrome on the owner's PC with
+  the CPU slowed 6× (about a modest tablet), with 30 decorations in each room (including every moving one).
+  "Open" times run from the tap to the next drawn frame; "doing nothing" is how much work the page does per second
+  while nobody touches it (1000 ms/s = the tablet's main thread is never free).
+  | | Before (v1.31) | After (v1.32) |
+  | --- | --- | --- |
+  | **Room, doing nothing** | **~990 ms/s** | **~15–80 ms/s** |
+  | **Closet, doing nothing** | ~430–590 ms/s | ~0–30 ms/s |
+  | Wear something you own (Closet) | ~240–330 ms (whole grid) | ~75–120 ms |
+  | Move a thing with the Shop open | room + Shop redrawn (~300 ms more) | room only |
+  | Open a room / Loft / Backyard | ~175–300 ms | ~185–415 ms (no change, run-to-run noise) |
+  | Open the Closet / change tab | ~230–325 ms | ~250–345 ms (no change) |
+  | Open Decorate on the Shop | ~550–730 ms | ~455–620 ms |
+  | Sticker Book | ~100–115 ms | ~130–250 ms (no change, noise) |
+  What was slow, and the fixes:
+  - A room doing nothing was the big one. The buddy's breathing, the pet, the gift pile and the lava lamp, fairy lights,
+    light stick, speaker and Stage sign (SVG `<animate>`) moved smoothly, so the whole room SVG (with its `#fuzz` and
+    `#glow` filters) was laid out and redrawn 60 times a second. Now every endless idle animation is a CSS animation with
+    `steps()` on a shared 0.2 s grid; they all start when the room is drawn, so the room is redrawn 5 times a second,
+    and Chrome sleeps in between. The moving decorations are `.an-*` classes under `#roomSvg`, so Shop tiles stay still.
+  - The gift pile's wiggle used the separate CSS `rotate` property, which made Chrome redraw every frame even when
+    stepped. It now wiggles an inner group with `transform`.
+  - The main loop asked for a new frame forever, even on screens that draw nothing. It now runs only on
+    `LOOP_SCREENS` (Soccer, Stage, Fidget Shelf), and `show()` wakes it (`wakeLoop`).
+  - Wearing an owned item redraws only the big buddy, the ✔ outline and My Looks (`closetWear`); buying still redraws all.
+  - Dropping a moved thing redraws the Decorate grid only on 📦 My Stuff or when it was put away.
+  - Still the slowest: opening Decorate on the Shop (~500 ms slowed 6×, about 80 ms on the PC). It is spread over
+    reading, laying out and drawing ~50 tiles (no single hot spot; skipping off-screen tiles and dropping filters did
+    not help), so it was left alone. `09-screens.js` is 35 KB, under the 40 KB limit, so it was not split.
+  - New ⚡ Speed check in the smoke test: no SVG `<animate>` anywhere; every endless room animation is stepped and uses
+    `transform`/`opacity`; the lava lamp still moves; Shop tiles don't move; moving a thing doesn't rebuild the Shop;
+    the main loop rests on the room and wakes on Soccer; wearing an owned item keeps the grid. Then it prints the
+    timings above and fails only on a big slowdown (any screen over 1.5 s, or a resting room over 500 ms/s).
+  - One Keeper check ("no dive: Hop scores") failed once in four full runs and passed in the others; it waits on the
+    match timing, so it is a timing flake on a busy PC, not a code fault.
+  Not tested automatically: how the stepped movements look on the tablet (the buddy and pet move only 2–6 px, so they
+  should look the same; the lava blobs and speaker notes now hop about 4 px at a time, which may look a little less
+  smooth) and how warm the tablet gets.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -864,8 +908,11 @@ _Last updated: 2026-11-16_
 2. ~~Build 🎁 Gifts & room presets (v1.28) on `feature/gifts` (on top of `feature/looks`).~~ Merged (PR #28).
 3. ~~Build 🔎 Shop filters + 💰 big dreams (v1.29) on `feature/shop`.~~ Merged (PR #29).
 4. ~~Build 🧑‍🔧 Grown-up helpers (v1.30).~~ Merged (PR #30).
-5. ~~🛋️ Room tweaks (v1.31).~~ Built (PR #31); owner: try it on the phone and merge.
-6. Build ⚡ Speed check & tidy-up (v1.32), the last Phase 10 PR.
+5. ~~🛋️ Room tweaks (v1.31).~~ Merged (PR #31).
+6. ~~Build ⚡ Speed check & tidy-up (v1.32), the last Phase 10 PR.~~ Built (PR #32).
+7. Owner: build v1.32 and check that the room still feels alive (buddy breathing, lava lamp, fairy lights, speaker
+   notes, gift wiggle) and that the tablet stays cooler; then merge it. That finishes Phase 10.
+8. Plan Phase 11 (more games and content, see `PLAN.md`) in detail and get it agreed before building.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

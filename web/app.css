@@ -69,13 +69,30 @@ body.easy .topbar .title{font-size:22px}
 .stage{flex:1;min-height:0;display:flex;background:#1a1422}
 #roomSvg{width:100%;height:100%;display:block;touch-action:none}
 .hot{cursor:pointer}
-.bob{animation:bob 2.6s ease-in-out infinite}
+.bob{animation:bob 2.4s steps(6) infinite} /* idle loops step every 0.2 s, all together (v1.32, speed: see .mascot) */
 /* room labels (Soccer, Closet...) only show in Easy mode; older kids find things by exploring (v1.12) */
 .sign{display:none}
 body.easy .sign{display:inline}
 @keyframes bob{50%{transform:translateY(-5px)}}
-.mascot{animation:breathe 3.2s ease-in-out infinite;transform-origin:500px 604px;cursor:pointer}
+/* Endless idle animations in the room move in small steps every 0.2 s (5 a second, not 60). They start together
+   when the room is drawn, so the room is redrawn 5 times a second instead of every frame (v1.32, speed). */
+.mascot{animation:breathe 3.2s steps(8) infinite;transform-origin:500px 604px;cursor:pointer}
 @keyframes breathe{50%{transform:scale(1.02,.985)}}
+/* Moving decorations (lava lamp, fairy lights, light stick, speaker, Stage sign) use the same 0.2 s steps. They used
+   SVG <animate>, which redrew the whole room every frame (v1.32, speed). Only in the room: Shop tiles stay still. */
+#roomSvg .an-lava1{animation:anLava1 6s steps(15) infinite}
+@keyframes anLava1{50%{transform:translateY(-54px)}}
+#roomSvg .an-lava2{animation:anLava2 7.2s steps(18) infinite}
+@keyframes anLava2{50%{transform:translateY(46px)}}
+#roomSvg .an-tw{animation:anTwinkle 1.6s steps(4) infinite}
+#roomSvg .an-bulb{animation:anTwinkle 1.2s steps(3) infinite}
+#roomSvg .an-bulb2{animation:anTwinkle 1.2s steps(3) -.6s infinite}
+@keyframes anTwinkle{50%{opacity:.35}}
+#roomSvg .an-glow{animation:anGlow 1.6s steps(4) infinite}
+@keyframes anGlow{50%{opacity:.6}}
+#roomSvg .an-note{animation:anNote 2s steps(10) infinite}
+#roomSvg .an-note2{animation:anNote 2.4s steps(12) .8s infinite both}
+@keyframes anNote{from{transform:translateY(0);opacity:1}to{transform:translateY(-45px);opacity:0}}
 .mascot.hop{animation:hop .6s ease}
 @keyframes hop{0%{transform:none}25%{transform:scale(1.08,.9)}55%{transform:translateY(-40px) scale(.95,1.06)}80%{transform:scale(1.05,.95)}100%{transform:none}}
 .deco{pointer-events:none}
@@ -367,9 +384,9 @@ body.easy .stk svg{width:110px;height:110px}body.easy .stk.locked .sn{display:no
 @media (max-width:760px){#stkTabs .tab span{display:none}#stkTabs .tab{font-size:21px;padding:8px 10px}#stkTabs .tab small{display:none}.stk-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}.stk svg{width:80px;height:80px}.stk-page{margin:6px;padding:8px}}
 /* Pet (v1.19) */
 .pet{cursor:pointer}
-.pet-bob{animation:petBob 2.6s ease-in-out infinite}
+.pet-bob{animation:petBob 2.4s steps(6) infinite}
 @keyframes petBob{50%{transform:translateY(-3px)}}
-.pet-ask{animation:petAsk 1.6s ease-in-out infinite}
+.pet-ask{animation:petAsk 1.6s steps(4) infinite}
 @keyframes petAsk{50%{transform:translateY(-6px)}}
 .pet-body{transform-box:fill-box;transform-origin:50% 100%}
 .pet-body.t-spin,.pet-body.t-flip{transform-origin:50% 50%}
@@ -547,8 +564,10 @@ body.easy .lk-label span{display:none}
 .confetti{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
 .confetti i{position:absolute;top:-20px;width:12px;height:18px;border-radius:3px;animation:confFall 2.2s ease-in forwards}
 @keyframes confFall{to{top:105%;transform:rotate(540deg) translateX(40px)}}
-.gift-pile{cursor:pointer;animation:giftWiggle 2.4s ease-in-out infinite;transform-box:fill-box}
-@keyframes giftWiggle{0%,80%,100%{rotate:0deg}85%{rotate:-4deg}90%{rotate:4deg}95%{rotate:-2deg}}
+.gift-pile{cursor:pointer}
+/* the wiggle is on an inner group, as a transform: Chrome redraws every frame for the separate rotate property (v1.32) */
+.gift-wig{animation:giftWiggle 2.4s steps(1) infinite;transform-box:fill-box}
+@keyframes giftWiggle{0%,100%{transform:rotate(0deg)}75%{transform:rotate(-4deg)}83.333%{transform:rotate(4deg)}91.667%{transform:rotate(-2deg)}}
 .lay-hint{grid-column:1/-1}
 .tile.lay{cursor:default;grid-column:span 2}
 button.tile.lay{cursor:pointer}

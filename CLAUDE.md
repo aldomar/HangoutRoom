@@ -50,7 +50,11 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   and `android/README.md` if the build changes. Write them for readers with limited technical experience.
 - **Light on the device.** Assume a modest Android tablet:
   - Keep animated SVG filters (the `#fuzz` filter) to a minimal number of elements.
-  - Run animation loops only while their screen is visible.
+  - Run animation loops only while their screen is visible. The main loop (`99-startup.js`) only runs on
+    `LOOP_SCREENS` (`soccer stage fidget`); a new screen that draws every frame must be added there (since v1.32).
+  - Endless idle animations (the buddy breathing, pet, lava lamp…) move in `steps()` every 0.2 s, all on the same
+    grid, so the room is redrawn 5 times a second instead of 60. No SVG `<animate>` (SMIL): use a CSS class under
+    `#roomSvg` instead (see `.an-*` in `app.css`). The smoke test's ⚡ Speed check checks both (since v1.32).
   - No large asset files.
 
 ## Architecture rules
@@ -153,7 +157,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   32. `32-gifts.js` Gifts + room layouts (`giveModal`, `sendGift`, `giftG`, `giftOpen`, `GIFT_SPOT`, `layoutGrid`, `layoutSave`, `layoutLoad`)
   33. `33-shopplus.js` Shop filters + big dreams (`THEMES`, `THEME_IDS`, `themesOf`, `themeFilter`, the 5 `dream:1` decorations, `dreamBar`, `dreamTap`)
   34. `34-helpers.js` Grown-up helpers (`backupSaved`, `lastBackupText`, `readOn`, `canSpeak`, `speakLabel`, `svgPng`, `snapRoom`, `snapCard`)
-  99. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
+  99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
 - A photocard is a small recipe `{id, no, at, look, stage, frame, title, name, s, bonus?}` in `profile.cards`, drawn by `cardSVG()`.
