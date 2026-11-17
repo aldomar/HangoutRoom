@@ -40,9 +40,9 @@ _Last updated: 2026-11-16_
 - **Phase 10 (Backlog + helpers): detailed plan agreed 2026-11-16** (five PRs, stacked; see "Phase 10 plan" under
   Decisions and `PLAN.md`): Looks & night (v1.27) → Gifts & presets (v1.28) → Shop filters + big dreams (v1.29) →
   Grown-up helpers (v1.30) → Speed check (v1.31).
-  - **👗 Looks, emotes & night mode: built, PR #27 open as v1.27** on branch `feature/looks` (from `main` after #26).
-    The owner tested it and is merging it.
-  - **🎁 Gifts & room layouts: built, PR #28 open as v1.28** on branch `feature/gifts` (on top of `feature/looks`).
+  - **👗 Looks, emotes & night mode: done** (v1.27 merged, PR #27). The owner tested it on the device.
+  - **🎁 Gifts & room layouts: done** (v1.28 merged, PR #28).
+  - **🔎 Shop filters & big dreams: built, PR #29 open as v1.29** on branch `feature/shop` (from `main` after #28).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -78,8 +78,9 @@ _Last updated: 2026-11-16_
 - PR #24 "Be the Keeper (v1.24)": merged.
 - PR #25 "Brain Games (v1.25)": merged.
 - PR #26 "Stage song pack (v1.26)": merged.
-- PR #27 "Looks, emotes & night mode (v1.27)" on branch `feature/looks` (from `main` after #26): open (tested by the owner).
-- PR #28 "Gifts & room layouts (v1.28)" on branch `feature/gifts` (on top of `feature/looks`, so it shows #27's changes until #27 is merged): open.
+- PR #27 "Looks, emotes & night mode (v1.27)": merged.
+- PR #28 "Gifts & room layouts (v1.28)": merged.
+- PR #29 "Shop filters & big dreams (v1.29)" on branch `feature/shop` (from `main` after #28): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`) are ignored.
 
@@ -382,6 +383,21 @@ _Last updated: 2026-11-16_
   - Note: the 🧤 keeper checks are timing-sensitive. They failed twice while Android Studio was busy on the PC, then passed
     with no change to that code.
   Not tested automatically: how the gift opening feels, and passing the tablet between two children.
+- **Shop filters & big dreams (v1.29)**: 842 checks, all passing, no console errors. New checks:
+  - save version 19; every theme in `THEME_IDS` names a real item; Closet chips (All first, Emo and Dino, no Dreams,
+    48 px); 🦇 Emo shows exactly the 3 emo tops; 🦕 Dino the dino hoodie; a tab with nothing of that theme goes back to
+    All; ✨ All shows every top again
+  - Shop chips with ⭐ Dreams and 🌳 Outdoor; Dreams shows the 5 dreams (60–100, starred); only dreams cost more than
+    40; every dream draws; the Arcade and Aquarium glow at night
+  - Save up: the offer, the bar (10 / 100, 90 more), the chips not squashed under it, a second tap says how many
+    more, ✖ stops it, "get it now" with enough coins, a normal buy that places it, costs 80 and clears the goal;
+    Dream Come True
+  - Easy mode: icon-only 56 px chips; a v1.28 backup restores with no goal; odd data is made safe; phone: chips and
+    bar fit the width
+  - Test changes: sticker count 71; the v1.28 checks accept save version 18 or later. The 🧤 keeper Easy-match step now
+    waits inside the page and dives on the first frame the ball flies, so a busy PC can't make it miss (that was the
+    flaky failure seen in v1.28).
+  Not tested automatically: how the dream items look on the tablet.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -657,6 +673,21 @@ _Last updated: 2026-11-16_
   and the speed check stays last (the app is fast today; it's there to catch slowness the new features might add);
   gifts are **decorations and coins only, with no PIN check**; 5 big-dream items at 60–100 coins are fine (more can be
   added later); 🔊 Read to me is **on by default in Easy mode**, off otherwise.
+- **Shop filters & big dreams (built as v1.29, `33-shopplus.js`):**
+  - Theme chips are the first row inside the Closet grid and the Decorate Shop grid (`themeFilter(where, list)`).
+    An item's themes: `THEME_IDS` (older items, by `category:id` or `decor:<key>`), plus `p2`, `yard:1` → Outdoor and
+    `dream:1` → Dreams. Only themes present in the list on screen get a chip; a chip with nothing in a new tab falls
+    back to All. The choice is remembered while the app is open (not saved). Icons only on a phone and in Easy mode.
+  - **No 🍂 Season chip** (it was in the plan): seasonal things aren't in the Shop or the Closet (they have their own
+    tab), so it would always be empty. A ⭐ Dreams chip took its place.
+  - Big dreams (`dream:1`, the only items above 40): Canopy Bed 100, Arcade Cabinet 80, Castle Bunk Bed 90, Rocket
+    Playhouse 80, Aquarium 60, all original art. Gold border and ⭐ in the Shop. Tapping one she can't afford asks
+    "⭐ Save up for it?" and sets `p.dream`; tapping it again says how many more. A "Saving for…" bar (picture,
+    progress, ✖) sits at the top of the Shop. With enough coins it's a normal buy, which clears the goal.
+    The Arcade and the Aquarium have `NIGHT_GLOW` entries.
+  - Sticker: 🌈 Dream Come True. 71 in all.
+  - Save version 19: `dream` ('' or a DECOR key).
+
 - **Gifts & room layouts (built as v1.28, `32-gifts.js`):**
   - 🎁 Give opens from ⚙️ Settings and from a 🎁 tile at the start of My Stuff (only when there is another room on the
     tablet). Three steps, each a modal: what (🪙 5 / 10 / 20, or one tile per kind of decoration in My Stuff; no posters
@@ -788,14 +819,14 @@ _Last updated: 2026-11-16_
 
 ## Next steps (Phase 10)
 1. ~~Build 👗 Looks, emotes & night mode (v1.27) on `feature/looks`.~~ Built (PR #27); the owner tested it.
-2. ~~Build 🎁 Gifts & room presets (v1.28) on `feature/gifts` (on top of `feature/looks`).~~ Built (PR #28); owner: try it and merge after #27.
-3. Build 🔎 Shop filters + 💰 big dreams (v1.29), then 🧑‍🔧 Grown-up helpers (v1.30, needs an Android Studio build),
-   then ⚡ Speed check (v1.31), each on top of the one before.
+2. ~~Build 🎁 Gifts & room presets (v1.28) on `feature/gifts` (on top of `feature/looks`).~~ Merged (PR #28).
+3. ~~Build 🔎 Shop filters + 💰 big dreams (v1.29) on `feature/shop`.~~ Built (PR #29); owner: try it and merge.
+4. Build 🧑‍🔧 Grown-up helpers (v1.30, needs an Android Studio build), then ⚡ Speed check (v1.31), each on top of the one before.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 18 since v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 19 since v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

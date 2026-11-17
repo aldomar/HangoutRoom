@@ -120,6 +120,21 @@ jump to any puzzle, and solved ones turn green.
 - 2 new stickers on the Room & Style page: 🎁 Kind Heart (give a gift) and 🏠 Interior Designer (save a layout).
 - Waiting gifts and saved layouts are in the backup too.
 
+## Shop filters & big dreams (since version 1.29)
+- **🔎 Theme buttons** at the top of the 👗 Closet and the 🛋️ Decorate Shop: ✨ All, 🦇 Emo, ☁️ Cute, ⚽ Sport, 🎤 Stage,
+  🦕 Dino, 🚀 Space, 🚗 Ride, 🤖 Hero, 🌳 Outdoor and ⭐ Dreams. Tap one to see only those things.
+  - Only themes that have something in the list on screen are shown.
+  - On a phone and in Easy mode they show just the icon.
+  - Seasonal things already have their own 🍂 Seasons tab, so there's no Season button.
+- **⭐ Big dreams:** 5 special decorations to save up for, the only things that cost more than 40:
+  🛏️ Canopy Bed (100), 🕹️ Arcade Cabinet (80), 🏰 Castle Bunk Bed (90), 🚀 Rocket Playhouse (80) and 🐠 Aquarium (60).
+  - They have a gold border and a ⭐ in the Shop.
+  - Tapping one you can't afford yet asks "⭐ Save up for it?". The Shop then shows a "Saving for…" bar with how many
+    coins are still needed (✖ stops saving for it). Nothing runs out: the dream waits as long as it takes.
+  - The Arcade and the Aquarium glow in 🌙 night mode.
+- A new sticker on the Room & Style page: 🌈 Dream Come True (get a big dream).
+- The dream you're saving for is in the backup too.
+
 ## Where things are
 In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
 (🎨 Art Desk) and the wardrobe (👗 Closet). In the Cozy Loft: the glowing **🎤 Stage** sign (since version 1.12)

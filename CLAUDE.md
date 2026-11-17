@@ -73,7 +73,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`.
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for).
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
   optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it.
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
@@ -147,6 +147,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   30. `30-songs2.js` Stage song pack (5 more `SONGS` recipes, pushed onto `SONG_IDS`; 4 song stickers)
   31. `31-looks.js` Looks, emotes + night mode (`renderLooks`, `wearLook`, `EMOTES`, `playEmote`, `emoteBar`, `NIGHT_GLOW`, `nightLayer`, `nightBtn`)
   32. `32-gifts.js` Gifts + room layouts (`giveModal`, `sendGift`, `giftG`, `giftOpen`, `GIFT_SPOT`, `layoutGrid`, `layoutSave`, `layoutLoad`)
+  33. `33-shopplus.js` Shop filters + big dreams (`THEMES`, `THEME_IDS`, `themesOf`, `themeFilter`, the 5 `dream:1` decorations, `dreamBar`, `dreamTap`)
   99. `99-startup.js` (always last) Main loop + startup (`androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -251,6 +252,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 - Gifts & layouts (since v1.28, `32-gifts.js`): a gift goes into the other profile's `gifts[]` inbox (no network) and is drawn as
   a `data-hot="gift"` pile at `GIFT_SPOT` in every room; opening adds coins or places the decoration. Posters and `award` items
   can't be given. 🏠 Layouts is Decorate's 7th tab; a layout stores item uids, so loading finds items in any room or My Stuff.
+- Theme chips + dreams (since v1.29, `33-shopplus.js`): an item's themes come from `p2`, `yard`, `dream` and `THEME_IDS`.
+  **A new closet item or decoration should get a theme** (a `p2`-style field or a `THEME_IDS` entry), so the chips find it.
+  Big dreams have `dream:1` and are the only items allowed above 40 coins.
 - Every room area is open. To add a locked area for a future feature, put it in `LOCKED` and `handleHot()`.
 - `android/`: Gradle project; `app/src/main/java/com/family/hangoutroom/MainActivity.kt`; `android/README.md` has build/sideload steps.
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.
@@ -265,7 +269,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   Code Lab: +3 per puzzle the first time it is solved, +5 when every puzzle of a level is solved (Challenge: +5 and +10).
   Fidgets (v1.16): 1 per 5 slime stretches, 1 per 25 clicker clicks, Marble Maze +3 per new maze, +1 per replay, +5 once for all.
   Sticker Book (v1.18): +2 per sticker, once each. Pet (v1.19): earns nothing; a treat costs 2.
-  Item prices are 0–40. Keep earning steady and fair.
+  Item prices are 0–40, except ⭐ big dreams (`dream:1`, 60–100, since v1.29). Keep earning steady and fair.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).
   A new decoration = one entry in `DECOR` with `{name, price, box, d()}` (plus `flat:1` for rugs, `wall:1` for wall items).
 - **A content pack** is a new numbered file (like `17-pack1.js`) that only adds entries. New SVG patterns go in

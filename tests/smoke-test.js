@@ -1083,7 +1083,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('70 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28), ids all different, 6 or more per page', await ev(`STICKERS.length===70&&new Set(STICKERS.map(s=>s.id)).size===70&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('71 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29), ids all different, 6 or more per page', await ev(`STICKERS.length===71&&new Set(STICKERS.map(s=>s.id)).size===71&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1600,7 +1600,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Easy: she can change her mind (a second tap moves the dive)', await ev(`Math.abs(KP.tgt.x-${N3.u})<0.02`));
   await kpTo('result');
   check('…and that saves it', await ev(`KP.saves[2]===true`));
-  for(let i=3;i<5;i++){await kpTo('fly');await ev(`kpDive(KP.shot.u,KP.shot.v)`);await kpTo('result');}
+  // dive on the first frame the ball flies (waiting inside the page, so a busy PC can't miss the short flight)
+  const kpDiveInFlight=()=>ev(`new Promise(r=>{let n=0;const f=()=>{if(KP.state==='fly'){kpDive(KP.shot.u,KP.shot.v);r(1);return;}if(['ready','wind','result'].includes(KP.state))KP.timer=99;if(++n>900){r(0);return;}requestAnimationFrame(f);};f();})`);
+  for(let i=3;i<5;i++){await kpDiveInFlight();await kpTo('result');}
   await kpTo('done'); await sleep(200); await shot('G03-keep-result');
   check('after 5 shots: the result box, best saves, a match counted', await ev(`document.querySelector('#modalTitle').textContent.includes('4 / 5 saves')&&P().soccer.keep.best.easy===4&&KP.round.easy===1`));
   check('+1 coin for each of the 4 saves', (await ev('P().coins'))===kc0+4, await ev('P().coins'));
@@ -1919,7 +1921,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     {const A=DB.profiles[0],B=DB.profiles[1];DB.activeId=A.id;[A,B].forEach(p=>{p.gifts=[];p.stats.gifts=0;p.presets={1:[null,null,null],2:[null,null,null],3:[null,null,null]};p.easy=false;});A.coins=30;}
     save();roomNo=1;show('room')`); await sleep(200);
   const nmA=await ev(`DB.profiles[0].name`), idB=await ev(`DB.profiles[1].id`), coinsB=await ev(`DB.profiles[1].coins`);
-  check('save version 18: every room has a gift inbox and 3 layout slots per room', await ev(`DB_VERSION===18&&DB.version===18&&DB.profiles.every(p=>Array.isArray(p.gifts)&&[1,2,3].every(k=>p.presets[k].length===3))`));
+  check('save version 18: every room has a gift inbox and 3 layout slots per room', await ev(`DB_VERSION>=18&&DB.version===DB_VERSION&&DB.profiles.every(p=>Array.isArray(p.gifts)&&[1,2,3].every(k=>p.presets[k].length===3))`));
   await ev(`settingsModal()`);
   check('Settings has 🎁 Give a gift', await ev(`!!document.querySelector('#sGift')`));
   await ev(`document.querySelector('#sGift').click()`); await sleep(100); await shot('GF01-give-what');
@@ -1969,13 +1971,13 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();goRoom(2)`); await sleep(100);
   check('each room has its own layouts', await ev(`document.querySelectorAll('#decoGrid [data-lay-save]').length===3&&!document.querySelector('#decoGrid [data-lay-load]')`));
   await ev(`exitDecorate();goRoom(1)`);
-  check('the Kind Heart and Interior Designer stickers are at the end, on the Room & Style page', await ev(`STICKERS.slice(-2).map(s=>s.id+':'+s.page).join()==='gift1:room,layout1:room'`));
+  check('the Kind Heart and Interior Designer stickers come after the looks ones, on the Room & Style page', await ev(`STICKERS.slice(STICKERS.findIndex(s=>s.id==='gift1'),STICKERS.findIndex(s=>s.id==='gift1')+2).map(s=>s.id+':'+s.page).join()==='gift1:room,layout1:room'`));
   // save data
   await ev(`DB.profiles[1].gifts=[{id:'g1',kind:'coins',n:5,from:'Test',badge:'⭐',at:1}]`);
   const gv27=await ev(`JSON.stringify(Object.assign({},DB,{version:17,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.gifts;delete q.presets;return q;})}))`);
   const gv28=await ev(`JSON.stringify(DB)`);
   await ev(`doRestore(${JSON.stringify(gv27)})`); await sleep(300);
-  check('a v1.27 backup restores with no gifts and empty layouts (save version 18)', await ev(`DB.version===18&&DB.profiles.every(p=>p.gifts.length===0&&[1,2,3].every(k=>p.presets[k].every(l=>l===null)))`));
+  check('a v1.27 backup restores with no gifts and empty layouts (save version 18 or later)', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.gifts.length===0&&[1,2,3].every(k=>p.presets[k].every(l=>l===null)))`));
   await ev(`closeModal();doRestore(${JSON.stringify(gv28)})`); await sleep(300);
   check('a v1.28 backup keeps waiting gifts and layouts', await ev(`DB.profiles[1].gifts.length===1&&DB.profiles[1].presets[1][0]!==null`));
   await ev(`closeModal();{const p=DB.profiles[0];p.gifts=[{id:'a',kind:'coins',n:'7',from:5},{kind:'coins',n:5},{id:'b',kind:'decor'},{id:'c',kind:'coins',n:-3},'x',{id:'d',kind:'coins',n:500}];p.presets={1:'no',2:[{wall:'x',floor:'y',items:[{uid:'u',type:'plant',x:'9'},null]},7],9:[]};normalize(p);}`);
@@ -1987,6 +1989,59 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();enterDecorate();decoTab='layouts';renderDecoGrid();document.querySelector('#decoTabs [data-dt=layouts]').scrollIntoView()`); await sleep(150); await shot('GF06-phone-layouts');
   check('phone: the 🏠 Layouts tab can be reached and the slots fit', await ev(`(()=>{const t=document.querySelector('#decoTabs [data-dt=layouts]').getBoundingClientRect();return t.right<=innerWidth&&t.width>=44&&[...document.querySelectorAll('#decoGrid .tile.lay')].every(x=>x.getBoundingClientRect().right<=innerWidth);})()`));
   await ev(`exitDecorate()`);
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+  await ev(`show('room')`);
+
+  console.log('Shop filters & big dreams (v1.29)');
+  await ev(`closeModal();DB.activeId=DB.profiles[0].id;{const p=P();p.easy=false;p.dream='';}roomNo=1;closetCat='top';themePick.closet='all';themePick.shop='all';show('closet')`); await sleep(200);
+  check('save version 19: every room has a dream goal (none yet)', await ev(`DB_VERSION===19&&DB.version===19&&DB.profiles.every(p=>typeof p.dream==='string')`));
+  check('every theme in the list names a real item', await ev(`Object.keys(THEME_OF).every(k=>{const [c,id]=k.split(':');return c==='decor'?!!DECOR[id]:!!(CLOSET[c]&&CLOSET[c].items.some(i=>i.id===id));})`));
+  check('Closet tops show theme chips (All first, Emo and Dino among them, no Dreams), all big enough', await ev(`(()=>{const c=[...document.querySelectorAll('#closetGrid [data-theme]')].map(b=>b.dataset.theme);return c[0]==='all'&&c.includes('emo')&&c.includes('dino')&&!c.includes('dream')&&document.querySelector('#closetGrid [data-theme=all]').classList.contains('on')&&[...document.querySelectorAll('#closetGrid .chip')].every(b=>b.getBoundingClientRect().height>=48);})()`));
+  const allTops=await ev(`document.querySelectorAll('#closetGrid .tile').length`);
+  await ev(`document.querySelector('#closetGrid [data-theme=emo]').click()`); await sleep(100); await shot('H01-closet-emo');
+  check('🦇 Emo shows only the emo tops', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).sort().join()==='batSweater,tee,zip'&&document.querySelector('#closetGrid [data-theme=emo]').classList.contains('on')`), await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).join()`));
+  await ev(`document.querySelector('#closetGrid [data-theme=dino]').click()`); await sleep(50);
+  check('🦕 Dino shows the dino hoodie (from Pack 2)', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).join()==='dinoHoodie'`));
+  await ev(`[...document.querySelectorAll('#closetTabs [data-cat]')].find(b=>b.dataset.cat==='arms').click()`); await sleep(50);
+  check('a tab with nothing of that theme goes back to All', await ev(`themePick.closet==='all'&&document.querySelectorAll('#closetGrid .tile').length===CLOSET.arms.items.length`));
+  await ev(`closetCat='top';themePick.closet='all';renderCloset()`);
+  check('✨ All shows every top again', await ev(`document.querySelectorAll('#closetGrid .tile').length===${allTops}&&${allTops}===CLOSET.top.items.length`));
+  await ev(`show('room');enterDecorate();decoTab='shop';renderDecoGrid()`); await sleep(100);
+  check('the Shop has chips too, with ⭐ Dreams and 🌳 Outdoor', await ev(`(()=>{const c=[...document.querySelectorAll('#decoGrid [data-theme]')].map(b=>b.dataset.theme);return c[0]==='all'&&c.includes('dream')&&c.includes('yard')&&c.includes('stage');})()`));
+  await ev(`document.querySelector('#decoGrid [data-theme=dream]').click()`); await sleep(100); await shot('H02-shop-dreams');
+  check('⭐ Dreams shows the 5 big dreams, 60–100 coins, with a star', await ev(`(()=>{const t=[...document.querySelectorAll('#decoGrid [data-buy]')];return t.map(x=>x.dataset.buy).join()==='canopyBed,arcade,castleBunk,rocketHouse,aquarium'&&t.every(x=>x.classList.contains('dream'))&&t.every(x=>{const d=DECOR[x.dataset.buy];return d.price>=60&&d.price<=100;});})()`));
+  check('only big dreams cost more than 40', await ev(`Object.values(DECOR).filter(d=>d.price>40).every(d=>d.dream)&&Object.values(DECOR).filter(d=>d.dream).length===5`));
+  check('every big dream draws (no broken numbers)', await ev(`['canopyBed','arcade','castleBunk','rocketHouse','aquarium'].every(k=>{const s=DECOR[k].d();return s.length>200&&!/NaN|undefined/.test(s);})`));
+  check('the arcade and the aquarium glow at night', await ev(`!!NIGHT_GLOW.arcade&&!!NIGHT_GLOW.aquarium`));
+  await ev(`P().coins=10;document.querySelector('#decoGrid [data-buy=canopyBed]').click()`); await sleep(100);
+  check('tapping a dream she can not afford offers ⭐ Save up', await ev(`document.querySelector('#modalTitle').textContent.includes('Save up for Canopy Bed')&&P().coins===10`));
+  await ev(`[...document.querySelectorAll('#modalBtns .btn')].pop().click()`); await sleep(100); await shot('H03-saving-for');
+  check('the chips are not squashed under the bar', await ev(`[...document.querySelectorAll('#decoGrid .chip')].every(c=>{const r=c.getBoundingClientRect(),g=document.querySelector('#decoGrid .chips').getBoundingClientRect();return r.height>=48&&g.height>=r.height;})`));
+  check('⭐ Save up! sets the goal; the Shop shows a Saving for bar (10 / 100)', await ev(`P().dream==='canopyBed'&&(()=>{const b=document.querySelector('#decoGrid .dream-bar');return !!b&&b.textContent.includes('Canopy Bed')&&b.textContent.includes('10 / 100')&&b.textContent.includes('90 more');})()`));
+  await ev(`document.querySelector('#decoGrid [data-buy=canopyBed]').click()`); await sleep(100);
+  check('tapping the same dream again just says how many more', await ev(`document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#toast').textContent.includes('90')`));
+  await ev(`document.querySelector('#decoGrid [data-dream-stop]').click()`); await sleep(50);
+  check('✖ stops saving for it', await ev(`P().dream===''&&!document.querySelector('#decoGrid .dream-bar')`));
+  await ev(`P().dream='arcade';P().coins=200;renderDecoGrid()`);
+  check('with enough coins the bar says she can get it now', await ev(`document.querySelector('#decoGrid .dream-bar').textContent.includes('get it now')`));
+  await ev(`document.querySelector('#decoGrid [data-buy=arcade]').click()`); await sleep(100);
+  check('then tapping it is a normal buy', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#modalTitle').textContent.includes('Arcade')`));
+  await ev(`[...document.querySelectorAll('#modalBtns .btn')].pop().click()`); await sleep(150);
+  check('buying it puts it in the room, costs 80 and clears the goal', await ev(`P().coins===120&&curRoom(P()).items.some(i=>i.type==='arcade'&&i.placed)&&P().dream===''`));
+  check('Dream Come True is earned (the last sticker, Room & Style page)', await ev(`stkDone(P(),STICKERS.find(s=>s.id==='dream1'))&&STICKERS[STICKERS.length-1].id==='dream1'&&STICKERS[STICKERS.length-1].page==='room'`));
+  await ev(`exitDecorate()`); await sleep(100); await shot('H04-arcade-room');
+  await ev(`P().easy=true;applyEasy();enterDecorate();decoTab='shop';renderDecoGrid()`); await sleep(100);
+  check('Easy mode: chips are icons only, 56 px', await ev(`(()=>{const c=document.querySelector('#decoGrid .chip');return getComputedStyle(c.querySelector('span')).display==='none'&&c.getBoundingClientRect().height>=56;})()`));
+  await ev(`exitDecorate();P().easy=false;applyEasy()`);
+  const hv28=await ev(`JSON.stringify(Object.assign({},DB,{version:18,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.dream;return q;})}))`);
+  await ev(`doRestore(${JSON.stringify(hv28)})`); await sleep(300);
+  check('a v1.28 backup restores with no dream goal (save version 19)', await ev(`DB.version===19&&DB.profiles.every(p=>p.dream==='')`));
+  await ev(`closeModal();{const p=DB.profiles[0];p.dream=5;normalize(p);window._d1=p.dream;p.dream='noSuchThing';}`);
+  check('odd dream data is made safe', await ev(`window._d1===''&&dreamOf(DB.profiles[0])===''`));
+  await ev(`DB.profiles[0].dream='aquarium';DB.activeId=DB.profiles[0].id;show('room');enterDecorate();decoTab='shop';renderDecoGrid()`);
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300); await shot('H05-phone-shop');
+  check('phone: the chips and the Saving for bar fit the width', await ev(`(()=>{const c=document.querySelector('#decoGrid .chips').getBoundingClientRect(),b=document.querySelector('#decoGrid .dream-bar').getBoundingClientRect();return c.right<=innerWidth&&b.right<=innerWidth&&b.left>=0;})()`));
+  await ev(`exitDecorate();DB.profiles[0].dream=''`);
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   await ev(`show('room')`);
 
