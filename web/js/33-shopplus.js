@@ -2,7 +2,7 @@
 /* =========================================================
    33. SHOP FILTERS + BIG DREAMS (v1.29)
    🔎 Theme chips above the Closet grid and the Decorate Shop grid. An item's themes come from its own fields
-   (p2:<theme>, yard:1 → 'yard', dream:1 → 'dream') plus THEME_IDS below for older items (no ids change).
+   (p2:<theme>, since v1.35 p3:<theme>, yard:1 → 'yard', dream:1 → 'dream') plus THEME_IDS below for older items (no ids change).
    A chip only shows when the list on screen has something with that theme. The chosen chip is remembered while the
    app is open (not saved). Easy mode shows icons only.
    💰 Big dreams: 5 decorations at 60–100 coins (dream:1, the only things above 40). Tapping one she can't afford yet
@@ -24,7 +24,7 @@ const THEME_IDS={
   hero:'decor:gaming decor:castleBunk'
 };
 const THEME_OF={}; Object.entries(THEME_IDS).forEach(([t,s])=>s.split(' ').forEach(k=>{(THEME_OF[k]=THEME_OF[k]||[]).push(t);}));
-function themesOf(key,it){const t=(THEME_OF[key]||[]).slice();if(it.p2)t.push(it.p2);if(it.yard)t.push('yard');if(it.dream)t.push('dream');return t;}
+function themesOf(key,it){const t=(THEME_OF[key]||[]).slice();if(it.p2)t.push(it.p2);if(it.p3)t.push(it.p3);if(it.yard)t.push('yard');if(it.dream)t.push('dream');return t;}
 const themePick={closet:'all',shop:'all'};
 // list = [[key, item]...]; returns the list for the chosen chip, and the chips' html (where = 'closet' | 'shop')
 function themeFilter(where,list){

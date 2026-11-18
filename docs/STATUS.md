@@ -56,7 +56,8 @@ _Last updated: 2026-11-17_
   Extras (v1.37) → Music Maker (v1.38).
   - **🚂 Pattern Train & 🔤 Word Builder: built, PR #33 open as v1.33** on branch `feature/brain2` (from `main` after #32).
     It also makes bonus photocards undeletable (the owner's request, 2026-11-17). **Merged** (PR #33); the owner checked it.
-  - **🍕 Fraction Bakery & 🪐 Fact Cards: built, PR #34 open as v1.34** on branch `feature/brain3` (from `main` after #33).
+  - **🍕 Fraction Bakery & 🪐 Fact Cards: done** (v1.34 merged, PR #34).
+  - **🎀 Content Pack 3: built, PR #35 open as v1.35** on branch `feature/pack3` (from `main` after #34).
   - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -100,7 +101,8 @@ _Last updated: 2026-11-17_
 - PR #31 "Room tweaks (v1.31)": merged.
 - PR #32 "Speed check (v1.32)": merged.
 - PR #33 "Pattern Train & Word Builder (v1.33)": merged.
-- PR #34 "Fraction Bakery & Fact Cards (v1.34)" on branch `feature/brain3` (from `main` after #33): open.
+- PR #34 "Fraction Bakery & Fact Cards (v1.34)": merged.
+- PR #35 "Content Pack 3 (v1.35)" on branch `feature/pack3` (from `main` after #34): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -487,6 +489,16 @@ _Last updated: 2026-11-17_
   the next full run passed.
   Not tested automatically: Read to me saying the words on the tablet (the browser has no voice), and how small the
   8-wagon trains look on a real phone (they fit; the choice wagons are big).
+- **Content Pack 3 (v1.35):** `tests/smoke-test.js` has 998 checks, all passing, no console errors. New checks: 18 clothes
+  draw on every buddy with no broken numbers, all on a photocard row; no "boy"/"girl" and prices 10–40; the new chips sit
+  before 🌳 and ⭐ and filter right (🍵 Cozy tops, 🎤 Stage old + new, 🐚 Ocean in the Shop); buying a top, the Seashell
+  Bed and a wall; 14 decorations draw in the Loft and the 3 lamps glow at night; 4 walls and 4 floors; pop-it boards
+  have 12–35 bubbles and flip; every new squishy, spinner, slime, cube and marble draws; sticker counts (fidgets and
+  My Stuff count; older stage things count for Stage Star) and pay; backup keeps it all; phone closet fits.
+  The test also had two small fixes of its own: the sticker checks for Brain Games 3/4 now look at the Code & Brain page
+  (the pack's stickers come later in the list), and a Keeper check that broke when a shot was on the left (`x--0.2`).
+  Runs can still stop by timing on a busy PC (seen once at the Art Desk reload and once in Keeper); a stray headless
+  Chrome left by a crashed run also caused failures until it was closed. The next run passed everything.
 - **Fraction Bakery & Fact Cards (v1.34):** `tests/smoke-test.js` has 941 checks, all passing, no console errors. New checks:
   7 games and the 📇 button on the menu; every Easy treat has the right number of pieces and the uneven cuts really are
   uneven; Medium fractions are whole numbers of pieces; the Hard answers; every fact puzzle has 3 different answers in
@@ -852,6 +864,12 @@ _Last updated: 2026-11-17_
   of their own room things/buddies (`memPic`); emoji newer than Android 8 were avoided. Medium shows faint letters in the
   slots; Hard does not. Brain Champ was changed to count only `snack memory pop`, so it keeps meaning "all 3 games".
   No save version change.
+- **Content Pack 3 (built as v1.35, `37-pack3.js`):** themes are a new field `p3` ('stage' 'cozy' 'cafe' 'ocean'), not `p2`,
+  so Pack 2's checks and stickers stay the same; `themesOf()` reads it. 🎤 Stage reuses the existing chip; 🍵 Cozy,
+  🧁 Cafe and 🐚 Ocean are new chips, put before 🌳 Outdoor and ⭐ Dreams. `p3Have()` counts clothes and decorations by
+  their chip (so older stage things count for Stage Star) and walls/floors/fidgets by `p3`. The decorations come in
+  4 matching sets (same colours). "Cozy anime-style" means generic looks only (big sweater, sailor collar, kitty beret,
+  a blanket table, a paper lantern); nothing from a real show. No save version change.
 - **Fraction Bakery & Fact Cards (built as v1.34, `36-brain4.js`):** game ids `bake` and `facts`. Fact cards are unlocked by
   `brain.solved` (no `facts[]` field, unlike the plan: simpler, and backups can't get out of step). The binder is a
   view of the Brain Games screen (`BR.view='facts'`, `factBinder()`), opened by a button that section 28 adds through
@@ -961,13 +979,15 @@ _Last updated: 2026-11-17_
 1. ~~Build 🚂 Pattern Train & 🔤 Word Builder (v1.33) on `feature/brain2`.~~ Built (PR #33).
 2. ~~Owner: build v1.33, try the two new games (see the PR), and merge it.~~ Merged.
 3. ~~Build 🍕 Fraction Bakery & 🪐 Fact Cards (v1.34) on `feature/brain3`.~~ Built (PR #34).
-4. Owner: build v1.34, try the two new games and the 📇 binder (see the PR), and merge it.
-5. Build 🎀 Content Pack 3 (v1.35).
+4. ~~Owner: build v1.34, try the two new games and the 📇 binder (see the PR), and merge it.~~ Merged.
+5. ~~Build 🎀 Content Pack 3 (v1.35) on `feature/pack3`.~~ Built (PR #35).
+6. Owner: build v1.35, try the new clothes, decorations and fidgets (see the PR), and merge it.
+7. Build 🏀 Content Pack 4 (v1.36), with the 🦖 dino nugget plush.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 20 since v1.30 (v1.33 and v1.34 added game ids only, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 20 since v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
