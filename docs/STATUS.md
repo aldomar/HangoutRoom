@@ -70,7 +70,7 @@ _Last updated: 2026-11-17_
   Order: 🗺️ fourth room + getting around (v1.40) → 🚪 Visitors (v1.41) → 👯 Two-player (v1.42) → 🎲 Free Play (v1.43) →
   the rest in any order. The v1.40 plan details are written up; agreed 2026-11-17 on branch
   `feature/room4` (from `feature/depth`; #39 is now merged, so the PR goes straight to `main`).
-  - **✨ Studio + 🗺️ getting around: built as v1.40** on branch `feature/room4` (on top of #39). Plan agreed 2026-11-17;
+  - **✨ Studio + 🗺️ getting around: built, PR #40 open as v1.40** on branch `feature/room4` (on top of #39). Plan agreed 2026-11-17;
     the owner named the room ✨ Studio.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -120,7 +120,7 @@ _Last updated: 2026-11-17_
 - PR #37 "Extras (v1.37)": merged.
 - PR #38 "Music Maker (v1.38)": merged.
 - PR #39 "Room depth (v1.39)": merged.
-- "Studio + getting around (v1.40)" on branch `feature/room4`: PR to be opened.
+- PR #40 "Studio + getting around (v1.40)" on branch `feature/room4`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
