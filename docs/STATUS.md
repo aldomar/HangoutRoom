@@ -903,6 +903,10 @@ _Last updated: 2026-11-17_
   didn't want stars showing inside), and the Backyard's 9 scattered sky stars now form the **Big Dipper** (7 stars, no
   connecting lines; a first try with lines and wall stars in every room was turned down). It sits between the tree and the
   moon. The window skies (her room, the Loft) keep their own few stars.
+- **Arrow tabs on an upright phone (v1.40, the owner's request 2026-11-18):** on a tall screen (`max-aspect-ratio:4/5`) the
+  room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
+  short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
+  so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
 - **Bonus photocards can't be deleted (v1.33, owner's request):** they are won once (`bonusGot`), so a deleted one was
   gone for good. `cardModal` leaves out 🗑️ Delete for a card with `bonus`, and `delCard` refuses one.
 - **Pattern Train & Word Builder (built as v1.33, `35-brain3.js`):** game ids `train` and `word` (puzzle ids `train:e1`…,

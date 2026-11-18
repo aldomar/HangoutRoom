@@ -2823,7 +2823,19 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300);
   check('phone: the top bar fits, with 🗺️ Map as an icon', await ev(`(()=>{const t=document.querySelector('#scr-room .topbar'),m=document.querySelector('#mapBtn').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&m.right<=innerWidth&&m.width>=48;})()`));
   check('phone: the tabs sit inside the screen', await ev(`[...document.querySelectorAll('#roomTabs .rtab')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.bottom<=innerHeight;})`));
+  // upright phone: the picture is a band in the middle; the tabs must sit in the empty space, not on the room
+  const offPic=()=>ev(`(()=>{const s=document.querySelector('#roomSvg').getBoundingClientRect(),h=Math.min(s.height,s.width*0.7),top=s.top+(s.height-h)/2,bot=top+h;
+    return [...document.querySelectorAll('#roomTabs .rtab')].every(b=>{const r=b.getBoundingClientRect();return r.bottom<=top+1||r.top>=bot-1;});})()`);
+  check('phone: the arrow tabs sit above or below the room picture, not on it', await offPic());
+  await ev(`goRoom(3)`); await sleep(150);
+  check('phone: the Backyard\'s ➡️ tab is off the picture too', await offPic());
+  await ev(`goRoom(1);P().easy=true;applyEasy();renderRoom()`); await sleep(150);
+  check('phone, Easy mode: the bigger tabs are still off the picture and 48 px or more', await offPic()&&await ev(`[...document.querySelectorAll('#roomTabs .rtab')].every(b=>b.getBoundingClientRect().height>=48)`));
+  await ev(`P().easy=false;applyEasy();renderRoom()`); await sleep(150);
+  await ev(`document.querySelector('#mascotG')&&document.querySelector('#mascotG').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(150);
+  check('phone: the emote bar does not cover the tabs', await ev(`(()=>{const e=document.querySelector('#emoteBar');if(e.classList.contains('hidden'))return true;const a=e.getBoundingClientRect();return [...document.querySelectorAll('#roomTabs .rtab')].every(t=>{const b=t.getBoundingClientRect();return a.right<=b.left||b.right<=a.left||a.bottom<=b.top||b.bottom<=a.top;});})()`));
   await shot('S07-phone-tabs');
+  await ev(`emoteBar(false)`);
   await ev(`document.querySelector('#mapBtn').click()`); await sleep(150); await shot('S08-phone-map');
   check('phone: the map fits the screen', await ev(`[...document.querySelectorAll('#modalBody .hm-room')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth;})`));
   await ev(`closeModal()`);

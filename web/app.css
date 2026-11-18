@@ -173,6 +173,14 @@ body.easy .hcol{width:56px;height:56px}
 .rt-left{left:10px;top:max(140px,calc(50% - 43px))}
 .rt-right{right:10px;top:max(106px,calc(50% - 43px))}
 body.easy .rtab{width:68px;min-height:96px}
+/* tall screens (phone upright): the picture is a band in the middle, so the side tabs go in the empty strip under it */
+@media (max-aspect-ratio:4/5){
+  .rtab,body.easy .rtab{flex-direction:row;width:auto;min-width:100px;min-height:58px;padding:0 14px;gap:8px}
+  body.easy .rtab{min-width:112px;min-height:66px}
+  .rt-left{top:auto;bottom:10px}
+  .rt-right{top:auto;bottom:10px}
+  .room-stage .emote-bar{bottom:84px}
+}
 /* 🗺️ the house map (v1.40) */
 .hmap{display:grid;gap:10px;margin:6px 0}
 .hm-room{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:100px;padding:8px 4px;border-radius:18px;border:3px solid var(--line);background:var(--panel2);color:var(--ink);font:inherit;cursor:pointer}
