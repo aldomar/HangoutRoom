@@ -22,6 +22,7 @@ function show(n){
   if(n==='stage') renderStage(); else stgStop();
   if(n==='code') renderCode(); else codeStop(); // section 18
   if(n==='brain') renderBrain(); else brStop(); // section 28
+  if(n==='music') renderMusic(); else muStop(); // section 40
   if(n==='stickers') renderStickers(); // section 21
   if(n==='about') renderAbout(); // section 25
   if(n==='room') stkDot();
@@ -145,6 +146,7 @@ function handleHot(h){
   else if(h==='stage'){SFX.click();show('stage');}
   else if(h==='code'){SFX.click();show('code');}
   else if(h==='brain'){SFX.click();show('brain');} // the Backyard's chalkboard (v1.25)
+  else if(h==='music'){SFX.click();show('music');} // the Loft's keyboard (v1.38)
   else if(h==='pet'){petTap();} // section 22
   else if(h==='gift'){giftOpen();} // section 32
   else {SFX.locked();toast(`🔒 ${LOCKED[h]} is coming in a future update!`);}

@@ -98,6 +98,17 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   the games on the Brain Games menu). Tap a card to read it again; tap a ❓ to play the puzzle that unlocks it.
 - 2 new stickers on the **Code & Brain** page: 🍕 Fraction Baker (8 puzzles) and 📇 Fact Finder (12 fact cards).
 
+## Music Maker (since version 1.38)
+- 🎹 **A keyboard in the Cozy Loft.** Tap it to open the Music Maker and make your own music loop.
+- The grid has 8 steps across. The top 5 rows are notes (A G E D C). They are the 5 notes that always sound nice
+  together, so there are no wrong answers. The bottom 4 rows are beats: 🔔 bell, 🥚 shaker, 👏 clap and 🥁 drum.
+  Tap a square to turn it on or off, or slide a finger along a row to fill it.
+- ▶️ **Play** plays the loop round and round, with a light on the step you hear. Pick a speed (🐢 🚶 🐇) and a sound
+  (🎹 Soft, 👾 Chip, 🌙 Dreamy). The room music rests while a loop plays.
+- 💾 **1 2 3** keep 3 loops. Tap an empty one to save; tap a full one to ▶ Load it or save over it. 🎁 **Ideas** has 3
+  loops to start from, and 🗑️ clears the grid. Nothing is lost by accident: it asks first.
+- Saving a new loop gives 3 coins, 3 times a day. A new sticker: 🎹 Beat Maker (Stage page).
+
 ## Extras (since version 1.37)
 - 🧠 **6 more Challenge puzzles** in the Code Lab (14 in all). New ideas: ⬅️ and ⬇️ inside ✨ My Move, 🔁 and ❓
   together inside ✨, and ✨ mixed with other blocks in the program. Each pays 5 coins the first time, and finishing

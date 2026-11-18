@@ -21,6 +21,13 @@ function normalize(p){
   p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.fidPay=Object.assign({day:'',n:0},p.fidPay&&typeof p.fidPay==='object'?p.fidPay:{}); if(typeof p.fidPay.n!=='number'||!(p.fidPay.n>=0)) p.fidPay.n=0; // v1.36: fidget coins paid today (see FID_DAILY)
+  // Music Maker (v1.38, section 40): sound kit, speed (0-2), the loop on the grid now, 3 saved loops, music coins paid today.
+  // A loop is 72 characters of 0/1 (9 rows x 8 steps). Section 40 checks the kit id; this only checks the types.
+  {const m=p.music&&typeof p.music==='object'&&!Array.isArray(p.music)?p.music:{}, ok=g=>typeof g==='string'&&/^[01]{72}$/.test(g), sp=v=>[0,1,2].includes(v)?v:1;
+   const sl=Array.isArray(m.slots)?m.slots:[], pay=m.pay&&typeof m.pay==='object'?m.pay:{};
+   p.music={kit:typeof m.kit==='string'?m.kit:'soft',speed:sp(m.speed),cur:ok(m.cur)?m.cur:'0'.repeat(72),
+     slots:[0,1,2].map(i=>{const x=sl[i];return x&&typeof x==='object'&&ok(x.g)?{g:x.g,kit:typeof x.kit==='string'?x.kit:'soft',speed:sp(x.speed)}:null;}),
+     pay:{day:typeof pay.day==='string'?pay.day:'',n:Math.max(0,Math.floor(Number(pay.n)||0))}};}
   p.look=Object.assign({},DEFAULT_LOOK,p.look||{});
   if(!BUDDIES[p.look.kind]) p.look.kind='bunny'; if(!FACES[p.look.face]) p.look.face='sparkle'; // v1.20
   p.owned=Array.isArray(p.owned)?p.owned:[];

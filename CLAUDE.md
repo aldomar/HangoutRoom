@@ -52,6 +52,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   - Keep animated SVG filters (the `#fuzz` filter) to a minimal number of elements.
   - Run animation loops only while their screen is visible. The main loop (`99-startup.js`) only runs on
     `LOOP_SCREENS` (`soccer stage fidget`); a new screen that draws every frame must be added there (since v1.32).
+    A screen that only needs it sometimes adds a condition to `loopWanted()` instead (the Music Maker, while a loop plays).
   - Endless idle animations (the buddy breathing, pet, lava lamp…) move in `steps()` every 0.2 s, all on the same
     grid, so the room is redrawn 5 times a second instead of 60. No SVG `<animate>` (SMIL): use a CSS class under
     `#roomSvg` instead (see `.an-*` in `app.css`). The smoke test's ⚡ Speed check checks both (since v1.32).
@@ -77,7 +78,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`, and (since v1.36) `fidPay{day,n}` (fidget coins paid today).
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`, and (since v1.36) `fidPay{day,n}` (fidget coins paid today), and (since v1.38) `music{kit, speed, cur, slots[3], pay{day,n}}`.
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
   optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it. So does `settings.lastBackup` (ms, since v1.30).
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
@@ -164,6 +165,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   38. `38-pack4.js` Content Pack 4 (sport, farm, trucks, space, the 🦖 dino nugget; only adds entries, each with `p4:<theme>`;
       `P4_THEMES`, `p4Nug` (the nugget drawing), `p4Have`, `p4Nuggets`, the squishy extras `nugget chick seams`, the 🐮 Farm chip)
   39. `39-extras.js` Extras (only pushes Challenge puzzles `c9`–`c14`, marble mazes `m7`–`m12` and 3 stickers; `exCodeAll`, `exCodeGot`)
+  40. `40-music.js` Music Maker on the Loft's 🎹 keyboard (`MU_ROWS`, `MU_KITS`, `MU_SPEEDS`, `MU_IDEAS`, `MU`, `muPlay`, `muTick`, `muStop`, `renderMusic`)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -279,6 +281,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 - Helpers (since v1.30, `34-helpers.js`): Read to me speaks a tapped button's `aria-label`, `.tn` text or text (emoji
   stripped), or a hotspot's `HOT_WORDS` name; give icon-only buttons an `aria-label`. Snapshots copy an SVG with the
   `#gdefs` patterns into a canvas, so room drawings should not depend on CSS (labels with `.sign` are left out).
+- Music Maker (since v1.38, `40-music.js`): the Loft's keyboard (`data-hot="music"`) opens `scr-music`. A loop is 72 characters
+  of 0/1 (9 rows x 8 steps). Kit ids (`soft chip dreamy`) and speeds (0-2) are saved: never rename them. Notes are scheduled on the
+  audio clock with the Stage's voices; `muTick()` runs from the main loop only while `MU.playing`.
 - Every room area is open. To add a locked area for a future feature, put it in `LOCKED` and `handleHot()`.
 - `android/`: Gradle project; `app/src/main/java/com/family/hangoutroom/MainActivity.kt`; `android/README.md` has build/sideload steps.
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.
@@ -296,7 +301,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   Stage: 2 / 3 / 4 coins per star (Easy / Medium / Hard), 1–3 stars per song; no stars (and no coins) without a hit.
   Code Lab: +3 per puzzle the first time it is solved, +5 when every puzzle of a level is solved (Challenge: +5 and +10).
   Fidgets (v1.16): 1 per 5 slime stretches, 1 per 25 clicker clicks, Marble Maze +3 per new maze, +1 per replay, +5 once for all.
-  Sticker Book (v1.18): +2 per sticker, once each. Pet (v1.19): earns nothing; a treat costs 2.
+  Sticker Book (v1.18): +2 per sticker, once each. Pet (v1.19): earns nothing; a treat costs 2. Music Maker (v1.38): +3 per saved new loop, 3 a day.
   Item prices are 0–40, except ⭐ big dreams (`dream:1`, 60–100, since v1.29). Keep earning steady and fair.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).
   A new decoration = one entry in `DECOR` with `{name, price, box, d()}` (plus `flat:1` for rugs, `wall:1` for wall items).
