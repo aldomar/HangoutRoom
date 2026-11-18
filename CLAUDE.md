@@ -163,6 +163,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
       the squishy extras `frosting tentacles nori`, the 🍵 Cozy / 🧁 Cafe / 🐚 Ocean theme chips)
   38. `38-pack4.js` Content Pack 4 (sport, farm, trucks, space, the 🦖 dino nugget; only adds entries, each with `p4:<theme>`;
       `P4_THEMES`, `p4Nug` (the nugget drawing), `p4Have`, `p4Nuggets`, the squishy extras `nugget chick seams`, the 🐮 Farm chip)
+  39. `39-extras.js` Extras (only pushes Challenge puzzles `c9`–`c14`, marble mazes `m7`–`m12` and 3 stickers; `exCodeAll`, `exCodeGot`)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.

@@ -328,7 +328,9 @@ textarea.inp{height:110px;font-size:11px;font-family:monospace;resize:none}
 @media (max-width:620px){#fidTabs .tab span{display:none}#fidTabs .tab{font-size:22px;padding:8px 14px}}
 #fid-maze{flex-direction:column;align-items:stretch;justify-content:flex-start}
 #fid-maze canvas{flex:1;min-height:0;height:auto}
-.mz-bar{justify-content:center;padding:8px 8px 0;flex-wrap:wrap}
+.mz-bar{justify-content:center;padding:8px 8px 0;flex-wrap:wrap;position:relative}
+/* (v1.37) 12 mazes: on a short screen (phone sideways) the buttons stay in one row that scrolls, so the board keeps its room */
+@media (max-height:500px){.mz-bar{flex-wrap:nowrap;justify-content:flex-start}.mz-bar>:first-child{margin-left:auto}.mz-bar>:last-child{margin-right:auto}}
 .mzb{min-width:52px;min-height:48px;font-size:17px}
 .cube{position:relative;background:var(--f);border-radius:2.2em;box-shadow:0 .5em 0 var(--e),0 1em 1.4em rgba(0,0,0,.45),inset 0 0 0 .3em rgba(255,255,255,.28);display:grid;
   grid-template-columns:1fr 3.6em 1fr;grid-template-rows:3.6em 2.6em 1fr;grid-template-areas:"btns btns btns" "roll roll roll" "joy sw ball";gap:.7em;padding:1.1em;touch-action:none;user-select:none;-webkit-user-select:none;margin-bottom:28px;box-sizing:border-box}

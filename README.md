@@ -98,6 +98,16 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   the games on the Brain Games menu). Tap a card to read it again; tap a ❓ to play the puzzle that unlocks it.
 - 2 new stickers on the **Code & Brain** page: 🍕 Fraction Baker (8 puzzles) and 📇 Fact Finder (12 fact cards).
 
+## Extras (since version 1.37)
+- 🧠 **6 more Challenge puzzles** in the Code Lab (14 in all). New ideas: ⬅️ and ⬇️ inside ✨ My Move, 🔁 and ❓
+  together inside ✨, and ✨ mixed with other blocks in the program. Each pays 5 coins the first time, and finishing
+  all 14 pays the +10 level bonus (once more, if she had already finished the first 8).
+- 🔮 **6 more marble mazes** (12 in all): Round and Round, Ladder, Bumper Alley, Little Rooms, Bat Wings and the
+  Long Way Home. Each pays 3 coins the first time, and solving all 12 pays +5 (once more, if she had solved the first 6).
+  With the phone held sideways, the maze buttons sit in one row that scrolls.
+- 3 new stickers: 🔮 Marble Marathon (roll the marble in 25 times, Fidgets page), 🏅 Level Collector (finish 3 Code Lab
+  levels) and 👑 Code Master (solve all 44 Code Lab puzzles) on the **Code & Brain** page.
+
 ## Content Pack 4 (since version 1.36)
 More things to buy with coins (10–40 each), open to everyone.
 - 🦖 **Dino nugget:** a Dino Nugget Plush, small enough to sit on a Little Shelf (drop it just above the shelf), plus a
