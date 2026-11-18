@@ -116,7 +116,14 @@ const GIFT_TIMELINE=[
   {v:'1.39',d:'2026-11-17',i:'🛋️',n:'Room depth',why:'So things in your rooms stand in front of and behind each other, like real furniture',
     news:['🛋️ Things lower on the floor stand in front, things higher up stand behind',
           '🎹 The closet, desks, keyboard and Backyard things join in too',
-          '👻 While decorating, the room\'s own furniture goes see-through so you can grab what is behind it']}
+          '👻 While decorating, the room\'s own furniture goes see-through so you can grab what is behind it']},
+  {v:'1.40',d:'2026-11-17',i:'✨',n:'The Studio',why:'A brand-new empty room where every single thing is your choice',
+    news:['✨ A new room: the Studio! Nothing is built in, so you choose everything',
+          '⬆️ Arrows on the sides of the screen take you to the next room',
+          '🗺️ The Map button shows your whole house: tap a room to go there',
+          '🌳 Your window now leads outside. ⚽ Soccer is at the goal in the Backyard',
+          '🪵 A free Built-in Shelf in the Shop',
+          '🌙 With the lights off, look for the Big Dipper in the Backyard sky']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

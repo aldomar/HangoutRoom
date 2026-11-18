@@ -22,6 +22,7 @@ function tryBuy(key,price,name,done){
 }
 function buyConsumable(price,name,done){
   const p=P();
+  if(!price){SFX.buy();done();return;} // free things (the Built-in Shelf, v1.40) need no question
   if(p.coins<price){needMore(p,price);return;}
   buyAsk(p,'Buy',name,price,()=>{p.coins-=price;save();updateCoins();SFX.buy();done();});
 }
@@ -35,4 +36,4 @@ function buyAsk(p,verb,name,price,yes){
 function easySort(list,cost){const p=P();if(!p||!p.easy)return list;
   return list.map((e,i)=>[e,i]).sort((a,b)=>cost(a[0])-cost(b[0])||a[1]-b[1]).map(x=>x[0]);}
 const poorCls=(p,own,price)=>!own&&p.easy&&p.coins<price?' poor':'';
-const priceTag=(p,price)=>`<div class="tp">${p.easy&&p.coins<price?'🔒 ':''}🪙 ${price}</div>`;
+const priceTag=(p,price)=>!price?`<div class="tp">Free</div>`:`<div class="tp">${p.easy&&p.coins<price?'🔒 ':''}🪙 ${price}</div>`;

@@ -63,9 +63,15 @@ _Last updated: 2026-11-17_
   - **🧩 Extras: done** (v1.37 merged, PR #37). 6 more 🧠 Challenge puzzles, 6 more marble mazes and 3 stickers.
   - **🎹 Music Maker: done** (v1.38 merged, PR #38), built on branch `feature/music` (from `main` after #37). Plan details agreed 2026-11-17
     (see "Music Maker" under Decisions). This is the last Phase 11 PR: once it is merged, Phase 11 is done.
-  - **🛋️ Room depth: built, PR #39 open as v1.39** on branch `feature/depth` (from `main` after #38). The owner's
+  - **🛋️ Room depth: done** (v1.39 merged, PR #39). The owner's
     request (2026-11-17): the new keyboard was hidden behind decorations, with no way to bring it forward.
   - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
+- **Phase 12 (Playability): roadmap talked through 2026-11-17** (see "Phase 12" in `PLAN.md` and under Decisions).
+  Order: 🗺️ fourth room + getting around (v1.40) → 🚪 Visitors (v1.41) → 👯 Two-player (v1.42) → 🎲 Free Play (v1.43) →
+  the rest in any order. The v1.40 plan details are written up; agreed 2026-11-17 on branch
+  `feature/room4` (from `feature/depth`; #39 is now merged, so the PR goes straight to `main`).
+  - **✨ Studio + 🗺️ getting around: built, PR #40 open as v1.40** on branch `feature/room4` (on top of #39). Plan agreed 2026-11-17;
+    the owner named the room ✨ Studio.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -113,7 +119,8 @@ _Last updated: 2026-11-17_
 - PR #36 "Content Pack 4 (v1.36)": merged.
 - PR #37 "Extras (v1.37)": merged.
 - PR #38 "Music Maker (v1.38)": merged.
-- PR #39 "Room depth (v1.39)" on branch `feature/depth`: open.
+- PR #39 "Room depth (v1.39)": merged.
+- PR #40 "Studio + getting around (v1.40)" on branch `feature/room4`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -878,6 +885,28 @@ _Last updated: 2026-11-17_
   called "Code & Brain" and holds the 4 new stickers (Brain Champ needs all 9 levels).
 - **Phase 11 plan (agreed 2026-11-17):** six PRs in the order of `PLAN.md`, stacked. Owner's answers: games first
   (Brain 2a → 2b → Pack 3 → Pack 4 → Extras → Music Maker); include the Music Maker, last; Fact Cards get their own 🪐 binder.
+- **Phase 12 (Playability), talked through 2026-11-17.** The owner liked all the ideas (see `PLAN.md`) and may not do them
+  all at once. Owner's answers for the fourth room: keep it **bare** (nothing built in), with a free **Built-in Shelf** in
+  the Shop as an option; the main room's **window leads to the Backyard** and Soccer is opened from the Backyard goal only;
+  the top bar's room buttons become a **🗺️ house map**, so more rooms can be added later. Arrow tabs at the screen edges
+  (not drawn doors) were chosen so decorations can never cover the way between rooms. The owner named the room ✨ Studio,
+  and agreed her room also gets a ⬅️ Backyard arrow (the same kind of arrow everywhere for the younger ones), with the
+  window as a secret shortcut.
+- **Studio + getting around (built as v1.40, `41-studio.js`):** `ROOM_MAP` (room, icon, name, `from`, `dir`, map `col`/`row`)
+  drives both the edge tabs (`#roomTabs`, HTML over the picture, hidden while decorating) and the 🗺️ map popup. The Studio is
+  `p.room4` (save version 23, `MIGRATIONS[23]` + `normalize`); its wall and floor are `''` until the first visit, when
+  `studioStart()` gives it her room colour's wall (`ROOM_START`) and wood. `nightBack()` only draws the Loft window in the Loft
+  (it used to draw it in any room but her first one). The Built-in Shelf (`builtShelf`, free, `first:1`, 440 wide) is first in
+  every room's Shop; free things skip the buy question and show "Free". Her window's Easy label is now 🌳 Outside (it said
+  ⚽ Soccer), and Read to me calls it Backyard. Sticker ✨ Studio Star (89 stickers).
+- **Night stars (v1.40, the owner's request 2026-11-17):** the glow-in-the-dark stars on the indoor walls are gone (the owner
+  didn't want stars showing inside), and the Backyard's 9 scattered sky stars now form the **Big Dipper** (7 stars, no
+  connecting lines; a first try with lines and wall stars in every room was turned down). It sits between the tree and the
+  moon. The window skies (her room, the Loft) keep their own few stars.
+- **Arrow tabs on an upright phone (v1.40, the owner's request 2026-11-18):** on a tall screen (`max-aspect-ratio:4/5`) the
+  room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
+  short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
+  so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
 - **Bonus photocards can't be deleted (v1.33, owner's request):** they are won once (`bonusGot`), so a deleted one was
   gone for good. `cardModal` leaves out 🗑️ Delete for a card with `bonus`, and `delCard` refuses one.
 - **Pattern Train & Word Builder (built as v1.33, `35-brain3.js`):** game ids `train` and `word` (puzzle ids `train:e1`…,
@@ -1060,8 +1089,14 @@ _Last updated: 2026-11-17_
 11. ~~Plan details and build 🎹 Music Maker (v1.38), the last Phase 11 PR.~~ Built (PR #38).
 12. Owner: build v1.38, try the Music Maker on the tablet (see the PR; check the sound timing and the speakers), and merge it.
 13. ~~Build 🛋️ Room depth (v1.39), the owner's request.~~ Built (PR #39).
-14. Owner: build v1.39 and check the rooms (see the PR), and merge it. (#38 is merged.)
-15. Phase 11 is then done. Talk about what comes next (the ideas backlog in `PLAN.md`).
+14. ~~Owner: build v1.39 and check the rooms (see the PR), and merge it.~~ Merged.
+15. ~~Phase 11 is then done. Talk about what comes next (the ideas backlog in `PLAN.md`).~~ Talked through: Phase 12.
+
+## Next steps (Phase 12)
+1. ~~Owner: OK the v1.40 plan in `PLAN.md` and pick the new room's name.~~ Agreed: ✨ Studio.
+2. ~~Build the fourth room + 🗺️ map (v1.40) on `feature/room4`.~~ Built.
+3. Owner: build v1.40 and try it (see the PR), and merge it. (#39 is merged.)
+4. Plan 🚪 Visitors (v1.41) and get it agreed before coding.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

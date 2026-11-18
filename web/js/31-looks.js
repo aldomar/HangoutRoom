@@ -85,25 +85,27 @@ function nightLayer(p,R){
   if(roomNo===1) lit.push({x:195,y:152,r:150,c:''}); // moonlight from her window
   R.items.filter(i=>i.placed&&NIGHT_GLOW[i.type]).forEach(i=>{const g=NIGHT_GLOW[i.type];lit.push({x:i.x,y:i.y+g.y,r:g.r,c:g.c});});
   const hole=l=>`<circle cx="${Math.round(l.x)}" cy="${Math.round(l.y)}" r="${l.r}" fill="url(#ngHole)"/>`;
-  // The glow-in-the-dark wall stars (drawn behind the room's things by nightBack) are cut out of the dark layer, so they still glow.
-  const glow=roomNo===3?'':`<g fill="#000">${NIGHT_WALL_STARS.map(([x,y],k)=>`<path d="${starPath(x,y,7*(k%3?0.7:1)+2)}"/>`).join('')}</g>`;
-  let s=`<g class="night" style="pointer-events:none"><mask id="nightMask"><rect x="-300" y="-100" width="1600" height="900" fill="#fff"/>${lit.map(hole).join('')}${glow}</mask>`
+  // (Glow-in-the-dark wall stars were cut out of this layer until v1.40; indoor walls have no stars now.)
+  let s=`<g class="night" style="pointer-events:none"><mask id="nightMask"><rect x="-300" y="-100" width="1600" height="900" fill="#fff"/>${lit.map(hole).join('')}</mask>`
     +`<rect x="-300" y="-100" width="1600" height="900" fill="#0d0a2a" opacity=".64" mask="url(#nightMask)"/>`
     +lit.filter(l=>l.c).map(l=>`<circle cx="${Math.round(l.x)}" cy="${Math.round(l.y)}" r="${Math.round(l.r*1.2)}" fill="url(#ngGlow-${l.c})"/>`).join('');
-  if(roomNo===3) s+=`<path d="M902 52 A44 44 0 1 0 902 128 A34 34 0 1 1 902 52Z" fill="#fff3c4"/>`+nightStars([[300,40],[420,120],[520,50],[640,100],[760,40],[980,180],[700,200],[560,170],[360,200]],8);
+  if(roomNo===3) s+=`<path d="M902 52 A44 44 0 1 0 902 128 A34 34 0 1 1 902 52Z" fill="#fff3c4"/>`+dipperArt(); // the Big Dipper in the Backyard sky (v1.40)
   return s+'</g>';
 }
-// The night window and the wall stars, drawn right after the furniture (renderRoom), so the window keeps its frame
-// and bars and the room's things stay in front of them (they used to be drawn over everything).
-const NIGHT_WALL_STARS=[[460,40],[620,30],[760,60],[880,36],[540,90],[700,110],[940,96]];
+// The Big Dipper (v1.40, the owner's idea): 7 stars in the Backyard's night sky, between the tree and the moon.
+// One shape (handle end -> bowl), placed at x 400, y 30, 2.3 times bigger. No lines between them. Nothing about it is saved.
+const DIPPER=[[0,20],[40,8],[72,12],[100,22],[104,50],[150,56],[152,22]]; // Alkaid Mizar Alioth Megrez Phecda Merak Dubhe
+const dipperPts=()=>DIPPER.map(([x,y])=>[Math.round(400+x*2.3),Math.round(30+y*2.3)]);
+const dipperArt=()=>`<g fill="#fff6c9" data-dipper="1">`+dipperPts().map(([x,y],k)=>`<path d="${starPath(x,y,k===3?6:8)}"/>`).join('')+`</g>`;
+// The night window, drawn right after the furniture (renderRoom), so the window keeps its frame and bars and the room's
+// things stay in front of it (it used to be drawn over everything). Since v1.40 there are no stars on the indoor walls.
 function nightBack(p){
   if(!isNight(p)||decorating||roomNo===3) return '';
   let s='<g style="pointer-events:none">';
   if(roomNo===1) s+=`<rect x="94" y="74" width="202" height="157" rx="6" fill="#1d1846"/><path d="M262 92 A22 22 0 1 0 262 132 A17 17 0 1 1 262 92Z" fill="#fff3c4"/>`+nightStars([[120,100],[170,150],[210,96],[150,200],[230,180],[280,210]],6);
-  else { const wf=furnC('window2').frame;
+  else if(roomNo===2){ const wf=furnC('window2').frame; // the Studio (v1.40) has no window, so nothing is drawn there
     s+=`<circle cx="340" cy="140" r="68" fill="#1d1846"/><path d="M360 104 A20 20 0 1 0 360 140 A15 15 0 1 1 360 104Z" fill="#fff3c4"/>`+nightStars([[300,120],[320,170],[370,180],[300,150]],6)
       +`<path d="M340 72 V208 M272 140 H408" stroke="${wf}" stroke-width="7"/>`; } // the Loft window's bars go back on top of the night sky
-  s+=nightStars(NIGHT_WALL_STARS,7).replace(/fill="#fff6c9"/g,'fill="#c8ffb0" opacity=".8"'); // glow-in-the-dark stars on the wall
   return s+'</g>';
 }
 function nightBtn(){const p=P(),b=$('#nightBtn');if(!p||!b)return;const on=isNight(p);

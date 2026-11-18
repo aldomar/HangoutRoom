@@ -329,6 +329,44 @@ The first ideas list:
   plus a matching squishy for the Fidget Shelf; no real brand names or packaging).
 - More 🧠 Challenge puzzles, more marble mazes, and stickers for every new game.
 
+### Phase 12: Playability (roadmap talked through 2026-11-17)
+Why: an honest look at the app found that most games are fixed lists that run out, decorating and dressing up have no
+goal, nothing is played together (four children share it), the youngest two have little no-fail play, and the creative
+tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still gets its own detailed plan before building.
+- ✅ **🗺️ A fourth room + getting around (v1.40, first; plan details below, agreed 2026-11-17):**
+  - A bare room with nothing built in (only a wall and a floor), so every piece is her choice. Named ✨ Studio (the owner liked it).
+    A free **Built-in Shelf** (a wide wall shelf, price 0) in the Shop gives her a built-in look if she wants one.
+  - Getting around: the main room is the hub. Small arrow tabs at the screen edges (pictures of the room they lead to,
+    hidden while decorating, never covered by decorations): main room ⬆️ Loft, ⬅️ Backyard, ➡️ the new room; each other room
+    has one tab back. The main room's **window now leads to the Backyard**; Soccer is opened from the Backyard's goal only.
+  - The top bar's two room buttons become one **🗺️ house map** (a picture of every room, one tap each), with room to add
+    more rooms later. Back still goes any room → main room → profiles.
+- **🚪 Visitors & requests (v1.41):** the original characters she knows (Mochi, Boo, Flap, Hop, Bolt, Zip) drop by with a
+  small wish ("a spooky-cozy corner", "dress up for a picnic"). She decorates or dresses up, they cheer, she gets a sticker.
+  No timer, no failing. The new room is the natural place for decorating requests.
+- **👯 Two-player games (v1.42):** take turns on one tablet: one kicks, one keeps (both Soccer modes exist), 2-player
+  Memory Match, and tapping the beat together on the Stage.
+- **🎲 Free Play + Puzzle of the Day (v1.43):** after the fixed puzzles, endless generated ones (made from a seed, never
+  saved by id) for the mazes, Pattern Train, Number Pop and simple Code Lab boards; one generated puzzle a day for a small
+  bonus, with no streak and no "missed it".
+- **Later, any order:** 💃 Dance Maker (buddy moves to a Music Maker loop or Stage song), 👗 Runway (style a look for a theme
+  card; judges only cheer), 🌱 Backyard garden (grows over real days, never wilts), 🧸 Little Ones' Corner (tap-to-colour,
+  sound play mat, peekaboo), 🔍 I Spy in her own room, 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
+  loop), Soccer trick shots, and new things to spend coins on (pet house, a collections museum, Stage backdrops).
+
+#### v1.40 plan details (agreed 2026-11-17; built as planned)
+- Save: `room4{wall,floor,items[]}` per profile, starting wall and floor from `ROOM_START`; `night['4']`, `presets['4']`.
+  Save version 23 (`normalize` + `MIGRATIONS[23]`); every older backup still restores (the room is added empty).
+- `roomNo` 4: `curRoom`, `rooms(p)` and `allItems(p)` include it, so My Stuff, layouts, gifts, night mode and the Shop work
+  there. Indoor walls and floors, all indoor and outdoor decorations; posters get a spot there too.
+- Built-in Shelf: a `DECOR` entry with `wall:1`, `shelf:{w,top}`, price 0, coloured to blend with the wall.
+- Edge tabs and the 🗺️ map: one `ROOM_MAP` list (id, icon, name, which room it hangs off) so a future room is one entry.
+  Read to me names every tab. The ✨ What's New box says the window now goes outside and Soccer is at the Backyard goal.
+- As built: `41-studio.js`. Her window's Easy-mode label says 🌳 Outside. Also (owner's request): no more stars on the indoor walls at
+  night, and the Backyard's night sky shows the Big Dipper. One sticker, ✨ Studio Star (5 things in the Studio).
+- 1–2 stickers (for example, decorating the new room). Smoke test: walk every tab and the map, place things in the new
+  room, night mode, a layout, a gift, a backup restore from v1.39.
+
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
 

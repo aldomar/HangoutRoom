@@ -35,7 +35,10 @@ function normalize(p){
   // The Cozy Loft (v1.10), a second room with its own wall, floor and decorations. My Stuff is shared between rooms.
   p.room2=Object.assign({wall:'attic',floor:'wood',items:[]},p.room2&&typeof p.room2==='object'?p.room2:{});
   p.room3=Object.assign({wall:'picket',floor:'grass',items:[]},p.room3&&typeof p.room3==='object'?p.room3:{}); // the Backyard (v1.23)
-  [p.room,p.room2,p.room3].forEach(r=>{if(!Array.isArray(r.items))r.items=[];r.items=r.items.filter(i=>i&&typeof i==='object');});
+  // The Studio (v1.40): bare, nothing built in. '' = not visited yet: studioStart() (section 41) picks the wall then.
+  p.room4=Object.assign({wall:'',floor:'',items:[]},p.room4&&typeof p.room4==='object'&&!Array.isArray(p.room4)?p.room4:{});
+  ['wall','floor'].forEach(k=>{if(typeof p.room4[k]!=='string')p.room4[k]='';});
+  [p.room,p.room2,p.room3,p.room4].forEach(r=>{if(!Array.isArray(r.items))r.items=[];r.items=r.items.filter(i=>i&&typeof i==='object');});
   p.fid=Object.assign({pop:'rainbow',squish:'mochi',spin:'galaxy',popShape:'classic',slime:'grape',cube:'pastel',marble:'pearl'},p.fid||{}); // popShape: v1.10; slime, cube, marble: v1.16
   // Marble Maze (v1.16): the ids of the mazes solved (each pays +3 once).
   p.maze=Object.assign({},p.maze&&typeof p.maze==='object'&&!Array.isArray(p.maze)?p.maze:{});
@@ -57,10 +60,10 @@ function normalize(p){
   // Gifts + layouts (v1.28): the gifts waiting to be opened, and up to 3 saved layouts per room.
   p.gifts=(Array.isArray(p.gifts)?p.gifts:[]).filter(g=>g&&typeof g==='object'&&typeof g.id==='string'&&(g.kind==='coins'&&Number(g.n)>0||g.kind==='decor'&&typeof g.type==='string')).map(g=>Object.assign(g,{from:String(g.from||'').slice(0,24),badge:typeof g.badge==='string'?g.badge:'🎁'},g.kind==='coins'?{n:Math.min(100,Math.floor(Number(g.n)))}:{}));
   const pr=p.presets&&typeof p.presets==='object'&&!Array.isArray(p.presets)?p.presets:{}, lay=L=>L&&typeof L==='object'&&typeof L.wall==='string'&&typeof L.floor==='string'&&Array.isArray(L.items)?Object.assign(L,{items:L.items.filter(i=>i&&typeof i.uid==='string'&&typeof i.type==='string').map(i=>({uid:i.uid,type:i.type,x:Number(i.x)||0,y:Number(i.y)||0}))}):null;
-  p.presets={1:0,2:0,3:0}; Object.keys(p.presets).forEach(k=>{const a=Array.isArray(pr[k])?pr[k]:[];p.presets[k]=[0,1,2].map(i=>lay(a[i]));});
+  p.presets={1:0,2:0,3:0,4:0}; Object.keys(p.presets).forEach(k=>{const a=Array.isArray(pr[k])?pr[k]:[];p.presets[k]=[0,1,2].map(i=>lay(a[i]));});
   if(typeof p.speak!=='boolean') p.speak=null; // v1.30 🔊 Read to me: null = on in Easy mode, off otherwise
   if(typeof p.dream!=='string') p.dream=''; // v1.29: the big dream she is saving up for (a DECOR key, or '')
-  p.night=Object.fromEntries(Object.entries(p.night&&typeof p.night==='object'&&!Array.isArray(p.night)?p.night:{}).filter(([k,v])=>['1','2','3'].includes(k)&&v===true));
+  p.night=Object.fromEntries(Object.entries(p.night&&typeof p.night==='object'&&!Array.isArray(p.night)?p.night:{}).filter(([k,v])=>['1','2','3','4'].includes(k)&&v===true));
   // Photocards (v1.4). A card: {id, no, at, look, stage, frame, title, name, s:[cute,spooky,sporty], bonus?}
   p.cards=Array.isArray(p.cards)?p.cards.filter(c=>c&&typeof c==='object'&&typeof c.id==='string'):[];
   p.cards.forEach(c=>{if(typeof c.no!=='number')c.no=Number(c.no)||0;});

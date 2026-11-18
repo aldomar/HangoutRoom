@@ -37,7 +37,7 @@ window.androidBack=function(){
   if(cur==='code'){clBackKey();return true;} // a puzzle -> the puzzle list -> room
   if(cur==='music'){muBackKey();return true;} // section 40
   if(cur==='brain'){brBackKey();return true;} // a puzzle -> the Brain Games menu -> room
-  if(cur==='room'){if(roomNo!==1)goRoom(1);else show('profiles');return true;} // Loft or Backyard -> room -> profiles
+  if(cur==='room'){if(roomNo!==1)goRoom(1);else show('profiles');return true;} // Loft, Backyard or Studio -> room -> profiles
   return false;
 };
 document.addEventListener('visibilitychange',()=>{
