@@ -637,3 +637,27 @@ body.easy .chip{font-size:24px;min-width:56px;min-height:56px}body.easy .chips{m
 .snap-flash{position:fixed;inset:0;background:#fff;pointer-events:none;z-index:300;animation:snapFlash .45s ease-out forwards}
 @keyframes snapFlash{from{opacity:.85}to{opacity:0}}
 .bk-last{margin:10px 0 0;font-size:14px;color:var(--muted);text-align:center}
+/* Music Maker (v1.38, section 40): --c = the size of one square, --k = a row's colour */
+.mu-wrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;gap:18px;padding:10px;--c:min(calc((100vw - 340px)/9.6),calc((100vh - 96px)/9.8),64px)}
+.mu-grid{display:grid;grid-template-columns:repeat(9,var(--c));grid-auto-rows:var(--c);gap:4px;touch-action:none;user-select:none;-webkit-user-select:none}
+.mu-lab{display:flex;align-items:center;justify-content:center;font-weight:900;font-size:calc(var(--c)*.45);color:var(--k)}
+.mu-lab:not(.note){font-size:calc(var(--c)*.5)}
+.mc{border-radius:10px;background:var(--panel2);border:2px solid var(--line)}
+.mc.b2{background:var(--hi)}
+.mc.on{background:var(--k);border-color:#ffffffaa;box-shadow:inset 0 -4px 0 #0003}
+.mc.drum.on{border-radius:50%}
+.mc.now{outline:3px solid var(--gold);outline-offset:1px}
+.mu-side{display:flex;flex-direction:column;gap:10px;align-items:center;width:300px}
+.mu-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.mu-b{min-width:56px;min-height:48px;font-size:22px}
+.mu-play{font-size:22px;min-width:180px;min-height:60px}
+.mu-slot{position:relative;width:80px;height:74px;background:var(--panel2);border:3px solid var(--line);border-radius:14px;display:flex;align-items:center;justify-content:center}
+.mu-slot.full{border-color:var(--mint)}
+.mu-slot svg{width:46px;height:52px}
+.mu-slot b{position:absolute;top:2px;left:7px;font-size:15px;font-weight:900}
+.mu-plus{font-size:24px;opacity:.6}
+.mu-big svg{width:180px;display:block;margin:0 auto}
+@media (max-aspect-ratio:1/1){
+  .mu-wrap{flex-direction:column;justify-content:flex-start;--c:min(calc((100vw - 44px)/9.4),calc((100vh - 380px)/9.8),64px)}
+  .mu-side{width:auto}
+}

@@ -57,11 +57,12 @@ _Last updated: 2026-11-17_
   - **🚂 Pattern Train & 🔤 Word Builder: built, PR #33 open as v1.33** on branch `feature/brain2` (from `main` after #32).
     It also makes bonus photocards undeletable (the owner's request, 2026-11-17). **Merged** (PR #33); the owner checked it.
   - **🍕 Fraction Bakery & 🪐 Fact Cards: done** (v1.34 merged, PR #34).
-  - **🎀 Content Pack 3: built, PR #35 open as v1.35** on branch `feature/pack3` (from `main` after #34).
-  - **🏀 Content Pack 4: built, PR #36 open as v1.36** on branch `feature/pack4` (stacked on `feature/pack3`; merge #35 first).
+  - **🎀 Content Pack 3: done** (v1.35 merged, PR #35).
+  - **🏀 Content Pack 4: done** (v1.36 merged, PR #36).
     It has the owner's 🦖 dino nugget wish: a plush that sits on a Little Shelf, and a matching squishy.
-  - **🧩 Extras: built, PR #37 open as v1.37** on branch `feature/extras` (stacked on `feature/pack4`; merge #35 and #36 first).
-    6 more 🧠 Challenge puzzles, 6 more marble mazes and 3 stickers.
+  - **🧩 Extras: done** (v1.37 merged, PR #37). 6 more 🧠 Challenge puzzles, 6 more marble mazes and 3 stickers.
+  - **🎹 Music Maker: built, PR #38 open as v1.38** on branch `feature/music` (from `main` after #37). Plan details agreed 2026-11-17
+    (see "Music Maker" under Decisions). This is the last Phase 11 PR: once it is merged, Phase 11 is done.
   - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -106,9 +107,10 @@ _Last updated: 2026-11-17_
 - PR #32 "Speed check (v1.32)": merged.
 - PR #33 "Pattern Train & Word Builder (v1.33)": merged.
 - PR #34 "Fraction Bakery & Fact Cards (v1.34)": merged.
-- PR #35 "Content Pack 3 (v1.35)" on branch `feature/pack3` (from `main` after #34): open.
-- PR #36 "Content Pack 4 (v1.36)" on branch `feature/pack4` (on top of `feature/pack3`): open. Merge #35 first.
-- PR #37 "Extras (v1.37)" on branch `feature/extras` (on top of `feature/pack4`): open. Merge #35 and #36 first.
+- PR #35 "Content Pack 3 (v1.35)": merged.
+- PR #36 "Content Pack 4 (v1.36)": merged.
+- PR #37 "Extras (v1.37)": merged.
+- PR #38 "Music Maker (v1.38)" on branch `feature/music` (from `main` after #37): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -888,6 +890,20 @@ _Last updated: 2026-11-17_
   toast says "Fidget coins are full for today! Keep playing for fun ✨ Games still give coins." (once per room per day,
   no countdown, no "come back" message). It refills quietly when the date changes. The marble maze and games are
   not included. Save version 21: `fidPay{day,n}` per profile (normalize + MIGRATIONS[21]). The flip bonus stays +5.
+- **Music Maker (built as v1.38, `40-music.js`), plan agreed 2026-11-17.** Owner's answers: a free built-in 🎹 keyboard in the
+  Cozy Loft opens it (not the bought Music Speaker); +3 coins per saved new loop, 3 a day (`MU_DAILY`, like the Art Desk);
+  the melody uses only C D E G A (a pentatonic scale), so any pattern sounds nice. The grid is 9 rows (A G E D C, then
+  🔔 bell, 🥚 shaker, 👏 clap, 🥁 drum) x 8 steps; a finger can slide to paint a row. 3 sound kits (`soft chip dreamy`,
+  saved ids), 3 speeds (84 / 104 / 126 beats a minute, saved as 0-2), 3 💾 slots with a little picture, 🎁 3 ready-made
+  loops (Bat Bop, Bunny Hop, Sleepy Stars), 🗑️ Clear (asks first). Loading over a loop that isn't saved anywhere asks first.
+  A loop pays only when it is new for that slot and has 3+ notes; after 3 a day saving still works, with one gentle note.
+  Sound: the Stage's voices (`sTone`, `sKick`, `sSnare`, `sNoise`) are scheduled 0.15 s ahead on the audio clock; the
+  light on the step uses the same "Sound late?" setting as the Stage. The room music rests while a loop plays
+  (`startMusic` checks `MU.playing`). Speed: the main loop runs on the Music Maker only while a loop plays
+  (`loopWanted()` in 99), not just because the screen is open; leaving the screen or the app stops the loop.
+  Save version 22: `music{kit, speed, cur, slots[3], pay{day,n}}`; a loop is 72 characters of 0/1. normalize() checks
+  the types, and backups from before v1.38 restore with an empty Music Maker. Sticker: 🎹 Beat Maker (Stage page).
+  On a phone held upright the squares are about 40 px (9 columns must fit); on a tablet they are 64 px.
 - **Extras (built as v1.37, `39-extras.js`):** the new file only pushes onto `CODE_PUZZLES.challenge` (c9–c14),
   `MAZES` (m7–m12) and `STICKERS`. Each Challenge puzzle was checked by a full search (no answer without ✨, or
   without ❓ when it has puddles); two first drafts had shortcuts and got extra puddles and blocks. New ideas:
@@ -1024,17 +1040,19 @@ _Last updated: 2026-11-17_
 3. ~~Build 🍕 Fraction Bakery & 🪐 Fact Cards (v1.34) on `feature/brain3`.~~ Built (PR #34).
 4. ~~Owner: build v1.34, try the two new games and the 📇 binder (see the PR), and merge it.~~ Merged.
 5. ~~Build 🎀 Content Pack 3 (v1.35) on `feature/pack3`.~~ Built (PR #35).
-6. Owner: build v1.35, try the new clothes, decorations and fidgets (see the PR), and merge it.
+6. ~~Owner: build v1.35, try the new clothes, decorations and fidgets (see the PR), and merge it.~~ Merged.
 7. ~~Build 🏀 Content Pack 4 (v1.36), with the 🦖 dino nugget plush.~~ Built (PR #36, on top of #35).
-8. Owner: merge #35 first, then build v1.36, try the dino nugget on a shelf and the new things (see the PR), and merge it.
+8. ~~Owner: merge #35 first, then build v1.36, try the dino nugget on a shelf and the new things (see the PR), and merge it.~~ Merged.
 9. ~~Build 🧩 Extras (v1.37): more 🧠 Challenge puzzles and marble mazes.~~ Built (PR #37, on top of #36).
-10. Owner: merge #35 and #36 first, then build v1.37, try the new puzzles and mazes (see the PR), and merge it.
-11. Plan details and build 🎹 Music Maker (v1.38), the last Phase 11 PR.
+10. ~~Owner: merge #35 and #36 first, then build v1.37, try the new puzzles and mazes (see the PR), and merge it.~~ Merged.
+11. ~~Plan details and build 🎹 Music Maker (v1.38), the last Phase 11 PR.~~ Built (PR #38).
+12. Owner: build v1.38, try the Music Maker on the tablet (see the PR; check the sound timing and the speakers), and merge it.
+13. Phase 11 is then done. Talk about what comes next (the ideas backlog in `PLAN.md`).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 21 since v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 22 since v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

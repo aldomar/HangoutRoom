@@ -8,9 +8,9 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.37';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.38';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=21;          // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=22;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
 // pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
 const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:'',seenNew:'',lastBackup:0}; // lastBackup (v1.30): when a backup was last saved on this device (ms) // seenNew (v1.22): last version whose What's New was shown
@@ -81,7 +81,9 @@ const MIGRATIONS={
   // v1.30 Grown-up helpers: speak (null = follow Easy mode, or true/false for 🔊 Read to me) and stats.snaps. normalize() fills them in.
   20: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&typeof p.speak!=='boolean') p.speak=null; }); },
   // v1.36 Fidget allowance: fidPay {day, n} = fidget coins paid today (see FID_DAILY in section 10). normalize() fills it in.
-  21: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.fidPay||typeof p.fidPay!=='object')) p.fidPay={day:'',n:0}; }); }
+  21: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.fidPay||typeof p.fidPay!=='object')) p.fidPay={day:'',n:0}; }); },
+  // v1.38 Music Maker: music {kit, speed, cur, slots[3], pay{day,n}} (section 40). normalize() fills it in.
+  22: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.music||typeof p.music!=='object'||Array.isArray(p.music))) p.music={}; }); }
 };
 
 // Hair ids from before v1.11 (one closet item per colour) -> the colour they had. They stay readable forever:

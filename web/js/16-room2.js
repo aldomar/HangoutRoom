@@ -28,6 +28,13 @@ function loftFurniture(){
   s+=`<line x1="590" y1="0" x2="590" y2="66" stroke="#3b2f52" stroke-width="3"/><path d="M562 96 Q590 56 618 96Z" fill="${furnC('lamp').shade}" ${o}/><ellipse cx="590" cy="100" rx="14" ry="6" fill="#fff6c8"/>`;
   // the Stage marquee, on the wall between the window and the desk (moved up from her room in v1.12)
   s+=`<g transform="translate(-345 230)">${stageMarquee()}</g>`;
+  // the 🎹 keyboard on its stand: tap it for the Music Maker (v1.38, section 40)
+  s+=`<g class="hot" data-hot="music"><path d="M92 590 L196 486 M300 590 L196 486 M196 486 V470" stroke="#3b2f52" stroke-width="10" stroke-linecap="round"/>`;
+  s+=`<rect x="60" y="430" width="272" height="52" rx="10" fill="#2b2340" ${o}/><rect x="72" y="436" width="110" height="10" rx="4" fill="#1d6f6a"/>`;
+  s+=`${[0,1,2].map(i=>`<circle cx="${212+i*22}" cy="441" r="5" fill="${['#ff8cc6','#ffd166','#8ff0d0'][i]}"/>`).join('')}<rect x="72" y="452" width="248" height="24" rx="3" fill="#fff" stroke="#2b2235" stroke-width="2"/>`;
+  s+=`${Array.from({length:12},(_,i)=>`<line x1="${92.7+i*20.7}" y1="452" x2="${92.7+i*20.7}" y2="476" stroke="#2b2235" stroke-width="1.5"/>`).join('')}`;
+  s+=`${[0,1,3,4,5,7,8,10,11].map(i=>`<rect x="${86+i*20.7}" y="452" width="13" height="14" rx="2" fill="#2b2235"/>`).join('')}`;
+  s+=`<text x="300" y="420" font-size="30" fill="#ff8cc6">♪</text>${sign(196,392,'🎹 Music')}</g>`;
   // computer desk: tap it for the Code Lab (v1.13)
   s+=`<g class="hot" data-hot="code"><rect x="712" y="434" width="250" height="20" rx="6" fill="${dk.top}" ${o}/>`;
   s+=`<rect x="726" y="454" width="16" height="140" fill="${dk.legs}" ${o}/><rect x="932" y="454" width="16" height="140" fill="${dk.legs}" ${o}/>`;

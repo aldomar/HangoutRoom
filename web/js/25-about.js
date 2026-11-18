@@ -108,7 +108,11 @@ const GIFT_TIMELINE=[
   {v:'1.37',d:'2026-11-17',i:'🧩',n:'Extras',why:'So there are new puzzles to crack and new mazes to roll through',
     news:['🧠 6 new Challenge puzzles in the Code Lab',
           '🔮 6 new marble mazes, from Bumper Alley to the Long Way Home',
-          '📒 3 new stickers to collect']}
+          '📒 3 new stickers to collect']},
+  {v:'1.38',d:'2026-11-17',i:'🎹',n:'Music Maker',why:'So there is a place to make up your own beats and tunes',
+    news:['🎹 A keyboard in the Cozy Loft: tap it to make your own music loop',
+          '🥁 Drums, claps and 5 notes that always sound nice together',
+          '💾 Keep 3 loops, and try 3 sounds and 3 speeds']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
