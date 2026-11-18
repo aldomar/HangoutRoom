@@ -194,7 +194,14 @@ Object.assign(SPINS,{
 });
 // Small one-colour pictures (the current fill colour) for spinner and slime decorations.
 Object.assign(FID_ICONS,{
-  rocket(ctx,x,y,s){ctx.beginPath();ctx.moveTo(x,y-s*1.4);ctx.quadraticCurveTo(x+s*.75,y-s*.6,x+s*.5,y+s*.6);ctx.lineTo(x+s*.95,y+s*1.1);ctx.lineTo(x-s*.95,y+s*1.1);ctx.lineTo(x-s*.5,y+s*.6);ctx.quadraticCurveTo(x-s*.75,y-s*.6,x,y-s*1.4);ctx.fill();},
+  // v1.36: a rounder nose, slanted fins, a porthole and a flame under a narrow nozzle (the old flat bottom looked odd).
+  rocket(ctx,x,y,s){
+    ctx.save();ctx.fillStyle='#ff9f43';ctx.beginPath();ctx.moveTo(x-s*.34,y+s*.62);ctx.quadraticCurveTo(x-s*.36,y+s*1.1,x-s*.12,y+s*1.25);ctx.quadraticCurveTo(x-s*.06,y+s*1.45,x,y+s*1.7);
+    ctx.quadraticCurveTo(x+s*.06,y+s*1.45,x+s*.12,y+s*1.25);ctx.quadraticCurveTo(x+s*.36,y+s*1.1,x+s*.34,y+s*.62);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#ffe066';ctx.beginPath();ctx.moveTo(x-s*.18,y+s*.62);ctx.quadraticCurveTo(x-s*.16,y+s*1.05,x,y+s*1.3);ctx.quadraticCurveTo(x+s*.16,y+s*1.05,x+s*.18,y+s*.62);ctx.closePath();ctx.fill();ctx.restore();
+    ctx.beginPath();ctx.moveTo(x,y-s*1.45);ctx.bezierCurveTo(x+s*.62,y-s*1.0,x+s*.6,y-s*.1,x+s*.38,y+s*.7);ctx.lineTo(x-s*.38,y+s*.7);ctx.bezierCurveTo(x-s*.6,y-s*.1,x-s*.62,y-s*1.0,x,y-s*1.45);
+    ctx.moveTo(x+s*.2,y-s*.42);ctx.arc(x,y-s*.42,s*.2,0,TAU,true);ctx.fill('evenodd');
+    for(const k of [-1,1]){ctx.beginPath();ctx.moveTo(x+k*s*.46,y-s*.05);ctx.quadraticCurveTo(x+k*s*.95,y+s*.35,x+k*s*.9,y+s*.95);ctx.lineTo(x+k*s*.42,y+s*.62);ctx.closePath();ctx.fill();}},
   nut(ctx,x,y,s){ctx.beginPath();for(let k=0;k<6;k++){const a=k*TAU/6;ctx.lineTo(x+Math.cos(a)*s,y+Math.sin(a)*s);}ctx.closePath();ctx.moveTo(x+s*.42,y);ctx.arc(x,y,s*.42,0,TAU,true);ctx.fill('evenodd');},
   footprint(ctx,x,y,s){ctx.beginPath();ctx.ellipse(x,y+s*.35,s*.5,s*.6,0,0,TAU);ctx.fill();for(const a of [-0.6,0,0.6]){ctx.beginPath();ctx.ellipse(x+Math.sin(a)*s*.95,y-Math.cos(a)*s*.75,s*.2,s*.4,a,0,TAU);ctx.fill();}}
 });

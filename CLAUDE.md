@@ -77,7 +77,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`.
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`, and (since v1.36) `fidPay{day,n}` (fidget coins paid today).
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
   optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it. So does `settings.lastBackup` (ms, since v1.30).
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
@@ -161,6 +161,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   36. `36-brain4.js` Brain Games 4: 🍕 Fraction Bakery (`FB_PUZ`, `fbTreat`, `fbCheck`) and 🪐 Fact Cards (`FACT_PUZ`, `factCard`, the 📇 binder `factBinder`)
   37. `37-pack3.js` Content Pack 3 (stage, cozy, cafe, ocean; only adds entries, each with `p3:<theme>`; `P3_THEMES`, `p3Have`,
       the squishy extras `frosting tentacles nori`, the 🍵 Cozy / 🧁 Cafe / 🐚 Ocean theme chips)
+  38. `38-pack4.js` Content Pack 4 (sport, farm, trucks, space, the 🦖 dino nugget; only adds entries, each with `p4:<theme>`;
+      `P4_THEMES`, `p4Nug` (the nugget drawing), `p4Have`, `p4Nuggets`, the squishy extras `nugget chick seams`, the 🐮 Farm chip)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -270,7 +272,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 - Gifts & layouts (since v1.28, `32-gifts.js`): a gift goes into the other profile's `gifts[]` inbox (no network) and is drawn as
   a `data-hot="gift"` pile at `GIFT_SPOT` in every room; opening adds coins or places the decoration. Posters and `award` items
   can't be given. 🏠 Layouts is Decorate's 7th tab; a layout stores item uids, so loading finds items in any room or My Stuff.
-- Theme chips + dreams (since v1.29, `33-shopplus.js`): an item's themes come from `p2`, `p3` (since v1.35), `yard`, `dream` and `THEME_IDS`.
+- Theme chips + dreams (since v1.29, `33-shopplus.js`): an item's themes come from `p2`, `p3` (since v1.35), `p4` (since v1.36), `yard`, `dream` and `THEME_IDS`.
   **A new closet item or decoration should get a theme** (a `p2`-style field or a `THEME_IDS` entry), so the chips find it.
   Big dreams have `dream:1` and are the only items allowed above 40 coins.
 - Helpers (since v1.30, `34-helpers.js`): Read to me speaks a tapped button's `aria-label`, `.tn` text or text (emoji
@@ -281,7 +283,11 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.
 
 ## Conventions
-- Coins: 1 per 10 pops, +5 per pop-it flip, 1 per 5 squishes, 1 per 25 spinner turns, +10 daily gift, 25 to start,
+- **Fidget allowance (since v1.36):** pop-it, squishy, spinner, slime and clicker coins go through `fidEarn()` (section 10) and
+  share `FID_DAILY` = 30 coins a day (`p.fidPay`, like the Art Desk's `artPay`). After that the fidgets still work and count
+  for stickers, with one gentle note, and it refills quietly the next day. A new fidget must pay through `fidEarn()`, not `earn()`.
+  The marble maze (a puzzle) and the games are not part of it.
+- Coins: 1 per 10 pops, +5 per pop-it flip, 1 per 5 squishes, 1 per 25 spinner turns (fidget coins: 30 a day in all, since v1.36), +10 daily gift, 25 to start,
   +5 per new drawing (3+ strokes, first 5 a day), +10 per bonus photocard (each milestone once). Making a photocard is free.
   Soccer: +1 / +2 / +3 per goal (Easy / Medium / Hard), +1 more per goal with 2+ soccer clothes on, +5 for 5/5.
   Be the Keeper (v1.24): the same per save (+1 / +2 / +3, +1 with the kit), +5 for 5/5 saves.

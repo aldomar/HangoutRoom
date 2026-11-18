@@ -58,6 +58,8 @@ _Last updated: 2026-11-17_
     It also makes bonus photocards undeletable (the owner's request, 2026-11-17). **Merged** (PR #33); the owner checked it.
   - **🍕 Fraction Bakery & 🪐 Fact Cards: done** (v1.34 merged, PR #34).
   - **🎀 Content Pack 3: built, PR #35 open as v1.35** on branch `feature/pack3` (from `main` after #34).
+  - **🏀 Content Pack 4: built, PR #36 open as v1.36** on branch `feature/pack4` (stacked on `feature/pack3`; merge #35 first).
+    It has the owner's 🦖 dino nugget wish: a plush that sits on a Little Shelf, and a matching squishy.
   - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -103,6 +105,7 @@ _Last updated: 2026-11-17_
 - PR #33 "Pattern Train & Word Builder (v1.33)": merged.
 - PR #34 "Fraction Bakery & Fact Cards (v1.34)": merged.
 - PR #35 "Content Pack 3 (v1.35)" on branch `feature/pack3` (from `main` after #34): open.
+- PR #36 "Content Pack 4 (v1.36)" on branch `feature/pack4` (on top of `feature/pack3`): open. Merge #35 first.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -489,6 +492,17 @@ _Last updated: 2026-11-17_
   the next full run passed.
   Not tested automatically: Read to me saying the words on the tablet (the browser has no voice), and how small the
   8-wagon trains look on a real phone (they fit; the choice wagons are big).
+- **Content Pack 4 + fidget allowance (v1.36):** `tests/smoke-test.js` has 1064 checks, all passing, no console errors.
+  Allowance checks: 30 paid then nothing, the gentle note (no countdown), a flip near the limit pays the rest, a new
+  day refills, a full pop-it board still pops and flips but pays nothing, odd `fidPay` made safe, save version 21.
+  The Keeper checks still sometimes fail by timing on a busy PC (seen once more); the next run passed.
+  Pack 4 checks: New checks: 17 clothes
+  draw on every buddy, on a photocard row; no "boy"/"girl" and prices 10–40; the 🐮 Farm chip sits before 🌳 and ⭐;
+  ⚽ Sport tops show the old jersey and the new ones; buying the tee and the plush; **the plush snaps onto a Little Shelf,
+  rides with it and is narrower than it**; 14 decorations draw in the Loft, the farm set in the Backyard, the UFO Lamp
+  at night; walls, floors; the 🏀 and 🦖 pop-it boards (12–35 bubbles, flip); every new fidget draws; sticker counts
+  (soccer things count for All-Star) and pay; a backup keeps the plush, its shelf and the squishy. Older checks updated:
+  the 🦕 Dino tops now include the Dino Nugget Tee, and there are 10 outdoor decorations.
 - **Content Pack 3 (v1.35):** `tests/smoke-test.js` has 998 checks, all passing, no console errors. New checks: 18 clothes
   draw on every buddy with no broken numbers, all on a photocard row; no "boy"/"girl" and prices 10–40; the new chips sit
   before 🌳 and ⭐ and filter right (🍵 Cozy tops, 🎤 Stage old + new, 🐚 Ocean in the Shop); buying a top, the Seashell
@@ -864,6 +878,22 @@ _Last updated: 2026-11-17_
   of their own room things/buddies (`memPic`); emoji newer than Android 8 were avoided. Medium shows faint letters in the
   slots; Hard does not. Brain Champ was changed to count only `snack memory pop`, so it keeps meaning "all 3 games".
   No save version change.
+- **Fidget allowance (v1.36, owner's request, agreed 2026-11-17):** a pop-it swipe earned about 8 coins every couple of
+  seconds with no limit. Owner picked a shared daily allowance of **30 fidget coins** (pop-it pops and flips, squishy,
+  spinner, slime, clicker), like the Art Desk's daily art coins. `fidEarn()` in section 10 pays up to what is left (a
+  flip near the limit pays only the rest); after that the fidgets still work and count for stickers, and one gentle
+  toast says "Fidget coins are full for today! Keep playing for fun ✨ Games still give coins." (once per room per day,
+  no countdown, no "come back" message). It refills quietly when the date changes. The marble maze and games are
+  not included. Save version 21: `fidPay{day,n}` per profile (normalize + MIGRATIONS[21]). The flip bonus stays +5.
+- **Content Pack 4 (built as v1.36, `38-pack4.js`):** themes are a new field `p4` ('sport' 'farm' 'ride' 'space' 'dino');
+  only 🐮 Farm is a new chip, the rest reuse ⚽ Sport, 🚗 Ride, 🚀 Space and 🦕 Dino. The dino nugget is an original chunky
+  long-neck dinosaur in golden crumbs (no brand or packaging), drawn once by `p4Nug()` and reused by the plush, the tee
+  and (in canvas) the squishy. The plush needed no new shelf code: any standing decoration snaps onto a shelf, and it is
+  about 125 wide, so it fits the Little Shelf (160). Big Adventures needs 5 (ride + space), a step up from Pack 2's 3.
+  Also (owner's request): the 🚀 rocket picture used by Rocket Goo and the Rocket spinner (`FID_ICONS.rocket`, section 24)
+  was redrawn: a rounder nose, slanted fins, a porthole and an orange flame under a narrow nozzle, in place of the flat
+  bottom that looked odd. The 🚀 Rocket pop-it board shape was not changed.
+  The pack itself changes no save data; the fidget allowance (above) is save version 21.
 - **Content Pack 3 (built as v1.35, `37-pack3.js`):** themes are a new field `p3` ('stage' 'cozy' 'cafe' 'ocean'), not `p2`,
   so Pack 2's checks and stickers stay the same; `themesOf()` reads it. 🎤 Stage reuses the existing chip; 🍵 Cozy,
   🧁 Cafe and 🐚 Ocean are new chips, put before 🌳 Outdoor and ⭐ Dreams. `p3Have()` counts clothes and decorations by
@@ -982,12 +1012,14 @@ _Last updated: 2026-11-17_
 4. ~~Owner: build v1.34, try the two new games and the 📇 binder (see the PR), and merge it.~~ Merged.
 5. ~~Build 🎀 Content Pack 3 (v1.35) on `feature/pack3`.~~ Built (PR #35).
 6. Owner: build v1.35, try the new clothes, decorations and fidgets (see the PR), and merge it.
-7. Build 🏀 Content Pack 4 (v1.36), with the 🦖 dino nugget plush.
+7. ~~Build 🏀 Content Pack 4 (v1.36), with the 🦖 dino nugget plush.~~ Built (PR #36, on top of #35).
+8. Owner: merge #35 first, then build v1.36, try the dino nugget on a shelf and the new things (see the PR), and merge it.
+9. Build 🧩 Extras (v1.37): more 🧠 Challenge puzzles and marble mazes.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 20 since v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 21 since v1.36 (Fidget allowance: `fidPay`). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
