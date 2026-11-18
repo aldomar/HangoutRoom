@@ -98,6 +98,16 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   the games on the Brain Games menu). Tap a card to read it again; tap a ❓ to play the puzzle that unlocks it.
 - 2 new stickers on the **Code & Brain** page: 🍕 Fraction Baker (8 puzzles) and 📇 Fact Finder (12 fact cards).
 
+## Room depth (since version 1.39)
+- Things standing on the floor are drawn **front to back by where they stand**: the lower on the floor (closer to you),
+  the more in front. This was how the rooms first worked, and it is back.
+- The room's own furniture joins in: the closet and art desk, the Loft's 🎹 keyboard and computer desk, and the
+  Backyard's tree, goal, shed and chalkboard. So a lamp put behind the keyboard stands behind it, and a plant put in
+  front of it stands in front. The buddy, the pet bed and gifts are in the same order.
+- Rugs and wall things (posters, shelves) still go by "the last one touched is on top".
+- While **🛋️ Decorating**, the room's own furniture, the buddy, the pet and gifts turn see-through and can't be
+  tapped, so anything hidden behind them can still be grabbed. They look normal again after ✔ Done.
+
 ## Music Maker (since version 1.38)
 - 🎹 **A keyboard in the Cozy Loft.** Tap it to open the Music Maker and make your own music loop.
 - The grid has 8 steps across. The top 5 rows are notes (A G E D C). They are the 5 notes that always sound nice

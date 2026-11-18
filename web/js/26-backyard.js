@@ -79,28 +79,28 @@ function yardBack(R){
 /* ---------- built-in pieces (colours: 🎨 Colours tab, FURN_PIECES room 3) ---------- */
 FURN_PIECES.shed={room:3,icon:'🏡',name:'Garden Shed',orig:{body:'#8fd3c0',roof:'#e85d8a',door:'#fff6e8'},map:c=>({body:c.l,roof:c.d,door:c.b})};
 FURN_PIECES.easel={room:3,icon:'📚',name:'Chalkboard',orig:{frame:'#c98b52'},map:c=>({frame:c.m})};
-function yardFurniture(){
+function yardFurniture(split){ // split: see furniture() in section 4 (v1.39)
   const o='stroke="#2b2235" stroke-width="4" stroke-linejoin="round"', sh=furnC('shed'), ez=furnC('easel').frame, T=YARD_TREE[seasonNow()]||YARD_TREE.summer;
-  let s=`<g data-ground="1">${yardSeason('ground')}</g>`;
+  let s=`<g data-ground="1">${yardSeason('ground')}</g>`; const F=[];
   // the garden shed, against the fence (a spot for a future game)
-  s+=`<g data-piece="shed"><rect x="782" y="330" width="168" height="140" fill="${sh.body}" ${o}/><path d="M764 338 L866 256 L968 338Z" fill="${sh.roof}" ${o}/>`
+  F.push({y:470,h:`<g data-piece="shed"><rect x="782" y="330" width="168" height="140" fill="${sh.body}" ${o}/><path d="M764 338 L866 256 L968 338Z" fill="${sh.roof}" ${o}/>`
     +`<rect x="836" y="382" width="54" height="88" rx="6" fill="${sh.door}" ${o}/><circle cx="880" cy="428" r="4" fill="#2b2235"/>`
-    +`<rect x="900" y="352" width="38" height="34" rx="6" fill="#d9f1ff" ${o}/><path d="${heartPath(919,368,8)}" fill="#ff8cc6"/></g>`;
+    +`<rect x="900" y="352" width="38" height="34" rx="6" fill="#d9f1ff" ${o}/><path d="${heartPath(919,368,8)}" fill="#ff8cc6"/></g>`});
   // the tree with a rope swing
-  s+=`<path d="M58 572 Q80 420 74 214 H120 Q114 420 138 572Z" fill="#8b5a35" ${o}/><path d="M112 300 Q170 284 236 286" stroke="#8b5a35" stroke-width="16" fill="none" stroke-linecap="round"/>`
+  F.push({y:572,h:`<path d="M58 572 Q80 420 74 214 H120 Q114 420 138 572Z" fill="#8b5a35" ${o}/><path d="M112 300 Q170 284 236 286" stroke="#8b5a35" stroke-width="16" fill="none" stroke-linecap="round"/>`
     +`<g data-tree="${seasonNow()}">`+[[96,150,100,0],[26,230,72,1],[176,214,80,0],[110,250,64,1]].map(([x,y,r,k])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${T[k]}" ${o}/>`).join('')+`</g>`
-    +`<path d="M184 292 V488 M230 288 V488" stroke="#c9a77a" stroke-width="4"/><rect x="170" y="484" width="74" height="12" rx="5" fill="#ff8cc6" ${o}/>`;
+    +`<path d="M184 292 V488 M230 288 V488" stroke="#c9a77a" stroke-width="4"/><rect x="170" y="484" width="74" height="12" rx="5" fill="#ff8cc6" ${o}/>`});
   // the soccer goal: tap it for Soccer
   let net=''; for(let x=270;x<=402;x+=16)net+=`M${x} 372 V488 `; for(let y=384;y<=480;y+=16)net+=`M262 ${y} H410 `;
-  s+=`<g class="hot" data-hot="goal"><rect x="262" y="370" width="148" height="118" fill="#ffffff2a"/><path d="${net}" stroke="#fff" stroke-width="2" opacity=".75"/>`
+  F.push({y:492,h:`<g class="hot" data-hot="goal"><rect x="262" y="370" width="148" height="118" fill="#ffffff2a"/><path d="${net}" stroke="#fff" stroke-width="2" opacity=".75"/>`
     +`<rect x="252" y="358" width="12" height="134" rx="4" fill="#fff" ${o}/><rect x="408" y="358" width="12" height="134" rx="4" fill="#fff" ${o}/><rect x="252" y="356" width="168" height="12" rx="4" fill="#fff" ${o}/>`
-    +`<circle cx="372" cy="520" r="17" fill="#fff" stroke="#2b2235" stroke-width="3"/><path d="${starPath(372,520,8,5)}" fill="#2b2235"/>${sign(336,330,'⚽ Soccer')}</g>`;
+    +`<circle cx="372" cy="520" r="17" fill="#fff" stroke="#2b2235" stroke-width="3"/><path d="${starPath(372,520,8,5)}" fill="#2b2235"/>${sign(336,330,'⚽ Soccer')}</g>`});
   // the chalkboard easel: 📚 Brain Games (v1.25, section 28)
-  s+=`<g class="hot" data-hot="brain" data-piece="easel"><path d="M712 612 L770 384 M848 612 L790 384 M780 384 L784 600" stroke="${ez}" stroke-width="10" stroke-linecap="round"/>`
+  F.push({y:612,h:`<g class="hot" data-hot="brain" data-piece="easel"><path d="M712 612 L770 384 M848 612 L790 384 M780 384 L784 600" stroke="${ez}" stroke-width="10" stroke-linecap="round"/>`
     +`<rect x="694" y="400" width="172" height="124" rx="8" fill="#2f5d50" stroke="${ez}" stroke-width="10"/><rect x="694" y="400" width="172" height="124" rx="8" fill="none" stroke="#2b2235" stroke-width="3"/>`
     +`<text x="716" y="446" font-size="24" font-weight="800" fill="#fff" opacity=".9">1+2=3</text><text x="760" y="500" font-size="22" font-weight="800" fill="#ffd1ea" opacity=".9">A B C</text>`
-    +`<path d="${starPath(840,430,9)}" fill="none" stroke="#ffe066" stroke-width="2.5"/><rect x="690" y="522" width="180" height="10" rx="4" fill="${ez}" ${o}/>${sign(780,372,'📚 Brain Games')}</g>`;
-  return s;
+    +`<path d="${starPath(840,430,9)}" fill="none" stroke="#ffe066" stroke-width="2.5"/><rect x="690" y="522" width="180" height="10" rx="4" fill="${ez}" ${o}/>${sign(780,372,'📚 Brain Games')}</g>`});
+  return split?{wall:s,floor:F}:s+F.map(f=>f.h).join('');
 }
 
 /* ---------- outdoor decorations (yard:1, any room) ---------- */

@@ -313,6 +313,11 @@ Detailed plan agreed 2026-11-17: six PRs in this order, each branch on top of th
   (C D E G A) and 4 beat rows, 3 sounds, 3 speeds, 3 💾 slots, 3 ready-made loops. +3 coins per saved new loop, 3 a day.
   The main loop runs only while a loop is playing. Sticker: 🎹 Beat Maker.
 
+- ✅ **🛋️ Room depth (v1.39, the owner's request 2026-11-17):** things standing on the floor are drawn front to back by
+  floor position again (the original design; a v1.28 slip had switched it off and v1.31 had made "last touched in front"
+  the rule). The rooms' own floor furniture, the buddy, the pet bed and gifts join the same order. While decorating they
+  fade so things behind can be grabbed. No save change.
+
 The first ideas list:
 - **📚 Brain Games, part 2:** 🚂 Pattern Train (colours → shapes → number sequences), 🔤 Word Builder (first letters →
   3-letter words → spelling from a picture), 🍕 Fraction Bakery (halves → quarters → "⅔ of the pizza"), 🪐 Fact Cards
