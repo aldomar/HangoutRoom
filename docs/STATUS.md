@@ -61,9 +61,9 @@ _Last updated: 2026-11-17_
   - **🏀 Content Pack 4: done** (v1.36 merged, PR #36).
     It has the owner's 🦖 dino nugget wish: a plush that sits on a Little Shelf, and a matching squishy.
   - **🧩 Extras: done** (v1.37 merged, PR #37). 6 more 🧠 Challenge puzzles, 6 more marble mazes and 3 stickers.
-  - **🎹 Music Maker: built, PR #38 open as v1.38** on branch `feature/music` (from `main` after #37). Plan details agreed 2026-11-17
+  - **🎹 Music Maker: done** (v1.38 merged, PR #38), built on branch `feature/music` (from `main` after #37). Plan details agreed 2026-11-17
     (see "Music Maker" under Decisions). This is the last Phase 11 PR: once it is merged, Phase 11 is done.
-  - **🛋️ Room depth: built as v1.39** on branch `feature/depth` (stacked on `feature/music`; merge #38 first). The owner's
+  - **🛋️ Room depth: built, PR #39 open as v1.39** on branch `feature/depth` (from `main` after #38). The owner's
     request (2026-11-17): the new keyboard was hidden behind decorations, with no way to bring it forward.
   - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
@@ -112,8 +112,8 @@ _Last updated: 2026-11-17_
 - PR #35 "Content Pack 3 (v1.35)": merged.
 - PR #36 "Content Pack 4 (v1.36)": merged.
 - PR #37 "Extras (v1.37)": merged.
-- PR #38 "Music Maker (v1.38)" on branch `feature/music` (from `main` after #37): open.
-- PR "Room depth (v1.39)" on branch `feature/depth` (on top of `feature/music`): open. Merge #38 first.
+- PR #38 "Music Maker (v1.38)": merged.
+- PR #39 "Room depth (v1.39)" on branch `feature/depth`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -1059,8 +1059,8 @@ _Last updated: 2026-11-17_
 10. ~~Owner: merge #35 and #36 first, then build v1.37, try the new puzzles and mazes (see the PR), and merge it.~~ Merged.
 11. ~~Plan details and build 🎹 Music Maker (v1.38), the last Phase 11 PR.~~ Built (PR #38).
 12. Owner: build v1.38, try the Music Maker on the tablet (see the PR; check the sound timing and the speakers), and merge it.
-13. ~~Build 🛋️ Room depth (v1.39), the owner's request.~~ Built (on top of #38).
-14. Owner: merge #38, then build v1.39 and check the rooms (see the PR), and merge it.
+13. ~~Build 🛋️ Room depth (v1.39), the owner's request.~~ Built (PR #39).
+14. Owner: build v1.39 and check the rooms (see the PR), and merge it. (#38 is merged.)
 15. Phase 11 is then done. Talk about what comes next (the ideas backlog in `PLAN.md`).
 
 ## How versions and save upgrades work (since v1.2)
