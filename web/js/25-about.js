@@ -112,7 +112,11 @@ const GIFT_TIMELINE=[
   {v:'1.38',d:'2026-11-17',i:'🎹',n:'Music Maker',why:'So there is a place to make up your own beats and tunes',
     news:['🎹 A keyboard in the Cozy Loft: tap it to make your own music loop',
           '🥁 Drums, claps and 5 notes that always sound nice together',
-          '💾 Keep 3 loops, and try 3 sounds and 3 speeds']}
+          '💾 Keep 3 loops, and try 3 sounds and 3 speeds']},
+  {v:'1.39',d:'2026-11-17',i:'🛋️',n:'Room depth',why:'So things in your rooms stand in front of and behind each other, like real furniture',
+    news:['🛋️ Things lower on the floor stand in front, things higher up stand behind',
+          '🎹 The closet, desks, keyboard and Backyard things join in too',
+          '👻 While decorating, the room\'s own furniture goes see-through so you can grab what is behind it']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

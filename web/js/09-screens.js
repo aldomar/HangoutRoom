@@ -106,16 +106,22 @@ function renderRoom(){
   let s=roomNo===3?yardBack(R):`<rect width="1000" height="470" fill="${W.fill}"/><rect width="1000" height="470" fill="url(#${W.pat})"/>`; // the Backyard: sky + fence (section 26)
   const G=roomNo===3?FLOORS[yardFloor(R)]:F;
   s+=`<rect y="470" width="1000" height="230" fill="${G.fill}"/><rect y="470" width="1000" height="230" fill="url(#${G.pat})"/><rect y="458" width="1000" height="16" fill="#00000026"/>`;
-  s+=roomNo===3?yardFurniture():roomNo===2?loftFurniture():furniture();
+  const fur=roomNo===3?yardFurniture(true):roomNo===2?loftFurniture(true):furniture(true);
+  s+=fur.wall; // windows, shelves and signs on the wall; furniture standing on the floor is sorted below (v1.39)
   s+=nightBack(p); // 🌙 the night window + wall stars, behind the room's things (section 31, v1.32)
   const items=R.items.filter(i=>i.placed&&DECOR[i.type]);
   const deco=i=>`<g class="deco" data-uid="${i.uid}" transform="translate(${Math.round(i.x)} ${Math.round(i.y)})">${DECOR[i.type].d(i)}</g>`;
   s+=items.filter(i=>DECOR[i.type].flat).map(deco).join('');
   // Wall things (posters, shelves…) are drawn behind everything that stands, so things on a shelf show in front of it.
-  // Inside each layer things are drawn in list order, and the one touched last moves to the end (toFront, v1.31).
+  // Rugs and wall things are drawn in list order, and the one touched last moves to the end (toFront, v1.31).
   s+=items.filter(i=>DECOR[i.type].wall&&!DECOR[i.type].flat).map(deco).join('');
-  s+=items.filter(i=>!DECOR[i.type].flat&&!DECOR[i.type].wall).map(deco).join('');
-  s+=mascotG(p)+petG(p)+giftG(p); // the buddy, the pet bed (section 22) and wrapped gifts (section 32) stay in front
+  // Things standing on the floor, the room's own furniture, the buddy, the pet bed (section 22) and wrapped gifts (section 32)
+  // are drawn back to front by how far forward they stand (y), so whatever is lower on the floor is in front (v1.39).
+  // Equal y keeps list order (sort is stable), so the one touched last is in front. While decorating, .fixed fades.
+  const fx=h=>`<g class="fixed">${h}</g>`;
+  s+=items.filter(i=>!DECOR[i.type].flat&&!DECOR[i.type].wall).map(i=>({y:i.y,h:deco(i)}))
+    .concat(fur.floor.map(f=>({y:f.y,h:fx(f.h)})),[{y:604,h:fx(mascotG(p))},{y:PET_SPOT.y,h:fx(petG(p))},{y:GIFT_SPOT.y,h:fx(giftG(p))}])
+    .sort((a,b)=>a.y-b.y).map(e=>e.h).join('');
   s+=nightLayer(p,R); // 🌙 night mode (section 31, v1.27)
   roomSvg.innerHTML=s; emoteBar(false); nightBtn();
   roomSvg.classList.toggle('decorating',decorating);

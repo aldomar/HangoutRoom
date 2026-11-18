@@ -208,9 +208,14 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   bought once for all styles). Hair items take `d(f, line, H)` and an optional back layer `b(f, line, H)`, where `H` is the colour.
   Old swoop ids (`swoopPurple` …) live on in `LEGACY_HAIR`; always read hair through `hairIds(look)`.
 - Shelves (since v1.11): a wall decoration with `shelf:{w, top}`. Dropped items snap onto a shelf top, and dragging a
-  shelf carries its riders (`onShelf`, `snapToShelf` in 09). The room draws flat items, then wall items, then standing items,
-  then the buddy, pet and gifts. Inside each layer items are drawn in `R.items` order; since v1.31 touching an item while
-  decorating (or placing it from My Stuff) moves it to the end with `toFront(R, it)`, so the last touched sits in front.
+  shelf carries its riders (`onShelf`, `snapToShelf` in 09). The room draws the wall and wall furniture, then flat items,
+  then wall items (both in `R.items` order; touching one moves it to the end with `toFront(R, it)`, v1.31), then one
+  layer sorted by floor position `y` (since v1.39): standing items, the room's own floor furniture, the buddy (y 604),
+  the pet bed and gifts. Equal `y` keeps list order, so the last touched wins a tie.
+- Room depth (since v1.39): `furniture(split)`, `loftFurniture(split)` and `yardFurniture(split)` return `{wall, floor:[{y, h}]}`
+  with `split` (and the whole picture as text without it). A new built-in piece that stands on the floor goes in `floor`
+  with the `y` of its feet; wall pieces stay in `wall`. Floor pieces, the buddy, pet and gifts are wrapped in `.fixed`,
+  which fades and lets taps through while decorating.
 - Three rooms (Loft since v1.10, Backyard since v1.23): `roomNo` (1 = `p.room`, 2 = `p.room2`, 3 = `p.room3`), `curRoom(p)` for
   the room on screen, `rooms(p)` for all three and `allItems(p)` for every item. My Stuff (items with `placed:false`) is shared
   between rooms; placing a stored item moves it into the room on screen. New code that adds or finds room items must use

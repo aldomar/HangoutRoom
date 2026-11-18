@@ -11,9 +11,9 @@ WALLS.attic={name:'Attic Boards',price:0,fill:'#efd6b8',pat:'pBoards'};
 EXTRA_DEFS.push(`<pattern id="pBoards" width="84" height="470" patternUnits="userSpaceOnUse"><rect x="81" width="3" height="470" fill="#00000018"/><circle cx="42" cy="120" r="2.5" fill="#00000014"/><circle cx="20" cy="330" r="2" fill="#00000012"/></pattern>`
   +`<radialGradient id="gMoonSky" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#3d3170"/><stop offset="1" stop-color="#171236"/></radialGradient>`);
 
-function loftFurniture(){
+function loftFurniture(split){ // split: see furniture() in section 4 (v1.39)
   const bm=furnC('beams'), wood=bm.wood, dark=bm.dark, dk=furnC('desk2'), wf=furnC('window2').frame, o='stroke="#2b2235" stroke-width="4" stroke-linejoin="round"';
-  let s='';
+  let s='', kb='', cd='';
   // slanted ceiling with beams
   s+=`<path d="M0 0 H270 L0 210Z" fill="${wood}"/><path d="M1000 0 H730 L1000 210Z" fill="${wood}"/>`;
   s+=`<path d="M270 0 L0 210 M730 0 L1000 210" stroke="${dark}" stroke-width="14" stroke-linecap="round"/>`;
@@ -29,18 +29,19 @@ function loftFurniture(){
   // the Stage marquee, on the wall between the window and the desk (moved up from her room in v1.12)
   s+=`<g transform="translate(-345 230)">${stageMarquee()}</g>`;
   // the 🎹 keyboard on its stand: tap it for the Music Maker (v1.38, section 40)
-  s+=`<g class="hot" data-hot="music"><path d="M92 590 L196 486 M300 590 L196 486 M196 486 V470" stroke="#3b2f52" stroke-width="10" stroke-linecap="round"/>`;
-  s+=`<rect x="60" y="430" width="272" height="52" rx="10" fill="#2b2340" ${o}/><rect x="72" y="436" width="110" height="10" rx="4" fill="#1d6f6a"/>`;
-  s+=`${[0,1,2].map(i=>`<circle cx="${212+i*22}" cy="441" r="5" fill="${['#ff8cc6','#ffd166','#8ff0d0'][i]}"/>`).join('')}<rect x="72" y="452" width="248" height="24" rx="3" fill="#fff" stroke="#2b2235" stroke-width="2"/>`;
-  s+=`${Array.from({length:12},(_,i)=>`<line x1="${92.7+i*20.7}" y1="452" x2="${92.7+i*20.7}" y2="476" stroke="#2b2235" stroke-width="1.5"/>`).join('')}`;
-  s+=`${[0,1,3,4,5,7,8,10,11].map(i=>`<rect x="${86+i*20.7}" y="452" width="13" height="14" rx="2" fill="#2b2235"/>`).join('')}`;
-  s+=`<text x="300" y="420" font-size="30" fill="#ff8cc6">♪</text>${sign(196,392,'🎹 Music')}</g>`;
+  kb+=`<g class="hot" data-hot="music"><path d="M92 590 L196 486 M300 590 L196 486 M196 486 V470" stroke="#3b2f52" stroke-width="10" stroke-linecap="round"/>`;
+  kb+=`<rect x="60" y="430" width="272" height="52" rx="10" fill="#2b2340" ${o}/><rect x="72" y="436" width="110" height="10" rx="4" fill="#1d6f6a"/>`;
+  kb+=`${[0,1,2].map(i=>`<circle cx="${212+i*22}" cy="441" r="5" fill="${['#ff8cc6','#ffd166','#8ff0d0'][i]}"/>`).join('')}<rect x="72" y="452" width="248" height="24" rx="3" fill="#fff" stroke="#2b2235" stroke-width="2"/>`;
+  kb+=`${Array.from({length:12},(_,i)=>`<line x1="${92.7+i*20.7}" y1="452" x2="${92.7+i*20.7}" y2="476" stroke="#2b2235" stroke-width="1.5"/>`).join('')}`;
+  kb+=`${[0,1,3,4,5,7,8,10,11].map(i=>`<rect x="${86+i*20.7}" y="452" width="13" height="14" rx="2" fill="#2b2235"/>`).join('')}`;
+  kb+=`<text x="300" y="420" font-size="30" fill="#ff8cc6">♪</text>${sign(196,392,'🎹 Music')}</g>`;
   // computer desk: tap it for the Code Lab (v1.13)
-  s+=`<g class="hot" data-hot="code"><rect x="712" y="434" width="250" height="20" rx="6" fill="${dk.top}" ${o}/>`;
-  s+=`<rect x="726" y="454" width="16" height="140" fill="${dk.legs}" ${o}/><rect x="932" y="454" width="16" height="140" fill="${dk.legs}" ${o}/>`;
-  s+=`<rect x="846" y="454" width="86" height="70" rx="6" fill="${dk.drawer}" ${o}/><circle cx="889" cy="489" r="5" fill="#2b2235"/>`;
-  s+=`<rect x="760" y="316" width="150" height="104" rx="12" fill="#2b2340" ${o}/><rect x="772" y="328" width="126" height="80" rx="6" fill="#1d6f6a"/>`;
-  s+=`<circle cx="815" cy="360" r="5" fill="#8ff0d0"/><circle cx="855" cy="360" r="5" fill="#8ff0d0"/><path d="M820 380 Q835 392 850 380" stroke="#8ff0d0" stroke-width="4" fill="none" stroke-linecap="round"/>`;
-  s+=`<rect x="826" y="420" width="18" height="14" fill="#3b2f52"/><rect x="770" y="424" width="70" height="10" rx="4" fill="#efe6ff" stroke="#2b2235" stroke-width="2"/>${sign(835,290,'💻 Code Lab')}</g>`;
-  return s;
+  cd+=`<g class="hot" data-hot="code"><rect x="712" y="434" width="250" height="20" rx="6" fill="${dk.top}" ${o}/>`;
+  cd+=`<rect x="726" y="454" width="16" height="140" fill="${dk.legs}" ${o}/><rect x="932" y="454" width="16" height="140" fill="${dk.legs}" ${o}/>`;
+  cd+=`<rect x="846" y="454" width="86" height="70" rx="6" fill="${dk.drawer}" ${o}/><circle cx="889" cy="489" r="5" fill="#2b2235"/>`;
+  cd+=`<rect x="760" y="316" width="150" height="104" rx="12" fill="#2b2340" ${o}/><rect x="772" y="328" width="126" height="80" rx="6" fill="#1d6f6a"/>`;
+  cd+=`<circle cx="815" cy="360" r="5" fill="#8ff0d0"/><circle cx="855" cy="360" r="5" fill="#8ff0d0"/><path d="M820 380 Q835 392 850 380" stroke="#8ff0d0" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  cd+=`<rect x="826" y="420" width="18" height="14" fill="#3b2f52"/><rect x="770" y="424" width="70" height="10" rx="4" fill="#efe6ff" stroke="#2b2235" stroke-width="2"/>${sign(835,290,'💻 Code Lab')}</g>`;
+  const F=[{y:590,h:kb},{y:594,h:cd}];
+  return split?{wall:s,floor:F}:s+F.map(f=>f.h).join('');
 }

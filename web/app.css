@@ -98,6 +98,8 @@ body.easy .sign{display:inline}
 .deco{pointer-events:none}
 .decorating .deco{pointer-events:all;cursor:grab}
 .decorating .hot,.decorating .mascot{pointer-events:none}
+/* (v1.39) while decorating, the room's own furniture, the buddy, pet and gifts fade, so things behind them can be grabbed */
+.decorating .fixed{opacity:.35;pointer-events:none}
 .decorating .deco.dragging{filter:drop-shadow(0 10px 6px rgba(0,0,0,.45))}
 .deco-panel{flex:0 0 40%;background:var(--panel);border-top:3px solid var(--line);display:flex;flex-direction:column;min-height:0;transition:background .2s}
 .deco-panel.drop{background:#5a2f4f}

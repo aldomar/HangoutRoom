@@ -2133,11 +2133,11 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('touching the back thing brings it to the front (drawn last, saved last)', (await decoOrder())==='tfC,tfD,tfB,tfA'&&await ev(`P().room.items[P().room.items.length-1].uid==='tfA'&&JSON.parse(localStorage.getItem('hangoutRoom.v1')).profiles.find(q=>q.id===DB.activeId).room.items.pop().uid==='tfA'`), await decoOrder());
   await ev(`dragDeco('tfC',300,200)`); await sleep(100);
   check('…and a wall thing too (still behind the standing things)', (await decoOrder())==='tfD,tfC,tfB,tfA', await decoOrder());
-  check('the buddy is still drawn in front of decorations', await ev(`(()=>{const k=[...roomSvg.children];return k.indexOf(document.querySelector('#mascotG'))>k.indexOf(roomSvg.querySelector('.deco[data-uid="tfA"]'));})()`));
+  check('the buddy is drawn in front of decorations standing behind it', await ev(`(()=>{const k=[...roomSvg.children];return k.indexOf(document.querySelector('#mascotG').closest('.fixed'))>k.indexOf(roomSvg.querySelector('.deco[data-uid="tfA"]'));})()`));
   // put tfB away and move it to the start of the list, so My Stuff's lava tile finds it first
   await ev(`(()=>{const R=P().room,it=R.items.find(i=>i.uid==='tfB');it.placed=false;R.items.splice(R.items.indexOf(it),1);R.items.unshift(it);renderRoom();document.querySelector('[data-dt=mine]').click();})()`); await sleep(100);
   await ev(`document.querySelector('#decoGrid [data-place="lava"]').click()`); await sleep(100);
-  check('placing from My Stuff puts it in front', (await decoOrder())==='tfD,tfC,tfA,tfB', await decoOrder());
+  check('placing from My Stuff puts it last in the list, and it is drawn by where it stands (v1.39)', await ev(`(()=>{const R=P().room,b=R.items.find(i=>i.uid==='tfB');return R.items[R.items.length-1]===b;})()`)&&(await decoOrder())===(await ev(`P().room.items.find(i=>i.uid==='tfB').y>=600`)?'tfD,tfC,tfA,tfB':'tfD,tfC,tfB,tfA'), await decoOrder());
   await ev(`exitDecorate();P().room.items=P().room.items.filter(i=>!/^tf/.test(i.uid));save();renderRoom()`);
   for(const [w,h,easy] of [[360,740,false],[360,740,true],[412,860,false]]){
     await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:true});
@@ -2718,6 +2718,36 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();P().easy=true;show('room');goRoom(2)`); await sleep(300); await shot('M08-loft-keyboard-easy');
   check('Easy mode shows the 🎹 Music sign', await ev(`[...document.querySelectorAll('#roomSvg .sign')].some(s=>s.textContent.includes('Music'))`));
   await ev(`P().easy=false;goRoom(1);show('room')`);
+
+  console.log('Room depth (v1.39): front to back by floor position');
+  await ev(`window.dIx=el=>[...roomSvg.children].indexOf(el&&el.closest('#roomSvg > *'));window.dU=u=>roomSvg.querySelector('.deco[data-uid="'+u+'"]');window.dH=h=>roomSvg.querySelector('[data-hot="'+h+'"]');`);
+  await ev(`(()=>{const p=P();closeModal();P().easy=false;show('room');goRoom(2);p.room2.items=p.room2.items.filter(i=>!/^dp/.test(i.uid));
+    p.room2.items.push({uid:'dpFront',type:'plant',x:200,y:660,placed:true},{uid:'dpBack',type:'lava',x:200,y:540,placed:true},{uid:'dpMid',type:'plant',x:520,y:598,placed:true});renderRoom();})()`); await sleep(150);
+  check('the Loft keyboard is drawn in front of a thing placed behind it (higher up the floor)', await ev(`dIx(dU('dpBack'))<dIx(dH('music'))`));
+  check('…and behind a thing placed in front of it (lower on the floor), even if that one was placed first', await ev(`dIx(dU('dpFront'))>dIx(dH('music'))`));
+  check('the buddy joins the same order: in front of things behind, behind things in front', await ev(`dIx(dU('dpMid'))<dIx(document.querySelector('#mascotG'))&&dIx(document.querySelector('#mascotG'))<dIx(dU('dpFront'))`));
+  check('the code desk is in the order too', await ev(`dIx(dU('dpBack'))<dIx(dH('code'))&&dIx(dH('code'))<dIx(dU('dpFront'))`));
+  await shot('N01-depth-loft');
+  await ev(`P().room2.items.push(P().room2.items.splice(P().room2.items.findIndex(i=>i.uid==='dpBack'),1)[0]);renderRoom()`); await sleep(100);
+  check('touching a thing no longer pulls it in front of things lower on the floor', await ev(`dIx(dU('dpBack'))<dIx(dH('music'))&&dIx(dU('dpBack'))<dIx(dU('dpFront'))`));
+  check('wall things (the round window, the Stage sign) stay behind everything standing', await ev(`dIx(roomSvg.querySelector('[data-hot=stage]'))<dIx(dU('dpBack'))`));
+  // decorating: built-ins, the buddy, the pet and gifts fade and let taps through
+  await ev(`enterDecorate()`); await sleep(150);
+  check('while decorating, the keyboard, desk and buddy fade', await ev(`[dH('music'),dH('code'),document.querySelector('#mascotG')].every(e=>getComputedStyle(e.closest('.fixed')).opacity==='0.35')`));
+  await ev(`(()=>{const it=P().room2.items.find(i=>i.uid==='dpBack');it.x=196;it.y=560;P().room2.items.find(i=>i.uid==='dpFront').x=640;renderRoom();})()`); await sleep(100);
+  check('a thing hidden behind the keyboard can still be grabbed while decorating', await ev(`(()=>{const r=dU('dpBack').getBoundingClientRect(),e=document.elementFromPoint(r.left+r.width/2,r.top+r.height*0.75);return !!e&&!!e.closest('.deco[data-uid="dpBack"]');})()`));
+  await shot('N02-depth-decorating');
+  await ev(`exitDecorate()`); await sleep(150);
+  check('after Done the furniture looks normal again and can be tapped', await ev(`getComputedStyle(dH('music').closest('.fixed')).opacity==='1'&&(()=>{const r=dH('music').querySelector('rect').getBoundingClientRect(),e=document.elementFromPoint(r.left+30,r.top+10);return !!e&&!!e.closest('[data-hot=music]');})()`));
+  // her room and the Backyard
+  await ev(`(()=>{const p=P();goRoom(1);p.room.items.push({uid:'dpCl',type:'plant',x:860,y:520,placed:true},{uid:'dpCl2',type:'plant',x:860,y:640,placed:true});renderRoom();})()`); await sleep(100);
+  check('her room: the closet hides a thing behind it and is hidden by a thing in front', await ev(`dIx(dU('dpCl'))<dIx(dH('closet'))&&dIx(dH('closet'))<dIx(dU('dpCl2'))&&dIx(dH('desk'))>dIx(dU('dpCl'))`));
+  await shot('N03-depth-room');
+  await ev(`(()=>{const p=P();goRoom(3);p.room3.items.push({uid:'dpY',type:'plant',x:780,y:560,placed:true},{uid:'dpY2',type:'plant',x:780,y:660,placed:true});renderRoom();})()`); await sleep(100);
+  check('Backyard: the easel and the tree are in the order too', await ev(`dIx(dU('dpY'))<dIx(dH('brain'))&&dIx(dH('brain'))<dIx(dU('dpY2'))&&dIx(roomSvg.querySelector('[data-tree]'))<dIx(dU('dpY2'))`));
+  check('the furniture functions still give the whole picture as text (for checks and snapshots)', await ev(`furniture().includes('data-hot="closet"')&&loftFurniture().includes('data-hot="music"')&&yardFurniture().includes('data-piece="shed"')&&typeof loftFurniture(true).floor[0].y==='number'`));
+  await shot('N04-depth-yard');
+  await ev(`(()=>{const p=P();[p.room,p.room2,p.room3].forEach(r=>{r.items=r.items.filter(i=>!/^dp/.test(i.uid));});save();goRoom(1);})()`);
 
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');
