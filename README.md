@@ -28,16 +28,17 @@ short description (outfit, stage, frame, title) instead of a picture.
 Soccer, Stage, Code Lab and Brain Games progress (best scores, trophies, keeper gloves, the Golden Mic, puzzles solved), saved looks and night settings are in the backup too.
 
 ## The Cozy Loft (since version 1.10)
-Every room has a second room upstairs: tap **🪜 Loft** at the top of the room screen (and **🏠 Room** to go back).
+Every room has a second room upstairs: tap the **⬆️ 🪜** arrow at the top right of her room (and **⬇️ 🏠** to go back).
+(Before version 1.40 this was a **🪜 Loft** button in the top bar.)
 The Loft has its own wall, floor and decorations. Things put away in **My Stuff** (🛋️ Decorate) can be placed
 in either room.
 
 ## The Backyard (since version 1.23)
-A third room, outside: tap **🌳 Yard** at the top of the room screen. The top bar always has one button for each of
-the other two rooms (on a phone, just their icons), and Back goes to her first room.
+A third room, outside: tap the **⬅️ 🌳** arrow on the left of her room, or her window (a shortcut, since version 1.40).
+Back goes to her first room.
 - A sky that shows the season (falling leaves, snow, blossoms or butterflies), a big tree with a swing, a garden shed
   and a chalkboard easel (📚 Brain Games, since version 1.25).
-- **Tap the soccer goal to play Soccer** (the same game as the window in her room).
+- **Tap the soccer goal to play Soccer.** Since version 1.40 this is the way to Soccer (her window used to open it).
 - In 🛋️ Decorate, the Walls and Floors tabs show **fences** (White Picket free; Garden Hedge, Stone Wall, Rainbow Fence,
   Bat Night Fence) and **ground** (Grass free; Flower Meadow, Sandy Beach, Stepping Stones, Soccer Stripes). Indoor
   wallpaper stays indoors. The 🎨 Colours tab paints the shed and the chalkboard.
@@ -97,6 +98,21 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   Every puzzle solved unlocks a **fact card**, shown in the win box and kept in **📇 My Fact Cards** (the button under
   the games on the Brain Games menu). Tap a card to read it again; tap a ❓ to play the puzzle that unlocks it.
 - 2 new stickers on the **Code & Brain** page: 🍕 Fraction Baker (8 puzzles) and 📇 Fact Finder (12 fact cards).
+
+## The Studio and getting around (since version 1.40)
+- **✨ The Studio** is a fourth room with **nothing built in**: just a wall and a floor, so every single thing in it
+  is her choice. It is the place for decorating ideas and, later, for visitors' wishes. Its wall starts in her room
+  colour the first time she goes in. Everything works there: the Shop, My Stuff, Layouts, 🌙 night, gifts and the pet.
+- A free **🪵 Built-in Shelf** is first in the Shop (in every room): a wide ledge that looks part of the wall.
+  Things dropped on it sit on it. Get as many as you like.
+- **Arrows at the edges of the screen** take you to the next room. Her room is the middle of the house:
+  ⬆️ Loft, ⬅️ Backyard, ➡️ Studio. Every other room has one arrow back. The arrows hide while decorating, and
+  decorations can never cover them.
+- **🗺️ Map** in the top bar (it replaces the room buttons) shows the whole house; tap a room to go there.
+  The room you are in has a ⭐. New rooms can be added to the map later.
+- **Her window now leads outside** to the Backyard (a secret shortcut). ⚽ Soccer opens from the goal in the Backyard.
+  In Easy mode the window's label says 🌳 Outside.
+- A new sticker: ✨ Studio Star (5 things in the Studio). Save version 23 (`room4`); every older backup still restores.
 
 ## Room depth (since version 1.39)
 - Things standing on the floor are drawn **front to back by where they stand**: the lower on the floor (closer to you),
@@ -190,9 +206,12 @@ Lots of new things to buy with coins (10–40 each). Everything is open to every
 - **Emotes:** tap your buddy in the room and 4 big buttons appear at the bottom: 👋 Wave, 💃 Dance, 😂 Laugh and
   💤 Nap. They go away by themselves after a few seconds.
 - **🌙 Night mode:** the round 🌙 button in the room's top-left corner turns the lights off in that room; ☀️ turns them
-  back on. Each room (Room, Loft, Backyard) remembers its own setting.
+  back on. Each room (Room, Loft, Backyard, Studio) remembers its own setting.
   - At night, lamps and lights glow: the Lava Lamp, Fairy Lights, Neon Heart, Moon Lamp, Disco Ball, Volcano Lamp and more.
-  - The window shows the moon and stars, and glow-in-the-dark stars appear on the wall. The Backyard gets a moon and a starry sky.
+  - The window shows the moon and stars. The Backyard gets a moon and a starry sky. (Until version 1.39 glow-in-the-dark
+    stars also appeared on the wall.)
+  Since version 1.40 the Backyard's stars make the shape of the **Big Dipper** (7 stars), and there are no more
+  stars on the indoor walls (the windows still show a starry sky).
   - The lights come back on while you decorate, so you can see what you're moving.
 - 2 new stickers on the Room & Style page: ⭐ Fashionista (fill all 4 look spots) and 🌙 Night Owl (turn the lights off).
 - Looks and night settings are in the backup too.
@@ -205,7 +224,7 @@ Lots of new things to buy with coins (10–40 each). Everything is open to every
   - Then pick whose room it's for, and tap ✔ to send it. The coins or the decoration leave your room straight away.
 - **Getting a gift:** a wrapped box (with a number if there are more) waits on the floor of their room. Tap it to open
   it, with confetti and who it's from. Coins are added, and a decoration appears in the room (drag it anywhere in Decorate).
-- **🏠 Layouts** (🛋️ Decorate → 🏠 Layouts): keep up to 3 looks of each room (Room, Loft, Backyard).
+- **🏠 Layouts** (🛋️ Decorate → 🏠 Layouts): keep up to 3 looks of each room (Room, Loft, Backyard, Studio).
   - Tap "💾 Save room here" to keep where everything is, plus the wall and the floor.
   - Tap 📂 Load to put it all back (it asks first). Things in the room now go to My Stuff.
   - Things moved to another room come back. Things given away since are skipped.
@@ -253,9 +272,10 @@ Nothing new to see; the app just does less work, so the tablet stays cooler and 
   long each screen takes to open.
 
 ## Where things are
-In her room: the window (⚽ Soccer), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
+In her room: the window (🌳 out to the Backyard), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
 (🎨 Art Desk) and the wardrobe (👗 Closet). In the Cozy Loft: the glowing **🎤 Stage** sign (since version 1.12)
-and the computer desk (**💻 Code Lab**, since version 1.13).
+and the computer desk (**💻 Code Lab**, since version 1.13). In the Backyard: the goal (**⚽ Soccer**) and the
+chalkboard (**📚 Brain Games**). The Studio has nothing built in.
 The pink labels only show in Easy mode; otherwise, tap things to find out what they do.
 
 ## Code Lab (since version 1.13)

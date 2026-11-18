@@ -46,8 +46,7 @@
   <div class="topbar">
     <div class="title" id="roomTitle">My Room</div>
     <div class="coins coinsDisp"></div>
-    <button class="btn small ghost" id="roomGo" data-go="2">🪜 <span>Loft</span></button>
-    <button class="btn small ghost" id="roomGo2" data-go="3">🌳 <span>Yard</span></button>
+    <button class="btn small ghost" id="mapBtn" aria-label="House map">🗺️<span> Map</span></button>
     <button class="btn small ghost" id="stkBtn" aria-label="Sticker Book">📒<i id="stkDot" class="stk-dot hidden"></i></button>
     <button class="btn small ghost" id="decoBtn">🛋️<span> Decorate</span></button>
     <button class="btn small ghost" id="setBtn">⚙️</button>
@@ -55,7 +54,8 @@
   <div class="stage room-stage"><svg id="roomSvg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet"></svg>
     <button class="night-btn" id="nightBtn" aria-label="Lights off">🌙</button>
     <button class="night-btn snap-btn" id="roomSnapBtn" aria-label="Take a picture">📷</button>
-    <div class="emote-bar hidden" id="emoteBar"></div></div>
+    <div class="emote-bar hidden" id="emoteBar"></div>
+    <div id="roomTabs"></div></div>
   <div id="decoPanel" class="deco-panel hidden">
     <div class="deco-head">
       <div class="tabs" id="decoTabs">
@@ -382,6 +382,7 @@
 <script src="web/js/38-pack4.js"></script>
 <script src="web/js/39-extras.js"></script>
 <script src="web/js/40-music.js"></script>
+<script src="web/js/41-studio.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

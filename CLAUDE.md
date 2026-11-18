@@ -78,7 +78,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`, and (since v1.36) `fidPay{day,n}` (fidget coins paid today), and (since v1.38) `music{kit, speed, cur, slots[3], pay{day,n}}`.
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`, and (since v1.36) `fidPay{day,n}` (fidget coins paid today), and (since v1.38) `music{kit, speed, cur, slots[3], pay{day,n}}`, and (since v1.40) `room4{wall,floor,items[]}` (the Studio; wall and floor are `''` until the first visit).
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
   optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it. So does `settings.lastBackup` (ms, since v1.30).
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
@@ -166,6 +166,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
       `P4_THEMES`, `p4Nug` (the nugget drawing), `p4Have`, `p4Nuggets`, the squishy extras `nugget chick seams`, the 🐮 Farm chip)
   39. `39-extras.js` Extras (only pushes Challenge puzzles `c9`–`c14`, marble mazes `m7`–`m12` and 3 stickers; `exCodeAll`, `exCodeGot`)
   40. `40-music.js` Music Maker on the Loft's 🎹 keyboard (`MU_ROWS`, `MU_KITS`, `MU_SPEEDS`, `MU_IDEAS`, `MU`, `muPlay`, `muTick`, `muStop`, `renderMusic`)
+  41. `41-studio.js` Studio + getting around (`ROOM_MAP`, `roomLinks`, `roomTabs`, `mapOpen`, `studioFurniture`, `studioStart`, the free `builtShelf`)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -216,11 +217,18 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   with `split` (and the whole picture as text without it). A new built-in piece that stands on the floor goes in `floor`
   with the `y` of its feet; wall pieces stay in `wall`. Floor pieces, the buddy, pet and gifts are wrapped in `.fixed`,
   which fades and lets taps through while decorating.
-- Three rooms (Loft since v1.10, Backyard since v1.23): `roomNo` (1 = `p.room`, 2 = `p.room2`, 3 = `p.room3`), `curRoom(p)` for
-  the room on screen, `rooms(p)` for all three and `allItems(p)` for every item. My Stuff (items with `placed:false`) is shared
+- Four rooms (Loft since v1.10, Backyard since v1.23, Studio since v1.40): `roomNo` (1 = `p.room`, 2 = `p.room2`, 3 = `p.room3`,
+  4 = `p.room4`), `curRoom(p)` for the room on screen, `rooms(p)` for all four and `allItems(p)` for every item. My Stuff (items with `placed:false`) is shared
   between rooms; placing a stored item moves it into the room on screen. New code that adds or finds room items must use
-  these, not `p.room` directly (prizes like trophies still go to `p.room`). The top bar has two buttons (`#roomGo`,
-  `#roomGo2`), one for each of the other rooms; Back goes Loft/Backyard → room → profiles.
+  these, not `p.room` directly (prizes like trophies still go to `p.room`). Back goes any other room → room → profiles.
+- Getting around (since v1.40, `41-studio.js`): her room is the hub. `ROOM_MAP` lists every room with the room it hangs off
+  (`from`) and the way (`dir`: up/down/left/right) plus its place on the map (`col`, `row`). That gives the arrow tabs
+  (`#roomTabs`, HTML over the room picture, so decorations can't cover them; hidden while decorating) and the 🗺️ house map
+  (`#mapBtn` in the top bar). A new room = one `ROOM_MAP` entry + its drawing in `renderRoom`. Her window (`data-hot="window"`)
+  is a shortcut to the Backyard; Soccer opens only from the Backyard's goal.
+- Studio (since v1.40): nothing built in (`studioFurniture` is empty). `studioStart()` gives it her room colour's wall on the
+  first visit. The free Built-in Shelf (`builtShelf`, `first:1` = listed first in the Shop) is the built-in option;
+  `buyConsumable` skips the question for price 0 and `priceTag` says Free.
 - Backyard (since v1.23, `26-backyard.js`): `yardBack()` draws the sky, the season and the fence; `yardFurniture()` the
   tree, the `data-hot="goal"` soccer goal (opens Soccer), the shed and the chalkboard easel (Brain Games will use it).
   Fences and grounds are `WALLS`/`FLOORS` entries with `yard:1`: Decorate lists them only in the Backyard and lists
@@ -275,7 +283,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   the last version whose What's New was shown; it belongs to the device, so `doRestore()` keeps it (like the PIN).
 - Looks & night (since v1.27, `31-looks.js`): ⭐ My Looks in the Closet saves 4 outfits (every `look` key except `kind`, `face`, `fur`).
   Tapping the buddy shows `#emoteBar` (4 CSS emotes on `#mascotG`). 🌙 `#nightBtn` sets `p.night[roomNo]`; `renderRoom` adds
-  `nightLayer()`: one masked dark layer (`pointer-events:none`) with soft light at `NIGHT_GLOW` decorations. A new lamp-like
+  `nightLayer()`: one masked dark layer (`pointer-events:none`) with soft light at `NIGHT_GLOW` decorations.
+  Since v1.40 indoor walls have no night stars (only the windows show a starry sky); the Backyard's sky has the
+  Big Dipper (`DIPPER`, 7 stars, no lines). A new lamp-like
   decoration should get a `NIGHT_GLOW` entry. Night is off while decorating.
 - Gifts & layouts (since v1.28, `32-gifts.js`): a gift goes into the other profile's `gifts[]` inbox (no network) and is drawn as
   a `data-hot="gift"` pile at `GIFT_SPOT` in every room; opening adds coins or places the decoration. Posters and `award` items

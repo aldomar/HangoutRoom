@@ -240,8 +240,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   console.log('Soccer Field');
   // The keeper guesses with Math.random. 0.99 = "guess a side, the right one" (dives to u=+0.32), so tests are repeatable.
   await ev(`window._rand=Math.random;Math.random=()=>0.99`);
-  check('soccer sign is unlocked', await ev(`!document.querySelector('[data-hot=window]').textContent.includes('🔒')`));
-  await ev(`handleHot('window')`); await sleep(500);
+  check('the Backyard has the soccer goal (the way to Soccer since v1.40)', await ev(`yardFurniture().includes('data-hot="goal"')`));
+  await ev(`handleHot('goal')`); await sleep(500);
   check('soccer screen shown', await ev(`cur==='soccer'&&!!SOC.g&&document.querySelectorAll('#socScore .dot').length===5`));
   check('starts on Easy with Mochi', await ev(`P().soccer.level==='easy'&&document.querySelector('#socTip').textContent.includes('Mochi')`));
   await shot('40-soccer-easy');
@@ -564,13 +564,13 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Cozy Loft (second room)');
   await ev(`P().coins=400;save()`);
-  check('room button says Loft', (await ev(`document.querySelector('#roomGo').textContent`)).includes('Loft'));
-  await ev(`document.querySelector('#roomGo').click()`); await sleep(200);
+  check('her room has a ⬆️ tab to the Loft', await ev(`!!document.querySelector('#roomTabs .rt-up[data-go="2"]')`));
+  await ev(`document.querySelector('#roomTabs [data-go="2"]').click()`); await sleep(200);
   check('the Loft opens', await ev(`roomNo===2&&document.querySelector('#roomTitle').textContent.includes('Loft')&&!!document.querySelector('#roomSvg [fill="url(#gMoonSky)"]')`));
   check('the Loft has its own free Attic wall', await ev(`P().room2.wall==='attic'&&!!document.querySelector('#gdefs #pBoards')`));
   check('Fuzzy is in the Loft too', await ev(`!!document.querySelector('#mascotG')`));
   await shot('A0-loft');
-  check('Back from the Loft goes to her room', await ev(`window.androidBack()&&cur==='room'&&roomNo===1&&document.querySelector('#roomGo').textContent.includes('Loft')`));
+  check('Back from the Loft goes to her room', await ev(`window.androidBack()&&cur==='room'&&roomNo===1&&!!document.querySelector('#roomTabs [data-go="2"]')`));
   await ev(`goRoom(2);enterDecorate();document.querySelector('[data-dt=shop]').click()`); await sleep(150);
   const r1n=await ev('P().room.items.length');
   await ev(`document.querySelector('#decoGrid [data-buy=disco]').click()`); await ev(`${mbtn('Buy')}.click()`); await sleep(150);
@@ -1075,7 +1075,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   }
   await ev(`goRoom(1)`); await sleep(100);
   await ev(`document.querySelector('#roomSvg [data-hot=window] [data-season]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(150);
-  check('tapping the seasonal window still opens the Soccer Field', await ev(`cur==='soccer'`));
+  check('tapping the seasonal window goes out to the Backyard (v1.40)', await ev(`cur==='room'&&roomNo===3`));
   await ev(`show('room');goRoom(2);{const R=P().room2;R.items=R.items.filter(i=>!DECOR[i.type].season);for(const k of Object.keys(DECOR).filter(k=>DECOR[k].season))R.items.push(Object.assign({uid:uid(),type:k,placed:true},spot(k)));}save();renderRoom()`); await sleep(200);
   check('every seasonal decoration draws in the room', await ev(`Object.keys(DECOR).filter(k=>DECOR[k].season).every(k=>{const i=P().room2.items.find(x=>x.type===k);const g=document.querySelector('#roomSvg .deco[data-uid="'+i.uid+'"]');return g&&g.getBBox().width>20;})`));
   check('the Donut Float lies flat; the garlands and rainbow hang on the wall', await ev(`!!DECOR.donutFloat.flat&&['ghostGarland','snowGarland','rainbowArch','butterflies'].every(k=>DECOR[k].wall)`));
@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('88 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38), ids all different, 6 or more per page', await ev(`STICKERS.length===88&&new Set(STICKERS.map(s=>s.id)).size===88&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('89 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40), ids all different, 6 or more per page', await ev(`STICKERS.length===89&&new Set(STICKERS.map(s=>s.id)).size===89&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1428,7 +1428,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`clOpen('move',4);CL.move=[...'2R2U'];CL.prog=['2','M'];clProg()`); await sleep(200); await shot('A36-phone-code-mymove');
   check('phone: My Move puzzle shows both rows, the board and ▶️ Run', await ev(`(()=>{const r=document.querySelector('#clRun').getBoundingClientRect(),m=document.querySelector('#clMove').getBoundingClientRect(),b=document.querySelector('#clBoard').getBoundingClientRect();return r.bottom<=innerHeight&&m.height>40&&b.height>120;})()`));
   await ev(`show('room')`); await sleep(200); await shot('A10-phone-room-topbar');
-  check('phone: the Loft button fits in the top bar', await ev(`(()=>{const r=document.querySelector('#roomGo').getBoundingClientRect(), d=document.querySelector('#setBtn').getBoundingClientRect();return r.width>=48&&d.right<=innerWidth;})()`));
+  check('phone: the 🗺️ Map button fits in the top bar', await ev(`(()=>{const r=document.querySelector('#mapBtn').getBoundingClientRect(), d=document.querySelector('#setBtn').getBoundingClientRect();return r.width>=48&&d.right<=innerWidth;})()`));
   await ev(`show('room');enterDecorate();document.querySelector('[data-dt=season]').click()`); await sleep(200); await shot('C5-phone-seasons');
   check('phone: all 7 Decorate tabs and ✔ Done fit without scrolling', await ev(`(()=>{const t=document.querySelector('#decoTabs'),d=document.querySelector('#decoDone').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&d.right<=innerWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`), await ev(`(()=>{const t=document.querySelector('#decoTabs');return [t.scrollWidth,t.clientWidth,document.querySelector('#decoDone').getBoundingClientRect().right,[...t.children].map(b=>Math.round(b.getBoundingClientRect().height))];})()`));
   await ev(`exitDecorate()`);
@@ -1493,16 +1493,17 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Backyard (v1.23)');
   await ev(`closeModal();stkPaused=true;P().easy=false;P().coins=500;applyEasy();show('room');goRoom(1)`); await sleep(200);
-  const goBtns=()=>ev(`[...document.querySelectorAll('#roomGo,#roomGo2')].map(b=>b.dataset.go+':'+b.textContent.trim()).join('|')`);
-  check('her room has 🪜 Loft and 🌳 Yard buttons', (await goBtns())==='2:🪜 Loft|3:🌳 Yard', await goBtns());
-  await ev(`document.querySelector('#roomGo2').click()`); await sleep(250); await shot('F01-backyard');
+  const goBtns=()=>ev(`[...document.querySelectorAll('#roomTabs [data-go]')].map(b=>b.className.split('rt-')[1]+':'+b.dataset.go).join('|')`);
+  check('her room has ⬆️ Loft, ⬅️ Backyard and ➡️ Studio tabs', (await goBtns())==='up:2|left:3|right:4', await goBtns());
+  await ev(`document.querySelector('#roomTabs [data-go="3"]').click()`); await sleep(250); await shot('F01-backyard');
   check('🌳 Yard opens the Backyard', await ev(`roomNo===3&&cur==='room'&&document.querySelector('#roomTitle').textContent.endsWith("'s Backyard")`));
-  check('the Backyard has 🏠 Room and 🪜 Loft buttons', (await goBtns())==='1:🏠 Room|2:🪜 Loft', await goBtns());
+  check('the Backyard has one ➡️ tab back to her room', (await goBtns())==='right:1', await goBtns());
   check('a new Backyard: White Picket fence, Grass, nothing placed', await ev(`P().room3.wall==='picket'&&P().room3.floor==='grass'&&document.querySelector('[data-fence=picket]')&&!P().room3.items.length`));
   check('the tree, goal, shed, easel, Fuzzy and the pet are drawn', await ev(`!!(document.querySelector('[data-tree]')&&document.querySelector('[data-hot=goal]')&&document.querySelector('[data-piece=shed]')&&document.querySelector('[data-piece=easel]')&&document.querySelector('#mascotG')&&document.querySelector('[data-hot=pet]'))`));
-  await ev(`document.querySelector('#roomGo2').click()`); await sleep(200);
-  check('the 🪜 Loft button opens the Loft', (await ev('roomNo'))===2);
-  check('…and they are the right ones', (await goBtns())==='1:🏠 Room|3:🌳 Yard', await goBtns());
+  await ev(`document.querySelector('#mapBtn').click()`); await sleep(150);
+  await ev(`document.querySelector('[data-map="2"]').click()`); await sleep(200);
+  check('the 🗺️ map takes her from the Backyard to the Loft', (await ev('roomNo'))===2);
+  check('…and the Loft has one ⬇️ tab back', (await goBtns())==='down:1', await goBtns());
   await ev(`goRoom(3)`); await sleep(150);
   check('Android Back from the Backyard goes to her room', await ev(`window.androidBack()===true&&cur==='room'&&roomNo===1`));
   await ev(`goRoom(3)`); await sleep(150);
@@ -1564,7 +1565,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();{const p=DB.profiles[0];p.room3='oops';normalize(p);DB.profiles[0].room3.wall='lavender';DB.profiles[0].room3.floor='nope';}DB.activeId=DB.profiles[0].id;enterRoom();goRoom(3)`); await sleep(200);
   check('odd Backyard data is made safe (an indoor wall or unknown ground draws the picket fence and grass)', await ev(`typeof P().room3==='object'&&Array.isArray(P().room3.items)&&!!document.querySelector('[data-fence=picket]')&&document.querySelector('#roomSvg').innerHTML.includes('pGrass')`));
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300); await shot('F06-phone-yard');
-  check('phone: the room bar fits both room buttons (icons only)', await ev(`(()=>{const t=document.querySelector('#scr-room .topbar');const a=document.querySelector('#roomGo').getBoundingClientRect(),b=document.querySelector('#roomGo2').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&b.right<=innerWidth&&a.width>=48&&b.width>=48;})()`));
+  check('phone: the room bar fits the 🗺️ Map button (icon only)', await ev(`(()=>{const t=document.querySelector('#scr-room .topbar');const a=document.querySelector('#mapBtn').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&a.right<=innerWidth&&a.width>=48;})()`));
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   await ev(`goRoom(1)`); await sleep(200);
 
@@ -1576,7 +1577,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await mouse('mousePressed',p[0],p[1]); await mouse('mouseReleased',p[0],p[1]); await sleep(50);};
   await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();P().coins=100;save();show('room');goRoom(1)`); await sleep(200);
   const kickLvl=await ev('P().soccer.level');
-  await ev(`handleHot('window')`); await sleep(400);
+  await ev(`handleHot('goal')`); await sleep(400);
   check('Soccer still opens in ⚽ Kick mode, with ⚽ Kick and 🧤 Keep buttons', await ev(`cur==='soccer'&&P().soccer.mode==='kick'&&document.querySelector('[data-mode=kick]').classList.contains('on')&&!!document.querySelector('[data-mode=keep]')`));
   check('Kick mode: Mochi, Boo and Flap on the level tabs', await ev(`[...document.querySelectorAll('#socTabs [data-lvl] i')].map(i=>i.textContent).join('')==='😺👻🦇'`));
   await ev(`document.querySelector('[data-mode=keep]').click()`); await sleep(300);
@@ -2579,7 +2580,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('the new puzzles use new ideas: ⬅️/⬇️, 🔁 inside ✨, and ✨ mixed with other blocks', await ev(`(()=>{const c=CODE_PUZZLES.challenge;return /L/.test(c[8].move)&&/[234]/.test(c[9].move)&&c[12].sol.length>2&&/[234]Q/.test(c[13].move);})()`));
   check('6 new mazes m7-m12, added at the end, each 9 x 6', await ev(`MAZES.map(z=>z.id).join()==='m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12'&&MAZES.every(z=>z.map.length===6&&z.map.every(r=>r.length===9))`));
   check('the new mazes are longer than the first one', await ev(`MAZES.slice(6).every((z,i)=>mzPath(6+i).length>=mzPath(0).length)`), await ev(`MAZES.map((z,i)=>mzPath(i).length).join()`));
-  check('3 new stickers: Marble Marathon (Fidgets), Level Collector and Code Master (Code & Brain)', await ev(`STICKERS.slice(-4,-1).map(s=>s.id+':'+s.page).join()==='maze25:fidget,codeLevels:code,codeAll:code'`));
+  check('3 new stickers: Marble Marathon (Fidgets), Level Collector and Code Master (Code & Brain)', await ev(`(a=>a.slice(a.indexOf('maze25:fidget'),a.indexOf('maze25:fidget')+3).join())(STICKERS.map(s=>s.id+':'+s.page))==='maze25:fidget,codeLevels:code,codeAll:code'`));
   check('Code Master needs every Code Lab puzzle; unknown ids in a save do not count', await ev(`(()=>{const s=STICKERS.find(x=>x.id==='codeAll'),p=JSON.parse(JSON.stringify(P()));p.code.solved=['e1','zz9','c99'];return stkNeed(s)===44&&stkHave(p,s)===1;})()`));
   check('Level Collector counts finished levels', await ev(`(()=>{const s=STICKERS.find(x=>x.id==='codeLevels'),p=JSON.parse(JSON.stringify(P()));p.code.solved=[...CODE_PUZZLES.easy,...CODE_PUZZLES.if].map(q=>q.id);return stkHave(p,s)===2&&!stkDone(p,s);})()`));
   check('Marble Marathon counts every maze rolled in, replays too', await ev(`(()=>{const s=STICKERS.find(x=>x.id==='maze25'),p=JSON.parse(JSON.stringify(P()));p.stats.mazes=25;return stkDone(p,s);})()`));
@@ -2705,12 +2706,12 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`renderMusic()`); await sleep(200);
   check('tablet: squares are big (60 px or more)', await ev(`muCell(0,0).getBoundingClientRect().width>=60`), await ev(`muCell(0,0).getBoundingClientRect().width`));
   // save data
-  check('save version 22 adds music to older saves', await ev(`DB_VERSION===22&&(()=>{const d={profiles:[{name:'Old'}]};MIGRATIONS[22](d);return typeof d.profiles[0].music==='object';})()`));
+  check('save version 22 adds music to older saves', await ev(`DB_VERSION>=22&&(()=>{const d={profiles:[{name:'Old'}]};MIGRATIONS[22](d);return typeof d.profiles[0].music==='object';})()`));
   await ev(`{const p=DB.profiles[0];p.music={kit:5,speed:9,cur:'012',slots:[{g:'1'},'x',{g:MU_EMPTY.replace('0','1'),kit:'chip',speed:0},7],pay:'odd'};normalize(p);}`);
   check('odd saved music is made safe', await ev(`(m=>m.kit==='soft'&&m.speed===1&&m.cur===MU_EMPTY&&m.slots.length===3&&m.slots[0]===null&&m.slots[1]===null&&m.slots[2].kit==='chip'&&m.pay.n===0)(DB.profiles[0].music)`));
   const muOld=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.version=21;d.profiles.forEach(p=>delete p.music);return JSON.stringify(d);})()`);
   await ev(`doRestore(${JSON.stringify(muOld)})`); await sleep(400);
-  check('a v1.37 backup restores with an empty Music Maker', await ev(`DB.version===22&&DB.profiles.every(p=>p.music.cur===MU_EMPTY&&p.music.slots.every(s=>s===null))`));
+  check('a v1.37 backup restores with an empty Music Maker', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.music.cur===MU_EMPTY&&p.music.slots.every(s=>s===null))`));
   await ev(`closeModal()`);
   const muNew=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.profiles[0].music.slots[1]={g:MU_IDEAS[1].rows.join(''),kit:'soft',speed:1};return JSON.stringify(d);})()`);
   await ev(`doRestore(${JSON.stringify(muNew)})`); await sleep(400);
@@ -2748,6 +2749,99 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('the furniture functions still give the whole picture as text (for checks and snapshots)', await ev(`furniture().includes('data-hot="closet"')&&loftFurniture().includes('data-hot="music"')&&yardFurniture().includes('data-piece="shed"')&&typeof loftFurniture(true).floor[0].y==='number'`));
   await shot('N04-depth-yard');
   await ev(`(()=>{const p=P();[p.room,p.room2,p.room3].forEach(r=>{r.items=r.items.filter(i=>!/^dp/.test(i.uid));});save();goRoom(1);})()`);
+
+  console.log('Studio + getting around (v1.40)');
+  await ev(`(()=>{closeModal();exitDecorate(true);stkPaused=true;const p=P();p.easy=false;applyEasy();p.night={};p.coins=100;p.dream='';themePick.shop='all';p.room4={wall:'',floor:'',items:[]};save();show('room');goRoom(1);})()`); await sleep(200);
+  const stTabs=()=>ev(`[...document.querySelectorAll('#roomTabs [data-go]')].map(b=>b.className.split('rt-')[1]+':'+b.dataset.go).join('|')`);
+  check('her room: ⬆️ Loft, ⬅️ Backyard and ➡️ Studio tabs, each with a spoken name', (await stTabs())==='up:2|left:3|right:4'&&await ev(`[...document.querySelectorAll('#roomTabs .rtab')].every(b=>/^Go to the /.test(b.getAttribute('aria-label')))`), await stTabs());
+  check('the tabs are at least 48 px and sit inside the screen', await ev(`[...document.querySelectorAll('#roomTabs .rtab')].every(b=>{const r=b.getBoundingClientRect();return r.width>=48&&r.height>=48&&r.left>=0&&r.right<=innerWidth;})`));
+  check('the left tab is clear of the 🌙 and 📷 buttons', await ev(`(()=>{const t=document.querySelector('.rt-left').getBoundingClientRect(),s=document.querySelector('#roomSnapBtn').getBoundingClientRect();return t.top>=s.bottom;})()`));
+  await shot('S01-room-tabs');
+  await ev(`document.querySelector('#roomTabs [data-go="4"]').click()`); await sleep(250);
+  check('➡️ opens the Studio', await ev(`roomNo===4&&cur==='room'&&document.querySelector('#roomTitle').textContent.endsWith("'s Studio")`));
+  check('a first visit gives it her room colour wall and the wood floor', await ev(`(()=>{const p=P(),r=ROOM_START[p.color];return p.room4.wall===(r&&WALLS[r[0]]?r[0]:'lavender')&&p.room4.floor==='wood'&&(p.owned.includes('wall:'+p.room4.wall)||!WALLS[p.room4.wall].price);})()`));
+  check('nothing is built in: no furniture to tap, only the buddy and the pet', await ev(`[...document.querySelectorAll('#roomSvg [data-hot]')].every(e=>['pet','gift'].includes(e.dataset.hot))&&!!document.querySelector('#mascotG')`));
+  check('Fuzzy says hello while the Studio is empty', await ev(`!!document.querySelector('#bubble')&&document.querySelector('#bubble').textContent.includes('Studio')`));
+  check('the Studio has one ⬅️ tab back to her room', (await stTabs())==='left:1'&&await ev(`document.querySelector('.rt-left').getAttribute('aria-label')==='Back to my room'`), await stTabs());
+  await shot('S02-studio-empty');
+  // decorating
+  await ev(`enterDecorate()`); await sleep(150);
+  check('the tabs hide while decorating', (await stTabs())==='');
+  await ev(`document.querySelector('[data-dt=colors]').click()`); await sleep(100);
+  check('🎨 Colours says there is nothing built in to colour', await ev(`document.querySelector('#decoGrid .empty').textContent.includes('nothing to colour')`));
+  await ev(`document.querySelector('[data-dt=shop]').click()`); await sleep(150);
+  check('the Shop lists the Built-in Shelf first, marked Free', await ev(`(()=>{const t=document.querySelector('#decoGrid [data-buy]');return t.dataset.buy==='builtShelf'&&t.querySelector('.tp').textContent==='Free';})()`));
+  await ev(`document.querySelector('#decoGrid [data-buy=builtShelf]').click()`); await sleep(150);
+  check('it goes straight into the Studio, with no question and no coins taken', await ev(`document.querySelector('#modal').classList.contains('hidden')&&P().coins===100&&P().room4.items.some(i=>i.type==='builtShelf'&&i.placed)`));
+  check('it is also listed first in the other rooms', await ev(`(()=>{goRoom(2);const t=document.querySelector('#decoGrid [data-buy]');goRoom(4);return t.dataset.buy==='builtShelf';})()`));
+  check('it has a theme chip (☁️ Cute)', await ev(`themesOf('decor:builtShelf',DECOR.builtShelf).includes('cute')`));
+  await ev(`(()=>{const p=P(),s=p.room4.items.find(i=>i.type==='builtShelf');s.x=500;s.y=260;const it={uid:'stP',type:'plant',x:600,y:228,placed:true};p.room4.items.push(it);window._snap=snapToShelf(it);renderRoom();})()`); await sleep(100);
+  check('a plant dropped near it sits on it', await ev(`window._snap===true&&P().room4.items.find(i=>i.uid==='stP').y===260-44`));
+  check('buying in the Studio leaves the other rooms alone', await ev(`!P().room.items.some(i=>i.type==='builtShelf')&&!P().room2.items.some(i=>i.type==='builtShelf')`));
+  await ev(`for(const k of ['lava','plant','disco','eggChair'])P().room4.items.push(Object.assign({uid:'st'+k,type:k,placed:true},spot(k)));exitDecorate()`); await sleep(150);
+  await shot('S03-studio-decorated');
+  check('5 things in the Studio earn ✨ Studio Star', await ev(`stkDone(P(),STICKERS.find(s=>s.id==='studio5'))&&STICKERS.find(s=>s.id==='studio5').page==='room'`));
+  check('allItems and rooms() include the Studio', await ev(`rooms(P()).length===4&&allItems(P()).some(i=>i.uid==='stP')`));
+  // night mode: the Studio has no window, so no Loft window appears
+  await ev(`document.querySelector('#nightBtn').click()`); await sleep(150);
+  check('🌙 works in the Studio, without the Loft window', await ev(`P().night['4']===true&&!!document.querySelector('#roomSvg .night')&&!document.querySelector('#roomSvg circle[cx="340"][cy="140"]')`));
+  await shot('S04-studio-night');
+  await ev(`document.querySelector('#nightBtn').click()`); await sleep(100);
+  // night stars: the Big Dipper (7 stars, no lines) in the Backyard sky; no stars on the indoor walls
+  for(const n of [1,2,3,4]){
+    await ev(`(()=>{const p=P();p.night={};p.night[${n}]=true;goRoom(${n});})()`); await sleep(150); await shot('S04-night-'+n);
+    if(n===3){
+      check('Backyard at night: the Big Dipper, 7 stars in the sky and no lines', await ev(`document.querySelectorAll('#roomSvg [data-dipper] path').length===7&&dipperPts().every(([x,y])=>x>=300&&x<=820&&y>=10&&y<=300)&&!document.querySelector('#roomSvg .night path[stroke]')`));
+    } else {
+      check(`room ${n} at night: no stars on the wall`, await ev(`!document.querySelector('#roomSvg [data-dipper]')&&!document.querySelector('#roomSvg [fill="#c8ffb0"]')`));
+    }
+  }
+  await ev(`(()=>{P().night={};save();goRoom(4);})()`); await sleep(100);
+  check('the Studio has its own layouts', await ev(`Array.isArray(P().presets[4])&&P().presets[4].length===3&&(()=>{enterDecorate();document.querySelector('[data-dt=layouts]').click();const n=document.querySelectorAll('#decoGrid *').length;exitDecorate();return n>0;})()`));
+  // 🗺️ the map
+  await ev(`document.querySelector('#mapBtn').click()`); await sleep(150);
+  check('🗺️ shows every room, the Studio marked ⭐ Here', await ev(`document.querySelectorAll('#modalBody [data-map]').length===4&&document.querySelector('#modalBody .hm-room.on').dataset.map==='4'&&document.querySelector('#modalBody .hm-room.on').textContent.includes('Here')`));
+  check('the map buttons are big enough to tap', await ev(`[...document.querySelectorAll('#modalBody .hm-room')].every(b=>{const r=b.getBoundingClientRect();return r.width>=48&&r.height>=48;})`));
+  await shot('S05-map');
+  await ev(`document.querySelector('[data-map="3"]').click()`); await sleep(200);
+  check('tapping the Backyard on the map goes there and closes the map', await ev(`roomNo===3&&document.querySelector('#modal').classList.contains('hidden')`));
+  await ev(`document.querySelector('#mapBtn').click()`); await sleep(100); await ev(`document.querySelector('[data-map="3"]').click()`); await sleep(100);
+  check('tapping the room she is in just closes the map', await ev(`roomNo===3&&document.querySelector('#modal').classList.contains('hidden')`));
+  check('Android Back from the Backyard goes to her room', await ev(`window.androidBack()===true&&cur==='room'&&roomNo===1`));
+  await ev(`goRoom(4)`); await sleep(100);
+  check('Android Back from the Studio goes to her room, then the profiles', await ev(`window.androidBack()===true&&roomNo===1&&cur==='room'&&window.androidBack()===true&&cur==='profiles'`));
+  await ev(`enterRoom()`); await sleep(200);
+  // the window is a shortcut outside
+  await ev(`document.querySelector('#roomSvg [data-hot=window]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(200);
+  check('her window is a shortcut to the Backyard (Soccer is at the goal)', await ev(`cur==='room'&&roomNo===3`));
+  check('Read to me calls the window "Backyard"', await ev(`HOT_WORDS.window==='Backyard'`));
+  await ev(`goRoom(1);P().easy=true;applyEasy();renderRoom()`); await sleep(150);
+  check('Easy mode: the window sign says Outside, and the tabs get bigger', await ev(`[...document.querySelectorAll('#roomSvg .sign')].some(s=>s.textContent.includes('Outside'))&&document.querySelector('.rtab').getBoundingClientRect().width>=68`));
+  await shot('S06-room-tabs-easy');
+  await ev(`P().easy=false;applyEasy();renderRoom()`);
+  // phone sizes
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300);
+  check('phone: the top bar fits, with 🗺️ Map as an icon', await ev(`(()=>{const t=document.querySelector('#scr-room .topbar'),m=document.querySelector('#mapBtn').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&m.right<=innerWidth&&m.width>=48;})()`));
+  check('phone: the tabs sit inside the screen', await ev(`[...document.querySelectorAll('#roomTabs .rtab')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.bottom<=innerHeight;})`));
+  await shot('S07-phone-tabs');
+  await ev(`document.querySelector('#mapBtn').click()`); await sleep(150); await shot('S08-phone-map');
+  check('phone: the map fits the screen', await ev(`[...document.querySelectorAll('#modalBody .hm-room')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth;})`));
+  await ev(`closeModal()`);
+  await send('Emulation.setDeviceMetricsOverride',{width:860,height:412,deviceScaleFactor:1,mobile:true}); await sleep(300); await shot('S09-phone-landscape-tabs');
+  check('phone landscape: the tabs do not cover each other or the 📷 button', await ev(`(()=>{const B=[...document.querySelectorAll('#roomTabs .rtab'),document.querySelector('#roomSnapBtn')].map(b=>b.getBoundingClientRect());return B.every((a,i)=>B.every((b,j)=>i===j||a.right<=b.left||b.right<=a.left||a.bottom<=b.top||b.bottom<=a.top));})()`));
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(200);
+  // save data
+  const v39=await ev(`JSON.stringify(Object.assign({},DB,{version:22,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.room4;q.presets={1:q.presets[1],2:q.presets[2],3:q.presets[3]};return q;})}))`);
+  const v40=await ev(`JSON.stringify(DB)`);
+  await ev(`doRestore(${JSON.stringify(v39)})`); await sleep(300);
+  check('a v1.39 backup restores with an empty Studio (save version 23)', await ev(`DB_VERSION===23&&DB.version===23&&DB.profiles.every(p=>p.room4&&p.room4.wall===''&&p.room4.items.length===0&&p.presets[4].length===3)`));
+  await ev(`doRestore(${JSON.stringify(v40)})`); await sleep(300);
+  check('a v1.40 backup keeps the Studio and its things', await ev(`DB.profiles.some(p=>p.room4.wall&&p.room4.items.some(i=>i.type==='builtShelf'))`));
+  await ev(`closeModal();{const p=DB.profiles[0];p.room4=['oops'];p.night={'4':true,'9':true};normalize(p);}`);
+  check('odd Studio data is made safe', await ev(`(()=>{const p=DB.profiles[0];return !Array.isArray(p.room4)&&p.room4.wall===''&&Array.isArray(p.room4.items)&&p.night['4']===true&&!p.night['9'];})()`));
+  await ev(`(()=>{const p=DB.profiles[0];p.night={};DB.activeId=p.id;save();enterRoom();goRoom(4);})()`); await sleep(200);
+  check('…and a visit sets it up again', await ev(`!!P().room4.wall&&P().room4.floor==='wood'&&!!document.querySelector('#roomSvg rect')`));
+  await ev(`(()=>{const p=P();p.room4.items=p.room4.items.filter(i=>!/^st/.test(i.uid)&&i.type!=='builtShelf');save();goRoom(1);})()`);
 
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');
