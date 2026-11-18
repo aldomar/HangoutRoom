@@ -63,13 +63,13 @@ _Last updated: 2026-11-17_
   - **🧩 Extras: done** (v1.37 merged, PR #37). 6 more 🧠 Challenge puzzles, 6 more marble mazes and 3 stickers.
   - **🎹 Music Maker: done** (v1.38 merged, PR #38), built on branch `feature/music` (from `main` after #37). Plan details agreed 2026-11-17
     (see "Music Maker" under Decisions). This is the last Phase 11 PR: once it is merged, Phase 11 is done.
-  - **🛋️ Room depth: built, PR #39 open as v1.39** on branch `feature/depth` (from `main` after #38). The owner's
+  - **🛋️ Room depth: done** (v1.39 merged, PR #39). The owner's
     request (2026-11-17): the new keyboard was hidden behind decorations, with no way to bring it forward.
   - **Owner wish (2026-11-17):** a 🦖 dino nugget plush (decoration + squishy) in Content Pack 4 (Phase 11, see `PLAN.md`).
 - **Phase 12 (Playability): roadmap talked through 2026-11-17** (see "Phase 12" in `PLAN.md` and under Decisions).
   Order: 🗺️ fourth room + getting around (v1.40) → 🚪 Visitors (v1.41) → 👯 Two-player (v1.42) → 🎲 Free Play (v1.43) →
   the rest in any order. The v1.40 plan details are written up; agreed 2026-11-17 on branch
-  `feature/room4` (from `feature/depth`, so it sits on top of #39).
+  `feature/room4` (from `feature/depth`; #39 is now merged, so the PR goes straight to `main`).
   - **✨ Studio + 🗺️ getting around: built as v1.40** on branch `feature/room4` (on top of #39). Plan agreed 2026-11-17;
     the owner named the room ✨ Studio.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
@@ -119,7 +119,8 @@ _Last updated: 2026-11-17_
 - PR #36 "Content Pack 4 (v1.36)": merged.
 - PR #37 "Extras (v1.37)": merged.
 - PR #38 "Music Maker (v1.38)": merged.
-- PR #39 "Room depth (v1.39)" on branch `feature/depth`: open.
+- PR #39 "Room depth (v1.39)": merged.
+- "Studio + getting around (v1.40)" on branch `feature/room4`: PR to be opened.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -1084,13 +1085,13 @@ _Last updated: 2026-11-17_
 11. ~~Plan details and build 🎹 Music Maker (v1.38), the last Phase 11 PR.~~ Built (PR #38).
 12. Owner: build v1.38, try the Music Maker on the tablet (see the PR; check the sound timing and the speakers), and merge it.
 13. ~~Build 🛋️ Room depth (v1.39), the owner's request.~~ Built (PR #39).
-14. Owner: build v1.39 and check the rooms (see the PR), and merge it. (#38 is merged.)
+14. ~~Owner: build v1.39 and check the rooms (see the PR), and merge it.~~ Merged.
 15. ~~Phase 11 is then done. Talk about what comes next (the ideas backlog in `PLAN.md`).~~ Talked through: Phase 12.
 
 ## Next steps (Phase 12)
 1. ~~Owner: OK the v1.40 plan in `PLAN.md` and pick the new room's name.~~ Agreed: ✨ Studio.
 2. ~~Build the fourth room + 🗺️ map (v1.40) on `feature/room4`.~~ Built.
-3. Owner: merge #39 first, then build v1.40 and try it (see the PR), and merge it.
+3. Owner: build v1.40 and try it (see the PR), and merge it. (#39 is merged.)
 4. Plan 🚪 Visitors (v1.41) and get it agreed before coding.
 
 ## How versions and save upgrades work (since v1.2)
