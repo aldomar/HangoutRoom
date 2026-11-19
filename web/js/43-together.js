@@ -223,10 +223,12 @@ function tgDraw(dt){
    🃏 MEMORY FOR 2 (in the Brain Games screen, view 'duo')
    ========================================================= */
 let TGM={lvl:'easy',cards:[],open:[],lock:false,turn:0,pts:[0,0],pl:null,done:false};
-BR_MENU_EXTRA.push(p=>`<button class="btn tg-mem-btn" data-duo="memory" aria-label="Memory for 2 players">👯 <span>Memory for 2</span></button>`);
+BR_MENU_TOP.push(p=>`<button class="btn tg-mem-btn" data-duo="memory" aria-label="Memory for 2 players">👯 <span>Memory for 2</span></button>`);
 $('#brMenu').addEventListener('click',e=>{const b=e.target.closest('[data-duo]');if(b)tgPick('memory');});
+$('#brTabs').addEventListener('click',e=>{const b=e.target.closest('[data-duo]');if(b&&BR.view==='play'){tgMemStart.lvl=BR.lvl;tgPick('memory');}}); // the 👯 tab in Memory Match
 function tgMemStart(lvl){
   const pl=tgPlayers(); if(!pl) return;
+  if(!lvl&&tgMemStart.lvl){lvl=tgMemStart.lvl;tgMemStart.lvl='';} // from the 👯 tab: the level she was playing
   if(lvl) TGM.lvl=lvl; else TGM.lvl=P().brain.level.memory||'easy';
   const sets=MEM_SETS[TGM.lvl], set=sets[Math.floor(Math.random()*sets.length)];
   const deck=brShuffle([...set,...set],'duo'+Date.now());

@@ -12,6 +12,7 @@
 const BRAIN_COINS=2, BRAIN_BONUS=5, BRAIN_LVLS=['easy','medium','hard'];
 const BRAIN_GAMES={};
 const BR_MENU_EXTRA=[]; // v1.34: functions p => HTML added under the games on the menu (the 🪐 Fact Cards binder button)
+const BR_MENU_TOP=[];   // v1.42: functions p => HTML added above the games (👯 Memory for 2, section 43)
 const brId=(g,l,i)=>`${g}:${l[0]}${i+1}`;
 let BR={view:'menu',game:'snack',lvl:'easy',idx:0,won:false,timer:0,tok:0};
 const brSolved=(p,g,l)=>BRAIN_GAMES[g].puzzles[l].filter((z,i)=>p.brain.solved.includes(brId(g,l,i))).length;
@@ -25,7 +26,7 @@ function brMenu(){
   $('#brMenu').classList.remove('hidden'); $('#brPlay').classList.add('hidden'); $('#brDuo').classList.add('hidden');
   $('#brBack').textContent='⬅ Room'; $('#brTitle').textContent='📚 Brain Games';
   $('#brMenu').innerHTML=`<div class="stg-note">${p.easy?'🧠 ✨':'Pick a game! Every puzzle you solve the first time pays 🪙'}</div>`
-    +`<div class="br-games">`+Object.keys(BRAIN_GAMES).map(g=>{const G=BRAIN_GAMES[g];
+    +BR_MENU_TOP.map(f=>f(p)).join('')+`<div class="br-games">`+Object.keys(BRAIN_GAMES).map(g=>{const G=BRAIN_GAMES[g];
       const n=BRAIN_LVLS.reduce((a,l)=>a+brSolved(p,g,l),0), all=BRAIN_LVLS.reduce((a,l)=>a+G.puzzles[l].length,0);
       return `<button class="br-game" data-game="${g}" style="--gc:${G.color}"><span class="br-gi">${G.icon}</span><b>${G.name}</b>`
         +`<small class="hint">${G.desc}</small><span class="br-pips">${BRAIN_LVLS.map(l=>`<i class="${brLevelDone(p,g,l)?'on':''}">${l==='easy'?'🐣':l==='medium'?'🌟':'🧠'}</i>`).join('')}</span>`
@@ -48,6 +49,7 @@ function brPuzzle(g,l,idx){
   $('#brMenu').classList.add('hidden'); $('#brPlay').classList.remove('hidden');
   $('#brBack').textContent='⬅ Games'; $('#brTitle').textContent=`${G.icon} ${G.name}`;
   $$('#brTabs [data-lvl]').forEach(b=>b.classList.toggle('on',b.dataset.lvl===l));
+  $$('#brTabs [data-duo]').forEach(b=>b.classList.toggle('hidden',b.dataset.duo!==g)); // 👯 2 players (Memory Match, section 43)
   $('#brDots').innerHTML=G.puzzles[l].map((z,i)=>`<button class="br-dot${p.brain.solved.includes(brId(g,l,i))?' done':''}${i===idx?' on':''}" data-pz="${i}">${i+1}</button>`).join('');
   $('#brMsg').textContent=''; $('#brQ').innerHTML=''; $('#brBoard').innerHTML=''; $('#brBoard').className='br-board br-'+g;
   G.start(pz,l,idx);

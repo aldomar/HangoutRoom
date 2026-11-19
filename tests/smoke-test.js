@@ -2986,7 +2986,13 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('the ⚽ Kick tab also leaves the duel', await ev(`!TGS.on&&P().soccer.mode==='kick'&&document.querySelector('#socTabs [data-mode=kick]').classList.contains('on')`));
   // 🃏 Memory for 2
   await ev(`P().brain.level.memory='easy';show('brain')`); await sleep(200);
-  check('Brain Games has 👯 Memory for 2', await ev(`!!document.querySelector('#brMenu [data-duo=memory]')`));
+  check('Brain Games has 👯 Memory for 2 at the top, on screen without scrolling', await ev(`(()=>{const b=document.querySelector('#brMenu [data-duo=memory]'),g=document.querySelector('#brMenu .br-games');return !!b&&b.getBoundingClientRect().bottom<=innerHeight&&b.getBoundingClientRect().bottom<=g.getBoundingClientRect().top;})()`));
+  await ev(`brOpen('memory')`); await sleep(150);
+  check('Memory Match itself has a 👯 2 players tab; the other games don\'t', await ev(`!document.querySelector('#brTabs [data-duo=memory]').classList.contains('hidden')&&(brOpen('snack'),document.querySelector('#brTabs [data-duo=memory]').classList.contains('hidden'))`));
+  await ev(`brPuzzle('memory','medium',0);document.querySelector('#brTabs [data-duo=memory]').click()`); await sleep(100);
+  await ev(`document.querySelector('#modalBody [data-tg-who="'+_tgPal+'"]').click()`); await sleep(200);
+  check('…which starts Memory for 2 on the level she was playing', await ev(`BR.view==='duo'&&TGM.lvl==='medium'&&document.querySelectorAll('#brDuo [data-tg-c]').length===12`));
+  await ev(`brMenu()`); await sleep(100);
   await ev(`document.querySelector('#brMenu [data-duo=memory]').click()`); await sleep(100);
   await ev(`document.querySelector('#modalBody [data-tg-who="'+_tgPal+'"]').click()`); await sleep(200);
   check('a 6-card board with both players, and whose turn it is', await ev(`BR.view==='duo'&&document.querySelectorAll('#brDuo [data-tg-c]').length===6&&document.querySelectorAll('#tgTurn .tg-sc').length===2&&TGM.turn===0&&/turn/.test(document.querySelector('#tgTurn').textContent)`));

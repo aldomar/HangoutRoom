@@ -231,7 +231,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 - Studio (since v1.40): nothing built in (`studioFurniture` is empty). `studioStart()` gives it her room colour's wall on the
   first visit. The free Built-in Shelf (`builtShelf`, `first:1` = listed first in the Shop) is the built-in option;
   `buyConsumable` skips the question for price 0 and `priceTag` says Free.
-- Two-player games (since v1.42, `43-together.js`): a 👯 button in Soccer (`data-duo` tab), the Brain Games menu (`BR_MENU_EXTRA`) and
+- Two-player games (since v1.42, `43-together.js`): a 👯 button in Soccer (`data-duo` tab), Memory Match (a `#brTabs` tab) and the top of the Brain Games menu (`BR_MENU_TOP`) and
   the Stage tabs opens `tgPick` (another room or 👤 Guest; `TG.p2` lasts until the app closes). Hooks: `drawSoccer`/the Soccer canvas
   pointer handlers hand over to `tgDraw`/`tgDown`/`tgMove`/`tgUp` while `TGS.on`; the kicker uses `socAim()` (the ⚽ Kick swipe maths,
   shared). The Stage's `duo` level (`STG_LEVELS.duo`: Medium chart, Easy timing; lane 0 = player 1) is used while `TGT.on` and is never
