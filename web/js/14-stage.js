@@ -25,7 +25,8 @@ const SONGS={
 };
 const SONG_IDS=Object.keys(SONGS);
 // lanes = pads to tap; coins per star; fall = seconds a note takes to reach its pad; win = timing windows ×
-const STG_LEVELS={easy:{lanes:1,coins:2,fall:1.9,win:1.35},medium:{lanes:2,coins:3,fall:1.6,win:1.15},hard:{lanes:3,coins:4,fall:1.3,win:1}};
+const STG_LEVELS={easy:{lanes:1,coins:2,fall:1.9,win:1.35},medium:{lanes:2,coins:3,fall:1.6,win:1.15},hard:{lanes:3,coins:4,fall:1.3,win:1},
+  duo:{lanes:2,coins:0,fall:1.9,win:1.35}}; // 👯 Together (v1.42, section 43): never saved as a level
 const JUDGE=[['Perfect!',0.06,100,'#ffd166'],['Great!',0.11,70,'#8ff0d0'],['Good',0.17,40,'#ff8cc6']]; // name, seconds early/late, points, colour
 const LANE_ICONS={1:[['star','#ffd166']],2:[['heart','#ff8cc6'],['star','#ffd166']],3:[['heart','#ff8cc6'],['star','#ffd166'],['bat','#a97cff']]};
 let STG={state:'pick',song:null,lvl:'easy',notes:[],ev:[],ei:0,t0:0,clock:'perf',end:0,first:0,beat:0.5,bar:2,score:0,combo:0,maxCombo:0,counts:[0,0,0,0],fx:[],press:[0,0,0],time:0,g:null};
@@ -118,9 +119,10 @@ function stgPickView(){
       +`<div class="ss">${[1,2,3].map(i=>`<span class="${i<=b.stars?'':'off'}">★</span>`).join('')}</div></span></button>`;}).join('');
   $('#stgHint').textContent=!DB.settings.sound?'🔇 Sounds are off. Turn them on in ⚙️ Settings to hear the songs!'
     :n===1?'Tap anywhere when a star reaches the circle! 🌟':`Tap the ${n} circles when the notes reach them! 🎵`;
+  tgStagePick(); // 👯 Together marks its tab and names the two players (section 43)
   const o=DB.settings.stageOffset||0; $('#stgLate').textContent=o?(o>0?'+':'')+o+' ms':'0 ms';
 }
-$('#stgTabs').onclick=e=>{const b=e.target.closest('[data-lvl]');if(!b||STG.state!=='pick')return;P().stage.level=b.dataset.lvl;save();SFX.click();stgPickView();};
+$('#stgTabs').onclick=e=>{const b=e.target.closest('[data-lvl]');if(!b||STG.state!=='pick')return;TGT.on=false;P().stage.level=b.dataset.lvl;save();SFX.click();stgPickView();};
 $('#stgSongs').onclick=e=>{const b=e.target.closest('[data-song]');if(b)stStart(b.dataset.song);};
 $('#stgBack').onclick=()=>{SFX.click();if(STG.state==='pick')show('room');else stgPickView();};
 $$('[data-late]').forEach(b=>b.onclick=()=>{DB.settings.stageOffset=clamp((DB.settings.stageOffset||0)+Number(b.dataset.late),-100,400);save();SFX.click();stgPickView();});
@@ -128,15 +130,15 @@ $$('[data-late]').forEach(b=>b.onclick=()=>{DB.settings.stageOffset=clamp((DB.se
 /* ---------- playing ---------- */
 function stStart(id){
   const p=P(); if(!p||!SONGS[id]) return;
-  const lvl=p.stage.level, b=buildSong(id,lvl), a=DB.settings.sound?ac():null;
+  const lvl=TGT.on?'duo':p.stage.level, b=buildSong(id,lvl), a=DB.settings.sound?ac():null;
   stopMusic();
   Object.assign(STG,{state:'play',song:id,lvl,notes:b.notes,ev:b.ev,ei:0,end:b.end,first:b.first,beat:b.beat,bar:b.bar,
     score:0,combo:0,maxCombo:0,counts:[0,0,0,0],fx:[],press:[0,0,0],time:0});
   STG.clock=a&&a.state==='running'?'ac':'perf'; STG.t0=stNow()+0.4;
   $('#stgPick').classList.add('hidden'); $('#stgTabs').classList.add('hidden'); $('#stgPlay').classList.remove('hidden');
   $('#stgBack').textContent='⬅ Songs';
-  $('#stgMascot').innerHTML=mascotSVG(p.look);
-  stHud(); SFX.click();
+  $('#stgMascot').innerHTML=lvl==='duo'?tgStageBuddies():mascotSVG(p.look); $('#stgMascot').classList.toggle('duo',lvl==='duo');
+  stHud(); SFX.click(); tgStageNames();
 }
 function stgStop(){if(STG.state!=='pick')STG.state='pick';} // leaving the screen ends the song (no coins, nothing lost)
 function stHud(){
@@ -171,6 +173,7 @@ stgCv.addEventListener('pointerdown',e=>{
 
 // Stars: 1 for taking part (at least one hit), 2 at 60% of the best possible score, 3 at 85%.
 function stFinish(){
+  if(STG.lvl==='duo'){tgStageEnd();return;} // 👯 Together (section 43)
   const p=P(); if(!p) return;
   const id=STG.song, lvl=STG.lvl, S=SONGS[id], N=STG.notes.length, c=STG.counts, hits=c[0]+c[1]+c[2];
   const acc=N?STG.score/(100*N):0, stars=hits?(acc>=0.85?3:acc>=0.6?2:1):0, full=N>0&&hits===N;

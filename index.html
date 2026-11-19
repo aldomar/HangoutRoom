@@ -221,6 +221,7 @@
   <div class="tabs" id="socTabs" style="background:var(--panel);justify-content:center">
     <button class="tab mode on" data-mode="kick">⚽ Kick</button>
     <button class="tab mode" data-mode="keep">🧤 Keep</button>
+    <button class="tab mode duo" data-duo="soccer" aria-label="Duel for 2 players">👯 <span>Duel</span></button>
     <span class="soc-gap"></span>
     <button class="tab on" data-lvl="easy"><i>😺</i> <span>Easy</span></button>
     <button class="tab" data-lvl="medium"><i>👻</i> <span>Medium</span></button>
@@ -246,6 +247,7 @@
     <button class="tab on" data-lvl="easy">🐣 Easy</button>
     <button class="tab" data-lvl="medium">🎵 Medium</button>
     <button class="tab" data-lvl="hard">🌟 Hard</button>
+    <button class="tab duo" data-duo="stage" aria-label="Together, 2 players">👯 <span>Together</span></button>
   </div>
   <div class="stg-pick" id="stgPick">
     <div class="stg-note" id="stgHint"></div>
@@ -256,6 +258,7 @@
     <canvas id="stgCv"></canvas>
     <div id="stgMascot"></div>
     <div class="stg-hud"><span id="stgScore"></span><span id="stgCombo"></span></div>
+    <div class="stg-names hidden" id="stgNames"><span id="stgN1"></span><span id="stgN2"></span></div>
   </div>
 </div>
 
@@ -334,6 +337,7 @@
       <div class="br-board" id="brBoard"></div>
     </div>
   </div>
+  <div class="br-duo hidden" id="brDuo"></div>
 </div>
 
 <div id="modal" class="modal hidden"><div class="modal-card"><div id="modalTitle"></div><div id="modalBody"></div><div id="modalBtns"></div></div></div>
@@ -384,6 +388,7 @@
 <script src="web/js/40-music.js"></script>
 <script src="web/js/41-studio.js"></script>
 <script src="web/js/42-visitors.js"></script>
+<script src="web/js/43-together.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

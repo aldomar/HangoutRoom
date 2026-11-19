@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('95 stickers on 7 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41), ids all different, 6 or more per page', await ev(`STICKERS.length===95&&new Set(STICKERS.map(s=>s.id)).size===95&&Object.keys(STK_PAGES).length===7&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('98 stickers on 7 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42), ids all different, 6 or more per page', await ev(`STICKERS.length===98&&new Set(STICKERS.map(s=>s.id)).size===98&&Object.keys(STK_PAGES).length===7&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1572,7 +1572,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   console.log('Be the Keeper (v1.24)');
   // kpTo(state) skips the pauses (and the run-up, unless we want to dive during it) until the match reaches that state
   const kpTo=async st=>{const skip=st==='wind'?['ready','result']:['ready','wind','result'];
-    for(let i=0;i<120&&(await ev('KP.state'))!==st;i++){await ev(`${JSON.stringify(skip)}.includes(KP.state)&&(KP.timer=99)`);await sleep(50);}return ev('KP.state');};
+    // check and skip in one step: two separate calls let a frame slip in between and skip a result (a flaky test before v1.42)
+    for(let i=0;i<120;i++){if(await ev(`KP.state==='${st}'||(${JSON.stringify(skip)}.includes(KP.state)&&(KP.timer=99),false)`))break;await sleep(50);}return ev('KP.state');};
   const kpTap=async(u,v)=>{const p=await ev(`(()=>{const r=socCv.getBoundingClientRect(),p=toScr(KP.g,${u},${v});return [r.left+p.x,r.top+p.y];})()`);
     await mouse('mousePressed',p[0],p[1]); await mouse('mouseReleased',p[0],p[1]); await sleep(50);};
   await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();P().coins=100;save();show('room');goRoom(1)`); await sleep(200);
@@ -1656,7 +1657,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('First Save is earned; Glove Case shows 2 of 3', await ev(`(()=>{const f=id=>STICKERS.find(s=>s.id===id);return stkDone(P(),f('save1'))&&stkHave(P(),f('gloves'))===2&&!stkDone(P(),f('gloves'));})()`));
   // phone
   await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(500); await shot('G08-phone-keep');
-  check('phone: Kick, Keep and the 3 level tabs fit (icons only on the levels)', await ev(`(()=>{const t=document.querySelector('#socTabs');return t.scrollWidth<=t.clientWidth&&getComputedStyle(document.querySelector('#socTabs [data-lvl] span')).display==='none'&&document.querySelector('[data-mode=keep]').getBoundingClientRect().height>=40;})()`));
+  check('phone: Kick, Keep, 👯 Duel and the 3 level tabs fit (icons only on the levels and Duel)', await ev(`(()=>{const t=document.querySelector('#socTabs');return t.scrollWidth<=t.clientWidth&&getComputedStyle(document.querySelector('#socTabs [data-lvl] span')).display==='none'&&document.querySelector('[data-mode=keep]').getBoundingClientRect().height>=40;})()`));
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(200);
   await ev(`document.querySelector('[data-mode=kick]').click()`); await sleep(300);
   check('back to ⚽ Kick: the kicker shows and the keeper is Mochi, Boo or Flap again', await ev(`P().soccer.mode==='kick'&&!document.querySelector('#socMascot').classList.contains('hidden')&&document.querySelector('#socTip').textContent.includes(KEEPERS[P().soccer.level].name)&&document.querySelector('#socTitle').textContent.includes('Soccer Field')`));
@@ -2924,7 +2925,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();renderRoom()`); await sleep(100); await shot('V04-plush');
   // stickers
   await ev(`stkPaused=false;checkStickers();stkPaused=true;closeModal()`);
-  check('the 🚪 Friends sticker page: Welcome! after the first wish', await ev(`!!STK_PAGES.friends&&P().stickers.includes('wish1')&&STICKERS.filter(s=>s.page==='friends').length===6`));
+  check('the 🚪 Friends sticker page: Welcome! after the first wish', await ev(`!!STK_PAGES.friends&&P().stickers.includes('wish1')&&STICKERS.filter(s=>s.page==='friends').length===9`));
   // every wish done: nobody knocks again
   await ev(`(()=>{const p=P();p.visit={cur:'',day:'',done:VISIT_WISHES.map(w=>w.id)};save();renderRoom();})()`);
   check('when every wish has come true, nobody knocks', await ev(`P().visit.cur===''&&!document.querySelector('#roomSvg .visitor')`));
@@ -2938,12 +2939,104 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   // save data
   const v40b=await ev(`JSON.stringify(Object.assign({},DB,{version:23,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.visit;return q;})}))`);
   await ev(`doRestore(${JSON.stringify(v40b)})`); await sleep(300);
-  check('a v1.40 backup restores with no wishes done (save version 24)', await ev(`DB_VERSION===24&&DB.version===24&&DB.profiles.every(p=>p.visit&&p.visit.cur===''&&p.visit.done.length===0)`));
+  check('a v1.40 backup restores with no wishes done (save version 24 or later)', await ev(`DB.version===DB_VERSION&&DB_VERSION>=24&&DB.profiles.every(p=>p.visit&&p.visit.cur===''&&p.visit.done.length===0)`));
   await ev(`closeModal();{const p=DB.profiles[0];p.visit={cur:7,day:null,done:['zip1',3,'zip1']};normalize(p);}`);
   check('odd visitor data is made safe', await ev(`(()=>{const v=DB.profiles[0].visit;return v.cur===''&&v.day===''&&v.done.join()==='zip1';})()`));
   await ev(`(()=>{const p=DB.profiles[0];DB.activeId=p.id;p.visit.cur='nope';p.visit.done=[];p.visit.day='';save();enterRoom();})()`); await sleep(200);
   check('an unknown wish id is skipped: the first wish not done comes instead', await ev(`P().visit.cur==='mochi1'`));
   await ev(`(()=>{vClear();const p=P();if(window._vKeep&&p===DB.profiles[0])rooms(p).forEach((R,i)=>{R.items=_vKeep[i];});save();closeModal();})()`);
+
+  console.log('Two-player games (v1.42)');
+  await ev(`(()=>{closeModal();stkPaused=true;const p=P();window._tgMe=p.id;p.easy=false;applyEasy();p.coins=100;p.duo={day:'',n:0,soccer:0,memory:0,stage:0};
+    let q=DB.profiles.find(x=>x.name==='Pal');if(!q){q=newProfile('Pal','white','mint','⭐');DB.profiles.push(q);}q.coins=50;q.duo={day:'',n:0,soccer:0,memory:0,stage:0};
+    window._tgPal=q.id;window._tgBest=JSON.stringify([p.soccer.best,p.soccer.keep.best,p.stats.matches,p.stage.best,p.brain.solved]);TG.p2=null;save();show('soccer');})()`); await sleep(300);
+  check('Soccer has a 👯 Duel tab', await ev(`!!document.querySelector('#socTabs [data-duo=soccer]')`));
+  await ev(`document.querySelector('#socTabs [data-duo=soccer]').click()`); await sleep(150);
+  check('👯 asks who is playing: every other room and 👤 Guest, big enough to tap', await ev(`document.querySelectorAll('#modalBody [data-tg-who]').length===DB.profiles.length&&!!document.querySelector('#modalBody [data-tg-who=guest]')&&[...document.querySelectorAll('#modalBody [data-tg-who]')].every(b=>b.getBoundingClientRect().height>=48)`));
+  await shot('T01-who-plays');
+  await ev(`document.querySelector('#modalBody [data-tg-who="'+_tgPal+'"]').click()`); await sleep(300);
+  check('picking Pal starts the duel: both players in the score, the kicker first', await ev(`TGS.on&&document.querySelector('#socTitle').textContent.includes('Duel')&&document.querySelectorAll('#socScore .tg-row').length===2&&tgKicker().id===_tgMe&&tgKeeper().id===_tgPal&&TGS.state==='aim'`));
+  // two fingers at once: the kicker swipes while the keeper touches the goal
+  const pd=(type,id,x,y)=>ev(`(()=>{const r=socCv.getBoundingClientRect();socCv.dispatchEvent(new PointerEvent('${type}',{pointerId:${id},clientX:r.left+${x},clientY:r.top+${y},bubbles:true}));})()`);
+  const G=await ev(`({bx:TGS.g.bx,by:TGS.g.by,cx:TGS.g.cx,gy:TGS.g.gy,GW:TGS.g.GW,GH:TGS.g.GH})`);
+  await pd('pointerdown',1,G.bx,G.by); await pd('pointermove',1,G.bx+10,G.by-80);
+  await pd('pointerdown',2,G.cx-G.GW*0.3,G.gy-G.GH*0.4); await pd('pointerup',2,G.cx-G.GW*0.3,G.gy-G.GH*0.4);
+  check('the keeper can\'t dive before the kick', await ev(`TGS.state==='aim'&&!TGS.tgt`));
+  await pd('pointermove',1,G.bx+20,G.by-160); await pd('pointerup',1,G.bx+24,G.by-200);
+  check('the kicker\'s swipe up from the ball shoots', await ev(`TGS.state==='fly'&&!!TGS.shot&&TGS.shot.u>0`));
+  await pd('pointerdown',3,G.cx+G.GW*0.3,G.gy-G.GH*0.3); await pd('pointerup',3,G.cx+G.GW*0.3,G.gy-G.GH*0.3);
+  check('…and the keeper\'s tap in the goal dives that way', await ev(`!!TGS.tgt&&TGS.tgt.x>0.2`));
+  await shot('T02-duel');
+  await sleep(1800);
+  check('the shot ends as a goal or a save, for the right player', await ev(`TGS.shots.length===1&&TGS.shots[0].by===0&&['goal','saved','post','wide','over'].includes(TGS.shot.res)`));
+  await sleep(1900);
+  check('🔄 then they switch: Pal kicks, the other keeps', await ev(`TGS.state==='aim'&&tgKicker().id===_tgPal&&tgKeeper().id===_tgMe`));
+  // jump to the last shot
+  await ev(`TGS.shots.push(...Array.from({length:8},(_,i)=>({by:(i+1)%2,goal:i%3===0})));tgSocScore()`);
+  const G2=await ev(`({bx:TGS.g.bx,by:TGS.g.by})`);
+  await pd('pointerdown',4,G2.bx,G2.by); await pd('pointermove',4,G2.bx-10,G2.by-90); await pd('pointerup',4,G2.bx-14,G2.by-200);
+  await sleep(3800);
+  check('after 10 shots: both scores and a cheer for both', await ev(`TGS.state==='done'&&document.querySelector('#modalTitle').textContent.includes('Duel')&&document.querySelectorAll('#modalBody .tg-sc').length===2&&/Great game|tie/.test(document.querySelector('#modalBody').textContent)`));
+  check('…and +3 coins for each room', await ev(`P().coins===103&&DB.profiles.find(x=>x.id===_tgPal).coins===53&&P().duo.soccer===1&&DB.profiles.find(x=>x.id===_tgPal).duo.soccer===1`));
+  await shot('T03-duel-end');
+  await ev(`[...document.querySelectorAll('#modalBtns .btn')].find(b=>/Just me/.test(b.textContent)).click()`); await sleep(200);
+  check('⚽ Just me goes back to the normal game', await ev(`!TGS.on&&!document.querySelector('#socTitle').textContent.includes('Duel')&&!document.querySelector('#socScore .tg-row')`));
+  await ev(`document.querySelector('#socTabs [data-duo=soccer]').click()`); await sleep(100); await ev(`document.querySelector('#modalBody [data-tg-who="'+_tgPal+'"]').click()`); await sleep(150);
+  await ev(`document.querySelector('#socTabs [data-mode=kick]').click()`); await sleep(150);
+  check('the ⚽ Kick tab also leaves the duel', await ev(`!TGS.on&&P().soccer.mode==='kick'&&document.querySelector('#socTabs [data-mode=kick]').classList.contains('on')`));
+  // 🃏 Memory for 2
+  await ev(`P().brain.level.memory='easy';show('brain')`); await sleep(200);
+  check('Brain Games has 👯 Memory for 2', await ev(`!!document.querySelector('#brMenu [data-duo=memory]')`));
+  await ev(`document.querySelector('#brMenu [data-duo=memory]').click()`); await sleep(100);
+  await ev(`document.querySelector('#modalBody [data-tg-who="'+_tgPal+'"]').click()`); await sleep(200);
+  check('a 6-card board with both players, and whose turn it is', await ev(`BR.view==='duo'&&document.querySelectorAll('#brDuo [data-tg-c]').length===6&&document.querySelectorAll('#tgTurn .tg-sc').length===2&&TGM.turn===0&&/turn/.test(document.querySelector('#tgTurn').textContent)`));
+  const memTapC=i=>ev(`document.querySelector('#brDuo [data-tg-c="${i}"]').click()`);
+  const pairs=await ev(`(()=>{const m={};TGM.cards.forEach((c,i)=>{(m[c.id]=m[c.id]||[]).push(i);});return Object.values(m);})()`);
+  await memTapC(pairs[0][0]); await memTapC(pairs[1][0]); await sleep(1100);
+  check('a miss flips back and passes the turn', await ev(`TGM.turn===1&&TGM.pts.join()==='0,0'&&!document.querySelector('#brDuo .mem-card.open')`));
+  await memTapC(pairs[0][0]); await memTapC(pairs[0][1]); await sleep(100);
+  check('a pair gives a point and another go', await ev(`TGM.turn===1&&TGM.pts.join()==='0,1'&&document.querySelectorAll('#brDuo .mem-card.got').length===2`));
+  await shot('T04-memory-duo');
+  for(const pr of pairs.slice(1)){await memTapC(pr[0]);await memTapC(pr[1]);await sleep(80);}
+  await sleep(900);
+  check('all pairs found: both scores and a cheer, +3 coins each, nothing marked solved', await ev(`/Memory for 2/.test(document.querySelector('#modalTitle').textContent)&&TGM.pts.join()==='0,3'&&P().coins===106&&DB.profiles.find(x=>x.id===_tgPal).coins===56&&!P().brain.solved.some(id=>/^memory:/.test(id)&&!JSON.parse(_tgBest)[4].includes(id))`));
+  await ev(`closeModal();brBackKey()`); await sleep(100);
+  check('Back from Memory for 2 goes to the menu', await ev(`BR.view==='menu'&&document.querySelector('#brDuo').classList.contains('hidden')`));
+  // 🎤 Stage together
+  await ev(`show('stage')`); await sleep(150);
+  await ev(`document.querySelector('#stgTabs [data-duo=stage]').click()`); await sleep(100);
+  await ev(`document.querySelector('#modalBody [data-tg-who="'+_tgPal+'"]').click()`); await sleep(150);
+  check('Stage 👯 Together: its tab is on and the hint says who has which circle', await ev(`TGT.on&&document.querySelector('#stgTabs [data-duo]').classList.contains('on')&&/Pal/.test(document.querySelector('#stgHint').textContent)`));
+  await ev(`document.querySelector('#stgSongs [data-song=starlight]').click()`); await sleep(400);
+  check('a song together: 2 pads, notes for both, both buddies dancing, names by the pads', await ev(`STG.lvl==='duo'&&STG.notes.some(n=>n.lane===0)&&STG.notes.some(n=>n.lane===1)&&document.querySelectorAll('#stgMascot svg').length===2&&!document.querySelector('#stgNames').classList.contains('hidden')&&document.querySelector('#stgN2').textContent.includes('Pal')`));
+  await shot('T05-stage-together');
+  await ev(`(()=>{STG.notes.forEach((n,i)=>{if(n.lane===0||i%2)stTap(n.lane,n.t);});stFinish();})()`); await sleep(200);
+  check('the end: a team score, notes for each player, +3 coins each', await ev(`STG.state==='done'&&document.querySelectorAll('#modalBody .tg-sc').length===2&&/Team score/.test(document.querySelector('#modalBody').textContent)&&P().coins===109&&DB.profiles.find(x=>x.id===_tgPal).coins===59`));
+  check('two-player games never change her bests, matches, stars or solved puzzles', await ev(`JSON.stringify([P().soccer.best,P().soccer.keep.best,P().stats.matches,P().stage.best,P().brain.solved])===_tgBest&&!Object.values(P().stage.best).some(b=>b.duo)`));
+  await ev(`closeModal();stgPickView();document.querySelector('#stgTabs [data-lvl=easy]').click()`); await sleep(100);
+  check('a level tab goes back to playing alone', await ev(`!TGT.on&&!document.querySelector('#stgTabs [data-duo]').classList.contains('on')`));
+  // the daily limit, and a Guest
+  await ev(`(()=>{const p=P();p.duo.n=14;window._tgPay=[tgPay(tgPlayers(),'memory'),tgPay(tgPlayers(),'memory')];})()`);
+  check('coins for playing together stop at 15 a day, with a gentle note', await ev(`/\\+1 🪙/.test(_tgPay[0])&&/full today/.test(_tgPay[1])&&P().duo.n===15`));
+  await ev(`TG.p2='guest'`);
+  check('a Guest plays but gets no coins (and the room still does)', await ev(`(()=>{const pl=tgPlayers();const h=tgPay(pl,'stage');return pl[1].name==='Guest'&&!/Guest/.test(h);})()`));
+  await ev(`stkPaused=false;checkStickers();stkPaused=true;closeModal()`);
+  check('stickers: Play Date and Game Night (all 3 games together)', await ev(`P().stickers.includes('duo1')&&P().stickers.includes('duo3')`));
+  // phone
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300);
+  await ev(`show('soccer');tgPick('soccer')`); await sleep(150); await shot('T06-phone-who');
+  check('phone: the picker fits the screen', await ev(`[...document.querySelectorAll('#modalBody [data-tg-who]')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth;})`));
+  await ev(`TG.p2=_tgPal;closeModal();tgSocStart()`); await sleep(300); await shot('T07-phone-duel');
+  check('phone: both score rows fit', await ev(`[...document.querySelectorAll('#socScore .tg-row')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth;})`));
+  await ev(`show('room')`);
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(200);
+  // save data
+  const v41=await ev(`JSON.stringify(Object.assign({},DB,{version:24,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.duo;return q;})}))`);
+  await ev(`doRestore(${JSON.stringify(v41)})`); await sleep(300);
+  check('a v1.41 backup restores with nothing played together yet (save version 25)', await ev(`DB_VERSION===25&&DB.version===25&&DB.profiles.every(p=>p.duo&&p.duo.n===0&&p.duo.soccer===0&&p.duo.day==='')`));
+  await ev(`closeModal();{const p=DB.profiles[0];p.duo={day:5,n:'x',soccer:-2,memory:3.7};normalize(p);}`);
+  check('odd two-player data is made safe', await ev(`(()=>{const d=DB.profiles[0].duo;return d.day===''&&d.n===0&&d.soccer===0&&d.memory===3&&d.stage===0;})()`));
+  await ev(`(()=>{DB.profiles=DB.profiles.filter(x=>x.name!=='Pal');DB.activeId=_tgMe;save();enterRoom();})()`); await sleep(200);
 
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');

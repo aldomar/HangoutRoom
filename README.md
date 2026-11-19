@@ -131,6 +131,22 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Play together (since version 1.42)
+Two children can play on one tablet. Tap a **👯** button, then tap who is playing with you: another room's badge
+(their buddy shows up in the game) or **👤 Guest**.
+- **⚽ Soccer Duel** (Soccer → 👯 Duel): both play at once. The kicker swipes up from the ball; the keeper taps the
+  goal to dive once the ball flies. After every shot they swap: 10 shots in all. Easy / Medium / Hard set how fast the
+  ball flies (on Easy it glows and the keeper can just tap the ball).
+- **🃏 Memory for 2** (Brain Games → 👯 Memory for 2): take turns flipping 2 cards. A pair gives a point and another
+  go; a miss passes the turn. Pick 6, 12 or 20 cards.
+- **🎤 Stage Together** (Stage → 👯 Together): pick any song. Player 1 taps the left circle, player 2 the right one.
+  One team score.
+- Both scores are shown, but the end box always cheers both players. Nobody "loses".
+- Each player's room gets **+3 coins** per finished game, up to 15 a day (a Guest gets none). Two-player games never
+  change bests, trophies, gloves, stars or solved puzzles.
+- 3 new stickers on the 🚪 Friends page: Play Date, Game Night (all 3 games together) and Best Buddies (20 games).
+- Save version 25 (`duo`); every older backup still restores.
+
 ## Room depth (since version 1.39)
 - Things standing on the floor are drawn **front to back by where they stand**: the lower on the floor (closer to you),
   the more in front. This was how the rooms first worked, and it is back.

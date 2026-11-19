@@ -22,7 +22,7 @@ function renderBrain(){if(P())brMenu();}
 function brStop(){clearTimeout(BR.timer);BR.tok++;} // leaving stops any pending flip-back or win box
 function brMenu(){
   const p=P(); if(!p) return; brStop(); BR.view='menu';
-  $('#brMenu').classList.remove('hidden'); $('#brPlay').classList.add('hidden');
+  $('#brMenu').classList.remove('hidden'); $('#brPlay').classList.add('hidden'); $('#brDuo').classList.add('hidden');
   $('#brBack').textContent='⬅ Room'; $('#brTitle').textContent='📚 Brain Games';
   $('#brMenu').innerHTML=`<div class="stg-note">${p.easy?'🧠 ✨':'Pick a game! Every puzzle you solve the first time pays 🪙'}</div>`
     +`<div class="br-games">`+Object.keys(BRAIN_GAMES).map(g=>{const G=BRAIN_GAMES[g];

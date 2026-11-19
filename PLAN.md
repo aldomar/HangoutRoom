@@ -344,7 +344,7 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
 - ✅ **🚪 Visitors & requests (v1.41, built; plan details below, agreed 2026-11-18):** the original characters she knows (Mochi, Boo, Flap, Hop, Bolt, Zip) drop by with a
   small wish ("a spooky-cozy corner", "dress up for a picnic"). She decorates or dresses up, they cheer, she gets a sticker.
   No timer, no failing. The new room is the natural place for decorating requests.
-- **👯 Two-player games (v1.42):** take turns on one tablet: one kicks, one keeps (both Soccer modes exist), 2-player
+- ✅ **👯 Two-player games (v1.42, built; plan details below, agreed 2026-11-19):** take turns on one tablet: one kicks, one keeps (both Soccer modes exist), 2-player
   Memory Match, and tapping the beat together on the Stage.
 - **🎲 Free Play + Puzzle of the Day (v1.43):** after the fixed puzzles, endless generated ones (made from a seed, never
   saved by id) for the mazes, Pattern Train, Number Pop and simple Code Lab boards; one generated puzzle a day for a small
@@ -384,6 +384,28 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   with no wishes done. New file `42-visitors.js`. Smoke test: every wish can be met and is checked, the daily pace, the
   plush, the stickers, a restore from v1.40.
 - As built: 6 stickers on a new 🚪 Friends page (Welcome!, Good Friend, Super Friend, Best Host, First Plush, Plush Pals).
+
+#### v1.42 plan details: 👯 Two-player games (agreed 2026-11-19)
+- **Who plays:** player 1 is the room that is open. Player 2 taps another room's badge (their buddy shows up in the game)
+  or 👤 Guest. The partner is remembered until the app closes, so "Play again" is one tap.
+- **Where:** a 👯 button in each game: Soccer's Kick/Keep row gets 👯 **Duel**, the Brain Games menu gets 👯 **Memory for 2**,
+  the Stage song list gets 👯 **Together**. One tap from where they already play.
+- **⚽ Soccer duel:** both play at once on one screen. The kicker swipes up from the ball (the same swipe as ⚽ Kick); the
+  keeper (their buddy in goal) taps or swipes to dive once the ball flies (the same as 🧤 Keep). Easy / Medium / Hard set
+  how fast the ball flies (Easy is slow and the glowing ball can be tapped). 10 shots, taking turns: after each shot the
+  players swap ends ("🔄 Switch!").
+- **🃏 Memory for 2:** a board from Memory Match (Easy / Medium / Hard size). Players take turns flipping 2 cards; a pair
+  gives a point in that player's colour and another go; a miss passes the turn. Nothing is saved as solved.
+- **🎤 Stage together:** any song, with 2 pads: the left one is player 1's, the right one player 2's (the Medium chart,
+  with Easy's slower notes and wider timing). One shared team score and stars.
+- **Gentle scores:** Soccer and Memory show both scores; the end box cheers both ("Great game, you two! 🎉"), never a
+  loser. A draw is "It's a tie, you're both stars!".
+- **Coins:** each player's room (not a Guest) gets **+3 coins** per finished game, up to **15 a day** (5 games), then a
+  gentle note and it keeps working for fun. Personal bests, trophies, gloves and stars are not changed by 2-player games.
+- **Stickers** (🚪 Friends page): Play Date (1 game together), Game Night (all 3 games together), Best Buddies (20 games).
+- Save: `duo{day, n, soccer, memory, stage}` per room (coins today + games played); save version 25. New file
+  `43-together.js` with small hooks in Soccer, Brain Games and the Stage. Smoke test: the partner picker, a whole duel with
+  both inputs at once, Memory turns and scores, a Stage song split by lane, coins and the daily limit, a restore from v1.41.
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.

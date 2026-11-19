@@ -129,7 +129,13 @@ const GIFT_TIMELINE=[
           '💌 Tap a visitor to see their wish, then make it come true',
           '💡 Tap a line on the wish card for help. 🔄 picks another wish',
           '🧸 Make all 3 of a friend\'s wishes come true and they leave you a plush',
-          '📒 A new 🚪 Friends page in the Sticker Book']}
+          '📒 A new 🚪 Friends page in the Sticker Book']},
+  {v:'1.42',d:'2026-11-19',i:'👯',n:'Play Together',why:'So brothers and sisters can play games together on one tablet',
+    news:['👯 Play with someone! Pick their room, or 👤 Guest',
+          '⚽ Soccer Duel: one kicks, one keeps, then swap',
+          '🃏 Memory for 2 in Brain Games: take turns finding pairs',
+          '🎤 Stage Together: one taps the left circle, one the right',
+          '🪙 Both players get coins for playing together']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

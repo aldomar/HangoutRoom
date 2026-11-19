@@ -490,7 +490,7 @@ body.easy .stk svg{width:110px;height:110px}body.easy .stk.locked .sn{display:no
 #socTabs .tab i{font-style:normal}
 #socTabs .tab.mode.on{background:var(--gold);color:#2b2235}
 .soc-gap{flex:0 0 10px}
-@media (max-width:620px){#socTabs [data-lvl] span{display:none}#socTabs [data-lvl]{font-size:21px;padding:6px 12px}#socTabs{gap:5px;padding:8px 4px}}
+@media (max-width:620px){#socTabs [data-lvl] span,#socTabs [data-duo] span{display:none}#socTabs .soc-gap{flex-basis:4px}#socTabs [data-lvl]{font-size:21px;padding:6px 12px}#socTabs{gap:5px;padding:8px 4px}}
 
 /* Brain Games (v1.25): menu, puzzle screen, Snack Stand, Memory Match, Number Pop */
 .br-menu{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:16px;padding:16px;padding-bottom:max(16px,env(safe-area-inset-bottom))}
@@ -717,3 +717,31 @@ body.easy .vs-tip{display:none}
 @media (max-width:520px){.vs-pic{width:96px;height:82px}.vs-say b{font-size:18px}}
 .modal-card:has(.vs-x) #modalTitle{padding-right:56px}
 .modal-card:has(.vs-card) #modalBtns .btn{min-height:52px;font-size:18px}
+/* ---------- 👯 Two-player games (v1.42, section 43) ---------- */
+.tab.duo{border-color:var(--gold)}
+.tg-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.tg-who{display:flex;flex-direction:column;align-items:center;gap:4px;min-height:120px;padding:8px;border-radius:18px;border:3px solid var(--line);background:var(--panel2);color:var(--ink);font:inherit;cursor:pointer}
+.tg-who.on{border-color:var(--gold)}
+.tg-who b{font-size:16px}
+.tg-face{display:inline-flex;width:64px;height:84px;border-radius:16px;background:radial-gradient(circle at 50% 65%,var(--tc) 0,transparent 72%)}
+.tg-face svg{width:100%;height:100%}
+.tg-end{text-align:center;font-size:18px}
+.tg-end p{margin:10px 0 4px;font-weight:800}
+.tg-scores{display:flex;gap:12px;justify-content:center}
+.tg-sc{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 12px;border-radius:18px;border:3px solid var(--tc);background:var(--panel2);min-width:96px}
+.tg-sc b{font-size:16px}
+.tg-sc span{font-size:24px;font-weight:900}
+.tg-sc.on{box-shadow:0 0 0 4px var(--tc)}
+.tg-pay{margin-top:8px;font-size:15px;display:flex;flex-direction:column;gap:4px}
+.tg-turn{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap;margin:6px 0 10px}
+.tg-go{flex-basis:100%;text-align:center;font-weight:900;font-size:20px;color:var(--tc)}
+.tg-mem-btn{display:flex;align-items:center;gap:8px;margin:12px auto 0;min-height:52px;font-size:18px}
+.br-duo{flex:1;min-height:0;display:flex;flex-direction:column}
+.soc-score .tg-row{display:flex;gap:4px;align-items:center;padding:2px 8px;border-radius:999px;background:#2f2540cc;border:2px solid var(--tc)}
+.soc-score:has(.tg-row){flex-direction:column;gap:4px}
+.soc-score .tg-row .dot{width:26px;height:26px;font-size:15px}
+#stgMascot.duo{display:flex;justify-content:center}
+#stgMascot.duo svg{flex:0 0 100%}
+.stg-names{position:absolute;left:8px;right:8px;bottom:8px;display:flex;justify-content:space-between;pointer-events:none}
+.stg-names span{padding:4px 12px;border-radius:999px;font-weight:900;color:#2b2235;font-size:16px}
+@media (max-width:520px){.tg-face{width:52px;height:68px}.tg-sc{min-width:80px}}
