@@ -52,6 +52,12 @@ function normalize(p){
    p.free={day:typeof f.day==='string'?f.day:'',n:Math.max(0,Math.floor(Number(f.n)||0))};
    p.potd={day:typeof d.day==='string'?d.day:''};
    ['free','potd'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));});}
+  // Dance Maker (v1.47, section 48): the dance now and 3 saved dances (8 move codes each, '.' = empty), the music id,
+  // the Stage songs danced to, and coins paid today. Move codes are fixed here; the music id is checked when it is read (dnMusic).
+  {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, dn=o(p.dance), py=o(dn.pay), ok=g=>typeof g==='string'&&/^[hspwbcjo.]{8}$/.test(g), sl=Array.isArray(dn.slots)?dn.slots:[];
+   p.dance={cur:ok(dn.cur)?dn.cur:'........',music:typeof dn.music==='string'?dn.music:'beat',slots:[0,1,2].map(i=>ok(sl[i])?sl[i]:null),
+     songs:Array.isArray(dn.songs)?[...new Set(dn.songs.filter(s=>typeof s==='string'))]:[],
+     pay:{day:typeof py.day==='string'?py.day:'',n:Math.max(0,Math.floor(Number(py.n)||0))}};}
   // Little Ones' Corner (v1.46, sections 46-47): colors per picture ('#rrggbb' or '' per area), pictures hung in the Gallery,
   // and coins paid today. Picture ids are checked when they are read (cbCols), so only the types are checked here.
   {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, l=o(p.little), py=o(l.pay);

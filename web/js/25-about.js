@@ -147,7 +147,9 @@ const GIFT_TIMELINE=[
   {v:'1.45',d:'2026-11-19',i:'📝',n:'Word Bank',why:'So spelling practice never runs out, with words picked for every age',
     news:['🎲 Word Builder has Free Play: a new word every time','👀 Look at the word, ✋ hide it, then spell it','📅 Word Builder joins the Puzzle of the Day']},
   {v:'1.46',d:'2026-11-19',i:'🧸',n:"Little Ones' Corner",why:'So the youngest players have toys where nothing can go wrong',
-    news:['🧸 Play is in the top bar of every room','🖍️ Tap-to-Color: 12 pictures, and 🖼️ hang them in your Gallery','🎵 A Sound Mat and 👀 Peekaboo with your friends']}
+    news:['🧸 Play is in the top bar of every room','🖍️ Tap-to-Color: 12 pictures, and 🖼️ hang them in your Gallery','🎵 A Sound Mat and 👀 Peekaboo with your friends']},
+  {v:'1.47',d:'2026-11-19',i:'💃',n:'Dance Maker',why:'So your buddy can dance to the music you make',
+    news:['💃 Dance is in the 🎹 Music Maker and on the Stage','Pick 8 moves, then ▶️ watch your buddy dance','🎤 The Stage sign now hangs over the Loft keyboard']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
