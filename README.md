@@ -131,6 +131,29 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Little Ones' Corner (since version 1.46)
+Toys for the youngest players (and anyone else) where **nothing can go wrong**: no reading needed, no scores, no
+timers, nothing to lose. Tap **🧸 Play** in the top bar of any room, then one of 3 big pictures:
+- **🖍️ Coloring:** 12 pictures (dino, rocket, dump truck, train, shark, robot, bunny buddy, kitten, flower, cupcake,
+  butterfly, house). Tap a crayon, then tap a part of the picture to fill it. ↩️ takes back the last color, 🎲 colors
+  everything at once, 🗑️ starts again (it asks first). The colors are remembered for next time. When every part
+  (not the background) has a color, a big 🌟 cheers and the picture gets a ⭐ in the list.
+- **🖼️ Hang it up** puts the colored picture into the Art Desk Gallery as a drawing, so it can go on the wall as a
+  poster. It follows the drawing rules: +5 coins for a new one, the first 5 a day. Hanging it again after changing
+  colors updates the same drawing.
+- **🎵 Sound Mat:** 8 huge pads. 🎹 plays notes that always sound nice together; 🥁 plays fun sounds (boing, drum,
+  bell, whoosh, rocket, choo-choo, honk, splash). Several fingers can play at once.
+- **👀 Peekaboo:** a friend hides behind a bush, a box, a cloud, a door, a drum or a flower pot (6 spots on the tablet,
+  4 on a phone). Empty spots hide a little surprise (a butterfly, a star…), never a "wrong". Finding the friend shows
+  "Peekaboo!" (said out loud on the tablet when sound is on), and a new round starts by itself. The friends are the
+  6 visitors, her buddy and her pet.
+- **Coins:** +1 per finished picture or friend found, up to **10 a day**, then a gentle note and the toys keep working.
+  The Sound Mat pays nothing.
+- A new **🧸 Play** page in the Sticker Book with 6 stickers: First Colors, Little Artist (all 12 pictures), Peekaboo!
+  (10 friends), Hide and Seek Pro (50), Music Mat (100 pad taps) and On the Wall (hang a picture).
+- On a phone the room bar now has 5 buttons below the name (🧸 shows as an icon).
+- Save version 27 (`little`); every older backup still restores.
+
 ## Word Builder word bank (since version 1.45)
 🔤 Word Builder now has a word bank made from the family's own spelling list, sorted by age, so spelling practice never
 runs out. The 8 puzzles per level that were already there stay exactly the same.

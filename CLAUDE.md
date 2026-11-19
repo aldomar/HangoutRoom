@@ -78,7 +78,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`, and (since v1.36) `fidPay{day,n}` (fidget coins paid today), and (since v1.38) `music{kit, speed, cur, slots[3], pay{day,n}}`, and (since v1.40) `room4{wall,floor,items[]}` (the Studio; wall and floor are `''` until the first visit), and (since v1.41) `visit{cur, day, done[]}` (Visitors), `stats.wishes`, and (since v1.42) `duo{day, n, soccer, memory, stage}` (two-player coins today + games played), and (since v1.43) `free{day, n}` (Free Play coins today), `potd{day}` (the last day the Puzzle of the Day was solved), `stats.free`, `stats.potd`.
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`, and (since v1.36) `fidPay{day,n}` (fidget coins paid today), and (since v1.38) `music{kit, speed, cur, slots[3], pay{day,n}}`, and (since v1.40) `room4{wall,floor,items[]}` (the Studio; wall and floor are `''` until the first visit), and (since v1.41) `visit{cur, day, done[]}` (Visitors), `stats.wishes`, and (since v1.42) `duo{day, n, soccer, memory, stage}` (two-player coins today + games played), and (since v1.43) `free{day, n}` (Free Play coins today), `potd{day}` (the last day the Puzzle of the Day was solved), `stats.free`, `stats.potd`, and (since v1.46) `little{colors{picId:[...]}, hung{picId:{art,sig}}, pay{day,n}}` (🧸 Play), `stats.colored/peeks/pads`.
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
   optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it. So does `settings.lastBackup` (ms, since v1.30).
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
@@ -173,6 +173,11 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
       `fpBrain`, `fpMaze`, `fpCode`, `POTD_GAMES`, `potdGame`, `potdOpen`)
   45. `45-words.js` Word Builder word bank (`WB_BANK` by level, `WB_PICS`, `FP_MAKERS.word`, `wbBankStart` for trace or
       👀 look, ✋ hide, spell, `wbLookView`, `wbBankTap`)
+  46. `46-little.js` 🧸 Little Ones' Corner: `#littleBtn` in the room bar opens `scr-little` (`LT.view`: menu, colorPick, color,
+      mat, peek; `renderLittle`, `ltGo`, `ltBackKey`), `ltPay` (`LITTLE_DAILY`), 🎵 Sound Mat (`LT_NOTES`, `LT_FUN`),
+      👀 Peekaboo (`LT_HIDES`, `LT_SURPRISES`, `ltFriends`, `ltPeekTap`), the 🧸 Play sticker page
+  47. `47-colorbook.js` 🖍️ Tap-to-Color (`CB_PICS` pictures as area paths, area 0 = background; `CB_CRAYONS`, `cbSVG`,
+      `cbCols`, `cbDone`, `cbSet`, `cbHang` into the Art Desk Gallery)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -251,6 +256,11 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   seeds with the date. A new game that can be generated gets a `FP_MAKERS` entry (and its `ok` should also pass its fixed puzzles).
   Word Builder (since v1.45) draws words from `WB_BANK` (the owner's list); a bank word is `{bank:1, w, x, pic}` and plays through
   `wbBankStart` (Easy traces faint letters; Medium/Hard: 👀 look, ✋ hide, spell, 👀 peeks, no timer). Extra letters are never in the word.
+- 🧸 Little Ones' Corner (since v1.46, `46-little.js` + `47-colorbook.js`): no words needed, no scores, no wrong answers. Colors are
+  saved per picture as one `'#rrggbb'` or `''` per area, by the area's place in `CB_PICS[i].areas`: picture ids are saved, so never
+  rename a picture or reorder, remove or insert its areas (new pictures go at the end). Areas in one region that overlap must wind
+  the same way (`cbE`/`cbC` go one way, `cbR` the other), or the overlap shows as a hole. `p.little.hung` maps a picture to its
+  Gallery drawing, so hanging again updates it. No main loop: CSS animations only. Peekaboo's next round uses one `setTimeout`.
 - Visitors (since v1.41, `42-visitors.js`): one friend at a time stands at `VISIT_SPOT` in whichever room is on screen
   (`visitG`, in the floor layer, `data-hot="visitor"`). A wish is `{id, who, icon, title, say, parts[]}`; a part is one line of the
   card with `have(p, R)` and `n`, built by `vInRoom`/`vWear` (theme chips, so new themed items count automatically) or the fixed
@@ -347,6 +357,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   Sticker Book (v1.18): +2 per sticker, once each. Pet (v1.19): earns nothing; a treat costs 2. Music Maker (v1.38): +3 per saved new loop, 3 a day.
   Two-player (v1.42): +3 per finished game to each player's room (not a Guest), 15 a day (`TG_DAILY`).
   Free Play (v1.43): +1 per made-up puzzle, 10 a day (`FREE_DAILY`); 📅 Puzzle of the Day +5 once a day (no streak).
+  🧸 Play (v1.46): +1 per finished picture or Peekaboo friend found, 10 a day (`LITTLE_DAILY`); the Sound Mat pays nothing;
+  🖼️ Hang it up goes through the drawing rules (+5, first 5 a day).
   Visitors (v1.41): +5 per wish that comes true (one new friend a day), and a plush after a friend's 3 wishes.
   Item prices are 0–40, except ⭐ big dreams (`dream:1`, 60–100, since v1.29). Keep earning steady and fair.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).

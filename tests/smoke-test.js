@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('101 stickers on 7 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43), ids all different, 6 or more per page', await ev(`STICKERS.length===101&&new Set(STICKERS.map(s=>s.id)).size===101&&Object.keys(STK_PAGES).length===7&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('107 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46), ids all different, 6 or more per page', await ev(`STICKERS.length===107&&new Set(STICKERS.map(s=>s.id)).size===107&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1434,7 +1434,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`exitDecorate()`);
   check('phone: the 📒 Sticker Book button and ⚙️ fit in the room top bar', await ev(`(()=>{const b=document.querySelector('#stkBtn').getBoundingClientRect(),s=document.querySelector('#setBtn').getBoundingClientRect(),t=document.querySelector('#roomTitle').getBoundingClientRect();return b.width>=44&&s.right<=innerWidth&&t.width>=60;})()`));
   await ev(`openStickers('fidget')`); await sleep(250); await shot('D6-phone-stickers');
-  check('phone: the 6 sticker page tabs fit, and 3 stickers fit across', await ev(`(()=>{const t=document.querySelector('#stkTabs'),g=[...document.querySelectorAll('#stkPage .stk')].slice(0,3).map(b=>b.getBoundingClientRect());return t.scrollWidth<=t.clientWidth&&g[2].top===g[0].top&&g[2].right<=innerWidth;})()`));
+  check('phone: the sticker page tabs fit (two rows since v1.46), and 3 stickers fit across', await ev(`(()=>{const t=document.querySelector('#stkTabs'),g=[...document.querySelectorAll('#stkPage .stk')].slice(0,3).map(b=>b.getBoundingClientRect());return t.scrollWidth<=t.clientWidth&&g[2].top===g[0].top&&g[2].right<=innerWidth;})()`));
   await ev(`show('room');petMenu()`); await sleep(200); await shot('E11-phone-pet-menu');
   check('phone: the whole pet menu fits on screen', await ev(`[...document.querySelectorAll('#modalBody [data-pa],#modalBtns button')].every(b=>{const r=b.getBoundingClientRect();return r.bottom<=innerHeight&&r.right<=innerWidth&&r.left>=0&&(r.height>=48||!b.dataset.pa);})`));
   await ev(`petDress()`); await sleep(150); await shot('E12-phone-pet-dress');
@@ -3177,7 +3177,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   // save data
   const v42=await ev(`JSON.stringify(Object.assign({},DB,{version:25,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.free;delete q.potd;delete q.stats.free;delete q.stats.potd;return q;})}))`);
   await ev(`doRestore(${JSON.stringify(v42)})`); await sleep(300);
-  check('a v1.42 backup restores with no Free Play yet (save version 26)', await ev(`DB_VERSION===26&&DB.version===26&&DB.profiles.every(p=>p.free&&p.free.n===0&&p.free.day===''&&p.potd.day===''&&p.stats.free===0&&p.stats.potd===0)`));
+  check('a v1.42 backup restores with no Free Play yet (save version 26 or later)', await ev(`DB_VERSION>=26&&DB.version===DB_VERSION&&DB.profiles.every(p=>p.free&&p.free.n===0&&p.free.day===''&&p.potd.day===''&&p.stats.free===0&&p.stats.potd===0)`));
   await ev(`closeModal();{const p=DB.profiles[0];p.free=[3];p.potd='x';p.stats.free=-4;p.stats.potd='7';normalize(p);}`);
   check('odd Free Play data is made safe', await ev(`(()=>{const p=DB.profiles[0];return p.free.day===''&&p.free.n===0&&p.potd.day===''&&p.stats.free===0&&p.stats.potd===7;})()`));
   await ev(`window.FP_TEST_DAY='';save()`);
@@ -3265,7 +3265,152 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await sleep(1100);
     check('…+5 coins, once', await ev(`P().coins===${wc0}+5&&P().stats.potd===${wd0}+1`));
     await ev(`closeModal();window.FP_TEST_DAY=''`);
-    check('v1.45 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.45')&&APP_VERSION==='1.45'`));
+    check('v1.45 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.45')`));
+  }
+
+  console.log("Little Ones' Corner (v1.46)");
+  {
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`closeModal();stkPaused=true;P().easy=false;goRoom(1);show('room')`); await sleep(300);
+    check('save version 27; every room has a Little Ones\' Corner record', await ev(`DB_VERSION===27&&DB.profiles.every(p=>p.little&&typeof p.little.colors==='object'&&typeof p.little.hung==='object'&&typeof p.little.pay.n==='number'&&p.stats.colored>=0&&p.stats.peeks>=0&&p.stats.pads>=0)`));
+    check('the 🧸 Play button is in the room bar (48 px+), and Read to me calls it Play', await ev(`(b=>!!b&&b.getBoundingClientRect().width>=48&&speakLabel(b)==='Play')(document.querySelector('#littleBtn'))`));
+    check('tablet: the room bar is still one row with 🧸', await ev(`(()=>{const t=document.querySelector('#roomTitle').getBoundingClientRect(),b=document.querySelector('#setBtn').getBoundingClientRect();return Math.abs(t.top+t.height/2-(b.top+b.height/2))<8;})()`));
+    await ev(`document.querySelector('#littleBtn').click()`); await sleep(200);
+    check('tapping 🧸 opens the Play menu with 3 huge picture buttons', await ev(`cur==='little'&&LT.view==='menu'&&[...document.querySelectorAll('#ltBody .lt-big')].length===3&&[...document.querySelectorAll('#ltBody .lt-big')].every(b=>b.getBoundingClientRect().height>=150)`));
+    await shot('L01-little-menu');
+    check('the 🧸 button works from the Loft, Backyard and Studio too', await ev(`[2,3,4].every(n=>{goRoom(n);document.querySelector('#littleBtn').click();return cur==='little';})`));
+    check('Android Back goes from the menu to the room it came from', await ev(`androidBack()&&cur==='room'&&roomNo===4`));
+    await ev(`goRoom(1);document.querySelector('#littleBtn').click()`); await sleep(100);
+    // 🖍️ coloring
+    await ev(`document.querySelector('[data-lt=color]').click()`); await sleep(200);
+    check('🖍️ shows 12 pictures', await ev(`LT.view==='colorPick'&&document.querySelectorAll('#ltBody .cb-thumb').length===12&&CB_PICS.length===12`));
+    await shot('L02-color-pick');
+    check('picture ids are all different; each has 4 to 8 areas to color plus the background', await ev(`new Set(CB_PICS.map(z=>z.id)).size===12&&CB_PICS.every(z=>z.areas.length>=5&&z.areas.length<=9&&z.areas[0]===CB_BG)`), await ev(`CB_PICS.map(z=>z.id+':'+(z.areas.length-1)).join(' ')`));
+    check('10 big crayons, all different colors', await ev(`CB_CRAYONS.length===10&&new Set(CB_CRAYONS).size===10&&CB_NAMES.length===10`));
+    // every area of every picture can be tapped somewhere (it is on top at that point)
+    await ev(`window.cbSpot=i=>{const el=document.querySelector('#cbSvg [data-a="'+i+'"]');const b=el.getBoundingClientRect();
+      for(let k=0;k<900;k++){const x=b.left+((k*37)%30+0.5)/30*b.width,y=b.top+(Math.floor(k/30)+0.5)/30*b.height;const t=document.elementFromPoint(x,y);if(t===el)return {x,y};}return null;};
+      window.cbTap=i=>{const s=cbSpot(i);if(!s)return false;const el=document.querySelector('#cbSvg [data-a="'+i+'"]');el.dispatchEvent(new PointerEvent('pointerdown',{pointerId:7,bubbles:true,clientX:s.x,clientY:s.y}));return true;};
+      window.crTap=i=>{const el=document.querySelector('#cbCrayons [data-cr="'+i+'"]');el.dispatchEvent(new PointerEvent('pointerdown',{pointerId:8,bubbles:true}));};`);
+    const unreach=await ev(`(()=>{const bad=[];for(const z of CB_PICS){LT.pic=z.id;ltGo('color');z.areas.forEach((_,i)=>{if(!cbSpot(i))bad.push(z.id+':'+i);});}return bad.join(' ');})()`);
+    check('every area of all 12 pictures can be tapped', unreach==='', unreach);
+    await ev(`P().little.colors={};P().little.pay={day:'',n:0};ltGo('colorPick')`);
+    await ev(`document.querySelector('#ltBody [data-pic=dino]').click()`); await sleep(150);
+    check('tapping a picture opens it big, with crayons and ↩️ 🎲 🗑️ 🖼️ (all 48 px+)', await ev(`LT.view==='color'&&LT.pic==='dino'&&document.querySelectorAll('#cbCrayons .cb-crayon').length===10&&document.querySelectorAll('#ltBody [data-cbt]').length===4&&[...document.querySelectorAll('#cbCrayons .cb-crayon,#ltBody [data-cbt]')].every(b=>b.getBoundingClientRect().width>=48&&b.getBoundingClientRect().height>=48)`));
+    await ev(`crTap(3)`);
+    check('tapping a crayon picks it', await ev(`LT.crayon===3&&document.querySelector('#cbCrayons [data-cr="3"]').classList.contains('on')`));
+    const lc0=await ev('P().coins');
+    await ev(`cbTap(5)`);
+    check('tapping an area fills it with that crayon, and it is saved', await ev(`document.querySelector('#cbSvg [data-a="5"]').getAttribute('fill')==='#ffd166'&&P().little.colors.dino[5]==='#ffd166'`));
+    await ev(`crTap(5);cbTap(5)`);
+    await ev(`document.querySelector('#ltBody [data-cbt=undo]').click()`); await sleep(50);
+    check('↩️ takes back the last fill', await ev(`P().little.colors.dino[5]==='#ffd166'&&document.querySelector('#cbSvg [data-a="5"]').getAttribute('fill')==='#ffd166'`));
+    check('nothing is finished yet: no coins', await ev(`P().coins===${lc0}&&P().stats.colored===0`));
+    await ev(`crTap(4);[1,2,3,4,6,7].forEach(i=>cbTap(i))`); await sleep(100);
+    check('coloring every area (not the background) finishes it: 🌟, +1 coin', await ev(`cbDone(P(),cbPic('dino'))&&P().stats.colored===1&&P().coins===${lc0}+1&&!!document.querySelector('.cb-star')`), await ev(`P().coins-${lc0}`));
+    await shot('L03-color-dino');
+    await ev(`crTap(6);cbTap(0)`);
+    check('the background can be colored too (no coin, it was already finished)', await ev(`P().little.colors.dino[0]==='#4d7cff'&&P().coins===${lc0}+1`));
+    await ev(`save()`);
+    check('the colors are in the saved data', await ev(`JSON.parse(localStorage.getItem('hangoutRoom.v1')).profiles.find(p=>p.id===P().id).little.colors.dino[5]==='#ffd166'`));
+    await ev(`ltBackKey()`); await sleep(100);
+    check('Back goes to the pictures; the finished one has a ⭐ and shows its colors', await ev(`LT.view==='colorPick'&&document.querySelector('#ltBody [data-pic=dino]').classList.contains('done')&&!!document.querySelector('#ltBody [data-pic=dino] path[fill="#ffd166"]')`));
+    await ev(`document.querySelector('#ltBody [data-pic=rocket]').click()`); await sleep(100);
+    await ev(`document.querySelector('#ltBody [data-cbt=dice]').click()`); await sleep(100);
+    check('🎲 colors every area at once (and finishing that way counts)', await ev(`P().little.colors.rocket.every(c=>CB_CRAYONS.includes(c))&&P().stats.colored===2&&P().coins===${lc0}+2`));
+    await ev(`document.querySelector('#ltBody [data-cbt=clear]').click()`); await sleep(100);
+    check('🗑️ asks first with picture buttons', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&!!document.querySelector('#modal .cb-ask svg')&&P().little.colors.rocket.some(Boolean)`));
+    await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(100);
+    check('✔ starts the picture again', await ev(`P().little.colors.rocket.every(c=>!c)&&[...document.querySelectorAll('#cbSvg [data-a]')].every(e=>e.getAttribute('fill')==='#fff')`));
+    // 🖼️ hang it up
+    await ev(`LT.pic='dino';ltGo('color');P().artPay={day:'',n:0}`); await sleep(50);
+    const hc0=await ev('P().coins'), hd0=await ev('P().stats.drawings');
+    check('🖼️ Hang it up puts the picture in the Art Desk Gallery', await ev(`cbHang()`)===true);
+    check('…as a new drawing: +5 art coins, counted as a drawing', await ev(`P().coins===${hc0}+5&&P().stats.drawings===${hd0}+1&&P().artPay.n===1`), await ev(`P().coins-${hc0}`));
+    check('…the drawing is a real 800 x 560 picture in her Gallery', await ev(`myArt().then(l=>{const r=l.find(x=>x.id===P().little.hung.dino.art);if(!r||!/^data:image/.test(r.ink)||!r.thumb)return false;return new Promise(ok=>{const i=new Image();i.onload=()=>ok(i.width===800&&i.height===560);i.onerror=()=>ok(false);i.src=r.ink;});})`));
+    check('hanging it again with the same colors does nothing new', await ev(`cbHang().then(r=>r===false&&P().coins===${hc0}+5&&/in your Gallery/.test(document.querySelector('#toast').textContent))`));
+    await ev(`crTap(0);cbTap(1)`);
+    const hid=await ev('P().little.hung.dino.art');
+    check('after changing a color, it updates the same drawing (no more coins)', await ev(`cbHang().then(r=>r===true&&P().little.hung.dino.art==='${hid}'&&P().coins===${hc0}+5&&P().stats.drawings===${hd0}+1)`));
+    check('a blank picture can\'t be hung', await ev(`(LT.pic='robot',P().little.colors.robot=[],cbHang()).then(r=>r===false)`));
+    // 🎵 Sound Mat
+    await ev(`ltGo('menu')`); await ev(`document.querySelector('[data-lt=mat]').click()`); await sleep(150);
+    check('🎵 the Sound Mat: 8 huge pads', await ev(`LT.view==='mat'&&document.querySelectorAll('#ltMat .lt-pad').length===8&&[...document.querySelectorAll('#ltMat .lt-pad')].every(b=>b.getBoundingClientRect().width>=100&&b.getBoundingClientRect().height>=100)`));
+    check('the notes are C D E G A only (any taps sound nice together)', await ev(`LT_NOTES.length===8&&LT_NOTES.every(n=>[0,2,4,7,9].includes(n.m%12))`));
+    await shot('L04-sound-mat');
+    const pd0=await ev('P().stats.pads');
+    await ev(`DB.settings.sound=true;['0','5'].forEach((k,j)=>{const el=document.querySelector('#ltMat [data-pad="'+k+'"]');el.dispatchEvent(new PointerEvent('pointerdown',{pointerId:20+j,bubbles:true}));})`);
+    check('two fingers play two pads at once (each bounces, both counted)', await ev(`P().stats.pads===${pd0}+2&&document.querySelectorAll('#ltMat .lt-pad.hit').length===2`));
+    await ev(`document.querySelector('[data-mat=fun]').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}))`); await sleep(50);
+    check('🥁 Fun sounds: 8 pads, each named for Read to me, and every sound plays', await ev(`LT.mat==='fun'&&document.querySelectorAll('#ltMat .lt-pad').length===8&&[...document.querySelectorAll('#ltMat .lt-pad')].every(b=>speakLabel(b).length>2)&&(LT_FUN.forEach(x=>x.s()),true)`));
+    check('the Sound Mat pays nothing', await ev(`P().coins===${hc0}+5`));
+    // 👀 Peekaboo
+    await ev(`ltGo('menu')`); await ev(`document.querySelector('[data-lt=peek]').click()`); await sleep(200);
+    check('👀 Peekaboo: 6 big hiding spots on the tablet, one friend behind one of them', await ev(`LT.view==='peek'&&document.querySelectorAll('#ltPeek [data-spot]').length===6&&LT.peek.friend>=0&&LT.peek.friend<6&&[...document.querySelectorAll('#ltPeek [data-spot]')].every(g=>g.getBoundingClientRect().width>=100)`));
+    check('the friends who can hide: 6 visitors and her buddy (and her pet once she has one)', await ev(`(f=>f.length>=7&&f.some(x=>x.k==='buddy')&&f.every(x=>x.art().length>50))(ltFriends(P()))`));
+    await shot('L05-peekaboo');
+    const pk0=await ev('P().coins'), pp0=await ev('P().stats.peeks');
+    await ev(`window.pkTap=i=>document.querySelector('#ltPeek [data-spot="'+i+'"]').dispatchEvent(new PointerEvent('pointerdown',{pointerId:30,bubbles:true}))`);
+    await ev(`pkTap((LT.peek.friend+1)%6)`); await sleep(100);
+    check('an empty spot shows a surprise, never a "wrong", and the game goes on', await ev(`LT.peek.open.length===1&&!LT.peek.found&&document.querySelector('#ltPeek [data-spot="'+((LT.peek.friend+1)%6)+'"]').classList.contains('open')&&P().coins===${pk0}`));
+    await ev(`pkTap(LT.peek.friend)`); await sleep(500);
+    check('finding the friend: Peekaboo!, +1 coin, counted', await ev(`LT.peek.found&&!!document.querySelector('#ltPeek .lt-boo')&&P().coins===${pk0}+1&&P().stats.peeks===${pp0}+1`));
+    await shot('L06-peekaboo-found');
+    await ev(`pkTap((LT.peek.friend+2)%6)`);
+    check('taps after finding wait for the next round', await ev(`P().coins===${pk0}+1&&LT.peek.open.length===2`));
+    await sleep(2500);
+    check('a new round starts by itself (no timer to beat)', await ev(`!LT.peek.found&&LT.peek.open.length===0&&!document.querySelector('#ltPeek .lt-boo')`));
+    await ev(`pkTap(LT.peek.friend);ltGo('menu');ltGo('peek')`);
+    check('leaving right after finding a friend: coming back starts a fresh round', await ev(`!LT.peek.found&&LT.peek.open.length===0`));
+    // coins: 10 a day in all
+    await ev(`P().little.pay={day:ltToday(),n:9};LT.noted=''`);
+    const cc0=await ev('P().coins');
+    await ev(`ltPay();ltPay()`);
+    check('+1 coins stop at 10 a day', await ev(`P().coins===${cc0}+1&&P().little.pay.n===10`));
+    await sleep(1000);
+    check('…with a gentle note that it keeps working for fun', await ev(`/full for today/.test(document.querySelector('#toast').textContent)`));
+    await ev(`P().little.pay.day='Mon Jan 01 2001';ltPay()`);
+    check('a new day pays again', await ev(`P().coins===${cc0}+2&&P().little.pay.n===1`));
+    // stickers
+    check('6 stickers on the 🧸 Play page', await ev(`!!STK_PAGES.little&&STICKERS.filter(s=>s.page==='little').length===6`));
+    check('First Colors and On the Wall are earned; Little Artist counts finished pictures', await ev(`(g=>stkDone(P(),g('lt1'))&&stkDone(P(),g('lthang'))&&stkHave(P(),g('lt12'))===1&&!stkDone(P(),g('lt12')))(id=>STICKERS.find(s=>s.id===id))`));
+    check('Little Artist needs all 12 pictures', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));CB_PICS.forEach(z=>{q.little.colors[z.id]=z.areas.map(()=>'#ff8cc6');});return stkDone(q,STICKERS.find(s=>s.id==='lt12'));})()`));
+    // Back
+    await ev(`ltGo('mat')`);
+    check('Android Back: a toy → the 🧸 menu → the room', await ev(`androidBack()&&LT.view==='menu'&&cur==='little'&&androidBack()&&cur==='room'`));
+    await ev(`show('little');LT.view='color';LT.pic='dino';renderLittle()`);
+    check('Back from a picture goes to the pictures', await ev(`androidBack()&&LT.view==='colorPick'`));
+    // phones
+    await send('Emulation.setDeviceMetricsOverride',{width:360,height:740,deviceScaleFactor:1,mobile:true});
+    await ev(`show('room')`); await sleep(200);
+    check('phone 360 px: 🧸 fits in the room bar (icon only, 48 px+)', await ev(`(()=>{const t=document.querySelector('#scr-room .topbar'),b=document.querySelector('#littleBtn').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&b.right<=innerWidth&&b.width>=48;})()`));
+    await shot('L07-phone-room-bar');
+    await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
+    await ev(`show('little');ltGo('menu')`); await sleep(150);
+    check('phone: the 3 menu buttons fit', await ev(`[...document.querySelectorAll('#ltBody .lt-big')].every(b=>{const r=b.getBoundingClientRect();return r.right<=innerWidth&&r.bottom<=innerHeight&&r.height>=100;})`));
+    await ev(`LT.pic='house';ltGo('color')`); await sleep(200);
+    await shot('L08-phone-color');
+    check('phone: the picture, the crayons and the tools fit on screen', await ev(`[...document.querySelectorAll('#cbSvg,#cbCrayons .cb-crayon,#ltBody [data-cbt]')].every(e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1&&r.width>=48;})&&document.querySelector('#cbSvg').getBoundingClientRect().width>=300`));
+    await ev(`ltGo('mat')`); await sleep(150);
+    check('phone: 8 pads fit (2 across)', await ev(`[...document.querySelectorAll('#ltMat .lt-pad')].every(b=>{const r=b.getBoundingClientRect();return r.right<=innerWidth&&r.bottom<=innerHeight&&r.height>=60;})`));
+    await ev(`LT.peek=null;ltGo('peek')`); await sleep(150);
+    check('phone: Peekaboo has 4 big spots', await ev(`document.querySelectorAll('#ltPeek [data-spot]').length===4&&[...document.querySelectorAll('#ltPeek [data-spot]')].every(g=>g.getBoundingClientRect().width>=80)`));
+    await shot('L09-phone-peekaboo');
+    await send('Emulation.setDeviceMetricsOverride',{width:860,height:412,deviceScaleFactor:1,mobile:true});
+    await ev(`LT.pic='robot';ltGo('color')`); await sleep(200);
+    await shot('L10-landscape-color');
+    check('phone landscape: the picture and crayons fit', await ev(`[...document.querySelectorAll('#cbSvg,#cbCrayons .cb-crayon,#ltBody [data-cbt]')].every(e=>{const r=e.getBoundingClientRect();return r.right<=innerWidth+1&&r.bottom<=innerHeight+1;})&&document.querySelector('#cbSvg').getBoundingClientRect().height>=200`));
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    // backups
+    const ltB=await ev(`JSON.stringify(DB)`);
+    await ev(`(()=>{const d=JSON.parse(${JSON.stringify(ltB)});d.version=26;d.profiles.forEach(p=>{delete p.little;delete p.stats.colored;delete p.stats.peeks;delete p.stats.pads;});doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('a v1.45 backup restores with nothing colored yet', await ev(`DB.version===27&&DB.profiles.every(p=>Object.keys(p.little.colors).length===0&&p.little.pay.n===0&&p.stats.colored===0)`));
+    await ev(`closeModal();doRestore(${JSON.stringify(ltB)})`); await sleep(400);
+    check('a v1.46 backup keeps the colors and the hung pictures', await ev(`DB.profiles.some(p=>p.little.colors.dino&&p.little.colors.dino[5]==='#ffd166'&&p.little.hung.dino)`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(ltB)});d.profiles[0].little={colors:{dino:['red',5,'#12345g','#ABCDEF'],x:'no'},hung:{a:{art:3}},pay:[]};doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd Play data is made safe', await ev(`(l=>l.colors.dino.join()===',,,#ABCDEF'&&!('x' in l.colors)&&Object.keys(l.hung).length===0&&l.pay.n===0)(DB.profiles[0].little)`));
+    await ev(`closeModal();stkPaused=false;show('room')`);
+    check('v1.46 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.46')&&APP_VERSION==='1.46'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

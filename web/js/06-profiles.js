@@ -18,7 +18,7 @@ function newProfile(name,fur,color,badge,look){
 function normalize(p){
   if(!p.id) p.id=uid();
   if(!p.name) p.name='Room';
-  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
+  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.fidPay=Object.assign({day:'',n:0},p.fidPay&&typeof p.fidPay==='object'?p.fidPay:{}); if(typeof p.fidPay.n!=='number'||!(p.fidPay.n>=0)) p.fidPay.n=0; // v1.36: fidget coins paid today (see FID_DAILY)
   // Music Maker (v1.38, section 40): sound kit, speed (0-2), the loop on the grid now, 3 saved loops, music coins paid today.
@@ -52,6 +52,13 @@ function normalize(p){
    p.free={day:typeof f.day==='string'?f.day:'',n:Math.max(0,Math.floor(Number(f.n)||0))};
    p.potd={day:typeof d.day==='string'?d.day:''};
    ['free','potd'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));});}
+  // Little Ones' Corner (v1.46, sections 46-47): colors per picture ('#rrggbb' or '' per area), pictures hung in the Gallery,
+  // and coins paid today. Picture ids are checked when they are read (cbCols), so only the types are checked here.
+  {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, l=o(p.little), py=o(l.pay);
+   p.little={colors:Object.fromEntries(Object.entries(o(l.colors)).filter(([k,v])=>Array.isArray(v)).map(([k,v])=>[k,v.slice(0,40).map(c=>typeof c==='string'&&/^#[0-9a-f]{6}$/i.test(c)?c:'')])),
+     hung:Object.fromEntries(Object.entries(o(l.hung)).filter(([k,v])=>v&&typeof v==='object'&&typeof v.art==='string').map(([k,v])=>[k,{art:v.art,sig:typeof v.sig==='string'?v.sig:''}])),
+     pay:{day:typeof py.day==='string'?py.day:'',n:Math.max(0,Math.floor(Number(py.n)||0))}};
+   ['colored','peeks','pads'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));});}
   // Visitors (v1.41, section 42): the wish waiting ('' = nobody), the day the last wish came true, and the wish ids done.
   {const v=p.visit&&typeof p.visit==='object'&&!Array.isArray(p.visit)?p.visit:{};
    p.visit={cur:typeof v.cur==='string'?v.cur:'',day:typeof v.day==='string'?v.day:'',done:Array.isArray(v.done)?v.done.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[]};}
