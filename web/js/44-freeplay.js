@@ -15,8 +15,8 @@
    Saved per room: free{day, n}, potd{day}, stats.free, stats.potd.
    ========================================================= */
 const FREE_DAILY=10, POTD_COINS=5;
-const POTD_GAMES=['train','pop','snack','memory','bake']; // the daily turn (the Maze and Code Lab live on other screens)
-const FP_BRAIN=['snack','memory','pop','train','bake'];   // Brain Games with 🎲 (words and facts can't be made up)
+const POTD_GAMES=['train','pop','snack','memory','bake']; // the daily turn (+ word in 45; the Maze and Code Lab live on other screens)
+const FP_BRAIN=['snack','memory','pop','train','bake'];   // Brain Games with 🎲 (+ word from the word bank in 45; facts can't be made up)
 let fpToldDay='';
 
 /* ---------- the dice ---------- */

@@ -171,6 +171,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   43. `43-together.js` Two-player games (`TG` partner, `tgPick`, `tgPay`; Soccer Duel `TGS`, `tgDraw`; Memory for 2 `TGM`; Stage Together `TGT`)
   44. `44-freeplay.js` 🎲 Free Play + 📅 Puzzle of the Day (`FP_MAKERS` per game: `make(r, lvl)` + `ok(pz, lvl)`, `fpMake`, `fpPay`,
       `fpBrain`, `fpMaze`, `fpCode`, `POTD_GAMES`, `potdGame`, `potdOpen`)
+  45. `45-words.js` Word Builder word bank (`WB_BANK` by level, `WB_PICS`, `FP_MAKERS.word`, `wbBankStart` for trace or
+      👀 look, ✋ hide, spell, `wbLookView`, `wbBankTap`)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -244,9 +246,11 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   again if not). Made-up puzzles are opened through hooks: `brPuzzle(g, l, idx, fz)` with `BR.free` (shuffles use `brKey`),
   `mzStart(i, free)` with `MZ.free`/`mzCur()`, `clOpen(lvl, idx, free)` with `CL.free`/`clPz()`; their wins go to `fpBrainWin`,
   `fpMazeWin`, `fpCodeWin`. They are never saved and never change `brain.solved`, `maze.solved`, `code.solved` or level bonuses.
-  🎲 is in `FP_BRAIN` (snack memory pop train bake: words and facts can't be made up), the maze bar and the Code Lab's Easy/Medium
+  🎲 is in `FP_BRAIN` (snack memory pop train bake, + word since v1.45; facts can't be made up), the maze bar and the Code Lab's Easy/Medium
   lists. The 📅 card (`BR_MENU_TOP`) turns through `POTD_GAMES` by the date (`fpDay()`; the smoke test sets `FP_TEST_DAY`) and
   seeds with the date. A new game that can be generated gets a `FP_MAKERS` entry (and its `ok` should also pass its fixed puzzles).
+  Word Builder (since v1.45) draws words from `WB_BANK` (the owner's list); a bank word is `{bank:1, w, x, pic}` and plays through
+  `wbBankStart` (Easy traces faint letters; Medium/Hard: 👀 look, ✋ hide, spell, 👀 peeks, no timer). Extra letters are never in the word.
 - Visitors (since v1.41, `42-visitors.js`): one friend at a time stands at `VISIT_SPOT` in whichever room is on screen
   (`visitG`, in the floor layer, `data-hot="visitor"`). A wish is `{id, who, icon, title, say, parts[]}`; a part is one line of the
   card with `have(p, R)` and `n`, built by `vInRoom`/`vWear` (theme chips, so new themed items count automatically) or the fixed

@@ -131,6 +131,24 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Word Builder word bank (since version 1.45)
+🔤 Word Builder now has a word bank made from the family's own spelling list, sorted by age, so spelling practice never
+runs out. The 8 puzzles per level that were already there stay exactly the same.
+- **🎲 Free Play:** tap 🎲 after the puzzle numbers for a new word from the bank (+1 coin each, sharing the same 10 a day as
+  the other Free Play games).
+- **Easy (ages 3–5):** the word's letters show faintly in the boxes, so she copies them by tapping the letters in order.
+  A picture shows when the word has one (cat, fox, robot, rocket…).
+- **Medium (ages 6–8) and Hard (ages 9–13):** 👀 look at the word, tap **✋ Hide it**, then spell it from the letters.
+  **👀 Peek** shows the word again any time, and keeps what she has spelled. There is no timer.
+- **🔊** says the word on the tablet (it works even when Read to me is off). It also says the word when the puzzle opens and
+  when it is spelled. In a computer browser there is no voice, so the button is hidden.
+- **📅 Puzzle of the Day** now turns through 6 games: Word Builder joins the other 5.
+- The word list: about 140 Easy words (3–5 letters), 300 Medium words (up to 9 letters) and 230 Hard words (up to
+  11 letters), all with American spelling. Left out: one- and two-letter words, the homophones (their/there… only make
+  sense in a sentence), a few words that don't suit the app, and 3 very long words. Added: web, bat, cub / robot, rocket,
+  slime, goal, ghost, comet / dinosaur, volcano, galaxy, astronaut, telescope.
+- No change to the save data.
+
 ## American spelling (since version 1.44)
 The children learn American English, so the app now uses American spelling everywhere it shows words: color,
 favorite, gray, cozy, tire, and the 🍂 season is called **Fall**. Nothing else changes: saves, items and backups
