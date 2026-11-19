@@ -78,7 +78,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`, and (since v1.36) `fidPay{day,n}` (fidget coins paid today), and (since v1.38) `music{kit, speed, cur, slots[3], pay{day,n}}`, and (since v1.40) `room4{wall,floor,items[]}` (the Studio; wall and floor are `''` until the first visit), and (since v1.41) `visit{cur, day, done[]}` (Visitors), `stats.wishes`, and (since v1.42) `duo{day, n, soccer, memory, stage}` (two-player coins today + games played).
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`, and (since v1.36) `fidPay{day,n}` (fidget coins paid today), and (since v1.38) `music{kit, speed, cur, slots[3], pay{day,n}}`, and (since v1.40) `room4{wall,floor,items[]}` (the Studio; wall and floor are `''` until the first visit), and (since v1.41) `visit{cur, day, done[]}` (Visitors), `stats.wishes`, and (since v1.42) `duo{day, n, soccer, memory, stage}` (two-player coins today + games played), and (since v1.43) `free{day, n}` (Free Play coins today), `potd{day}` (the last day the Puzzle of the Day was solved), `stats.free`, `stats.potd`.
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
   optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it. So does `settings.lastBackup` (ms, since v1.30).
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
@@ -169,6 +169,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   41. `41-studio.js` Studio + getting around (`ROOM_MAP`, `roomLinks`, `roomTabs`, `mapOpen`, `studioFurniture`, `studioStart`, the free `builtShelf`)
   42. `42-visitors.js` Visitors & wishes (`VISIT_FRIENDS` front-view SVG friends, `VISIT_WISHES`, `VISIT_SPOT`, `visitG`, `visitTap`, `visitCheck`, `VISIT_PLUSH`)
   43. `43-together.js` Two-player games (`TG` partner, `tgPick`, `tgPay`; Soccer Duel `TGS`, `tgDraw`; Memory for 2 `TGM`; Stage Together `TGT`)
+  44. `44-freeplay.js` 🎲 Free Play + 📅 Puzzle of the Day (`FP_MAKERS` per game: `make(r, lvl)` + `ok(pz, lvl)`, `fpMake`, `fpPay`,
+      `fpBrain`, `fpMaze`, `fpCode`, `POTD_GAMES`, `potdGame`, `potdOpen`)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -237,6 +239,14 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   shared). The Stage's `duo` level (`STG_LEVELS.duo`: Medium chart, Easy timing; lane 0 = player 1) is used while `TGT.on` and is never
   saved; `stFinish` hands over to `tgStageEnd`. Memory for 2 is the Brain Games view `duo` (`#brDuo`). Two-player games must never
   change bests, trophies, gloves, stars, `brain.solved` or `stats.matches`; they pay through `tgPay` only.
+- Free Play + Puzzle of the Day (since v1.43, `44-freeplay.js`): a maker turns a seed into a puzzle in the game's own format
+  (`brRand`, so the same seed = the same puzzle) and its `ok()` checks it with the same rules as the fixed puzzles (the dice roll
+  again if not). Made-up puzzles are opened through hooks: `brPuzzle(g, l, idx, fz)` with `BR.free` (shuffles use `brKey`),
+  `mzStart(i, free)` with `MZ.free`/`mzCur()`, `clOpen(lvl, idx, free)` with `CL.free`/`clPz()`; their wins go to `fpBrainWin`,
+  `fpMazeWin`, `fpCodeWin`. They are never saved and never change `brain.solved`, `maze.solved`, `code.solved` or level bonuses.
+  🎲 is in `FP_BRAIN` (snack memory pop train bake: words and facts can't be made up), the maze bar and the Code Lab's Easy/Medium
+  lists. The 📅 card (`BR_MENU_TOP`) turns through `POTD_GAMES` by the date (`fpDay()`; the smoke test sets `FP_TEST_DAY`) and
+  seeds with the date. A new game that can be generated gets a `FP_MAKERS` entry (and its `ok` should also pass its fixed puzzles).
 - Visitors (since v1.41, `42-visitors.js`): one friend at a time stands at `VISIT_SPOT` in whichever room is on screen
   (`visitG`, in the floor layer, `data-hot="visitor"`). A wish is `{id, who, icon, title, say, parts[]}`; a part is one line of the
   card with `have(p, R)` and `n`, built by `vInRoom`/`vWear` (theme chips, so new themed items count automatically) or the fixed
@@ -332,6 +342,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   Fidgets (v1.16): 1 per 5 slime stretches, 1 per 25 clicker clicks, Marble Maze +3 per new maze, +1 per replay, +5 once for all.
   Sticker Book (v1.18): +2 per sticker, once each. Pet (v1.19): earns nothing; a treat costs 2. Music Maker (v1.38): +3 per saved new loop, 3 a day.
   Two-player (v1.42): +3 per finished game to each player's room (not a Guest), 15 a day (`TG_DAILY`).
+  Free Play (v1.43): +1 per made-up puzzle, 10 a day (`FREE_DAILY`); 📅 Puzzle of the Day +5 once a day (no streak).
   Visitors (v1.41): +5 per wish that comes true (one new friend a day), and a plush after a friend's 3 wishes.
   Item prices are 0–40, except ⭐ big dreams (`dream:1`, 60–100, since v1.29). Keep earning steady and fair.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).

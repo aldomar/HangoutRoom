@@ -44,7 +44,7 @@ const memDeck=(l,idx)=>brShuffle([...MEM_SETS[l][idx],...MEM_SETS[l][idx]],brId(
 BRAIN_GAMES.memory={icon:'🃏',name:'Memory Match',desc:'Find the pairs',color:'#a97cff',
   puzzles:{easy:MEM_SETS.easy,medium:MEM_SETS.medium,hard:MEM_SETS.hard},
   start(pz,l,idx){
-    const p=P(), deck=memDeck(l,idx), faces={}; pz.forEach(id=>{faces[id]=memPic(id);});
+    const p=P(), deck=BR.free?brShuffle([...pz,...pz],BR.free.key):memDeck(l,idx), faces={}; pz.forEach(id=>{faces[id]=memPic(id);});
     MEM={cards:deck.map(id=>({id,open:false,got:false})),open:[],lock:false,found:0};
     $('#brQ').innerHTML=`<div class="br-ask">${p.easy?'🃏 🔍':`Find the ${pz.length} pairs! Tap two cards.`}</div>`;
     const cols=deck.length<=6?3:deck.length<=12?4:5;
@@ -90,7 +90,7 @@ let POP={sel:-1,popped:0,need:0,order:[]};
 BRAIN_GAMES.pop={icon:'🫧',name:'Number Pop',desc:'Pop the right bubbles',color:'#8ff0d0',
   puzzles:POP_SETS,
   start(pz,l,idx){
-    const p=P(), order=brShuffle(pz.b.map((n,i)=>i),brId('pop',l,idx));
+    const p=P(), order=brShuffle(pz.b.map((n,i)=>i),brKey('pop',l,idx));
     POP={sel:-1,popped:0,need:popNeed(pz,l),order,pz,l};
     const dots=n=>`<span class="br-dots">${'●'.repeat(n)}</span>`;
     $('#brQ').innerHTML=l==='easy'?`<div class="br-ask">${p.easy?'🫧':'Pop every'} <span class="pop-target"><b>${pz.t}</b>${dots(pz.t)}</span></div>`

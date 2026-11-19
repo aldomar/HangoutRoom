@@ -200,9 +200,11 @@ const MAZES=[
 const MZ_ACC=14, MZ_R=0.3, MZ_TILT=20; // full push in cells/s², marble radius in cells, degrees of tilt for a full push
 const MZ={i:0,x:0,y:0,vx:0,vy:0,roll:0,drop:0,done:false,fing:null,tilt:{on:true,seen:false,base:null,x:0,y:0},listening:false,geo:null,knock:0,hit:{},cells:null};
 const mzc=$('#mazeCv');
-function mzCell(c,r){const m=MAZES[MZ.i].map;return r<0||r>=m.length||c<0||c>=m[0].length?'#':m[r][c];}
-function mzStart(i){
-  MZ.i=clamp(i|0,0,MAZES.length-1); const m=MAZES[MZ.i].map;
+// (v1.43) MZ.free = a made-up 🎲 maze {id:'free', name, map} (section 44); otherwise the fixed maze MZ.i
+const mzCur=()=>MZ.free||MAZES[MZ.i];
+function mzCell(c,r){const m=mzCur().map;return r<0||r>=m.length||c<0||c>=m[0].length?'#':m[r][c];}
+function mzStart(i,free){
+  MZ.free=free||null; if(!free) MZ.i=clamp(i|0,0,MAZES.length-1); const m=mzCur().map;
   m.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch==='S'){MZ.x=c+0.5;MZ.y=r+0.5;}if(ch==='G'){MZ.gx=c+0.5;MZ.gy=r+0.5;}}));
   MZ.vx=MZ.vy=0; MZ.drop=0; MZ.done=false; MZ.tilt.base=null; MZ.hit={};
   mzBar();
@@ -210,12 +212,14 @@ function mzStart(i){
 function mzOpen(){const p=P();if(MZ.i===0&&!MZ.started){MZ.started=1;const k=MAZES.findIndex(m=>!p.maze.solved.includes(m.id));mzStart(k<0?0:k);}else mzBar();}
 function mzBar(){
   const p=P(); if(!p) return;
-  $('#mazeBar').innerHTML=MAZES.map((m,i)=>`<button class="tab mzb${i===MZ.i?' on':''}" data-mz="${i}">${i+1}${p.maze.solved.includes(m.id)?' ⭐':''}</button>`).join('')
+  $('#mazeBar').innerHTML=MAZES.map((m,i)=>`<button class="tab mzb${i===MZ.i&&!MZ.free?' on':''}" data-mz="${i}">${i+1}${p.maze.solved.includes(m.id)?' ⭐':''}</button>`).join('')
+    +(typeof fpMazeBtn==='function'?fpMazeBtn():'') // 🎲 Free Play (section 44)
     +(MZ.tilt.seen?`<button class="tab mzb" id="mzTilt">📱 ${MZ.tilt.on?'Tilt ON':'Tilt OFF'}</button>`:'');
   const on=$('#mazeBar .mzb.on'), bar=$('#mazeBar'); // (v1.37) a scrolling bar keeps the current maze in view
   if(on&&bar.scrollWidth>bar.clientWidth) bar.scrollLeft=on.offsetLeft-(bar.clientWidth-on.offsetWidth)/2;
 }
 $('#mazeBar').onclick=e=>{
+  if(e.target.closest('#mzDice')){SFX.click();fpMaze();return;}
   if(e.target.closest('#mzTilt')){MZ.tilt.on=!MZ.tilt.on;MZ.tilt.base=null;SFX.click();mzBar();return;}
   const b=e.target.closest('[data-mz]'); if(!b) return; SFX.click(); mzStart(+b.dataset.mz);
 };
@@ -247,7 +251,7 @@ function mzPush(){ // which way the marble is pushed, -1..1 on each axis
   return {x:0,y:0};
 }
 function mzStep(dt){
-  const m=MAZES[MZ.i].map, cols=m[0].length, rows=m.length, g=mzPush(), n=4, h=dt/n;
+  const m=mzCur().map, cols=m[0].length, rows=m.length, g=mzPush(), n=4, h=dt/n;
   for(let s=0;s<n;s++){
     MZ.vx+=g.x*MZ_ACC*h; MZ.vy+=g.y*MZ_ACC*h;
     const fr=Math.exp(-0.9*h); MZ.vx*=fr; MZ.vy*=fr;
@@ -273,6 +277,7 @@ function mzStep(dt){
   MZ.knock-=dt; for(const k in MZ.hit) MZ.hit[k]-=dt;
 }
 function mzWin(){
+  if(MZ.free){fpMazeWin();return;}
   const p=P(), m=MAZES[MZ.i], first=!p.maze.solved.includes(m.id), G=MZ.geo, r=mzc.getBoundingClientRect();
   p.stats.mazes++; if(first) p.maze.solved.push(m.id);
   const all=first&&MAZES.every(q=>p.maze.solved.includes(q.id));
@@ -285,7 +290,7 @@ function mzWin(){
 }
 function drawMaze(dt){
   const {ctx,W,H}=fit(mzc); ctx.clearRect(0,0,W,H);
-  const m=MAZES[MZ.i].map, cols=m[0].length, rows=m.length, foot=document.body.classList.contains('easy')?8:30;
+  const m=mzCur().map, cols=m[0].length, rows=m.length, foot=document.body.classList.contains('easy')?8:30;
   const cs=Math.max(8,Math.min((W-24)/cols,(H-foot-22)/rows)), bw=cs*cols, bh=cs*rows, ox=(W-bw)/2, oy=Math.max(11,(H-foot-bh)/2);
   MZ.geo={cs,ox,oy,mx:ox+bw/2,my:oy+bh/2,short:Math.min(bw,bh)};
   if(!MZ.done&&!MZ.drop&&$('#modal').classList.contains('hidden')) mzStep(dt);

@@ -346,7 +346,7 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   No timer, no failing. The new room is the natural place for decorating requests.
 - ✅ **👯 Two-player games (v1.42, built; plan details below, agreed 2026-11-19):** take turns on one tablet: one kicks, one keeps (both Soccer modes exist), 2-player
   Memory Match, and tapping the beat together on the Stage.
-- **🎲 Free Play + Puzzle of the Day (v1.43, plan details below, waiting for the owner's OK):** endless generated puzzles
+- ✅ **🎲 Free Play + Puzzle of the Day (v1.43, built; plan details below, agreed 2026-11-19):** endless generated puzzles
   (made from a seed, never saved by id) for the mazes, simple Code Lab boards and 5 Brain Games; one generated
   puzzle a day for a small bonus, with no streak and no "missed it".
 - **Later, any order:** 💃 Dance Maker (buddy moves to a Music Maker loop or Stage song), 👗 Runway (style a look for a theme
@@ -407,7 +407,7 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   `43-together.js` with small hooks in Soccer, Brain Games and the Stage. Smoke test: the partner picker, a whole duel with
   both inputs at once, Memory turns and scores, a Stage song split by lane, coins and the daily limit, a restore from v1.41.
 
-#### v1.43 plan details: 🎲 Free Play + 📅 Puzzle of the Day (proposed 2026-11-19, waiting for the owner's OK)
+#### v1.43 plan details: 🎲 Free Play + 📅 Puzzle of the Day (agreed 2026-11-19)
 Owner's answers so far (2026-11-19): Free Play is **always open**; **+1 coin each, 10 a day**; the Puzzle of the Day is a
 **card on the Brain Games menu**; it pays **+5 coins**.
 - **How a puzzle is made:** a small "dice" (a random number maker started from a seed) builds a puzzle from rules. The same
@@ -456,6 +456,10 @@ Owner's answers so far (2026-11-19): Free Play is **always open**; **+1 coin eac
   games; +1 coins up to 10 then the note; a new day refills; the daily card: the right game by date (only the 5 rotation games), +5 once, then
   "Solved today", a new puzzle the next day, no streak words anywhere; fixed-puzzle progress unchanged; the stickers; a
   restore from v1.42; phone layouts.
+- As built: one file, `44-freeplay.js` (about 22 KB, so no second file was needed). On Easy, Code Lab boards may have up to 2 toy
+  blocks; Medium boards have none (so the fewest blocks can be worked out exactly). Free Play mazes count for Marble Marathon,
+  like a replay. The "coins are full" note shows once a day in the done box. The makers' checks also pass every fixed puzzle. Mazes are corridor mazes (rooms joined by a random search, so there is always
+  a way through, plus 1–3 extra gaps and a few nooks in the bottom row), mirrored so the start can be in any corner.
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.

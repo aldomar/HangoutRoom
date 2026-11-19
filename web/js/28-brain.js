@@ -14,7 +14,9 @@ const BRAIN_GAMES={};
 const BR_MENU_EXTRA=[]; // v1.34: functions p => HTML added under the games on the menu (the 🪐 Fact Cards binder button)
 const BR_MENU_TOP=[];   // v1.42: functions p => HTML added above the games (👯 Memory for 2, section 43)
 const brId=(g,l,i)=>`${g}:${l[0]}${i+1}`;
-let BR={view:'menu',game:'snack',lvl:'easy',idx:0,won:false,timer:0,tok:0};
+let BR={view:'menu',game:'snack',lvl:'easy',idx:0,won:false,timer:0,tok:0,free:null};
+// (v1.43) the shuffle seed of a puzzle: its id, or for a made-up 🎲 / 📅 puzzle (section 44) its own key
+const brKey=(g,l,idx)=>BR.free?BR.free.key:brId(g,l,idx);
 const brSolved=(p,g,l)=>BRAIN_GAMES[g].puzzles[l].filter((z,i)=>p.brain.solved.includes(brId(g,l,i))).length;
 const brLevelDone=(p,g,l)=>brSolved(p,g,l)===BRAIN_GAMES[g].puzzles[l].length;
 
@@ -26,7 +28,7 @@ function brMenu(){
   $('#brMenu').classList.remove('hidden'); $('#brPlay').classList.add('hidden'); $('#brDuo').classList.add('hidden');
   $('#brBack').textContent='⬅ Room'; $('#brTitle').textContent='📚 Brain Games';
   $('#brMenu').innerHTML=`<div class="stg-note">${p.easy?'🧠 ✨':'Pick a game! Every puzzle you solve the first time pays 🪙'}</div>`
-    +BR_MENU_TOP.map(f=>f(p)).join('')+`<div class="br-games">`+Object.keys(BRAIN_GAMES).map(g=>{const G=BRAIN_GAMES[g];
+    +`<div class="br-top">${BR_MENU_TOP.map(f=>f(p)).join('')}</div>`+`<div class="br-games">`+Object.keys(BRAIN_GAMES).map(g=>{const G=BRAIN_GAMES[g];
       const n=BRAIN_LVLS.reduce((a,l)=>a+brSolved(p,g,l),0), all=BRAIN_LVLS.reduce((a,l)=>a+G.puzzles[l].length,0);
       return `<button class="br-game" data-game="${g}" style="--gc:${G.color}"><span class="br-gi">${G.icon}</span><b>${G.name}</b>`
         +`<small class="hint">${G.desc}</small><span class="br-pips">${BRAIN_LVLS.map(l=>`<i class="${brLevelDone(p,g,l)?'on':''}">${l==='easy'?'🐣':l==='medium'?'🌟':'🧠'}</i>`).join('')}</span>`
@@ -43,22 +45,26 @@ $('#brBack').onclick=()=>{SFX.click();brBackKey();};
 function brBackKey(){if(BR.view!=='menu')brMenu();else show('room');} // Android Back: a puzzle -> the menu -> room
 
 /* ---------- the puzzle screen: level tabs, 8 puzzle buttons, the question and the board ---------- */
-function brPuzzle(g,l,idx){
-  const p=P(), G=BRAIN_GAMES[g], pz=G&&G.puzzles[l]&&G.puzzles[l][idx]; if(!pz) return;
-  brStop(); Object.assign(BR,{view:'play',game:g,lvl:l,idx,won:false});
+// fz (v1.43, section 44): a made-up puzzle {pz, key, idx, daily} for 🎲 Free Play or the 📅 Puzzle of the Day.
+function brPuzzle(g,l,idx,fz){
+  const p=P(), G=BRAIN_GAMES[g], pz=fz?fz.pz:G&&G.puzzles[l]&&G.puzzles[l][idx]; if(!pz) return;
+  brStop(); Object.assign(BR,{view:'play',game:g,lvl:l,idx,won:false,free:fz||null});
   $('#brMenu').classList.add('hidden'); $('#brPlay').classList.remove('hidden');
-  $('#brBack').textContent='⬅ Games'; $('#brTitle').textContent=`${G.icon} ${G.name}`;
+  $('#brBack').textContent='⬅ Games'; $('#brTitle').textContent=fz&&fz.daily?'📅 Puzzle of the Day':`${G.icon} ${G.name}`;
   $$('#brTabs [data-lvl]').forEach(b=>b.classList.toggle('on',b.dataset.lvl===l));
   $$('#brTabs [data-duo]').forEach(b=>b.classList.toggle('hidden',b.dataset.duo!==g)); // 👯 2 players (Memory Match, section 43)
-  $('#brDots').innerHTML=G.puzzles[l].map((z,i)=>`<button class="br-dot${p.brain.solved.includes(brId(g,l,i))?' done':''}${i===idx?' on':''}" data-pz="${i}">${i+1}</button>`).join('');
+  $('#brDots').innerHTML=G.puzzles[l].map((z,i)=>`<button class="br-dot${p.brain.solved.includes(brId(g,l,i))?' done':''}${i===idx&&!fz?' on':''}" data-pz="${i}">${i+1}</button>`).join('')
+    +(typeof fpDice==='function'?fpDice(g,l):''); // the 🎲 Free Play button (section 44)
   $('#brMsg').textContent=''; $('#brQ').innerHTML=''; $('#brBoard').innerHTML=''; $('#brBoard').className='br-board br-'+g;
   G.start(pz,l,idx);
 }
 $('#brTabs').onclick=e=>{const b=e.target.closest('[data-lvl]');if(!b||BR.view!=='play')return;const p=P();
   p.brain.level[BR.game]=b.dataset.lvl; save(); SFX.click();
+  if(BR.free&&!BR.free.daily&&typeof fpBrain==='function'){fpBrain(BR.game,b.dataset.lvl);return;} // in 🎲 Free Play a tab makes a new one
   const list=BRAIN_GAMES[BR.game].puzzles[b.dataset.lvl], first=list.findIndex((z,i)=>!p.brain.solved.includes(brId(BR.game,b.dataset.lvl,i)));
   brPuzzle(BR.game,b.dataset.lvl,first<0?0:first);};
-$('#brDots').onclick=e=>{const b=e.target.closest('[data-pz]');if(b){SFX.click();brPuzzle(BR.game,BR.lvl,Number(b.dataset.pz));}};
+$('#brDots').onclick=e=>{if(e.target.closest('[data-dice]')){SFX.click();fpBrain(BR.game,BR.lvl);return;}
+  const b=e.target.closest('[data-pz]');if(b){SFX.click();brPuzzle(BR.game,BR.lvl,Number(b.dataset.pz));}};
 function brSay(t){const m=$('#brMsg');m.textContent=t;m.classList.remove('pop');void m.offsetWidth;m.classList.add('pop');}
 function brWobble(el){if(!el)return;el.classList.remove('wob');void el.offsetWidth;el.classList.add('wob');}
 function brOops(el){SFX.locked();vibrate(15);brWobble(el);brSay(P().easy?'🙈 🔁':'Not quite. Try again! 💪');}
@@ -66,6 +72,7 @@ function brOops(el){SFX.locked();vibrate(15);brWobble(el);brSay(P().easy?'🙈 �
 function brWin(){
   const p=P(), g=BR.game, l=BR.lvl, idx=BR.idx, id=brId(g,l,idx), first=!p.brain.solved.includes(id), G=BRAIN_GAMES[g];
   if(BR.won) return; BR.won=true;
+  if(BR.free){fpBrainWin();return;} // a 🎲 / 📅 puzzle pays its own way and never counts as solved (section 44)
   let coins=0, all=false;
   if(first){p.brain.solved.push(id);coins=BRAIN_COINS;all=brLevelDone(p,g,l);if(all)coins+=BRAIN_BONUS;}
   SFX.cheer(); vibrate(30); brSay(p.easy?'🎉🎉🎉':'You did it! 🎉');
