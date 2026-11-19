@@ -72,7 +72,7 @@ _Last updated: 2026-11-19_
   `feature/room4` (from `feature/depth`; #39 is now merged, so the PR goes straight to `main`).
   - **✨ Studio + 🗺️ getting around: done** (v1.40 merged, PR #40). The owner named the room ✨ Studio.
   - **🚪 Visitors & wishes: done** (v1.41 merged, PR #41).
-  - **👯 Two-player games: built as v1.42** on branch `feature/together` (from `main` after #41). Plan agreed 2026-11-19
+  - **👯 Two-player games: built, PR #42 open as v1.42** on branch `feature/together` (from `main` after #41). Plan agreed 2026-11-19
     (see "Two-player games" under Decisions and `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -124,7 +124,7 @@ _Last updated: 2026-11-19_
 - PR #39 "Room depth (v1.39)": merged.
 - PR #40 "Studio + getting around (v1.40)": merged.
 - PR #41 "Visitors & wishes (v1.41)": merged.
-- PR "Play Together (v1.42)" on branch `feature/together`: open.
+- PR #42 "Play Together (v1.42)" on branch `feature/together`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
