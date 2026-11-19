@@ -809,3 +809,75 @@ body.easy .br-daily .br-dt b{display:none}
   .cb-tools{grid-template-columns:repeat(4,56px)}}
 /* a short landscape phone: crayons in 2 rows of 5, tools in one row (v1.46) */
 @media (orientation:landscape) and (max-height:520px){.cb-crayons{grid-template-columns:repeat(5,48px);gap:8px}.cb-crayon{width:48px;height:48px}.cb-tools{grid-template-columns:repeat(4,52px);gap:8px}.cb-tools .btn{min-width:52px;min-height:52px}.cb-side{gap:10px}}
+/* ---------- 💃 Dance Maker (v1.47, section 48) ---------- */
+.dn-wrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;gap:18px;padding:10px;--s:min(56px,calc((100vw - 400px)/9.4))}
+.dn-floor{position:relative;flex:0 1 380px;align-self:stretch;max-height:560px;min-height:240px;border-radius:24px;overflow:hidden;
+  background:radial-gradient(ellipse 70% 14% at 50% 88%,#5b3a99 0 98%,transparent 100%),linear-gradient(#2b1846,#120a1e);perspective:600px}
+.dn-lights{position:absolute;top:10px;left:0;right:0;display:flex;justify-content:space-around;padding:0 10px}
+.dn-lights i{width:14px;height:14px;border-radius:50%;background:var(--k);opacity:.3;transition:opacity .12s}
+.dn-lights i.on{opacity:1;box-shadow:0 0 12px var(--k)}
+.dn-dancer{position:absolute;left:50%;bottom:8%;height:62%;aspect-ratio:200/270;transform:translateX(-50%);--bt:.5s;--d:1}
+.dn-dancer img{width:100%;height:100%;display:block;transform-origin:50% 95%;pointer-events:none;user-select:none;-webkit-user-select:none}
+.dn-fx{position:absolute;inset:0;pointer-events:none}
+.dn-fx span{position:absolute;top:38%;font-size:30px;animation:emRise 1.2s ease-out both}
+.dn-side{display:flex;flex-direction:column;gap:10px;align-items:center;max-width:520px}
+.dn-musbtn{min-height:60px;font-size:18px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dn-hint{font-size:16px;text-align:center;min-height:20px}
+.dn-slots{display:grid;grid-template-columns:repeat(8,var(--s));gap:6px}
+.dn-slot{position:relative;width:var(--s);height:calc(var(--s) + 8px);min-height:48px;border:3px dashed var(--line);border-radius:12px;background:var(--panel);font-size:calc(var(--s)*.5);display:flex;align-items:center;justify-content:center;color:var(--ink);padding:0}
+.dn-slot.full{border-style:solid;border-color:var(--purple);background:var(--panel2)}
+.dn-slot.now{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold);transform:scale(1.06)}
+.dn-slot b{position:absolute;top:1px;left:5px;font-size:12px;opacity:.7}
+.dn-moves{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%}
+.dn-move{min-height:64px;border:0;border-radius:16px;background:var(--panel2);font-size:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;color:var(--ink);cursor:pointer}
+.dn-move span{font-size:14px;font-weight:800}
+.dn-move:active{transform:scale(.94)}
+body.easy .dn-move{min-height:76px;font-size:34px}
+.dn-save svg{display:none}
+.dn-mini{font-size:15px;letter-spacing:-2px}
+.dn-big{font-size:34px;text-align:center;line-height:1.5}
+.dn-mus{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;max-height:52vh;overflow:auto}
+.dn-mus .btn{min-height:52px}
+.tab.dance{border-color:var(--mint)}
+/* the moves: whole-body, one beat long (--bt); --d is 1 or -1 so sways go left and right in turn */
+.dn-dancer.dm-nod img{animation:dmNod var(--bt) ease-out}
+.dn-dancer.dm-h img{animation:dmHop var(--bt) ease-out}
+.dn-dancer.dm-s img{animation:dmSway var(--bt) ease-in-out}
+.dn-dancer.dm-p img{animation:dmSpin var(--bt) ease-in-out}
+.dn-dancer.dm-w img{animation:dmWiggle var(--bt) linear}
+.dn-dancer.dm-b img{animation:dmBounce var(--bt) ease-out}
+.dn-dancer.dm-c img{animation:dmClap var(--bt) ease-out}
+.dn-dancer.dm-j img{animation:dmJump var(--bt) ease-out}
+.dn-dancer.dm-o img{animation:dmBow var(--bt) ease-in-out}
+@keyframes dmNod{40%{transform:translateY(3%) scale(1.02,.97)}}
+@keyframes dmHop{0%,100%{transform:none}10%{transform:scale(1.08,.9)}45%{transform:translateY(-22%) scale(.96,1.05)}80%{transform:scale(1.06,.93)}}
+@keyframes dmSway{50%{transform:rotate(calc(var(--d)*13deg)) translateX(calc(var(--d)*8%))}}
+@keyframes dmSpin{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
+@keyframes dmWiggle{0%,100%{transform:none}20%{transform:skewX(9deg)}40%{transform:skewX(-9deg)}60%{transform:skewX(7deg)}80%{transform:skewX(-7deg)}}
+@keyframes dmBounce{0%,100%{transform:none}35%{transform:scale(1.14,.78)}65%{transform:scale(.95,1.06)}}
+@keyframes dmClap{0%,100%{transform:none}25%{transform:scale(1.07)}50%{transform:scale(.97)}75%{transform:scale(1.05)}}
+@keyframes dmJump{0%,100%{transform:none}15%{transform:scale(1.1,.85)}50%{transform:translateY(-26%) scale(1.15) rotate(calc(var(--d)*8deg))}85%{transform:scale(1.05,.95)}}
+@keyframes dmBow{0%,100%{transform:none}50%{transform:rotateX(32deg) scale(.97)}}
+@media (max-aspect-ratio:1/1){
+  .dn-wrap{flex-direction:column;justify-content:flex-start;--s:min(56px,calc((100vw - 76px)/8))}
+  .dn-floor{flex:0 0 auto;align-self:center;width:min(100%,420px);height:min(34vh,340px);min-height:200px}
+  .dn-side{width:100%}
+}
+@media (max-height:520px) and (min-aspect-ratio:1/1){
+  .dn-move{min-height:48px;font-size:22px}
+  .dn-move span{display:none}
+  .dn-side{gap:6px}
+}
+@media (max-aspect-ratio:1/1) and (max-width:560px){
+  .dn-wrap{--s:min(60px,calc((100vw - 60px)/4));gap:10px;padding:8px}
+  .dn-floor{height:min(26vh,300px);min-height:170px}
+  .dn-slots{grid-template-columns:repeat(4,var(--s))}
+  .dn-side{gap:8px}
+  .dn-move{min-height:50px;font-size:24px}
+  .dn-slot{height:var(--s)}
+  .dn-save{width:58px;height:54px}
+  #dnIdeas .tn{display:none}
+  #dnPlay{min-width:0;flex:1 1 auto}
+  .dn-musbtn{max-width:190px}
+  .dn-mini{font-size:12px}
+}

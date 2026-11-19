@@ -131,6 +131,21 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Dance Maker (since version 1.47)
+Your buddy dances to music, with moves you pick. Open it with **💃 Dance** in the 🎹 Music Maker or the **💃 Dance** tab on the 🎤 Stage
+(Back goes to where you came from).
+- **Make a dance:** 8 beats in a row. Tap a move (🦘 Hop, ↔️ Sway, 🌀 Spin, 🐛 Wiggle, ⬇️ Bounce, 👏 Clap, ⭐ Star jump, 🙇 Bow)
+  to put it in the next empty beat. Tap a beat to take its move out. An empty beat is a little nod.
+- **▶️ Play:** the music plays and your buddy dances the 8 beats round and round, right on the beat.
+- **🕺 Free dance:** while the music plays, tap any move and your buddy does it on the next beat (nothing to plan; great
+  for the little ones).
+- **🎵 Music:** 🥁 a plain beat, 🎹 your Music Maker loop, a 💾 saved loop, or any of the 8 Stage songs (a song plays once).
+- **💾 1 2 3** save dances, **🎁 Ideas** has 3 ready-made dances, 🗑️ clears (it asks first).
+- Saving a new dance gives **3 coins, 3 times a day** (like the Music Maker). 3 new stickers on the Stage page:
+  💃 First Dance, 🕺 All the Moves (all 8 in one dance) and 🪩 Dance Party (dance to 3 different Stage songs).
+- The 🎤 Stage sign in the Cozy Loft now hangs on the wall right above the 🎹 keyboard, so the music things are together.
+- Save version 28 (`dance`); every older backup still restores (with no dances yet).
+
 ## Little Ones' Corner (since version 1.46)
 Toys for the youngest players (and anyone else) where **nothing can go wrong**: no reading needed, no scores, no
 timers, nothing to lose. Tap **🧸 Play** in the top bar of any room, then one of 3 big pictures:
@@ -369,7 +384,7 @@ Nothing new to see; the app just does less work, so the tablet stays cooler and 
 
 ## Where things are
 In her room: the window (🌳 out to the Backyard), the corkboard (📸 Photocards), the shelf (🫧 Fidget Shelf), the desk
-(🎨 Art Desk) and the wardrobe (👗 Closet). In the Cozy Loft: the glowing **🎤 Stage** sign (since version 1.12)
+(🎨 Art Desk) and the wardrobe (👗 Closet). In the Cozy Loft: the glowing **🎤 Stage** sign (since version 1.12; above the 🎹 keyboard since 1.47)
 and the computer desk (**💻 Code Lab**, since version 1.13). In the Backyard: the goal (**⚽ Soccer**) and the
 chalkboard (**📚 Brain Games**). The Studio has nothing built in.
 The pink labels only show in Easy mode; otherwise, tap things to find out what they do.

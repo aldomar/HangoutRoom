@@ -79,7 +79,9 @@ _Last updated: 2026-11-19_
     Pop, Snack, Memory, Bakery; not Word Builder or Fact Cards), and those 5 get 🎲 Free Play too.
   - **🇺🇸 American spelling (v1.44) and 🔤 Word Builder word bank (v1.45): done** (PRs #44 and #45 merged 2026-11-19).
   - **🧸 Little Ones' Corner: built, PR #46 open as v1.46** on branch `feature/little` (from `main` after #45). Picked from the
-    "Later" list and planned 2026-11-19 (see "Little Ones' Corner" under Decisions and `PLAN.md`).
+    "Later" list and planned 2026-11-19 (see "Little Ones' Corner" under Decisions and `PLAN.md`). **Merged** (PR #46).
+  - **💃 Dance Maker: built as v1.47** on branch `feature/dance` (from `main` after #46). Picked from the "Later" list and
+    planned 2026-11-19 (see "Dance Maker" under Decisions and `PLAN.md`). Also moves the Loft's 🎤 Stage sign above the keyboard.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -134,7 +136,8 @@ _Last updated: 2026-11-19_
 - PR #43 "Free Play & Puzzle of the Day (v1.43)": merged.
 - PR #44 "American spelling (v1.44)": merged.
 - PR #45 "Word Builder word bank (v1.45)": merged.
-- PR #46 "Little Ones' Corner (v1.46)" on branch `feature/little`: open.
+- PR #46 "Little Ones' Corner (v1.46)": merged.
+- "Dance Maker (v1.47)" on branch `feature/dance`: PR to open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -587,6 +590,14 @@ _Last updated: 2026-11-19_
   already means "span the whole row" in the app's CSS, so they are `fc-none` now.
   Not tested automatically: tapping pizza slices with a finger on the tablet.
 
+- **Dance Maker (v1.47)**: 1453 checks, all passing, no console errors. New checks: the Stage sign hangs right above the
+  Loft keyboard (and the Easy label doesn't cover it); 💃 from the Music Maker and the Stage (Back goes to each); filling and
+  emptying beats; ▶ Play moves on the beat with the main loop on, room music quiet; 🕺 free dance on the next beat; ⏹ stops the
+  loop; the music list (Beat, My loop, saved loops, 8 songs) and each one's speed; a song ends by itself and counts once;
+  saving and the 3-a-day coins; Load, Ideas (asks over an unsaved dance), Clear; the 3 stickers; leaving the screen or the app
+  stops it; Easy mode; phone, small phone, phone landscape, tablet and upright tablet layouts; restoring v1.46 and v1.47
+  backups and odd data. Not tested automatically: how the moves look in time with the music on the real tablet.
+
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
 - One web page (works offline, no server) plus a WebView APK wrapper. The same code serves both.
@@ -956,6 +967,12 @@ _Last updated: 2026-11-19_
   room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
   short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
   so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
+- **Dance Maker (built as v1.47, `48-dance.js`), agreed 2026-11-19.** Picked by the owner from the Phase 12 "Later" list.
+  Owner's answers: opened from **the Music Maker and the Stage**; **8 free moves**; **8 beats**. The buddy can't move its arms
+  or legs on its own (sleeves and arm warmers are drawn on top of the body), so moves are whole-body CSS animations on a picture
+  of the buddy drawn once. Save version 28: `dance{cur, music, slots[3], songs[], pay{day,n}}`. +3 coins per saved new dance,
+  3 a day. 3 stickers on the Stage page (110 in all). Also the owner's request (2026-11-19): the Loft's 🎤 Stage sign now hangs
+  right above the 🎹 keyboard (it was between the window and the desk), so the music things are together.
 - **Little Ones' Corner (built as v1.46, `46-little.js` + `47-colorbook.js`), agreed 2026-11-19.** Picked by the owner from the
   Phase 12 "Later" list. Owner's answers: a **🧸 Play button in the top bar** of every room; **+1 coin** per finished picture or
   Peekaboo friend, **10 a day**; **🖼️ Hang it up** saves a colored picture into the Art Desk Gallery (drawing coin rules); the
@@ -1202,13 +1219,15 @@ _Last updated: 2026-11-19_
     harass, illegal, cemetery (explosion borderline); remove repeats; add theme words (web, bat, cub / robot, rocket, slime,
     goal, ghost, comet / dinosaur, volcano, galaxy, astronaut, telescope). The owner's file is SpellingWords.txt (not in the repo yet).
 12. ~~Then pick from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 🧸 Little Ones' Corner (v1.46), planned and built.
-13. Owner: build v1.46, try 🧸 Play with the little ones (see the PR), and merge it.
-14. Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).
+13. ~~Owner: build v1.46, try 🧸 Play with the little ones (see the PR), and merge it.~~ Merged.
+14. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 💃 Dance Maker (v1.47), planned and built.
+15. Owner: build v1.47, try 💃 Dance (see the PR), and merge it.
+16. Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 27 since v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 28 since v1.47 (Dance Maker: `dance`). It was 27 in v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

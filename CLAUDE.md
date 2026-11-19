@@ -52,7 +52,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   - Keep animated SVG filters (the `#fuzz` filter) to a minimal number of elements.
   - Run animation loops only while their screen is visible. The main loop (`99-startup.js`) only runs on
     `LOOP_SCREENS` (`soccer stage fidget`); a new screen that draws every frame must be added there (since v1.32).
-    A screen that only needs it sometimes adds a condition to `loopWanted()` instead (the Music Maker, while a loop plays).
+    A screen that only needs it sometimes adds a condition to `loopWanted()` instead (the Music Maker and the Dance Maker, while playing).
   - Endless idle animations (the buddy breathing, pet, lava lamp…) move in `steps()` every 0.2 s, all on the same
     grid, so the room is redrawn 5 times a second instead of 60. No SVG `<animate>` (SMIL): use a CSS class under
     `#roomSvg` instead (see `.an-*` in `app.css`). The smoke test's ⚡ Speed check checks both (since v1.32).
@@ -78,7 +78,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
-  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`, and (since v1.36) `fidPay{day,n}` (fidget coins paid today), and (since v1.38) `music{kit, speed, cur, slots[3], pay{day,n}}`, and (since v1.40) `room4{wall,floor,items[]}` (the Studio; wall and floor are `''` until the first visit), and (since v1.41) `visit{cur, day, done[]}` (Visitors), `stats.wishes`, and (since v1.42) `duo{day, n, soccer, memory, stage}` (two-player coins today + games played), and (since v1.43) `free{day, n}` (Free Play coins today), `potd{day}` (the last day the Puzzle of the Day was solved), `stats.free`, `stats.potd`, and (since v1.46) `little{colors{picId:[...]}, hung{picId:{art,sig}}, pay{day,n}}` (🧸 Play), `stats.colored/peeks/pads`.
+  `artPay`, (since v1.4) `cards[], cardPins[], bonusGot[], cardNo`, and (since v1.5) `soccer{level, best{easy,medium,hard}, trophies[]}`, and (since v1.7) `stage{level, best{songId:{level:{stars,score}}}, mic}`, and (since v1.8) `easy, color, badge`, and (since v1.10) `room2{wall,floor,items[]}` (the Cozy Loft), and (since v1.11) `look.hairColor`, and (since v1.13) `code{level, solved[]}`, and (since v1.16) `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`, and (since v1.18) `stickers[]`, `stickerNew[]`, `stats.dailies`, and (since v1.19) `pet{kind, acc, names{}, hearts{}}`, and (since v1.20) `look.kind`, `look.face`, `tint`, `furn{}`, and (since v1.23) `room3{wall,floor,items[]}` (the Backyard), and (since v1.24) `soccer.mode` ('kick'|'keep'), `soccer.keep{level, best{}, gloves[]}`, `stats.saves`, and (since v1.25) `brain{game, level{snack,memory,pop}, solved[]}`, and (since v1.27) `looks[4]` (null or an outfit), `night{'1'|'2'|'3':true}`, `stats.nights`, and (since v1.28) `gifts[]` (waiting gifts), `presets{'1'|'2'|'3': 3 × null or a layout}`, `stats.gifts`, and (since v1.29) `dream` ('' or the DECOR key she is saving for), and (since v1.30) `speak` (null = follow Easy mode, or true/false), `stats.snaps`, and (since v1.36) `fidPay{day,n}` (fidget coins paid today), and (since v1.38) `music{kit, speed, cur, slots[3], pay{day,n}}`, and (since v1.40) `room4{wall,floor,items[]}` (the Studio; wall and floor are `''` until the first visit), and (since v1.41) `visit{cur, day, done[]}` (Visitors), `stats.wishes`, and (since v1.42) `duo{day, n, soccer, memory, stage}` (two-player coins today + games played), and (since v1.43) `free{day, n}` (Free Play coins today), `potd{day}` (the last day the Puzzle of the Day was solved), `stats.free`, `stats.potd`, and (since v1.46) `little{colors{picId:[...]}, hung{picId:{art,sig}}, pay{day,n}}` (🧸 Play), `stats.colored/peeks/pads`, and (since v1.47) `dance{cur, music, slots[3], songs[], pay{day,n}}`.
   `settings.stageOffset` (ms, per device) is the Stage "Sound late?" setting. `settings.pin` ('' or 4 digits) is the
   optional grown-up PIN; it belongs to the device, so `doRestore()` keeps it. So does `settings.lastBackup` (ms, since v1.30).
 - **Never rename or remove saved fields or item ids.** `owned` uses `category:id` keys
@@ -178,6 +178,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
       👀 Peekaboo (`LT_HIDES`, `LT_SURPRISES`, `ltFriends`, `ltPeekTap`), the 🧸 Play sticker page
   47. `47-colorbook.js` 🖍️ Tap-to-Color (`CB_PICS` pictures as area paths, area 0 = background; `CB_CRAYONS`, `cbSVG`,
       `cbCols`, `cbDone`, `cbSet`, `cbHang` into the Art Desk Gallery)
+  48. `48-dance.js` 💃 Dance Maker, opened from the Music Maker's `#muDance` and the Stage's `data-dance` tab (`DN_MOVES`,
+      `DN_IDEAS`, `DN`, `dnChoices`, `dnPlay`, `dnTick`, `dnBeat`, `dnMove`, `renderDance`, `dnSaveSlot`)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -205,7 +207,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   Since v1.33 there are 5 games (+ `train`, `word` in `35-brain3.js`), since v1.34 7 (+ `bake`, `facts` in `36-brain4.js`);
   a new game id must also go in `normalize()`'s list (`brG` in 06). A fact card is unlocked by its puzzle id in
   `brain.solved`. `BR_MENU_EXTRA` adds HTML under the menu's games; a game's optional `winExtra()` adds to its win box. Brain Champ counts only the first 3 games. Bonus photocards (`c.bonus`) can't be deleted.
-- Stage: the marquee (`stageMarquee()` in 04) hangs on the Cozy Loft's wall since v1.12 (it was above the closet). Songs are generated from small text recipes in `SONGS` (scale, chords, melody, drum patterns). `buildSong(id, level)`
+- Stage: the marquee (`stageMarquee()` in 04) hangs on the Cozy Loft's wall since v1.12 (it was above the closet), right above the 🎹 keyboard since v1.47. Songs are generated from small text recipes in `SONGS` (scale, chords, melody, drum patterns). `buildSong(id, level)`
   turns a recipe into audio events and a fixed note chart (no randomness). Song time comes from the audio clock
   (`stSongT()`), so taps line up with what she hears. Song ids `starlight/bats/sugar` (and since v1.26 `neon/clap/dino/rocket/lullaby`, in `30-songs2.js`) and level ids are saved: never rename them.
   `SONG_IDS` is made when 14 loads, so a song file must push its new ids onto it. A new song must pass the smoke test's chart rules
@@ -261,6 +263,12 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   rename a picture or reorder, remove or insert its areas (new pictures go at the end). Areas in one region that overlap must wind
   the same way (`cbE`/`cbC` go one way, `cbR` the other), or the overlap shows as a hole. `p.little.hung` maps a picture to its
   Gallery drawing, so hanging again updates it. No main loop: CSS animations only. Peekaboo's next round uses one `setTimeout`.
+- Dance Maker (since v1.47, `48-dance.js`): a dance is 8 move codes (`h s p w b c j o`, `.` = empty, an empty beat nods); codes and
+  music ids (`beat`, `loop`, `m0`-`m2`, a song id) are saved: never rename them. Moves are whole-body CSS animations (`.dm-*`, one beat
+  long through `--bt`) on an `<img>` of the buddy drawn once (`dnArt`), because sleeves and arm warmers are drawn over the arms.
+  Music is scheduled on the audio clock (Music Maker voices `muVoice`, or `buildSong(id,'easy').ev`); `dnTick()` runs from the
+  main loop only while `DN.playing`. While playing, a tapped move is 🕺 free dance (`DN.next`). Back goes to `DN.from` (music/stage).
+  The Loft's 🎤 Stage marquee hangs above the 🎹 keyboard since v1.47.
 - Visitors (since v1.41, `42-visitors.js`): one friend at a time stands at `VISIT_SPOT` in whichever room is on screen
   (`visitG`, in the floor layer, `data-hot="visitor"`). A wish is `{id, who, icon, title, say, parts[]}`; a part is one line of the
   card with `have(p, R)` and `n`, built by `vInRoom`/`vWear` (theme chips, so new themed items count automatically) or the fixed
@@ -359,6 +367,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   Free Play (v1.43): +1 per made-up puzzle, 10 a day (`FREE_DAILY`); 📅 Puzzle of the Day +5 once a day (no streak).
   🧸 Play (v1.46): +1 per finished picture or Peekaboo friend found, 10 a day (`LITTLE_DAILY`); the Sound Mat pays nothing;
   🖼️ Hang it up goes through the drawing rules (+5, first 5 a day).
+  Dance Maker (v1.47): +3 per saved new dance, 3 a day (`DN_DAILY`).
   Visitors (v1.41): +5 per wish that comes true (one new friend a day), and a plush after a friend's 3 wishes.
   Item prices are 0–40, except ⭐ big dreams (`dream:1`, 60–100, since v1.29). Keep earning steady and fair.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).

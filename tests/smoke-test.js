@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('107 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46), ids all different, 6 or more per page', await ev(`STICKERS.length===107&&new Set(STICKERS.map(s=>s.id)).size===107&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('110 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47), ids all different, 6 or more per page', await ev(`STICKERS.length===110&&new Set(STICKERS.map(s=>s.id)).size===110&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -3272,7 +3272,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   {
     await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
     await ev(`closeModal();stkPaused=true;P().easy=false;goRoom(1);show('room')`); await sleep(300);
-    check('save version 27; every room has a Little Ones\' Corner record', await ev(`DB_VERSION===27&&DB.profiles.every(p=>p.little&&typeof p.little.colors==='object'&&typeof p.little.hung==='object'&&typeof p.little.pay.n==='number'&&p.stats.colored>=0&&p.stats.peeks>=0&&p.stats.pads>=0)`));
+    check('save version 27; every room has a Little Ones\' Corner record', await ev(`DB_VERSION>=27&&DB.profiles.every(p=>p.little&&typeof p.little.colors==='object'&&typeof p.little.hung==='object'&&typeof p.little.pay.n==='number'&&p.stats.colored>=0&&p.stats.peeks>=0&&p.stats.pads>=0)`));
     check('the 🧸 Play button is in the room bar (48 px+), and Read to me calls it Play', await ev(`(b=>!!b&&b.getBoundingClientRect().width>=48&&speakLabel(b)==='Play')(document.querySelector('#littleBtn'))`));
     check('tablet: the room bar is still one row with 🧸', await ev(`(()=>{const t=document.querySelector('#roomTitle').getBoundingClientRect(),b=document.querySelector('#setBtn').getBoundingClientRect();return Math.abs(t.top+t.height/2-(b.top+b.height/2))<8;})()`));
     await ev(`document.querySelector('#littleBtn').click()`); await sleep(200);
@@ -3404,13 +3404,142 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     // backups
     const ltB=await ev(`JSON.stringify(DB)`);
     await ev(`(()=>{const d=JSON.parse(${JSON.stringify(ltB)});d.version=26;d.profiles.forEach(p=>{delete p.little;delete p.stats.colored;delete p.stats.peeks;delete p.stats.pads;});doRestore(JSON.stringify(d));})()`); await sleep(400);
-    check('a v1.45 backup restores with nothing colored yet', await ev(`DB.version===27&&DB.profiles.every(p=>Object.keys(p.little.colors).length===0&&p.little.pay.n===0&&p.stats.colored===0)`));
+    check('a v1.45 backup restores with nothing colored yet', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>Object.keys(p.little.colors).length===0&&p.little.pay.n===0&&p.stats.colored===0)`));
     await ev(`closeModal();doRestore(${JSON.stringify(ltB)})`); await sleep(400);
     check('a v1.46 backup keeps the colors and the hung pictures', await ev(`DB.profiles.some(p=>p.little.colors.dino&&p.little.colors.dino[5]==='#ffd166'&&p.little.hung.dino)`));
     await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(ltB)});d.profiles[0].little={colors:{dino:['red',5,'#12345g','#ABCDEF'],x:'no'},hung:{a:{art:3}},pay:[]};doRestore(JSON.stringify(d));})()`); await sleep(400);
     check('odd Play data is made safe', await ev(`(l=>l.colors.dino.join()===',,,#ABCDEF'&&!('x' in l.colors)&&Object.keys(l.hung).length===0&&l.pay.n===0)(DB.profiles[0].little)`));
     await ev(`closeModal();stkPaused=false;show('room')`);
-    check('v1.46 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.46')&&APP_VERSION==='1.46'`));
+    check('v1.46 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.46')`));
+  }
+
+  console.log('Dance Maker (v1.47)');
+  {
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`closeModal();stkPaused=true;P().easy=false;goRoom(1);show('room')`); await sleep(300);
+    check('save version 28; every room has an empty dance to start', await ev(`DB_VERSION===28&&DB.profiles.every(p=>p.dance&&p.dance.cur===DN_EMPTY&&p.dance.slots.length===3&&Array.isArray(p.dance.songs)&&p.dance.pay.n===0)`));
+    check('8 moves, one letter each (saved ids), and 3 ideas that use only them', await ev(`DN_CODES.join('')==='hspwbcjo'&&DN_IDEAS.length===3&&DN_IDEAS.every(z=>dnOk(z.g)&&(z.music==='beat'||SONGS[z.music]))`));
+    // the Stage sign hangs over the Loft keyboard (v1.47, the owner's request)
+    await ev(`goRoom(2)`); await sleep(300);
+    check('the Loft: the 🎤 Stage sign hangs on the wall right above the 🎹 keyboard', await ev(`(()=>{const m=document.querySelector('#roomSvg [data-hot=stage] rect').getBoundingClientRect(),k=document.querySelector('#roomSvg [data-hot=music] rect').getBoundingClientRect();return m.bottom<k.top&&Math.abs((m.left+m.right)/2-(k.left+k.right)/2)<k.width*0.2;})()`));
+    await ev(`P().easy=true;applyEasy();renderRoom()`); await sleep(150);
+    check('Easy mode: the 🎹 Music label does not cover the Stage sign', await ev(`(()=>{const m=document.querySelector('#roomSvg [data-hot=stage] rect').getBoundingClientRect(),s=document.querySelector('#roomSvg [data-hot=music] .sign').getBoundingClientRect();return s.top>=m.bottom;})()`));
+    await shot('D01-loft-stage-sign'); await ev(`P().easy=false;applyEasy();goRoom(1);show('room')`);
+    // from the Music Maker
+    await ev(`P().music.cur=MU_EMPTY;show('music')`); await sleep(150);
+    check('the Music Maker has a 💃 Dance button', await ev(`!!document.querySelector('#muDance')&&speakLabel(document.querySelector('#muDance'))==='Dance Maker'`));
+    await ev(`document.querySelector('#muDance').click()`); await sleep(200);
+    check('💃 opens the Dance Maker: 8 empty beats, 8 big moves, ⬅ Music', await ev(`cur==='dance'&&document.querySelectorAll('#dnSlots .dn-slot').length===8&&!document.querySelector('#dnSlots .full')&&document.querySelectorAll('#dnMoves .dn-move').length===8&&[...document.querySelectorAll('#dnMoves .dn-move,#dnSlots .dn-slot')].every(b=>b.getBoundingClientRect().height>=48)&&document.querySelector('#dnBack').textContent.includes('Music')`));
+    check('the buddy is a picture (drawn once), and the music starts on the 🥁 Beat', await ev(`document.querySelector('#dnBuddy').src.startsWith('data:image/svg+xml')&&dnMusic(P()).id==='beat'`));
+    check('the main loop rests while nothing plays', await ev('!loopOn'));
+    await ev(`['h','s','c'].forEach(c=>document.querySelector('#dnMoves [data-move='+c+']').click())`);
+    check('tapping moves fills the beats in order', await ev(`P().dance.cur==='hsc.....'&&document.querySelectorAll('#dnSlots .full').length===3`));
+    check('…and the buddy shows the move', await ev(`document.querySelector('#dnDancer').classList.contains('dm-c')`));
+    await ev(`document.querySelector('#dnSlots [data-beat="1"]').click()`);
+    check('tapping a beat takes its move out (the others stay in place)', await ev(`P().dance.cur==='h.c.....'`));
+    await ev(`document.querySelector('#dnMoves [data-move=w]').click()`);
+    check('the next move fills the empty beat', await ev(`P().dance.cur==='hwc.....'`));
+    await ev(`P().dance.cur='hwcbpjso';renderDance()`);
+    await ev(`document.querySelector('#dnMoves [data-move=h]').click()`);
+    check('when all 8 are full, a move just shows itself (with a note)', await ev(`P().dance.cur==='hwcbpjso'&&document.querySelector('#toast').textContent.includes('full')`));
+    await shot('D02-dance-maker');
+    // playing
+    await ev(`DB.settings.music=true;document.querySelector('#dnPlay').click()`); await sleep(1300);
+    check('▶ Play: the dance plays on the beat (main loop on, a beat lit, a move on)', await ev(`DN.playing&&loopOn&&DN.last>=1&&!!document.querySelector('#dnSlots .dn-slot.now')&&/dm-/.test(document.querySelector('#dnDancer').className)`), await ev(`JSON.stringify({p:DN.playing,l:DN.last,c:document.querySelector('#dnDancer').className})`));
+    await ev(`startMusic()`);
+    check('the room music stays quiet while she dances', await ev(`musicTimer===null`));
+    check('the hint says 🕺 tap a move to dance it now', await ev(`document.querySelector('#dnHint').textContent.includes('dance it now')`));
+    await shot('D03-dancing');
+    await ev(`document.querySelector('#dnMoves [data-move=o]').click()`);
+    check('🕺 free dance: a move tapped while playing waits for the next beat and does not change the dance', await ev(`DN.next==='o'&&P().dance.cur==='hwcbpjso'`));
+    await sleep(800);
+    check('…and the buddy does it on the beat', await ev(`DN.next===null`));
+    await ev(`document.querySelector('#dnPlay').click()`); await sleep(100);
+    check('⏹ Stop stops the dance and the main loop', await ev(`!DN.playing&&!loopOn&&!document.querySelector('#dnSlots .now')`));
+    await ev(`DB.settings.music=false;stopMusic()`);
+    // music choices
+    await ev(`P().music.cur=MU_IDEAS[0].rows.join('');P().music.slots=[null,{g:MU_IDEAS[1].rows.join(''),kit:'soft',speed:1},null];document.querySelector('#dnMusic').click()`); await sleep(150);
+    check('🎵 lists the Beat, My loop, saved loops and every Stage song', await ev(`[...document.querySelectorAll('#modalBody [data-mus]')].map(b=>b.dataset.mus).join()===['beat','loop','m1',...SONG_IDS].join()`));
+    await shot('D04-music-pick');
+    await ev(`document.querySelector('#modalBody [data-mus=m1]').click()`); await sleep(100);
+    check('picking one saves it and shows it on the button', await ev(`P().dance.music==='m1'&&document.querySelector('#dnMusic').textContent.includes('Loop 2')&&document.querySelector('#modal').classList.contains('hidden')`));
+    await ev(`dnPlay()`); await sleep(300);
+    check('a saved loop plays at its own speed', await ev(`DN.kind==='loop'&&Math.abs(DN.beat-60/MU_SPEEDS[1].bpm)<1e-6`));
+    await ev(`dnStop();P().dance.music='bats';dnPlay()`); await sleep(200);
+    check('a Stage song plays at its own beat', await ev(`DN.kind==='song'&&DN.song==='bats'&&Math.abs(DN.beat-60/SONGS.bats.bpm)<1e-6`));
+    await ev(`dnBeat(P(),8);dnBeat(P(),16)`);
+    check('a whole round danced to a song counts it (once)', await ev(`P().dance.songs.join()==='bats'`));
+    await ev(`DN.t0-=DN.end+1`); await sleep(200);
+    check('the song ends by itself', await ev(`!DN.playing&&!loopOn`));
+    await ev(`P().dance.music='nope'`);
+    check('an unknown music id falls back to the Beat', await ev(`dnMusic(P()).id==='beat'`));
+    // saving and coins
+    await ev(`P().dance.pay={day:'',n:0};P().dance.slots=[null,null,null];P().dance.cur='hh......';renderDance();document.querySelector('#dnSaves [data-slot="0"]').click()`); await sleep(100);
+    check('a dance with fewer than 3 moves is not saved', await ev(`P().dance.slots[0]===null`));
+    const dn0=await ev(`P().coins`);
+    await ev(`P().dance.cur='hhc.....';document.querySelector('#dnSaves [data-slot="0"]').click()`); await sleep(100);
+    check('saving a new dance pays 3 coins', await ev(`P().dance.slots[0]==='hhc.....'&&P().coins===${dn0}+3&&P().dance.pay.n===1`), await ev(`P().coins-${dn0}`));
+    await ev(`document.querySelector('#dnSaves [data-slot="0"]').click()`); await sleep(100);
+    check('a full slot asks: Load or Save mine here', await ev(`document.querySelector('#modalTitle').textContent.includes('Dance 1')`));
+    await ev(`document.querySelectorAll('#modalBtns button')[1].click()`); await sleep(100);
+    check('saving the same dance again pays nothing', await ev(`P().coins===${dn0}+3`));
+    await ev(`P().dance.cur='hhcc....';document.querySelector('#dnSaves [data-slot="1"]').click()`); await sleep(100);
+    await ev(`P().dance.cur='hhccc...';document.querySelector('#dnSaves [data-slot="2"]').click()`); await sleep(100);
+    await ev(`P().dance.cur='hhcccc..';document.querySelector('#dnSaves [data-slot="2"]').click()`); await sleep(100); await ev(`document.querySelectorAll('#modalBtns button')[1].click()`); await sleep(100);
+    check('after 3 a day, saving still works but pays nothing (with a gentle note)', await ev(`P().coins===${dn0}+9&&P().dance.slots[2]==='hhcccc..'&&document.querySelector('#toast').textContent.includes('done for today')`), await ev(`P().coins-${dn0}`));
+    await ev(`P().dance.pay.day='Mon Jan 01 2001';P().dance.cur='jjj.....';document.querySelector('#dnSaves [data-slot="1"]').click()`); await sleep(100); await ev(`document.querySelectorAll('#modalBtns button')[1].click()`); await sleep(100);
+    check('a new day pays again', await ev(`P().coins===${dn0}+12&&P().dance.pay.n===1`));
+    await ev(`document.querySelector('#dnSaves [data-slot="0"]').click()`); await sleep(100); await ev(`document.querySelectorAll('#modalBtns button')[0].click()`); await sleep(100);
+    check('▶ Load puts a saved dance back', await ev(`P().dance.cur==='hhc.....'`));
+    await ev(`P().dance.cur='pppp....';document.querySelector('#dnIdeas').click()`); await sleep(100); await ev(`document.querySelectorAll('#modalBtns button')[1].click()`); await sleep(100);
+    check('loading an idea over a dance that is not saved asks first', await ev(`document.querySelector('#modalTitle').textContent.includes('not saved')&&P().dance.cur==='pppp....'`));
+    await ev(`document.querySelectorAll('#modalBtns button')[1].click()`); await sleep(100);
+    check('…and Load anyway loads the idea with its music', await ev(`P().dance.cur===DN_IDEAS[1].g&&P().dance.music===DN_IDEAS[1].music`));
+    await ev(`P().dance.slots[0]=P().dance.cur;document.querySelector('#dnClear').click()`); await sleep(100); await ev(`document.querySelectorAll('#modalBtns button')[1].click()`); await sleep(100);
+    check('🗑️ Clear empties the dance (saved dances stay)', await ev(`P().dance.cur===DN_EMPTY&&P().dance.slots.every(Boolean)`));
+    // stickers
+    check('3 Dance stickers on the Stage page', await ev(`['dance1','dance8','dance3'].every(id=>(s=>s&&s.page==='stage')(STICKERS.find(s=>s.id===id)))`));
+    check('First Dance: a saved dance', await ev(`(s=>stkDone(P(),s)&&!stkDone(Object.assign({},P(),{dance:{cur:DN_EMPTY,slots:[null,null,null],songs:[]}}),s))(STICKERS.find(s=>s.id==='dance1'))`));
+    check('All the Moves: all 8 moves in one dance (not spread over two)', await ev(`(s=>stkDone(Object.assign({},P(),{dance:{cur:'hspwbcjo',slots:[null,null,null],songs:[]}}),s)&&!stkDone(Object.assign({},P(),{dance:{cur:'hspw....',slots:['bcjo....',null,null],songs:[]}}),s))(STICKERS.find(s=>s.id==='dance8'))`));
+    check('Dance Party: 3 different Stage songs', await ev(`(s=>!stkDone(P(),s)&&stkDone(Object.assign({},P(),{dance:{cur:DN_EMPTY,slots:[null,null,null],songs:['bats','neon','dino']}}),s))(STICKERS.find(s=>s.id==='dance3'))`));
+    // getting there and back
+    check('Android Back goes from the Dance Maker to the Music Maker', await ev(`androidBack()&&cur==='music'`));
+    await ev(`P().dance.music='beat';show('stage')`); await sleep(200);
+    check('the Stage has a 💃 Dance tab', await ev(`!!document.querySelector('#stgTabs [data-dance]')`));
+    const lvBefore=await ev(`P().stage.level`);
+    await ev(`document.querySelector('#stgTabs [data-dance]').click()`); await sleep(200);
+    check('💃 on the Stage opens the Dance Maker on a song, ⬅ Stage', await ev(`cur==='dance'&&!!SONGS[P().dance.music]&&document.querySelector('#dnBack').textContent.includes('Stage')`));
+    check('the 💃 tab does not change the song level', await ev(`P().stage.level===${JSON.stringify(lvBefore)}`));
+    await ev(`document.querySelector('#dnBack').click()`); await sleep(150);
+    check('⬅ goes back to the Stage song list', await ev(`cur==='stage'&&STG.state==='pick'`));
+    await ev(`dnOpen('stage');dnPlay()`); await sleep(150);
+    await ev(`Object.defineProperty(document,'hidden',{value:true,configurable:true});document.dispatchEvent(new Event('visibilitychange'));delete document.hidden;document.dispatchEvent(new Event('visibilitychange'))`); await sleep(100);
+    check('switching away from the app stops the dance', await ev(`!DN.playing`));
+    await ev(`dnPlay();show('room')`); await sleep(100);
+    check('leaving the screen stops the dance', await ev(`!DN.playing&&!loopOn`));
+    // sizes
+    await ev(`P().dance.cur='hspwbcjo';P().easy=true;show('dance')`); await sleep(200);
+    check('Easy mode: moves are bigger (76 px)', await ev(`document.querySelector('#dnMoves .dn-move').getBoundingClientRect().height>=76`));
+    await shot('D05-easy-dance'); await ev(`P().easy=false;show('dance')`);
+    const dnEls=`[...document.querySelectorAll('#dnPlay,#dnMusic,#dnSlots .dn-slot,#dnMoves .dn-move,#dnSaves .dn-save,#dnIdeas,#dnClear,#dnDancer')]`;
+    for(const [w,h,name] of [[412,860,'phone'],[360,740,'small phone'],[860,412,'phone landscape'],[1180,820,'tablet'],[820,1180,'tablet upright']]){
+      await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<1000});
+      await ev(`show('dance')`); await sleep(250);
+      check(name+': the dancer, the beats, the moves and the buttons fit on screen', await ev(`${dnEls}.every(e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1&&r.top>=0;})`), await ev(`${dnEls}.filter(e=>{const r=e.getBoundingClientRect();return !(r.left>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1&&r.top>=0);}).map(e=>(e.id||e.className)+':'+JSON.stringify(e.getBoundingClientRect())).join(' ')`));
+      check(name+': taps are 44 px or more and the buddy is easy to see', await ev(`[...document.querySelectorAll('#dnSlots .dn-slot,#dnMoves .dn-move')].every(e=>{const r=e.getBoundingClientRect();return r.width>=44&&r.height>=44;})&&document.querySelector('#dnDancer').getBoundingClientRect().height>=110`), await ev(`JSON.stringify([document.querySelector('#dnSlots .dn-slot').getBoundingClientRect().width,document.querySelector('#dnMoves .dn-move').getBoundingClientRect().height,document.querySelector('#dnDancer').getBoundingClientRect().height])`));
+      await shot('D06-'+name.replace(/ /g,'-'));
+    }
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    // backups
+    const dnB=await ev(`JSON.stringify(DB)`);
+    await ev(`(()=>{const d=JSON.parse(${JSON.stringify(dnB)});d.version=27;d.profiles.forEach(p=>delete p.dance);doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('a v1.46 backup restores with no dances yet', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.dance.cur===DN_EMPTY&&p.dance.slots.every(s=>s===null)&&p.dance.music==='beat')`));
+    await ev(`closeModal();doRestore(${JSON.stringify(dnB)})`); await sleep(400);
+    check('a v1.47 backup keeps the dances', await ev(`DB.profiles.some(p=>p.dance.cur==='hspwbcjo'&&p.dance.slots[0]===DN_IDEAS[1].g)`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(dnB)});d.profiles[0].dance={cur:'hhhhhhhx',music:7,slots:['hs......','abc',null,'jjjjjjjj'],songs:['bats','bats',3],pay:'x'};doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd dance data is made safe', await ev(`(d=>d.cur===DN_EMPTY&&d.music==='beat'&&d.slots.length===3&&d.slots[0]==='hs......'&&d.slots[1]===null&&d.songs.join()==='bats'&&d.pay.n===0)(DB.profiles[0].dance)`));
+    await ev(`closeModal();stkPaused=false;show('room')`);
+    check('v1.47 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.47')&&APP_VERSION==='1.47'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

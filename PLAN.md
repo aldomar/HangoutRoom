@@ -356,7 +356,9 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   🔊 on every level. Word Builder joins the 📅 daily turn (6 games). The 8 fixed puzzles per level are unchanged.
 - ✅ **🧸 Little Ones' Corner (v1.46, built; plan details below, agreed 2026-11-19):** a 🧸 Play button in every room:
   🖍️ Tap-to-Color (12 pictures, 🖼️ hang one in the Gallery), 🎵 Sound Mat and 👀 Peekaboo. Nothing can go wrong.
-- **Later, any order:** 💃 Dance Maker (buddy moves to a Music Maker loop or Stage song), 👗 Runway (style a look for a theme
+- ✅ **💃 Dance Maker (v1.47, built; plan details below, agreed 2026-11-19):** 8 beats of whole-body moves, danced to a beat,
+  a Music Maker loop or a Stage song; 🕺 free dance while it plays. Also (owner's request) the 🎤 Stage sign hangs above the 🎹 keyboard.
+- **Later, any order:** 👗 Runway (style a look for a theme
   card; judges only cheer), 🌱 Backyard garden (grows over real days, never wilts), 🔍 I Spy in her own room, 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
   loop), Soccer trick shots, and new things to spend coins on (pet house, a collections museum, Stage backdrops).
 
@@ -466,6 +468,26 @@ Owner's answers so far (2026-11-19): Free Play is **always open**; **+1 coin eac
   blocks; Medium boards have none (so the fewest blocks can be worked out exactly). Free Play mazes count for Marble Marathon,
   like a replay. The "coins are full" note shows once a day in the done box. The makers' checks also pass every fixed puzzle. Mazes are corridor mazes (rooms joined by a random search, so there is always
   a way through, plus 1–3 extra gaps and a few nooks in the bottom row), mirrored so the start can be in any corner.
+
+#### v1.47 plan details: 💃 Dance Maker (agreed 2026-11-19)
+Why: the creative tools didn't connect; this gives the Music Maker's loops and the Stage's songs something to do together.
+Owner's answers: opened from **both** the Music Maker and the Stage; **8 free moves**; dances are **8 beats** long.
+- **The way in:** a 💃 **Dance** button in the Music Maker (next to 🎁 Ideas and 🗑️) and a 💃 **Dance** tab on the Stage's level row.
+  Back goes to where she came from. Opened from the Stage it starts on a song; from the Music Maker, on her loop (if it has notes).
+- **Moves:** the buddy is one picture (every closet item is drawn on top of the body), so moves are whole-body: 🦘 Hop, ↔️ Sway,
+  🌀 Spin, 🐛 Wiggle, ⬇️ Bounce, 👏 Clap, ⭐ Star jump, 🙇 Bow, each exactly one beat long (CSS animations on a picture of the
+  buddy drawn once, so the `#fuzz` filter is never redrawn). Saved as one letter each (`h s p w b c j o`, `.` = empty).
+- **Making a dance:** tap a move = the next empty beat; tap a beat = empty it (like the Code Lab blocks). ▶️ plays the dance
+  round and round. **🕺 Free dance:** while the music plays, a tapped move is danced on the next beat (the dance itself stays).
+- **Music:** 🥁 Beat (104 beats a minute), 🎹 My loop, 💾 saved loops (their own sound and speed), and the 8 Stage songs (played
+  once, sounds only; no notes to tap). Scheduled ahead on the audio clock like the Stage, with the same "Sound late?" setting.
+- **Saving:** 💾 3 slots, 🎁 3 ideas (Bunny Bop, Bat Flap, Star Show), 🗑️ Clear; loading over an unsaved dance asks first.
+- **Coins:** +3 per saved new dance (3 moves or more), 3 a day (`DN_DAILY`), then a gentle note.
+- **Stickers** (Stage page): 💃 First Dance, 🕺 All the Moves (all 8 in one dance), 🪩 Dance Party (3 different Stage songs).
+- **Light on the device:** the main loop runs only while a dance plays (`loopWanted`); leaving the screen or the app stops it.
+- **Save:** `dance{cur, music, slots[3], songs[], pay{day,n}}`; save version 28 (`normalize` + `MIGRATIONS[28]`).
+- **Files:** new `48-dance.js` and a `scr-dance` screen. Also (owner's request): the Loft's 🎤 Stage sign moved from between
+  the window and the desk to the wall right above the 🎹 keyboard.
 
 #### v1.46 plan details: 🧸 Little Ones' Corner (agreed 2026-11-19)
 Why: the youngest two (5 and 3) can't read yet and most games have right and wrong answers. This corner has three toys

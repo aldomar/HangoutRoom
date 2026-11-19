@@ -26,8 +26,9 @@ function loftFurniture(split){ // split: see furniture() in section 4 (v1.39)
   s+=`<path d="M340 72 V208 M272 140 H408" stroke="${wf}" stroke-width="7"/>`;
   // a little pendant lamp
   s+=`<line x1="590" y1="0" x2="590" y2="66" stroke="#3b2f52" stroke-width="3"/><path d="M562 96 Q590 56 618 96Z" fill="${furnC('lamp').shade}" ${o}/><ellipse cx="590" cy="100" rx="14" ry="6" fill="#fff6c8"/>`;
-  // the Stage marquee, on the wall between the window and the desk (moved up from her room in v1.12)
-  s+=`<g transform="translate(-345 230)">${stageMarquee()}</g>`;
+  // the Stage marquee (moved up from her room in v1.12), on the wall right above the 🎹 keyboard since v1.47,
+  // so the music things are together (it was between the window and the desk)
+  s+=`<g transform="translate(-669 256)">${stageMarquee()}</g>`;
   // the 🎹 keyboard on its stand: tap it for the Music Maker (v1.38, section 40)
   kb+=`<g class="hot" data-hot="music"><path d="M92 590 L196 486 M300 590 L196 486 M196 486 V470" stroke="#3b2f52" stroke-width="10" stroke-linecap="round"/>`;
   kb+=`<rect x="60" y="430" width="272" height="52" rx="10" fill="#2b2340" ${o}/><rect x="72" y="436" width="110" height="10" rx="4" fill="#1d6f6a"/>`;

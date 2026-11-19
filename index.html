@@ -249,6 +249,7 @@
     <button class="tab" data-lvl="medium">🎵 Medium</button>
     <button class="tab" data-lvl="hard">🌟 Hard</button>
     <button class="tab duo" data-duo="stage" aria-label="Together, 2 players">👯 <span>Together</span></button>
+    <button class="tab dance" data-dance="1" aria-label="Dance Maker">💃 <span>Dance</span></button>
   </div>
   <div class="stg-pick" id="stgPick">
     <div class="stg-note" id="stgHint"></div>
@@ -312,7 +313,30 @@
       <div class="mu-row" id="muSpeed"></div>
       <div class="mu-row" id="muKit"></div>
       <div class="mu-row" id="muSlots"></div>
-      <div class="mu-row"><button class="btn ghost" id="muIdeas">🎁 <span class="tn">Ideas</span></button><button class="btn ghost" id="muClear" aria-label="Clear">🗑️</button></div>
+      <div class="mu-row"><button class="btn ghost" id="muIdeas">🎁 <span class="tn">Ideas</span></button><button class="btn ghost" id="muClear" aria-label="Clear">🗑️</button><button class="btn ghost" id="muDance" aria-label="Dance Maker">💃 <span class="tn">Dance</span></button></div>
+    </div>
+  </div>
+</div>
+
+<!-- DANCE MAKER (v1.47, 💃 in the Music Maker and the Stage) -->
+<div id="scr-dance" class="screen">
+  <div class="topbar">
+    <button class="btn small ghost" id="dnBack">⬅ Room</button>
+    <div class="title">💃 Dance Maker</div>
+    <div class="coins coinsDisp"></div>
+  </div>
+  <div class="dn-wrap">
+    <div class="dn-floor">
+      <div class="dn-lights" id="dnLights"></div>
+      <div class="dn-dancer" id="dnDancer"><img id="dnBuddy" alt="" draggable="false"></div>
+      <div class="dn-fx" id="dnFx"></div>
+    </div>
+    <div class="dn-side">
+      <div class="mu-row"><button class="btn pink mu-play" id="dnPlay" aria-label="Play">▶️ <span class="tn">Play</span></button><button class="btn ghost dn-musbtn" id="dnMusic"></button></div>
+      <div class="dn-hint tip" id="dnHint"></div>
+      <div class="dn-slots" id="dnSlots"></div>
+      <div class="dn-moves" id="dnMoves"></div>
+      <div class="mu-row"><span id="dnSaves" class="mu-row"></span><button class="btn ghost" id="dnIdeas">🎁 <span class="tn">Ideas</span></button><button class="btn ghost" id="dnClear" aria-label="Clear">🗑️</button></div>
     </div>
   </div>
 </div>
@@ -405,6 +429,7 @@
 <script src="web/js/45-words.js"></script>
 <script src="web/js/46-little.js"></script>
 <script src="web/js/47-colorbook.js"></script>
+<script src="web/js/48-dance.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>
