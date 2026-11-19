@@ -24,6 +24,7 @@ function show(n){
   if(n==='code') renderCode(); else codeStop(); // section 18
   if(n==='brain') renderBrain(); else brStop(); // section 28
   if(n==='music') renderMusic(); else muStop(); // section 40
+  if(n==='little') renderLittle(); else ltStop(); // 🧸 Play (section 46)
   if(n==='stickers') renderStickers(); // section 21
   if(n==='about') renderAbout(); // section 25
   if(n==='room') stkDot();

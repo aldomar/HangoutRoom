@@ -145,7 +145,9 @@ const GIFT_TIMELINE=[
     news:['🎨 Words now use American spelling: color, favorite, gray, cozy',
           '🍂 The season is called Fall']},
   {v:'1.45',d:'2026-11-19',i:'📝',n:'Word Bank',why:'So spelling practice never runs out, with words picked for every age',
-    news:['🎲 Word Builder has Free Play: a new word every time','👀 Look at the word, ✋ hide it, then spell it','📅 Word Builder joins the Puzzle of the Day']}
+    news:['🎲 Word Builder has Free Play: a new word every time','👀 Look at the word, ✋ hide it, then spell it','📅 Word Builder joins the Puzzle of the Day']},
+  {v:'1.46',d:'2026-11-19',i:'🧸',n:"Little Ones' Corner",why:'So the youngest players have toys where nothing can go wrong',
+    news:['🧸 Play is in the top bar of every room','🖍️ Tap-to-Color: 12 pictures, and 🖼️ hang them in your Gallery','🎵 A Sound Mat and 👀 Peekaboo with your friends']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

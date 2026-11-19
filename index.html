@@ -47,6 +47,7 @@
     <div class="title" id="roomTitle">My Room</div>
     <div class="coins coinsDisp"></div>
     <button class="btn small ghost" id="mapBtn" aria-label="House map">🗺️<span> Map</span></button>
+    <button class="btn small ghost" id="littleBtn" aria-label="Play">🧸<span> Play</span></button>
     <button class="btn small ghost" id="stkBtn" aria-label="Sticker Book">📒<i id="stkDot" class="stk-dot hidden"></i></button>
     <button class="btn small ghost" id="decoBtn">🛋️<span> Decorate</span></button>
     <button class="btn small ghost" id="setBtn">⚙️</button>
@@ -316,6 +317,16 @@
   </div>
 </div>
 
+<!-- LITTLE ONES' CORNER (v1.46, the 🧸 button in the room's top bar) -->
+<div id="scr-little" class="screen">
+  <div class="topbar">
+    <button class="btn small ghost" id="ltBack" aria-label="Room">⬅<span> Room</span></button>
+    <div class="title" id="ltTitle">🧸 Play</div>
+    <div class="coins coinsDisp"></div>
+  </div>
+  <div class="lt-body" id="ltBody"></div>
+</div>
+
 <!-- BRAIN GAMES (v1.25, the Backyard's chalkboard) -->
 <div id="scr-brain" class="screen">
   <div class="topbar">
@@ -392,6 +403,8 @@
 <script src="web/js/43-together.js"></script>
 <script src="web/js/44-freeplay.js"></script>
 <script src="web/js/45-words.js"></script>
+<script src="web/js/46-little.js"></script>
+<script src="web/js/47-colorbook.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

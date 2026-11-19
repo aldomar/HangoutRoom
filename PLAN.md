@@ -354,9 +354,10 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
 - ✅ **🔤 Word Builder word bank (v1.45, built; agreed 2026-11-19):** the owner's spelling list by age (`45-words.js`).
   🎲 Free Play in Word Builder: Easy traces faint letters, Medium/Hard is 👀 look, ✋ hide, spell (👀 peeks again, no timer),
   🔊 on every level. Word Builder joins the 📅 daily turn (6 games). The 8 fixed puzzles per level are unchanged.
+- ✅ **🧸 Little Ones' Corner (v1.46, built; plan details below, agreed 2026-11-19):** a 🧸 Play button in every room:
+  🖍️ Tap-to-Color (12 pictures, 🖼️ hang one in the Gallery), 🎵 Sound Mat and 👀 Peekaboo. Nothing can go wrong.
 - **Later, any order:** 💃 Dance Maker (buddy moves to a Music Maker loop or Stage song), 👗 Runway (style a look for a theme
-  card; judges only cheer), 🌱 Backyard garden (grows over real days, never wilts), 🧸 Little Ones' Corner (tap-to-colour,
-  sound play mat, peekaboo), 🔍 I Spy in her own room, 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
+  card; judges only cheer), 🌱 Backyard garden (grows over real days, never wilts), 🔍 I Spy in her own room, 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
   loop), Soccer trick shots, and new things to spend coins on (pet house, a collections museum, Stage backdrops).
 
 #### v1.40 plan details (agreed 2026-11-17; built as planned)
@@ -465,6 +466,48 @@ Owner's answers so far (2026-11-19): Free Play is **always open**; **+1 coin eac
   blocks; Medium boards have none (so the fewest blocks can be worked out exactly). Free Play mazes count for Marble Marathon,
   like a replay. The "coins are full" note shows once a day in the done box. The makers' checks also pass every fixed puzzle. Mazes are corridor mazes (rooms joined by a random search, so there is always
   a way through, plus 1–3 extra gaps and a few nooks in the bottom row), mirrored so the start can be in any corner.
+
+#### v1.46 plan details: 🧸 Little Ones' Corner (agreed 2026-11-19)
+Why: the youngest two (5 and 3) can't read yet and most games have right and wrong answers. This corner has three toys
+where **nothing can go wrong**: no words needed, no scores, no timers, nothing to lose. Everyone can use it (no age or
+"boy"/"girl" labels); it just suits the little ones best.
+- **The way in:** a 🧸 **Play** button in the room's top bar, next to 📒, in every room. One tap. It opens a
+  menu with 3 huge picture buttons (🖍️ 🎵 👀). Back goes toy → menu → the room she came from.
+- **🖍️ Tap-to-Color:** 12 original pictures drawn in code with thick outlines and 4–8 big areas each (dino, rocket, dump
+  truck, train, shark, robot, her buddy, kitten, flower, cupcake, butterfly, house). 10 huge crayons at the bottom (48 px or more).
+  Tap a crayon, tap an area: it fills, with a soft "pop" sound and a sparkle. No outside-the-lines, nothing wrong. 🧽 undo
+  (last fill), 🎲 surprise colors, 🗑️ start again (asks with ✔/✖ pictures). Each picture's colors are **remembered**, so it is
+  still there next time. A ✔ that's finished shows a big 🌟 cheer.
+  - 🖼️ **Hang it up**: save the colored picture into the Art Desk Gallery as a drawing, so it can be a poster
+    on the wall like her own drawings (uses the existing gallery storage; it counts as a drawing).
+- **🎵 Sound Mat:** a grid of 8 huge pads (2 × 4) that fill the screen. Two mats, picked by tabs:
+  - 🎹 **Notes:** 8 colored pads with a picture each, playing a pentatonic scale, so any taps in any order sound nice.
+  - 🥁 **Fun sounds:** boing, drum, bell, whoosh, rocket, train "choo-choo", car honk, splash, all made with Web Audio.
+  - Several fingers at once work (pointer events). Each pad bounces and its picture wiggles. No recording, no score.
+- **👀 Peekaboo:** a cozy scene (her Backyard style: a bush, a box, a curtain, a cloud, a flower pot, a door; 4 spots on
+  phones, 6 on the tablet, all big). A friend hides (her pet, a buddy or one of the visitors). Tap a spot: it lifts with a
+  little sound. An empty spot shows a fun surprise (a butterfly, a star, a ladybug) and a giggle, never a "wrong". Finding
+  the friend: "Peekaboo!" (said with the tablet's voice when 🔊 is on), confetti, and a new round after a moment. No timer, no counting misses.
+- **Coins:** **+1 coin per finished picture or friend found, up to 10 a day** (`LITTLE_DAILY`, like the
+  fidget allowance), then it keeps working with one gentle note. The Sound Mat pays nothing (it's free play).
+- **Stickers:** a new 🧸 page with 4: First Colors (1 picture finished), Little Artist (all 12 colored), Peekaboo! (10 friends found),
+  Music Mat (100 pad taps). They count totals, never streaks.
+- **Light on the device:** no main loop (CSS animations and transitions only), no `#fuzz` filter on the pictures, the
+  hiding friend is drawn once. Read to me names every button. Easy mode makes nothing smaller (the buttons are already big).
+- **Save:** `little{colors{picId:[...]}, pay{day,n}}`, `stats.colored`, `stats.peeks`, `stats.pads`; save version 27
+  (`normalize` + `MIGRATIONS[27]`). Older backups restore with nothing colored. Picture ids are saved: never rename them.
+- **Files:** new `46-little.js` (menu, Sound Mat, Peekaboo) and `47-colorbook.js` (the 12 pictures and coloring), a new
+  `scr-little` screen in `index.html`.
+- **Smoke test:** the 🧸 button in all four rooms (also on a phone); every picture draws and every area can be filled; fills
+  are remembered after a reload; undo/surprise/start again; Hang it up puts a drawing in the Gallery; every pad of both mats
+  plays and two fingers at once work; Peekaboo: empty spots never say wrong, finding the friend cheers and starts a new
+  round; coins +1 up to 10 then the note; the stickers; Back; a restore from v1.45; tap targets 48 px+, phone layouts fit.
+- As built: undo is ↩️ (not 🧽). The background is area 0 and can be colored, but a picture counts as finished without it.
+  🎲 colors every area at once (finishing that way counts too). The saved shape also has `hung{picId:{art, sig}}`, so hanging the
+  same picture again updates its drawing instead of making a new one. **6 stickers** (a sticker page needs 6 or more):
+  First Colors, Little Artist, Peekaboo!, Hide and Seek Pro (50 friends), Music Mat, On the Wall. Peekaboo's 6 hiding spots
+  are a bush, a gift box, a flower pot, a cloud, a door and a drum. "Peekaboo!" is spoken when sound is on (Android only).
+  On a phone the room bar's button row has 5 columns.
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.

@@ -77,6 +77,9 @@ _Last updated: 2026-11-19_
     2026-11-19 (see "Free Play" under Decisions and `PLAN.md`). Owner's answers 2026-11-19: always open; +1 coin each, 10 a day; the daily
     card on the Brain Games menu; +5 for the Puzzle of the Day; the daily card rotates through 5 Brain Games only (Train,
     Pop, Snack, Memory, Bakery; not Word Builder or Fact Cards), and those 5 get 🎲 Free Play too.
+  - **🇺🇸 American spelling (v1.44) and 🔤 Word Builder word bank (v1.45): done** (PRs #44 and #45 merged 2026-11-19).
+  - **🧸 Little Ones' Corner: built, PR #46 open as v1.46** on branch `feature/little` (from `main` after #45). Picked from the
+    "Later" list and planned 2026-11-19 (see "Little Ones' Corner" under Decisions and `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -129,8 +132,9 @@ _Last updated: 2026-11-19_
 - PR #41 "Visitors & wishes (v1.41)": merged.
 - PR #42 "Play Together (v1.42)": merged.
 - PR #43 "Free Play & Puzzle of the Day (v1.43)": merged.
-- PR #44 "American spelling (v1.44)" on branch `feature/american`: open.
-- PR #45 "Word Builder word bank (v1.45)" on branch `feature/words` (made from `feature/american`): open. Merge #44 first.
+- PR #44 "American spelling (v1.44)": merged.
+- PR #45 "Word Builder word bank (v1.45)": merged.
+- PR #46 "Little Ones' Corner (v1.46)" on branch `feature/little`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -517,6 +521,18 @@ _Last updated: 2026-11-19_
   the next full run passed.
   Not tested automatically: Read to me saying the words on the tablet (the browser has no voice), and how small the
   8-wagon trains look on a real phone (they fit; the choice wagons are big).
+- **Little Ones' Corner (v1.46):** `tests/smoke-test.js` has 1391 checks, all passing, no console errors. New checks: save version 27;
+  the 🧸 button in all four rooms (48 px+, Read to me says Play, one row on the tablet, icon only at 360 px); the menu's 3 big
+  buttons; 12 pictures with 4–8 areas each, and **every area of every picture can really be tapped** (a point where it is on top);
+  picking a crayon, filling, ↩️ undo, finishing (🌟, +1, counted), the background, saved colors, the ⭐ in the list, 🎲 and 🗑️ (asks
+  first); 🖼️ Hang it up makes a real 800 × 560 Gallery drawing (+5, counted), again with the same colors does nothing, after a
+  change it updates the same drawing; the Sound Mat's 8 pads (C D E G A notes), two fingers at once, every fun sound, no coins;
+  Peekaboo's 6 spots (4 on a phone), an empty spot is never "wrong", finding the friend (+1, counted), a new round by itself, a
+  fresh round after leaving; +1 coins stop at 10 a day with a note and come back the next day; the 6 stickers; Back; phone
+  portrait and landscape layouts; restoring a v1.45 backup, a v1.46 backup and odd data.
+  Older checks changed: the sticker count (107 on 8 pages), the phone sticker tabs (now two rows on a narrow phone), the v1.43
+  backup check (save version 26 or later) and the v1.45 Gift Story check (no longer the current version).
+  Not tested automatically: how the sounds and "Peekaboo!" voice feel on the tablet, and whether the little ones find 🧸.
 - **Word Builder word bank (v1.45):** `tests/smoke-test.js` has 1333 checks; all pass except the old Soccer "a wide shot misses" check, which failed once on a timing hiccup (it passed on the run before; nothing here touches Soccer); no console errors. New checks: the
   bank's size, letters, lengths (Easy 3–5, Medium up to 9, Hard up to 11) and no repeats; the left-out words are gone and the theme
   words are in; American spelling; every picture draws; extra letters never appear in the word; Easy traces faint letters and wins;
@@ -940,6 +956,12 @@ _Last updated: 2026-11-19_
   room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
   short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
   so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
+- **Little Ones' Corner (built as v1.46, `46-little.js` + `47-colorbook.js`), agreed 2026-11-19.** Picked by the owner from the
+  Phase 12 "Later" list. Owner's answers: a **🧸 Play button in the top bar** of every room; **+1 coin** per finished picture or
+  Peekaboo friend, **10 a day**; **🖼️ Hang it up** saves a colored picture into the Art Desk Gallery (drawing coin rules); the
+  12 pictures (dino, rocket, dump truck, train, shark, robot, buddy, kitten, flower, cupcake, butterfly, house). Save version 27:
+  `little{colors, hung, pay}`, `stats.colored/peeks/pads`. A new 🧸 Play sticker page with 6 stickers (107 in all; a page
+  needs 6 or more). On a phone the room bar's button row has 5 columns.
 - **Word Bank (built as v1.45, `45-words.js`), agreed 2026-11-19.** From the owner's SpellingWords.txt (the words are typed into
   `WB_BANK`; the file itself is not in the repo). Owner's answers: 🎲 **and** the 📅 daily turn (6 games now); Easy = **trace**
   (faint letters in the slots, a picture where there is one), Medium/Hard = **👀 look, ✋ hide, spell** (👀 Peek any time, no timer,
@@ -1179,12 +1201,14 @@ _Last updated: 2026-11-19_
     tablet even with Read to me off); American spelling; drop 1–2 letter words and homophones; Hard at most 11 letters; swap
     harass, illegal, cemetery (explosion borderline); remove repeats; add theme words (web, bat, cub / robot, rocket, slime,
     goal, ghost, comet / dinosaur, volcano, galaxy, astronaut, telescope). The owner's file is SpellingWords.txt (not in the repo yet).
-12. Then pick from the "Later, any order" list in `PLAN.md` (Phase 12).
+12. ~~Then pick from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 🧸 Little Ones' Corner (v1.46), planned and built.
+13. Owner: build v1.46, try 🧸 Play with the little ones (see the PR), and merge it.
+14. Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 26 since v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 27 since v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
