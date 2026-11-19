@@ -72,8 +72,10 @@ _Last updated: 2026-11-19_
   `feature/room4` (from `feature/depth`; #39 is now merged, so the PR goes straight to `main`).
   - **✨ Studio + 🗺️ getting around: done** (v1.40 merged, PR #40). The owner named the room ✨ Studio.
   - **🚪 Visitors & wishes: done** (v1.41 merged, PR #41).
-  - **👯 Two-player games: built, PR #42 open as v1.42** on branch `feature/together` (from `main` after #41). Plan agreed 2026-11-19
-    (see "Two-player games" under Decisions and `PLAN.md`).
+  - **👯 Two-player games: done** (v1.42 merged, PR #42).
+  - **🎲 Free Play + 📅 Puzzle of the Day (v1.43): plan written, waiting for the owner's OK** (in `PLAN.md`, on branch
+    `feature/freeplay` from `main` after #42). Owner's answers 2026-11-19: always open; +1 coin each, 10 a day; the daily
+    card on the Brain Games menu; +5 for the Puzzle of the Day.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -124,7 +126,7 @@ _Last updated: 2026-11-19_
 - PR #39 "Room depth (v1.39)": merged.
 - PR #40 "Studio + getting around (v1.40)": merged.
 - PR #41 "Visitors & wishes (v1.41)": merged.
-- PR #42 "Play Together (v1.42)" on branch `feature/together`: open.
+- PR #42 "Play Together (v1.42)": merged.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -1118,8 +1120,9 @@ _Last updated: 2026-11-19_
 4. ~~Plan 🚪 Visitors (v1.41) and get it agreed before coding.~~ Agreed 2026-11-18 and built.
 5. ~~Owner: build v1.41 and try it (see the PR), and merge it.~~ Merged.
 6. ~~Plan 👯 Two-player games (v1.42) and get it agreed before coding.~~ Agreed 2026-11-19 and built.
-7. Owner: build v1.42 and try it with two children (see the PR), and merge it.
-8. Plan 🎲 Free Play + Puzzle of the Day (v1.43) and get it agreed before coding.
+7. ~~Owner: build v1.42 and try it with two children (see the PR), and merge it.~~ Merged.
+8. Plan 🎲 Free Play + Puzzle of the Day (v1.43) and get it agreed before coding. Plan written in `PLAN.md` (2026-11-19);
+   waiting for the owner's OK.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

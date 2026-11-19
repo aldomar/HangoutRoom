@@ -346,9 +346,9 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   No timer, no failing. The new room is the natural place for decorating requests.
 - ✅ **👯 Two-player games (v1.42, built; plan details below, agreed 2026-11-19):** take turns on one tablet: one kicks, one keeps (both Soccer modes exist), 2-player
   Memory Match, and tapping the beat together on the Stage.
-- **🎲 Free Play + Puzzle of the Day (v1.43):** after the fixed puzzles, endless generated ones (made from a seed, never
-  saved by id) for the mazes, Pattern Train, Number Pop and simple Code Lab boards; one generated puzzle a day for a small
-  bonus, with no streak and no "missed it".
+- **🎲 Free Play + Puzzle of the Day (v1.43, plan details below, waiting for the owner's OK):** endless generated puzzles
+  (made from a seed, never saved by id) for the mazes, Pattern Train, Number Pop and simple Code Lab boards; one generated
+  puzzle a day for a small bonus, with no streak and no "missed it".
 - **Later, any order:** 💃 Dance Maker (buddy moves to a Music Maker loop or Stage song), 👗 Runway (style a look for a theme
   card; judges only cheer), 🌱 Backyard garden (grows over real days, never wilts), 🧸 Little Ones' Corner (tap-to-colour,
   sound play mat, peekaboo), 🔍 I Spy in her own room, 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
@@ -406,6 +406,46 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
 - Save: `duo{day, n, soccer, memory, stage}` per room (coins today + games played); save version 25. New file
   `43-together.js` with small hooks in Soccer, Brain Games and the Stage. Smoke test: the partner picker, a whole duel with
   both inputs at once, Memory turns and scores, a Stage song split by lane, coins and the daily limit, a restore from v1.41.
+
+#### v1.43 plan details: 🎲 Free Play + 📅 Puzzle of the Day (proposed 2026-11-19, waiting for the owner's OK)
+Owner's answers so far (2026-11-19): Free Play is **always open**; **+1 coin each, 10 a day**; the Puzzle of the Day is a
+**card on the Brain Games menu**; it pays **+5 coins**.
+- **How a puzzle is made:** a small "dice" (a random number maker started from a seed) builds a puzzle from rules. The same
+  seed always gives the same puzzle. Free Play rolls a new seed each time; the Puzzle of the Day uses the date, so it is the
+  same all day (also after closing the app). Every made puzzle is checked before it is shown (it can be solved, and only one
+  answer fits); if a check fails, the dice rolls again. Nothing about a made puzzle is saved.
+- **🎲 Free Play, one button in each game** (glowing once that level's fixed puzzles are all done):
+  - **🔮 Marble Maze:** a 🎲 button at the end of the maze bar. A new 9×6 maze with a start, a star hole, walls and a few
+    bumpers; checked with the same path search as the fixed mazes, and never a too-short path.
+  - **🚂 Pattern Train** (🐣 Easy / 🌟 Medium / 🧠 Hard): a 🎲 button after the 8 puzzle numbers. Easy: colour patterns
+    (AB, ABC, AAB, ABB), the gap at the end or in the middle. Medium: shape + colour. Hard: number rules (+n, −n, ×2, ÷2,
+    squares, growing steps), with the matching hint. Only the answer may make the train repeat.
+  - **🫧 Number Pop** (same levels): Easy "pop every 3" with dots; Medium pairs that make 10 or 20 (one lonely decoy at most);
+    Hard the factors of a number with lots of them (12 to 60), mixed with numbers that aren't.
+  - **💻 Code Lab:** a 🎲 New board tile on the Easy and Medium lists only (arrows, and 🔁 on Medium). Fuzzy, a carrot and a few
+    toy blocks; the block limit comes from the shortest answer (found by search), plus a little room. Medium boards need 🔁.
+    My Move, If and Challenge stay fixed (they are hand-checked puzzles).
+  - Solving shows the usual cheer and a box with **🎲 Another one!** and **⬅ Back**. **+1 coin each, up to 10 a day**
+    (`FREE_DAILY`, shared by all four games), then one gentle note ("Free Play coins are full for today! Keep playing for
+    fun ✨"), and it keeps working. It refills quietly when the date changes. No countdown, no "come back".
+  - Free Play never changes `brain.solved`, `maze.solved`, `code.solved`, the level bonuses, Brain Champ or the puzzle ticks.
+- **📅 Puzzle of the Day:** a card at the top of the Brain Games menu (`BR_MENU_TOP`, next to 👯 Memory for 2). The game turns
+  through Pattern Train → Number Pop → Marble Maze → Code Lab by the date; the level is her saved level for that game
+  (Easy mode: always Easy; Code Lab: Easy or Medium). Tapping it opens that game straight on the day's puzzle (the maze on
+  the Fidget Shelf, the board in the Code Lab); Back goes back to the Brain Games menu.
+  - Solved: **+5 coins** once that day, and the card says "✔ Solved today 🎉". Not solved: the card just shows the puzzle,
+    with no reminder, streak or "missed" message. A replay the same day is free practice.
+- **Stickers** (Code & Brain page, total counts, never streaks): 🎲 Dice Roller (10 Free Play puzzles), 🎲 Puzzle Explorer
+  (50), 📅 Daily Thinker (5 Puzzles of the Day).
+- **Save:** `free{day, n}` (Free Play coins today), `potd{day}` (the last day the Puzzle of the Day was solved),
+  `stats.free`, `stats.potd`; save version 26 (`normalize` + `MIGRATIONS[26]`). Older backups restore with nothing played.
+- **Files:** new `44-freeplay.js` (the dice, the four makers, the 🎲 buttons, the daily card); small hooks in the maze (19),
+  the Code Lab (18) and the Brain Games puzzle screen (28) so a made puzzle can be opened like a fixed one.
+- **Smoke test:** each maker on a few hundred seeds gives puzzles that follow the fixed puzzles' rules (solvable, one answer,
+  choices contain the answer, Medium Code Lab needs 🔁); the same seed gives the same puzzle; the 🎲 buttons in all four
+  games; +1 coins up to 10 then the note; a new day refills; the daily card: the right game by date, +5 once, then
+  "Solved today", a new puzzle the next day, no streak words anywhere; fixed-puzzle progress unchanged; the stickers; a
+  restore from v1.42; phone layouts.
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
