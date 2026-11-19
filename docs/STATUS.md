@@ -75,7 +75,8 @@ _Last updated: 2026-11-19_
   - **👯 Two-player games: done** (v1.42 merged, PR #42).
   - **🎲 Free Play + 📅 Puzzle of the Day (v1.43): plan written, waiting for the owner's OK** (in `PLAN.md`, on branch
     `feature/freeplay` from `main` after #42). Owner's answers 2026-11-19: always open; +1 coin each, 10 a day; the daily
-    card on the Brain Games menu; +5 for the Puzzle of the Day.
+    card on the Brain Games menu; +5 for the Puzzle of the Day; the daily card rotates through 5 Brain Games only (Train,
+    Pop, Snack, Memory, Bakery; not Word Builder or Fact Cards), and those 5 get 🎲 Free Play too.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
