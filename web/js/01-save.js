@@ -8,7 +8,7 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.43';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.44';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
 const DB_VERSION=26;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
@@ -46,8 +46,8 @@ const MIGRATIONS={
   // v1.10 Loft + Content Pack 1: room2 {wall, floor, items} (the Cozy Loft, empty at first) and fid.popShape
   // ('classic' | 'heart' | 'star'). normalize() fills in both; this step only marks the upgrade.
   7: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&!p.room2) p.room2={wall:'attic',floor:'wood',items:[]}; }); },
-  // v1.11 Hair styles + colours: look.hair is now a style and look.hairColor a HAIR_COLORS id. The old coloured swoops
-  // become the Emo Swoop style ('swoopBlack') in that colour, and owning one gives that colour (owned 'hairc:<id>').
+  // v1.11 Hair styles + colors: look.hair is now a style and look.hairColor a HAIR_COLORS id. The old colored swoops
+  // become the Emo Swoop style ('swoopBlack') in that color, and owning one gives that color (owned 'hairc:<id>').
   // Old keys are kept, never deleted.
   8: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(!p||typeof p!=='object') return;
     if(p.look&&LEGACY_HAIR[p.look.hair]){p.look.hairColor=LEGACY_HAIR[p.look.hair];p.look.hair='swoopBlack';}
@@ -63,7 +63,7 @@ const MIGRATIONS={
   // v1.19 Pet: pet {kind ('' until she picks one), acc, names{kind:name}, hearts{kind:n}}. normalize() fills it in.
   12: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.pet||typeof p.pet!=='object')) p.pet={kind:'',acc:'none',names:{},hearts:{}}; }); },
   // v1.20 Buddies: look.kind / look.face (a bunny with the Sparkly face, filled in by normalize), p.tint
-  // (off for rooms made before v1.20, so they look the same) and p.furn (furniture colours; empty = the classic colours).
+  // (off for rooms made before v1.20, so they look the same) and p.furn (furniture colors; empty = the classic colors).
   13: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&typeof p.tint!=='boolean') p.tint=false; }); },
   // v1.23 Backyard: room3 {wall, floor, items} (empty, with the White Picket fence and Grass). normalize() fills it in too.
   14: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.room3||typeof p.room3!=='object')) p.room3={wall:'picket',floor:'grass',items:[]}; }); },
@@ -96,7 +96,7 @@ const MIGRATIONS={
     if(!p.potd||typeof p.potd!=='object'||Array.isArray(p.potd)) p.potd={day:''}; } }); }
 };
 
-// Hair ids from before v1.11 (one closet item per colour) -> the colour they had. They stay readable forever:
+// Hair ids from before v1.11 (one closet item per color) -> the color they had. They stay readable forever:
 // old saves, old backups and old photocards (which keep the outfit they were made in) still draw the same hair.
 const LEGACY_HAIR={swoopPurple:'purple',swoopPink:'pink',swoopStreak:'streak',swoopCandy:'candy'};
 
@@ -126,7 +126,7 @@ const P=()=>DB.profiles.find(p=>p.id===DB.activeId);
 // ---------- Drawings store (Art Desk) ----------
 // Drawings are too big for localStorage, so they live in IndexedDB. One record per drawing:
 //   {id, profileId, created, updated, paper, ink, thumb}
-//   ink   = the drawing itself (see-through image, data URL); paper = paper colour id
+//   ink   = the drawing itself (see-through image, data URL); paper = paper color id
 //   thumb = small picture with the paper behind it (gallery + room posters)
 // A record with draft:true is an unsaved drawing kept while the app is in the background.
 // If IndexedDB is not available, drawings fall back to the localStorage key ART_LS (smaller limit),

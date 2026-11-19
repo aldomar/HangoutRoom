@@ -64,7 +64,7 @@ const DECOR={
 function shelfArt(w){const h=w/2, o='stroke="#2b2235" stroke-width="4" stroke-linejoin="round"';
   return [-1,1].map(k=>`<path d="M${k*(h-26)} -30 V-4 L${k*(h-26)-k*22} -30Z" fill="#ff8cc6" ${o}/>`).join('')
     +`<rect x="${-h}" y="-44" width="${w}" height="16" rx="5" fill="#fbf2e6" ${o}/><rect x="${-h+6}" y="-34" width="${w-12}" height="3" fill="#e7d6c2"/>`;}
-// A trophy cup with a soccer-ball badge, drawn bottom-centre at (0,0) like the other decorations.
+// A trophy cup with a soccer-ball badge, drawn bottom-center at (0,0) like the other decorations.
 function trophyArt(main,light,dark,label){
   const o=`stroke="#2b2235" stroke-width="4" stroke-linejoin="round"`;
   return `<ellipse cx="0" cy="-2" rx="44" ry="7" fill="#00000030"/>`
@@ -94,7 +94,7 @@ function stageMarquee(){
     +`<text x="865" y="68" text-anchor="middle" font-size="32" font-weight="900" fill="#ffd1ea" filter="url(#glow)">🎤 Stage</text></g>`;
 }
 function furniture(split){ // split (v1.39): {wall, floor:[{y, h}]} so floor pieces can be sorted with the room's things
-  let s=''; const F=[]; const cu=furnC('curtain'), sh=furnC('shelf'), cl=furnC('closet'), dk=furnC('desk'); // colours (v1.20, section 23)
+  let s=''; const F=[]; const cu=furnC('curtain'), sh=furnC('shelf'), cl=furnC('closet'), dk=furnC('desk'); // colors (v1.20, section 23)
   // window -> soccer field (open since v1.5); since v1.40 a shortcut out to the Backyard (Soccer is at its goal)
   s+=`<g class="hot" data-hot="window"><rect x="80" y="60" width="230" height="185" rx="12" fill="#fff" stroke="#5b4a6b" stroke-width="5"/><rect x="94" y="74" width="202" height="157" rx="6" fill="url(#gSky)"/><rect x="94" y="182" width="202" height="49" fill="#6cc56f"/>${seasonWindow(1,'ground')}<g stroke="#fff" stroke-width="2" opacity=".7"><line x1="216" y1="160" x2="216" y2="182"/><line x1="236" y1="160" x2="236" y2="182"/><line x1="256" y1="160" x2="256" y2="182"/><line x1="200" y1="170" x2="272" y2="170"/></g><path d="M200 182 V152 H272 V182" fill="none" stroke="#fff" stroke-width="5"/><circle cx="148" cy="204" r="11" fill="#fff" stroke="#333" stroke-width="2"/><path d="M148 199 l4 3 -1.5 5 h-5 l-1.5 -5z" fill="#333"/><circle cx="130" cy="100" r="16" fill="#fff" opacity=".9"/><circle cx="146" cy="96" r="20" fill="#fff" opacity=".9"/><circle cx="164" cy="102" r="14" fill="#fff" opacity=".9"/>${seasonWindow(1,'air')}<path d="M68 52 Q112 150 84 258 L64 258 Z" fill="${cu.fill}" stroke="${cu.line}" stroke-width="4"/><path d="M322 52 Q278 150 306 258 L326 258 Z" fill="${cu.fill}" stroke="${cu.line}" stroke-width="4"/>${sign(195,278,'🌳 Outside')}</g>`;
   // photocard wall (open since v1.4): up to 3 pinned cards, drawn without the fuzz filter to stay light

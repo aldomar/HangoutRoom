@@ -22,7 +22,7 @@ function tgPartner(){
   if(TG.p2==='guest') return Object.assign({},TG_GUEST);
   const q=DB.profiles.find(x=>x.id===TG.p2&&x.id!==DB.activeId); return q?tgMe(q):null;
 }
-// The two players; player 2 gets another colour if both rooms have the same one.
+// The two players; player 2 gets another color if both rooms have the same one.
 function tgPlayers(){
   const a=tgMe(P()), b=tgPartner(); if(!b) return null;
   if(b.color===a.color) b.color=a.color==='#8ff0d0'?'#ffd166':'#8ff0d0';

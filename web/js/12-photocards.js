@@ -57,7 +57,7 @@ const CARD_TAGS={
   sporty:['top:jersey','top:hoodie','bottom:shorts','bottom:jeans','legs:soccer','shoes:cleats','shoes:sneakers','acc:headphones']
 };
 const STAT_ROWS=[['cute','💗 Cute'],['spooky','🦇 Spooky'],['sporty','⚽ Sporty']];
-// Hair counts by style and (for styles that aren't fur) by colour, e.g. Pigtails or Pink hair are Cute.
+// Hair counts by style and (for styles that aren't fur) by color, e.g. Pigtails or Pink hair are Cute.
 function cardStats(look){
   const hi=hairIds(look), hk=['hair:'+hi.h].concat(itemOf('hair',hi.h).fur?[]:['hairc:'+hi.c]);
   return STAT_ROWS.map(([k])=>Math.min(5,1+Object.keys(CLOSET).filter(cat=>cat==='hair'?hk.some(x=>CARD_TAGS[k].includes(x)):CARD_TAGS[k].includes(cat+':'+look[cat])).length));}

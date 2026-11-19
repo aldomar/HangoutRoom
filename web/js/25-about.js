@@ -65,15 +65,15 @@ const GIFT_TIMELINE=[
           '💖 Neon Hearts, 👏 Stadium Clap and 🚀 Rocket Launch',
           '🦖 Dino Stomp (slow and big) and 🌙 Moon Lullaby (calm)',
           '📒 4 new Stage stickers, like 🎶 Whole Setlist']},
-  {v:'1.27',d:'2026-11-16',i:'⭐',n:'Looks & Night Mode',why:'Your favourite outfits in one tap, and a cozy room at night',
+  {v:'1.27',d:'2026-11-16',i:'⭐',n:'Looks & Night Mode',why:'Your favorite outfits in one tap, and a cozy room at night',
     news:['⭐ My Looks in the Closet: keep 4 outfits, wear one with a tap',
           '👋 Tap your buddy to wave, dance, laugh or nap',
           '🌙 Turn the lights off: lamps glow and stars come out']},
-  {v:'1.28',d:'2026-11-16',i:'🎁',n:'Gifts & Layouts',why:'So you can surprise each other, and keep your favourite room',
+  {v:'1.28',d:'2026-11-16',i:'🎁',n:'Gifts & Layouts',why:'So you can surprise each other, and keep your favorite room',
     news:['🎁 Give coins or a decoration to a brother or sister',
           '📦 A gift for you? Tap the wrapped box in your room!',
           '🏠 Save your room layout in 🛋️ Decorate and put it back any time']},
-  {v:'1.29',d:'2026-11-16',i:'⭐',n:'Shop Filters & Big Dreams',why:'To find your favourite things fast, and something big to save up for',
+  {v:'1.29',d:'2026-11-16',i:'⭐',n:'Shop Filters & Big Dreams',why:'To find your favorite things fast, and something big to save up for',
     news:['🔎 Theme buttons in the Closet and the Shop: 🦇 ☁️ ⚽ 🎤 🦕 🚀 …',
           '⭐ 5 big dreams to save up for: Canopy Bed, Arcade, Castle Bunk Bed, Rocket Playhouse, Aquarium',
           '🌈 A new sticker: Dream Come True']},
@@ -140,7 +140,10 @@ const GIFT_TIMELINE=[
     news:['🎲 Free Play: endless new puzzles in Brain Games, the Marble Maze and the Code Lab',
           '📅 Puzzle of the Day on the Brain Games menu: +5 coins',
           '🪙 +1 coin for each Free Play puzzle (10 a day)',
-          '📒 3 new stickers on the Code & Brain page']}
+          '📒 3 new stickers on the Code & Brain page']},
+  {v:'1.44',d:'2026-11-19',i:'🔤',n:'American Spelling',why:'So the words in the app match the spelling you learn at school',
+    news:['🎨 Words now use American spelling: color, favorite, gray, cozy',
+          '🍂 The season is called Fall']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

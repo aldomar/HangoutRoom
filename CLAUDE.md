@@ -353,4 +353,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   Pop-it shapes are `POP_SHAPES` entries with a 100×100 outline `path`; owned as `popshape:<id>`.
   A new squishy `extra` goes in `SQ_EXTRAS` (`back`/`front` canvas drawings); a new spinner or slime `deco` picture goes in
   `FID_ICONS` (both in section 5, since v1.21). Pack 2 helpers use the `p2` prefix.
+- **American English (since v1.44).** The children learn American spelling, so everything the app shows and every code comment
+  uses it (color, favorite, gray, center, cozy, tire; the season is "Fall"). Saved ids never change to match (the season id
+  stays `autumn`). The smoke test fails on British spellings in `web/` and `index.html`. New doc text uses American spelling too.
 - Use the existing palette (`:root` CSS variables; pink `#ff8cc6`, purple `#a97cff`, mint `#8ff0d0`, gold `#ffd166`, dark `#231b2e`).

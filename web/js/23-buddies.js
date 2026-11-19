@@ -1,6 +1,6 @@
 'use strict';
 /* =========================================================
-   23. BUDDIES (v1.20): starter looks for a new room, and room colours that tint the app
+   23. BUDDIES (v1.20): starter looks for a new room, and room colors that tint the app
    The buddies themselves (BUDDIES, FACES and the new clothes) are in section 3, because mascotSVG draws them.
    ========================================================= */
 
@@ -27,9 +27,9 @@ function giveStarter(p){
 // The profile screen shows a few buddies together.
 function profHeroSVG(){return ['fox','emo','dino'].map(k=>mascotSVG(starterLook(k))).join('');}
 
-// Room colour tints (v1.20): when p.tint is on, the room's colour (ROOM_COLORS id) replaces the pink and purple of the
+// Room color tints (v1.20): when p.tint is on, the room's color (ROOM_COLORS id) replaces the pink and purple of the
 // buttons, tabs and bars, and the dark panels take a hint of it. Pink and purple rooms keep the classic look.
-// a = main colour (pink before), ad = its shadow, ai = text on it, b = second colour (purple before), bd = its shadow, hi = a highlighted tile.
+// a = main color (pink before), ad = its shadow, ai = text on it, b = second color (purple before), bd = its shadow, hi = a highlighted tile.
 const TINTS={
   mint:{a:'#8ff0d0',ad:'#3fae8c',ai:'#123a2e',b:'#2f9c7c',bd:'#1d6b54',bg:'#16262a',panel:'#1f3438',panel2:'#284247',line:'#355a5e',hi:'#2f5458'},
   gold:{a:'#ffd166',ad:'#c8962a',ai:'#3a2a08',b:'#d98a1f',bd:'#9a5e0c',bg:'#2a2216',panel:'#382d1d',panel2:'#463825',line:'#5c4a2f',hi:'#5a4830'},
@@ -47,9 +47,9 @@ function applyTint(){
   for(const [k,v] of Object.entries(TINT_VARS)){if(t)b.style.setProperty(v,t[k]);else b.style.removeProperty(v);}
 }
 
-// Furniture colours (v1.20): the built-in furniture of both rooms can be recoloured, free, in Decorate's 🎨 Colours
-// tab. Saved per room-profile in p.furn {piece: colour id}; a missing or unknown id = the classic colours (as before
-// v1.20). Piece ids and colour ids are saved: never rename them. b = bright, l = light, m = middle, d = dark.
+// Furniture colors (v1.20): the built-in furniture of both rooms can be recolored, free, in Decorate's 🎨 Colors
+// tab. Saved per room-profile in p.furn {piece: color id}; a missing or unknown id = the classic colors (as before
+// v1.20). Piece ids and color ids are saved: never rename them. b = bright, l = light, m = middle, d = dark.
 const FURN_COLORS={
   pink:{name:'Pink',b:'#ff8cc6',l:'#ffc2df',m:'#e48fbf',d:'#c8578f'},
   purple:{name:'Purple',b:'#a97cff',l:'#c9b3ff',m:'#8d68dc',d:'#4e3191'},
@@ -62,7 +62,7 @@ const FURN_COLORS={
   white:{name:'White',b:'#f4f0fa',l:'#ffffff',m:'#ddd5e8',d:'#9f93b5'},
   wood:{name:'Wood',b:'#c08a58',l:'#d9a46c',m:'#a87444',d:'#6e4526'}
 };
-// orig = the classic colours; map = the colours drawn from a FURN_COLORS entry.
+// orig = the classic colors; map = the colors drawn from a FURN_COLORS entry.
 const FURN_PIECES={
   desk:{room:1,icon:'🎨',name:'Art Desk',orig:{top:'#ffb3d9',legs:'#e48fbf'},map:c=>({top:c.l,legs:c.m})},
   closet:{room:1,icon:'👗',name:'Wardrobe',orig:{body:'#6b46b8',door:'#7d58cc',dark:'#3e2670'},map:c=>({body:c.m,door:c.l,dark:c.d})},
@@ -73,9 +73,9 @@ const FURN_PIECES={
   window2:{room:2,icon:'🌙',name:'Round Window',orig:{frame:'#5b3a99'},map:c=>({frame:c.m})},
   lamp:{room:2,icon:'💡',name:'Lamp',orig:{shade:'#ff8cc6'},map:c=>({shade:c.b})}
 };
-// The colours to draw a piece with, for the room on screen.
+// The colors to draw a piece with, for the room on screen.
 function furnC(piece){const p=P(),F=FURN_PIECES[piece],c=FURN_COLORS[p&&p.furn?p.furn[piece]:''];return c?F.map(c):F.orig;}
-// Decorate's 🎨 Colours tab: one row of swatches per piece in the room on screen. 'classic' = the colours from before.
+// Decorate's 🎨 Colors tab: one row of swatches per piece in the room on screen. 'classic' = the colors from before.
 function furnGrid(p){
   return Object.entries(FURN_PIECES).filter(([k,F])=>F.room===roomNo).map(([k,F])=>{const now=FURN_COLORS[p.furn[k]]?p.furn[k]:'classic', o=Object.values(F.orig);
     return `<div class="furn-row"><div class="furn-name">${F.icon} ${F.name}</div><div class="furn-sw">`
@@ -87,13 +87,13 @@ $('#decoGrid').addEventListener('click',e=>{
   if(b.dataset.fc==='classic') delete p.furn[b.dataset.furn]; else p.furn[b.dataset.furn]=b.dataset.fc;
   save(); SFX.click(); renderRoom(); renderDecoGrid();
 });
-// Pastel walls to match the new room colours (bought in the Walls tab, or given to a new room of that colour).
+// Pastel walls to match the new room colors (bought in the Walls tab, or given to a new room of that color).
 Object.assign(WALLS,{
   lemonDots:{name:'Lemon Dots',price:20,fill:'#fff0b8',pat:'pDots'},
   leafDots:{name:'Leafy Green',price:20,fill:'#cdf0c8',pat:'pDots'},
   blueDots:{name:'Blue Dots',price:20,fill:'#c8d4ff',pat:'pDots'}
 });
-// A new room starts in its colour: a matching wall (given free) and furniture in both rooms (the Loft's beams stay wood).
+// A new room starts in its color: a matching wall (given free) and furniture in both rooms (the Loft's beams stay wood).
 const ROOM_START={pink:['bubblegum','pink'],purple:['lavender','purple'],mint:['mint','mint'],gold:['lemonDots','lemon'],
   sky:['skyCloud','sky'],peach:['peachStripe','peach'],green:['leafDots','green'],blue:['blueDots','blue']};
 function roomStart(p){

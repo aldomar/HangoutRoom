@@ -10,12 +10,12 @@ const FUR={
   black:{name:'Midnight',c:'#3d3547',e:'#ff79b0',price:0},
   mint:{name:'Mint',c:'#c8f3e2',e:'#ffa8c8',price:0},
   cocoa:{name:'Cocoa',c:'#c9a184',e:'#ffb0c0',price:10},
-  // v1.20 (Buddies): three more free colours that suit every buddy.
+  // v1.20 (Buddies): three more free colors that suit every buddy.
   sky:{name:'Sky',c:'#c4e2ff',e:'#ff9fc4',price:0},
   ginger:{name:'Ginger',c:'#ffc59a',e:'#ff9fb0',price:0},
   stone:{name:'Stone',c:'#cfcbd8',e:'#ffa8c8',price:0}
 };
-// A fur colour a little darker (k<0) or lighter (k>0), for puppy ears.
+// A fur color a little darker (k<0) or lighter (k>0), for puppy ears.
 function bdShade(hex,k){const n=parseInt(hex.slice(1),16),c=[n>>16,n>>8&255,n&255].map(v=>Math.round(k<0?v*(1+k):v+(255-v)*k));return '#'+c.map(v=>v.toString(16).padStart(2,'0')).join('');}
 // Buddies (v1.20): every buddy has the same body, so every outfit fits every buddy. Only the ears (back = behind the
 // head, front = over it) and a tail change. Ids are saved in look.kind: never rename them.
@@ -45,7 +45,7 @@ const kick=(x,fill,sole,studs)=>`<path d="M${x} 238 Q${x} 228 ${x+12} 228 H${x+2
 const mj=x=>`<path d="M${x} 246 Q${x} 234 ${x+19} 234 Q${x+38} 234 ${x+38} 250 H${x}Z" fill="#1f1a26" ${st('#000',2)}/><path d="M${x+6} 238 L${x+32} 238" stroke="#ff8cc6" stroke-width="3"/><circle cx="${x+30}" cy="238" r="2.5" fill="#ffd166"/>`;
 const none=()=>'';
 
-// Hair colours (v1.11): bought once (owned 'hairc:<id>') and used with every style. s = a streak colour.
+// Hair colors (v1.11): bought once (owned 'hairc:<id>') and used with every style. s = a streak color.
 // Ids are saved: never rename them.
 const HAIR_COLORS={
   black:{name:'Black',c:'#2a2230',price:0}, brown:{name:'Brown',c:'#6b4630',price:0},
@@ -56,14 +56,14 @@ const HAIR_COLORS={
 const HL=st('#1a1320',2.5);
 const hShine=d=>`<path d="${d}" stroke="#fff" stroke-opacity=".25" stroke-width="4" fill="none" stroke-linecap="round"/>`;
 const hStreak=(H,d)=>H.s?`<path d="${d}" stroke="${H.s}" stroke-width="7" fill="none" stroke-linecap="round"/>`:'';
-// The hair a look really shows: old coloured-swoop ids (LEGACY_HAIR, section 1) become Emo Swoop in that colour.
+// The hair a look really shows: old colored-swoop ids (LEGACY_HAIR, section 1) become Emo Swoop in that color.
 function hairIds(L){let h=L.hair,c=L.hairColor;if(LEGACY_HAIR[h]){c=LEGACY_HAIR[h];h='swoopBlack';}return {h,c:HAIR_COLORS[c]?c:'black'};}
 const CLOSET={
   kind:{label:'Buddy',icon:'🐾',vb:'0 0 200 270',items:Object.entries(BUDDIES).map(([id,b])=>({id,name:b.name,price:0,d:none}))},
   fur:{label:'Fur',icon:'🎨',vb:'0 0 200 270',items:Object.entries(FUR).map(([id,f])=>({id,name:f.name,price:f.price,d:none}))},
   face:{label:'Face',icon:'😊',vb:'38 60 124 76',items:Object.entries(FACES).map(([id,f])=>({id,name:f.name,price:0,d:none}))},
-  // Hair (v1.11): each item is a STYLE; the colour comes from look.hairColor (HAIR_COLORS). d = in front of the head,
-  // b = behind the head and body (long hair). fur:1 styles are made of fur, so the hair colour doesn't change them.
+  // Hair (v1.11): each item is a STYLE; the color comes from look.hairColor (HAIR_COLORS). d = in front of the head,
+  // b = behind the head and body (long hair). fur:1 styles are made of fur, so the hair color doesn't change them.
   hair:{label:'Hair',icon:'💇',vb:'0 0 200 230',items:[
     {id:'none',name:'No Bangs',price:0,fur:1,d:none},
     {id:'tuft',name:'Fluffy Tuft',price:0,fur:1,d:(f,l)=>`<path d="M86 50 Q86 28 98 40 Q102 22 110 40 Q122 30 118 52 Z" fill="${f.c}" ${st(l)}/>`},
@@ -76,7 +76,7 @@ const CLOSET={
     {id:'waves',name:'Long Waves',price:20,b:(f,l,H)=>`<path d="M38 84 Q22 150 34 214 Q46 204 56 216 Q66 204 76 214 H124 Q134 204 144 216 Q154 204 166 214 Q178 150 162 84 Q160 30 100 30 Q40 30 38 84Z" fill="${H.c}" ${HL}/>`,
       d:(f,l,H)=>`<path d="M46 86 C52 48 96 36 134 44 C150 50 158 66 156 86 C140 70 112 62 84 70 C70 76 56 82 46 86Z" fill="${H.c}" ${HL}/>`+hShine('M70 56 Q100 42 132 50')+hStreak(H,'M120 48 Q136 60 140 76')},
     {id:'spikes',name:'Emo Spikes',price:20,d:(f,l,H)=>`<path d="M42 88 L48 58 L58 70 L64 42 L76 62 L86 34 L96 58 L108 32 L116 58 L130 38 L134 62 L148 50 L150 72 L160 66 L156 90 Q132 70 100 70 Q68 70 42 88Z" fill="${H.c}" ${HL}/>`+hStreak(H,'M88 42 L95 62 M110 38 L113 60')},
-    // Original anime-style twin tails: star clips, heart-dip fringe, tails that float out in a big curl.
+    // Original anime-style twin tails: star clips, heart-dip bangs, tails that float out in a big curl.
     {id:'twinTails',name:'Starry Twin Tails',price:25,b:(f,l,H)=>[1,-1].map(k=>`<path transform="${k<0?'translate(200 0) scale(-1 1)':''}" d="M56 56 C12 26 -6 92 10 140 C22 178 6 218 24 258 C42 228 36 196 40 160 C44 120 34 92 62 74Z" fill="${H.c}" ${HL}/>`).join('')
         +hStreak(H,'M30 70 C12 110 26 150 20 200'),
       d:(f,l,H)=>`<path d="M46 86 Q46 44 100 42 Q154 44 154 86 Q138 74 124 80 Q112 66 100 78 Q88 66 76 80 Q62 74 46 86Z" fill="${H.c}" ${HL}/>`+hShine('M66 56 Q100 44 134 56')

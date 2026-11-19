@@ -2,7 +2,7 @@
 /* =========================================================
    21. STICKER BOOK (v1.18): stickers for milestones in every game
    Tap 📒 in the room's top bar. 6 pages (one per theme). Each sticker is a fixed milestone (no randomness), given once,
-   never taken away, and pays STICKER_COINS. Stickers she hasn't got yet are grey, with a hint and a progress bar.
+   never taken away, and pays STICKER_COINS. Stickers she hasn't got yet are gray, with a hint and a progress bar.
    Saved per room: stickers[] (ids she has) and stickerNew[] (ids not seen in the book yet, for the dot on 📒).
    Sticker ids are saved: never rename or remove them. Add new stickers at the end of their page.
    Bonus photocards (section 12) are separate and unchanged.

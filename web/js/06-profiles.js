@@ -2,8 +2,8 @@
 /* =========================================================
    6. PROFILES
    ========================================================= */
-// Each room has a colour and a badge, so a child who can't read yet can still find her own room.
-// Colour ids and badges are saved: never rename or remove them (new ones can be added).
+// Each room has a color and a badge, so a child who can't read yet can still find her own room.
+// Color ids and badges are saved: never rename or remove them (new ones can be added).
 const ROOM_COLORS={pink:'#ff8cc6',purple:'#a97cff',mint:'#8ff0d0',gold:'#ffd166',sky:'#7fc8ff',peach:'#ffab7a',green:'#7ee08a',blue:'#6c8cff'}; // green, blue: v1.20
 const ROOM_BADGES=['🐰','⭐','💜','🦇','⚽','🎤','🎨','☁️'];
 function newProfile(name,fur,color,badge,look){
@@ -101,12 +101,12 @@ function normalize(p){
     Object.keys(b).forEach(l=>{const r=b[l];if(!r||typeof r!=='object')delete b[l];else{r.stars=Number(r.stars)||0;r.score=Number(r.score)||0;}});});
   if(!['easy','medium','hard'].includes(p.stage.level)) p.stage.level='easy';
   p.stage.mic=!!p.stage.mic;
-  // Little-sister polish (v1.8): Easy mode, and the room's colour + badge on the profile screen.
+  // Little-sister polish (v1.8): Easy mode, and the room's color + badge on the profile screen.
   p.easy=!!p.easy;
-  // Buddies (v1.20): the room's colour also colours the buttons and bars. New rooms start with it on; rooms made
+  // Buddies (v1.20): the room's color also colors the buttons and bars. New rooms start with it on; rooms made
   // before v1.20 start with it off, so they look the same as before (it can be switched on with ✏️ under the room).
   p.tint=!!p.tint;
-  // Furniture colours (v1.20): {piece: colour id}. Section 23 checks the ids when drawing; this only checks the types.
+  // Furniture colors (v1.20): {piece: color id}. Section 23 checks the ids when drawing; this only checks the types.
   p.furn=Object.fromEntries(Object.entries(p.furn&&typeof p.furn==='object'&&!Array.isArray(p.furn)?p.furn:{}).filter(([k,v])=>typeof v==='string'));
   if(!ROOM_COLORS[p.color]){const ks=Object.keys(ROOM_COLORS);p.color=ks[[...p.id].reduce((a,c)=>a+c.charCodeAt(0),0)%ks.length];}
   if(!ROOM_BADGES.includes(p.badge)) p.badge=ROOM_BADGES[0];

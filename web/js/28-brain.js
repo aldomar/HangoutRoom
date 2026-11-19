@@ -101,7 +101,7 @@ function brOptions(ans,idx,pats){
 }
 
 /* ---------- 🧁 Snack Stand: count -> add up an order -> change and times tables ---------- */
-const SNACK_ART={ // 40 x 40, drawn bottom-centre-ish
+const SNACK_ART={ // 40 x 40, drawn bottom-center-ish
   cupcake:`<path d="M9 22 L13 38 H27 L31 22Z" fill="#ff8cc6" stroke="#2b2235" stroke-width="2.5" stroke-linejoin="round"/><path d="M15 23 L16.5 37 M20 23 V37 M25 23 L23.5 37" stroke="#fff" stroke-width="2" opacity=".7"/>`
     +`<path d="M7 23 Q4 15 12 13 Q13 5 20 7 Q27 5 28 13 Q36 15 33 23Z" fill="#fff4fb" stroke="#2b2235" stroke-width="2.5" stroke-linejoin="round"/><circle cx="20" cy="6" r="3.5" fill="#ff4d6d" stroke="#2b2235" stroke-width="2"/>`
     +`<circle cx="14" cy="17" r="1.4" fill="#a97cff"/><circle cx="24" cy="15" r="1.4" fill="#8ff0d0"/><circle cx="27" cy="20" r="1.4" fill="#ffd166"/>`,

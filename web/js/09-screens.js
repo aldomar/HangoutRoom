@@ -47,16 +47,16 @@ $('#profList').addEventListener('click',e=>{
   DB.activeId=p.id; save(); SFX.happy(); enterRoom();
 });
 $('#newProfBtn').onclick=()=>askPin(()=>roomModal(null));
-// Make a new room (p = null) or change a room's name, colour and badge.
+// Make a new room (p = null) or change a room's name, color and badge.
 function roomModal(p){
   const used=DB.profiles.map(x=>x.color), free=Object.keys(ROOM_COLORS).find(k=>!used.includes(k));
   let fur='white', start='emo', tint=p?p.tint:true, color=p?p.color:(free||'purple'), badge=p?p.badge:ROOM_BADGES[0];
   modal(p?'✏️ Change Room':'✨ New Room ✨',`<input id="npName" class="inp" maxlength="16" placeholder="Your name" autocomplete="off" value="${p?esc(p.name):''}">`
     +(p?'':`<div class="pick-lbl">Pick a buddy</div><div class="startpick" id="npStart">${starterRow(start)}</div>`
       +`<div class="pick-lbl">Fur</div><div class="furpick" id="npFur">${Object.entries(FUR).filter(([k,v])=>!v.price).map(([k,v])=>`<button data-fur="${k}" style="background:${v.c}" class="${k===fur?'on':''}" title="${v.name}"></button>`).join('')}</div>`)
-    +`<div class="pick-lbl">Room colour</div><div class="furpick" id="npCol">${Object.entries(ROOM_COLORS).map(([k,c])=>`<button data-col="${k}" style="background:${c}" class="${k===color?'on':''}"></button>`).join('')}</div>`
+    +`<div class="pick-lbl">Room color</div><div class="furpick" id="npCol">${Object.entries(ROOM_COLORS).map(([k,c])=>`<button data-col="${k}" style="background:${c}" class="${k===color?'on':''}"></button>`).join('')}</div>`
     +`<div class="pick-lbl">Badge</div><div class="badgepick" id="npBadge">${ROOM_BADGES.map(b=>`<button data-badge="${b}" class="${b===badge?'on':''}">${b}</button>`).join('')}</div>`
-    +`<button class="btn small ghost tintbtn" id="npTint">🎨 Colour the buttons too: <b>${tint?'ON':'OFF'}</b></button>`,
+    +`<button class="btn small ghost tintbtn" id="npTint">🎨 Color the buttons too: <b>${tint?'ON':'OFF'}</b></button>`,
     [{text:'Cancel',cls:'ghost'},{text:p?'Save':'Make it!',cls:'pink',keep:true,on:()=>{
       const n=$('#npName').value.trim(); if(!n){toast('Type a name first!');return;}
       closeModal();
@@ -233,7 +233,7 @@ function renderDecoGrid(){
   } else if(decoTab==='layouts'){
     h=layoutGrid(p); // 🏠 room layouts (section 32)
   } else if(decoTab==='colors'){
-    h=furnGrid(p)||`<div class="empty">Nothing here is built in, so there is nothing to colour. Everything in this room is yours to pick! ✨</div>`; // furniture colours (v1.20, section 23); the Studio has none
+    h=furnGrid(p)||`<div class="empty">Nothing here is built in, so there is nothing to color. Everything in this room is yours to pick! ✨</div>`; // furniture colors (v1.20, section 23); the Studio has none
   } else {
     const isW=decoTab==='wall', L=isW?WALLS:FLOORS, curId=isW?curRoom(p).wall:curRoom(p).floor;
     // fences and grounds (yard:1) only in the Backyard, indoor walls and floors only indoors (v1.23)
@@ -395,7 +395,7 @@ function renderCloset(){
   const tf=themeFilter('closet',C.items.map(it=>[closetCat+':'+it.id,it])); // 🔎 theme chips (section 33)
   $('#closetGrid').innerHTML=tf.chips+easySort(tf.list.map(x=>x[1]),it=>isOwned(p,closetCat,it)?0:it.price).map(it=>{const own=isOwned(p,closetCat,it),on=p.look[closetCat]===it.id;
     return `<button class="tile ${on?'on':''} ${own?'':'locked'}${poorCls(p,own,it.price)}" data-id="${it.id}"><div class="tv">${mascotSVG(Object.assign({},p.look,{[closetCat]:it.id}),C.vb)}</div><div class="tn">${it.name}</div>${own?'':priceTag(p,it.price)}</button>`;}).join('');
-  // Hair colours: a row of swatches above the styles (bought once, for every style)
+  // Hair colors: a row of swatches above the styles (bought once, for every style)
   const hc=$('#hairCols'); hc.classList.toggle('hidden',closetCat!=='hair');
   if(closetCat==='hair'){const cur=hairIds(p.look).c;
     hc.innerHTML=easySort(Object.entries(HAIR_COLORS),([k,v])=>hcOwned(p,k)?0:v.price).map(([k,v])=>{const own=hcOwned(p,k), poor=poorCls(p,own,v.price);

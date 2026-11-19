@@ -19,7 +19,7 @@ const PET_TRICKS=[
 const petLine='stroke="#2b2235" stroke-width="3" stroke-linejoin="round"';
 const petEyes=(y,dx)=>[-dx,dx].map(x=>`<circle cx="${x}" cy="${y}" r="4" fill="#2a1f33"/><circle cx="${x+1.3}" cy="${y-1.4}" r="1.4" fill="#fff"/>`).join('');
 const petBlush=(y,dx)=>[-dx,dx].map(x=>`<ellipse cx="${x}" cy="${y}" rx="5" ry="3" fill="#ff8fb8" opacity=".6"/>`).join('');
-// Each pet draws bottom-centre at (0,0), about 100 wide and 90 tall. hat = where a hat/bow sits; neck = collar/scarf (y, width).
+// Each pet draws bottom-center at (0,0), about 100 wide and 90 tall. hat = where a hat/bow sits; neck = collar/scarf (y, width).
 const PETS={
   bat:{name:'Tiny Bat',def:'Nibbles',hat:{x:0,y:-60},neck:{y:-20,w:40},d:()=>
     `<path d="M-24 -42 Q-54 -62 -54 -30 Q-46 -34 -42 -26 Q-36 -32 -26 -22Z M24 -42 Q54 -62 54 -30 Q46 -34 42 -26 Q36 -32 26 -22Z" fill="#3b2f52" ${petLine}/>`

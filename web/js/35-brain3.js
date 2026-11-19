@@ -2,8 +2,8 @@
 /* =========================================================
    35. BRAIN GAMES (v1.33), part 3: 🚂 Pattern Train and 🔤 Word Builder (the menu and screen are section 28)
    Pattern Train: a little train whose wagons follow a pattern; one wagon is a ❓. Pick the wagon that fits.
-   Easy = colours, Medium = shapes (later the colour counts too), Hard = number sequences (a hint after a wrong try).
-   A wagon is a short code: Easy 'r' (a colour), Medium 'Sy' (shape + colour), Hard a number. '?' marks the gap.
+   Easy = colors, Medium = shapes (later the color counts too), Hard = number sequences (a hint after a wrong try).
+   A wagon is a short code: Easy 'r' (a color), Medium 'Sy' (shape + color), Hard a number. '?' marks the gap.
    Word Builder: Easy = tap the first letter of the picture; Medium = build a 3-letter word; Hard = spell the picture.
    Letters are tapped in order; a wrong letter just wobbles. Tiles are the word's letters plus a few extra, in a fixed
    order (a shuffle seeded by the puzzle id). A picture is an emoji or a memPic id ('d:bat', 'b:fox' ...).
@@ -25,7 +25,7 @@ const TR_PUZ={
     {s:'1 1 2 3 5 8 ?',a:'13',o:'11 12 13 16',h:'Add the two wagons before.'},{s:'96 48 24 12 ?',a:'6',o:'0 2 6 8',h:'Each wagon is half the one before.'}]
 };
 const trList=s=>s.split(' ');
-function trShape(k,c,x,y){ // a shape about 30 across, centred on x,y
+function trShape(k,c,x,y){ // a shape about 30 across, centered on x,y
   const L=`stroke="#2b2235" stroke-width="2.5" stroke-linejoin="round" fill="${c}"`;
   if(k==='S') return `<path d="${starPath(x,y,17)}" ${L}/>`;
   if(k==='H') return `<path d="${heartPath(x,y+1,13)}" ${L}/>`;

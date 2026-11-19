@@ -131,6 +131,12 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## American spelling (since version 1.44)
+The children learn American English, so the app now uses American spelling everywhere it shows words: color,
+favorite, gray, cozy, tire, and the 🍂 season is called **Fall**. Nothing else changes: saves, items and backups
+are exactly the same (the hidden names inside the save data were never changed). The smoke test checks that no
+British spelling slips back in.
+
 ## Free Play and Puzzle of the Day (since version 1.43)
 The puzzles never run out now. The app makes new ones by itself, and checks each one is fair before showing it.
 - **🎲 Free Play:** tap 🎲 for a brand-new puzzle. It is after the puzzle numbers in 5 Brain Games (Snack Stand,

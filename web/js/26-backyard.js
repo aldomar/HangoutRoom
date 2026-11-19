@@ -76,7 +76,7 @@ function yardBack(R){
     +`<g data-season="${seasonNow()}">${yardSeason('sky')}</g>`+`<g data-fence="${yardWall(R)}">${YARD_FENCES[yardWall(R)]()}</g>`+yardSeason('fence');
 }
 
-/* ---------- built-in pieces (colours: 🎨 Colours tab, FURN_PIECES room 3) ---------- */
+/* ---------- built-in pieces (colors: 🎨 Colors tab, FURN_PIECES room 3) ---------- */
 FURN_PIECES.shed={room:3,icon:'🏡',name:'Garden Shed',orig:{body:'#8fd3c0',roof:'#e85d8a',door:'#fff6e8'},map:c=>({body:c.l,roof:c.d,door:c.b})};
 FURN_PIECES.easel={room:3,icon:'📚',name:'Chalkboard',orig:{frame:'#c98b52'},map:c=>({frame:c.m})};
 function yardFurniture(split){ // split: see furniture() in section 4 (v1.39)

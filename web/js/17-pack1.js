@@ -2,7 +2,7 @@
 /* =========================================================
    17. CONTENT PACK 1 (v1.10): new clothes, decorations, walls, floors, a squishy, a spinner and pop-it shapes
    A pack only ADDS entries to the lists from earlier sections. All ids below are saved: never rename them.
-   Clothes are drawn in the mascot's 200 x 270 box; decorations bottom-centre at (0,0) like section 4.
+   Clothes are drawn in the mascot's 200 x 270 box; decorations bottom-center at (0,0) like section 4.
    ========================================================= */
 
 /* ---------- closet ---------- */
@@ -10,7 +10,7 @@ const PACK1_BAT='M84 156 Q90 145 96 152 Q100 146 104 152 Q110 145 116 156 Q110 1
 const p1Slipper=x=>`<ellipse cx="${x}" cy="244" rx="19" ry="11" fill="#fbf7ff" ${st('#9b8cc9',2.5)}/><ellipse cx="${x-6}" cy="231" rx="4" ry="9" fill="#fbf7ff" ${st('#9b8cc9',2)} transform="rotate(-12 ${x-6} 238)"/>`
   +`<ellipse cx="${x+6}" cy="231" rx="4" ry="9" fill="#fbf7ff" ${st('#9b8cc9',2)} transform="rotate(12 ${x+6} 238)"/><circle cx="${x-5}" cy="243" r="1.8" fill="#2a1f33"/><circle cx="${x+5}" cy="243" r="1.8" fill="#2a1f33"/><ellipse cx="${x}" cy="248" rx="3" ry="2" fill="#ff8fb8"/>`;
 const p1Flower=(x,y,c)=>[0,1,2,3,4].map(k=>{const a=k*TAU/5;return `<circle cx="${(x+Math.cos(a)*5).toFixed(1)}" cy="${(y+Math.sin(a)*5).toFixed(1)}" r="4.2" fill="${c}"/>`;}).join('')+`<circle cx="${x}" cy="${y}" r="3" fill="#ffd166"/>`;
-// (Cotton Candy hair became a hair colour in v1.11: see HAIR_COLORS in section 3.)
+// (Cotton Candy hair became a hair color in v1.11: see HAIR_COLORS in section 3.)
 CLOSET.top.items.push({id:'batSweater',name:'Bat Sweater',price:25,
   t:()=>`<path d="${TORSO}" fill="#3b2f52" ${st()}/><path d="M66 182 H134" stroke="#c9a7ff" stroke-width="4" stroke-dasharray="6 4"/><path d="${PACK1_BAT}" fill="#c9a7ff" ${st('#1f1a26',1.5)}/><circle cx="97" cy="154" r="1.3" fill="#ff6fae"/><circle cx="103" cy="154" r="1.3" fill="#ff6fae"/>`,
   s:()=>sleeves('#3b2f52',58)+`<g stroke="#c9a7ff" stroke-width="4"><path d="M37 184 l18 -7" transform="${LA}"/><path d="M145 177 l18 7" transform="${RA}"/></g>`});

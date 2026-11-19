@@ -2,7 +2,7 @@
 /* =========================================================
    24. CONTENT PACK 2 (v1.21): dinosaurs, space and rockets, trucks/trains/cars, robots/sharks/heroes
    A pack only ADDS entries to the lists from earlier sections. All ids below are saved: never rename them.
-   Clothes are drawn in the mascot's 200 x 270 box; decorations bottom-centre at (0,0) like section 4.
+   Clothes are drawn in the mascot's 200 x 270 box; decorations bottom-center at (0,0) like section 4.
    Every entry has p2:'dino' | 'space' | 'ride' | 'hero' (its theme), counted by the four pack stickers.
    Everything is for everyone: nothing here is labelled "boy" or "girl".
    ========================================================= */
@@ -192,7 +192,7 @@ Object.assign(SPINS,{
   gear:{name:'Robo Gear',price:15,p2:'hero',body:'#9aa6b8',edge:'#4fd1c5',cap:'#26305e',deco:'nut'},
   dino:{name:'Dino Spinner',price:15,p2:'dino',body:'#5cb85c',edge:'#ffb347',cap:'#fff3b0',deco:'footprint'}
 });
-// Small one-colour pictures (the current fill colour) for spinner and slime decorations.
+// Small one-color pictures (the current fill color) for spinner and slime decorations.
 Object.assign(FID_ICONS,{
   // v1.36: a rounder nose, slanted fins, a porthole and a flame under a narrow nozzle (the old flat bottom looked odd).
   rocket(ctx,x,y,s){
@@ -215,7 +215,7 @@ Object.assign(CUBES,{
 });
 Object.assign(MARBLES,{
   earth:{name:'Little Earth',price:10,p2:'space',a:'#7fc8ff',b:'#2f6fc0',sw:'#5cd67a'},
-  wheel:{name:'Tyre',price:10,p2:'ride',a:'#5d6470',b:'#2b2235',sw:'#ffd166'}
+  wheel:{name:'Tire',price:10,p2:'ride',a:'#5d6470',b:'#2b2235',sw:'#ffd166'}
 });
 
 /* ---------- stickers (Room & Style page): 3 things from a theme ---------- */

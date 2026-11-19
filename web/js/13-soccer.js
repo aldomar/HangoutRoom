@@ -272,7 +272,7 @@ function socField(ctx,g,W,H,time,cheering){
   ctx.fillStyle=sky; ctx.fillRect(0,0,W,g.hy);
   ctx.fillStyle='#ffe066'; ctx.beginPath(); ctx.arc(W*0.86,g.hy*0.3,Math.min(W,H)*0.05,0,TAU); ctx.fill();
   ctx.fillStyle='#ffffffdd'; [[0.18,0.25],[0.55,0.15]].forEach(([fx,fy])=>{const cx=W*fx+Math.sin(time*0.1)*20,cy=g.hy*fy+10,r=Math.min(W,H)*0.035;[[-1.2,0.3,1],[0,0,1.3],[1.2,0.3,0.9]].forEach(([ox,oy,k2])=>{ctx.beginPath();ctx.arc(cx+ox*r,cy+oy*r,r*k2,0,TAU);ctx.fill();});});
-  // stands with a cheering crowd (just coloured dots)
+  // stands with a cheering crowd (just colored dots)
   const y0=g.hy-g.GH*0.55, cr=(g.hy-y0)/7, cols=['#ff8cc6','#a97cff','#8ff0d0','#ffd166','#4dabf7','#ff6b8a'];
   ctx.fillStyle='#4a3d63'; ctx.fillRect(0,y0,W,g.hy-y0);
   for(let row=0;row<3;row++) for(let i=0,x=cr*(row%2?2.2:1.2);x<W;i++,x+=cr*2.4){

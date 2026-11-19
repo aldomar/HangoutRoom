@@ -67,7 +67,7 @@ FP_MAKERS.train={
   make(r,l){
     if(l==='hard') return fpTrainHard(r);
     const u=fpPick(r,FP_UNITS), keys=[...new Set(u)], co=fpMix(r,Object.keys(TR_COLORS)), sh=fpMix(r,Object.keys(TR_SHAPES));
-    const mode=fpInt(r,0,2); // Medium: 0 = shapes change, 1 = colours change, 2 = both
+    const mode=fpInt(r,0,2); // Medium: 0 = shapes change, 1 = colors change, 2 = both
     const tok=i=>l==='easy'?co[i]:mode===0?sh[i]+co[0]:mode===1?sh[0]+co[i]:sh[i]+co[i];
     const map={}; keys.forEach((c,i)=>{map[c]=tok(i);});
     const toks=keys.map(c=>map[c]), len=fpInt(r,Math.max(6,u.length*2),8), seq=Array.from({length:len},(_,i)=>map[u[i%u.length]]);
@@ -175,7 +175,7 @@ FP_MAKERS.bake={
 };
 
 /* ---------- 🔮 Marble Maze (9 × 6, like the fixed ones) ---------- */
-// The shortest way from S to G (cell centres, like the smoke test's mzPath), or [] if there is none.
+// The shortest way from S to G (cell centers, like the smoke test's mzPath), or [] if there is none.
 function fpMazePath(m){
   const R=m.length, C=m[0].length, key=(c,r)=>r*C+c; let s, g;
   m.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch==='S')s=[c,r];if(ch==='G')g=[c,r];}));

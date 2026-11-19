@@ -465,13 +465,13 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('every squishy design draws with dents', await ev("cur==='fidget'"));
   await ev(`P().fid.squish='mochi';show('room')`);
 
-  console.log('Little-sister polish: room colour + badge, Easy mode, grown-up PIN');
+  console.log('Little-sister polish: room color + badge, Easy mode, grown-up PIN');
   const mbtn=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
   const title=()=>ev(`document.querySelector('#modal').classList.contains('hidden')?'':document.querySelector('#modalTitle').textContent`);
   const pinType=async s=>{for(const k of s)await ev(`document.querySelector('#pinPad [data-k="${k}"]').click()`);await sleep(300);};
   const prices=sel=>ev(`[...document.querySelectorAll('${sel}')].map(t=>{const p=t.querySelector('.tp');return p?Number(p.textContent.replace(/\\D/g,'')):0;})`);
   const sorted=a=>a.every((v,i)=>!i||a[i-1]<=v);
-  check('every room has a colour and a badge', await ev(`DB.profiles.every(p=>ROOM_COLORS[p.color]&&ROOM_BADGES.includes(p.badge)&&p.easy===false)`));
+  check('every room has a color and a badge', await ev(`DB.profiles.every(p=>ROOM_COLORS[p.color]&&ROOM_BADGES.includes(p.badge)&&p.easy===false)`));
   await ev(`settingsModal()`); await shot('90-settings-easy-pin');
   await ev(`document.querySelector('#sEasy').click()`); await sleep(150);
   check('Settings turns Easy mode on', await ev(`P().easy===true&&document.body.classList.contains('easy')`));
@@ -539,7 +539,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`document.querySelector('#npCol [data-col=mint]').click();document.querySelector('#npBadge [data-badge="⚽"]').click()`);
   await shot('97-change-room');
   await ev(`${mbtn('Save')}.click()`); await sleep(150);
-  check('new colour and badge saved', await ev(`DB.profiles[0].color==='mint'&&DB.profiles[0].badge==='⚽'`));
+  check('new color and badge saved', await ev(`DB.profiles[0].color==='mint'&&DB.profiles[0].badge==='⚽'`));
   check('profile card shows the badge', (await ev(`document.querySelector('.pcard .pbadge').textContent`))==='⚽');
   await shot('98-profiles-badge');
   await ev(`document.querySelector('.pcard').click()`); await sleep(300); await ev(`closeModal();backupModal()`); await sleep(400);
@@ -551,7 +551,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('restoring keeps this device\'s PIN', (await ev('DB.settings.pin'))==='1234');
   const v17Code=await ev(`JSON.stringify(Object.assign({},DB,{version:5,settings:{sound:true,music:false,backupArt:true,stageOffset:0},profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));['easy','color','badge'].forEach(k=>delete q[k]);return q;})}))`);
   await ev(`doRestore(${JSON.stringify(v17Code)})`); await sleep(400);
-  check('v1.7 backup restores with a colour, a badge and Easy mode off', await ev(`DB.version===DB_VERSION&&ROOM_COLORS[DB.profiles[0].color]&&DB.profiles[0].badge==='🐰'&&DB.profiles[0].easy===false&&DB.settings.pin==='1234'`));
+  check('v1.7 backup restores with a color, a badge and Easy mode off', await ev(`DB.version===DB_VERSION&&ROOM_COLORS[DB.profiles[0].color]&&DB.profiles[0].badge==='🐰'&&DB.profiles[0].easy===false&&DB.settings.pin==='1234'`));
   await ev(`window._ok=0;askPin(()=>window._ok=1)`); await ev(`${mbtn('Forgot')}.click()`); await sleep(100);
   check('Forgot PIN asks a grown-up sum', (await title()).includes('Grown-up'));
   await shot('99-forgot-pin');
@@ -651,7 +651,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`document.querySelector('.pcard').click()`); await sleep(300); await ev(`closeModal();show('room')`);
 
   console.log('Wall shelves');
-  // dragDeco(uid,x,y): a real drag (pointer events) of a room item so its bottom-centre ends at room point x,y
+  // dragDeco(uid,x,y): a real drag (pointer events) of a room item so its bottom-center ends at room point x,y
   await ev(`window.dragDeco=(uid,x,y)=>{const g=roomSvg.querySelector('.deco[data-uid="'+uid+'"]'), it=allItems(P()).find(i=>i.uid===uid), m=roomSvg.getScreenCTM();
     const S=(a,b)=>({clientX:m.a*a+m.e,clientY:m.d*b+m.f,bubbles:true,pointerId:7}), A=S(it.x,it.y-10), B=S(x,y-10);
     g.dispatchEvent(new PointerEvent('pointerdown',A));roomSvg.dispatchEvent(new PointerEvent('pointermove',B));roomSvg.dispatchEvent(new PointerEvent('pointerup',B));}`);
@@ -678,13 +678,13 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('a lamp dropped on the floor stays on the floor', (await ev(`Math.round(P().room.items.find(i=>i.uid==='${lava}').y)`))===650);
   await ev(`exitDecorate()`);
 
-  console.log('Hair styles + colours');
+  console.log('Hair styles + colors');
   await ev(`P().coins=500;show('closet');document.querySelector('[data-cat=hair]').click()`); await sleep(150);
   check('hair tab shows 12 styles (8, 3 short ones since v1.20, Idol Buns since v1.35)', (await ev(`document.querySelectorAll('#closetGrid .tile').length`))===12, await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id)`));
-  check('and 10 colour swatches', await ev(`!document.querySelector('#hairCols').classList.contains('hidden')&&document.querySelectorAll('#hairCols [data-hc]').length===10`));
-  check('no old coloured swoops in the closet', await ev(`!document.querySelector('#closetGrid [data-id=swoopPurple]')&&!document.querySelector('#closetGrid [data-id=swoopCandy]')`));
+  check('and 10 color swatches', await ev(`!document.querySelector('#hairCols').classList.contains('hidden')&&document.querySelectorAll('#hairCols [data-hc]').length===10`));
+  check('no old colored swoops in the closet', await ev(`!document.querySelector('#closetGrid [data-id=swoopPurple]')&&!document.querySelector('#closetGrid [data-id=swoopCandy]')`));
   await ev(`document.querySelector('#hairCols [data-hc=pink]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
-  check('buying Pink colours the hair', await ev(`P().look.hairColor==='pink'&&P().owned.includes('hairc:pink')&&document.querySelector('#closetMascot').innerHTML.includes('#ff6fae')`));
+  check('buying Pink colors the hair', await ev(`P().look.hairColor==='pink'&&P().owned.includes('hairc:pink')&&document.querySelector('#closetMascot').innerHTML.includes('#ff6fae')`));
   await ev(`document.querySelector('#hairCols [data-hc=brown]').click()`); await sleep(100);
   check('Brown is free (no buy box)', await ev(`P().look.hairColor==='brown'&&document.querySelector('#modal').classList.contains('hidden')`));
   await ev(`P().look.hairColor='pink';renderCloset()`);
@@ -694,20 +694,20 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await shot('B1-hair-'+id);
   }
   await ev(`document.querySelector('#hairCols [data-hc=candy]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
-  check('two-tone colours draw a streak', await ev(`document.querySelector('#closetMascot').innerHTML.includes('#ff9fd0')`));
+  check('two-tone colors draw a streak', await ev(`document.querySelector('#closetMascot').innerHTML.includes('#ff9fd0')`));
   await shot('B2-hair-twin-candy');
   check('pigtails in pink count as Cute', (await ev(`cardStats(Object.assign({},DEFAULT_LOOK,{fur:'black',hair:'pigtails',hairColor:'pink',top:'none',bottom:'none',legs:'none',arms:'none',shoes:'none',acc:'none'}))[0]`))===2);
   check('Emo Spikes count as Spooky', (await ev(`cardStats(Object.assign({},DEFAULT_LOOK,{fur:'white',hair:'spikes',hairColor:'blonde',top:'none',bottom:'none',legs:'none',arms:'none',shoes:'none',acc:'none'}))[1]`))===2);
   let surpriseOk=true; for(let k=0;k<12;k++){const ok=await ev(`document.querySelector('#randomBtn').click(),hcOwned(P(),P().look.hairColor)&&isOwned(P(),'hair',itemOf('hair',P().look.hair))`);if(!ok)surpriseOk=false;}
-  check('Surprise me only picks owned styles and colours', surpriseOk);
+  check('Surprise me only picks owned styles and colors', surpriseOk);
   check('an old photocard with Purple Swoop still draws purple hair', await ev(`cardSVG(Object.assign({no:1,at:Date.now(),stage:'pastel',frame:'classic',title:'Superstar',name:'Fuzzy'},{look:Object.assign({},DEFAULT_LOOK,{hair:'swoopPurple',hairColor:undefined})})).includes('#7c4ddb')`));
   const hairCode=await ev('JSON.stringify(DB)');
   const v110Hair=await ev(`JSON.stringify(Object.assign({},DB,{version:7,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));q.look.hair='swoopPurple';delete q.look.hairColor;q.owned=q.owned.filter(k=>!k.startsWith('hairc:')).concat(['hair:swoopPink','hair:swoopCandy']);return q;})}))`);
   await ev(`doRestore(${JSON.stringify(v110Hair)})`); await sleep(400);
   check('a v1.10 backup turns Purple Swoop into Emo Swoop + Purple', await ev(`DB.version===DB_VERSION&&DB.profiles[0].look.hair==='swoopBlack'&&DB.profiles[0].look.hairColor==='purple'`));
-  check('...and owned Pink Swoop / Cotton Candy become owned colours', await ev(`['hairc:pink','hairc:candy'].every(k=>DB.profiles[0].owned.includes(k))&&DB.profiles[0].owned.includes('hair:swoopPink')`));
+  check('...and owned Pink Swoop / Cotton Candy become owned colors', await ev(`['hairc:pink','hairc:candy'].every(k=>DB.profiles[0].owned.includes(k))&&DB.profiles[0].owned.includes('hair:swoopPink')`));
   await ev(`doRestore(${JSON.stringify(hairCode)})`); await sleep(400);
-  check('a v1.11 backup keeps style and colour', await ev(`DB.profiles[0].owned.includes('hair:twinTails')&&HAIR_COLORS[DB.profiles[0].look.hairColor]`));
+  check('a v1.11 backup keeps style and color', await ev(`DB.profiles[0].owned.includes('hair:twinTails')&&HAIR_COLORS[DB.profiles[0].look.hairColor]`));
   await ev(`document.querySelector('.pcard').click()`); await sleep(300); await ev(`closeModal();show('room')`);
 
   console.log('Code Lab (coding puzzles)');
@@ -960,7 +960,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`(()=>{const b=document.querySelectorAll('#cube .cb-btn')[1];for(let i=0;i<13;i++){cbp(b,'pointerdown');cbp(b,'pointerup');}})()`);
   check('25 clicks pay 1 coin', (await ev('P().stats.clicks'))===fzk0+25&&(await ev('P().coins'))===fzkc0+1, [await ev(`P().stats.clicks-${fzk0}`),await ev(`P().coins-${fzkc0}`)]);
   for(const k of await ev('Object.keys(CUBES)')){await ev(`P().fid.cube='${k}';renderCube()`);await sleep(80);await shot('B6-cube-'+k);}
-  check('every cube colour draws', await ev(`getComputedStyle(cubeEl).getPropertyValue('--f').trim()===CUBES[Object.keys(CUBES).pop()].face`));
+  check('every cube color draws', await ev(`getComputedStyle(cubeEl).getPropertyValue('--f').trim()===CUBES[Object.keys(CUBES).pop()].face`));
   await ev(`P().fid.cube='pastel';renderCube()`);
 
   await ev(`setFidTab('maze')`); await sleep(300); await shot('B7-maze');
@@ -1025,7 +1025,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check(`buying the ${id} ${tab} owns it as ${key}:${id} and uses it`, await ev(`P().owned.includes('${key}:${id}')&&P().fid.${key}==='${id}'`));
   }
   check('the three designs cost 10 + 10 + 15', (await ev('P().coins'))===fzbc0-35, await ev(`${fzbc0}-P().coins`));
-  check('a bought cube colour shows straight away', await ev(`getComputedStyle(cubeEl).getPropertyValue('--f').trim()===CUBES.emo.face`));
+  check('a bought cube color shows straight away', await ev(`getComputedStyle(cubeEl).getPropertyValue('--f').trim()===CUBES.emo.face`));
   const fzfCode=await ev('JSON.stringify(DB)');
   const fzv115=await ev(`(()=>{const d=JSON.parse(JSON.stringify(DB));d.version=9;d.profiles.forEach(p=>{delete p.maze;['slime','cube','marble'].forEach(k=>delete p.fid[k]);['stretches','clicks','mazes'].forEach(k=>delete p.stats[k]);p.owned=p.owned.filter(o=>!/^(slime|cube|marble):/.test(o));});return JSON.stringify(d);})()`);
   await ev(`doRestore(${JSON.stringify(fzv115)})`); await sleep(400);
@@ -1105,7 +1105,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`document.querySelector('#stkBtn').click()`); await sleep(250);
   check('📒 opens the Sticker Book on the Fidgets page', await ev(`cur==='stickers'&&document.querySelectorAll('#stkPage .stk').length===STICKERS.filter(s=>s.page==='fidget').length`));
   check('the count shows stickers got / all', await ev(`document.querySelector('#stkCount').textContent===P().stickers.length+' / '+STICKERS.length`));
-  check('earned stickers are in colour with their name; the rest are grey with a hint and a bar', await ev(`[...document.querySelectorAll('#stkPage .stk')].every(b=>{const s=STICKERS.find(x=>x.id===b.dataset.stk), got=P().stickers.includes(s.id);return got?!b.classList.contains('locked')&&b.querySelector('.sn').textContent===s.name:b.classList.contains('locked')&&b.querySelector('.sn').textContent===s.hint&&!!b.querySelector('.sbar');})`));
+  check('earned stickers are in color with their name; the rest are gray with a hint and a bar', await ev(`[...document.querySelectorAll('#stkPage .stk')].every(b=>{const s=STICKERS.find(x=>x.id===b.dataset.stk), got=P().stickers.includes(s.id);return got?!b.classList.contains('locked')&&b.querySelector('.sn').textContent===s.name:b.classList.contains('locked')&&b.querySelector('.sn').textContent===s.hint&&!!b.querySelector('.sbar');})`));
   check('new stickers sparkle', await ev(`document.querySelectorAll('#stkPage .stk.new').length>0`));
   await shot('D2-stickers-fidgets');
   check('stickers on a page count as seen once it is open', await ev(`!P().stickerNew.some(id=>STICKERS.find(s=>s.id===id).page==='fidget')`));
@@ -1115,7 +1115,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const skLocked=await ev(`(STICKERS.find(s=>!P().stickers.includes(s.id))||{}).id`);
   if(skLocked){
     await ev(`stkPage=STICKERS.find(s=>s.id==='${skLocked}').page;renderStickers();document.querySelector('#stkPage [data-stk=${skLocked}]').click()`); await sleep(150);
-    check('tapping a grey sticker says what to do and how far she is', await ev(`(()=>{const s=STICKERS.find(x=>x.id==='${skLocked}');const t=document.querySelector('#modalBody').textContent;return document.querySelector('#modalTitle').textContent.includes('Not yet')&&t.includes(s.hint)&&t.includes(stkHave(P(),s).toLocaleString()+' / '+stkNeed(s).toLocaleString());})()`));
+    check('tapping a gray sticker says what to do and how far she is', await ev(`(()=>{const s=STICKERS.find(x=>x.id==='${skLocked}');const t=document.querySelector('#modalBody').textContent;return document.querySelector('#modalTitle').textContent.includes('Not yet')&&t.includes(s.hint)&&t.includes(stkHave(P(),s).toLocaleString()+' / '+stkNeed(s).toLocaleString());})()`));
     await shot('D4-sticker-locked'); await ev(`closeModal()`);
   }
   check('Back goes from the Sticker Book to the room', await ev(`window.androidBack()&&cur==='room'`));
@@ -1131,7 +1131,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`show('room')`); await sleep(200);
   check('a new sticker brings the dot back', await ev(`!document.querySelector('#stkDot').classList.contains('hidden')`));
   await ev(`P().easy=true;openStickers('room')`); await sleep(200); await shot('D5-stickers-easy');
-  check('Easy mode: big stickers, no hint text on grey ones', await ev(`document.querySelector('#stkPage .stk svg').getBoundingClientRect().width>=104&&[...document.querySelectorAll('#stkPage .stk.locked .sn')].every(e=>getComputedStyle(e).display==='none')`));
+  check('Easy mode: big stickers, no hint text on gray ones', await ev(`document.querySelector('#stkPage .stk svg').getBoundingClientRect().width>=104&&[...document.querySelectorAll('#stkPage .stk.locked .sn')].every(e=>getComputedStyle(e).display==='none')`));
   await ev(`P().easy=false;show('room')`);
   console.log('Stickers in backups');
   const skCode=await ev('JSON.stringify(DB)'), skId=await ev('P().id'), skN=await ev('P().stickers.length');
@@ -1228,14 +1228,14 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Easy mode: the pet menu buttons are big', await ev(`[...document.querySelectorAll('#modalBody [data-pa]')].every(b=>b.getBoundingClientRect().height>=52)`));
   await ev(`closeModal();P().easy=false;applyEasy()`);
 
-  console.log('Buddies (v1.20): animal buddies, faces, starter looks, room colour tints');
+  console.log('Buddies (v1.20): animal buddies, faces, starter looks, room color tints');
   await ev(`stkPaused=true`);
   check('5 buddies, 3 faces, 6 starter looks', await ev(`Object.keys(BUDDIES).join()==='bunny,bear,puppy,dino,fox'&&Object.keys(FACES).join()==='sparkle,bright,cheeky'&&Object.keys(STARTERS).length===6`));
   check('every buddy draws with every face and fur', await ev(`Object.keys(BUDDIES).every(k=>Object.keys(FACES).every(fc=>Object.keys(FUR).every(fu=>{const s=mascotSVG(Object.assign({},DEFAULT_LOOK,{kind:k,face:fc,fur:fu}));return s.length>2000&&!/undefined|NaN/.test(s);})))`));
   check('every starter look uses real closet items', await ev(`Object.keys(STARTERS).every(k=>{const L=starterLook(k);return Object.keys(CLOSET).every(c=>CLOSET[c].items.some(i=>i.id===L[c]))&&FUR[STARTERS[k].fur];})`));
   check('an old look (no buddy, no face) draws exactly like before: a bunny with the Sparkly face', await ev(`(()=>{const o=Object.assign({},DEFAULT_LOOK);delete o.kind;delete o.face;return mascotSVG(o)===mascotSVG(DEFAULT_LOOK)&&mascotSVG(Object.assign({},o,{kind:'dragon',face:'x'}))===mascotSVG(DEFAULT_LOOK);})()`));
   check('the new short hair, tee, shorts, high-tops and cap draw', await ev(`['hair:buzz','hair:messy','hair:sidePart','top:stripeTee','bottom:cargo','shoes:hightops','acc:capBack'].every(k=>{const [c,i]=k.split(':');return CLOSET[c].items.some(x=>x.id===i)&&!/undefined|NaN/.test(mascotSVG(Object.assign({},DEFAULT_LOOK,{[c]:i})));})`));
-  check('hair colours work on the new hair', await ev(`mascotSVG(Object.assign({},DEFAULT_LOOK,{hair:'messy',hairColor:'streak'})).includes('#ff6fae')`));
+  check('hair colors work on the new hair', await ev(`mascotSVG(Object.assign({},DEFAULT_LOOK,{hair:'messy',hairColor:'streak'})).includes('#ff6fae')`));
   // the Closet: 🐾 Buddy is the first tab, and buddies and faces are free
   await ev(`closeModal();show('closet')`); await sleep(200);
   check('the Closet starts with 🐾 Buddy and has a 😊 Face tab', await ev(`(()=>{const t=[...document.querySelectorAll('#closetTabs [data-cat]')].map(b=>b.dataset.cat);return t[0]==='kind'&&t.includes('face');})()`));
@@ -1253,7 +1253,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`P().look.kind='dino';save();show('room')`); await sleep(250); await shot('F3-room-dino');
   check('the room shows the dino too', await ev(`document.querySelector('#mascotG').innerHTML.includes('M89 45 L100 10')`));
   check('the pet still sits by the dino', await ev(`!!document.querySelector('#petG')`));
-  check('a room with no furniture colours has the classic pink desk, purple wardrobe and curtains', await ev(`(()=>{const k=P().furn;P().furn={};const f=furniture();P().furn=k;return ['#ffb3d9','#e48fbf','#6b46b8','#7d58cc','#a97cff','#ff8cc6'].every(c=>f.includes(c));})()`));
+  check('a room with no furniture colors has the classic pink desk, purple wardrobe and curtains', await ev(`(()=>{const k=P().furn;P().furn={};const f=furniture();P().furn=k;return ['#ffb3d9','#e48fbf','#6b46b8','#7d58cc','#a97cff','#ff8cc6'].every(c=>f.includes(c));})()`));
   check('the Loft has its classic wood beams and lavender desk', await ev(`(()=>{const k=P().furn;P().furn={};const f=loftFurniture();P().furn=k;return ['#9b6a42','#c9a7ff','#5b3a99'].every(c=>f.includes(c));})()`));
   check('rooms from before v1.20 get the tint OFF (save step 13)', await ev(`(()=>{const d={profiles:[{},{tint:true}]};MIGRATIONS[13](d);return d.profiles[0].tint===false&&d.profiles[1].tint===true;})()`));
   // make a new room from a starter look
@@ -1273,9 +1273,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('a new room is tinted: green buttons and bars', await ev(`P().tint===true&&document.body.classList.contains('tint')&&document.body.style.getPropertyValue('--pink')==='#7ee08a'`));
   check('a green room starts with the Leafy Green wall (given free) and green furniture', await ev(`(()=>{const p=P();return p.room.wall==='leafDots'&&p.owned.includes('wall:leafDots')&&['desk','closet','shelf','curtain','desk2','window2','lamp'].every(k=>p.furn[k]==='green')&&!p.furn.beams&&p.room2.wall==='attic';})()`));
   check('the green furniture is drawn in the room', await ev(`document.querySelector('#roomSvg').innerHTML.includes('#62c470')&&!furniture().includes('#6b46b8')`));
-  check('the room labels take the room colour', await ev(`(()=>{const r=document.querySelector('#roomSvg .sign rect');return r&&(r.getAttribute('style')||'').includes('var(--pink)')&&getComputedStyle(r).fill==='rgb(126, 224, 138)';})()`));
-  await ev(`enterDecorate();document.querySelector('[data-dt=colors]').click()`); await sleep(150); await shot('F9-colours-tab');
-  check('Decorate has a 🎨 Colours tab: 4 pieces, 11 swatches each (Classic + 10)', await ev(`document.querySelectorAll('#decoGrid .furn-row').length===4&&[...document.querySelectorAll('#decoGrid .furn-row')].every(r=>r.querySelectorAll('[data-fc]').length===11)`));
+  check('the room labels take the room color', await ev(`(()=>{const r=document.querySelector('#roomSvg .sign rect');return r&&(r.getAttribute('style')||'').includes('var(--pink)')&&getComputedStyle(r).fill==='rgb(126, 224, 138)';})()`));
+  await ev(`enterDecorate();document.querySelector('[data-dt=colors]').click()`); await sleep(150); await shot('F9-colors-tab');
+  check('Decorate has a 🎨 Colors tab: 4 pieces, 11 swatches each (Classic + 10)', await ev(`document.querySelectorAll('#decoGrid .furn-row').length===4&&[...document.querySelectorAll('#decoGrid .furn-row')].every(r=>r.querySelectorAll('[data-fc]').length===11)`));
   const fcc0=await ev('P().coins');
   await ev(`document.querySelector('[data-furn=desk][data-fc=sky]').click()`); await sleep(100);
   check('tapping Sky paints the desk sky blue, free', await ev(`P().furn.desk==='sky'&&document.querySelector('#roomSvg').innerHTML.includes('#c6e6ff')&&document.querySelector('[data-furn=desk][data-fc=sky]').classList.contains('on')&&P().coins===${fcc0}`));
@@ -1283,8 +1283,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Classic gives the wardrobe its old purple back', await ev(`!('closet' in P().furn)&&furniture().includes('#6b46b8')`));
   check('every swatch is at least 48 px', await ev(`[...document.querySelectorAll('#decoGrid [data-fc]')].every(b=>b.getBoundingClientRect().width>=48)`));
   await ev(`goRoom(2)`); await sleep(200); await ev(`decorating||enterDecorate();document.querySelector('[data-dt=colors]').click()`); await sleep(150);
-  check('in the Loft the Colours tab lists the Loft pieces', await ev(`[...document.querySelectorAll('#decoGrid [data-fc=classic]')].map(b=>b.dataset.furn).join()==='desk2,beams,window2,lamp'`));
-  await ev(`document.querySelector('[data-furn=beams][data-fc=white]').click()`); await sleep(100); await shot('F10-loft-colours');
+  check('in the Loft the Colors tab lists the Loft pieces', await ev(`[...document.querySelectorAll('#decoGrid [data-fc=classic]')].map(b=>b.dataset.furn).join()==='desk2,beams,window2,lamp'`));
+  await ev(`document.querySelector('[data-furn=beams][data-fc=white]').click()`); await sleep(100); await shot('F10-loft-colors');
   check('white beams in the Loft', await ev(`P().furn.beams==='white'&&loftFurniture().includes('#ddd5e8')`));
   await ev(`exitDecorate();goRoom(1)`); await sleep(150);
   check('a tinted button really is green', await ev(`(()=>{const b=document.createElement('button');b.className='btn pink';document.body.appendChild(b);const c=getComputedStyle(b).backgroundColor;b.remove();return c==='rgb(126, 224, 138)';})()`));
@@ -1301,7 +1301,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`P().tint=true;P().color='pink';applyEasy()`);
   check('a pink room with the tint on looks classic', await ev(`!document.body.classList.contains('tint')`));
   for(const c of ['mint','gold','sky','peach','green','blue']){await ev(`P().color='${c}';applyEasy()`); await sleep(60); await shot('F7-tint-'+c);}
-  check('every room colour tints', await ev(`Object.keys(ROOM_COLORS).filter(c=>c!=='pink'&&c!=='purple').every(c=>TINTS[c])`));
+  check('every room color tints', await ev(`Object.keys(ROOM_COLORS).filter(c=>c!=='pink'&&c!=='purple').every(c=>TINTS[c])`));
   await ev(`P().color='green';applyEasy();P().easy=true;applyEasy()`);
   check('Easy mode and the tint work together', await ev(`document.body.classList.contains('tint')&&document.body.classList.contains('easy')`));
   await ev(`P().easy=false;applyEasy()`);
@@ -1363,7 +1363,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Content Pack 2: fidget designs');
   await ev(`show('fidget');setFidTab('popit')`); await sleep(200);
-  check('3 new pop-it colours and 2 new board shapes', await ev(`['dino','space','traffic'].every(k=>document.querySelector('#skinRow [data-skin='+k+']'))&&['rocket','dino'].every(k=>document.querySelector('#skinRow [data-shape='+k+']'))`));
+  check('3 new pop-it colors and 2 new board shapes', await ev(`['dino','space','traffic'].every(k=>document.querySelector('#skinRow [data-skin='+k+']'))&&['rocket','dino'].every(k=>document.querySelector('#skinRow [data-shape='+k+']'))`));
   for(const sh of ['rocket','dino']){
     await ev(`P().fid.pop='${sh==='rocket'?'space':'dino'}';document.querySelector('#skinRow [data-shape=${sh}]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(200);
     const n=await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').length`);
@@ -1533,7 +1533,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`document.querySelector('#decoGrid [data-buy=stringLights]').click()`); await sleep(150); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(200);
   check('String Lights hang on the fence, not up in the sky', await ev(`(()=>{const i=P().room3.items.find(i=>i.type==='stringLights');return i&&i.y>=340&&i.y<=420;})()`));
   await ev(`document.querySelector('[data-dt=colors]').click()`); await sleep(150);
-  check('Colours tab in the Backyard: the shed and the chalkboard', await ev(`[...document.querySelectorAll('#decoGrid [data-furn]')].every(b=>['shed','easel'].includes(b.dataset.furn))&&document.querySelectorAll('#decoGrid .furn-row').length===2`));
+  check('Colors tab in the Backyard: the shed and the chalkboard', await ev(`[...document.querySelectorAll('#decoGrid [data-furn]')].every(b=>['shed','easel'].includes(b.dataset.furn))&&document.querySelectorAll('#decoGrid .furn-row').length===2`));
   await ev(`document.querySelector('#decoGrid [data-furn=shed][data-fc=sky]').click()`); await sleep(150);
   check('painting the shed Sky is free and shows', await ev(`P().furn.shed==='sky'&&P().coins===425&&yardFurniture().includes(FURN_COLORS.sky.l)`));
   await ev(`exitDecorate();goRoom(1);enterDecorate();document.querySelector('[data-dt=wall]').click()`); await sleep(150);
@@ -1871,7 +1871,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('saving over a full slot asks first', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&P().looks[0].top===${JSON.stringify(top0)}`));
   await ev(`[...document.querySelectorAll('#modalBtns .btn')].pop().click()`); await sleep(100);
   check('✔ Yes replaces the look', await ev(`P().looks[0].top===${JSON.stringify(otherTop)}&&!document.querySelector('#looksRow').classList.contains('saving')`));
-  await ev(`P().looks[1]={top:'noSuchTop',hairColor:'noSuchColour'};window._lk=[P().look.top,P().look.hairColor];renderCloset();document.querySelector('[data-look="1"]').click()`);
+  await ev(`P().looks[1]={top:'noSuchTop',hairColor:'noSuchColor'};window._lk=[P().look.top,P().look.hairColor];renderCloset();document.querySelector('[data-look="1"]').click()`);
   check('a look with things that do not exist changes nothing', await ev(`P().look.top===window._lk[0]&&P().look.hairColor===window._lk[1]`));
   await ev(`P().looks[1]=null;renderCloset();[1,2,3].forEach(i=>document.querySelector('[data-look="'+i+'"]').click())`);
   check('Fashionista is earned with 4 looks kept', await ev(`P().looks.every(Boolean)&&stkDone(P(),STICKERS.find(s=>s.id==='looks4'))`));
@@ -2211,7 +2211,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   console.log('Pattern Train + Word Builder (v1.33)');
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   await ev(`P().easy=false;applyEasy();show('brain')`); await sleep(200);
-  check('Pattern Train: every wagon is a known colour / shape / number, one ❓ per train, the answer is a choice, choices are different',
+  check('Pattern Train: every wagon is a known color / shape / number, one ❓ per train, the answer is a choice, choices are different',
     await ev(`BRAIN_LVLS.every(l=>TR_PUZ[l].every(z=>{const q=trList(z.s),o=trList(z.o);const ok=t=>l==='easy'?!!TR_COLORS[t]:l==='medium'?t.length===2&&!!TR_SHAPES[t[0]]&&!!TR_COLORS[t[1]]:/^\\d+$/.test(t);
       return q.filter(t=>t==='?').length===1&&q.every(t=>t==='?'||ok(t))&&o.every(ok)&&o.includes(z.a)&&new Set(o).size===o.length&&o.length>=3;}))`));
   check('Pattern Train: on Easy and Medium only the answer makes the train repeat', await ev(`['easy','medium'].every(l=>TR_PUZ[l].every(z=>{const q=trList(z.s);
@@ -2399,7 +2399,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Content Pack 3: fidget designs');
   await ev(`show('fidget');setFidTab('popit')`); await sleep(200);
-  check('3 new pop-it colours and 2 new board shapes', await ev(`['idol','macaron','sea'].every(k=>document.querySelector('#skinRow [data-skin='+k+']'))&&['shell','cupcake'].every(k=>document.querySelector('#skinRow [data-shape='+k+']'))`));
+  check('3 new pop-it colors and 2 new board shapes', await ev(`['idol','macaron','sea'].every(k=>document.querySelector('#skinRow [data-skin='+k+']'))&&['shell','cupcake'].every(k=>document.querySelector('#skinRow [data-shape='+k+']'))`));
   for(const sh of ['shell','cupcake']){
     await ev(`P().fid.pop='${sh==='shell'?'sea':'macaron'}';document.querySelector('#skinRow [data-shape=${sh}]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(200);
     const n=await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').length`);
@@ -2504,7 +2504,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Content Pack 4: fidget designs');
   await ev(`show('fidget');setFidTab('popit')`); await sleep(200);
-  check('3 new pop-it colours and 2 new board shapes', await ev(`['hoops','farm','nebula'].every(k=>document.querySelector('#skinRow [data-skin='+k+']'))&&['bball','nugget'].every(k=>document.querySelector('#skinRow [data-shape='+k+']'))`));
+  check('3 new pop-it colors and 2 new board shapes', await ev(`['hoops','farm','nebula'].every(k=>document.querySelector('#skinRow [data-skin='+k+']'))&&['bball','nugget'].every(k=>document.querySelector('#skinRow [data-shape='+k+']'))`));
   for(const sh of ['bball','nugget']){
     await ev(`P().fid.pop='${sh==='bball'?'hoops':'farm'}';document.querySelector('#skinRow [data-shape=${sh}]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(200);
     const n=await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').length`);
@@ -2760,7 +2760,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await shot('S01-room-tabs');
   await ev(`document.querySelector('#roomTabs [data-go="4"]').click()`); await sleep(250);
   check('➡️ opens the Studio', await ev(`roomNo===4&&cur==='room'&&document.querySelector('#roomTitle').textContent.endsWith("'s Studio")`));
-  check('a first visit gives it her room colour wall and the wood floor', await ev(`(()=>{const p=P(),r=ROOM_START[p.color];return p.room4.wall===(r&&WALLS[r[0]]?r[0]:'lavender')&&p.room4.floor==='wood'&&(p.owned.includes('wall:'+p.room4.wall)||!WALLS[p.room4.wall].price);})()`));
+  check('a first visit gives it her room color wall and the wood floor', await ev(`(()=>{const p=P(),r=ROOM_START[p.color];return p.room4.wall===(r&&WALLS[r[0]]?r[0]:'lavender')&&p.room4.floor==='wood'&&(p.owned.includes('wall:'+p.room4.wall)||!WALLS[p.room4.wall].price);})()`));
   check('nothing is built in: no furniture to tap, only the buddy and the pet', await ev(`[...document.querySelectorAll('#roomSvg [data-hot]')].every(e=>['pet','gift','visitor'].includes(e.dataset.hot))&&!!document.querySelector('#mascotG')`));
   check('Fuzzy says hello while the Studio is empty', await ev(`!!document.querySelector('#bubble')&&document.querySelector('#bubble').textContent.includes('Studio')`));
   check('the Studio has one ⬅️ tab back to her room', (await stTabs())==='left:1'&&await ev(`document.querySelector('.rt-left').getAttribute('aria-label')==='Back to my room'`), await stTabs());
@@ -2769,7 +2769,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`enterDecorate()`); await sleep(150);
   check('the tabs hide while decorating', (await stTabs())==='');
   await ev(`document.querySelector('[data-dt=colors]').click()`); await sleep(100);
-  check('🎨 Colours says there is nothing built in to colour', await ev(`document.querySelector('#decoGrid .empty').textContent.includes('nothing to colour')`));
+  check('🎨 Colors says there is nothing built in to color', await ev(`document.querySelector('#decoGrid .empty').textContent.includes('nothing to color')`));
   await ev(`document.querySelector('[data-dt=shop]').click()`); await sleep(150);
   check('the Shop lists the Built-in Shelf first, marked Free', await ev(`(()=>{const t=document.querySelector('#decoGrid [data-buy]');return t.dataset.buy==='builtShelf'&&t.querySelector('.tp').textContent==='Free';})()`));
   await ev(`document.querySelector('#decoGrid [data-buy=builtShelf]').click()`); await sleep(150);
@@ -3180,6 +3180,21 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();{const p=DB.profiles[0];p.free=[3];p.potd='x';p.stats.free=-4;p.stats.potd='7';normalize(p);}`);
   check('odd Free Play data is made safe', await ev(`(()=>{const p=DB.profiles[0];return p.free.day===''&&p.free.n===0&&p.potd.day===''&&p.stats.free===0&&p.stats.potd===7;})()`));
   await ev(`window.FP_TEST_DAY='';save()`);
+
+  console.log('American spelling (v1.44)');
+  {
+    // every app file (on-screen text and comments) uses American spelling; saved ids like the season 'autumn' are allowed
+    const UK=/\b(colour|favourite|centre|theatre|metre|grey|tyre|cosy|organis|realis|recognis|apologis|personalis|customis|travell|cancell|jewellery|pyjama|moustache|honour|humour|behaviour|flavour|neighbour|labour|maths|fringe)\w*/i;
+    const appFiles=[...fs.readdirSync(path.join(__dirname,'..','web/js')).map(f=>'web/js/'+f),'index.html','web/app.css','web/about-local.example.js'];
+    const ukHits=appFiles.flatMap(f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8').split('\n').map((l,i)=>UK.test(l)?f+':'+(i+1)+' '+l.trim().slice(0,60):'').filter(Boolean));
+    check('no British spellings in the app files (color, favorite, gray, center, tire, cozy …)', ukHits.length===0, ukHits.slice(0,5));
+    check('the season is called Fall on screen; its saved id is still autumn', await ev(`SEASONS.autumn&&SEASONS.autumn.name==='Fall'&&!SEASONS.fall&&Object.values(DECOR).filter(d=>d.season==='autumn').length===4`));
+    check('no "Autumn" in anything she can see (names, hints, news)', await ev(`![...Object.values(DECOR).map(d=>d.name),...Object.values(WALLS).map(w=>w.name),...Object.values(FLOORS).map(w=>w.name),...Object.values(CLOSET).flatMap(c=>c.items.map(i=>i.name)),
+      ...STICKERS.map(s=>s.name+' '+s.hint),...Object.values(SEASONS).map(s=>s.name),...GIFT_TIMELINE.map(t=>t.n+' '+t.why+' '+(t.news||[]).join(' ')),...Object.values(SONGS).map(s=>s.name+' '+(s.desc||''))].some(t=>/autumn|colour|favourite|grey\\b|tyre|cosy/i.test(t))`));
+    await ev(`show('room');enterDecorate()`); await sleep(200);
+    check('Decorate\'s tab says 🎨 Colors', await ev(`document.querySelector('[data-dt=colors]').textContent.includes('Colors')`));
+    await ev(`exitDecorate()`);
+  }
 
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');

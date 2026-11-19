@@ -2,7 +2,7 @@
 /* =========================================================
    41. STUDIO + GETTING AROUND (v1.40)
    The ✨ Studio is the fourth room (roomNo 4, saved in p.room4 {wall, floor, items}). Nothing is built in, so every piece
-   in it is her choice. '' as the wall or floor means "not visited yet": studioStart() then gives it her room colour's
+   in it is her choice. '' as the wall or floor means "not visited yet": studioStart() then gives it her room color's
    wall (ROOM_START, section 23) and the free wood floor. The free Built-in Shelf (Shop, listed first) is the "built-in" option.
    Getting around: her room is the hub. ROOM_MAP lists every room; each one but her room hangs off another room in one
    direction (dir). That gives the arrow tabs at the edges of the screen (roomTabs, hidden while decorating, never covered by

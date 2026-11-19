@@ -44,7 +44,7 @@ document.addEventListener('click',e=>{
 /* ---------- snapshots ---------- */
 function svgPng(svgEl,w,h){
   const c=svgEl.cloneNode(true);
-  c.querySelectorAll('#bubble,#emoteFx,.sign').forEach(n=>n.remove()); // no speech bubble, emote or Easy-mode labels (their colours come from CSS)
+  c.querySelectorAll('#bubble,#emoteFx,.sign').forEach(n=>n.remove()); // no speech bubble, emote or Easy-mode labels (their colors come from CSS)
   c.setAttribute('xmlns','http://www.w3.org/2000/svg'); c.setAttribute('width',w); c.setAttribute('height',h);
   c.insertAdjacentHTML('afterbegin',`<defs>${$('#gdefs').innerHTML}</defs>`);
   const xml=new XMLSerializer().serializeToString(c);

@@ -7,7 +7,7 @@
    Decoration and wall ids below are saved: never rename them. Season ids are not saved anywhere.
    ========================================================= */
 const SEASONS={
-  autumn:{name:'Autumn',icon:'🍂',months:[8,9,10]},
+  autumn:{name:'Fall',icon:'🍂',months:[8,9,10]},
   winter:{name:'Winter',icon:'❄️',months:[11,0,1]},
   spring:{name:'Spring',icon:'🌸',months:[2,3,4]},
   summer:{name:'Summer',icon:'☀️',months:[5,6,7]}
@@ -56,7 +56,7 @@ Object.assign(WALLS,{
 
 /* ---------- decorations (4 per season) ---------- */
 Object.assign(DECOR,{
-  // Autumn
+  // Fall (the saved season id stays 'autumn')
   pumpkin:{name:'Smiley Pumpkin',price:15,season:'autumn',box:'-80 -130 160 140',d:()=>`<ellipse cx="0" cy="-3" rx="62" ry="8" fill="#00000030"/>`
     +`<ellipse cx="-30" cy="-46" rx="30" ry="43" fill="#f58a2e" ${ssnLine}/><ellipse cx="30" cy="-46" rx="30" ry="43" fill="#f58a2e" ${ssnLine}/><ellipse cx="0" cy="-48" rx="32" ry="46" fill="#ffa64d" ${ssnLine}/>`
     +`<path d="M-4 -92 Q-2 -110 10 -116" stroke="#5c8a3a" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M8 -100 Q30 -120 42 -98 Q22 -90 8 -100Z" fill="#6cc56f" stroke="#2b6a4a" stroke-width="3"/>`

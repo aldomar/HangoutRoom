@@ -73,7 +73,7 @@ _Last updated: 2026-11-19_
   - **✨ Studio + 🗺️ getting around: done** (v1.40 merged, PR #40). The owner named the room ✨ Studio.
   - **🚪 Visitors & wishes: done** (v1.41 merged, PR #41).
   - **👯 Two-player games: done** (v1.42 merged, PR #42).
-  - **🎲 Free Play + 📅 Puzzle of the Day: built as v1.43** on branch `feature/freeplay` (from `main` after #42). Plan agreed
+  - **🎲 Free Play + 📅 Puzzle of the Day: done** (v1.43 merged, PR #43). Plan agreed
     2026-11-19 (see "Free Play" under Decisions and `PLAN.md`). Owner's answers 2026-11-19: always open; +1 coin each, 10 a day; the daily
     card on the Brain Games menu; +5 for the Puzzle of the Day; the daily card rotates through 5 Brain Games only (Train,
     Pop, Snack, Memory, Bakery; not Word Builder or Fact Cards), and those 5 get 🎲 Free Play too.
@@ -128,7 +128,8 @@ _Last updated: 2026-11-19_
 - PR #40 "Studio + getting around (v1.40)": merged.
 - PR #41 "Visitors & wishes (v1.41)": merged.
 - PR #42 "Play Together (v1.42)": merged.
-- PR #43 "Free Play & Puzzle of the Day (v1.43)" on branch `feature/freeplay`: open.
+- PR #43 "Free Play & Puzzle of the Day (v1.43)": merged.
+- PR #44 "American spelling (v1.44)" on branch `feature/american`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -515,6 +516,9 @@ _Last updated: 2026-11-19_
   the next full run passed.
   Not tested automatically: Read to me saying the words on the tablet (the browser has no voice), and how small the
   8-wagon trains look on a real phone (they fit; the choice wagons are big).
+- **American spelling (v1.44):** `tests/smoke-test.js` has 1305 checks, all passing, no console errors. New checks: no British
+  spelling in any app file (web/ and index.html), the season shows as Fall with its saved id still autumn, no British word in
+  item names, sticker hints, song descriptions or the Gift Story, and Decorate's tab says 🎨 Colors.
 - **Free Play + Puzzle of the Day (v1.43):** `tests/smoke-test.js` has 1301 checks, all passing, no console errors. New checks:
   7 makers (not Word Builder or Fact Cards); 150 seeds for every game and level all make a fair puzzle; the same seed makes the
   same puzzle and different seeds make many different ones; the checks catch broken puzzles and pass every fixed puzzle; Snack
@@ -929,6 +933,12 @@ _Last updated: 2026-11-19_
   room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
   short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
   so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
+- **American spelling (built as v1.44), agreed 2026-11-19.** The children learn American English. Owner's answers: the season
+  label is **Fall** (the saved id stays `autumn`); **on-screen text and code comments** switch (the smoke test too); the docs
+  stay as written, and new doc text is American. Changed on screen: Room color, Color the buttons too, 🎨 Colors, nothing to
+  color, the Art Desk's spoken "Color", the Tire spinner, "favorite" in 3 Gift Story lines, "Calm and cozy" (Moon Lullaby).
+  No saved id changed (none contained these words). `web/about-local.js` (personal, not in git) was not touched: the owner can
+  check it by hand.
 - **Free Play + Puzzle of the Day (built as v1.43, `44-freeplay.js`), plan agreed 2026-11-19.** Owner's answers: 🎲 is **always open**
   (it glows once a level's fixed puzzles are done); **+1 coin each, 10 a day**; the 📅 card is on the **Brain Games menu**; it pays **+5**.
   The daily game turns through **5 Brain Games only** (Pattern Train, Number Pop, Snack Stand, Memory Match, Fraction Bakery), because
@@ -1147,9 +1157,8 @@ _Last updated: 2026-11-19_
 6. ~~Plan 👯 Two-player games (v1.42) and get it agreed before coding.~~ Agreed 2026-11-19 and built.
 7. ~~Owner: build v1.42 and try it with two children (see the PR), and merge it.~~ Merged.
 8. ~~Plan 🎲 Free Play + Puzzle of the Day (v1.43) and get it agreed before coding.~~ Agreed 2026-11-19 and built.
-9. Owner: build v1.43 and try 🎲 and 📅 (see the PR), and merge it.
-10. 🇺🇸 American spelling (v1.44, the owner's request 2026-11-19): change on-screen text to American English (color, favorite,
-    gray …). Only the words she sees; saved ids never change. About 70 spots in 29 files (many are code comments). Plan first.
+9. ~~Owner: build v1.43 and try 🎲 and 📅 (see the PR), and merge it.~~ Merged.
+10. ~~🇺🇸 American spelling (v1.44, the owner's request 2026-11-19).~~ Built (PR #44). Owner: build it and check the words, then merge.
 11. 🔤 Word Builder word bank (later): the owner gave a list by age (Easy 3–5, Medium 6–8, Hard 9–13). Agreed 2026-11-19:
     👀 look, hide (✋), spell, with 👀 to peek again (no timer); a picture where there is one; 🔊 says the word (it works on the
     tablet even with Read to me off); American spelling; drop 1–2 letter words and homophones; Hard at most 11 letters; swap
