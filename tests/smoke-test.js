@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('98 stickers on 7 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42), ids all different, 6 or more per page', await ev(`STICKERS.length===98&&new Set(STICKERS.map(s=>s.id)).size===98&&Object.keys(STK_PAGES).length===7&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('101 stickers on 7 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43), ids all different, 6 or more per page', await ev(`STICKERS.length===101&&new Set(STICKERS.map(s=>s.id)).size===101&&Object.keys(STK_PAGES).length===7&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1688,7 +1688,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Number Pop: Medium pairs always work out (a lone decoy never has a partner), 2+ pairs each', await ev(`POP_SETS.medium.every(z=>{const c={};z.b.forEach(n=>c[n]=(c[n]||0)+1);return popNeed(z,'medium')>=4&&Object.keys(c).every(k=>{const n=+k,m=z.t-n;return n===m?c[n]%2===0||c[n]===1:!c[m]||c[m]===c[n];});})`));
   // Snack Stand: Easy
   await ev(`document.querySelector('#brMenu [data-game=snack]').click()`); await sleep(250); await shot('H02-snack-easy');
-  check('Snack Stand opens on Easy puzzle 1 with 8 puzzle buttons and 3 answers', await ev(`BR.view==='play'&&BR.game==='snack'&&BR.lvl==='easy'&&BR.idx===0&&document.querySelectorAll('#brDots .br-dot').length===8&&document.querySelectorAll('.br-ch').length===3&&document.querySelector('#brQ').textContent.includes('How many')`));
+  check('Snack Stand opens on Easy puzzle 1 with 8 puzzle buttons and 3 answers', await ev(`BR.view==='play'&&BR.game==='snack'&&BR.lvl==='easy'&&BR.idx===0&&document.querySelectorAll('#brDots [data-pz]').length===8&&document.querySelectorAll('.br-ch').length===3&&document.querySelector('#brQ').textContent.includes('How many')`));
   const sc0b=await ev('P().coins');
   const snackRight=`document.querySelector('.br-ch[data-n="'+BRAIN_GAMES.snack.answer(BRAIN_GAMES.snack.puzzles[BR.lvl][BR.idx],BR.lvl)+'"]')`;
   await ev(`document.querySelector('.br-ch:not([data-n="'+BRAIN_GAMES.snack.answer(BRAIN_GAMES.snack.puzzles.easy[0],'easy')+'"])').click()`); await sleep(150);
@@ -2339,7 +2339,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`brPuzzle('facts','hard',5)`); await sleep(200); await shot('L10-phone-facts-hard');
   check('phone: long answers fit', await ev(`[...document.querySelectorAll('.fc-ans')].every(e=>e.getBoundingClientRect().right<=innerWidth&&e.scrollWidth<=e.clientWidth+1)`));
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
-  check('2 new stickers on the Code & Brain page', await ev(`STICKERS.filter(s=>s.page==='code').slice(-4,-2).map(s=>s.id+':'+s.page).join()==='bake8:code,facts12:code'`));
+  check('2 new stickers on the Code & Brain page', await ev(`(a=>a.slice(a.indexOf('bake8'),a.indexOf('bake8')+2).join())(STICKERS.filter(s=>s.page==='code').map(s=>s.id))==='bake8,facts12'`));
   await ev(`{const p=DB.profiles[0];p.brain={game:'facts',level:{bake:'hard',facts:'medium'},solved:['facts:e1']};normalize(p);}`);
   check('saved game and levels for the new games are kept', await ev(`(()=>{const b=DB.profiles[0].brain;return b.game==='facts'&&b.level.bake==='hard'&&b.level.facts==='medium'&&b.level.train==='easy';})()`));
   await ev(`closeModal();show('room')`);
@@ -3039,10 +3039,147 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   // save data
   const v41=await ev(`JSON.stringify(Object.assign({},DB,{version:24,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.duo;return q;})}))`);
   await ev(`doRestore(${JSON.stringify(v41)})`); await sleep(300);
-  check('a v1.41 backup restores with nothing played together yet (save version 25)', await ev(`DB_VERSION===25&&DB.version===25&&DB.profiles.every(p=>p.duo&&p.duo.n===0&&p.duo.soccer===0&&p.duo.day==='')`));
+  check('a v1.41 backup restores with nothing played together yet (save version 25 or later)', await ev(`DB_VERSION>=25&&DB.version===DB_VERSION&&DB.profiles.every(p=>p.duo&&p.duo.n===0&&p.duo.soccer===0&&p.duo.day==='')`));
   await ev(`closeModal();{const p=DB.profiles[0];p.duo={day:5,n:'x',soccer:-2,memory:3.7};normalize(p);}`);
   check('odd two-player data is made safe', await ev(`(()=>{const d=DB.profiles[0].duo;return d.day===''&&d.n===0&&d.soccer===0&&d.memory===3&&d.stage===0;})()`));
   await ev(`(()=>{DB.profiles=DB.profiles.filter(x=>x.name!=='Pal');DB.activeId=_tgMe;save();enterRoom();})()`); await sleep(200);
+
+  console.log('Free Play + Puzzle of the Day (v1.43)');
+  await ev(`(()=>{closeModal();stkPaused=true;const p=P();p.easy=false;applyEasy();p.coins=100;p.free={day:'',n:0};p.potd={day:''};p.stats.free=0;p.stats.potd=0;
+    window._fpBest=JSON.stringify([p.brain.solved,p.maze.solved,p.code.solved]);window.FP_TEST_DAY='2026-11-19';save();})()`);
+  // the makers: many seeds each, every puzzle checked by the same rules as the fixed ones
+  check('7 makers: 5 Brain Games (not Word Builder or Fact Cards), the maze and the Code Lab', await ev(`Object.keys(FP_MAKERS).sort().join()==='bake,code,maze,memory,pop,snack,train'&&FP_BRAIN.length===5&&!FP_BRAIN.includes('word')&&!FP_BRAIN.includes('facts')`));
+  const fpAll=await ev(`(()=>{const bad=[];
+    FP_BRAIN.forEach(g=>BRAIN_LVLS.forEach(l=>{for(let i=0;i<150;i++){const z=fpMake(g,l,'t'+i);if(!z||!FP_MAKERS[g].ok(z.pz,l))bad.push(g+l+i);}}));
+    for(let i=0;i<150;i++){const z=fpMake('maze','easy','t'+i);if(!z)bad.push('maze'+i);}
+    ['easy','medium'].forEach(l=>{for(let i=0;i<150;i++){const z=fpMake('code',l,'t'+i);if(!z)bad.push('code'+l+i);}});
+    return bad;})()`);
+  check('every game and level makes a fair puzzle from 150 different seeds', fpAll.length===0, fpAll.slice(0,10));
+  check('the same seed always makes the same puzzle', await ev(`[...FP_BRAIN,'maze','code'].every(g=>['easy','medium','hard'].every(l=>JSON.stringify(fpMake(g,l,'same'))===JSON.stringify(fpMake(g,l,'same'))))`));
+  check('…and different seeds make many different puzzles', await ev(`[...FP_BRAIN.map(g=>[g,'medium']),['maze','easy'],['code','easy'],['code','medium']].every(([g,l])=>new Set(Array.from({length:40},(_,i)=>JSON.stringify(fpMake(g,l,'d'+i).pz))).size>=15)`),
+    await ev(`[...FP_BRAIN.map(g=>[g,'medium']),['maze','easy'],['code','easy'],['code','medium']].map(([g,l])=>new Set(Array.from({length:40},(_,i)=>JSON.stringify(fpMake(g,l,'d'+i).pz))).size).join()`));
+  check('the checks catch broken puzzles (a train whose answer does not fit, a maze with no way through, a board that needs no 🔁)', await ev(`!FP_MAKERS.train.ok({s:'r b r b r ?',a:'r',o:'r b y'},'easy')&&!FP_MAKERS.train.ok({s:'r b r b r ?',a:'b',o:'b r b'},'easy')
+    &&!FP_MAKERS.maze.ok({map:['S.#......','..#......','###......','.........','.........','........G']})&&!FP_MAKERS.code.ok({id:'free',map:['F.C'],max:2,sol:'RR'},'medium')`));
+  check('the fixed puzzles pass the same checks', await ev(`['train','pop','snack','bake'].every(g=>BRAIN_LVLS.every(l=>BRAIN_GAMES[g].puzzles[l].every(z=>FP_MAKERS[g].ok(z,l))))&&BRAIN_LVLS.every(l=>MEM_SETS[l].every(z=>FP_MAKERS.memory.ok(z,l)))`),
+    await ev(`['train','pop','snack','bake'].flatMap(g=>BRAIN_LVLS.flatMap(l=>BRAIN_GAMES[g].puzzles[l].map((z,i)=>FP_MAKERS[g].ok(z,l)?'':g+l+i))).filter(Boolean).join()`));
+  check('Snack Stand and Bakery: the answer is always among the choices', await ev(`BRAIN_LVLS.every(l=>Array.from({length:60},(_,i)=>fpMake('snack',l,'o'+i)).every(z=>BRAIN_GAMES.snack.options(z.pz,l,z.idx).includes(BRAIN_GAMES.snack.answer(z.pz,l))))&&Array.from({length:60},(_,i)=>fpMake('bake','hard','o'+i)).every(z=>brOptions(z.pz.a,z.idx,[[-2,0,1,10]]).includes(z.pz.a))`));
+  check('Memory: every made board\'s pictures draw', await ev(`BRAIN_LVLS.every(l=>Array.from({length:20},(_,i)=>fpMake('memory',l,'m'+i).pz).every(s=>s.every(id=>memPic(id).length>60)))`));
+  check('Code Lab: each made board\'s answer works within its blocks; Medium can\'t be done with arrows only', await ev(`Array.from({length:80},(_,i)=>fpMake('code','medium','c'+i).pz).every(z=>codeSim(z,[...z.sol],null).end==='win'&&z.sol.length<=z.max&&fpCodeWalk(z.map).length>z.max&&/[234]/.test(z.sol))
+    &&Array.from({length:80},(_,i)=>fpMake('code','easy','c'+i).pz).every(z=>codeSim(z,[...z.sol],null).end==='win'&&z.max<=12&&!/[234]/.test(z.sol))`));
+  // 📅 Puzzle of the Day
+  await ev(`window._fpDays=Array.from({length:6},(_,k)=>new Date(Date.UTC(2026,10,19+k)).toISOString().slice(0,10))`);
+  check('the daily game turns through the 5 Brain Games, one a day', await ev(`new Set(_fpDays.slice(0,5).map(potdGame)).size===5&&_fpDays.slice(0,5).every(d=>POTD_GAMES.includes(potdGame(d)))&&potdGame(_fpDays[5])===potdGame(_fpDays[0])`));
+  await ev(`window.FP_TEST_DAY=_fpDays.find(d=>potdGame(d)==='train');P().brain.level.train='medium';show('brain')`); await sleep(200);
+  check('the 📅 card is at the top of the Brain Games menu, next to 👯, and says what today\'s game is', await ev(`(()=>{const c=document.querySelector('#brMenu [data-potd]'),d=document.querySelector('#brMenu [data-duo=memory]'),g=document.querySelector('#brMenu .br-games');
+    return !!c&&c.parentElement===d.parentElement&&c.getBoundingClientRect().bottom<=g.getBoundingClientRect().top&&c.getBoundingClientRect().bottom<=innerHeight&&c.textContent.includes('Pattern Train')&&c.textContent.includes('+5')&&c.getBoundingClientRect().height>=48;})()`));
+  await shot('U01-brain-daily-card');
+  check('no streaks or "missed" words anywhere on the menu', await ev(`!/streak|missed|come back|tomorrow|in a row/i.test(document.querySelector('#brMenu').textContent)`));
+  await ev(`document.querySelector('#brMenu [data-potd]').click()`); await sleep(200);
+  check('the card opens today\'s puzzle: Pattern Train at her level (Medium)', await ev(`BR.view==='play'&&!!BR.free&&BR.free.daily&&BR.game==='train'&&BR.lvl==='medium'&&document.querySelector('#brTitle').textContent.includes('Puzzle of the Day')`));
+  await shot('U02-daily-train');
+  const fpDailyPz=await ev(`JSON.stringify(BR.free.pz)`);
+  await ev(`brMenu();document.querySelector('#brMenu [data-potd]').click()`); await sleep(150);
+  check('it is the same puzzle all day', (await ev(`JSON.stringify(BR.free.pz)`))===fpDailyPz);
+  // a helper that solves whatever made-up puzzle is on screen
+  await ev(`window._fpSolve=()=>{const g=BR.game,l=BR.lvl,z=BR.free.pz,q=s=>{const b=document.querySelector(s);if(b)b.click();};
+    if(g==='train') q('.tr-ch[data-t="'+z.a+'"]');
+    else if(g==='snack') q('#brBoard [data-n="'+BRAIN_GAMES.snack.answer(z,l)+'"]');
+    else if(g==='memory'){const m={};MEM.cards.forEach((c,i)=>{(m[c.id]=m[c.id]||[]).push(i);});Object.values(m).forEach(([a,b])=>{memTap(a);memTap(b);});}
+    else if(g==='pop'){const done=i=>document.querySelector('.nbub[data-b="'+i+'"]').classList.contains('popped');
+      if(l==='medium'){z.b.forEach((n,i)=>{if(done(i))return;const j=z.b.findIndex((m,jj)=>jj!==i&&!done(jj)&&m+n===z.t);if(j>=0){popTap(i);popTap(j);}});}
+      else z.b.forEach((n,i)=>{if(l==='easy'?n===z.t:z.t%n===0)popTap(i);});}
+    else if(g==='bake'){if(l==='easy')q('[data-o="'+z.n+'"]');else if(l==='medium'){FB.on=FB.on.map((x,i)=>i<z.a*z.n/z.b);fbCheck(z);}else q('#brBoard [data-n="'+z.a+'"]');}
+    return BR.won;}`);
+  const fpc0=await ev('P().coins');
+  check('solving it wins', await ev('_fpSolve()'));
+  await sleep(1100);
+  check('📅 +5 coins once, and it never counts as a solved puzzle', await ev(`P().coins===${fpc0}+5&&P().potd.day===FP_TEST_DAY&&P().stats.potd===1&&JSON.stringify([P().brain.solved,P().maze.solved,P().code.solved])===_fpBest&&document.querySelector('#modalTitle').textContent.includes('Puzzle of the Day')`));
+  await shot('U03-daily-solved');
+  await ev(`closeModal();brMenu()`); await sleep(100);
+  check('the card now says ✔ Solved today', await ev(`document.querySelector('#brMenu [data-potd]').textContent.includes('Solved today')&&document.querySelector('#brMenu [data-potd]').classList.contains('done')`));
+  await ev(`document.querySelector('#brMenu [data-potd]').click()`); await sleep(150); await ev('_fpSolve()'); await sleep(1100);
+  check('playing it again the same day is free practice', await ev(`P().coins===${fpc0}+5&&P().stats.potd===1`));
+  await ev(`closeModal();window.FP_TEST_DAY=_fpDays[_fpDays.indexOf(FP_TEST_DAY)+1];brMenu()`); await sleep(100);
+  check('the next day: a new game on the card, +5 again, nothing about yesterday', await ev(`(()=>{const c=document.querySelector('#brMenu [data-potd]');return !c.classList.contains('done')&&c.textContent.includes('+5')&&c.textContent.includes(BRAIN_GAMES[potdGame(FP_TEST_DAY)].name)&&potdGame(FP_TEST_DAY)!=='train';})()`));
+  await ev(`P().easy=true;applyEasy();brMenu();document.querySelector('#brMenu [data-potd]').click()`); await sleep(150);
+  check('Easy mode: the daily puzzle is on Easy', await ev(`BR.free.daily&&BR.lvl==='easy'`));
+  await shot('U04-daily-easy');
+  await ev(`P().easy=false;applyEasy();closeModal()`);
+  // 🎲 Free Play in the Brain Games
+  check('🎲 sits after the puzzle numbers in the 5 games, not in Word Builder or Fact Cards', await ev(`FP_BRAIN.every(g=>(brOpen(g),!!document.querySelector('#brDots [data-dice]')&&document.querySelector('#brDots').lastElementChild.matches('[data-dice]')))&&!(brOpen('word'),document.querySelector('#brDots [data-dice]'))&&!(brOpen('facts'),document.querySelector('#brDots [data-dice]'))`));
+  await ev(`P().brain.level.pop='easy';brOpen('pop');document.querySelector('#brDots [data-dice]').click()`); await sleep(150);
+  check('🎲 opens a made-up puzzle: the dice lit, no number lit', await ev(`!!BR.free&&!BR.free.daily&&BR.game==='pop'&&document.querySelector('#brDots [data-dice]').classList.contains('on')&&!document.querySelector('#brDots [data-pz].on')`));
+  await shot('U05-free-pop');
+  const fpc1=await ev('P().coins');
+  await ev('_fpSolve()'); await sleep(1100);
+  check('solved: +1 coin, the box offers 🎲 Another one!, nothing marked solved', await ev(`P().coins===${fpc1}+1&&P().stats.free===1&&/Another one/.test(document.querySelector('#modalBtns').textContent)&&JSON.stringify([P().brain.solved,P().maze.solved,P().code.solved])===_fpBest`));
+  const fpKey=await ev('BR.free.key');
+  await ev(`[...document.querySelectorAll('#modalBtns button')].find(b=>/Another/.test(b.textContent)).click()`); await sleep(150);
+  check('🎲 Another one! makes a new one', await ev(`!!BR.free&&BR.free.key!==${JSON.stringify(fpKey)}&&!BR.won`));
+  await ev(`document.querySelector('#brTabs [data-lvl=hard]').click()`); await sleep(150);
+  check('a level tab in Free Play makes a new one at that level', await ev(`!!BR.free&&!BR.free.daily&&BR.lvl==='hard'&&BR.free.lvl==='hard'`));
+  // every game and level, through the screen (15 puzzles: the coins stop at 10 a day)
+  await ev(`P().free={day:FP_TEST_DAY,n:0};P().stats.free=0`); const fpc2=await ev('P().coins');
+  const fpWon=await ev(`(()=>{const out=[];FP_BRAIN.forEach(g=>BRAIN_LVLS.forEach(l=>{fpBrain(g,l);if(!_fpSolve())out.push(g+':'+l);}));return out;})()`);
+  check('a made-up puzzle of every game and level can be solved on screen', fpWon.length===0, fpWon);
+  await sleep(1100);
+  check('15 solved: +10 coins (10 a day), all 15 count for stickers', await ev(`P().coins===${fpc2}+10&&P().free.n===10&&P().stats.free===15`), await ev(`[P().coins-${fpc2},P().free.n,P().stats.free]`));
+  check('the full note is gentle (once, no countdown, no "come back")', await ev(`(()=>{fpToldDay='';const h=fpPay();return /full for today/.test(h)&&!/come back|hours|minutes|tomorrow/i.test(h)&&fpPay()==='';})()`));
+  await ev(`closeModal();window.FP_TEST_DAY='2027-01-01'`); const fpc3=await ev('P().coins');
+  check('a new day refills the Free Play coins quietly', await ev(`fpPay()==='+1 🪙'&&P().coins===${fpc3}+1&&P().free.n===1&&P().free.day===FP_TEST_DAY`));
+  await ev(`BRAIN_GAMES.pop.puzzles.easy.forEach((z,i)=>{if(!P().brain.solved.includes(brId('pop','easy',i)))P().brain.solved.push(brId('pop','easy',i));});brPuzzle('pop','easy',0)`); await sleep(100);
+  check('🎲 glows once every fixed puzzle of that level is solved', await ev(`document.querySelector('#brDots [data-dice]').classList.contains('glow')&&!(brPuzzle('pop','hard',0),document.querySelector('#brDots [data-dice]').classList.contains('glow'))`));
+  await ev(`P().brain.solved=JSON.parse(_fpBest)[0];save()`);
+  // 🎲 in the Marble Maze
+  await ev(`closeModal();show('fidget');setFidTab('maze')`); await sleep(300);
+  check('the maze bar has 🎲 after the numbered mazes', await ev(`(()=>{const k=[...document.querySelectorAll('#mazeBar > *')];const d=k.findIndex(b=>b.id==='mzDice');return d>0&&k.slice(0,d).filter(b=>b.dataset.mz).length===MAZES.length;})()`));
+  await ev(`document.querySelector('#mzDice').click()`); await sleep(200);
+  check('🎲 starts a made-up 9 × 6 maze; no numbered maze is lit', await ev(`!!MZ.free&&mzCur().map.length===6&&!document.querySelector('#mazeBar [data-mz].on')&&document.querySelector('#mzDice').classList.contains('on')`));
+  await shot('U06-free-maze');
+  await ev(`window._mzPathKeep=window.mzPath;window.mzPath=()=>fpMazePath(mzCur().map)`);
+  const fpc4=await ev('P().coins'), fpMz0=await ev('P().stats.mazes');
+  const fmr=await ev('mzAuto()'); await sleep(300);
+  check('a made-up maze can be solved by tilting, never inside a wall', fmr.done&&fmr.bad===0, fmr);
+  check('…it pays +1 (Free Play), counts for Marble Marathon and is not saved as a maze', await ev(`P().coins===${fpc4}+1&&P().stats.mazes===${fpMz0}+1&&JSON.stringify(P().maze.solved)===JSON.stringify(JSON.parse(_fpBest)[1])&&/Maze done/.test(document.querySelector('#modalTitle').textContent)`));
+  for(let i=0;i<3;i++){await ev(`closeModal();fpMaze()`);const r=await ev('mzAuto()');check(`another made-up maze (${i+2}) solved by tilting, never inside a wall`,r.done&&r.bad===0,r);}
+  await ev(`closeModal();window.mzPath=_mzPathKeep;document.querySelector('#mazeBar [data-mz="0"]').click()`); await sleep(100);
+  check('a numbered maze button goes back to the fixed mazes', await ev(`!MZ.free&&MZ.i===0`));
+  // 🎲 in the Code Lab
+  await ev(`P().code.level='easy';show('code')`); await sleep(200);
+  check('the Code Lab\'s Easy list ends with a 🎲 New board tile', await ev(`!!document.querySelector('#clList [data-dice]')&&document.querySelector('#clList').lastElementChild.matches('[data-dice]')&&document.querySelector('#clList [data-dice]').getBoundingClientRect().height>=48`));
+  await shot('U07-code-list');
+  await ev(`P().code.level='hard';clPickView()`);
+  check('…on Medium too, but not on Hard, My Move, If or Challenge', await ev(`!document.querySelector('#clList [data-dice]')&&['move','if','challenge'].every(l=>(P().code.level=l,clPickView(),!document.querySelector('#clList [data-dice]')))&&(P().code.level='medium',clPickView(),!!document.querySelector('#clList [data-dice]'))`));
+  await ev(`CODE_STEP=40;document.querySelector('#clList [data-dice]').click()`); await sleep(200);
+  check('a made-up Medium board with 🔁 in the blocks', await ev(`!!CL.free&&CL.lvl==='medium'&&CL.view==='play'&&!!document.querySelector('#clPal [data-add="4"]')`));
+  await shot('U08-free-code');
+  const fpc5=await ev('P().coins');
+  await ev(`CL.prog=[...CL.free.sol];clProg();clGo()`); await sleep(1500);
+  check('its answer runs, pays +1 and offers 🎲 Another one!; not saved as solved', await ev(`CL.state==='win'&&P().coins===${fpc5}+1&&/Board solved/.test(document.querySelector('#modalTitle').textContent)&&/Another/.test(document.querySelector('#modalBtns').textContent)&&JSON.stringify(P().code.solved)===JSON.stringify(JSON.parse(_fpBest)[2])`));
+  await ev(`[...document.querySelectorAll('#modalBtns button')].find(b=>/Another/.test(b.textContent)).click()`); await sleep(150);
+  check('…and Another one! makes a new board', await ev(`!!CL.free&&CL.state==='edit'&&CL.lvl==='medium'`));
+  await ev(`clBackKey()`);
+  check('Back from a made-up board goes to the list', await ev(`CL.view==='pick'`));
+  // stickers
+  await ev(`P().stats.free=50;P().stats.potd=5;stkPaused=false;checkStickers();stkPaused=true;closeModal()`);
+  check('stickers: Dice Roller, Puzzle Explorer and Daily Thinker (totals, never streaks)', await ev(`['free10','free50','potd5'].every(id=>P().stickers.includes(id))&&STICKERS.filter(s=>/^(free|potd)/.test(s.id)).every(s=>s.page==='code'&&!/streak|in a row/i.test(s.hint))`));
+  // phone
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300);
+  await ev(`show('brain')`); await sleep(200); await shot('U09-phone-brain');
+  check('phone: the 📅 card and 👯 fit the width', await ev(`[...document.querySelectorAll('#brMenu .br-top > *')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth;})`));
+  await ev(`brOpen('train')`); await sleep(150);
+  check('phone: the 🎲 dot fits with the 8 numbers', await ev(`(()=>{const r=document.querySelector('#brDots [data-dice]').getBoundingClientRect();return r.right<=innerWidth&&r.width>=48;})()`));
+  await ev(`show('fidget');setFidTab('maze');fpMaze()`); await sleep(300);
+  check('phone: a made-up maze still leaves a big board', await ev('MZ.geo.cs>=36'), await ev('MZ.geo.cs'));
+  await ev(`mzStart(0);show('room')`);
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(200);
+  // save data
+  const v42=await ev(`JSON.stringify(Object.assign({},DB,{version:25,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.free;delete q.potd;delete q.stats.free;delete q.stats.potd;return q;})}))`);
+  await ev(`doRestore(${JSON.stringify(v42)})`); await sleep(300);
+  check('a v1.42 backup restores with no Free Play yet (save version 26)', await ev(`DB_VERSION===26&&DB.version===26&&DB.profiles.every(p=>p.free&&p.free.n===0&&p.free.day===''&&p.potd.day===''&&p.stats.free===0&&p.stats.potd===0)`));
+  await ev(`closeModal();{const p=DB.profiles[0];p.free=[3];p.potd='x';p.stats.free=-4;p.stats.potd='7';normalize(p);}`);
+  check('odd Free Play data is made safe', await ev(`(()=>{const p=DB.profiles[0];return p.free.day===''&&p.free.n===0&&p.potd.day===''&&p.stats.free===0&&p.stats.potd===7;})()`));
+  await ev(`window.FP_TEST_DAY='';save()`);
 
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');

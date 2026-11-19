@@ -135,7 +135,12 @@ const GIFT_TIMELINE=[
           '⚽ Soccer Duel: one kicks, one keeps, then swap',
           '🃏 Memory for 2 in Brain Games: take turns finding pairs',
           '🎤 Stage Together: one taps the left circle, one the right',
-          '🪙 Both players get coins for playing together']}
+          '🪙 Both players get coins for playing together']},
+  {v:'1.43',d:'2026-11-19',i:'🎲',n:'Free Play & Puzzle of the Day',why:'So the puzzles never run out, with a fresh one waiting every day',
+    news:['🎲 Free Play: endless new puzzles in Brain Games, the Marble Maze and the Code Lab',
+          '📅 Puzzle of the Day on the Brain Games menu: +5 coins',
+          '🪙 +1 coin for each Free Play puzzle (10 a day)',
+          '📒 3 new stickers on the Code & Brain page']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

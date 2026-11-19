@@ -745,3 +745,16 @@ body.easy .vs-tip{display:none}
 .stg-names{position:absolute;left:8px;right:8px;bottom:8px;display:flex;justify-content:space-between;pointer-events:none}
 .stg-names span{padding:4px 12px;border-radius:999px;font-weight:900;color:#2b2235;font-size:16px}
 @media (max-width:520px){.tg-face{width:52px;height:68px}.tg-sc{min-width:80px}}
+/* 🎲 Free Play + 📅 Puzzle of the Day (v1.43, section 44) */
+.br-top{display:flex;flex-wrap:wrap;justify-content:center;align-items:stretch;gap:10px;margin:4px 0 12px}
+.br-top .tg-mem-btn{margin:0}
+.br-daily{display:flex;align-items:center;gap:10px;min-height:52px;padding:6px 16px;background:var(--panel2);border:3px solid var(--gc);border-radius:18px;box-shadow:0 4px 0 #1a1424;color:var(--ink);text-align:left}
+.br-daily:active{transform:translateY(3px);box-shadow:0 1px 0 #1a1424}
+.br-daily .br-gi{font-size:30px;line-height:1}
+.br-daily .br-dt{display:flex;flex-direction:column;line-height:1.2}.br-daily b{font-size:17px}.br-daily small{font-size:15px;color:var(--muted)}
+.br-daily i{font-style:normal;font-weight:900;font-size:16px;color:var(--gold);white-space:nowrap}
+.br-daily.done{border-style:dashed}.br-daily.done i{color:var(--mint)}
+.br-dice{font-size:22px;background:var(--panel)}
+.br-dice.glow,.mz-dice.glow,.clp-dice.glow{border-color:var(--gold);box-shadow:0 0 0 3px #ffd16666,0 0 14px #ffd16688}
+.clp-dice .fp-dice{font-size:56px;line-height:1}
+body.easy .br-daily .br-dt b{display:none}

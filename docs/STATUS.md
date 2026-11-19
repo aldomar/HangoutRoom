@@ -72,8 +72,11 @@ _Last updated: 2026-11-19_
   `feature/room4` (from `feature/depth`; #39 is now merged, so the PR goes straight to `main`).
   - **✨ Studio + 🗺️ getting around: done** (v1.40 merged, PR #40). The owner named the room ✨ Studio.
   - **🚪 Visitors & wishes: done** (v1.41 merged, PR #41).
-  - **👯 Two-player games: built, PR #42 open as v1.42** on branch `feature/together` (from `main` after #41). Plan agreed 2026-11-19
-    (see "Two-player games" under Decisions and `PLAN.md`).
+  - **👯 Two-player games: done** (v1.42 merged, PR #42).
+  - **🎲 Free Play + 📅 Puzzle of the Day: built as v1.43** on branch `feature/freeplay` (from `main` after #42). Plan agreed
+    2026-11-19 (see "Free Play" under Decisions and `PLAN.md`). Owner's answers 2026-11-19: always open; +1 coin each, 10 a day; the daily
+    card on the Brain Games menu; +5 for the Puzzle of the Day; the daily card rotates through 5 Brain Games only (Train,
+    Pop, Snack, Memory, Bakery; not Word Builder or Fact Cards), and those 5 get 🎲 Free Play too.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -124,7 +127,8 @@ _Last updated: 2026-11-19_
 - PR #39 "Room depth (v1.39)": merged.
 - PR #40 "Studio + getting around (v1.40)": merged.
 - PR #41 "Visitors & wishes (v1.41)": merged.
-- PR #42 "Play Together (v1.42)" on branch `feature/together`: open.
+- PR #42 "Play Together (v1.42)": merged.
+- PR #43 "Free Play & Puzzle of the Day (v1.43)" on branch `feature/freeplay`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -511,6 +515,20 @@ _Last updated: 2026-11-19_
   the next full run passed.
   Not tested automatically: Read to me saying the words on the tablet (the browser has no voice), and how small the
   8-wagon trains look on a real phone (they fit; the choice wagons are big).
+- **Free Play + Puzzle of the Day (v1.43):** `tests/smoke-test.js` has 1301 checks, all passing, no console errors. New checks:
+  7 makers (not Word Builder or Fact Cards); 150 seeds for every game and level all make a fair puzzle; the same seed makes the
+  same puzzle and different seeds make many different ones; the checks catch broken puzzles and pass every fixed puzzle; Snack
+  Stand and Bakery answers are among the choices; Memory pictures draw; Code Lab answers fit their blocks and Medium needs 🔁.
+  📅: the 5 games turn by date; the card sits next to 👯 above the games; no streak words; it opens today's game at her level
+  (Easy in Easy mode); the same puzzle all day; +5 once, then "Solved today" and free practice; a new game the next day.
+  🎲: in the 5 games (not Word Builder or Fact Cards), lit while playing; +1 and 🎲 Another one!; a tab makes one at that level;
+  a made-up puzzle of every game and level solved on screen; 15 solved = +10 coins (10 a day) and 15 counted; the gentle note once;
+  a new day refills; the dice glows when a level is done; 4 made-up mazes solved by tilting, never inside a wall (+1, counts for
+  Marble Marathon, not saved); the Code Lab tile on Easy and Medium only, a made-up board solved (+1, not saved); Back; 3 stickers;
+  phone layouts; a v1.42 backup restores (save version 26) and odd data is made safe. Older checks updated: 101 stickers, the
+  puzzle-number count ignores 🎲, the Bakery sticker check finds its place by id, the v1.41 restore accepts version 25 or later.
+  First run: 7 failures. The maze maker gave up on 4 of 150 seeds (it only succeeded 3% of the time), so it was rewritten as a
+  corridor maze; the rest were test mistakes (the test's "next day" was the same day, which also broke two coin checks).
 - **Content Pack 4 + fidget allowance (v1.36):** `tests/smoke-test.js` has 1064 checks, all passing, no console errors.
   Allowance checks: 30 paid then nothing, the gentle note (no countdown), a flip near the limit pays the rest, a new
   day refills, a full pop-it board still pops and flips but pays nothing, odd `fidPay` made safe, save version 21.
@@ -911,6 +929,15 @@ _Last updated: 2026-11-19_
   room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
   short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
   so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
+- **Free Play + Puzzle of the Day (built as v1.43, `44-freeplay.js`), plan agreed 2026-11-19.** Owner's answers: 🎲 is **always open**
+  (it glows once a level's fixed puzzles are done); **+1 coin each, 10 a day**; the 📅 card is on the **Brain Games menu**; it pays **+5**.
+  The daily game turns through **5 Brain Games only** (Pattern Train, Number Pop, Snack Stand, Memory Match, Fraction Bakery), because
+  the Maze and Code Lab live on other screens; those 5 get 🎲 too, as do the Maze and Code Lab (Easy/Medium). Word Builder and Fact
+  Cards are left out: words and facts can't be made up. **The owner will think about a word bank for Word Builder later.**
+  Each game has a maker (`FP_MAKERS[g].make`) and a check (`ok`) that uses the same rules as the fixed puzzles; the dice roll again
+  until the check passes. Seeds use `brRand`, so the daily puzzle (seeded with the date) is the same all day. Made-up puzzles are
+  never saved and never change solved lists, ticks, level bonuses or Brain Champ. Save version 26: `free{day, n}`, `potd{day}`,
+  `stats.free`, `stats.potd`. 3 stickers on the Code & Brain page (101 in all).
 - **Two-player games (built as v1.42, `43-together.js`), plan agreed 2026-11-19.** Owner's answers: player 2 **picks their room or
   👤 Guest**; **+3 coins** per finished game for each room (not a Guest), **15 a day**; **gentle scores** (both scores shown, the end box
   cheers both, a tie is "you're both stars"); a **👯 button in each game**. Soccer Duel is real-time on one screen: the kicker swipes
@@ -1118,13 +1145,22 @@ _Last updated: 2026-11-19_
 4. ~~Plan 🚪 Visitors (v1.41) and get it agreed before coding.~~ Agreed 2026-11-18 and built.
 5. ~~Owner: build v1.41 and try it (see the PR), and merge it.~~ Merged.
 6. ~~Plan 👯 Two-player games (v1.42) and get it agreed before coding.~~ Agreed 2026-11-19 and built.
-7. Owner: build v1.42 and try it with two children (see the PR), and merge it.
-8. Plan 🎲 Free Play + Puzzle of the Day (v1.43) and get it agreed before coding.
+7. ~~Owner: build v1.42 and try it with two children (see the PR), and merge it.~~ Merged.
+8. ~~Plan 🎲 Free Play + Puzzle of the Day (v1.43) and get it agreed before coding.~~ Agreed 2026-11-19 and built.
+9. Owner: build v1.43 and try 🎲 and 📅 (see the PR), and merge it.
+10. 🇺🇸 American spelling (v1.44, the owner's request 2026-11-19): change on-screen text to American English (color, favorite,
+    gray …). Only the words she sees; saved ids never change. About 70 spots in 29 files (many are code comments). Plan first.
+11. 🔤 Word Builder word bank (later): the owner gave a list by age (Easy 3–5, Medium 6–8, Hard 9–13). Agreed 2026-11-19:
+    👀 look, hide (✋), spell, with 👀 to peek again (no timer); a picture where there is one; 🔊 says the word (it works on the
+    tablet even with Read to me off); American spelling; drop 1–2 letter words and homophones; Hard at most 11 letters; swap
+    harass, illegal, cemetery (explosion borderline); remove repeats; add theme words (web, bat, cub / robot, rocket, slime,
+    goal, ghost, comet / dinosaur, volcano, galaxy, astronaut, telescope). The owner's file is SpellingWords.txt (not in the repo yet).
+12. Then pick from the "Later, any order" list in `PLAN.md` (Phase 12).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 25 since v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 26 since v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

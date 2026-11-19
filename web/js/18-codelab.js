@@ -159,8 +159,10 @@ const codeCoins=lvl=>CODE_LEVELS[lvl].coins||CODE_COINS, codeBonus=lvl=>CODE_LEV
 // view: 'pick' (puzzle list) or 'play'. state while playing: 'edit' | 'run' | 'oops' | 'win'.
 // move = the ✨ My Move row; row = the row the palette adds to ('main' or 'move'); bad/badM = glowing blocks in each row.
 let CL={view:'pick',lvl:'easy',idx:0,prog:[],move:[],row:'main',state:'edit',timer:0,ev:null,k:0,bad:[],badM:[]};
+// (v1.43) CL.free = a made-up 🎲 board (section 44); otherwise the fixed puzzle
+const clPz=()=>CL.free||CODE_PUZZLES[CL.lvl][CL.idx];
 const clHasMove=()=>CODE_LEVELS[CL.lvl].blocks.includes('M');
-const clMoveMax=()=>CODE_PUZZLES[CL.lvl][CL.idx].moveMax||CODE_LEVELS[CL.lvl].moveMax||4;
+const clMoveMax=()=>clPz().moveMax||CODE_LEVELS[CL.lvl].moveMax||4;
 function renderCode(){if(P())clPickView();}
 function codeStop(){clearTimeout(CL.timer);if(CL.state==='run')CL.state='edit';} // leaving the screen stops a run (nothing lost)
 function clPickView(){
@@ -172,7 +174,8 @@ function clPickView(){
   const done=list.filter(q=>p.code.solved.includes(q.id)).length;
   $('#clHint').textContent=done===list.length?`You solved every ${CODE_LEVELS[lv].name} puzzle! 🎉`:`Help ${p.mascotName} get to the carrot! 🥕 (${done} of ${list.length} solved)`;
   $('#clList').innerHTML=list.map((q,i)=>`<button class="clp${p.code.solved.includes(q.id)?' done':''}" data-pz="${i}">`
-    +`<svg viewBox="0 0 ${q.map[0].length*10} ${q.map.length*10}">${clMini(q)}</svg><b>${i+1}</b></button>`).join('');
+    +`<svg viewBox="0 0 ${q.map[0].length*10} ${q.map.length*10}">${clMini(q)}</svg><b>${i+1}</b></button>`).join('')
+    +(typeof fpCodeTile==='function'?fpCodeTile(lv):''); // 🎲 a new board (section 44)
 }
 // A tiny picture of the puzzle for the list (works without reading).
 function clMini(q){
@@ -180,13 +183,14 @@ function clMini(q){
   return q.map.map((row,y)=>[...row].map((c,x)=>`<rect x="${x*10+0.6}" y="${y*10+0.6}" width="8.8" height="8.8" rx="2" fill="${col[c]||'#4b3a66'}"/>`).join('')).join('');
 }
 $('#clTabs').onclick=e=>{const b=e.target.closest('[data-lvl]');if(!b||CL.view!=='pick')return;P().code.level=b.dataset.lvl;save();SFX.click();clPickView();};
-$('#clList').onclick=e=>{const b=e.target.closest('[data-pz]');if(b){SFX.click();clOpen(P().code.level,Number(b.dataset.pz));}};
+$('#clList').onclick=e=>{if(e.target.closest('[data-dice]')){SFX.click();fpCode(P().code.level);return;}
+  const b=e.target.closest('[data-pz]');if(b){SFX.click();clOpen(P().code.level,Number(b.dataset.pz));}};
 $('#clBack').onclick=()=>{SFX.click();if(CL.view==='pick')show('room');else clPickView();};
 function clBackKey(){if(CL.view==='pick')show('room');else clPickView();} // Android Back: a puzzle -> the list -> room
 
-function clOpen(lvl,idx){
-  const p=P(), pz=CODE_PUZZLES[lvl]&&CODE_PUZZLES[lvl][idx]; if(!p||!pz) return;
-  codeStop(); Object.assign(CL,{view:'play',lvl,idx,prog:[],move:[],state:'edit',bad:[],badM:[]});
+function clOpen(lvl,idx,free){
+  const p=P(), pz=free||CODE_PUZZLES[lvl]&&CODE_PUZZLES[lvl][idx]; if(!p||!pz) return;
+  codeStop(); Object.assign(CL,{view:'play',lvl,idx,free:free||null,prog:[],move:[],state:'edit',bad:[],badM:[]});
   CL.row=clHasMove()?'move':'main'; // My Move puzzles start in the ✨ row: make the move first
   $('#clPick').classList.add('hidden'); $('#clTabs').classList.add('hidden'); $('#clPlay').classList.remove('hidden');
   $('#clBack').textContent='⬅ Puzzles';
@@ -197,7 +201,7 @@ const clFace=t=>CODE_BLOCKS[t].n?`🔁<small>×${CODE_BLOCKS[t].n}</small>`:CODE
 const clCls=t=>CODE_BLOCKS[t].n?' rep':t==='M'?' fn':t==='Q'?' cond':'';
 // The board: 100 units per square, Fuzzy in a group moved with a CSS transition.
 function clBoard(){
-  const p=P(), pz=CODE_PUZZLES[CL.lvl][CL.idx], g=codeParse(pz), W=g.w*100, H=g.h*100;
+  const p=P(), pz=clPz(), g=codeParse(pz), W=g.w*100, H=g.h*100;
   let s=`<rect x="-8" y="-8" width="${W+16}" height="${H+16}" rx="22" fill="#2b2340"/>`;
   for(let y=0;y<g.h;y++) for(let x=0;x<g.w;x++){
     const k=x+','+y, X=x*100, Y=y*100;
@@ -233,7 +237,7 @@ function clRow(list,max,bad,tag){
 }
 function clProg(){
   const mv=clHasMove();
-  $('#clProg').innerHTML=clRow(CL.prog,codeMax(CL.lvl,CODE_PUZZLES[CL.lvl][CL.idx]),CL.bad,mv?'🧩':'');
+  $('#clProg').innerHTML=clRow(CL.prog,codeMax(CL.lvl,clPz()),CL.bad,mv?'🧩':'');
   $('#clMove').innerHTML=mv?clRow(CL.move,clMoveMax(),CL.badM,'✨'):'';
   $('#clMove').classList.toggle('hidden',!mv);
   $('#clProg').classList.toggle('on',mv&&CL.row==='main'); $('#clMove').classList.toggle('on',mv&&CL.row==='move');
@@ -252,7 +256,7 @@ $('#clPal').onclick=e=>{
   const b=e.target.closest('[data-add]'); if(!b||CL.state==='run') return;
   const t=b.dataset.add; if(t==='M') CL.row='main';
   const inMove=clHasMove()&&CL.row==='move', list=inMove?CL.move:CL.prog;
-  const max=inMove?clMoveMax():codeMax(CL.lvl,CODE_PUZZLES[CL.lvl][CL.idx]);
+  const max=inMove?clMoveMax():codeMax(CL.lvl,clPz());
   if(list.length>=max){SFX.locked();clProg();toast(P().easy?`🔒 ${max} blocks`:inMove?`✨ My Move holds ${max} blocks. Tap 🧩 to add to the program.`:`Only ${max} blocks fit! Try 🔁 repeat, or tap a block to take it out.`);return;}
   list.push(t); SFX.click(); vibrate(6); clEdited();
 };
@@ -277,7 +281,7 @@ $('#clRun').onclick=()=>{if(CL.state==='run'){codeStop();clBoard();CL.bad=[];clP
 /* ---------- running a program ---------- */
 function clGo(){
   if(!CL.prog.length){SFX.locked();clSay(P().easy?'👇 ⬆️ ⬇️ ⬅️ ➡️':'Tap the blocks below to make a program first! 👇');return;}
-  const r=codeSim(CODE_PUZZLES[CL.lvl][CL.idx],CL.prog,clHasMove()?CL.move:null);
+  const r=codeSim(clPz(),CL.prog,clHasMove()?CL.move:null);
   clBoard(); Object.assign(CL,{state:'run',ev:r.ev,end:r.end,k:0,bad:[],badM:[]}); clSay('',true); clProg(); SFX.click();
   CL.timer=setTimeout(clTick,CODE_STEP*0.6);
 }
@@ -321,6 +325,7 @@ function clDone(){
   clSay(CL_OOPS[CL.end][p.easy?0:1]); clProg();
 }
 function clWin(){
+  if(CL.free){fpCodeWin();return;}
   const p=P(), pz=CODE_PUZZLES[CL.lvl][CL.idx], first=!p.code.solved.includes(pz.id);
   CL.state='win'; clProg();
   let coins=0, all=false;

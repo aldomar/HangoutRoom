@@ -131,6 +131,22 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Free Play and Puzzle of the Day (since version 1.43)
+The puzzles never run out now. The app makes new ones by itself, and checks each one is fair before showing it.
+- **🎲 Free Play:** tap 🎲 for a brand-new puzzle. It is after the puzzle numbers in 5 Brain Games (Snack Stand,
+  Memory Match, Number Pop, Pattern Train, Fraction Bakery), at the end of the Marble Maze's number bar, and as a
+  "New" tile on the Code Lab's Easy and Medium lists. The 🎲 glows once all the fixed puzzles of that level are solved,
+  but it can be used any time. Solving one shows **🎲 Another one!**
+- Free Play pays **+1 coin** per puzzle, up to **10 a day**. After that it says so once, gently, and keeps working
+  for fun. Made-up puzzles never count as "solved" (the ticks, level bonuses and Brain Champ stay the same).
+- Word Builder and Fact Cards have no 🎲: words and facts can't be made up. A word list may come later.
+- **📅 Puzzle of the Day:** a card at the top of the Brain Games menu. Each day it is one of the 5 games above, in
+  turn, at her usual level (Easy in Easy mode). It is the same puzzle all day. Solving it gives **+5 coins** once,
+  and the card says "✔ Solved today". Missing a day doesn't matter: there are no streaks.
+- 3 new stickers on the Code & Brain page: Dice Roller (10 Free Play puzzles), Puzzle Explorer (50) and Daily
+  Thinker (5 Puzzles of the Day, any days).
+- Save version 26 (`free`, `potd`); every older backup still restores.
+
 ## Play together (since version 1.42)
 Two children can play on one tablet. Tap a **👯** button, then tap who is playing with you: another room's badge
 (their buddy shows up in the game) or **👤 Guest**.
