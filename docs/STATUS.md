@@ -78,7 +78,7 @@ _Last updated: 2026-11-19_
     card on the Brain Games menu; +5 for the Puzzle of the Day; the daily card rotates through 5 Brain Games only (Train,
     Pop, Snack, Memory, Bakery; not Word Builder or Fact Cards), and those 5 get 🎲 Free Play too.
   - **🇺🇸 American spelling (v1.44) and 🔤 Word Builder word bank (v1.45): done** (PRs #44 and #45 merged 2026-11-19).
-  - **🧸 Little Ones' Corner: built, PR open as v1.46** on branch `feature/little` (from `main` after #45). Picked from the
+  - **🧸 Little Ones' Corner: built, PR #46 open as v1.46** on branch `feature/little` (from `main` after #45). Picked from the
     "Later" list and planned 2026-11-19 (see "Little Ones' Corner" under Decisions and `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -134,7 +134,7 @@ _Last updated: 2026-11-19_
 - PR #43 "Free Play & Puzzle of the Day (v1.43)": merged.
 - PR #44 "American spelling (v1.44)": merged.
 - PR #45 "Word Builder word bank (v1.45)": merged.
-- PR "Little Ones' Corner (v1.46)" on branch `feature/little`: open.
+- PR #46 "Little Ones' Corner (v1.46)" on branch `feature/little`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
