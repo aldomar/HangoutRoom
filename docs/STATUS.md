@@ -137,7 +137,7 @@ _Last updated: 2026-11-19_
 - PR #44 "American spelling (v1.44)": merged.
 - PR #45 "Word Builder word bank (v1.45)": merged.
 - PR #46 "Little Ones' Corner (v1.46)": merged.
-- "Dance Maker (v1.47)" on branch `feature/dance`: PR to open.
+- PR #47 "Dance Maker (v1.47)" on branch `feature/dance`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
