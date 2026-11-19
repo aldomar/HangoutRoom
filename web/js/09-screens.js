@@ -17,6 +17,7 @@ function show(n){
   if(n==='fidget') setFidTab(fidTab);
   if(n==='art') renderArt();
   if(n==='cards') renderCards();
+  if(n!=='soccer') TGS.on=false; if(n!=='stage') TGT.on=false; // 👯 (section 43)
   if(n==='soccer') renderSoccer();
   if(n==='room'||n==='stage'){if(giveMic())setTimeout(()=>toast('🎤 The Golden Mic is in your room!'),400);} // section 14
   if(n==='stage') renderStage(); else stgStop();

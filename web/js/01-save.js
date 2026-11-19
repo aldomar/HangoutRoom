@@ -8,9 +8,9 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.41';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.42';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=24;          // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=25;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
 // pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
 const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:'',seenNew:'',lastBackup:0}; // lastBackup (v1.30): when a backup was last saved on this device (ms) // seenNew (v1.22): last version whose What's New was shown
@@ -87,7 +87,9 @@ const MIGRATIONS={
   // v1.40 Studio: room4 {wall, floor, items} (the fourth room, bare; the wall is chosen on the first visit). normalize() fills it in too.
   23: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.room4||typeof p.room4!=='object'||Array.isArray(p.room4))) p.room4={wall:'',floor:'',items:[]}; }); },
   // v1.41 Visitors: visit {cur, day, done[]} (section 42): the wish waiting, the day the last wish came true, the wishes done.
-  24: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.visit||typeof p.visit!=='object'||Array.isArray(p.visit))) p.visit={cur:'',day:'',done:[]}; }); }
+  24: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.visit||typeof p.visit!=='object'||Array.isArray(p.visit))) p.visit={cur:'',day:'',done:[]}; }); },
+  // v1.42 Two-player games: duo {day, n, soccer, memory, stage} (section 43): coins today and games played together.
+  25: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.duo||typeof p.duo!=='object'||Array.isArray(p.duo))) p.duo={day:'',n:0,soccer:0,memory:0,stage:0}; }); }
 };
 
 // Hair ids from before v1.11 (one closet item per colour) -> the colour they had. They stay readable forever:

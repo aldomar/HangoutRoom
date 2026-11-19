@@ -31,6 +31,7 @@ function socGeo(W,H){
 const toScr=(g,u,v)=>({x:g.cx+u*g.GW,y:g.gy-v*g.GH});
 
 function renderSoccer(){
+  if(TGS.on){tgSocRender();return;} // 👯 Duel (section 43)
   const p=P(); if(!p) return; const keep=socKeep(), lvl=keep?p.soccer.keep.level:p.soccer.level;
   $$('#socTabs [data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===(keep?'keep':'kick')));
   $$('#socTabs [data-lvl]').forEach(b=>{b.classList.toggle('on',b.dataset.lvl===lvl);b.querySelector('i').textContent=(keep?STRIKERS:KEEPERS)[b.dataset.lvl].icon;});
@@ -43,7 +44,8 @@ function renderSoccer(){
   newMatch(); SFX.whistle();
 }
 $('#socTabs').onclick=e=>{const b=e.target.closest('[data-lvl],[data-mode]');if(!b)return;const p=P();
-  if(b.dataset.mode){if(p.soccer.mode===b.dataset.mode)return;p.soccer.mode=b.dataset.mode;}
+  if(TGS.on&&tgSocTab(b))return; // 👯 Duel: a level tab sets the ball speed; Kick or Keep leaves the duel (section 43)
+  if(b.dataset.mode){if(p.soccer.mode===b.dataset.mode&&!TGS.was)return;TGS.was=false;p.soccer.mode=b.dataset.mode;}
   else if(socKeep()) p.soccer.keep.level=b.dataset.lvl; else p.soccer.level=b.dataset.lvl;
   save();SFX.click();renderSoccer();};
 function newMatch(){clearTimeout(SOC.next);SOC.kicks=[];$('#socMsg').classList.remove('on');resetKick();renderSocScore();}
@@ -121,22 +123,25 @@ function endMatch(){
 
 // Touch: a short tap aims at that spot in the goal; a swipe up shoots along its direction.
 socCv.addEventListener('pointerdown',e=>{
+  if(TGS.on){tgDown(e);return;} // 👯 Duel (section 43)
   if(socKeep()){kpDown(e);return;}
   if(SOC.state==='done'){newMatch();SFX.whistle();return;}
   if(SOC.state!=='aim') return;
   const r=socCv.getBoundingClientRect(); SOC.swipe=[[e.clientX-r.left,e.clientY-r.top,performance.now()]];
   try{socCv.setPointerCapture(e.pointerId);}catch(_){}
 });
-socCv.addEventListener('pointermove',e=>{if(socKeep()){kpMove(e);return;}if(!SOC.swipe)return;const r=socCv.getBoundingClientRect();SOC.swipe.push([e.clientX-r.left,e.clientY-r.top,performance.now()]);});
+socCv.addEventListener('pointermove',e=>{if(TGS.on){tgMove(e);return;}if(socKeep()){kpMove(e);return;}if(!SOC.swipe)return;const r=socCv.getBoundingClientRect();SOC.swipe.push([e.clientX-r.left,e.clientY-r.top,performance.now()]);});
 function socRelease(){
   const sw=SOC.swipe, g=SOC.g; SOC.swipe=null; if(!sw||!g||SOC.state!=='aim') return;
+  const s=socAim(sw,g);
+  if(s.tap){if(Math.abs(s.u)<0.75&&s.v>-0.2&&s.v<1.4) socShoot(s.u,clamp(s.v,0.03,1.3),1,0); else toast('Swipe up from the ball, or tap the goal! ⚽');}
+  else if(s.err) toast(s.err); else socShoot(s.u,s.v,s.power,s.curve);
+}
+// A swipe (points [x, y, ms]) as a shot: {u, v, power, curve}, or {tap:1, u, v} for a short tap, or {err} (v1.42: shared with 👯 Duel).
+function socAim(sw,g){
   const a=sw[0], b=sw[sw.length-1], dx=b[0]-a[0], dy=b[1]-a[1], len=Math.hypot(dx,dy);
-  if(len<14){ // tap
-    const u=(a[0]-g.cx)/g.GW, v=(g.gy-a[1])/g.GH;
-    if(Math.abs(u)<0.75&&v>-0.2&&v<1.4) socShoot(u,clamp(v,0.03,1.3),1,0); else toast('Swipe up from the ball, or tap the goal! ⚽');
-    return;
-  }
-  if(dy>-20){toast('Swipe UP toward the goal! ⚽');return;}
+  if(len<14) return {tap:1,u:(a[0]-g.cx)/g.GW,v:(g.gy-a[1])/g.GH}; // tap
+  if(dy>-20) return {err:'Swipe UP toward the goal! ⚽'};
   // Power comes from the flick: the finger speed over the last 0.12 s (a pause before flicking doesn't count),
   // or the whole swipe if that was faster (a pause at the end doesn't count either). Speed is in px per ms.
   let i=sw.length-1; while(i>0&&b[2]-sw[i-1][2]<=120) i--;
@@ -146,9 +151,10 @@ function socRelease(){
   const v=clamp(0.12+(power-0.8)*0.75,0.05,0.9);
   const midY=g.gy-g.GH*0.5, k=(g.by-midY)/(-dy), u=(g.bx+dx*k-g.cx)/g.GW; // where the swipe direction meets the goal
   const m=sw[Math.floor(sw.length/2)], lineX=a[0]+dx*((m[1]-a[1])/dy); // the middle of the swipe vs a straight line
-  socShoot(u,v,power,clamp((m[0]-lineX)/g.GW*1.5,-0.5,0.5));
+  return {u,v,power,curve:clamp((m[0]-lineX)/g.GW*1.5,-0.5,0.5)};
 }
 socCv.addEventListener('pointerup',e=>{ // add where the finger lifted, then shoot
+  if(TGS.on){tgUp(e);return;}
   if(socKeep()){kpUp(e);return;}
   if(SOC.swipe){const r=socCv.getBoundingClientRect();SOC.swipe.push([e.clientX-r.left,e.clientY-r.top,performance.now()]);}
   socRelease();
@@ -231,6 +237,7 @@ function drawKeeper(ctx,kind,x,y,s,tilt,pose,time,awake){
 }
 
 function drawSoccer(dt){
+  if(TGS.on){tgDraw(dt);return;} // 👯 Duel (section 43)
   if(socKeep()){drawKeep(dt);return;} // 🧤 Keep mode (section 27)
   const {ctx,W,H}=fit(socCv), g=socGeo(W,H), L=socLevel(), k=SOC.keeper, s=SOC.shot; SOC.g=g; SOC.time+=dt;
   // keeper + ball movement

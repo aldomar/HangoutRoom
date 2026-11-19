@@ -44,6 +44,9 @@ function normalize(p){
   p.maze=Object.assign({},p.maze&&typeof p.maze==='object'&&!Array.isArray(p.maze)?p.maze:{});
   p.maze.solved=Array.isArray(p.maze.solved)?p.maze.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[];
   if(typeof p.coins!=='number') p.coins=0;
+  // Two-player games (v1.42, section 43): the day and coins paid today for playing together, and games played together.
+  {const d=p.duo&&typeof p.duo==='object'&&!Array.isArray(p.duo)?p.duo:{}, n=v=>Math.max(0,Math.floor(Number(v)||0));
+   p.duo={day:typeof d.day==='string'?d.day:'',n:n(d.n),soccer:n(d.soccer),memory:n(d.memory),stage:n(d.stage)};}
   // Visitors (v1.41, section 42): the wish waiting ('' = nobody), the day the last wish came true, and the wish ids done.
   {const v=p.visit&&typeof p.visit==='object'&&!Array.isArray(p.visit)?p.visit:{};
    p.visit={cur:typeof v.cur==='string'?v.cur:'',day:typeof v.day==='string'?v.day:'',done:Array.isArray(v.done)?v.done.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[]};}

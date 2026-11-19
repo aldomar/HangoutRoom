@@ -1,6 +1,6 @@
 # Status / handover
 
-_Last updated: 2026-11-18_
+_Last updated: 2026-11-19_
 
 ## Where we are
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
@@ -71,8 +71,9 @@ _Last updated: 2026-11-18_
   the rest in any order. The v1.40 plan details are written up; agreed 2026-11-17 on branch
   `feature/room4` (from `feature/depth`; #39 is now merged, so the PR goes straight to `main`).
   - **✨ Studio + 🗺️ getting around: done** (v1.40 merged, PR #40). The owner named the room ✨ Studio.
-  - **🚪 Visitors & wishes: built, PR #41 open as v1.41** on branch `feature/visitors` (from `main` after #40). Plan agreed 2026-11-18
-    (see "Visitors" under Decisions and `PLAN.md`).
+  - **🚪 Visitors & wishes: done** (v1.41 merged, PR #41).
+  - **👯 Two-player games: built, PR #42 open as v1.42** on branch `feature/together` (from `main` after #41). Plan agreed 2026-11-19
+    (see "Two-player games" under Decisions and `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -122,7 +123,8 @@ _Last updated: 2026-11-18_
 - PR #38 "Music Maker (v1.38)": merged.
 - PR #39 "Room depth (v1.39)": merged.
 - PR #40 "Studio + getting around (v1.40)": merged.
-- PR #41 "Visitors & wishes (v1.41)" on branch `feature/visitors`: open.
+- PR #41 "Visitors & wishes (v1.41)": merged.
+- PR #42 "Play Together (v1.42)" on branch `feature/together`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -909,6 +911,13 @@ _Last updated: 2026-11-18_
   room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
   short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
   so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
+- **Two-player games (built as v1.42, `43-together.js`), plan agreed 2026-11-19.** Owner's answers: player 2 **picks their room or
+  👤 Guest**; **+3 coins** per finished game for each room (not a Guest), **15 a day**; **gentle scores** (both scores shown, the end box
+  cheers both, a tie is "you're both stars"); a **👯 button in each game**. Soccer Duel is real-time on one screen: the kicker swipes
+  below the goal (`socAim`, the Kick swipe, moved out of `socRelease`), the keeper may dive only once the ball flies; Easy/Medium/Hard
+  set the ball speed from `STRIKERS`; 10 shots, alternating. Memory for 2: classic rule (a pair = another go). Stage Together: the
+  `duo` level (Medium's 2-lane chart with Easy's fall time and timing windows). Nothing personal (bests, stars, trophies, solved
+  puzzles, matches) changes. Save version 25: `duo{day, n, soccer, memory, stage}`. 3 stickers on the 🚪 Friends page (98 in all).
 - **Visitors (built as v1.41, `42-visitors.js`), plan agreed 2026-11-18.** Owner's answers: **one new friend a day** (the first
   right away; after a wish comes true the next knocks the next day; a friend never leaves); thank-you = **+5 coins** per wish and,
   after a friend's 3 wishes, **a plush of them** (`plushMochi` … `award:1`, placed where the friend stood); the friend stands
@@ -1107,13 +1116,15 @@ _Last updated: 2026-11-18_
 2. ~~Build the fourth room + 🗺️ map (v1.40) on `feature/room4`.~~ Built.
 3. ~~Owner: build v1.40 and try it (see the PR), and merge it.~~ Merged.
 4. ~~Plan 🚪 Visitors (v1.41) and get it agreed before coding.~~ Agreed 2026-11-18 and built.
-5. Owner: build v1.41 and try it (see the PR), and merge it.
-6. Plan 👯 Two-player games (v1.42) and get it agreed before coding.
+5. ~~Owner: build v1.41 and try it (see the PR), and merge it.~~ Merged.
+6. ~~Plan 👯 Two-player games (v1.42) and get it agreed before coding.~~ Agreed 2026-11-19 and built.
+7. Owner: build v1.42 and try it with two children (see the PR), and merge it.
+8. Plan 🎲 Free Play + Puzzle of the Day (v1.43) and get it agreed before coding.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 24 since v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 25 since v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
