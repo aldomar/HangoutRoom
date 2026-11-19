@@ -341,7 +341,7 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
     has one tab back. The main room's **window now leads to the Backyard**; Soccer is opened from the Backyard's goal only.
   - The top bar's two room buttons become one **🗺️ house map** (a picture of every room, one tap each), with room to add
     more rooms later. Back still goes any room → main room → profiles.
-- **🚪 Visitors & requests (v1.41):** the original characters she knows (Mochi, Boo, Flap, Hop, Bolt, Zip) drop by with a
+- ✅ **🚪 Visitors & requests (v1.41, built; plan details below, agreed 2026-11-18):** the original characters she knows (Mochi, Boo, Flap, Hop, Bolt, Zip) drop by with a
   small wish ("a spooky-cozy corner", "dress up for a picnic"). She decorates or dresses up, they cheer, she gets a sticker.
   No timer, no failing. The new room is the natural place for decorating requests.
 - **👯 Two-player games (v1.42):** take turns on one tablet: one kicks, one keeps (both Soccer modes exist), 2-player
@@ -366,6 +366,24 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   night, and the Backyard's night sky shows the Big Dipper. One sticker, ✨ Studio Star (5 things in the Studio).
 - 1–2 stickers (for example, decorating the new room). Smoke test: walk every tab and the map, place things in the new
   room, night mode, a layout, a gift, a backup restore from v1.39.
+
+#### v1.41 plan details: 🚪 Visitors & wishes (agreed 2026-11-18)
+- Six friends from the games visit: Mochi 😺, Boo 👻, Flap 🦇 (the Soccer keepers), Hop 🐸, Bolt 🤖, Zip 🦊 (the strikers).
+  Each is drawn once into a small picture (no drawing every frame) and stands in **whichever room is on screen** (like the
+  gift pile), with a speech bubble. Tapping the friend opens their wish card.
+- **18 fixed wishes, 3 per friend** (saved by id, never renamed; new ones go at the end). Each wish is a simple check:
+  things of a theme chip placed in the room on screen, clothes of a theme worn, a poster, night mode with a lamp, a rug…
+  Wishes never need a ⭐ big dream item.
+- ✅ **Show me!** checks it. Not yet: a gentle "Almost! 1 more 🦇 thing" and the friend keeps waiting. No timer, no failing.
+  💡 **Help** opens the Shop (or Closet) with that theme chip picked. 🔄 **Something else?** swaps to another wish.
+- **One new friend a day.** The first comes right after the update. A friend waits as long as it takes (never leaves,
+  nothing is missed); after a wish is done, the next friend knocks the next day (from the device date, like the daily gift).
+- Thank-you: **+5 coins** per wish; after all 3 of a friend's wishes, they leave a **plush of themselves** (an `award:1`
+  decoration for any room, not in the Shop). A few stickers (first wish, 6 / 18 wishes, all six plushes).
+- Save: `visit{cur, day, done[]}` per profile; save version 24 (`normalize` + `MIGRATIONS[24]`); older backups restore
+  with no wishes done. New file `42-visitors.js`. Smoke test: every wish can be met and is checked, the daily pace, the
+  plush, the stickers, a restore from v1.40.
+- As built: 6 stickers on a new 🚪 Friends page (Welcome!, Good Friend, Super Friend, Best Host, First Plush, Plush Pals).
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.

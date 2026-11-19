@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('89 stickers on 6 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40), ids all different, 6 or more per page', await ev(`STICKERS.length===89&&new Set(STICKERS.map(s=>s.id)).size===89&&Object.keys(STK_PAGES).length===6&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('95 stickers on 7 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41), ids all different, 6 or more per page', await ev(`STICKERS.length===95&&new Set(STICKERS.map(s=>s.id)).size===95&&Object.keys(STK_PAGES).length===7&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -2760,7 +2760,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`document.querySelector('#roomTabs [data-go="4"]').click()`); await sleep(250);
   check('➡️ opens the Studio', await ev(`roomNo===4&&cur==='room'&&document.querySelector('#roomTitle').textContent.endsWith("'s Studio")`));
   check('a first visit gives it her room colour wall and the wood floor', await ev(`(()=>{const p=P(),r=ROOM_START[p.color];return p.room4.wall===(r&&WALLS[r[0]]?r[0]:'lavender')&&p.room4.floor==='wood'&&(p.owned.includes('wall:'+p.room4.wall)||!WALLS[p.room4.wall].price);})()`));
-  check('nothing is built in: no furniture to tap, only the buddy and the pet', await ev(`[...document.querySelectorAll('#roomSvg [data-hot]')].every(e=>['pet','gift'].includes(e.dataset.hot))&&!!document.querySelector('#mascotG')`));
+  check('nothing is built in: no furniture to tap, only the buddy and the pet', await ev(`[...document.querySelectorAll('#roomSvg [data-hot]')].every(e=>['pet','gift','visitor'].includes(e.dataset.hot))&&!!document.querySelector('#mascotG')`));
   check('Fuzzy says hello while the Studio is empty', await ev(`!!document.querySelector('#bubble')&&document.querySelector('#bubble').textContent.includes('Studio')`));
   check('the Studio has one ⬅️ tab back to her room', (await stTabs())==='left:1'&&await ev(`document.querySelector('.rt-left').getAttribute('aria-label')==='Back to my room'`), await stTabs());
   await shot('S02-studio-empty');
@@ -2846,7 +2846,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const v39=await ev(`JSON.stringify(Object.assign({},DB,{version:22,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.room4;q.presets={1:q.presets[1],2:q.presets[2],3:q.presets[3]};return q;})}))`);
   const v40=await ev(`JSON.stringify(DB)`);
   await ev(`doRestore(${JSON.stringify(v39)})`); await sleep(300);
-  check('a v1.39 backup restores with an empty Studio (save version 23)', await ev(`DB_VERSION===23&&DB.version===23&&DB.profiles.every(p=>p.room4&&p.room4.wall===''&&p.room4.items.length===0&&p.presets[4].length===3)`));
+  check('a v1.39 backup restores with an empty Studio (save version 23 or later)', await ev(`DB.version===DB_VERSION&&DB_VERSION>=23&&DB.profiles.every(p=>p.room4&&p.room4.wall===''&&p.room4.items.length===0&&p.presets[4].length===3)`));
   await ev(`doRestore(${JSON.stringify(v40)})`); await sleep(300);
   check('a v1.40 backup keeps the Studio and its things', await ev(`DB.profiles.some(p=>p.room4.wall&&p.room4.items.some(i=>i.type==='builtShelf'))`));
   await ev(`closeModal();{const p=DB.profiles[0];p.room4=['oops'];p.night={'4':true,'9':true};normalize(p);}`);
@@ -2854,6 +2854,96 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`(()=>{const p=DB.profiles[0];p.night={};DB.activeId=p.id;save();enterRoom();goRoom(4);})()`); await sleep(200);
   check('…and a visit sets it up again', await ev(`!!P().room4.wall&&P().room4.floor==='wood'&&!!document.querySelector('#roomSvg rect')`));
   await ev(`(()=>{const p=P();p.room4.items=p.room4.items.filter(i=>!/^st/.test(i.uid)&&i.type!=='builtShelf');save();goRoom(1);})()`);
+
+  console.log('Visitors & wishes (v1.41)');
+  // A helper in the page that makes the room on screen (and her outfit) meet one wish, using only things the Shop sells.
+  await ev(`window.vMeet=w=>{const p=P();for(const pt of w.parts){
+      if(pt===vYard){goRoom(3);continue;}
+      const R=curRoom(p);
+      if(pt===vRug)R.items.push({uid:'vt'+uid(),type:'starRug',x:500,y:660,placed:true});
+      else if(pt===vPosters){for(let i=0;i<2;i++)R.items.push({uid:'vt'+uid(),type:'poster',art:'none',x:300+i*200,y:220,placed:true});}
+      else if(pt===vGlow)R.items.push({uid:'vt'+uid(),type:'lava',x:300,y:600,placed:true});
+      else if(pt===vNight)p.night[roomNo]=true;
+      else if(pt.wear){let n=0;for(const c of Object.keys(CLOSET)){if(['kind','fur','face'].includes(c)||n>=pt.n)continue;
+          const it=CLOSET[c].items.find(i=>i.id!=='none'&&themesOf(c+':'+i.id,i).some(t=>pt.th.includes(t)));if(it){p.look[c]=it.id;n++;}}}
+      else {const ks=Object.keys(DECOR).filter(k=>{const d=DECOR[k];return !d.art&&!d.award&&!d.dream&&themesOf('decor:'+k,d).some(t=>pt.th.includes(t));}).slice(0,pt.n);
+        ks.forEach((k,i)=>R.items.push({uid:'vt'+uid(),type:k,x:200+i*150,y:DECOR[k].wall?220:600,placed:true}));}
+    }};
+    window.vClear=()=>{const p=P();rooms(p).forEach(R=>{R.items=R.items.filter(i=>!/^vt/.test(i.uid));});p.night={};p.look=Object.assign({},DEFAULT_LOOK,{kind:p.look.kind,face:p.look.face,fur:p.look.fur});};`);
+  await ev(`(()=>{closeModal();exitDecorate(true);stkPaused=true;const p=P();p.easy=false;applyEasy();p.coins=100;p.visit={cur:'',day:'',done:[]};
+    window._vKeep=rooms(p).map(R=>R.items);rooms(p).forEach(R=>{R.items=[];});vClear();save();show('room');goRoom(1);})()`); await sleep(500);
+  check('18 wishes, 3 for each of the 6 friends, with different ids', await ev(`VISIT_WISHES.length===18&&new Set(VISIT_WISHES.map(w=>w.id)).size===18&&Object.keys(VISIT_FRIENDS).every(f=>VISIT_WISHES.filter(w=>w.who===f).length===3)`));
+  check('the first friend knocks straight away (Mochi)', await ev(`P().visit.cur==='mochi1'&&!!document.querySelector('#roomSvg .visitor[data-hot=visitor]')`));
+  check('…and the friend is in every room', await ev(`[2,3,4,1].every(n=>{goRoom(n);return !!document.querySelector('#roomSvg .visitor');})`));
+  check('the friend is a little picture (no #fuzz filter) and moves in steps', await ev(`!document.querySelector('#roomSvg .visitor [filter]')&&/^steps/.test(getComputedStyle(document.querySelector('#roomSvg .visitor .an-bob')).animationTimingFunction)`));
+  check('Read to me knows the visitor', await ev(`speakLabel(document.querySelector('#roomSvg .visitor'))==='A friend is visiting'`));
+  await shot('V01-visitor');
+  // every wish: not met in an empty room, met once its things are there (all for sale, no big dreams)
+  const wishBad=await ev(`(()=>{const out=[];for(const w of VISIT_WISHES){vClear();goRoom(4);
+      if(vMet(P(),w)){out.push(w.id+': met with nothing');continue;}
+      vMeet(w); if(!vMet(P(),w))out.push(w.id+': not met: '+JSON.stringify(vPartsDone(P(),w).map(x=>x.have)));
+      for(const pt of w.parts.filter(x=>x.th&&!x.wear)){const n=Object.keys(DECOR).filter(k=>{const d=DECOR[k];return !d.art&&!d.award&&!d.dream&&themesOf('decor:'+k,d).some(t=>pt.th.includes(t));}).length;if(n<pt.n+1)out.push(w.id+': only '+n+' to pick from');}
+      goRoom(1);} vClear();return out;})()`);
+  check('every wish needs something, and can be met with things from the Shop or the Closet', wishBad.length===0, wishBad);
+  // the card
+  await ev(`goRoom(1);document.querySelector('#roomSvg .visitor').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(200);
+  check('tapping the friend opens the wish card', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&/Mochi/.test(document.querySelector('#modalTitle').textContent)&&document.querySelectorAll('#modalBody .vs-row').length===2`));
+  check('the card\'s lines and buttons are big enough to tap', await ev(`[...document.querySelectorAll('#modalBody .vs-row,#modalBody .vs-x,#modalBtns .btn')].every(b=>{const r=b.getBoundingClientRect();return r.height>=48;})`));
+  await shot('V02-wish-card');
+  await ev(`[...document.querySelectorAll('#modalBtns .btn')].find(b=>/Show me/.test(b.textContent)).click()`); await sleep(150);
+  check('Show me! before it is done: a kind "Almost!", the card stays open, no coins', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&/Almost!/.test(document.querySelector('.vs-msg').textContent)&&P().coins===100&&P().visit.cur==='mochi1'`));
+  // 💡 help from a line: the Shop with the right chip
+  await ev(`document.querySelector('#modalBody [data-vs-help="0"]').click()`); await sleep(200);
+  check('💡 a "things" line opens the Shop with that theme chip picked', await ev(`decorating&&decoTab==='shop'&&themePick.shop==='cute'&&!!document.querySelector('#decoGrid [data-theme=cute].on')&&document.querySelector('#modal').classList.contains('hidden')`));
+  await ev(`exitDecorate()`);
+  // meet it and show
+  await ev(`vMeet(vWishOf('mochi1'));renderRoom();visitTap()`); await sleep(150);
+  check('…the card ticks the lines that are done', await ev(`document.querySelectorAll('#modalBody .vs-row.ok').length===2`));
+  await ev(`[...document.querySelectorAll('#modalBtns .btn')].find(b=>/Show me/.test(b.textContent)).click()`); await sleep(250);
+  check('done: +5 coins, the wish is saved, and a thank-you', await ev(`P().coins===105&&P().visit.done.join()==='mochi1'&&P().visit.cur===''&&P().visit.day===new Date().toDateString()&&/loves it/.test(document.querySelector('#modalTitle').textContent)`));
+  await shot('V03-thank-you');
+  await ev(`closeModal();renderRoom()`);
+  check('no new friend the same day', await ev(`P().visit.cur===''&&!document.querySelector('#roomSvg .visitor')`));
+  await ev(`P().visit.day='Mon Jan 01 2001';renderRoom()`); await sleep(100);
+  check('the next day, the next friend knocks (Boo)', await ev(`P().visit.cur==='boo1'&&!!document.querySelector('#roomSvg .visitor')`));
+  // 🔄 another wish
+  await ev(`visitTap();[...document.querySelectorAll('#modalBtns .btn')].find(b=>/Other/.test(b.textContent)).click()`); await sleep(150);
+  check('🔄 Other wish brings the next friend, and keeps Boo\'s wish for later', await ev(`P().visit.cur==='flap1'&&!P().visit.done.includes('boo1')`));
+  // 💡 help for clothes: the Closet
+  await ev(`P().visit.cur='zip1';save();visitTap();document.querySelector('#modalBody [data-vs-help="0"]').click()`); await sleep(200);
+  check('💡 a clothes line opens the Closet with that chip', await ev(`cur==='closet'&&themePick.closet==='sport'&&!!document.querySelector('#closetGrid [data-theme=sport].on')`));
+  await ev(`show('room');goRoom(1)`); await sleep(100);
+  // 💡 help for going outside
+  await ev(`P().visit.cur='hop1';save();renderRoom();visitTap();document.querySelector('#modalBody [data-vs-help="0"]').click()`); await sleep(200);
+  check('💡 "Out in the Backyard" takes her there, and the friend comes along', await ev(`roomNo===3&&!!document.querySelector('#roomSvg .visitor')`));
+  // the plush after all 3 of a friend's wishes
+  await ev(`(()=>{vClear();goRoom(1);const p=P();p.visit.done=['mochi1','mochi2'];p.visit.cur='mochi3';p.coins=100;vMeet(vWishOf('mochi3'));save();renderRoom();visitTap();})()`); await sleep(100);
+  await ev(`[...document.querySelectorAll('#modalBtns .btn')].find(b=>/Show me/.test(b.textContent)).click()`); await sleep(250);
+  check('all 3 of Mochi\'s wishes: a Mochi Plush in the room, where Mochi stood', await ev(`P().room.items.some(i=>i.type==='plushMochi'&&i.placed&&i.x===VISIT_SPOT.x)&&!!document.querySelector('#modalBody .vs-plush')&&P().coins===105`));
+  check('plushes are prizes: never in the Shop', await ev(`Object.values(VISIT_PLUSH).every(k=>DECOR[k].award)`));
+  await ev(`closeModal();renderRoom()`); await sleep(100); await shot('V04-plush');
+  // stickers
+  await ev(`stkPaused=false;checkStickers();stkPaused=true;closeModal()`);
+  check('the 🚪 Friends sticker page: Welcome! after the first wish', await ev(`!!STK_PAGES.friends&&P().stickers.includes('wish1')&&STICKERS.filter(s=>s.page==='friends').length===6`));
+  // every wish done: nobody knocks again
+  await ev(`(()=>{const p=P();p.visit={cur:'',day:'',done:VISIT_WISHES.map(w=>w.id)};save();renderRoom();})()`);
+  check('when every wish has come true, nobody knocks', await ev(`P().visit.cur===''&&!document.querySelector('#roomSvg .visitor')`));
+  // phone
+  await ev(`P().visit={cur:'bolt2',day:'',done:[]};save();renderRoom()`);
+  await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true}); await sleep(300);
+  await ev(`visitTap()`); await sleep(150); await shot('V05-phone-card');
+  check('phone: the wish card fits the screen', await ev(`(()=>{const r=document.querySelector('.modal-card').getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&[...document.querySelectorAll('#modalBtns .btn')].every(b=>b.getBoundingClientRect().right<=innerWidth);})()`));
+  await ev(`closeModal()`);
+  await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(200);
+  // save data
+  const v40b=await ev(`JSON.stringify(Object.assign({},DB,{version:23,profiles:DB.profiles.map(p=>{const q=JSON.parse(JSON.stringify(p));delete q.visit;return q;})}))`);
+  await ev(`doRestore(${JSON.stringify(v40b)})`); await sleep(300);
+  check('a v1.40 backup restores with no wishes done (save version 24)', await ev(`DB_VERSION===24&&DB.version===24&&DB.profiles.every(p=>p.visit&&p.visit.cur===''&&p.visit.done.length===0)`));
+  await ev(`closeModal();{const p=DB.profiles[0];p.visit={cur:7,day:null,done:['zip1',3,'zip1']};normalize(p);}`);
+  check('odd visitor data is made safe', await ev(`(()=>{const v=DB.profiles[0].visit;return v.cur===''&&v.day===''&&v.done.join()==='zip1';})()`));
+  await ev(`(()=>{const p=DB.profiles[0];DB.activeId=p.id;p.visit.cur='nope';p.visit.done=[];p.visit.day='';save();enterRoom();})()`); await sleep(200);
+  check('an unknown wish id is skipped: the first wish not done comes instead', await ev(`P().visit.cur==='mochi1'`));
+  await ev(`(()=>{vClear();const p=P();if(window._vKeep&&p===DB.profiles[0])rooms(p).forEach((R,i)=>{R.items=_vKeep[i];});save();closeModal();})()`);
 
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');

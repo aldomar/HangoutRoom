@@ -120,7 +120,7 @@ function renderRoom(){
   // Equal y keeps list order (sort is stable), so the one touched last is in front. While decorating, .fixed fades.
   const fx=h=>`<g class="fixed">${h}</g>`;
   s+=items.filter(i=>!DECOR[i.type].flat&&!DECOR[i.type].wall).map(i=>({y:i.y,h:deco(i)}))
-    .concat(fur.floor.map(f=>({y:f.y,h:fx(f.h)})),[{y:604,h:fx(mascotG(p))},{y:PET_SPOT.y,h:fx(petG(p))},{y:GIFT_SPOT.y,h:fx(giftG(p))}])
+    .concat(fur.floor.map(f=>({y:f.y,h:fx(f.h)})),[{y:604,h:fx(mascotG(p))},{y:PET_SPOT.y,h:fx(petG(p))},{y:GIFT_SPOT.y,h:fx(giftG(p))},{y:VISIT_SPOT.y,h:fx(visitG(p))}])
     .sort((a,b)=>a.y-b.y).map(e=>e.h).join('');
   s+=nightLayer(p,R); // 🌙 night mode (section 31, v1.27)
   roomSvg.innerHTML=s; emoteBar(false); nightBtn();
@@ -155,6 +155,7 @@ function handleHot(h){
   else if(h==='music'){SFX.click();show('music');} // the Loft's keyboard (v1.38)
   else if(h==='pet'){petTap();} // section 22
   else if(h==='gift'){giftOpen();} // section 32
+  else if(h==='visitor'){visitTap();} // a friend with a wish (section 42, v1.41)
   else {SFX.locked();toast(`🔒 ${LOCKED[h]} is coming in a future update!`);}
 }
 roomSvg.addEventListener('click',e=>{

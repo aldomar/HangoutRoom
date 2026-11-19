@@ -690,3 +690,30 @@ body.easy .chip{font-size:24px;min-width:56px;min-height:56px}body.easy .chips{m
   .mu-wrap{flex-direction:column;justify-content:flex-start;--c:min(calc((100vw - 44px)/9.4),calc((100vh - 380px)/9.8),64px)}
   .mu-side{width:auto}
 }
+/* ---------- 🚪 Visitors (v1.41, section 42) ---------- */
+#roomSvg .an-bob{animation:anBob 1.6s steps(8) infinite}
+@keyframes anBob{50%{transform:translateY(-6px)}}
+#roomSvg .an-bob.vs-hop{animation:hop .6s ease;transform-box:fill-box;transform-origin:bottom}
+.vs-x{position:absolute;top:10px;right:10px;width:48px;height:48px;border-radius:50%;border:3px solid var(--line);background:var(--panel2);color:var(--ink);font-size:20px;cursor:pointer}
+.modal-card{position:relative}
+.vs-card{display:flex;align-items:center;gap:12px;margin:4px 0 10px}
+.vs-pic{width:130px;height:110px;flex:0 0 auto;background:radial-gradient(circle at 50% 70%,var(--vs) 0,transparent 70%);border-radius:20px}
+.vs-yay{animation:hop .8s ease 2}
+.vs-say{flex:1;background:#fff;color:#2b2235;border-radius:18px;padding:10px 14px;border:3px solid var(--vs);display:flex;flex-direction:column;gap:4px;font-size:16px}
+.vs-say b{font-size:20px}
+.vs-parts{display:flex;flex-direction:column;gap:8px}
+.vs-row{display:flex;align-items:center;gap:10px;min-height:52px;padding:6px 12px;border-radius:14px;border:3px solid var(--line);background:var(--panel2);color:var(--ink);font:inherit;font-size:17px;text-align:left;cursor:pointer}
+.vs-row i{font-style:normal;font-size:28px}
+.vs-row .tn{flex:1;font-weight:700}
+.vs-row b{font-size:18px;white-space:nowrap}
+.vs-row.ok{border-color:var(--mint)}
+.vs-row.ok b{color:var(--mint)}
+.vs-msg{margin-top:10px;text-align:center;font-size:18px;font-weight:800;color:var(--gold)}
+.vs-tip{margin-top:8px;text-align:center;font-size:15px;opacity:.8}
+body.easy .vs-tip{display:none}
+.vs-plush{display:flex;align-items:center;gap:12px;justify-content:center;margin:8px 0}
+.vs-plush svg{width:90px;height:84px}
+.vs-plush span{font-weight:800;font-size:17px}
+@media (max-width:520px){.vs-pic{width:96px;height:82px}.vs-say b{font-size:18px}}
+.modal-card:has(.vs-x) #modalTitle{padding-right:56px}
+.modal-card:has(.vs-card) #modalBtns .btn{min-height:52px;font-size:18px}

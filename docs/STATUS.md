@@ -1,6 +1,6 @@
 # Status / handover
 
-_Last updated: 2026-11-17_
+_Last updated: 2026-11-18_
 
 ## Where we are
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
@@ -70,8 +70,9 @@ _Last updated: 2026-11-17_
   Order: 🗺️ fourth room + getting around (v1.40) → 🚪 Visitors (v1.41) → 👯 Two-player (v1.42) → 🎲 Free Play (v1.43) →
   the rest in any order. The v1.40 plan details are written up; agreed 2026-11-17 on branch
   `feature/room4` (from `feature/depth`; #39 is now merged, so the PR goes straight to `main`).
-  - **✨ Studio + 🗺️ getting around: built, PR #40 open as v1.40** on branch `feature/room4` (on top of #39). Plan agreed 2026-11-17;
-    the owner named the room ✨ Studio.
+  - **✨ Studio + 🗺️ getting around: done** (v1.40 merged, PR #40). The owner named the room ✨ Studio.
+  - **🚪 Visitors & wishes: built as v1.41** on branch `feature/visitors` (from `main` after #40). Plan agreed 2026-11-18
+    (see "Visitors" under Decisions and `PLAN.md`).
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -120,7 +121,8 @@ _Last updated: 2026-11-17_
 - PR #37 "Extras (v1.37)": merged.
 - PR #38 "Music Maker (v1.38)": merged.
 - PR #39 "Room depth (v1.39)": merged.
-- PR #40 "Studio + getting around (v1.40)" on branch `feature/room4`: open.
+- PR #40 "Studio + getting around (v1.40)": merged.
+- PR "Visitors (v1.41)" on branch `feature/visitors`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -907,6 +909,14 @@ _Last updated: 2026-11-17_
   room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
   short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
   so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
+- **Visitors (built as v1.41, `42-visitors.js`), plan agreed 2026-11-18.** Owner's answers: **one new friend a day** (the first
+  right away; after a wish comes true the next knocks the next day; a friend never leaves); thank-you = **+5 coins** per wish and,
+  after a friend's 3 wishes, **a plush of them** (`plushMochi` … `award:1`, placed where the friend stood); the friend stands
+  **in every room** (`VISIT_SPOT` x 880, y 676, in the floor layer like the gifts); when she lacks things, **💡 Help + 🔄 swap**
+  (a line on the card opens the Shop or Closet with that theme chip, the Art Desk, or the Backyard; 🔄 picks the next wish not done).
+  The strikers are only drawn from behind in Keep mode, so all six friends got new front-view SVG drawings (same colours).
+  18 wishes, checked with the theme chips (`themesOf`), so new themed items count. Not done yet: a kind "Almost!" line, no coins.
+  Save version 24: `visit{cur, day, done[]}` + `stats.wishes`. 6 stickers on a new 🚪 Friends page (95 stickers, 7 pages).
 - **Bonus photocards can't be deleted (v1.33, owner's request):** they are won once (`bonusGot`), so a deleted one was
   gone for good. `cardModal` leaves out 🗑️ Delete for a card with `bonus`, and `delCard` refuses one.
 - **Pattern Train & Word Builder (built as v1.33, `35-brain3.js`):** game ids `train` and `word` (puzzle ids `train:e1`…,
@@ -1095,13 +1105,15 @@ _Last updated: 2026-11-17_
 ## Next steps (Phase 12)
 1. ~~Owner: OK the v1.40 plan in `PLAN.md` and pick the new room's name.~~ Agreed: ✨ Studio.
 2. ~~Build the fourth room + 🗺️ map (v1.40) on `feature/room4`.~~ Built.
-3. Owner: build v1.40 and try it (see the PR), and merge it. (#39 is merged.)
-4. Plan 🚪 Visitors (v1.41) and get it agreed before coding.
+3. ~~Owner: build v1.40 and try it (see the PR), and merge it.~~ Merged.
+4. ~~Plan 🚪 Visitors (v1.41) and get it agreed before coding.~~ Agreed 2026-11-18 and built.
+5. Owner: build v1.41 and try it (see the PR), and merge it.
+6. Plan 👯 Two-player games (v1.42) and get it agreed before coding.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 22 since v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 24 since v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
