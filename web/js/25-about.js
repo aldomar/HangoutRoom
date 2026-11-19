@@ -123,7 +123,13 @@ const GIFT_TIMELINE=[
           '🗺️ The Map button shows your whole house: tap a room to go there',
           '🌳 Your window now leads outside. ⚽ Soccer is at the goal in the Backyard',
           '🪵 A free Built-in Shelf in the Shop',
-          '🌙 With the lights off, look for the Big Dipper in the Backyard sky']}
+          '🌙 With the lights off, look for the Big Dipper in the Backyard sky']},
+  {v:'1.41',d:'2026-11-18',i:'🚪',n:'Visitors',why:'Friends from the games come to visit, each with a little wish',
+    news:['🚪 Knock knock! Mochi, Boo, Flap, Hop, Bolt and Zip come to visit',
+          '💌 Tap a visitor to see their wish, then make it come true',
+          '💡 Tap a line on the wish card for help. 🔄 picks another wish',
+          '🧸 Make all 3 of a friend\'s wishes come true and they leave you a plush',
+          '📒 A new 🚪 Friends page in the Sticker Book']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

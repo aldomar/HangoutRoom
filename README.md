@@ -114,6 +114,23 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   In Easy mode the window's label says 🌳 Outside.
 - A new sticker: ✨ Studio Star (5 things in the Studio). Save version 23 (`room4`); every older backup still restores.
 
+## Visitors and wishes (since version 1.41)
+- **🚪 Friends from the games come to visit:** Mochi 😺, Boo 👻 and Flap 🦇 (the Soccer keepers) and Hop 🐸, Bolt 🤖
+  and Zip 🦊 (the strikers). One friend at a time stands on the right of the room, in whichever room is on screen,
+  with a little picture of their wish over their head.
+- **Tap the friend** to see their wish card. Examples: "A cozy corner" (2 cute or cozy things and a rug),
+  "Spooky-cute room" (3 emo things), "Space ghost" (2 space clothes on), "Soccer outfit" (2 sport clothes on), "Night lights" (something that glows, and 🌙 on).
+  Each line shows how far along it is.
+- **✅ Show me!** checks the room on screen (or the outfit). If it isn't done yet, the friend just says "Almost!" and
+  what is still missing. There is no timer and no way to fail: the friend waits as long as it takes.
+- **💡 Tap a line for help:** it opens the Shop (or the Closet) with the right theme chip already picked, the Art Desk,
+  or goes out to the Backyard. **🔄 Other wish** swaps to another friend's wish; the first one comes back later.
+- **One new friend a day.** The first one knocks right after the update. After a wish comes true, the next friend
+  knocks the next day. Nothing is missed and nobody leaves. There are 18 wishes (3 for each friend).
+- Each wish gives **+5 coins**. After all 3 of a friend's wishes, they leave **a plush of themselves** in the room
+  (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
+- Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
+
 ## Room depth (since version 1.39)
 - Things standing on the floor are drawn **front to back by where they stand**: the lower on the floor (closer to you),
   the more in front. This was how the rooms first worked, and it is back.
