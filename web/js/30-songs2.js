@@ -23,7 +23,7 @@ Object.assign(SONGS,{
     chords:{A:['E','C#m','A','B'],B:['A','B','E','C#m']},
     mel:{A:'1.2.3.4.'+'5-4-3...'+'1.2.3.4.'+'5---....',B:'5.6.7.8.'+'9-8-7...'+'8.7.6.5.'+'8---.567'},
     form:'AABBABB',kick:'x.x.x.x.',snare:'..x...x.',hat:'xxxxxxxx',bass:'r.o.r.o.'},
-  lullaby:{name:'Moon Lullaby',icon:'🌙',desc:'Calm and cosy',bpm:72,scale:[62,67,69,71,72,74,76,78,79,81],lead:'sine',leadVol:0.11,echo:1,
+  lullaby:{name:'Moon Lullaby',icon:'🌙',desc:'Calm and cozy',bpm:72,scale:[62,67,69,71,72,74,76,78,79,81],lead:'sine',leadVol:0.11,echo:1,
     chords:{A:['G','Em','C','D'],B:['C','G','Am','G']},
     mel:{A:'5-3-5-3-'+'4-3-2---'+'3-1-3-1-'+'2-----..',B:'6-5-4-3-'+'2-3-4---'+'5-4-3-2-'+'1-------'},
     form:'ABAB',kick:'x.......',snare:'........',hat:'....x...',bass:'r.......'}

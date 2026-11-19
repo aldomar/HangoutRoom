@@ -2,10 +2,10 @@
 /* =========================================================
    37. CONTENT PACK 3 (v1.35): stage idols, cozy days, cafe and bakery, ocean and mermaids
    A pack only ADDS entries to the lists from earlier sections. All ids below are saved: never rename them.
-   Clothes are drawn in the mascot's 200 x 270 box; decorations bottom-centre at (0,0) like section 4.
+   Clothes are drawn in the mascot's 200 x 270 box; decorations bottom-center at (0,0) like section 4.
    Every entry has p3:'stage' | 'cozy' | 'cafe' | 'ocean' (its theme). themesOf() (section 33) reads p3, so the
    🔎 theme chips find them, and p3Have() counts them for the four pack stickers.
-   The decorations come in matching sets (same colours): Stage, Cozy, Cafe and Seashell.
+   The decorations come in matching sets (same colors): Stage, Cozy, Cafe and Seashell.
    All original: "inspired by" stage shows, cozy anime-style looks, cafes and the sea. No real idols, logos or text.
    ========================================================= */
 const P3_THEMES={stage:'🎤',cozy:'🍵',cafe:'🧁',ocean:'🐚'};

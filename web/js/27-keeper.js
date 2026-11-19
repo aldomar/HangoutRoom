@@ -74,7 +74,7 @@ function drawStriker(ctx,kind,x,y,s,lean,kick,time){
     kpNum(ctx,'1',0,-42);
     [-1,1].forEach(sd=>kC(ctx,sd*19,-82,14,'#7ed957'));
     ctx.fillStyle='#4fa83d';[[-24,-86],[16,-88],[-8,-52]].forEach(([a,b])=>{ctx.beginPath();ctx.arc(a,b,3.5,0,TAU);ctx.fill();});
-  } else if(kind==='robot'){ // Bolt: a friendly blue-grey robot with a blinking antenna
+  } else if(kind==='robot'){ // Bolt: a friendly blue-gray robot with a blinking antenna
     leg(-13,0,24,12,'#7d8ea3'); leg(13,-kick*0.9,24,12,'#7d8ea3');
     [-1,1].forEach(sd=>{ctx.beginPath();ctx.moveTo(sd*32,-70);ctx.lineTo(sd*46,-42);ctx.lineWidth=14;ctx.stroke();ctx.lineWidth=7;ctx.strokeStyle='#9fb4c8';ctx.stroke();ctx.lineWidth=4;ctx.strokeStyle='#3b2f52';kC(ctx,sd*46,-40,7,'#ffd166');});
     kpRR(ctx,-34,-80,68,56,12,'#a9bdd2');

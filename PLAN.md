@@ -349,6 +349,9 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
 - ✅ **🎲 Free Play + Puzzle of the Day (v1.43, built; plan details below, agreed 2026-11-19):** endless generated puzzles
   (made from a seed, never saved by id) for the mazes, simple Code Lab boards and 5 Brain Games; one generated
   puzzle a day for a small bonus, with no streak and no "missed it".
+- ✅ **🔤 American spelling (v1.44, the owner's request, built):** the app's words and code comments use American English
+  (color, favorite, gray, cozy, tire; the season is Fall). Saved ids are unchanged. A smoke-test check keeps it that way.
+- **🔤 Word Builder word bank (next):** the owner's list by age, with 👀 look, ✋ hide, spell (see `docs/STATUS.md`).
 - **Later, any order:** 💃 Dance Maker (buddy moves to a Music Maker loop or Stage song), 👗 Runway (style a look for a theme
   card; judges only cheer), 🌱 Backyard garden (grows over real days, never wilts), 🧸 Little Ones' Corner (tap-to-colour,
   sound play mat, peekaboo), 🔍 I Spy in her own room, 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own

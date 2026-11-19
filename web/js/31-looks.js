@@ -66,7 +66,7 @@ function playEmote(k){
 $('#emoteBar').onclick=e=>{const b=e.target.closest('[data-emote]');if(b)playEmote(b.dataset.emote);};
 
 /* ---------- night mode ---------- */
-// Where a decoration glows, from its spot (x, y = bottom centre): dy up, r = how far the light reaches, c = colour.
+// Where a decoration glows, from its spot (x, y = bottom center): dy up, r = how far the light reaches, c = color.
 const NIGHT_GLOW={
   lava:{y:-80,r:110,c:'pink'}, lights:{y:-75,r:170,c:'warm'}, neon:{y:-70,r:120,c:'pink'}, lightstick:{y:-118,r:80,c:'pink'},
   moon:{y:-88,r:120,c:'warm'}, disco:{y:-90,r:130,c:'purple'}, sunLamp:{y:-150,r:130,c:'warm'}, gaming:{y:-110,r:100,c:'mint'},

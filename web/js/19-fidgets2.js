@@ -29,7 +29,7 @@ function fid2Open(t){if(t==='cube')renderCube();if(t==='maze')mzOpen();}
 function fid2Refresh(){if(fidTab==='cube')renderCube();}
 
 /* ---------- slime (stretchy blob) ----------
-   The outline is a ring of points (in units of the blob's size R, around its resting centre). Grab it and pull:
+   The outline is a ring of points (in units of the blob's size R, around its resting center). Grab it and pull:
    the side you pull towards stretches out after your finger and the rest gets a little thinner. Let go and it snaps
    back with a wobble. A quick poke leaves a dimple that fills back in. One stretch is counted per pull. */
 const SL={N:56,pts:[],touches:new Map(),dimples:[],geo:null,maxPull:0,glit:[],gd:''};

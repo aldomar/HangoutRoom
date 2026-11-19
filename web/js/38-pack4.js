@@ -2,7 +2,7 @@
 /* =========================================================
    38. CONTENT PACK 4 (v1.36): basketball, skate and karate, farm animals, more trucks and space, and the 🦖 dino nugget
    A pack only ADDS entries to the lists from earlier sections. All ids below are saved: never rename them.
-   Clothes are drawn in the mascot's 200 x 270 box; decorations bottom-centre at (0,0) like section 4.
+   Clothes are drawn in the mascot's 200 x 270 box; decorations bottom-center at (0,0) like section 4.
    Every entry has p4:'sport' | 'farm' | 'ride' | 'space' | 'dino' (its theme chip; themesOf() in section 33 reads it).
    Only 🐮 Farm is a new chip. The Dino Nugget Plush is small, so it sits on a Little Shelf (any standing decoration
    snaps onto a shelf, section 9). It has a matching squishy. Original: no real brands, teams, logos or packaging.
@@ -14,7 +14,7 @@ const p4L='stroke="#2b2235" stroke-width="4" stroke-linejoin="round"', p4L3='str
 const p4Ball=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#ff8a2a" ${st('#2b2235',Math.max(1.5,r*.12))}/>`
   +`<path d="M${x-r} ${y} H${x+r} M${x} ${y-r} V${y+r} M${x-r*.7} ${y-r*.7} Q${x-r*.25} ${y} ${x-r*.7} ${y+r*.7} M${x+r*.7} ${y-r*.7} Q${x+r*.25} ${y} ${x+r*.7} ${y+r*.7}" stroke="#2b2235" stroke-width="${Math.max(1,r*.08)}" fill="none"/>`;
 // The dino nugget: a chunky little long-neck dinosaur in golden crumbs. Every shape is drawn twice, a dark outline pass
-// and then the fill, so it reads as one soft silhouette. (x, y) = bottom centre, s = size.
+// and then the fill, so it reads as one soft silhouette. (x, y) = bottom center, s = size.
 function p4Nug(x,y,s,face){
   const sh=(c,w)=>`<g fill="${c}" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round">`
     +`<ellipse cx="8" cy="-36" rx="46" ry="28"/><ellipse cx="-46" cy="-94" rx="20" ry="15"/>${[-28,-8,22,40].map(lx=>`<rect x="${lx-7}" y="-26" width="14" height="24" rx="6"/>`).join('')}</g>`

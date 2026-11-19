@@ -27,7 +27,7 @@ const SONG_IDS=Object.keys(SONGS);
 // lanes = pads to tap; coins per star; fall = seconds a note takes to reach its pad; win = timing windows ×
 const STG_LEVELS={easy:{lanes:1,coins:2,fall:1.9,win:1.35},medium:{lanes:2,coins:3,fall:1.6,win:1.15},hard:{lanes:3,coins:4,fall:1.3,win:1},
   duo:{lanes:2,coins:0,fall:1.9,win:1.35}}; // 👯 Together (v1.42, section 43): never saved as a level
-const JUDGE=[['Perfect!',0.06,100,'#ffd166'],['Great!',0.11,70,'#8ff0d0'],['Good',0.17,40,'#ff8cc6']]; // name, seconds early/late, points, colour
+const JUDGE=[['Perfect!',0.06,100,'#ffd166'],['Great!',0.11,70,'#8ff0d0'],['Good',0.17,40,'#ff8cc6']]; // name, seconds early/late, points, color
 const LANE_ICONS={1:[['star','#ffd166']],2:[['heart','#ff8cc6'],['star','#ffd166']],3:[['heart','#ff8cc6'],['star','#ffd166'],['bat','#a97cff']]};
 let STG={state:'pick',song:null,lvl:'easy',notes:[],ev:[],ei:0,t0:0,clock:'perf',end:0,first:0,beat:0.5,bar:2,score:0,combo:0,maxCombo:0,counts:[0,0,0,0],fx:[],press:[0,0,0],time:0,g:null};
 const stgCv=$('#stgCv');

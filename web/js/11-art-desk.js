@@ -3,7 +3,7 @@
    11. ART DESK: drawing pad, stamps, gallery, posters
    The pad is a fixed 800 x 560 canvas, scaled to fit the screen.
    #artCv holds the drawing. It is see-through where nothing is drawn;
-   the paper colour is the background behind it (so the eraser just erases).
+   the paper color is the background behind it (so the eraser just erases).
    #artLive shows the marker/neon line while the finger is down, and is
    copied onto #artCv when it lifts (so the marker doesn't get darker where it crosses itself).
    No animation loop: the pad only redraws when she touches it.
@@ -85,7 +85,7 @@ function renderArtTools(){
   $('#artStampRow').classList.toggle('hidden',ART.tool!=='stamp');
   $('#artStampRow').innerHTML=Object.entries(STAMPS).map(([k,s])=>`<button class="abtn ${k===ART.stamp?'on':''}" data-stamp="${k}">${s.icon}</button>`).join('');
   $('#artSizeRow').innerHTML=[8,16,26].map((px,i)=>`<button class="abtn ${i===ART.size?'on':''}" data-size="${i}" aria-label="Size ${i+1}"><span class="sdot" style="width:${px}px;height:${px}px"></span></button>`).join('');
-  $('#artColRow').innerHTML=ART_COLS.map(c=>`<button class="swatch ${c===ART.col?'on':''}" data-col="${c}" aria-label="Colour" style="background:${c==='rainbow'?'conic-gradient(#ff6b8a,#ffd166,#69db7c,#4dabf7,#a97cff,#ff6b8a)':c}"></button>`).join('');
+  $('#artColRow').innerHTML=ART_COLS.map(c=>`<button class="swatch ${c===ART.col?'on':''}" data-col="${c}" aria-label="Color" style="background:${c==='rainbow'?'conic-gradient(#ff6b8a,#ffd166,#69db7c,#4dabf7,#a97cff,#ff6b8a)':c}"></button>`).join('');
 }
 function setArtView(v){
   ART.view=v;
