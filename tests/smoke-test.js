@@ -3048,7 +3048,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`(()=>{closeModal();stkPaused=true;const p=P();p.easy=false;applyEasy();p.coins=100;p.free={day:'',n:0};p.potd={day:''};p.stats.free=0;p.stats.potd=0;
     window._fpBest=JSON.stringify([p.brain.solved,p.maze.solved,p.code.solved]);window.FP_TEST_DAY='2026-11-19';save();})()`);
   // the makers: many seeds each, every puzzle checked by the same rules as the fixed ones
-  check('7 makers: 5 Brain Games (not Word Builder or Fact Cards), the maze and the Code Lab', await ev(`Object.keys(FP_MAKERS).sort().join()==='bake,code,maze,memory,pop,snack,train'&&FP_BRAIN.length===5&&!FP_BRAIN.includes('word')&&!FP_BRAIN.includes('facts')`));
+  check('8 makers: 6 Brain Games (Word Builder from v1.45, not Fact Cards), the maze and the Code Lab', await ev(`Object.keys(FP_MAKERS).sort().join()==='bake,code,maze,memory,pop,snack,train,word'&&FP_BRAIN.length===6&&FP_BRAIN.includes('word')&&!FP_BRAIN.includes('facts')`));
   const fpAll=await ev(`(()=>{const bad=[];
     FP_BRAIN.forEach(g=>BRAIN_LVLS.forEach(l=>{for(let i=0;i<150;i++){const z=fpMake(g,l,'t'+i);if(!z||!FP_MAKERS[g].ok(z.pz,l))bad.push(g+l+i);}}));
     for(let i=0;i<150;i++){const z=fpMake('maze','easy','t'+i);if(!z)bad.push('maze'+i);}
@@ -3067,8 +3067,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Code Lab: each made board\'s answer works within its blocks; Medium can\'t be done with arrows only', await ev(`Array.from({length:80},(_,i)=>fpMake('code','medium','c'+i).pz).every(z=>codeSim(z,[...z.sol],null).end==='win'&&z.sol.length<=z.max&&fpCodeWalk(z.map).length>z.max&&/[234]/.test(z.sol))
     &&Array.from({length:80},(_,i)=>fpMake('code','easy','c'+i).pz).every(z=>codeSim(z,[...z.sol],null).end==='win'&&z.max<=12&&!/[234]/.test(z.sol))`));
   // 📅 Puzzle of the Day
-  await ev(`window._fpDays=Array.from({length:6},(_,k)=>new Date(Date.UTC(2026,10,19+k)).toISOString().slice(0,10))`);
-  check('the daily game turns through the 5 Brain Games, one a day', await ev(`new Set(_fpDays.slice(0,5).map(potdGame)).size===5&&_fpDays.slice(0,5).every(d=>POTD_GAMES.includes(potdGame(d)))&&potdGame(_fpDays[5])===potdGame(_fpDays[0])`));
+  await ev(`window._fpDays=Array.from({length:7},(_,k)=>new Date(Date.UTC(2026,10,19+k)).toISOString().slice(0,10))`);
+  check('the daily game turns through the 6 Brain Games, one a day', await ev(`new Set(_fpDays.slice(0,6).map(potdGame)).size===6&&_fpDays.slice(0,6).every(d=>POTD_GAMES.includes(potdGame(d)))&&potdGame(_fpDays[6])===potdGame(_fpDays[0])`));
   await ev(`window.FP_TEST_DAY=_fpDays.find(d=>potdGame(d)==='train');P().brain.level.train='medium';show('brain')`); await sleep(200);
   check('the 📅 card is at the top of the Brain Games menu, next to 👯, and says what today\'s game is', await ev(`(()=>{const c=document.querySelector('#brMenu [data-potd]'),d=document.querySelector('#brMenu [data-duo=memory]'),g=document.querySelector('#brMenu .br-games');
     return !!c&&c.parentElement===d.parentElement&&c.getBoundingClientRect().bottom<=g.getBoundingClientRect().top&&c.getBoundingClientRect().bottom<=innerHeight&&c.textContent.includes('Pattern Train')&&c.textContent.includes('+5')&&c.getBoundingClientRect().height>=48;})()`));
@@ -3088,6 +3088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     else if(g==='pop'){const done=i=>document.querySelector('.nbub[data-b="'+i+'"]').classList.contains('popped');
       if(l==='medium'){z.b.forEach((n,i)=>{if(done(i))return;const j=z.b.findIndex((m,jj)=>jj!==i&&!done(jj)&&m+n===z.t);if(j>=0){popTap(i);popTap(j);}});}
       else z.b.forEach((n,i)=>{if(l==='easy'?n===z.t:z.t%n===0)popTap(i);});}
+    else if(g==='word'){q('#wbHide:not(.hidden)');[...z.w].forEach(c=>q('#brBoard .wb-tile[data-c="'+c+'"]:not(.used)'));}
     else if(g==='bake'){if(l==='easy')q('[data-o="'+z.n+'"]');else if(l==='medium'){FB.on=FB.on.map((x,i)=>i<z.a*z.n/z.b);fbCheck(z);}else q('#brBoard [data-n="'+z.a+'"]');}
     return BR.won;}`);
   const fpc0=await ev('P().coins');
@@ -3106,7 +3107,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await shot('U04-daily-easy');
   await ev(`P().easy=false;applyEasy();closeModal()`);
   // 🎲 Free Play in the Brain Games
-  check('🎲 sits after the puzzle numbers in the 5 games, not in Word Builder or Fact Cards', await ev(`FP_BRAIN.every(g=>(brOpen(g),!!document.querySelector('#brDots [data-dice]')&&document.querySelector('#brDots').lastElementChild.matches('[data-dice]')))&&!(brOpen('word'),document.querySelector('#brDots [data-dice]'))&&!(brOpen('facts'),document.querySelector('#brDots [data-dice]'))`));
+  check('🎲 sits after the puzzle numbers in the 6 games, not in Fact Cards', await ev(`FP_BRAIN.every(g=>(brOpen(g),!!document.querySelector('#brDots [data-dice]')&&document.querySelector('#brDots').lastElementChild.matches('[data-dice]')))&&!(brOpen('facts'),document.querySelector('#brDots [data-dice]'))`));
   await ev(`P().brain.level.pop='easy';brOpen('pop');document.querySelector('#brDots [data-dice]').click()`); await sleep(150);
   check('🎲 opens a made-up puzzle: the dice lit, no number lit', await ev(`!!BR.free&&!BR.free.daily&&BR.game==='pop'&&document.querySelector('#brDots [data-dice]').classList.contains('on')&&!document.querySelector('#brDots [data-pz].on')`));
   await shot('U05-free-pop');
@@ -3118,12 +3119,12 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('🎲 Another one! makes a new one', await ev(`!!BR.free&&BR.free.key!==${JSON.stringify(fpKey)}&&!BR.won`));
   await ev(`document.querySelector('#brTabs [data-lvl=hard]').click()`); await sleep(150);
   check('a level tab in Free Play makes a new one at that level', await ev(`!!BR.free&&!BR.free.daily&&BR.lvl==='hard'&&BR.free.lvl==='hard'`));
-  // every game and level, through the screen (15 puzzles: the coins stop at 10 a day)
+  // every game and level, through the screen (18 puzzles: the coins stop at 10 a day)
   await ev(`P().free={day:FP_TEST_DAY,n:0};P().stats.free=0`); const fpc2=await ev('P().coins');
   const fpWon=await ev(`(()=>{const out=[];FP_BRAIN.forEach(g=>BRAIN_LVLS.forEach(l=>{fpBrain(g,l);if(!_fpSolve())out.push(g+':'+l);}));return out;})()`);
   check('a made-up puzzle of every game and level can be solved on screen', fpWon.length===0, fpWon);
   await sleep(1100);
-  check('15 solved: +10 coins (10 a day), all 15 count for stickers', await ev(`P().coins===${fpc2}+10&&P().free.n===10&&P().stats.free===15`), await ev(`[P().coins-${fpc2},P().free.n,P().stats.free]`));
+  check('18 solved: +10 coins (10 a day), all 18 count for stickers', await ev(`P().coins===${fpc2}+10&&P().free.n===10&&P().stats.free===18`), await ev(`[P().coins-${fpc2},P().free.n,P().stats.free]`));
   check('the full note is gentle (once, no countdown, no "come back")', await ev(`(()=>{fpToldDay='';const h=fpPay();return /full for today/.test(h)&&!/come back|hours|minutes|tomorrow/i.test(h)&&fpPay()==='';})()`));
   await ev(`closeModal();window.FP_TEST_DAY='2027-01-01'`); const fpc3=await ev('P().coins');
   check('a new day refills the Free Play coins quietly', await ev(`fpPay()==='+1 🪙'&&P().coins===${fpc3}+1&&P().free.n===1&&P().free.day===FP_TEST_DAY`));
@@ -3184,7 +3185,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   console.log('American spelling (v1.44)');
   {
     // every app file (on-screen text and comments) uses American spelling; saved ids like the season 'autumn' are allowed
-    const UK=/\b(colour|favourite|centre|theatre|metre|grey|tyre|cosy|organis|realis|recognis|apologis|personalis|customis|travell|cancell|jewellery|pyjama|moustache|honour|humour|behaviour|flavour|neighbour|labour|maths|fringe)\w*/i;
+    const UK=/\b(colour|favourite|centre|theatre|metre|grey|tyre|cosy|organis(?!m)|realis|recognis|apologis|personalis|customis|travell|cancell|jewellery|pyjama|moustache|honour|humour|behaviour|flavour|neighbour|labour|maths|fringe)\w*/i;
     const appFiles=[...fs.readdirSync(path.join(__dirname,'..','web/js')).map(f=>'web/js/'+f),'index.html','web/app.css','web/about-local.example.js'];
     const ukHits=appFiles.flatMap(f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8').split('\n').map((l,i)=>UK.test(l)?f+':'+(i+1)+' '+l.trim().slice(0,60):'').filter(Boolean));
     check('no British spellings in the app files (color, favorite, gray, center, tire, cozy …)', ukHits.length===0, ukHits.slice(0,5));
@@ -3194,6 +3195,77 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`show('room');enterDecorate()`); await sleep(200);
     check('Decorate\'s tab says 🎨 Colors', await ev(`document.querySelector('[data-dt=colors]').textContent.includes('Colors')`));
     await ev(`exitDecorate()`);
+  }
+
+  console.log('Word Builder word bank (v1.45)');
+  {
+    await ev(`closeModal();show('brain')`); await sleep(250);
+    check('the word bank: 3 levels, plenty of words, capital letters only, no repeats', await ev(`BRAIN_LVLS.every(l=>WB_BANK[l].length>=120&&WB_BANK[l].every(w=>/^[A-Z]+$/.test(w))&&new Set(WB_BANK[l]).size===WB_BANK[l].length)`),
+      await ev(`BRAIN_LVLS.map(l=>WB_BANK[l].length).join()`));
+    check('word lengths: Easy 3-5, Medium 3-9, Hard 3-11 (no 1-2 letter words)', await ev(`BRAIN_LVLS.every(l=>WB_BANK[l].every(w=>w.length>=3&&w.length<=WB_MAX[l]))`),
+      await ev(`BRAIN_LVLS.flatMap(l=>WB_BANK[l].filter(w=>w.length<3||w.length>WB_MAX[l])).join()`));
+    check('the words we agreed to leave out are not there', await ev(`!['HARASS','ILLEGAL','CEMETERY','EXPLOSION','PHOTOSYNTHESIS','INTERNATIONAL','MISUNDERSTAND','HEAR','WHOLE','WEATHER','PRINCIPAL','AFFECT','DESSERT','ALOUD'].some(w=>BRAIN_LVLS.some(l=>WB_BANK[l].includes(w)))`));
+    check('the theme words are in (web bat cub / robot rocket slime goal ghost comet / dinosaur volcano galaxy astronaut telescope)', await ev(`['WEB','BAT','CUB'].every(w=>WB_BANK.easy.includes(w))&&['ROBOT','ROCKET','SLIME','GOAL','GHOST','COMET'].every(w=>WB_BANK.medium.includes(w))&&['DINOSAUR','VOLCANO','GALAXY','ASTRONAUT','TELESCOPE'].every(w=>WB_BANK.hard.includes(w))`));
+    check('American spelling in the bank (COLOR, FAVORITE, GRAY, CENTER; no COLOUR)', await ev(`['COLOR','FAVORITE','CENTER','THEATER','PAJAMAS'].every(w=>WB_BANK.hard.includes(w))&&WB_BANK.easy.includes('GRAY')&&!BRAIN_LVLS.some(l=>WB_BANK[l].some(w=>/COLOUR|FAVOURITE|GREY|CENTRE|THEATRE/.test(w)))`));
+    check('every picture belongs to a word in the bank and draws', await ev(`Object.entries(WB_PICS).every(([w,pic])=>BRAIN_LVLS.some(l=>WB_BANK[l].includes(w))&&(/^[db]:/.test(pic)?memPic(pic).length>60:wbPic(pic).length>0))`),
+      await ev(`Object.entries(WB_PICS).filter(([w,pic])=>!BRAIN_LVLS.some(l=>WB_BANK[l].includes(w))||(/^[db]:/.test(pic)&&memPic(pic).length<=60)).map(e=>e[0]).join()`));
+    check('a made-up word: extra letters are never in the word (so only one way to spell it)', await ev(`BRAIN_LVLS.every(l=>Array.from({length:120},(_,i)=>fpMake('word',l,'w'+i).pz).every(z=>[...z.x].every(c=>!z.w.includes(c))&&z.x.length>=2))`));
+    check('Word Builder has 🎲 and is in the 📅 daily turn (6 games)', await ev(`FP_BRAIN.includes('word')&&POTD_GAMES.length===6&&POTD_GAMES.includes('word')`));
+    check('the 8 fixed Word Builder puzzles are unchanged and still play the old way', await ev(`BRAIN_LVLS.every(l=>WB_PUZ[l].length===8)&&(brPuzzle('word','medium',0),!document.querySelector('#wbLook')&&!!document.querySelector('#brQ .wb-slot i'))`));
+    const _wbBest=await ev(`JSON.stringify(P().brain.solved)`);
+    // Easy = trace
+    await ev(`P().easy=false;window._said=[];window.AndroidBridge={speak(t){window._said.push(t);}};brPuzzle('word','easy',0,{pz:{bank:1,w:'FOX',x:'AM',pic:'b:fox'},key:'wtest',idx:0,lvl:'easy'})`); await sleep(150);
+    await shot('V01-word-easy-trace');
+    check('Easy traces: the letters show faintly in the slots, with the picture, and no Hide button', await ev(`[...document.querySelectorAll('#brQ .wb-slot i')].map(i=>i.textContent).join('')==='FOX'&&!!document.querySelector('#brQ .wb-pic svg')&&!document.querySelector('#wbHide')&&!document.querySelector('#brBoard .wb-tiles').classList.contains('hidden')&&document.querySelectorAll('#brBoard .wb-tile').length===5`));
+    check('🔊 is there on the tablet and the word is said when it opens', await ev(`!!document.querySelector('#brQ .wb-say')&&_said.includes('fox')`));
+    await ev(`_said=[];document.querySelector('#brQ .wb-say').click()`);
+    check('tapping 🔊 says the word again', await ev(`_said.join()==='fox'`));
+    await ev(`document.querySelector('#brBoard .wb-tile[data-c="O"]').click()`); await sleep(50);
+    check('a letter out of order is a gentle "try again" and fills nothing', await ev(`WB.got===0&&!document.querySelector('#brQ .wb-slot.on')`));
+    await ev(`['F','O','X'].forEach(c=>document.querySelector('#brBoard .wb-tile[data-c="'+c+'"]:not(.used)').click())`); await sleep(100);
+    check('tapping the letters in order spells it and wins', await ev(`BR.won===true&&document.querySelectorAll('#brQ .wb-slot.on').length===3`));
+    await sleep(1100); await ev(`closeModal()`);
+    // Medium/Hard = look, hide, spell
+    await ev(`brPuzzle('word','hard',0,{pz:{bank:1,w:'TEMPERATURE',x:'BDK',pic:''},key:'wtest2',idx:0,lvl:'hard'})`); await sleep(150);
+    await shot('V02-word-look');
+    check('Hard starts by showing the word, with ✋ Hide it; the letters wait', await ev(`document.querySelector('#wbLook').textContent==='TEMPERATURE'&&!document.querySelector('#wbLook').classList.contains('hidden')&&!document.querySelector('#wbHide').classList.contains('hidden')&&document.querySelector('#brQ .wb-slots').classList.contains('hidden')&&document.querySelector('#brBoard .wb-tiles').classList.contains('hidden')&&document.querySelector('#wbPeek').classList.contains('hidden')`));
+    check('the slots are empty on Hard (no faint letters)', await ev(`!document.querySelector('#brQ .wb-slot i')`));
+    await ev(`document.querySelector('#wbHide').click()`); await sleep(100);
+    await shot('V03-word-spell');
+    check('✋ hides the word and shows the slots, the letters and 👀 Peek', await ev(`document.querySelector('#wbLook').classList.contains('hidden')&&!document.querySelector('#brQ .wb-slots').classList.contains('hidden')&&!document.querySelector('#brBoard .wb-tiles').classList.contains('hidden')&&!document.querySelector('#wbPeek').classList.contains('hidden')&&document.querySelectorAll('#brBoard .wb-tile').length===14`));
+    await ev(`['T','E','M'].forEach(c=>document.querySelector('#brBoard .wb-tile[data-c="'+c+'"]:not(.used)').click())`);
+    await ev(`document.querySelector('#wbPeek').click()`); await sleep(50);
+    check('👀 Peek shows the word again and keeps what she spelled (no timer)', await ev(`!document.querySelector('#wbLook').classList.contains('hidden')&&WB.got===3&&WB.look===true&&document.querySelectorAll('#brQ .wb-slot.on').length===3`));
+    await ev(`document.querySelector('#wbHide').click()`);
+    await ev(`[...'PERATURE'].forEach(c=>document.querySelector('#brBoard .wb-tile[data-c="'+c+'"]:not(.used)').click())`); await sleep(100);
+    check('…then she finishes the word and wins', await ev(`BR.won===true&&WB.got===11`));
+    await sleep(1100); await ev(`closeModal()`);
+    check('made-up words never count as solved puzzles', await ev(`JSON.stringify(P().brain.solved)===${JSON.stringify(_wbBest)}`));
+    // phone width: the longest word fits
+    await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
+    await ev(`brPuzzle('word','hard',0,{pz:{bank:1,w:'ACCOMMODATE',x:'BFG',pic:''},key:'wtest3',idx:0,lvl:'hard'})`); await sleep(200);
+    await shot('V04-phone-word-look');
+    check('on a phone the longest word fits on screen', await ev(`cur==='brain'&&document.querySelector('#wbLook').getBoundingClientRect().width>100&&document.querySelector('#wbLook').getBoundingClientRect().right<=innerWidth&&document.documentElement.scrollWidth<=innerWidth`));
+    await ev(`document.querySelector('#wbHide').click()`); await sleep(100);
+    await shot('V05-phone-word-spell');
+    check('…and so do its 11 slots', await ev(`[...document.querySelectorAll('#brQ .wb-slot')].every(s=>s.getBoundingClientRect().right<=innerWidth)&&document.documentElement.scrollWidth<=innerWidth`));
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    // without the tablet: no 🔊
+    await ev(`delete window.AndroidBridge;brPuzzle('word','medium',0,{pz:{bank:1,w:'ROBOT',x:'AEK',pic:'d:robotPal'},key:'wtest4',idx:0,lvl:'medium'})`); await sleep(100);
+    check('in a browser there is no 🔊 button (it needs the tablet)', await ev(`!document.querySelector('#brQ .wb-say')&&!!document.querySelector('#brQ .wb-pic svg')`));
+    // Easy mode words
+    await ev(`P().easy=true;brPuzzle('word','medium',0,{pz:{bank:1,w:'ROBOT',x:'AEK',pic:'d:robotPal'},key:'wtest4',idx:0,lvl:'medium'})`); await sleep(100);
+    check('in Easy mode the question is just 👀, then 🔤', await ev(`document.querySelector('#wbAsk').textContent==='👀'&&(document.querySelector('#wbHide').click(),document.querySelector('#wbAsk').textContent==='🔤')`));
+    await ev(`P().easy=false`);
+    // 📅 daily Word Builder
+    await ev(`window.FP_TEST_DAY=Array.from({length:7},(_,k)=>new Date(Date.UTC(2027,0,1+k)).toISOString().slice(0,10)).find(d=>potdGame(d)==='word');P().brain.level.word='medium';brMenu()`); await sleep(150);
+    check('📅 a Word Builder day: the card says Word Builder and opens a bank word', await ev(`document.querySelector('#brMenu [data-potd]').textContent.includes('Word Builder')&&(document.querySelector('#brMenu [data-potd]').click(),BR.game==='word'&&BR.free&&BR.free.daily&&BR.free.pz.bank===1&&!!document.querySelector('#wbLook'))`));
+    const wc0=await ev('P().coins'), wd0=await ev('P().stats.potd');
+    check('…and solving it pays the daily +5', await ev('_fpSolve()'));
+    await sleep(1100);
+    check('…+5 coins, once', await ev(`P().coins===${wc0}+5&&P().stats.potd===${wd0}+1`));
+    await ev(`closeModal();window.FP_TEST_DAY=''`);
+    check('v1.45 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.45')&&APP_VERSION==='1.45'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

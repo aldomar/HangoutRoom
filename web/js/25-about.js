@@ -143,7 +143,9 @@ const GIFT_TIMELINE=[
           '📒 3 new stickers on the Code & Brain page']},
   {v:'1.44',d:'2026-11-19',i:'🔤',n:'American Spelling',why:'So the words in the app match the spelling you learn at school',
     news:['🎨 Words now use American spelling: color, favorite, gray, cozy',
-          '🍂 The season is called Fall']}
+          '🍂 The season is called Fall']},
+  {v:'1.45',d:'2026-11-19',i:'📝',n:'Word Bank',why:'So spelling practice never runs out, with words picked for every age',
+    news:['🎲 Word Builder has Free Play: a new word every time','👀 Look at the word, ✋ hide it, then spell it','📅 Word Builder joins the Puzzle of the Day']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

@@ -559,6 +559,8 @@ body.easy .br-ch{min-width:120px;min-height:120px}body.easy .nbub{width:96px;hei
 .wb-slot i{font-style:normal;opacity:.3}.wb-slot.on{border-style:solid;background:var(--mint);color:#2b2235;animation:brPop .3s ease}
 .wb-tile b{font-size:38px}.wb-tile small{font-size:18px;opacity:.75}.wb-tile.used{visibility:hidden}
 .wb-tiles .br-ch{min-width:72px;min-height:72px}
+.wb-look{font-size:46px;font-weight:900;letter-spacing:6px;background:#fff6fb;color:#2b2235;border-radius:18px;padding:8px 20px;box-shadow:0 4px 0 #1a1424;overflow-wrap:anywhere;text-align:center}
+.wb-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.wb-btns .btn{min-height:52px;font-size:18px}
 /* v1.34 Fraction Bakery + Fact Cards (36-brain4.js) */
 .fb-treat{display:block;width:100%;height:auto}
 .fb-ch{width:150px;padding:10px}.fb-friends{font-size:40px;letter-spacing:6px;line-height:1.1}
@@ -581,7 +583,7 @@ body.easy .br-ch{min-width:120px;min-height:120px}body.easy .nbub{width:96px;hei
 .fc-slot{min-height:130px;border-radius:16px;background:#fffaf2;color:#2b2235;border:4px solid #fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px}
 .fc-slot .fc-i{width:64px;height:64px;display:flex;align-items:center;justify-content:center;font-size:40px}.fc-slot .wb-emo{font-size:48px}.fc-slot b{font-size:15px}
 .fc-slot.fc-none{background:var(--panel2);color:#fff;border-style:dashed}
-@media (max-width:620px){.br-games{grid-template-columns:1fr}.br-game{min-height:0;flex-direction:row;flex-wrap:wrap;justify-content:center;padding:12px}.br-gi{font-size:44px}.mem-grid{gap:6px}.nbub{width:66px;height:66px}.br-ch{min-width:80px;min-height:80px}.br-ask{font-size:18px}.wb-slot{width:40px;height:48px;font-size:24px}.wb-tiles .br-ch{min-width:60px;min-height:60px}.wb-pic{width:120px;height:120px}.wb-emo{font-size:76px}}
+@media (max-width:620px){.br-games{grid-template-columns:1fr}.br-game{min-height:0;flex-direction:row;flex-wrap:wrap;justify-content:center;padding:12px}.br-gi{font-size:44px}.mem-grid{gap:6px}.nbub{width:66px;height:66px}.br-ch{min-width:80px;min-height:80px}.br-ask{font-size:18px}.wb-slot{width:40px;height:48px;font-size:24px}.wb-tiles .br-ch{min-width:60px;min-height:60px}.wb-pic{width:120px;height:120px}.wb-look{font-size:32px;letter-spacing:3px}.wb-emo{font-size:76px}}
 /* 31. Looks, emotes + night mode (v1.27) */
 .room-stage{position:relative}
 .night-btn{position:absolute;left:10px;top:10px;width:56px;height:56px;border-radius:50%;border:3px solid var(--line);background:var(--panel);font-size:28px;cursor:pointer;box-shadow:0 3px 0 #0003;z-index:2}

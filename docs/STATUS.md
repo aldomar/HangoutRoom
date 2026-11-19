@@ -130,6 +130,7 @@ _Last updated: 2026-11-19_
 - PR #42 "Play Together (v1.42)": merged.
 - PR #43 "Free Play & Puzzle of the Day (v1.43)": merged.
 - PR #44 "American spelling (v1.44)" on branch `feature/american`: open.
+- PR #45 "Word Builder word bank (v1.45)" on branch `feature/words` (made from `feature/american`): open. Merge #44 first.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -516,6 +517,12 @@ _Last updated: 2026-11-19_
   the next full run passed.
   Not tested automatically: Read to me saying the words on the tablet (the browser has no voice), and how small the
   8-wagon trains look on a real phone (they fit; the choice wagons are big).
+- **Word Builder word bank (v1.45):** `tests/smoke-test.js` has 1333 checks; all pass except the old Soccer "a wide shot misses" check, which failed once on a timing hiccup (it passed on the run before; nothing here touches Soccer); no console errors. New checks: the
+  bank's size, letters, lengths (Easy 3–5, Medium up to 9, Hard up to 11) and no repeats; the left-out words are gone and the theme
+  words are in; American spelling; every picture draws; extra letters never appear in the word; Easy traces faint letters and wins;
+  a wrong letter fills nothing; Hard shows the word, ✋ hides it, 👀 peeks and keeps progress, and wins; made-up words never count
+  as solved; the longest words fit on a phone; no 🔊 in a browser; Easy mode's short question; a Word Builder 📅 day pays +5 once.
+  The v1.43 checks now expect 8 makers, a 6-game daily turn, and 🎲 in Word Builder.
 - **American spelling (v1.44):** `tests/smoke-test.js` has 1305 checks, all passing, no console errors. New checks: no British
   spelling in any app file (web/ and index.html), the season shows as Fall with its saved id still autumn, no British word in
   item names, sticker hints, song descriptions or the Gift Story, and Decorate's tab says 🎨 Colors.
@@ -933,6 +940,14 @@ _Last updated: 2026-11-19_
   room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
   short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
   so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
+- **Word Bank (built as v1.45, `45-words.js`), agreed 2026-11-19.** From the owner's SpellingWords.txt (the words are typed into
+  `WB_BANK`; the file itself is not in the repo). Owner's answers: 🎲 **and** the 📅 daily turn (6 games now); Easy = **trace**
+  (faint letters in the slots, a picture where there is one), Medium/Hard = **👀 look, ✋ hide, spell** (👀 Peek any time, no timer,
+  progress kept); 🔊 on every level (the tablet's voice, even with Read to me off). Left out: 1–2 letter words, the homophones
+  section, harass, illegal, cemetery, explosion, and photosynthesis, international, misunderstand (over 11 letters). Added: web, bat,
+  cub / robot, rocket, slime, goal, ghost, comet / dinosaur, volcano, galaxy, astronaut, telescope. Pictures (`WB_PICS`) only for
+  words with a clear one. Extra letters are never letters of the word, so there is only one way to spell it. A bank word is
+  `{bank:1, w, x, pic}` and is played by `wbBankStart`; the fixed puzzles still use the old `start`. No save change.
 - **American spelling (built as v1.44), agreed 2026-11-19.** The children learn American English. Owner's answers: the season
   label is **Fall** (the saved id stays `autumn`); **on-screen text and code comments** switch (the smoke test too); the docs
   stay as written, and new doc text is American. Changed on screen: Room color, Color the buttons too, 🎨 Colors, nothing to
@@ -1159,7 +1174,7 @@ _Last updated: 2026-11-19_
 8. ~~Plan 🎲 Free Play + Puzzle of the Day (v1.43) and get it agreed before coding.~~ Agreed 2026-11-19 and built.
 9. ~~Owner: build v1.43 and try 🎲 and 📅 (see the PR), and merge it.~~ Merged.
 10. ~~🇺🇸 American spelling (v1.44, the owner's request 2026-11-19).~~ Built (PR #44). Owner: build it and check the words, then merge.
-11. 🔤 Word Builder word bank (later): the owner gave a list by age (Easy 3–5, Medium 6–8, Hard 9–13). Agreed 2026-11-19:
+11. ~~🔤 Word Builder word bank (v1.45).~~ Built (PR #45). Owner: merge #44, then build v1.45 and try a few words, then merge. The list: (Easy 3–5, Medium 6–8, Hard 9–13). Agreed 2026-11-19:
     👀 look, hide (✋), spell, with 👀 to peek again (no timer); a picture where there is one; 🔊 says the word (it works on the
     tablet even with Read to me off); American spelling; drop 1–2 letter words and homophones; Hard at most 11 letters; swap
     harass, illegal, cemetery (explosion borderline); remove repeats; add theme words (web, bat, cub / robot, rocket, slime,
