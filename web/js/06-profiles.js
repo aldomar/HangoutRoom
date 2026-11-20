@@ -18,7 +18,7 @@ function newProfile(name,fur,color,badge,look){
 function normalize(p){
   if(!p.id) p.id=uid();
   if(!p.name) p.name='Room';
-  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
+  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.fidPay=Object.assign({day:'',n:0},p.fidPay&&typeof p.fidPay==='object'?p.fidPay:{}); if(typeof p.fidPay.n!=='number'||!(p.fidPay.n>=0)) p.fidPay.n=0; // v1.36: fidget coins paid today (see FID_DAILY)
   // Music Maker (v1.38, section 40): sound kit, speed (0-2), the loop on the grid now, 3 saved loops, music coins paid today.
@@ -78,7 +78,7 @@ function normalize(p){
   // Stage Jam (v1.52, section 53): the jam sound (checked when it is read, jamSound) and jams paid today.
   {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, j=o(p.jam), py=o(j.pay);
    p.jam={sound:typeof j.sound==='string'?j.sound:'sparkle',pay:{day:typeof py.day==='string'?py.day:'',n:Math.max(0,Math.floor(Number(py.n)||0))}};
-   ['jams','jamOwn'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));});}
+   ['jams','jamOwn','tricks'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));});}
   // Little Ones' Corner (v1.46, sections 46-47): colors per picture ('#rrggbb' or '' per area), pictures hung in the Gallery,
   // and coins paid today. Picture ids are checked when they are read (cbCols), so only the types are checked here.
   {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, l=o(p.little), py=o(l.pay);
@@ -122,7 +122,12 @@ function normalize(p){
   p.soccer.trophies=Array.isArray(p.soccer.trophies)?p.soccer.trophies.filter(l=>['easy','medium','hard'].includes(l)):[]; // levels whose trophy she has won
   if(!['easy','medium','hard'].includes(p.soccer.level)) p.soccer.level='easy';
   // Be the Keeper (v1.24): ⚽ Kick or 🧤 Keep (the last one used), and the keeper's level, best saves and gloves won.
-  if(p.soccer.mode!=='keep') p.soccer.mode='kick';
+  if(!['keep','trick'].includes(p.soccer.mode)) p.soccer.mode='kick'; // 'trick' since v1.53
+  // Trick Shots (v1.53, section 54): trick ids done (checked against TRICKS when counted), the trick on screen, coins paid today.
+  {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, py=o(p.soccer.trickPay);
+   p.soccer.tricks=Array.isArray(p.soccer.tricks)?[...new Set(p.soccer.tricks.filter(t=>typeof t==='string'))]:[];
+   if(typeof p.soccer.trick!=='string') p.soccer.trick='t1';
+   p.soccer.trickPay={day:typeof py.day==='string'?py.day:'',n:Math.max(0,Math.floor(Number(py.n)||0))};}
   const kp=p.soccer.keep&&typeof p.soccer.keep==='object'&&!Array.isArray(p.soccer.keep)?p.soccer.keep:{};
   p.soccer.keep={level:['easy','medium','hard'].includes(kp.level)?kp.level:'easy',
     best:Object.assign({easy:0,medium:0,hard:0},kp.best&&typeof kp.best==='object'?kp.best:{}),

@@ -23,6 +23,7 @@ const LVL_KEYS=Object.keys(KEEPERS);
 const socLevel=()=>KEEPERS[P().soccer.level]||KEEPERS.easy;
 // ⚽ Kick (this section) or 🧤 Keep (section 27, v1.24). The mode is saved per room in soccer.mode.
 const socKeep=()=>{const p=P();return !!p&&p.soccer.mode==='keep';};
+const socTrick=()=>{const p=P();return !!p&&p.soccer.mode==='trick';}; // 🎯 Trick Shots (section 54, v1.53)
 
 function socGeo(W,H){
   const GW=Math.min(W*0.66,H*0.36*2.4), GH=GW/2.4;
@@ -31,9 +32,12 @@ function socGeo(W,H){
 const toScr=(g,u,v)=>({x:g.cx+u*g.GW,y:g.gy-v*g.GH});
 
 function renderSoccer(){
+  const tricks=!TGS.on&&socTrick(); $('#socTabs').classList.toggle('trick',tricks); $('#trBar').classList.toggle('hidden',!tricks); $('#socStage').classList.toggle('trick',tricks); // 🎯 (section 54)
   if(TGS.on){tgSocRender();return;} // 👯 Duel (section 43)
   const p=P(); if(!p) return; const keep=socKeep(), lvl=keep?p.soccer.keep.level:p.soccer.level;
-  $$('#socTabs [data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===(keep?'keep':'kick')));
+  $$('#socTabs [data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===(keep?'keep':tricks?'trick':'kick')));
+  if(tricks){clearTimeout(SOC.next);SOC.swipe=null;kpStop();$('#socTitle').textContent='🎯 Trick Shots';$('#kitBadge').classList.add('hidden');
+    $('#socMascot').classList.remove('hidden');$('#socMascot').innerHTML=mascotSVG(p.look);trRender();return;} // 🎯 Trick Shots (section 54, v1.53)
   $$('#socTabs [data-lvl]').forEach(b=>{b.classList.toggle('on',b.dataset.lvl===lvl);b.querySelector('i').textContent=(keep?STRIKERS:KEEPERS)[b.dataset.lvl].icon;});
   $('#socTitle').textContent=keep?'🧤 Be the Keeper':'⚽ Soccer Field';
   $('#socMascot').classList.toggle('hidden',keep);
@@ -125,12 +129,13 @@ function endMatch(){
 socCv.addEventListener('pointerdown',e=>{
   if(TGS.on){tgDown(e);return;} // 👯 Duel (section 43)
   if(socKeep()){kpDown(e);return;}
+  if(socTrick()){trDown(e);return;} // 🎯 (section 54)
   if(SOC.state==='done'){newMatch();SFX.whistle();return;}
   if(SOC.state!=='aim') return;
   const r=socCv.getBoundingClientRect(); SOC.swipe=[[e.clientX-r.left,e.clientY-r.top,performance.now()]];
   try{socCv.setPointerCapture(e.pointerId);}catch(_){}
 });
-socCv.addEventListener('pointermove',e=>{if(TGS.on){tgMove(e);return;}if(socKeep()){kpMove(e);return;}if(!SOC.swipe)return;const r=socCv.getBoundingClientRect();SOC.swipe.push([e.clientX-r.left,e.clientY-r.top,performance.now()]);});
+socCv.addEventListener('pointermove',e=>{if(TGS.on){tgMove(e);return;}if(socKeep()){kpMove(e);return;}if(socTrick()){trMove(e);return;}if(!SOC.swipe)return;const r=socCv.getBoundingClientRect();SOC.swipe.push([e.clientX-r.left,e.clientY-r.top,performance.now()]);});
 function socRelease(){
   const sw=SOC.swipe, g=SOC.g; SOC.swipe=null; if(!sw||!g||SOC.state!=='aim') return;
   const s=socAim(sw,g);
@@ -156,10 +161,11 @@ function socAim(sw,g){
 socCv.addEventListener('pointerup',e=>{ // add where the finger lifted, then shoot
   if(TGS.on){tgUp(e);return;}
   if(socKeep()){kpUp(e);return;}
+  if(socTrick()){trUp(e);return;}
   if(SOC.swipe){const r=socCv.getBoundingClientRect();SOC.swipe.push([e.clientX-r.left,e.clientY-r.top,performance.now()]);}
   socRelease();
 });
-socCv.addEventListener('pointercancel',()=>{SOC.swipe=null;KP.swipe=null;});
+socCv.addEventListener('pointercancel',()=>{SOC.swipe=null;KP.swipe=null;TR.swipe=null;});
 
 // Where the ball is at time t (0 = on the spot, 1 = at the goal, >1 = what happens after).
 function ballPos(g,s,t){
@@ -239,6 +245,7 @@ function drawKeeper(ctx,kind,x,y,s,tilt,pose,time,awake){
 function drawSoccer(dt){
   if(TGS.on){tgDraw(dt);return;} // 👯 Duel (section 43)
   if(socKeep()){drawKeep(dt);return;} // 🧤 Keep mode (section 27)
+  if(socTrick()){drawTrick(dt);return;} // 🎯 Trick Shots (section 54)
   const {ctx,W,H}=fit(socCv), g=socGeo(W,H), L=socLevel(), k=SOC.keeper, s=SOC.shot; SOC.g=g; SOC.time+=dt;
   // keeper + ball movement
   if(s&&(SOC.state==='fly'||SOC.state==='result')){

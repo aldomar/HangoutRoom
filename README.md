@@ -131,6 +131,19 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Trick Shots (since version 1.53)
+A third Soccer mode: tap **🎯 Tricks** next to ⚽ Kick and 🧤 Keep. There's no keeper; Mochi, Boo and Flap cheer at the side.
+- **12 trick shots**, from easy to tricky: ⭐ Star Kick, ↖️ Top Corner, ↘️ Low and Right, 🍩 Hoop Shot, 🎈 Balloon Pop (pop all 3),
+  🔔 Ring the Bell, 🧱 Over the Wall (chip it over the 3 friends), 🌀 Curve It (bend it around the wall), 🎯 Moving Star,
+  🦇 Bat Hoop, 🍌 Banana Kick (around the wall and through a hoop) and 🌈 Rainbow Row (red, yellow, blue, in order).
+- Kick the same way as ⚽ Kick: **tap the goal** for a straight shot, **swipe** for power, and a **bent swipe** curves the ball.
+- **◀ ▶** change trick; tap the trick's name to see all 12 (✅ = done). Every trick is open from the start.
+- **No failing:** unlimited tries. After 3 misses a **💡 dotted line** shows a kick that works.
+- **+3 coins** the first time each trick is done, **+1** for doing it again (10 a day). All 12 put the **🏅 Trick Shot Star**
+  in the Backyard (a prize, never in the Shop).
+- 3 new stickers on the Soccer page: 🎯 First Trick, 🍌 Banana Kick (a curve trick) and 🏅 Trick Master (all 12).
+- Save version 34 (`soccer.tricks`, `soccer.trick`, `soccer.trickPay`, `stats.tricks`); every older backup still restores.
+
 ## Stage Jam (since version 1.52)
 Your 🎹 Music Maker loop becomes the band, and you play along on the 🎤 Stage. Open it with the **🎸 Jam** tab on the Stage, or
 **🎸 Jam** in the Music Maker (that one starts straight away with the loop on the grid). Back goes to where you came from.

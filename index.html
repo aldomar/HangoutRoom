@@ -227,8 +227,9 @@
     <div class="coins coinsDisp"></div>
   </div>
   <div class="tabs" id="socTabs" style="background:var(--panel);justify-content:center">
-    <button class="tab mode on" data-mode="kick">⚽ Kick</button>
-    <button class="tab mode" data-mode="keep">🧤 Keep</button>
+    <button class="tab mode on" data-mode="kick" aria-label="Kick">⚽ <span class="w">Kick</span></button>
+    <button class="tab mode" data-mode="keep" aria-label="Keep">🧤 <span class="w">Keep</span></button>
+    <button class="tab mode" data-mode="trick" aria-label="Trick Shots">🎯 <span>Tricks</span></button>
     <button class="tab mode duo" data-duo="soccer" aria-label="Duel for 2 players">👯 <span>Duel</span></button>
     <span class="soc-gap"></span>
     <button class="tab on" data-lvl="easy"><i>😺</i> <span>Easy</span></button>
@@ -239,6 +240,7 @@
     <canvas id="socCv"></canvas>
     <div id="socMascot"></div>
     <div class="soc-score" id="socScore"></div>
+    <div class="tr-bar hidden" id="trBar"></div>
     <div class="soc-msg" id="socMsg"></div>
     <div class="fid-tip" id="socTip"></div>
   </div>
@@ -503,6 +505,7 @@
 <script src="web/js/51-spend.js"></script>
 <script src="web/js/52-runway.js"></script>
 <script src="web/js/53-jam.js"></script>
+<script src="web/js/54-tricks.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

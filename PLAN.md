@@ -368,7 +368,7 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   borrowed ones), walk the catwalk; three visitor friends hold up cheer cards. Judges only cheer.
 - ✅ **🎸 Stage Jam (v1.52, built; plan details below, agreed 2026-11-20):** one of her 🎹 Music Maker loops plays on the Stage
   and she taps big pads to play her own notes on top. Every note fits, no score.
-- **🎯 Soccer Trick Shots (v1.53, plan details below, agreed 2026-11-20):** a 🎯 Tricks tab with 12 fixed trick
+- ✅ **🎯 Soccer Trick Shots (v1.53, built; plan details below, agreed 2026-11-20):** a 🎯 Tricks tab with 12 fixed trick
   shots (stars, hoops, balloons, a wall of friends to curve around). Unlimited tries, coins the first time, a prize for all 12.
 - **Later, any order:** 🐾 more pet play (walks, hide-and-seek).
 
@@ -447,6 +447,9 @@ and curve, with no keeper and no failing. Owner's answers (2026-11-20): **a fixe
   shot is proven not to work where the trick needs curve or height; Balloon Pop and Rainbow Row need all three; +3 the first
   time, +1 replays and the 10-a-day limit; all 12 gives the Trick Shot Star in the Backyard once; the 3 stickers; ⚽ Kick,
   🧤 Keep and 👯 Duel still work; speed and spelling checks still pass.
+- *Changed while building:* 🔔 Ring the Bell is a bell hanging just under the crossbar (a swipe can't reach the bar itself, only a tap can);
+  the 🌀 and 🍌 walls are wider and lower than first drawn, so the three friends stand side by side instead of in a pile (they still
+  block every straight shot; the smoke test checks every one). On a phone the 🎯 tab shows only its icon, like 👯.
 
 #### v1.51 plan details: 👠 Runway (agreed 2026-11-20)
 Why: dressing up has no goal. She owns many clothes (112 in the Closet) but nothing asks her to put an outfit together.
