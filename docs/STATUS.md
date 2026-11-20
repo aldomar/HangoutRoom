@@ -93,7 +93,7 @@ _Last updated: 2026-11-20_
     Owner's answers: one PR; the museum is display pieces she arranges (not self-filling cases). Plan agreed ("go for it")
     and built (`PLAN.md`, "v1.50 plan details"). Left out on purpose: the visitor wish (it would give one friend 4 wishes
     and delay that friend's plush). **Merged** (PR #50, 2026-11-20).
-  - **👠 Runway: built as v1.51** on branch `feature/runway` (from `main` after #50). Plan agreed 2026-11-20 ("go for it"). Picked from the
+  - **👠 Runway: built, PR #51 open as v1.51** on branch `feature/runway` (from `main` after #50). Plan agreed 2026-11-20 ("go for it"). Picked from the
     "Later" list 2026-11-20. Owner's answers: her own clothes plus a 👜 Borrow rack (borrowed for one show, never owned); the
     judges (3 visitor friends) hold up cheer cards, every walk gets cheers; +3 coins a show, 15 a day; a 👠 button in the Closet.
     Full plan in `PLAN.md` ("v1.51 plan details").
@@ -1276,7 +1276,7 @@ _Last updated: 2026-11-20_
 24. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 👠 Runway (v1.51), 2026-11-20.
     Plan written in `PLAN.md` ("v1.51 plan details") on branch `feature/runway`.
 25. ~~Owner: OK the v1.51 Runway plan in `PLAN.md`, then build it on `feature/runway`.~~ Agreed and built.
-26. Owner: build v1.51, try 👠 Runway from the Closet (see the PR), and merge it.
+26. Owner: build v1.51, try 👠 Runway from the Closet (see PR #51), and merge it.
 27. Then pick the next item from the "Later, any order" list: 🐾 more pet play, Stage freestyle or Soccer trick shots.
 
 ## How versions and save upgrades work (since v1.2)
