@@ -99,9 +99,12 @@ _Last updated: 2026-11-20_
     Full plan in `PLAN.md` ("v1.51 plan details"). **Merged** (PR #51).
   - **🎸 Stage Jam: built, PR #52 open as v1.52** on branch `feature/freestyle` (from `main` after #51). Picked 2026-11-20 together with 🎯 Soccer
     Trick Shots (v1.53, next). Owner's answers: jam over her own loop (no falling notes, no score); two PRs. Plans agreed ("go for it").
-    Full plan in `PLAN.md` ("v1.52 plan details").
+    Full plan in `PLAN.md` ("v1.52 plan details"). **Merged** (PR #52).
   - **🎯 Soccer Trick Shots: built, PR #53 open as v1.53** on branch `feature/tricks` (from `feature/freestyle`, as #52 is still open). Owner's answer:
-    a fixed list of 12 tricks. Full plan in `PLAN.md` ("v1.53 plan details").
+    a fixed list of 12 tricks. Full plan in `PLAN.md` ("v1.53 plan details"). **Merged** (PR #53, 2026-11-20).
+  - **🐾 More pet play: plans written, waiting for the owner's OK** on branch `feature/petplay` (from `main` after #53). The last
+    "Later" item. Owner's answers (2026-11-20): 🙈 Hide & Seek, 🎾 Fetch and 🦮 Walks; ❤️ hearts and stickers only (no coins); a walk
+    is its own path scene. Two PRs: v1.54 (Hide & Seek + Fetch), v1.55 (Walks). Full plans in `PLAN.md`. Phase 12 is done when both are merged.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -1318,10 +1321,14 @@ _Last updated: 2026-11-20_
     Owner's answers: freestyle = **jam over her own loop** (no falling notes, no score); trick shots = **a fixed list of 12
     tricks**; **two PRs** (Jam v1.52, then Trick Shots v1.53). Both plans written in `PLAN.md` on branch `feature/freestyle`.
 28. ~~Owner: OK the v1.52 Jam and v1.53 Trick Shots plans in `PLAN.md`, then build Jam on `feature/freestyle`.~~ Agreed and built.
-28b. Owner: build v1.52, try 🎸 Jam from the Stage and from the Music Maker (see PR #52), and merge it.
+28b. ~~Owner: build v1.52, try 🎸 Jam from the Stage and from the Music Maker (see PR #52), and merge it.~~ Merged.
 29. ~~Then build 🎯 Trick Shots (v1.53) on `feature/tricks` (from `feature/freestyle`).~~ Built.
-29b. Owner: merge #52 first, then build v1.53, try 🎯 Tricks in Soccer (see PR #53), and merge it.
-30. Then the last "Later" item: 🐾 more pet play.
+29b. ~~Owner: merge #52 first, then build v1.53, try 🎯 Tricks in Soccer (see PR #53), and merge it.~~ Merged (2026-11-20).
+30. ~~Then the last "Later" item: 🐾 more pet play.~~ Picked 2026-11-20. Owner's answers: 🙈 Hide & Seek, 🎾 Fetch and 🦮 Walks;
+    ❤️ hearts and stickers only (no coins); a walk is its own path scene. Plans written in `PLAN.md` on branch `feature/petplay`:
+    v1.54 (Hide & Seek + Fetch) and v1.55 (Walks), two PRs.
+31. Owner: OK the v1.54 and v1.55 plans in `PLAN.md`, then build v1.54 on `feature/petplay`.
+32. Then build v1.55 (Walks). Phase 12 is done when both are merged.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
