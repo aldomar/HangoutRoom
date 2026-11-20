@@ -97,7 +97,7 @@ _Last updated: 2026-11-20_
     "Later" list 2026-11-20. Owner's answers: her own clothes plus a 👜 Borrow rack (borrowed for one show, never owned); the
     judges (3 visitor friends) hold up cheer cards, every walk gets cheers; +3 coins a show, 15 a day; a 👠 button in the Closet.
     Full plan in `PLAN.md` ("v1.51 plan details"). **Merged** (PR #51).
-  - **🎸 Stage Jam: built as v1.52** on branch `feature/freestyle` (from `main` after #51). Picked 2026-11-20 together with 🎯 Soccer
+  - **🎸 Stage Jam: built, PR #52 open as v1.52** on branch `feature/freestyle` (from `main` after #51). Picked 2026-11-20 together with 🎯 Soccer
     Trick Shots (v1.53, next). Owner's answers: jam over her own loop (no falling notes, no score); two PRs. Plans agreed ("go for it").
     Full plan in `PLAN.md` ("v1.52 plan details").
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
@@ -160,7 +160,7 @@ _Last updated: 2026-11-20_
 - PR #49 "I Spy (v1.49)": merged.
 - PR #50 "New things to buy (v1.50)": merged.
 - PR #51 "Runway (v1.51)": merged.
-- PR "Stage Jam (v1.52)" on branch `feature/freestyle`: open.
+- PR #52 "Stage Jam (v1.52)" on branch `feature/freestyle`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -1303,7 +1303,7 @@ _Last updated: 2026-11-20_
     Owner's answers: freestyle = **jam over her own loop** (no falling notes, no score); trick shots = **a fixed list of 12
     tricks**; **two PRs** (Jam v1.52, then Trick Shots v1.53). Both plans written in `PLAN.md` on branch `feature/freestyle`.
 28. ~~Owner: OK the v1.52 Jam and v1.53 Trick Shots plans in `PLAN.md`, then build Jam on `feature/freestyle`.~~ Agreed and built.
-28b. Owner: build v1.52, try 🎸 Jam from the Stage and from the Music Maker (see the PR), and merge it.
+28b. Owner: build v1.52, try 🎸 Jam from the Stage and from the Music Maker (see PR #52), and merge it.
 29. Then build 🎯 Trick Shots (v1.53) on `feature/tricks` (from `feature/freestyle`).
 30. Then the last "Later" item: 🐾 more pet play.
 
