@@ -131,6 +131,19 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Pet Walks (since version 1.55)
+Tap your pet → **🦮 Walk**. Your buddy and your pet go for a stroll.
+- **Pick a path** (all free): 🌼 Flower Meadow, 🦆 Duck Pond, 🏘️ Town Sidewalk or 🌙 Starry Path. Each card shows how many of its
+  finds you have (🧺 3/8).
+- **Hold 👣** (or hold the picture) to walk; the scenery slides by. Let go to stop.
+- Now and then the pet stops and sniffs a bush (a ❗ pops up). **Tap it** to see what the pet found: a daisy, a shell, a marble…
+  Animals (a ladybug, a frog, an owl…) are only said hello to, never taken.
+- After 5 finds you reach a bench and head home. **+1 heart** for each find and **+3** for the walk. No coins.
+- **🧺 Finds** shows all 32 things (the ones not found yet are gray shapes). New finds come first, so a path fills up in about 2 walks.
+- All 8 finds of a path put its **🫙 treasure jar** in 📦 My Stuff (a prize, never in the Shop), to place in any room.
+- 3 new stickers on the Room & Style page: 🦮 Walk Buddy, 🧺 Collector (one whole path) and 🌟 Treasure Hunter (all 32).
+- Save version 36 (`walk`, `stats.petWalks`, `stats.finds`); every older backup still restores.
+
 ## Pet Hide & Seek and Fetch (since version 1.54)
 Tap your pet: two big new buttons at the top of its menu. Both games play in whichever room you are in.
 - **🙈 Hide & Seek:** close your eyes (1… 2… 3…) and the pet hides behind something in the room: a standing decoration, the
@@ -578,7 +591,7 @@ Like everything else, they are for anyone to use. All are bought with coins she 
   - **🍪 Treat:** 2 coins, 3 hearts.
   - **🎀 Dress:** a bow, a star collar, a scarf, a tiny witch hat or a crown (5–15 coins, bought once, worn by any pet).
   - **✏️ Name** and **🔄 Change** (pick another pet).
-  - **🙈 Hide & Seek** and **🎾 Fetch** (since v1.54, see "Pet Hide & Seek and Fetch").
+  - **🙈 Hide & Seek** and **🎾 Fetch** (since v1.54, see "Pet Hide & Seek and Fetch") and **🦮 Walk** (since v1.55, see "Pet Walks").
 - **Hearts only go up.** The pet never gets hungry or sad, and nothing is lost if she doesn't play with it.
   New tricks come at 10, 30, 60 and 100 hearts (Spin, Hop, Flip, Dance). The pet doesn't earn coins.
 - There are 4 pet stickers in the Sticker Book (🏠 Room & Style page).

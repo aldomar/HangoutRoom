@@ -30,6 +30,7 @@ function show(n){
   if(n==='dance') renderDance(); else dnStop(); // 💃 Dance Maker (section 48)
   if(n==='garden') renderGarden(); // 🌱 Garden (section 49)
   if(n==='runway') renderRunway(); else rwStop(); // 👠 Runway (section 52)
+  if(n==='walk') renderWalk(); else wkStop(); // 🦮 Pet walks (section 56)
   if(n==='stickers') renderStickers(); // section 21
   if(n==='about') renderAbout(); // section 25
   if(n==='room') stkDot();

@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('133 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54), ids all different, 6 or more per page', await ev(`STICKERS.length===133&&new Set(STICKERS.map(s=>s.id)).size===133&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('136 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===136&&new Set(STICKERS.map(s=>s.id)).size===136&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -4231,7 +4231,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`petTap()`); await sleep(150);
     check('before she has a pet: the pet bed asks her to pick one (no games yet)', await ev(`${box}&&!document.querySelector('#modalBody [data-pa=hide]')`));
     await ev(`closeModal();{const p=P();p.pet.kind='bat';p.pet.hearts.bat=0;save();}renderRoom();petTap()`); await sleep(150);
-    check('with a pet: 🙈 Hide & Seek and 🎾 Fetch are the first buttons in its menu', await ev(`${box}&&(b=>b.length===2&&b[0].dataset.pa==='hide'&&b[1].dataset.pa==='fetch')(document.querySelectorAll('#modalBody .pet-play [data-pa]'))`));
+    check('with a pet: 🙈 Hide & Seek and 🎾 Fetch are the first buttons in its menu', await ev(`${box}&&(b=>b.length>=2&&b[0].dataset.pa==='hide'&&b[1].dataset.pa==='fetch')(document.querySelectorAll('#modalBody .pet-play [data-pa]'))`));
     await shot('PP01-pet-menu');
     // 🙈 Hide & Seek
     await ev(`document.querySelector('#modalBody [data-pa=hide]').click()`); await sleep(20);
@@ -4243,8 +4243,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await shot('PP03-hiding');
     check('the peeking pet wiggles in steps (light on the device)', await ev(`(a=>!!a&&/^steps\\(/.test(getComputedStyle(a.effect.target).animationTimingFunction))(document.getAnimations().find(a=>a.animationName==='ppWig'))`));
     const h0=await ev(`petHearts(P())`), c0=await ev(`P().coins`);
-    // a wrong tap: on the buddy
-    const fz=await ev(`(r=>[r.left+r.width/2,r.top+r.height*0.4])(document.querySelector('#mascotG').getBoundingClientRect())`);
+    // a wrong tap: somewhere well away from the hiding spot and the pet
+    const fz=await ev(`(()=>{const s=ppSpots().find(x=>x.key===PP.spot.key).el.getBoundingClientRect(),q=document.querySelector('#ppPet').getBoundingClientRect(),R=roomSvg.getBoundingClientRect();
+      for(let i=1;i<10;i++)for(let j=1;j<10;j++){const x=R.left+R.width*i/10,y=R.top+R.height*j/10,far=r=>x<r.left-30||x>r.right+30||y<r.top-30||y>r.bottom+30;if(far(s)&&far(q))return [x,y];}return null;})()`);
     await click(fz); await sleep(100);
     check('a wrong tap counts nothing ("Not here!"); the game goes on', await ev(`PP.wrong===1&&!PP.found&&PP.phase==='seek'&&petHearts(P())===${h0}&&!${box}`));
     await click(fz); await click(fz); await sleep(100);
@@ -4346,7 +4347,118 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('odd pet play data is made safe', await ev(`(p=>p.pet.toy==='ball'&&p.stats.seeks===0&&p.stats.fetches===0)(DB.profiles[0])`));
     await ev(`closeModal();doRestore(${JSON.stringify(ppB)})`); await sleep(400);
     await ev(`closeModal();{const p=P();p.pet.kind=ppSaved.kind;p.pet.hearts=JSON.parse(ppSaved.hearts);p.coins=ppSaved.coins;save();}PP_TEST_FAST=false;stkPaused=false;goRoom(1);show('room')`);
-    check('v1.54 is in the Gift Story and the app says 1.54', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.54')&&APP_VERSION==='1.54'`));
+    check('v1.54 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.54')`));
+  }
+
+  console.log('Pet Walks (v1.55)');
+  {
+    const box=`(!document.querySelector('#modal').classList.contains('hidden'))`, boxText=`document.querySelector('#modalBody').textContent`;
+    const mb=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
+    const waitFor=async(cond,ms)=>{for(let i=0;i<(ms||3000)/50;i++){if(await ev(cond))return true;await sleep(50);}return false;};
+    const center=sel=>ev(`(r=>[r.left+r.width/2,r.top+r.height/2])(document.querySelector(${JSON.stringify(sel)}).getBoundingClientRect())`);
+    const xml=`(h=>!new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg">'+h+'</svg>','image/svg+xml').querySelector('parsererror'))`;
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`closeModal();stkPaused=true;WK_TEST_FAST=true;{const p=P();p.easy=false;applyEasy();window.wkSaved={kind:p.pet.kind,hearts:JSON.stringify(p.pet.hearts),coins:p.coins};p.pet.kind='cloudPup';p.pet.hearts.cloudPup=0;save();}goRoom(1);show('room')`); await sleep(300);
+    check('save version 36; every room starts on the meadow with no finds', await ev(`DB_VERSION>=36&&DB.profiles.every(p=>p.walk.path==='meadow'&&p.walk.finds.length===0&&p.stats.petWalks===0&&p.stats.finds===0)`));
+    check('save version 36 adds walks to older saves', await ev(`(()=>{const d={profiles:[{name:'Old'}]};MIGRATIONS[36](d);return d.profiles[0].walk.path==='meadow'&&d.profiles[0].walk.finds.length===0;})()`));
+    check('4 paths with 8 finds each, 32 different find ids', await ev(`WALK_IDS.join()==='meadow,pond,town,stars'&&WALK_IDS.every(k=>WALK_FINDS[k].length===8)&&new Set(wkAllFinds().map(f=>f.id)).size===32`));
+    check('every path picture, sniff spot, find and treasure jar is strict XML', await ev(`WALK_IDS.every(k=>{const W=WALK_PATHS[k];return ['still','far','mid','ground','prop'].every(x=>${xml}(W[x]()))&&${xml}(DECOR[WALK_JARS[k]].d({}));})&&wkAllFinds().every(f=>${xml}(f.d()))`));
+    check('the 4 treasure jars are prizes (never in the Shop) with a theme chip', await ev(`Object.values(WALK_JARS).every(k=>DECOR[k].award&&!DECOR[k].price&&themesOf('decor:'+k,DECOR[k]).length>0)`));
+    // the way in
+    await ev(`petTap()`); await sleep(150);
+    check('the pet menu has 🦮 Walk next to 🙈 and 🎾', await ev(`[...document.querySelectorAll('#modalBody .pet-play [data-pa]')].map(b=>b.dataset.pa).join()==='hide,fetch,walk'`));
+    await ev(`document.querySelector('#modalBody [data-pa=walk]').click()`); await sleep(200);
+    check('🦮 opens the walk screen: 4 path cards, each with its finds count', await ev(`!${box}&&cur==='walk'&&document.querySelector('#scr-walk').dataset.view==='pick'&&document.querySelectorAll('#wkPaths [data-path]').length===4&&[...document.querySelectorAll('#wkPaths .wk-cc')].every(e=>e.textContent.includes('0/8'))`));
+    await shot('W01-paths');
+    await ev(`document.querySelector('#wkPaths [data-path=meadow]').click()`); await sleep(200);
+    check('a path card starts the walk: the scene, 5 paw dots, the 👣 button', await ev(`document.querySelector('#scr-walk').dataset.view==='walk'&&!!document.querySelector('#wkSvg .wk-buddy image')&&document.querySelectorAll('#wkDots b').length===5&&!document.querySelector('#wkGo').disabled`));
+    check('standing still: the scenery does not move', await ev(`document.getAnimations().filter(a=>a.animationName==='wkScroll').every(a=>a.playState==='paused')`));
+    await shot('W02-walk');
+    const h0=await ev(`petHearts(P())`), c0=await ev(`P().coins`);
+    await ev(`WK_TEST_FAST=false`);
+    const go=await center('#wkGo');
+    await mouse('mousePressed',go[0],go[1]); await sleep(150);
+    check('holding 👣 walks: the scenery slides', await ev(`WK.walking&&document.querySelector('#wkScene').classList.contains('walking')&&document.getAnimations().filter(a=>a.animationName==='wkScroll').every(a=>a.playState==='running')`));
+    await shot('W03-walking');
+    await mouse('mouseReleased',go[0],go[1]); await sleep(50);
+    check('letting go stops (and keeps how far she walked)', await ev(`!WK.walking&&WK.walked>0&&!WK.sniff`));
+    await ev(`WK_TEST_FAST=true`);
+    await mouse('mousePressed',go[0],go[1]);
+    check('after a while the pet stops and sniffs a bush', await waitFor(`!!WK.sniff`)&&await ev(`!WK.walking&&!document.querySelector('#wkSpot').classList.contains('hidden')&&document.querySelector('#wkGo').disabled&&document.querySelector('#wkTip').textContent.includes('found something')`));
+    await mouse('mouseReleased',go[0],go[1]);
+    await shot('W04-sniff');
+    const first=await ev(`WK.sniff.id`);
+    await (async()=>{const pt=await center('#wkSpot .wk-prop');await mouse('mousePressed',pt[0],pt[1]);await mouse('mouseReleased',pt[0],pt[1]);})(); await sleep(150);
+    check('a tap on the bush finds something: a card, +1 heart, in the finds, no coins', await ev(`${box}&&P().walk.finds.join()===${JSON.stringify(first)}&&petHearts(P())===${h0}+1&&P().stats.finds===1&&P().coins===${c0}&&WK.spots===1`));
+    await shot('W05-find');
+    await ev(`${mb('Keep walking')}.click()`); await sleep(50);
+    check('👣 Keep walking: ready to walk on, one paw dot on', await ev(`!${box}&&!WK.sniff&&!document.querySelector('#wkGo').disabled&&document.querySelectorAll('#wkDots b.on').length===1&&document.querySelector('#wkSpot').classList.contains('hidden')`));
+    for(let i=1;i<5;i++){await ev(`wkWalk(true)`);await waitFor(`!!WK.sniff`);await ev(`wkDig()`);await sleep(50);if(i<4)await ev(`${mb('Keep walking')}.click()`);}
+    check('5 sniffs on one walk: 5 different finds, all new', await ev(`WK.got.length===5&&new Set(WK.got).size===5&&P().walk.finds.length===5&&WK.got.every(id=>WALK_FINDS.meadow.some(f=>f.id===id))`));
+    check('the 5th find offers 🏡 Head home', await ev(`!!${mb('Head home')}`));
+    await ev(`${mb('Head home')}.click()`); await sleep(100);
+    check('home: the bench, "What a lovely walk!", +3 hearts (and +1 for each of 5 finds)', await ev(`${box}&&/lovely walk/.test(document.querySelector('#modalTitle').textContent)&&!document.querySelector('#wkBench').classList.contains('hidden')&&P().stats.petWalks===1&&petHearts(P())===${h0}+8&&P().coins===${c0}`));
+    await shot('W06-home');
+    await ev(`${mb('Another walk')}.click()`); await sleep(100);
+    check('🔁 Another walk goes back to the paths; the meadow card says 5/8', await ev(`document.querySelector('#scr-walk').dataset.view==='pick'&&document.querySelector('#wkPaths [data-path=meadow] .wk-cc').textContent.includes('5/8')`));
+    // an animal is only seen
+    await ev(`wkStart('pond');P().walk.finds=P().walk.finds.concat(WALK_FINDS.pond.filter(f=>f.id!=='frog').map(f=>f.id));save();wkWalk(true)`);
+    await waitFor(`!!WK.sniff`);
+    check('a new find comes first: the only pond find left (the frog)', await ev(`WK.sniff.id==='frog'`));
+    await ev(`wkDig()`); await sleep(100);
+    check('an animal is waved goodbye ("Hello, frog!") and still goes in the book', await ev(`/Hello, frog/.test(document.querySelector('#modalTitle').textContent)&&/Bye bye/.test(${boxText})&&P().walk.finds.includes('frog')`));
+    check('the 8th pond find puts the 🫙 Pond Jar in My Stuff, once', await ev(`/Pond Jar/.test(${boxText})&&(j=>j.length===1&&!j[0].placed)(allItems(P()).filter(i=>i.type==='jarPond'))&&wkGiveJar(P(),'pond')===''`));
+    await shot('W07-jar');
+    await ev(`closeModal();wkWalk(true)`); await waitFor(`!!WK.sniff`);
+    check('a full path still has finds (seen again)', await ev(`WALK_FINDS.pond.some(f=>f.id===WK.sniff.id)&&!WK.got.includes(WK.sniff.id)`));
+    // the book
+    await ev(`document.querySelector('#wkBookBtn').click()`); await sleep(150);
+    check('🧺 Walk Finds: all 32 shown, the ones not found as gray shapes', await ev(`document.querySelector('#scr-walk').dataset.view==='book'&&document.querySelectorAll('#wkBook [data-find]').length===32&&document.querySelectorAll('#wkBook .wk-no').length===32-P().walk.finds.length`));
+    await shot('W08-book');
+    await ev(`androidBack()`); await sleep(100);
+    check('Back: the finds -> the paths', await ev(`cur==='walk'&&document.querySelector('#scr-walk').dataset.view==='pick'`));
+    await ev(`wkStart('stars');wkWalk(true)`); await sleep(30);
+    await shot('W09-stars');
+    await ev(`androidBack()`); await sleep(100);
+    check('Back in the middle of a walk: stops walking, back to the paths', await ev(`!WK.walking&&document.querySelector('#scr-walk').dataset.view==='pick'&&!document.querySelector('#wkScene').classList.contains('walking')`));
+    await ev(`androidBack()`); await sleep(100);
+    check('Back from the paths: the room', await ev(`cur==='room'`));
+    await ev(`wkOpen();wkStart('town');wkWalk(true);show('room')`); await sleep(50);
+    check('leaving the screen stops the walk', await ev(`!WK.walking`));
+    // every path draws
+    await ev(`show('walk')`);
+    for(const k of ['meadow','pond','town','stars']){await ev(`wkStart('${k}')`);await sleep(100);await shot('W10-path-'+k);}
+    check('every path draws without errors', true);
+    // small screens
+    for(const [w,h,name] of [[412,860,'phone'],[360,740,'small phone'],[820,1180,'tablet upright'],[860,412,'phone sideways']]){
+      await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:true});
+      await ev(`WK.view='pick';renderWalk()`); await sleep(150);
+      check(name+': the path cards fit', await ev(`[...document.querySelectorAll('#wkPaths .wk-card')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.height>=48;})&&document.documentElement.scrollWidth<=innerWidth+1`));
+      await shot('W11-'+name.replace(/ /g,'-')+'-paths');
+      await ev(`wkStart('meadow')`); await sleep(150);
+      check(name+': the buddy, the pet and the sniff spot are all on screen; 👣 is big enough', await ev(`(()=>{document.querySelector('#wkSpot').classList.remove('hidden');const s=document.querySelector('#wkScene').getBoundingClientRect(),in_=e=>{const r=e.getBoundingClientRect();return r.left>=s.left-1&&r.right<=s.right+1&&r.top>=s.top-1&&r.bottom<=s.bottom+1;};const g=document.querySelector('#wkGo').getBoundingClientRect();const ok=in_(document.querySelector('.wk-buddy image'))&&in_(document.querySelector('#wkPet'))&&in_(document.querySelector('#wkSpot .wk-prop'))&&g.height>=48&&g.width>=48&&g.right<=innerWidth+1;document.querySelector('#wkSpot').classList.add('hidden');return ok;})()`));
+      await shot('W11-'+name.replace(/ /g,'-')+'-walk');
+      await ev(`WK.view='book';renderWalk()`); await sleep(100);
+      check(name+': the finds book fits', await ev(`[...document.querySelectorAll('#wkBook .wk-bt')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.height>=48;})`));
+    }
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`P().easy=true;applyEasy();show('walk');wkStart('meadow')`); await sleep(100);
+    check('Easy mode: a short tip, a bigger 👣', await ev(`document.querySelector('#wkTip').textContent==='Hold 👣'&&document.querySelector('#wkGo').getBoundingClientRect().height>=70`));
+    await ev(`P().easy=false;applyEasy();show('room')`);
+    // stickers
+    check('3 new stickers on the 🏠 Room & Style page: Walk Buddy, Collector, Treasure Hunter', await ev(`['petWalk1','petWalkPath','petWalkAll'].every(id=>(s=>s&&s.page==='room')(STICKERS.find(s=>s.id===id)))`));
+    check('…Walk Buddy and Collector are done (the pond is full), Treasure Hunter not yet', await ev(`stkDone(P(),STICKERS.find(s=>s.id==='petWalk1'))&&stkDone(P(),STICKERS.find(s=>s.id==='petWalkPath'))&&!stkDone(P(),STICKERS.find(s=>s.id==='petWalkAll'))`));
+    // backups
+    const wkB=await ev(`JSON.stringify(DB)`);
+    await ev(`(()=>{const d=JSON.parse(${JSON.stringify(wkB)});d.version=35;d.profiles.forEach(p=>{delete p.walk;delete p.stats.petWalks;delete p.stats.finds;});doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('a v1.54 backup restores with no walks', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.walk.finds.length===0&&p.stats.petWalks===0)`));
+    await ev(`closeModal();doRestore(${JSON.stringify(wkB)})`); await sleep(400);
+    check('a v1.55 backup keeps the finds and the jar', await ev(`DB.profiles.some(p=>p.walk.finds.length>=13&&p.stats.petWalks===1&&allItems(p).some(i=>i.type==='jarPond'))`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(wkB)});d.profiles[0].walk={path:5,finds:['daisy',7,'daisy','nope']};d.profiles[0].stats.finds='x';doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd walk data is made safe (unknown finds are ignored by the book and stickers)', await ev(`(p=>p.walk.path==='meadow'&&p.walk.finds.join()==='daisy,nope'&&p.stats.finds===0&&wkHave(p,'meadow')===1)(DB.profiles[0])`));
+    await ev(`closeModal();doRestore(${JSON.stringify(wkB)})`); await sleep(400);
+    await ev(`closeModal();{const p=P();p.pet.kind=wkSaved.kind;p.pet.hearts=JSON.parse(wkSaved.hearts);p.coins=wkSaved.coins;save();}WK_TEST_FAST=false;stkPaused=false;goRoom(1);show('room')`);
+    check('v1.55 is in the Gift Story and the app says 1.55', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.55')&&APP_VERSION==='1.55'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);
