@@ -86,7 +86,7 @@ _Last updated: 2026-11-19_
     Picked from the "Later" list 2026-11-19. Owner's answers: plants grow by themselves (one step a day, never wilt), picking gives
     +3 coins and the first time a pot, 4 free seeds + 8 to buy, 6 plots. Full plan in `PLAN.md` ("v1.48 plan details"); agreed and built.
     **Merged** (PRs #47 and #48).
-  - **🔍 I Spy: built as v1.49** on branch `feature/ispy` (from `main` after #48). Picked from the "Later" list 2026-11-19
+  - **🔍 I Spy: built, PR #49 open as v1.49** on branch `feature/ispy` (from `main` after #48). Picked from the "Later" list 2026-11-19
     (the recommended pick). Owner's answers: build the plan as written, and 🌙 night turns it into a 🔦 flashlight game.
     Full plan in `PLAN.md` ("v1.49 plan details").
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
@@ -146,7 +146,7 @@ _Last updated: 2026-11-19_
 - PR #46 "Little Ones' Corner (v1.46)": merged.
 - PR #47 "Dance Maker (v1.47)": merged.
 - PR #48 "Backyard Garden (v1.48)": merged.
-- PR "I Spy (v1.49)" on branch `feature/ispy`: open.
+- PR #49 "I Spy (v1.49)" on branch `feature/ispy`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
