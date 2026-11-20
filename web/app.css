@@ -951,3 +951,14 @@ body.easy .spy-pic{width:76px;height:76px}
   .spy-txt{flex:1 1 calc(100% - 90px)}
   .spy-btns{flex:1 1 100%;justify-content:flex-end}
 }
+/* 51. New things to spend coins on (v1.50): the Stage backdrop row */
+.stg-bds{width:min(1000px,100%);display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.stg-bds .bd-t{width:100%;text-align:center;font-weight:900;font-size:17px;color:var(--muted)}
+.bd{position:relative;background:var(--panel2);border:3px solid var(--line);border-radius:16px;padding:6px;width:112px;min-height:48px;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 4px 0 #1a1424}
+.bd:active{transform:translateY(3px);box-shadow:0 1px 0 #1a1424}
+.bd img{width:96px;height:64px;border-radius:10px;display:block}
+.bd .tn{font-size:14px;font-weight:800;line-height:1.15;text-align:center}
+.bd.on{border-color:var(--gold);box-shadow:0 0 0 3px #ffd16655,0 4px 0 #1a1424}
+.bd .tp{position:absolute;top:2px;right:2px;background:#3a2c18;color:var(--gold);font-size:14px;font-weight:900;padding:1px 7px;border-radius:999px;border:1px solid #6b5220}
+body.easy .bd.poor{opacity:.5}
+@media (max-width:620px){.bd{width:96px}.bd img{width:80px;height:54px}}

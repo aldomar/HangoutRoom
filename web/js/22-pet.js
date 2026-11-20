@@ -76,7 +76,7 @@ function petG(p){
   const k=petKind(p);
   const inner=k?`<g class="pet-bob"><g transform="translate(0 -8)"><g id="petBody" class="pet-body">${petArt(k,petAcc(p))}</g></g></g>`
     :`<g class="pet-ask"><circle cx="0" cy="-56" r="20" fill="#fff" stroke="#2b2235" stroke-width="3"/><text x="0" y="-48" text-anchor="middle" font-size="22">🐾</text><text x="22" y="-66" font-size="18" font-weight="900" fill="#ff4fa3">?</text></g>`;
-  return `<g id="petG" class="hot pet" data-hot="pet" transform="translate(${PET_SPOT.x} ${PET_SPOT.y})"><rect x="-55" y="-95" width="110" height="100" fill="transparent"/>${petBed()}${inner}</g>`;
+  return `<g id="petG" class="hot pet" data-hot="pet" transform="translate(${PET_SPOT.x} ${PET_SPOT.y})"><rect x="-55" y="-95" width="110" height="100" fill="transparent"/>${petHomeArt(p)}${inner}</g>`;
 }
 
 /* ---------- playing ---------- */
@@ -123,9 +123,9 @@ function petMenu(){
     +`<div class="pet-info"><div class="pet-h">❤️ ${h}</div><div class="pet-sub">${nx?`New trick at ❤️ ${nx.at}`:'Knows every trick! 🌟'}</div>`
     +`<div class="pet-tricks">${PET_TRICKS.map(t=>`<span class="${h>=t.at?'on':''}" title="${t.name}">${h>=t.at?t.icon:'🔒'}<small>${t.name}</small></span>`).join('')}</div></div></div>`
     +`<div class="pet-acts"><button class="btn pink" data-pa="pat">🤚 Pet</button><button class="btn" data-pa="treat">🍪 Treat <small>🪙${PET_TREAT}</small></button>`
-    +`<button class="btn ghost" data-pa="dress">🎀 Dress</button><button class="btn ghost" data-pa="name">✏️ Name</button><button class="btn ghost" data-pa="change">🔄 Change</button></div>`,
+    +`<button class="btn ghost" data-pa="dress">🎀 Dress</button><button class="btn ghost" data-pa="home">🏠 Home</button><button class="btn ghost" data-pa="name">✏️ Name</button><button class="btn ghost" data-pa="change">🔄 Change</button></div>`,
     [{text:'Close',cls:'ghost'}]);
-  $$('#modalBody [data-pa]').forEach(b=>b.onclick=()=>{SFX.click();({pat:petPat,treat:petTreat,dress:petDress,name:petRename,change:petChoose})[b.dataset.pa]();});
+  $$('#modalBody [data-pa]').forEach(b=>b.onclick=()=>{SFX.click();({pat:petPat,treat:petTreat,dress:petDress,home:petHomes,name:petRename,change:petChoose})[b.dataset.pa]();});
 }
 function petChoose(){
   const p=P(), k=petKind(p);

@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('117 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49), ids all different, 6 or more per page', await ev(`STICKERS.length===117&&new Set(STICKERS.map(s=>s.id)).size===117&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('120 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50), ids all different, 6 or more per page', await ev(`STICKERS.length===120&&new Set(STICKERS.map(s=>s.id)).size===120&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -2453,7 +2453,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('every new piece of clothing draws on every buddy, with no broken numbers', await ev(`(()=>{const items=Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p4).map(i=>[c,i.id]));return items.every(([c,id])=>Object.keys(BUDDIES).every(k=>{const s=mascotSVG(Object.assign({},DEFAULT_LOOK,{kind:k,[c]:id}));return s.length>500&&!/NaN|undefined/.test(s);}));})()`));
   check('nothing in the pack says "boy" or "girl", and every price is 10–40', await ev(`(()=>{const L=[...Object.values(CLOSET).flatMap(c=>c.items),...Object.values(DECOR),...Object.values(WALLS),...Object.values(FLOORS),...Object.values(POP_THEMES),...Object.values(POP_SHAPES),...Object.values(SQUISHIES),...Object.values(SPINS),...Object.values(SLIMES),...Object.values(CUBES),...Object.values(MARBLES)].filter(x=>x.p4);return L.length>=50&&L.every(x=>!/\\b(boy|girl)s?\\b/i.test(x.name)&&x.price>=10&&x.price<=40);})()`));
   check('every new item is on a photocard row', await ev(`Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p4).map(i=>c+':'+i.id)).every(k=>Object.values(CARD_TAGS).some(t=>t.includes(k)))`));
-  check('the 🐮 Farm chip sits before Outdoor and Dreams', await ev(`Object.keys(THEMES).slice(-3).join()==='farm,yard,dream'`));
+  check('the 🐮 Farm chip sits before Outdoor and Dreams (and 🏛️ Museum since v1.50)', await ev(`Object.keys(THEMES).slice(-4).join()==='farm,museum,yard,dream'`));
   await ev(`show('closet')`);
   for(const [c,i] of p4Clothes){await ev(`document.querySelector('[data-cat=${c}]').click()`);
     check(`closet has ${c}:${i}`, await ev(`!!document.querySelector('#closetGrid [data-id=${i}] svg')`));}
@@ -3650,7 +3650,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   {
     await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
     await ev(`closeModal();stkPaused=true;P().easy=false;Object.keys(P().night).forEach(k=>delete P().night[k]);window.FP_TEST_DAY='2026-11-19';goRoom(1);show('room')`); await sleep(300);
-    check('save version 30; every room starts I Spy on ⭐ with nothing spied', await ev(`DB_VERSION===30&&DB.profiles.every(p=>p.spy&&p.spy.lvl===1&&p.spy.rooms.length===0&&p.spy.pay.n===0&&p.stats.spied===0&&p.stats.spyRounds===0)`));
+    check('save version 30 or later; every room starts I Spy on ⭐ with nothing spied', await ev(`DB_VERSION>=30&&DB.profiles.every(p=>p.spy&&p.spy.lvl===1&&p.spy.rooms.length===0&&p.spy.pay.n===0&&p.stats.spied===0&&p.stats.spyRounds===0)`));
     check('the 🔍 button sits on the room picture, right of 🌙, 48 px or more', await ev(`(()=>{const b=document.querySelector('#spyBtn'),n=document.querySelector('#nightBtn'),r=b.getBoundingClientRect(),q=n.getBoundingClientRect();return !b.classList.contains('hidden')&&r.width>=48&&r.height>=48&&r.left>=q.right&&Math.abs(r.top-q.top)<2&&b.getAttribute('aria-label')==='I Spy';})()`));
     // the Studio: 4 known things (2 spooky, 2 cute) and the pet bed
     await ev(`{const p=P();window.spyKeep=JSON.stringify(p.room4.items);p.room4.items=[{uid:'sp1',type:'ghost',x:150,y:560,placed:true},{uid:'sp2',type:'moon',x:330,y:560,placed:true},{uid:'sp3',type:'plant',x:720,y:560,placed:true},{uid:'sp4',type:'starRug',x:500,y:690,placed:true}];goRoom(4);}`); await sleep(250);
@@ -3757,7 +3757,108 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(spB)});d.profiles[0].spy={lvl:9,rooms:[4,4,'x',7,2],pay:'no'};d.profiles[0].stats.spied=-3;doRestore(JSON.stringify(d));})()`); await sleep(400);
     check('odd I Spy data is made safe', await ev(`(s=>s.lvl===1&&s.rooms.join()==='4,2'&&s.pay.n===0&&s.pay.day===''&&DB.profiles[0].stats.spied===0)(DB.profiles[0].spy)`));
     await ev(`closeModal();stkPaused=false;delete window.FP_TEST_DAY;show('room')`);
-    check('v1.49 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.49')&&APP_VERSION==='1.49'`));
+    check('v1.49 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.49')`));
+  }
+
+  console.log('New things to spend coins on (v1.50)');
+  {
+    const mb=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`closeModal();stkPaused=true;{const p=P();p.easy=false;applyEasy();Object.keys(p.night).forEach(k=>delete p.night[k]);p.coins=1000;}goRoom(1);show('room')`); await sleep(300);
+    check('save version 31; every room has the cushion and the Classic backdrop', await ev(`DB_VERSION===31&&DB.version===31&&DB.profiles.every(p=>p.pet.home===''&&p.stage.backdrop==='classic')`));
+    check('save version 31 adds the home and backdrop to older saves', await ev(`(()=>{const d={profiles:[{name:'Old',pet:{kind:'bat'},stage:{level:'easy'}}]};MIGRATIONS[31](d);return d.profiles[0].pet.home===''&&d.profiles[0].stage.backdrop==='classic';})()`));
+    // 🏠 pet homes
+    await ev(`{const p=P();p.pet.kind='bat';if(!('bat' in p.pet.hearts))p.pet.hearts.bat=0;renderRoom();}`); await sleep(150);
+    check('8 pet homes to buy, 12-30 coins, with different ids', await ev(`(e=>e.length===8&&e.every(([k,H])=>H.price>=12&&H.price<=30&&H.name&&H.icon))(Object.entries(PET_HOMES))`));
+    check('before buying one, the pet sits on the cushion bed', await ev(`petHomeId(P())===''&&!!document.querySelector('#petG [data-ph=cushion]')`));
+    await ev(`petMenu()`); await sleep(150);
+    check('the pet menu has a 🏠 Home button', await ev(`!!document.querySelector('#modalBody [data-pa=home]')`));
+    await ev(`document.querySelector('#modalBody [data-pa=home]').click()`); await sleep(150);
+    check('🏠 Home shows the cushion (picked) and the 8 homes with prices', await ev(`document.querySelectorAll('#modalBody [data-home]').length===9&&document.querySelector('#modalBody [data-home=""]').classList.contains('on')&&document.querySelectorAll('#modalBody [data-home] .tp').length===8`));
+    await shot('CS1-pet-homes');
+    const homeBad=[];
+    for(const id of await ev(`Object.keys(PET_HOMES)`)){
+      const before=await ev(`P().coins`);
+      await ev(`document.querySelector('#modalBody [data-home=${id}]').click()`); await sleep(80);
+      await ev(`${mb('Yes, get it!')}.click()`); await sleep(120);
+      const ok=await ev(`(()=>{const p=P();return p.pet.home==='${id}'&&p.owned.includes('pethome:${id}')&&p.coins===${before}-PET_HOMES['${id}'].price&&!!document.querySelector('#petG [data-ph=${id}]')&&!!document.querySelector('#modalBody [data-home=${id}].on');})()`);
+      // a home stays in the pet's spot (the screenshots show it stays clear of the buddy)
+      const fit=await ev(`(b=>b.x>=-66&&b.x+b.width<=66&&b.y>=-140&&b.y+b.height<=8.5)(document.querySelector('#petG [data-ph=${id}]').getBBox())`);
+      if(!ok||!fit) homeBad.push(id+(ok?'':' buy')+(fit?'':' size '+JSON.stringify(await ev(`(b=>[b.x,b.y,b.width,b.height].map(Math.round))(document.querySelector('#petG [data-ph=${id}]').getBBox())`))));
+    }
+    check('each home can be bought and is drawn under the pet; each fits the pet spot', homeBad.length===0, homeBad);
+    await ev(`closeModal()`); await sleep(100); await shot('CS2-room-castle');
+    await ev(`petHomes();document.querySelector('#modalBody [data-home=batTent]').click()`); await sleep(120);
+    check('an owned home is picked again with no question and no coins', await ev(`P().pet.home==='batTent'&&!!document.querySelector('#modalBody [data-home=batTent].on')`));
+    await ev(`document.querySelector('#modalBody [data-home=""]').click()`); await sleep(100);
+    check('the cushion is free and can be picked back', await ev(`P().pet.home===''&&!!document.querySelector('#petG [data-ph=cushion]')`));
+    await ev(`P().pet.home='cottage';closeModal();renderRoom()`);
+    check('the home shows in every room', await ev(`[2,3,4,1].every(n=>{goRoom(n);return !!document.querySelector('#petG [data-ph=cottage]');})`));
+    check('a home she does not own (an odd save) draws the cushion', await ev(`(()=>{const p=P();p.pet.home='castle';const o=p.owned;p.owned=o.filter(k=>k!=='pethome:castle');const r=petHomeArt(p).includes('data-ph="cushion"');p.owned=o;p.pet.home='cottage';return r;})()`));
+    // 🎨 Stage backdrops
+    await ev(`show('stage')`); await sleep(250);
+    check('the Stage song list has a 🎨 Backdrop row: Classic (picked) + 7 to buy, 10-20 coins', await ev(`(b=>b.length===8&&document.querySelector('#stgBds [data-bd=classic]').classList.contains('on')&&document.querySelectorAll('#stgBds .tp').length===7&&Object.values(BACKDROPS).every(B=>B.price===0||(B.price>=10&&B.price<=20)))([...document.querySelectorAll('#stgBds [data-bd]')])`));
+    check('each backdrop button has a picture and is 48 px or more', await ev(`[...document.querySelectorAll('#stgBds [data-bd]')].every(b=>{const r=b.getBoundingClientRect(),i=b.querySelector('img');return r.width>=48&&r.height>=48&&i&&/^data:image\\/png/.test(i.src);})`));
+    await shot('CS3-stage-backdrops');
+    const bdBad=[];
+    for(const id of await ev(`Object.keys(BACKDROPS).filter(k=>BACKDROPS[k].price)`)){
+      const before=await ev(`P().coins`);
+      await ev(`document.querySelector('#stgBds [data-bd=${id}]').click()`); await sleep(80);
+      await ev(`${mb('Yes, get it!')}.click()`); await sleep(120);
+      const ok=await ev(`P().stage.backdrop==='${id}'&&P().owned.includes('backdrop:${id}')&&P().coins===${before}-BACKDROPS['${id}'].price&&document.querySelector('#stgBds [data-bd=${id}]').classList.contains('on')&&!document.querySelector('#stgBds [data-bd=${id}] .tp')`);
+      await ev(`stStart('starlight')`); await sleep(500);
+      const drawn=await ev(`BD.key.startsWith('${id}|')&&(()=>{const c=document.querySelector('#stgCv'),x=c.getContext('2d').getImageData(4,Math.round(c.height/2),1,1).data;return x[3]===255;})()`);
+      await shot('CS4-backdrop-'+id);
+      await ev(`stgPickView()`); await sleep(100);
+      if(!ok||!drawn) bdBad.push(id+(ok?'':' buy')+(drawn?'':' draw'));
+    }
+    check('each backdrop can be bought, picked, and is drawn behind a song', bdBad.length===0, bdBad);
+    await ev(`stStart('starlight')`); await sleep(300);
+    const cv1=await ev(`(window.bdCv=BD.cv,1)`); await sleep(400);
+    check('the backdrop is drawn once, not every frame', await ev(`BD.cv===window.bdCv&&STG.state==='play'`));
+    await ev(`stgPickView();document.querySelector('#stgBds [data-bd=classic]').click()`); await sleep(100);
+    check('Classic is free and can be picked back', await ev(`P().stage.backdrop==='classic'&&stgBdId(P())==='classic'`));
+    check('a backdrop she does not own (an odd save) plays as Classic', await ev(`(()=>{const p=P();p.stage.backdrop='neon';const o=p.owned;p.owned=o.filter(k=>k!=='backdrop:neon');const r=stgBdId(p)==='classic';p.owned=o;p.stage.backdrop='galaxy';return r;})()`));
+    for(const [w,h,name] of [[412,860,'phone'],[360,740,'small phone'],[820,1180,'tablet upright']]){
+      await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:true});
+      await ev(`stgPickView()`); await sleep(200);
+      check(name+': the backdrop buttons fit across the screen', await ev(`[...document.querySelectorAll('#stgBds [data-bd]')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.width>=48&&r.height>=48;})`));
+      await ev(`document.querySelector('#stgBds').scrollIntoView()`); await sleep(100); await shot('CS5-'+name.replace(/ /g,'-'));
+    }
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    // 🏛️ museum pieces
+    await ev(`show('room');goRoom(4)`); await sleep(200);
+    check('10 museum pieces, 6-35 coins, all with the 🏛️ Museum chip and none a prize', await ev(`SP_MUSEUM.length===10&&SP_MUSEUM.every(k=>DECOR[k]&&DECOR[k].price>=6&&DECOR[k].price<=35&&!DECOR[k].award&&themesOf('decor:'+k,DECOR[k]).includes('museum'))&&THEMES.museum.icon==='🏛️'`));
+    check('🔍 I Spy has words for the Museum chip', await ev(`SPY_THEME_WORDS.museum==='for a museum'`));
+    await ev(`enterDecorate();decoTab='shop';renderDecoGrid()`); await sleep(150);
+    check('the Shop shows a 🏛️ Museum chip', await ev(`!!document.querySelector('#decoPanel [data-theme=museum]')`));
+    await ev(`document.querySelector('#decoPanel [data-theme=museum]').click()`); await sleep(150);
+    check('…which lists the 10 museum pieces', await ev(`SP_MUSEUM.every(k=>!!document.querySelector('#decoGrid [data-buy='+k+']'))&&document.querySelectorAll('#decoGrid [data-buy]').length===10`));
+    await shot('CS6-shop-museum');
+    await ev(`exitDecorate(true)`);
+    // a pedestal carries what sits on it, drawn in front of it
+    await ev(`{const p=P();window.muKeep=JSON.stringify(p.room4.items);p.room4.items=[{uid:'mu2',type:'plant',x:300,y:500,placed:true},{uid:'mu1',type:'pedestal',x:300,y:600,placed:true},{uid:'mu3',type:'velvetRope',x:620,y:640,placed:true},{uid:'mu4',type:'dinoBones',x:760,y:560,placed:true},{uid:'mu5',type:'wallCase',x:520,y:330,placed:true},{uid:'mu6',type:'spotlight',x:150,y:300,placed:true},{uid:'mu7',type:'goldFrame',x:860,y:300,placed:true},{uid:'mu8',type:'museumPlaque',x:520,y:400,placed:true},{uid:'mu9',type:'tallPedestal',x:120,y:640,placed:true},{uid:'mu10',type:'museumCounter',x:460,y:690,placed:true},{uid:'mu11',type:'museumBench',x:900,y:690,placed:true}];renderRoom();}`); await sleep(150);
+    check('a thing dropped near a pedestal\'s top sits on it', await ev(`(()=>{const R=P().room4,t=R.items.find(i=>i.uid==='mu2');return snapToShelf(t)&&t.y===600-DECOR.pedestal.shelf.top;})()`));
+    await ev(`renderRoom()`); await sleep(100);
+    check('…and is drawn in front of the pedestal (its own y is higher up)', await ev(`(d=>d.indexOf('mu2')>d.indexOf('mu1')&&d.indexOf('mu1')>=0)([...document.querySelectorAll('#roomSvg .deco')].map(g=>g.dataset.uid))`));
+    check('moving the pedestal takes it along', await ev(`onShelf(P().room4.items.find(i=>i.uid==='mu1')).map(i=>i.uid).join()==='mu2'`));
+    check('a pedestal never sits on another shelf', await ev(`(()=>{const R=P().room4,t=R.items.find(i=>i.uid==='mu9'),y=t.y;t.x=520;t.y=330-44+5;const r=snapToShelf(t);t.x=120;t.y=y;return r===false;})()`));
+    check('the spotlight glows at night', await ev(`!!NIGHT_GLOW.spotlight`));
+    await shot('CS7-museum');
+    // stickers
+    check('3 new stickers: Home Sweet Home, Set Designer, Museum Maker', await ev(`[['petHome','room'],['backdrop','stage'],['museum3','room']].every(([id,pg])=>(s=>s&&s.page===pg)(STICKERS.find(s=>s.id===id)))`));
+    check('…all done now (a home, a backdrop, 3+ museum pieces placed)', await ev(`['petHome','backdrop','museum3'].every(id=>stkDone(P(),STICKERS.find(s=>s.id===id)))`));
+    // backups
+    const spendB=await ev(`JSON.stringify(DB)`);
+    await ev(`(()=>{const d=JSON.parse(${JSON.stringify(spendB)});d.version=30;d.profiles.forEach(p=>{delete p.pet.home;delete p.stage.backdrop;});doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('a v1.49 backup restores with the cushion and the Classic backdrop', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.pet.home===''&&p.stage.backdrop==='classic')`));
+    await ev(`closeModal();doRestore(${JSON.stringify(spendB)})`); await sleep(400);
+    check('a v1.50 backup keeps the home, the backdrop and what was bought', await ev(`DB.profiles.some(p=>p.pet.home==='cottage'&&p.stage.backdrop==='galaxy'&&p.owned.includes('pethome:castle')&&p.owned.includes('backdrop:neon'))`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(spendB)});d.profiles[0].pet.home=5;d.profiles[0].stage.backdrop={};doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd home and backdrop data is made safe', await ev(`DB.profiles[0].pet.home===''&&DB.profiles[0].stage.backdrop==='classic'`));
+    await ev(`closeModal();doRestore(${JSON.stringify(spendB)})`); await sleep(400);
+    await ev(`closeModal();{const p=P();p.room4.items=JSON.parse(window.muKeep);}stkPaused=false;goRoom(1);show('room')`);
+    check('v1.50 is in the Gift Story and the app says 1.50', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.50')&&APP_VERSION==='1.50'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

@@ -83,7 +83,7 @@ function normalize(p){
   // Pet (v1.19): which pet is out (a PETS id, or '' before she picks one), what it wears, and a name and
   // friendship hearts for each kind of pet she has had. Section 22 checks the ids; this only checks the types.
   p.pet=Object.assign({kind:'',acc:'none'},p.pet&&typeof p.pet==='object'&&!Array.isArray(p.pet)?p.pet:{});
-  if(typeof p.pet.kind!=='string') p.pet.kind=''; if(typeof p.pet.acc!=='string') p.pet.acc='none';
+  if(typeof p.pet.kind!=='string') p.pet.kind=''; if(typeof p.pet.acc!=='string') p.pet.acc='none'; if(typeof p.pet.home!=='string') p.pet.home=''; // v1.50
   const petObj=o=>o&&typeof o==='object'&&!Array.isArray(o)?o:{};
   p.pet.names=Object.fromEntries(Object.entries(petObj(p.pet.names)).filter(([k,v])=>typeof v==='string'&&v.trim()).map(([k,v])=>[k,v.slice(0,12)]));
   p.pet.hearts=Object.fromEntries(Object.entries(petObj(p.pet.hearts)).map(([k,v])=>[k,Math.max(0,Math.floor(Number(v)||0))]));
@@ -125,7 +125,7 @@ function normalize(p){
   Object.keys(p.stage.best).forEach(k=>{const b=p.stage.best[k];if(!b||typeof b!=='object'||Array.isArray(b)){delete p.stage.best[k];return;}
     Object.keys(b).forEach(l=>{const r=b[l];if(!r||typeof r!=='object')delete b[l];else{r.stars=Number(r.stars)||0;r.score=Number(r.score)||0;}});});
   if(!['easy','medium','hard'].includes(p.stage.level)) p.stage.level='easy';
-  p.stage.mic=!!p.stage.mic;
+  p.stage.mic=!!p.stage.mic; if(typeof p.stage.backdrop!=='string') p.stage.backdrop='classic'; // v1.50
   // Little-sister polish (v1.8): Easy mode, and the room's color + badge on the profile screen.
   p.easy=!!p.easy;
   // Buddies (v1.20): the room's color also colors the buttons and bars. New rooms start with it on; rooms made

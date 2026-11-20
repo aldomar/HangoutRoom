@@ -362,13 +362,13 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   garden. Plants grow one step a day by themselves and never wilt; picking one gives coins and, the first time, a potted plant.
 - ✅ **🔍 I Spy (v1.49, built; plan details below, agreed 2026-11-19):** a 🔍 button in every room. Clues (a picture, a name or a
   theme hint) for things in her own room; tap to find, 5 a round, nothing can go wrong; a 🔦 flashlight at night.
-- **🪙 New things to spend coins on (v1.50, plan below, waiting for the owner's OK):** 🏠 pet homes, 🎤 Stage backdrops
+- ✅ **🪙 New things to spend coins on (v1.50, built; plan details below, agreed 2026-11-19):** 🏠 pet homes, 🎤 Stage backdrops
   and 🏛️ museum display pieces for showing off her prizes. One PR.
 - **Later, any order:** 👗 Runway (style a look for a theme
   card; judges only cheer), 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
   loop) and Soccer trick shots.
 
-#### v1.50 plan details: 🪙 New things to spend coins on (picked 2026-11-19)
+#### v1.50 plan details: 🪙 New things to spend coins on (agreed 2026-11-19)
 Why: the last few PRs added many ways to earn coins (Garden, I Spy, Dance Maker, 🧸 Play, Free Play) but nothing new to
 buy, so coins pile up with no goal. This adds about 25 new things across three places. Owner's answers: one PR; the museum
 is display pieces she arranges herself (not cases that fill themselves). Everything is a normal one-time buy with the
@@ -392,8 +392,9 @@ usual helpers (`tryBuy`/`buyConsumable`, Easy buy box, `priceTag`), all prices 6
     Museum Plaque (6, "⭐ My Collection").
   - Pedestals and the counter work like shelves: a trophy, glove, plush, pot or anything standing dropped on top sits there
     and moves with it. New: things on a standing shelf are drawn just in front of it (today only wall shelves exist).
-- **Extras:** 3 stickers (a pet home, a backdrop, 3 museum pieces); one new visitor wish at the end of the list
-  ("Show me your treasures!": 2 museum pieces + a prize in the room). The museum pieces count for 🔍 I Spy by themselves.
+- **Extras:** 3 stickers (a pet home, a backdrop, 3 museum pieces). The museum pieces count for 🔍 I Spy by themselves.
+  *Changed while building:* no new visitor wish. Each friend has exactly 3 wishes and leaves a plush after all 3, so a 4th
+  wish would have moved a plush further away. A museum wish can come with a future set of wishes.
 - **Code:** a new file `51-spend.js` (split into a second file if it passes ~40 KB). Save version 30 → 31 (`pet.home`,
   `stage.backdrop`), defaults filled in by `normalize()`; old backups still restore.
 - **Smoke test:** buy and show each pet home; buy, pick and play a song with each backdrop; put a trophy on a pedestal and

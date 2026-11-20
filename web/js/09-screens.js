@@ -124,7 +124,7 @@ function renderRoom(){
   // are drawn back to front by how far forward they stand (y), so whatever is lower on the floor is in front (v1.39).
   // Equal y keeps list order (sort is stable), so the one touched last is in front. While decorating, .fixed fades.
   const fx=h=>`<g class="fixed">${h}</g>`;
-  s+=items.filter(i=>!DECOR[i.type].flat&&!DECOR[i.type].wall).map(i=>({y:i.y,h:deco(i)}))
+  s+=items.filter(i=>!DECOR[i.type].flat&&!DECOR[i.type].wall).map(i=>({y:rideY(i,items),h:deco(i)}))
     .concat(fur.floor.map(f=>({y:f.y,h:fx(f.h)})),[{y:604,h:fx(mascotG(p))},{y:PET_SPOT.y,h:fx(petG(p))},{y:GIFT_SPOT.y,h:fx(giftG(p))},{y:VISIT_SPOT.y,h:fx(visitG(p))}])
     .sort((a,b)=>a.y-b.y).map(e=>e.h).join('');
   s+=nightLayer(p,R); // 🌙 night mode (section 31, v1.27)
@@ -205,9 +205,14 @@ function toFront(R,it){const k=R.items.indexOf(it);if(k>=0)R.items.splice(k,1);R
 const standing=i=>i.placed&&DECOR[i.type]&&!DECOR[i.type].wall&&!DECOR[i.type].flat;
 function onShelf(s){const S=DECOR[s.type].shelf, top=s.y-S.top;
   return curRoom(P()).items.filter(i=>standing(i)&&Math.abs(i.y-top)<3&&Math.abs(i.x-s.x)<=S.w/2+4);}
+// Where a standing thing is sorted front to back: on a standing shelf (a pedestal, v1.50) it goes just in front of the
+// shelf instead of by its own y (which is higher up, so it would be drawn behind it).
+function rideY(i,items){if(!standing(i)||DECOR[i.type].shelf) return i.y;
+  for(const s of items){const S=s!==i&&standing(s)&&DECOR[s.type].shelf; if(S&&Math.abs(i.y-(s.y-S.top))<3&&Math.abs(i.x-s.x)<=S.w/2+4) return s.y+0.01;}
+  return i.y;}
 function snapToShelf(it){ // drop a standing thing near a shelf top and it sits on it
-  if(!standing(it)) return false; let best=null, bd=31;
-  for(const s of curRoom(P()).items){const S=s.placed&&DECOR[s.type]&&DECOR[s.type].shelf; if(!S) continue;
+  if(!standing(it)||DECOR[it.type].shelf) return false; let best=null, bd=31; // a pedestal never sits on a shelf (v1.50)
+  for(const s of curRoom(P()).items){const S=s!==it&&s.placed&&DECOR[s.type]&&DECOR[s.type].shelf; if(!S) continue;
     const d=Math.abs(it.y-(s.y-S.top)); if(d<bd&&Math.abs(it.x-s.x)<=S.w/2){bd=d;best=s;}}
   if(!best) return false; it.y=best.y-DECOR[best.type].shelf.top; return true;
 }
