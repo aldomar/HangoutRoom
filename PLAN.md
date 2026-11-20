@@ -375,7 +375,7 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   a walk is **its own path scene**. Proposed as two PRs: 🙈 Hide & Seek + 🎾 Fetch in the rooms (v1.54), then 🦮 Walks (v1.55).
   Phase 12 is done when both are merged.
   - ✅ **🙈 Hide & Seek + 🎾 Fetch (v1.54, built).**
-  - **🦮 Walks (v1.55):** next.
+  - ✅ **🦮 Walks (v1.55, built).** Phase 12 is done when both are merged.
 
 #### v1.54 plan details: 🙈 Pet Hide & Seek + 🎾 Fetch (agreed 2026-11-20, built)
 Why: the pet can only be patted, fed and dressed, so after the tricks are learned there is nothing to *do* with it. Hide &
@@ -424,7 +424,7 @@ something to throw past. Both work for all four children (the 3-year-old can fin
   legs. At least 8% of the pet peeks out (16% in Easy mode, so the little ones find it), and at most 45%. The 🌙 button hides while
   a game is on (like the room tabs), so the lights can't change mid-game.
 
-#### v1.55 plan details: 🦮 Pet Walks (agreed 2026-11-20)
+#### v1.55 plan details: 🦮 Pet Walks (agreed 2026-11-20, built)
 Why: pet play in the room stays in the room. A walk takes her buddy and the pet somewhere new, with little things to
 discover and collect. It is calm, has no wrong answers and suits the little ones as much as the older two.
 - **The way in:** 🦮 **Walk** in the pet menu (next to 🙈 and 🎾). It opens a new screen, `scr-walk`. Back goes to the room.
@@ -454,6 +454,8 @@ discover and collect. It is calm, has no wrong answers and suits the little ones
 - **Smoke test:** open a walk from the pet menu; every path draws and walks (a test switch skips the wait); 5 sniff spots then
   home with the right hearts; a find card for each spot, new finds first; the Walk Finds book; all 8 finds of a path give its
   jar once (into My Stuff); no coins change; the 3 stickers; every find drawing parses as XML; speed and spelling checks pass.
+- *Changed while building:* the first sticker is called 🦮 **Walk Buddy** (the Runway already has a "First Walk"). On an upright phone the
+  scene keeps its shape at the bottom with more sky above, so the buddy, the pet and the bush always stay on screen.
 
 #### v1.52 plan details: 🎸 Stage Jam (agreed 2026-11-20)
 Why: the Music Maker makes loops, but a loop can only be listened to. The Stage only plays fixed songs. Jam joins the two:

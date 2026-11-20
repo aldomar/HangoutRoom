@@ -18,7 +18,7 @@ function newProfile(name,fur,color,badge,look){
 function normalize(p){
   if(!p.id) p.id=uid();
   if(!p.name) p.name='Room';
-  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0,seeks:0,fetches:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
+  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0,seeks:0,fetches:0,petWalks:0,finds:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.fidPay=Object.assign({day:'',n:0},p.fidPay&&typeof p.fidPay==='object'?p.fidPay:{}); if(typeof p.fidPay.n!=='number'||!(p.fidPay.n>=0)) p.fidPay.n=0; // v1.36: fidget coins paid today (see FID_DAILY)
   // Music Maker (v1.38, section 40): sound kit, speed (0-2), the loop on the grid now, 3 saved loops, music coins paid today.
@@ -95,6 +95,10 @@ function normalize(p){
   if(typeof p.pet.kind!=='string') p.pet.kind=''; if(typeof p.pet.acc!=='string') p.pet.acc='none'; if(typeof p.pet.home!=='string') p.pet.home=''; // v1.50
   if(typeof p.pet.toy!=='string') p.pet.toy='ball'; // 🎾 the fetch toy (v1.54, section 55 checks the id)
   ['seeks','fetches'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));}); // v1.54
+  // Pet walks (v1.55, section 56): the last path walked and the find ids found (both checked when they are read).
+  {const w=p.walk&&typeof p.walk==='object'&&!Array.isArray(p.walk)?p.walk:{};
+   p.walk={path:typeof w.path==='string'?w.path:'meadow',finds:Array.isArray(w.finds)?w.finds.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[]};
+   ['petWalks','finds'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));});}
   const petObj=o=>o&&typeof o==='object'&&!Array.isArray(o)?o:{};
   p.pet.names=Object.fromEntries(Object.entries(petObj(p.pet.names)).filter(([k,v])=>typeof v==='string'&&v.trim()).map(([k,v])=>[k,v.slice(0,12)]));
   p.pet.hearts=Object.fromEntries(Object.entries(petObj(p.pet.hearts)).map(([k,v])=>[k,Math.max(0,Math.floor(Number(v)||0))]));

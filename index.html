@@ -360,6 +360,21 @@
 </div>
 
 <!-- RUNWAY (v1.51, from the Closet) -->
+<!-- PET WALK (v1.55, section 56) -->
+<div id="scr-walk" class="screen" data-view="pick">
+  <div class="topbar">
+    <button class="btn small ghost" id="wkBack">⬅ Room</button>
+    <div class="title">🦮 Walk</div>
+    <button class="btn small ghost" id="wkBookBtn" aria-label="Walk Finds">🧺<span> Finds</span></button>
+  </div>
+  <div class="wk-pick"><div class="wk-hint">Pick a path!</div><div class="wk-paths" id="wkPaths"></div></div>
+  <div class="wk-walk">
+    <div class="wk-scene" id="wkScene"><svg id="wkSvg" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMax meet"></svg></div>
+    <div class="wk-bar"><div class="wk-info"><span id="wkTip"></span><i id="wkDots" class="wk-dots"></i></div><button class="btn pink wk-go" id="wkGo" aria-label="Walk">👣 <span class="tn">Walk</span></button></div>
+  </div>
+  <div class="wk-book" id="wkBook"></div>
+</div>
+
 <div id="scr-runway" class="screen" data-view="cards">
   <div class="topbar">
     <button class="btn small ghost" id="rwBack">⬅ Closet</button>
@@ -508,6 +523,7 @@
 <script src="web/js/53-jam.js"></script>
 <script src="web/js/54-tricks.js"></script>
 <script src="web/js/55-petplay.js"></script>
+<script src="web/js/56-walk.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

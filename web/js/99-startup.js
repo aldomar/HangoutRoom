@@ -43,6 +43,7 @@ window.androidBack=function(){
   if(cur==='music'){muBackKey();return true;} // section 40
   if(cur==='dance'){dnBackKey();return true;} // back to the Music Maker or the Stage (section 48)
   if(cur==='garden'){gdBackKey();return true;} // back to the Backyard (section 49)
+  if(cur==='walk'){wkBackKey();return true;} // a walk or the finds -> the paths -> the room (section 56)
   if(cur==='runway'){rwBackKey();return true;} // the walk -> dressing room -> cards -> Closet (section 52)
   if(cur==='little'){ltBackKey();return true;} // a toy -> the 🧸 menu -> room (section 46)
   if(cur==='brain'){brBackKey();return true;} // a puzzle -> the Brain Games menu -> room

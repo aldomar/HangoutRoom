@@ -163,7 +163,9 @@ const GIFT_TIMELINE=[
   {v:'1.53',d:'2026-11-20',i:'🎯',n:'Trick Shots',why:'So there is always a new kick to learn, even after every trophy is won',
     news:['🎯 Trick Shots in Soccer: 12 tricks to try','🍌 Curve the ball around a wall of friends','🏅 Do all 12 to win the Trick Shot Star']},
   {v:'1.54',d:'2026-11-20',i:'🙈',n:'Pet Hide & Seek + Fetch',why:'So there is always something to play with your pet, even after it knows every trick',
-    news:['🙈 Hide & Seek: your pet hides behind something in your room','🎾 Fetch: swipe to throw a toy and your pet brings it back','🦴 New fetch toys to get']}
+    news:['🙈 Hide & Seek: your pet hides behind something in your room','🎾 Fetch: swipe to throw a toy and your pet brings it back','🦴 New fetch toys to get']},
+  {v:'1.55',d:'2026-11-20',i:'🦮',n:'Pet Walks',why:'So her pet can take her somewhere new, with little treasures to find on the way',
+    news:['🦮 Walk your pet on 4 paths: meadow, pond, town and a starry night','🧺 32 little things to find for your Walk Finds','🫙 Find a whole path for its treasure jar']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
