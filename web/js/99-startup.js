@@ -29,7 +29,9 @@ document.addEventListener('pointerdown',e=>{lastX=e.clientX;lastY=e.clientY;ac()
 document.addEventListener('contextmenu',e=>e.preventDefault());
 // Android back button (called by the APK wrapper). Returns true if the app handled it.
 window.androidBack=function(){
+  if(SPY.on&&SPY.done&&!$('#modal').classList.contains('hidden')){closeModal();spyEnd();return true;} // the 🔍 round box: Back = Done
   if(!$('#modal').classList.contains('hidden')){closeModal();return true;}
+  if(cur==='room'&&SPY.on){spyEnd();return true;} // 🔍 I Spy -> the room (section 50)
   if(decorating){exitDecorate();return true;}
   if(cur==='fidget'||cur==='closet'){show('room');return true;}
   if(cur==='art'){artBack();return true;}

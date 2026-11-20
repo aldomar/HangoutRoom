@@ -360,9 +360,35 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   a Music Maker loop or a Stage song; 🕺 free dance while it plays. Also (owner's request) the 🎤 Stage sign hangs above the 🎹 keyboard.
 - ✅ **🌱 Backyard garden (v1.48, built; plan details below, agreed 2026-11-19):** the garden shed opens a 6-plot
   garden. Plants grow one step a day by themselves and never wilt; picking one gives coins and, the first time, a potted plant.
+- ✅ **🔍 I Spy (v1.49, built; plan details below, agreed 2026-11-19):** a 🔍 button in every room. Clues (a picture, a name or a
+  theme hint) for things in her own room; tap to find, 5 a round, nothing can go wrong; a 🔦 flashlight at night.
 - **Later, any order:** 👗 Runway (style a look for a theme
-  card; judges only cheer), 🔍 I Spy in her own room, 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
+  card; judges only cheer), 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
   loop), Soccer trick shots, and new things to spend coins on (pet house, a collections museum, Stage backdrops).
+
+#### v1.49 plan details: 🔍 I Spy (agreed 2026-11-19)
+Why: her room fills up as she decorates, but nothing asks her to look at it again. I Spy turns whatever she has built into
+a finding game that never runs out (every new thing is a new thing to find). Owner's answers: build the plan as written; at night it
+becomes a 🔦 flashlight game.
+- **The way in:** a round 🔍 button on the room picture, right of 🌙 (the top bar is full). It works in all 4 rooms and hides
+  while decorating.
+- **Play:** a clue card takes the top bar's place: "Find the Bat Lamp!". She taps the thing; a tap on it or close to it
+  counts. It sparkles and the next clue comes. A wrong tap only says "👀 Keep looking!" (no timer, no score). 💡 makes the
+  right thing shimmer, 🔊 says the clue, ✖ (or Back) stops. While I Spy is on, tapping furniture doesn't open anything.
+- **Clue levels** (remembered; Easy mode is always ⭐): ⭐ picture + name, ⭐⭐ name only, ⭐⭐⭐ a theme hint
+  ("something 🦇 spooky"): any thing with that theme chip counts.
+- **What can be spied:** the decorations on screen plus the room's own furniture (by its hotspot) and the pet. Things too
+  small to tap or hidden behind others are skipped. A room needs at least 3 things ("Put out a few more things first!").
+- **Rounds and coins:** 5 finds a round (fewer in a room with fewer things), then a cheer box (🔁 Again / 🏠 Done).
+  +2 coins a round, 10 a day (`SPY_DAILY`); after that it still plays, with one gentle note.
+- **🌙 Night:** a dark layer with one 🔦 circle of light that follows her finger (bigger in Easy mode); lamps still glow a little.
+- **Stickers** (🏠 Room & Style): 🔍 Sharp Eyes (a round), 🕵️ Super Spy (100 things found), 🗺️ Spy Everywhere (a round in all 4 rooms).
+- **Light on the device:** no main loop. Sparkles and the hint ring are short CSS animations; only the flashlight circle moves.
+- **Save:** `spy{lvl, rooms[], pay{day,n}}`, `stats.spied`, `stats.spyRounds`. Save version 30 (`normalize` + `MIGRATIONS[30]`).
+  Older backups restore with nothing spied yet.
+- **Files:** new `50-ispy.js`, the 🔍 button and clue card in `index.html`, CSS in `app.css`, small hooks in sections 9, 31 and 99.
+- **Smoke test:** every room, right and wrong taps (also a real mouse tap), 💡, a round paying +2 and the daily limit, the
+  levels and theme hints, Easy mode, the flashlight, too few things, ✖ and Back, stickers, phone layouts, backups.
 
 #### v1.48 plan details: 🌱 Backyard garden (agreed 2026-11-19)
 Why: the Backyard has a shed that was "a spot for a future game", and nothing in the app grows over time. A garden gives a

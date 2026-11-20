@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('114 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48), ids all different, 6 or more per page', await ev(`STICKERS.length===114&&new Set(STICKERS.map(s=>s.id)).size===114&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('117 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49), ids all different, 6 or more per page', await ev(`STICKERS.length===117&&new Set(STICKERS.map(s=>s.id)).size===117&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -3547,7 +3547,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     const gdDay=n=>{const d=new Date(Date.UTC(2026,10,19+n));return d.toISOString().slice(0,10);};
     await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
     await ev(`closeModal();stkPaused=true;P().easy=false;window.FP_TEST_DAY='${gdDay(0)}';goRoom(1);show('room')`); await sleep(300);
-    check('save version 29; every room has an empty garden of 6 plots', await ev(`DB_VERSION===29&&DB.profiles.every(p=>p.garden&&p.garden.plots.length===6&&p.garden.plots.every(x=>x===null)&&p.garden.grown.length===0&&p.stats.planted===0&&p.stats.harvests===0)`));
+    check('save version 29 or later; every room has an empty garden of 6 plots', await ev(`DB_VERSION>=29&&DB.profiles.every(p=>p.garden&&p.garden.plots.length===6&&p.garden.plots.every(x=>x===null)&&p.garden.grown.length===0&&p.stats.planted===0&&p.stats.harvests===0)`));
     check('12 seeds with different ids: 4 free, the others 5–15 coins', await ev(`GD_SEEDS.length===12&&new Set(GD_SEEDS.map(s=>s.id)).size===12&&GD_SEEDS.filter(s=>!s.price).length===4&&GD_SEEDS.filter(s=>s.price).every(s=>s.price>=5&&s.price<=15)`));
     check('every plant draws at every step (and in a pot)', await ev(`GD_SEEDS.every(s=>[0,1,2,3].every(k=>{const h=gdPlant(s.id,k);return h.length>80&&!/undefined|NaN/.test(h);})&&!/undefined|NaN/.test(gdPlant(s.id,3,true)))`));
     check('every seed has a pot: a prize (never in the Shop) with a theme chip and 🌳 Outdoor', await ev(`GD_SEEDS.every(s=>{const k=gdPotKey(s),d=DECOR[k];return d&&d.award&&!d.price&&themesOf('decor:'+k,d).includes('yard')&&themesOf('decor:'+k,d).includes(s.th)&&!/undefined|NaN/.test(d.d());})`));
@@ -3643,7 +3643,121 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(gdB)});d.profiles[0].garden={plots:[{seed:'tulip',day:'yesterday'},{seed:'nope',day:'2026-11-19',step:9},'x',{seed:4,day:'2026-11-19'}],grown:['tulip','tulip',5]};doRestore(JSON.stringify(d));})()`); await sleep(400);
     check('odd garden data is made safe (an unknown seed just shows an empty plot)', await ev(`(g=>g.plots.length===6&&g.plots[0]===null&&g.plots[1].step===3&&g.plots[2]===null&&g.plots[3]===null&&g.grown.join()==='tulip'&&gdPlot(DB.profiles[0],1)===null)(DB.profiles[0].garden)`));
     await ev(`closeModal();stkPaused=false;delete window.FP_TEST_DAY;show('room')`);
-    check('v1.48 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.48')&&APP_VERSION==='1.48'`));
+    check('v1.48 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.48')`));
+  }
+
+  console.log('I Spy (v1.49)');
+  {
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`closeModal();stkPaused=true;P().easy=false;Object.keys(P().night).forEach(k=>delete P().night[k]);window.FP_TEST_DAY='2026-11-19';goRoom(1);show('room')`); await sleep(300);
+    check('save version 30; every room starts I Spy on ⭐ with nothing spied', await ev(`DB_VERSION===30&&DB.profiles.every(p=>p.spy&&p.spy.lvl===1&&p.spy.rooms.length===0&&p.spy.pay.n===0&&p.stats.spied===0&&p.stats.spyRounds===0)`));
+    check('the 🔍 button sits on the room picture, right of 🌙, 48 px or more', await ev(`(()=>{const b=document.querySelector('#spyBtn'),n=document.querySelector('#nightBtn'),r=b.getBoundingClientRect(),q=n.getBoundingClientRect();return !b.classList.contains('hidden')&&r.width>=48&&r.height>=48&&r.left>=q.right&&Math.abs(r.top-q.top)<2&&b.getAttribute('aria-label')==='I Spy';})()`));
+    // the Studio: 4 known things (2 spooky, 2 cute) and the pet bed
+    await ev(`{const p=P();window.spyKeep=JSON.stringify(p.room4.items);p.room4.items=[{uid:'sp1',type:'ghost',x:150,y:560,placed:true},{uid:'sp2',type:'moon',x:330,y:560,placed:true},{uid:'sp3',type:'plant',x:720,y:560,placed:true},{uid:'sp4',type:'starRug',x:500,y:690,placed:true}];goRoom(4);}`); await sleep(250);
+    const spyFind=`(()=>{const t=spyThings().find(SPY.clue.ok);const r=t.el.getBoundingClientRect();t.el.dispatchEvent(new MouseEvent('click',{bubbles:true,clientX:r.left+r.width/2,clientY:r.top+r.height/2}));return t.key;})()`;
+    await ev(`document.querySelector('#spyBtn').click()`); await sleep(300);
+    check('🔍 starts I Spy: the clue card takes the top bar\'s place, the room tabs and 📷 hide', await ev(`SPY.on&&!document.querySelector('#spyCard').classList.contains('hidden')&&getComputedStyle(document.querySelector('#scr-room .topbar')).display==='none'&&getComputedStyle(document.querySelector('#roomTabs')).display==='none'&&getComputedStyle(document.querySelector('#roomSnapBtn')).display==='none'`));
+    check('the Studio has 5 things to spy (4 decorations + the pet), with names', await ev(`(a=>a.length===5&&a.every(t=>t.name&&!/undefined/.test(t.name))&&a.some(t=>t.key==='hot:pet'))(spyThings())`), await ev(`spyThings().map(t=>t.key).join()`));
+    check('⭐ clue: "Find the …!" with a picture of the thing, and 5 dots', await ev(`/^Find the .+!$/.test(document.querySelector('#spyText').textContent)&&!!document.querySelector('#spyPic svg')&&!document.querySelector('#spyPic').classList.contains('hidden')&&document.querySelectorAll('#spyDots b').length===5`));
+    check('every thing draws a clue picture', await ev(`spyThings().every(t=>{const h=spyPic(t.el);return h.startsWith('<svg viewBox=')&&!/NaN|undefined/.test(h);})`));
+    await shot('S01-ispy-card');
+    // a wrong tap
+    const c0=await ev(`P().coins`);
+    const wrong=await ev(`(()=>{const ok=spyThings().filter(SPY.clue.ok).map(t=>t.el.getBoundingClientRect());const w=spyThings().find(t=>{if(SPY.clue.ok(t))return false;const r=t.el.getBoundingClientRect();return ok.every(o=>r.right+20<o.left||r.left-20>o.right||r.bottom+20<o.top||r.top-20>o.bottom);});if(!w)return '';const r=w.el.getBoundingClientRect();w.el.dispatchEvent(new MouseEvent('click',{bubbles:true,clientX:r.left+r.width/2,clientY:r.top+r.height/2}));return w.key;})()`);
+    check('a wrong tap only says keep looking: nothing found, nothing lost, the same clue', !!wrong&&await ev(`SPY.found===0&&!!SPY.clue&&P().coins===${c0}&&P().stats.spied===0&&[...document.querySelectorAll('.float')].some(f=>f.textContent.includes('Keep looking'))`), wrong);
+    await ev(`document.querySelector('#spyHint').click()`); await sleep(100);
+    check('💡 rings the right thing', await ev(`(()=>{const g=document.querySelector('#spyRing ellipse'),t=spyThings().find(SPY.clue.ok);if(!g||!t)return false;const b=spyBox(t.el);return Math.abs(+g.getAttribute('cx')-b.cx)<2&&Math.abs(+g.getAttribute('cy')-b.cy)<2;})()`));
+    await shot('S02-ispy-hint');
+    await ev(`SPY.clue.ok=x=>x.key==='decor:ghost';document.querySelector('#roomSvg [data-hot=pet]').dispatchEvent(new MouseEvent('click',{bubbles:true,clientX:5,clientY:5}))`); await sleep(150);
+    check('while spying, tapping the pet doesn\'t open its menu', await ev(`document.querySelector('#modal').classList.contains('hidden')&&cur==='room'&&SPY.found===0`));
+    await ev(`SPY.clue=null;SPY.used=[];spyNext()`);
+    // a right tap with a real mouse click inside the thing
+    const pt=await ev(`(()=>{const t=spyThings().find(SPY.clue.ok),r=t.el.getBoundingClientRect();for(const [a,b] of [[.5,.5],[.3,.3],[.7,.3],[.3,.7],[.7,.7],[.5,.15],[.5,.88]]){const x=r.left+r.width*a,y=r.top+r.height*b,e=document.elementFromPoint(x,y);if(e&&t.el.contains(e))return [x,y];}return null;})()`);
+    await mouse('mousePressed',pt[0],pt[1]); await mouse('mouseReleased',pt[0],pt[1]); await sleep(100);
+    check('a real tap on the thing finds it: a sparkle, a dot fills, 1 spied', await ev(`SPY.found===1&&P().stats.spied===1&&!!document.querySelector('#roomSvg .spy-spark')&&document.querySelectorAll('#spyDots b.on').length===1&&!document.querySelector('#spyRing')`));
+    await sleep(800);
+    check('…then the next clue comes, for a different thing', await ev(`!!SPY.clue&&SPY.used.length>=1&&!SPY.used.includes(SPY.clue.key)`));
+    for(let i=0;i<3;i++){await ev(spyFind);await sleep(850);}
+    check('no coins before the round is done', await ev(`P().coins===${c0}&&SPY.found===4`));
+    await ev(spyFind); await sleep(900);
+    check('5 finds: a cheer box, +2 coins, the Studio counted', await ev(`document.querySelector('#modalTitle').textContent.includes('Super spy')&&P().coins===${c0}+2&&P().stats.spyRounds===1&&P().stats.spied===5&&P().spy.rooms.join()==='4'&&P().spy.pay.n===2`));
+    await shot('S03-ispy-done');
+    await ev(`[...document.querySelectorAll('#modalBtns .btn')].find(b=>b.textContent.includes('Again')).click()`); await sleep(300);
+    check('🔁 Again: a new round of 5', await ev(`SPY.on&&SPY.found===0&&!!SPY.clue&&document.querySelectorAll('#spyDots b.on').length===0`));
+    // the daily limit
+    await ev(`P().spy.pay={day:'2026-11-19',n:10}`); const c1=await ev(`P().coins`);
+    for(let i=0;i<5;i++){await ev(spyFind);await sleep(850);}
+    check('after 10 coins today a round still cheers, with no coins and a gentle note', await ev(`P().coins===${c1}&&document.querySelector('#modalBody').textContent.includes('full for today')&&P().stats.spyRounds===2`));
+    check('Back on the cheer box ends I Spy', await ev(`androidBack()&&!SPY.on&&cur==='room'&&document.querySelector('#modal').classList.contains('hidden')&&getComputedStyle(document.querySelector('#scr-room .topbar')).display!=='none'`));
+    await ev(`P().spy.pay={day:'2026-11-18',n:10}`); await ev(`document.querySelector('#spyBtn').click()`); await sleep(300); const c2=await ev(`P().coins`);
+    for(let i=0;i<5;i++){await ev(spyFind);await sleep(850);}
+    check('a new day pays again', await ev(`P().coins===${c2}+2&&P().spy.pay.day==='2026-11-19'&&P().spy.pay.n===2`));
+    await ev(`[...document.querySelectorAll('#modalBtns .btn')].find(b=>b.textContent.includes('Again')).click()`); await sleep(300);
+    // levels
+    await ev(`document.querySelector('#spyLvl').click()`); await sleep(100);
+    check('⭐⭐: the name only, no picture (remembered)', await ev(`P().spy.lvl===2&&document.querySelector('#spyLvl').textContent==='⭐⭐'&&document.querySelector('#spyPic').classList.contains('hidden')&&/^Find the .+!$/.test(document.querySelector('#spyText').textContent)`));
+    await ev(`document.querySelector('#spyLvl').click()`); await sleep(100);
+    check('⭐⭐⭐: a hint like "Find something 🦇 spooky!"', await ev(`P().spy.lvl===3&&!!SPY.clue.theme&&/^Find something .+!$/.test(document.querySelector('#spyText').textContent)&&document.querySelector('#spyText').textContent.includes(SPY_THEME_WORDS[SPY.clue.theme])`));
+    const other=await ev(`(()=>{const t=spyThings().find(x=>SPY.clue.ok(x)&&x.key!==SPY.clue.key);if(!t)return '';const r=t.el.getBoundingClientRect();t.el.dispatchEvent(new MouseEvent('click',{bubbles:true,clientX:r.left+r.width/2,clientY:r.top+r.height/2}));return t.key;})()`);
+    check('a hint is met by any thing with that theme', !!other&&await ev(`SPY.found===1`), other);
+    await sleep(850);
+    check('every theme chip but Dreams has hint words', await ev(`Object.keys(THEMES).filter(t=>t!=='all'&&t!=='dream').every(t=>SPY_THEME_WORDS[t])`));
+    await ev(`document.querySelector('#spyLvl').click()`); await sleep(100);
+    check('the level button goes round to ⭐ again', await ev(`P().spy.lvl===1`));
+    await ev(`P().spy.lvl=3;P().easy=true;applyEasy();spyNext()`); await sleep(100);
+    check('Easy mode: always the picture clue, no level button', await ev(`!!document.querySelector('#spyPic svg')&&document.querySelector('#spyLvl').classList.contains('hidden')&&/^Find the/.test(document.querySelector('#spyText').textContent)`));
+    await shot('S04-ispy-easy');
+    await ev(`P().easy=false;applyEasy();spyNext()`);
+    // night: the flashlight
+    await ev(`document.querySelector('#nightBtn').click()`); await sleep(200);
+    check('🌙 while spying: the room goes dark with a 🔦 light, and I Spy goes on', await ev(`SPY.on&&!!SPY.clue&&!!document.querySelector('#spyDark #spyLight')&&!!document.querySelector('#roomSvg .night')`));
+    const lp=await ev(`(()=>{const r=roomSvg.getBoundingClientRect();return [r.left+r.width*0.8,r.top+r.height*0.75];})()`);
+    await mouse('mouseMoved',lp[0],lp[1]); await sleep(60);
+    check('the light follows the finger (or mouse)', await ev(`(l=>{const q=toSvg({clientX:${lp[0]},clientY:${lp[1]}});return Math.abs(+l.getAttribute('cx')-q.x)<2&&Math.abs(+l.getAttribute('cy')-q.y)<2;})(document.querySelector('#spyLight'))`), await ev(`[document.querySelector('#spyLight').getAttribute('cx'),document.querySelector('#spyLight').getAttribute('cy')]`));
+    check('spying still works in the dark', await ev(`spyThings().length===5`));
+    await shot('S05-ispy-flashlight');
+    await ev(`document.querySelector('#spyX').click()`); await sleep(200);
+    check('✖ ends I Spy: the top bar is back and the flashlight is gone (night stays on)', await ev(`!SPY.on&&document.querySelector('#spyCard').classList.contains('hidden')&&!document.querySelector('#spyDark')&&!!document.querySelector('#roomSvg .night')&&getComputedStyle(document.querySelector('#scr-room .topbar')).display!=='none'`));
+    await ev(`document.querySelector('#nightBtn').click()`); await sleep(150);
+    // too few things
+    await ev(`P().room4.items=[{uid:'sp1',type:'ghost',x:150,y:560,placed:true}];renderRoom();document.querySelector('#spyBtn').click()`); await sleep(250);
+    check('a room with fewer than 3 things: Fuzzy asks for more, I Spy doesn\'t start', await ev(`!SPY.on&&document.querySelector('#bubble').textContent.includes('few more things')&&getComputedStyle(document.querySelector('#scr-room .topbar')).display!=='none'`));
+    await ev(`P().room4.items=JSON.parse(window.spyKeep);save();goRoom(1)`); await sleep(250);
+    // the other rooms
+    const counts=await ev(`[1,2,3].map(n=>{goRoom(n);SPY.on=true;document.body.classList.add('spying');const k=spyThings().map(t=>t.key);SPY.on=false;document.body.classList.remove('spying');return k;})`);
+    check('her Room, the Loft and the Backyard each have 3+ things to spy, furniture too', counts.every(k=>k.length>=3)&&counts[0].includes('hot:closet')&&counts[1].includes('hot:music')&&counts[2].includes('hot:garden'), counts);
+    await ev(`goRoom(1);renderRoom();document.querySelector('#spyBtn').click()`); await sleep(250);
+    check('Back while spying ends I Spy and stays in the room', await ev(`SPY.on&&androidBack()&&!SPY.on&&cur==='room'&&roomNo===1`));
+    await ev(`document.querySelector('#spyBtn').click()`); await sleep(250); await ev(`show('closet')`); await sleep(150);
+    check('leaving the room ends I Spy', await ev(`!SPY.on&&!document.body.classList.contains('spying')`));
+    await ev(`show('room');enterDecorate()`); await sleep(150);
+    check('🔍 hides while decorating', await ev(`document.querySelector('#spyBtn').classList.contains('hidden')`));
+    await ev(`exitDecorate()`); await sleep(150);
+    // stickers
+    check('3 I Spy stickers on the Room & Style page', await ev(`['spy1','spy100','spyAll'].every(id=>(s=>s&&s.page==='room')(STICKERS.find(s=>s.id===id)))`));
+    check('Sharp Eyes is done after a round; Spy Everywhere needs all 4 rooms', await ev(`(s=>stkDone(P(),s))(STICKERS.find(s=>s.id==='spy1'))&&(s=>!stkDone(P(),s)&&stkDone(Object.assign({},P(),{spy:{lvl:1,rooms:[1,2,3,4],pay:{day:'',n:0}}}),s))(STICKERS.find(s=>s.id==='spyAll'))`));
+    // layouts
+    for(const [w,h,name] of [[412,860,'phone'],[360,740,'small phone'],[860,412,'phone landscape'],[1180,820,'tablet'],[820,1180,'tablet upright']]){
+      await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<1000});
+      await ev(`spyEnd();goRoom(1);show('room')`); await sleep(250);
+      check(name+': the 🔍 button fits', await ev(`(r=>r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight&&r.width>=48)(document.querySelector('#spyBtn').getBoundingClientRect())`));
+      await ev(`document.querySelector('#spyBtn').click()`); await sleep(400);
+      const els=`[...document.querySelectorAll('#spyCard .spy-b:not(.hidden),#spyText')]`;
+      check(name+': the clue card and its 48 px buttons fit on screen', await ev(`SPY.on&&${els}.every(e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.top>=0&&r.bottom<=innerHeight+1&&(e.id==='spyText'||(r.width>=48&&r.height>=48));})`), await ev(`${els}.map(e=>e.id+':'+JSON.stringify(e.getBoundingClientRect())).join(' ')`));
+      await shot('S06-'+name.replace(/ /g,'-'));
+    }
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`spyEnd();show('room')`);
+    // backups
+    const spB=await ev(`JSON.stringify(DB)`);
+    await ev(`(()=>{const d=JSON.parse(${JSON.stringify(spB)});d.version=29;d.profiles.forEach(p=>{delete p.spy;delete p.stats.spied;delete p.stats.spyRounds;});doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('a v1.48 backup restores with nothing spied yet', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.spy.lvl===1&&p.spy.rooms.length===0&&p.stats.spied===0&&p.stats.spyRounds===0)`));
+    await ev(`closeModal();doRestore(${JSON.stringify(spB)})`); await sleep(400);
+    check('a v1.49 backup keeps the rounds and rooms', await ev(`DB.profiles.some(p=>p.stats.spyRounds===3&&p.spy.rooms.includes(4))`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(spB)});d.profiles[0].spy={lvl:9,rooms:[4,4,'x',7,2],pay:'no'};d.profiles[0].stats.spied=-3;doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd I Spy data is made safe', await ev(`(s=>s.lvl===1&&s.rooms.join()==='4,2'&&s.pay.n===0&&s.pay.day===''&&DB.profiles[0].stats.spied===0)(DB.profiles[0].spy)`));
+    await ev(`closeModal();stkPaused=false;delete window.FP_TEST_DAY;show('room')`);
+    check('v1.49 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.49')&&APP_VERSION==='1.49'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

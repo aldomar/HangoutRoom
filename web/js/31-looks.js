@@ -109,7 +109,7 @@ function nightBack(p){
   return s+'</g>';
 }
 function nightBtn(){const p=P(),b=$('#nightBtn');if(!p||!b)return;const on=isNight(p);
-  b.textContent=on?'☀️':'🌙'; b.setAttribute('aria-label',on?'Lights on':'Lights off'); b.classList.toggle('on',on); b.classList.toggle('hidden',decorating);$('#roomSnapBtn').classList.toggle('hidden',decorating);} // 📷 (section 34) hides with it
+  b.textContent=on?'☀️':'🌙'; b.setAttribute('aria-label',on?'Lights on':'Lights off'); b.classList.toggle('on',on); b.classList.toggle('hidden',decorating);$('#roomSnapBtn').classList.toggle('hidden',decorating);$('#spyBtn').classList.toggle('hidden',decorating);} // 📷 (section 34) and 🔍 (section 50) hide with it
 $('#nightBtn').onclick=()=>{
   const p=P(); if(!p) return; const on=!isNight(p);
   if(on){p.night[roomNo]=true;p.stats.nights++;tone(300,0.12,'triangle',0.12,200);}else{delete p.night[roomNo];tone(500,0.12,'triangle',0.12,760);}
