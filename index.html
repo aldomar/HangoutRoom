@@ -43,6 +43,11 @@
 
 <!-- ROOM -->
 <div id="scr-room" class="screen">
+  <div id="spyCard" class="spy-card hidden" role="status">
+    <div id="spyPic" class="spy-pic hidden"></div>
+    <div class="spy-txt"><b>🔍 I spy…</b><span id="spyText"></span><i id="spyDots" class="spy-dots"></i></div>
+    <div class="spy-btns"><button class="spy-b" id="spyLvl" aria-label="Clue level">⭐</button><button class="spy-b" id="spySay" aria-label="Say it">🔊</button><button class="spy-b" id="spyHint" aria-label="Hint">💡</button><button class="spy-b" id="spyX" aria-label="Stop I Spy">✖</button></div>
+  </div>
   <div class="topbar">
     <div class="title" id="roomTitle">My Room</div>
     <div class="coins coinsDisp"></div>
@@ -55,6 +60,7 @@
   <div class="stage room-stage"><svg id="roomSvg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet"></svg>
     <button class="night-btn" id="nightBtn" aria-label="Lights off">🌙</button>
     <button class="night-btn snap-btn" id="roomSnapBtn" aria-label="Take a picture">📷</button>
+    <button class="night-btn spy-btn" id="spyBtn" aria-label="I Spy">🔍</button>
     <div class="emote-bar hidden" id="emoteBar"></div>
     <div id="roomTabs"></div></div>
   <div id="decoPanel" class="deco-panel hidden">
@@ -447,6 +453,7 @@
 <script src="web/js/47-colorbook.js"></script>
 <script src="web/js/48-dance.js"></script>
 <script src="web/js/49-garden.js"></script>
+<script src="web/js/50-ispy.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

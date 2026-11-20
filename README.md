@@ -131,6 +131,23 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## I Spy (since version 1.49)
+Tap the round **🔍** button on the room picture (next to 🌙) to play I Spy in whichever room you're in: your Room, the Loft,
+the Backyard or the Studio. The game uses the things you have put in that room, so it changes every time you decorate.
+- A **clue card** takes the top bar's place: "Find the Lava Lamp!" Tap that thing in the room. A tap on it or close to it counts.
+- **Nothing can go wrong.** A wrong tap only says "👀 Keep looking!". There's no timer and no score.
+  **💡** makes the right thing shimmer, **🔊** says the clue (on the tablet), **✖** stops.
+- **Clue levels** (the ⭐ button): ⭐ a picture and the name, ⭐⭐ the name only, ⭐⭐⭐ a hint like "something 🦇 spooky" or
+  "something 🚀 from space" (anything with that theme counts). Easy mode always uses ⭐ pictures, so no reading is needed.
+- Your decorations count, and so does the room's own furniture (closet, desk, window, keyboard, soccer goal, shed, the pet…).
+  Things hidden behind other things are skipped. A room needs at least 3 things to play.
+- A round is **5 finds** (fewer in a room with fewer things), then a cheer: **+2 coins**, up to 10 coins a day. After that it
+  still plays, just for fun.
+- **🌙 At night** the room goes dark and a **🔦 flashlight** follows your finger (a bigger light in Easy mode).
+- 3 new stickers on the Room & Style page: 🔍 Sharp Eyes (first round), 🕵️ Super Spy (100 things found) and
+  🗺️ Spy Everywhere (a round in all 4 rooms).
+- Save version 30 (`spy`); every older backup still restores (with nothing spied yet).
+
 ## Backyard Garden (since version 1.48)
 Tap the **🏡 garden shed** in the 🌳 Backyard to open the **🌱 Garden**: a raised bed with 6 plots and a tray of seed packets.
 - **Plant:** tap an empty plot, then a seed (or a seed first, then as many plots as you like). Planting is free.

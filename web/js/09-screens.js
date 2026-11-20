@@ -5,6 +5,7 @@
 let cur='profiles';
 function show(n){
   if(n!=='room'&&decorating) exitDecorate(true);
+  if(n!=='room'&&SPY.on) spyEnd(true); // 🔍 (section 50)
   cur=n; $$('.screen').forEach(s=>s.classList.toggle('on',s.id==='scr-'+n));
   const ep=n==='profiles'?null:P(); applyEasy();
   if(ep&&ep.easy){if(n==='soccer'){ep.soccer.level='easy';ep.soccer.keep.level='easy';}if(n==='stage')ep.stage.level='easy';if(n==='code')ep.code.level='easy';if(n==='brain')Object.keys(ep.brain.level).forEach(g=>{ep.brain.level[g]='easy';});} // Easy mode opens games on Easy
@@ -127,6 +128,7 @@ function renderRoom(){
     .concat(fur.floor.map(f=>({y:f.y,h:fx(f.h)})),[{y:604,h:fx(mascotG(p))},{y:PET_SPOT.y,h:fx(petG(p))},{y:GIFT_SPOT.y,h:fx(giftG(p))},{y:VISIT_SPOT.y,h:fx(visitG(p))}])
     .sort((a,b)=>a.y-b.y).map(e=>e.h).join('');
   s+=nightLayer(p,R); // 🌙 night mode (section 31, v1.27)
+  s+=spyDark(p,R); // 🔦 I Spy in the dark (section 50, v1.49)
   roomSvg.innerHTML=s; emoteBar(false); nightBtn();
   roomSvg.classList.toggle('decorating',decorating);
   $('#roomTitle').textContent=`${p.name}'s ${ROOM_NAMES[roomNo]}`;
@@ -165,6 +167,7 @@ function handleHot(h){
 }
 roomSvg.addEventListener('click',e=>{
   if(decorating) return;
+  if(SPY.on){spyTap(e);return;} // 🔍 I Spy: taps look for the clue, nothing opens (section 50, v1.49)
   const hot=e.target.closest('[data-hot]'); if(hot){handleHot(hot.dataset.hot);return;}
   if(e.target.closest('#mascotG')) mascotTap();
 });

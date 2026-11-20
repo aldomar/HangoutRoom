@@ -85,6 +85,10 @@ _Last updated: 2026-11-19_
   - **🌱 Backyard garden: built, PR #48 open as v1.48** on branch `feature/garden` (from `feature/dance`, as #47 is still open).
     Picked from the "Later" list 2026-11-19. Owner's answers: plants grow by themselves (one step a day, never wilt), picking gives
     +3 coins and the first time a pot, 4 free seeds + 8 to buy, 6 plots. Full plan in `PLAN.md` ("v1.48 plan details"); agreed and built.
+    **Merged** (PRs #47 and #48).
+  - **🔍 I Spy: built, PR #49 open as v1.49** on branch `feature/ispy` (from `main` after #48). Picked from the "Later" list 2026-11-19
+    (the recommended pick). Owner's answers: build the plan as written, and 🌙 night turns it into a 🔦 flashlight game.
+    Full plan in `PLAN.md` ("v1.49 plan details").
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -140,8 +144,9 @@ _Last updated: 2026-11-19_
 - PR #44 "American spelling (v1.44)": merged.
 - PR #45 "Word Builder word bank (v1.45)": merged.
 - PR #46 "Little Ones' Corner (v1.46)": merged.
-- PR #47 "Dance Maker (v1.47)" on branch `feature/dance`: open.
-- PR #48 "Backyard Garden (v1.48)" on branch `feature/garden` (built on `feature/dance`; merge #47 first): open.
+- PR #47 "Dance Maker (v1.47)": merged.
+- PR #48 "Backyard Garden (v1.48)": merged.
+- PR #49 "I Spy (v1.49)" on branch `feature/ispy`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -607,6 +612,13 @@ _Last updated: 2026-11-19_
   saving and the 3-a-day coins; Load, Ideas (asks over an unsaved dance), Clear; the 3 stickers; leaving the screen or the app
   stops it; Easy mode; phone, small phone, phone landscape, tablet and upright tablet layouts; restoring v1.46 and v1.47
   backups and odd data. Not tested automatically: how the moves look in time with the music on the real tablet.
+- **I Spy (v1.49)**: `tests/smoke-test.js` has 1552 checks, all passing with no console errors (48 new). New checks: the 🔍 button
+  and clue card; decorations and built-in furniture can be spied (the owner's browser test found decorations were skipped,
+  because they let taps through outside Decorate; fixed with `body.spying #roomSvg .deco{pointer-events:all}`); a wrong tap
+  changes nothing; 💡; a real mouse tap finds a thing; a round pays +2, 10 a day, and a new day pays again; ⭐/⭐⭐/⭐⭐⭐ clues
+  and theme hints met by any matching thing; Easy mode; the 🔦 flashlight follows the pointer; too few things; ✖, Back and
+  leaving the room; hidden while decorating; the 3 stickers; 5 screen sizes; restoring v1.48 and v1.49 backups and odd data.
+  Not tested automatically: how the flashlight feels under a finger on the real tablet.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -1236,16 +1248,19 @@ _Last updated: 2026-11-19_
 12. ~~Then pick from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 🧸 Little Ones' Corner (v1.46), planned and built.
 13. ~~Owner: build v1.46, try 🧸 Play with the little ones (see the PR), and merge it.~~ Merged.
 14. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 💃 Dance Maker (v1.47), planned and built.
-15. Owner: build v1.47, try 💃 Dance (see the PR), and merge it.
+15. ~~Owner: build v1.47, try 💃 Dance (see the PR), and merge it.~~ Merged.
 16. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 🌱 Backyard garden (v1.48); plan written.
 17. ~~Owner: OK the v1.48 garden plan in `PLAN.md`, then build it on `feature/garden`.~~ Agreed and built.
-18. Owner: merge #47, then build v1.48, try the 🌱 Garden over a few days (see the PR), and merge it.
-19. Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).
+18. ~~Owner: merge #47, then build v1.48, try the 🌱 Garden over a few days (see the PR), and merge it.~~ Merged.
+19. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 🔍 I Spy (v1.49), planned and built.
+20. Owner: build v1.49, try 🔍 I Spy in a few rooms and with the lights off (see the PR), and merge it.
+21. Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12): 👗 Runway, 🐾 more pet play,
+    Stage freestyle, Soccer trick shots, or new things to spend coins on.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 29 since v1.48 (Garden: `garden`, `stats.planted/harvests`). It was 28 in v1.47 (Dance Maker: `dance`). It was 27 in v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 30 since v1.49 (I Spy: `spy`, `stats.spied/spyRounds`). It was 29 in v1.48 (Garden: `garden`, `stats.planted/harvests`). It was 28 in v1.47 (Dance Maker: `dance`). It was 27 in v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
