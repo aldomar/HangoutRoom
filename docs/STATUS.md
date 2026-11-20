@@ -89,7 +89,7 @@ _Last updated: 2026-11-19_
   - **🔍 I Spy: built, PR #49 open as v1.49** on branch `feature/ispy` (from `main` after #48). Picked from the "Later" list 2026-11-19
     (the recommended pick). Owner's answers: build the plan as written, and 🌙 night turns it into a 🔦 flashlight game.
     Full plan in `PLAN.md` ("v1.49 plan details"). **Merged** (PR #49).
-  - **🪙 New things to spend coins on: built as v1.50** on branch `feature/spend` (from `main` after #49). Picked 2026-11-19.
+  - **🪙 New things to spend coins on: built, PR #50 open as v1.50** on branch `feature/spend` (from `main` after #49). Picked 2026-11-19.
     Owner's answers: one PR; the museum is display pieces she arranges (not self-filling cases). Plan agreed ("go for it")
     and built (`PLAN.md`, "v1.50 plan details"). Left out on purpose: the visitor wish (it would give one friend 4 wishes
     and delay that friend's plush).
@@ -151,7 +151,7 @@ _Last updated: 2026-11-19_
 - PR #47 "Dance Maker (v1.47)": merged.
 - PR #48 "Backyard Garden (v1.48)": merged.
 - PR #49 "I Spy (v1.49)": merged.
-- PR "New things to buy (v1.50)" on branch `feature/spend`: open.
+- PR #50 "New things to buy (v1.50)" on branch `feature/spend`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
