@@ -5,7 +5,7 @@
    The "wall" is a fence in front of the sky, the "floor" is the ground. Fences and grounds have yard:1 and are only
    listed in the Backyard; indoor walls and floors are only listed indoors. Decorations go anywhere; the 8 outdoor
    ones (yard:1) are listed first in the Backyard's Shop.
-   Built in: a tree with a swing, a soccer goal (opens Soccer), a garden shed and a chalkboard easel (opens Brain Games,
+   Built in: a tree with a swing, a soccer goal (opens Soccer), a garden shed (opens the 🌱 Garden, since v1.48) and a chalkboard easel (opens Brain Games,
    since v1.25). The season shows in the sky, on the tree and on the ground (seasonNow, section 20). No animation loop.
    Wall, floor and decoration ids are saved: never rename them.
    ========================================================= */
@@ -82,10 +82,10 @@ FURN_PIECES.easel={room:3,icon:'📚',name:'Chalkboard',orig:{frame:'#c98b52'},m
 function yardFurniture(split){ // split: see furniture() in section 4 (v1.39)
   const o='stroke="#2b2235" stroke-width="4" stroke-linejoin="round"', sh=furnC('shed'), ez=furnC('easel').frame, T=YARD_TREE[seasonNow()]||YARD_TREE.summer;
   let s=`<g data-ground="1">${yardSeason('ground')}</g>`; const F=[];
-  // the garden shed, against the fence (a spot for a future game)
-  F.push({y:470,h:`<g data-piece="shed"><rect x="782" y="330" width="168" height="140" fill="${sh.body}" ${o}/><path d="M764 338 L866 256 L968 338Z" fill="${sh.roof}" ${o}/>`
+  // the garden shed, against the fence: tap it for the 🌱 Garden (v1.48, section 49)
+  F.push({y:470,h:`<g class="hot" data-hot="garden" data-piece="shed"><rect x="782" y="330" width="168" height="140" fill="${sh.body}" ${o}/><path d="M764 338 L866 256 L968 338Z" fill="${sh.roof}" ${o}/>`
     +`<rect x="836" y="382" width="54" height="88" rx="6" fill="${sh.door}" ${o}/><circle cx="880" cy="428" r="4" fill="#2b2235"/>`
-    +`<rect x="900" y="352" width="38" height="34" rx="6" fill="#d9f1ff" ${o}/><path d="${heartPath(919,368,8)}" fill="#ff8cc6"/></g>`});
+    +`<rect x="900" y="352" width="38" height="34" rx="6" fill="#d9f1ff" ${o}/><path d="${heartPath(919,368,8)}" fill="#ff8cc6"/>${typeof gdShedBox==='function'?gdShedBox():''}${sign(866,226,'🌱 Garden')}</g>`});
   // the tree with a rope swing
   F.push({y:572,h:`<path d="M58 572 Q80 420 74 214 H120 Q114 420 138 572Z" fill="#8b5a35" ${o}/><path d="M112 300 Q170 284 236 286" stroke="#8b5a35" stroke-width="16" fill="none" stroke-linecap="round"/>`
     +`<g data-tree="${seasonNow()}">`+[[96,150,100,0],[26,230,72,1],[176,214,80,0],[110,250,64,1]].map(([x,y,r,k])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${T[k]}" ${o}/>`).join('')+`</g>`

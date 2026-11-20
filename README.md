@@ -131,6 +131,23 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Backyard Garden (since version 1.48)
+Tap the **🏡 garden shed** in the 🌳 Backyard to open the **🌱 Garden**: a raised bed with 6 plots and a tray of seed packets.
+- **Plant:** tap an empty plot, then a seed (or a seed first, then as many plots as you like). Planting is free.
+- **Grow:** a plant grows one step each new day all by itself: 🟤 seed → 🌱 sprout → 🌿 bud → ✨ ready, so it's ready in 3 days.
+  Plants never wilt, dry out or go away, so nothing is lost by not visiting.
+- **💧 Water:** tap a growing plant (or 💧 for all of them) for sparkles and a splash. It's just for fun and doesn't change growing.
+- **Pick:** tap a ready plant for **+3 coins**. The first time you grow each kind, you also get **a pot of it** in the Backyard
+  (a prize, never in the Shop) that you can move to any room in 🛋️ Decorate. The Star Flower and Moon Bell pots glow at night.
+- **12 seeds:** 🌻 Sunflower, 🍓 Strawberry, 🥕 Bunny Carrot and 🌷 Tulip are free; ⭐ Star Flower, 🦇 Bat-Wing Bloom, 🌙 Moon Bell,
+  🍄 Puff Mushroom, 🎃 Mini Pumpkin, 🦖 Dino Fern, 🚀 Rocket Pepper and 🍭 Candy Swirl cost 8–15 coins once, then plant forever.
+- A little flower box under the shed's window shows when plants are ready to pick.
+- 4 new stickers on the Room & Style page: 🌱 First Sprout, 🪴 Green Thumb (10 picked), 🌻 Garden Party (all 6 plots growing)
+  and 🏡 Master Gardener (every kind grown once).
+- **For grown-ups:** plants grow by the device's date, so changing the date on the tablet changes them too (a date that goes
+  backwards never makes a plant smaller).
+- Save version 29 (`garden`); every older backup still restores (with an empty garden).
+
 ## Dance Maker (since version 1.47)
 Your buddy dances to music, with moves you pick. Open it with **💃 Dance** in the 🎹 Music Maker or the **💃 Dance** tab on the 🎤 Stage
 (Back goes to where you came from).
