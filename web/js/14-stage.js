@@ -111,7 +111,7 @@ function renderStage(){if(P())stgPickView();}
 function stgPickView(){
   const p=P(); if(!p) return; STG.state='pick';
   $('#stgPick').classList.remove('hidden'); $('#stgPlay').classList.add('hidden'); $('#stgTabs').classList.remove('hidden');
-  $('#stgBack').textContent='⬅ Room';
+  $('#stgBack').textContent='⬅ Room'; jamHide(); // 🎸 Jam (section 53)
   $$('#stgTabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.lvl===p.stage.level));
   const lv=p.stage.level, n=STG_LEVELS[lv].lanes;
   $('#stgSongs').innerHTML=SONG_IDS.map(id=>{const S=SONGS[id], b=(p.stage.best[id]||{})[lv]||{stars:0,score:0};
@@ -125,7 +125,7 @@ function stgPickView(){
 }
 $('#stgTabs').onclick=e=>{const b=e.target.closest('[data-lvl]');if(!b||STG.state!=='pick')return;TGT.on=false;P().stage.level=b.dataset.lvl;save();SFX.click();stgPickView();};
 $('#stgSongs').onclick=e=>{const b=e.target.closest('[data-song]');if(b)stStart(b.dataset.song);};
-$('#stgBack').onclick=()=>{SFX.click();if(STG.state==='pick')show('room');else stgPickView();};
+$('#stgBack').onclick=()=>{SFX.click();if(jamBackKey())return;if(STG.state==='pick')show('room');else stgPickView();};
 $$('[data-late]').forEach(b=>b.onclick=()=>{DB.settings.stageOffset=clamp((DB.settings.stageOffset||0)+Number(b.dataset.late),-100,400);save();SFX.click();stgPickView();});
 
 /* ---------- playing ---------- */
@@ -141,7 +141,7 @@ function stStart(id){
   $('#stgMascot').innerHTML=lvl==='duo'?tgStageBuddies():mascotSVG(p.look); $('#stgMascot').classList.toggle('duo',lvl==='duo');
   stHud(); SFX.click(); tgStageNames();
 }
-function stgStop(){if(STG.state!=='pick')STG.state='pick';} // leaving the screen ends the song (no coins, nothing lost)
+function stgStop(){jamEnd(true);if(STG.state!=='pick')STG.state='pick';} // leaving the screen ends the song (no coins, nothing lost); a jam keeps its coins
 function stHud(){
   $('#stgScore').textContent=STG.score?'🎵 '+STG.score:'';
   $('#stgCombo').textContent=STG.combo>=5?STG.combo+' combo!':'';
@@ -218,6 +218,7 @@ function stIcon(ctx,kind,x,y,r,col){
   ctx.fill(); ctx.stroke();
 }
 function drawStage(dt){
+  if(STG.state==='jam'||STG.state==='jamdone'){drawJam(dt);return;} // 🎸 Jam (section 53, v1.52)
   const {ctx,W,H}=fit(stgCv), L=STG_LEVELS[STG.lvl], n=L.lanes, now=stNow(); STG.time+=dt;
   // send the next bit of the song to the speaker (a little ahead, so it never stutters)
   const live=DB.settings.sound&&AC&&AC.state==='running';
@@ -227,16 +228,7 @@ function drawStage(dt){
   const mh=H*0.3, mw=mh*200/270, y0=H*0.34, yh=H-Math.max(64,H*0.13), lw=Math.min(170,(W-24)/n,W*0.3), cx=W/2;
   const xs=Array.from({length:n},(_,i)=>cx+(i-(n-1)/2)*lw), pr=Math.min(lw*0.36,H*0.075,58);
   STG.g={n,cx,lw,xs,yh,pr};
-  // background: stage gradient, swinging spotlights and a row of lights that flash on the beat
-  stgBackdrop(ctx,W,H); // 🎨 her backdrop, drawn once into a hidden canvas (section 51, v1.50)
-  ['#ff8cc6','#8ff0d0','#ffd166'].forEach((c,i)=>{const a=Math.sin(STG.time*0.7+i*2.1)*0.35, bx=W*(0.15+i*0.35), len=H*1.1;
-    ctx.globalAlpha=0.1+onBeat*0.06; ctx.fillStyle=c; ctx.beginPath(); ctx.moveTo(bx,0);
-    ctx.lineTo(bx+Math.sin(a-0.14)*len,Math.cos(a-0.14)*len); ctx.lineTo(bx+Math.sin(a+0.14)*len,Math.cos(a+0.14)*len); ctx.fill();});
-  ctx.globalAlpha=1;
-  const cols=['#ff8cc6','#ffd166','#8ff0d0','#a97cff'], nl=Math.max(5,Math.round(W/70));
-  for(let i=0;i<nl;i++){ctx.globalAlpha=0.35+0.65*((i+Math.floor(beatF))%2?onBeat:0.2);ctx.fillStyle=cols[i%4];ctx.beginPath();ctx.arc((i+0.5)*W/nl,10,6,0,TAU);ctx.fill();}
-  ctx.globalAlpha=1;
-  ctx.fillStyle='#5b3a99'; ctx.beginPath(); ctx.ellipse(cx,y0,Math.max(mw*0.9,lw*n*0.25),H*0.03,0,0,TAU); ctx.fill();
+  stgScene(ctx,W,H,beatF,onBeat,null); ctx.fillStyle='#5b3a99'; ctx.beginPath(); ctx.ellipse(cx,y0,Math.max(mw*0.9,lw*n*0.25),H*0.03,0,0,TAU); ctx.fill();
   // lanes (narrow at the top, like a stage seen from the front) and the pads
   const topX=x=>cx+(x-cx)*0.25;
   xs.forEach((x,i)=>{ctx.fillStyle=i%2?'#ffffff10':'#ffffff1a';ctx.beginPath();
@@ -267,8 +259,23 @@ function drawStage(dt){
     const txt=t<STG.bar?'Get ready! 🎵':['3','2','1','Go!'][clamp(k,0,3)];
     ctx.font=`900 ${Math.round(Math.min(W,H)*0.09)}px sans-serif`; ctx.lineWidth=6; ctx.strokeStyle='#2b2235';
     ctx.strokeText(txt,cx,H*0.6); ctx.fillStyle='#fff'; ctx.fillText(txt,cx,H*0.6);}
-  // Fuzzy bounces to the beat (moving the whole picture is cheap; the fuzz filter is not redrawn)
-  const hop=t>0?Math.sin(ph*Math.PI)*H*0.025:0, sq=t>0?1+onBeat*0.05:1;
-  $('#stgMascot').style.transform=`translate(${(cx-mw/2).toFixed(1)}px,${(y0-mh*0.97-hop).toFixed(1)}px) scale(${(2-sq).toFixed(3)},${sq.toFixed(3)})`;
+  stgBounce(cx,y0,mw,mh,H,t>0,ph,onBeat);
   if(STG.state==='play'&&t>STG.end) stFinish();
+}
+// The stage behind a song or a 🎸 Jam (v1.52): her backdrop, swinging spotlights (spot = one color for all three, or null)
+// and a row of lights that flash on the beat.
+function stgScene(ctx,W,H,beatF,onBeat,spot){
+  stgBackdrop(ctx,W,H); // 🎨 her backdrop, drawn once into a hidden canvas (section 51, v1.50)
+  ['#ff8cc6','#8ff0d0','#ffd166'].forEach((c,i)=>{const a=Math.sin(STG.time*0.7+i*2.1)*0.35, bx=W*(0.15+i*0.35), len=H*1.1;
+    ctx.globalAlpha=0.1+onBeat*0.06; ctx.fillStyle=spot||c; ctx.beginPath(); ctx.moveTo(bx,0);
+    ctx.lineTo(bx+Math.sin(a-0.14)*len,Math.cos(a-0.14)*len); ctx.lineTo(bx+Math.sin(a+0.14)*len,Math.cos(a+0.14)*len); ctx.fill();});
+  ctx.globalAlpha=1;
+  const cols=['#ff8cc6','#ffd166','#8ff0d0','#a97cff'], nl=Math.max(5,Math.round(W/70));
+  for(let i=0;i<nl;i++){ctx.globalAlpha=0.35+0.65*((i+Math.floor(beatF))%2?onBeat:0.2);ctx.fillStyle=cols[i%4];ctx.beginPath();ctx.arc((i+0.5)*W/nl,10,6,0,TAU);ctx.fill();}
+  ctx.globalAlpha=1;
+}
+// Her buddy bounces to the beat (moving the whole picture is cheap; the fuzz filter is not redrawn).
+function stgBounce(cx,y0,mw,mh,H,going,ph,onBeat){
+  const hop=going?Math.sin(ph*Math.PI)*H*0.025:0, sq=going?1+onBeat*0.05:1;
+  $('#stgMascot').style.transform=`translate(${(cx-mw/2).toFixed(1)}px,${(y0-mh*0.97-hop).toFixed(1)}px) scale(${(2-sq).toFixed(3)},${sq.toFixed(3)})`;
 }

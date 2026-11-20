@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('123 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51), ids all different, 6 or more per page', await ev(`STICKERS.length===123&&new Set(STICKERS.map(s=>s.id)).size===123&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('126 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52), ids all different, 6 or more per page', await ev(`STICKERS.length===126&&new Set(STICKERS.map(s=>s.id)).size===126&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -3978,7 +3978,119 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('odd Runway data is made safe', await ev(`DB.profiles[0].runway.pay.n===0&&DB.profiles[0].runway.cards.join()==='farm'&&DB.profiles[0].stats.walks===0`));
     await ev(`closeModal();doRestore(${JSON.stringify(rwB)})`); await sleep(400);
     await ev(`closeModal();stkPaused=false;window.RW_TEST_FAST=false;goRoom(1);show('room')`);
-    check('v1.51 is in the Gift Story and the app says 1.51', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.51')&&APP_VERSION==='1.51'`));
+    check('v1.51 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.51')`));
+  }
+
+  console.log('Stage Jam (v1.52)');
+  {
+    const mb=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
+    const box=`(!document.querySelector('#modal').classList.contains('hidden'))`, boxText=`document.querySelector('#modalBody').textContent`;
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`closeModal();stkPaused=true;window.FP_TEST_DAY='2026-12-01';{const p=P();p.easy=false;applyEasy();window.jmMusic=JSON.stringify(p.music);}goRoom(1);show('room')`); await sleep(300);
+    check('save version 33; every room starts with the ✨ Sparkle sound and no jams', await ev(`DB_VERSION>=33&&DB.profiles.every(p=>p.jam&&p.jam.sound==='sparkle'&&p.jam.pay.n===0&&p.stats.jams===0&&p.stats.jamOwn===0)`));
+    check('save version 33 adds the Jam to older saves', await ev(`(()=>{const d={profiles:[{name:'Old'}]};MIGRATIONS[33](d);return d.profiles[0].jam.sound==='sparkle'&&d.profiles[0].jam.pay.n===0;})()`));
+    check('5 pads play the Music Maker notes C D E G A, low to high; 3 jam sounds', await ev(`JAM_PADS.map(x=>MU_ROWS[x.r].l).join('')==='CDEGA'&&JAM_PADS.every((x,i)=>!i||x.m>JAM_PADS[i-1].m)&&Object.keys(JAM_SOUNDS).join()==='sparkle,pluck,toot'`));
+    // the way in, from the Stage
+    await ev(`{const p=P();p.music.cur=MU_IDEAS[1].rows.join('');p.music.kit='soft';p.music.speed=1;p.music.slots=[null,{g:MU_IDEAS[0].rows.join(''),kit:'chip',speed:2},null];}show('stage')`); await sleep(200);
+    check('the Stage has a 🎸 Jam tab (as big as the other tabs) that Read to me calls Jam', await ev(`(b=>!!b&&b.getBoundingClientRect().height>=document.querySelector('#stgTabs [data-dance]').getBoundingClientRect().height-1&&speakLabel(b)==='Jam')(document.querySelector('#stgTabs [data-jam]'))`));
+    await ev(`document.querySelector('#stgTabs [data-jam]').click()`); await sleep(200);
+    check('🎸 opens the loop picker: my loop now, my saved loop 2 and the 3 ideas', await ev(`JAM.pick&&!document.querySelector('#jamPick').classList.contains('hidden')&&document.querySelector('#stgPick').classList.contains('hidden')&&[...document.querySelectorAll('#jamLoops [data-loop]')].map(b=>b.dataset.loop).join()==='cur,s1,i0,i1,i2'&&document.querySelectorAll('#jamLoops .own').length===2&&document.querySelectorAll('#jamLoops svg').length===5`), await ev(`[...document.querySelectorAll('#jamLoops [data-loop]')].map(b=>b.dataset.loop).join()`));
+    check('…with 3 jam sounds, ✨ Sparkle picked', await ev(`document.querySelectorAll('#jamSounds [data-snd]').length===3&&document.querySelector('#jamSounds [data-snd=sparkle]').classList.contains('on')`));
+    await shot('J01-jam-pick');
+    await ev(`document.querySelector('#jamSounds [data-snd=pluck]').click()`); await sleep(100);
+    check('a jam sound is picked and remembered', await ev(`P().jam.sound==='pluck'&&jamSound(P())==='pluck'&&document.querySelector('#jamSounds [data-snd=pluck]').classList.contains('on')`));
+    // jamming
+    await ev(`window.jmCalls=0;window.jmOrig=muVoice;muVoice=function(){window.jmCalls++;return window.jmOrig.apply(null,arguments);};DB.settings.sound=true;document.querySelector('#jamLoops [data-loop=cur]').click()`); await sleep(200);
+    check('a loop card starts the jam: the stage, the pads and ⏹️ Stop', await ev(`STG.state==='jam'&&JAM.on&&JAM.loop.id==='cur'&&!document.querySelector('#stgPlay').classList.contains('hidden')&&!document.querySelector('#jamStop').classList.contains('hidden')&&loopOn`));
+    const steps=await ev(`new Promise(res=>{const s=new Set();const iv=setInterval(()=>s.add(JAM.step),40);setTimeout(()=>{clearInterval(iv);res(s.size);},2600);})`);
+    check('the band plays the loop round and round (all 8 steps)', steps===8, steps);
+    const live=await ev(`JAM.clock==='ac'`);
+    check('the loop\'s notes are sent to the speaker'+(live?'':' (no audio clock here, skipped)'), !live||await ev(`window.jmCalls>0`), await ev(`window.jmCalls`));
+    await ev(`muVoice=window.jmOrig`);
+    const cv=await ev(`(()=>{const r=document.querySelector('#stgCv').getBoundingClientRect();return {x:r.left,y:r.top,xs:JAM.g.xs,yh:JAM.g.yh,pr:JAM.g.pr,w:r.width,h:r.height};})()`);
+    for(const x of cv.xs){await mouse('mousePressed',cv.x+x,cv.y+cv.yh);await mouse('mouseReleased',cv.x+x,cv.y+cv.yh);}
+    check('tapping the 5 pads plays 5 notes', await ev(`JAM.notes===5`), await ev(`JAM.notes`));
+    await stroke(cv.xs.map(x=>[cv.x+x,cv.y+cv.yh]));
+    check('sliding across the pads plays a run (one note per pad)', await ev(`JAM.notes===10`), await ev(`JAM.notes`));
+    await mouse('mousePressed',cv.x+cv.w/2,cv.y+cv.h*0.15); await mouse('mouseReleased',cv.x+cv.w/2,cv.y+cv.h*0.15);
+    check('a tap on her buddy (above the stage) is not a note', await ev(`JAM.notes===10`));
+    check('the pads fit on the screen', cv.xs.every(x=>x-cv.pr>=0&&x+cv.pr<=cv.w)&&cv.yh+cv.pr<=cv.h);
+    for(const snd of ['sparkle','pluck','toot']) await ev(`(ac()&&jamVoice(0,AC.currentTime+0.01,'${snd}'),1)`);
+    check('every jam sound plays without errors', true);
+    await ev(`for(let i=0;i<6;i++)jamPlay(i%5)`); await sleep(300);
+    check('the crowd cheers every 16 notes', await ev(`JAM.cheers===1&&JAM.fx.some(o=>o.big)`));
+    await shot('J02-jam-playing');
+    // stop
+    const c0=await ev('P().coins');
+    await ev(`JAM.notes=12;document.querySelector('#jamStop').click()`); await sleep(200);
+    check('⏹️ Stop with fewer than 20 notes: a cheer box, no coins, no jam counted', await ev(`STG.state==='jamdone'&&!JAM.on&&${box}&&P().coins===${c0}&&P().stats.jams===0&&/20 notes/.test(${boxText})`));
+    await shot('J03-jam-stop');
+    await ev(`${mb('Again')}.click()`); await sleep(150);
+    check('🎸 Again starts the same loop', await ev(`STG.state==='jam'&&JAM.loop.id==='cur'&&JAM.notes===0`));
+    await ev(`for(let i=0;i<20;i++)jamPlay(i%5);jamEnd(false)`); await sleep(150);
+    check('a jam of 20 notes pays +2, counts the jam and her own loop', await ev(`P().coins===${c0}+2&&P().stats.jams===1&&P().stats.jamOwn===1&&P().jam.pay.n===1&&P().jam.pay.day==='2026-12-01'`), await ev(`P().coins-${c0}`));
+    await ev(`closeModal();P().jam.pay.n=3;jamStart('i0');for(let i=0;i<25;i++)jamPlay(i%5);jamEnd(false)`); await sleep(150);
+    check('after 3 jams a day: no coins, a gentle note, still counted; an idea loop is not her own', await ev(`P().coins===${c0}+2&&P().stats.jams===2&&P().stats.jamOwn===1&&/full for today/.test(${boxText})`));
+    await ev(`closeModal();window.FP_TEST_DAY='2026-12-02';jamStart('s1');for(let i=0;i<20;i++)jamPlay(i%5);jamEnd(false)`); await sleep(150);
+    check('the next day it pays again (her saved loop counts as her own)', await ev(`P().coins===${c0}+4&&P().jam.pay.n===1&&P().stats.jamOwn===2`));
+    await ev(`closeModal()`);
+    // Back
+    await ev(`jamPickView();jamStart('cur')`); await sleep(100);
+    await ev(`androidBack()`); await sleep(100);
+    check('Back during a jam stops it with the cheer box', await ev(`STG.state==='jamdone'&&!JAM.on&&${box}`));
+    await ev(`androidBack()`); await sleep(100);
+    check('Back: the cheer box → the loops', await ev(`JAM.pick&&!${box}&&!document.querySelector('#jamPick').classList.contains('hidden')&&document.querySelector('#stgBack').textContent.includes('Songs')`));
+    await ev(`androidBack()`); await sleep(100);
+    check('Back: the loops → the songs', await ev(`cur==='stage'&&!JAM.pick&&!document.querySelector('#stgPick').classList.contains('hidden')&&document.querySelector('#jamPick').classList.contains('hidden')&&!document.querySelector('#stgTabs').classList.contains('hidden')`));
+    await ev(`stStart('starlight')`); await sleep(400);
+    check('a Stage song still plays after a jam', await ev(`STG.state==='play'&&document.querySelector('#jamStop').classList.contains('hidden')`));
+    await ev(`stgPickView()`);
+    // from the Music Maker
+    await ev(`show('music')`); await sleep(150);
+    check('the Music Maker has a 🎸 Jam button that Read to me reads', await ev(`!!document.querySelector('#muJam')&&speakLabel(document.querySelector('#muJam'))==='Jam on the Stage'`));
+    await ev(`document.querySelector('#muJam').click()`); await sleep(200);
+    check('🎸 in the Music Maker starts a jam with the loop on the grid straight away', await ev(`cur==='stage'&&STG.state==='jam'&&JAM.loop.id==='cur'&&JAM.loop.g===P().music.cur`));
+    await ev(`androidBack()`); await sleep(100); await ev(`androidBack()`); await sleep(100);
+    check('…Back goes to the loops, with ⬅ Music', await ev(`JAM.pick&&document.querySelector('#stgBack').textContent.includes('Music')`));
+    await ev(`androidBack()`); await sleep(100);
+    check('…and Back again to the Music Maker', await ev(`cur==='music'`));
+    await ev(`P().music.cur=MU_EMPTY;renderMusic();document.querySelector('#muJam').click()`); await sleep(200);
+    check('with an empty grid, 🎸 opens the loop picker (no "My loop now")', await ev(`cur==='stage'&&JAM.pick&&!document.querySelector('#jamLoops [data-loop=cur]')`));
+    // leaving the screen
+    await ev(`P().jam.pay.n=0;jamStart('i2');for(let i=0;i<20;i++)jamPlay(i%5);window.jmC=P().coins;show('room')`); await sleep(150);
+    check('leaving the screen stops the band and keeps the jam\'s coins', await ev(`!JAM.on&&STG.state==='pick'&&P().coins===window.jmC+2`));
+    // Easy mode and small screens
+    await ev(`P().easy=true;show('stage');jamOpen('stage')`); await sleep(200);
+    await shot('J04-easy-pick');
+    for(const [w,h,name] of [[412,860,'phone'],[360,740,'small phone'],[820,1180,'tablet upright'],[860,412,'phone sideways']]){
+      await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:true});
+      await ev(`jamPickView()`); await sleep(150);
+      check(name+': the loop cards and sounds fit across the screen', await ev(`[...document.querySelectorAll('#jamLoops [data-loop],#jamSounds [data-snd]')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.height>=48;})&&document.documentElement.scrollWidth<=innerWidth+1`));
+      await shot('J05-'+name.replace(/ /g,'-')+'-pick');
+      await ev(`jamStart('i0')`); await sleep(250);
+      check(name+': the 5 pads fit and ⏹️ Stop is on screen', await ev(`(()=>{const c=document.querySelector('#stgCv').getBoundingClientRect(),g=JAM.g,s=document.querySelector('#jamStop').getBoundingClientRect();return g.xs.every(x=>x-g.pr>=0&&x+g.pr<=c.width+1)&&g.yh+g.pr<=c.height+1&&g.pr>=24&&s.top>=0&&s.right<=innerWidth+1&&s.height>=48;})()`));
+      await ev(`for(let i=0;i<5;i++)jamPlay(i)`); await sleep(150);
+      await shot('J05-'+name.replace(/ /g,'-')+'-jam');
+      await ev(`jamEnd(true)`);
+    }
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`P().easy=false;applyEasy();show('room')`);
+    // stickers
+    check('3 new stickers on the 🎤 Stage page: First Jam, Jam Band, My Own Song', await ev(`['jam1','jam10','jamOwn'].every(id=>(s=>s&&s.page==='stage')(STICKERS.find(s=>s.id===id)))`));
+    check('…First Jam and My Own Song are done; Jam Band needs 10 jams', await ev(`stkDone(P(),STICKERS.find(s=>s.id==='jam1'))&&stkDone(P(),STICKERS.find(s=>s.id==='jamOwn'))&&!stkDone(P(),STICKERS.find(s=>s.id==='jam10'))&&(P().stats.jams=10,stkDone(P(),STICKERS.find(s=>s.id==='jam10')))`));
+    // backups
+    const jmB=await ev(`JSON.stringify(DB)`);
+    await ev(`(()=>{const d=JSON.parse(${JSON.stringify(jmB)});d.version=32;d.profiles.forEach(p=>{delete p.jam;delete p.stats.jams;delete p.stats.jamOwn;});doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('a v1.51 backup restores with no jams yet', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.jam.sound==='sparkle'&&p.jam.pay.n===0&&p.stats.jams===0&&p.stats.jamOwn===0)`));
+    await ev(`closeModal();doRestore(${JSON.stringify(jmB)})`); await sleep(400);
+    check('a v1.52 backup keeps the jam sound and the counts', await ev(`DB.profiles.some(p=>p.jam.sound==='pluck'&&p.stats.jams===10&&p.stats.jamOwn>=2)`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(jmB)});d.profiles[0].jam={sound:7,pay:'x'};d.profiles[0].stats.jams='lots';doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd Jam data is made safe', await ev(`DB.profiles[0].jam.sound==='sparkle'&&DB.profiles[0].jam.pay.n===0&&DB.profiles[0].stats.jams===0`));
+    await ev(`DB.profiles[0].jam.sound='banjo'`);
+    check('an unknown jam sound plays as ✨ Sparkle', await ev(`jamSound(DB.profiles[0])==='sparkle'`));
+    await ev(`closeModal();doRestore(${JSON.stringify(jmB)})`); await sleep(400);
+    await ev(`closeModal();{const p=P();p.music=JSON.parse(window.jmMusic);}save();stkPaused=false;window.FP_TEST_DAY=null;goRoom(1);show('room')`);
+    check('v1.52 is in the Gift Story and the app says 1.52', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.52')&&APP_VERSION==='1.52'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

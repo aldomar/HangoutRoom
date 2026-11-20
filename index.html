@@ -257,6 +257,7 @@
     <button class="tab" data-lvl="hard">🌟 Hard</button>
     <button class="tab duo" data-duo="stage" aria-label="Together, 2 players">👯 <span>Together</span></button>
     <button class="tab dance" data-dance="1" aria-label="Dance Maker">💃 <span>Dance</span></button>
+    <button class="tab jam" data-jam="1" aria-label="Jam">🎸 <span>Jam</span></button>
   </div>
   <div class="stg-pick" id="stgPick">
     <div class="stg-note" id="stgHint"></div>
@@ -264,7 +265,13 @@
     <div class="stg-bds" id="stgBds"></div>
     <div class="stg-late"><span>⏱️ Sound late?</span><button class="btn ghost" data-late="-20">−</button><b id="stgLate"></b><button class="btn ghost" data-late="20">+</button></div>
   </div>
+  <div class="stg-pick hidden" id="jamPick">
+    <div class="stg-note" id="jamHint"></div>
+    <div class="stg-songs jam-loops" id="jamLoops"></div>
+    <div class="jam-sounds" id="jamSounds"></div>
+  </div>
   <div class="stg-play hidden" id="stgPlay">
+    <button class="btn pink jam-stop hidden" id="jamStop" aria-label="Stop">⏹️ <span class="tn">Stop</span></button>
     <canvas id="stgCv"></canvas>
     <div id="stgMascot"></div>
     <div class="stg-hud"><span id="stgScore"></span><span id="stgCombo"></span></div>
@@ -321,7 +328,7 @@
       <div class="mu-row" id="muSpeed"></div>
       <div class="mu-row" id="muKit"></div>
       <div class="mu-row" id="muSlots"></div>
-      <div class="mu-row"><button class="btn ghost" id="muIdeas">🎁 <span class="tn">Ideas</span></button><button class="btn ghost" id="muClear" aria-label="Clear">🗑️</button><button class="btn ghost" id="muDance" aria-label="Dance Maker">💃 <span class="tn">Dance</span></button></div>
+      <div class="mu-row"><button class="btn ghost" id="muIdeas">🎁 <span class="tn">Ideas</span></button><button class="btn ghost" id="muClear" aria-label="Clear">🗑️</button><button class="btn ghost" id="muDance" aria-label="Dance Maker">💃 <span class="tn">Dance</span></button><button class="btn ghost" id="muJam" aria-label="Jam on the Stage">🎸 <span class="tn">Jam</span></button></div>
     </div>
   </div>
 </div>
@@ -495,6 +502,7 @@
 <script src="web/js/50-ispy.js"></script>
 <script src="web/js/51-spend.js"></script>
 <script src="web/js/52-runway.js"></script>
+<script src="web/js/53-jam.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

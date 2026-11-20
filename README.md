@@ -131,6 +131,18 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Stage Jam (since version 1.52)
+Your 🎹 Music Maker loop becomes the band, and you play along on the 🎤 Stage. Open it with the **🎸 Jam** tab on the Stage, or
+**🎸 Jam** in the Music Maker (that one starts straight away with the loop on the grid). Back goes to where you came from.
+- **Pick the band:** your loop on the grid now, your 💾 saved loops, or the 3 ready-made ideas (🦇 Bat Bop, 🐰 Bunny Hop,
+  ⭐ Sleepy Stars). Each plays with its own sound and speed. Pick a **jam sound** too: ✨ Sparkle, 🎸 Pluck or 🎺 Toot.
+- **Jam:** the loop plays round and round on the Stage. Tap the **5 big circles** to play notes on top, or slide a finger
+  across them. They play the Music Maker's own 5 notes, so **every note fits**: nothing can sound wrong. Notes float up,
+  the spotlights change color and the crowd cheers every 16 notes. No falling notes, no score, no timer.
+- **⏹️ Stop** shows how many notes you played. A jam of 20 notes or more gives **2 coins, 3 times a day**.
+- 3 new stickers on the Stage page: 🎸 First Jam, 🎶 Jam Band (10 jams) and 🎹 My Own Song (jam over your own loop).
+- Save version 33 (`jam`, `stats.jams`, `stats.jamOwn`); every older backup still restores (with no jams yet).
+
 ## Runway (since version 1.51)
 Tap **👠 Runway** in the 👗 Closet (next to 🎲 Surprise me) to put on a little fashion show.
 - **Pick a theme card:** 3 big cards at a time (🔀 shows others). There are 14, like 🦇 Spooky Night, ⚽ Game Day,
