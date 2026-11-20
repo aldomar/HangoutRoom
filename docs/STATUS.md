@@ -88,7 +88,10 @@ _Last updated: 2026-11-19_
     **Merged** (PRs #47 and #48).
   - **🔍 I Spy: built, PR #49 open as v1.49** on branch `feature/ispy` (from `main` after #48). Picked from the "Later" list 2026-11-19
     (the recommended pick). Owner's answers: build the plan as written, and 🌙 night turns it into a 🔦 flashlight game.
-    Full plan in `PLAN.md` ("v1.49 plan details").
+    Full plan in `PLAN.md` ("v1.49 plan details"). **Merged** (PR #49).
+  - **🪙 New things to spend coins on: planned as v1.50** on branch `feature/spend` (from `main` after #49). Picked 2026-11-19.
+    Owner's answers: one PR; the museum is display pieces she arranges (not self-filling cases). Plan in `PLAN.md`
+    ("v1.50 plan details"), waiting for the owner's OK.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -146,7 +149,7 @@ _Last updated: 2026-11-19_
 - PR #46 "Little Ones' Corner (v1.46)": merged.
 - PR #47 "Dance Maker (v1.47)": merged.
 - PR #48 "Backyard Garden (v1.48)": merged.
-- PR #49 "I Spy (v1.49)" on branch `feature/ispy`: open.
+- PR #49 "I Spy (v1.49)": merged.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -1253,9 +1256,10 @@ _Last updated: 2026-11-19_
 17. ~~Owner: OK the v1.48 garden plan in `PLAN.md`, then build it on `feature/garden`.~~ Agreed and built.
 18. ~~Owner: merge #47, then build v1.48, try the 🌱 Garden over a few days (see the PR), and merge it.~~ Merged.
 19. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 🔍 I Spy (v1.49), planned and built.
-20. Owner: build v1.49, try 🔍 I Spy in a few rooms and with the lights off (see the PR), and merge it.
-21. Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12): 👗 Runway, 🐾 more pet play,
-    Stage freestyle, Soccer trick shots, or new things to spend coins on.
+20. ~~Owner: build v1.49, try 🔍 I Spy in a few rooms and with the lights off (see the PR), and merge it.~~ Merged.
+21. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 🪙 new things to spend
+    coins on (v1.50), 2026-11-19: pet homes, Stage backdrops, museum display pieces, one PR. Plan written in `PLAN.md`.
+22. Owner: OK the v1.50 plan in `PLAN.md`, then build it on `feature/spend`.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

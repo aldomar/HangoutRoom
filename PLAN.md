@@ -362,9 +362,42 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   garden. Plants grow one step a day by themselves and never wilt; picking one gives coins and, the first time, a potted plant.
 - ✅ **🔍 I Spy (v1.49, built; plan details below, agreed 2026-11-19):** a 🔍 button in every room. Clues (a picture, a name or a
   theme hint) for things in her own room; tap to find, 5 a round, nothing can go wrong; a 🔦 flashlight at night.
+- **🪙 New things to spend coins on (v1.50, plan below, waiting for the owner's OK):** 🏠 pet homes, 🎤 Stage backdrops
+  and 🏛️ museum display pieces for showing off her prizes. One PR.
 - **Later, any order:** 👗 Runway (style a look for a theme
   card; judges only cheer), 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
-  loop), Soccer trick shots, and new things to spend coins on (pet house, a collections museum, Stage backdrops).
+  loop) and Soccer trick shots.
+
+#### v1.50 plan details: 🪙 New things to spend coins on (picked 2026-11-19)
+Why: the last few PRs added many ways to earn coins (Garden, I Spy, Dance Maker, 🧸 Play, Free Play) but nothing new to
+buy, so coins pile up with no goal. This adds about 25 new things across three places. Owner's answers: one PR; the museum
+is display pieces she arranges herself (not cases that fill themselves). Everything is a normal one-time buy with the
+usual helpers (`tryBuy`/`buyConsumable`, Easy buy box, `priceTag`), all prices 6–35 (no new big dreams).
+- **🏠 Pet homes** (instead of the cushion bed under the pet, in every room):
+  - The pet menu gets a 🏠 Home button next to 🎀 Dress-up, with the same kind of picture picker. The cushion stays free.
+  - 8 homes to buy: 🦇 Bat Tent (15), ☁️ Cloud Bed (12), ⭐ Star Dome (18), 🏡 Tiny Cottage (20), 🚀 Rocket Pod (25),
+    🥚 Dino Egg Bed (22), 🐚 Seashell Bed (15), 🏰 Mini Castle (30).
+  - A home stays inside the pet's spot (about the size of the cushion's tap area), so it never covers the buddy or the trophies.
+  - Saved: `pet.home` (`''` = the cushion), owned as `pethome:<id>`.
+- **🎤 Stage backdrops** (behind the lanes while a song plays):
+  - A 🎨 Backdrop row of round picture buttons under the song list. Tap one she owns to use it, a new one to buy it.
+  - 7 to buy, plus today's look (✨ Classic, free): 🌙 Starry Night (10), 🍭 Candy Clouds (12), 🦇 Bat Castle (15),
+    🐠 Under the Sea (15), 🦖 Dino Jungle (15), 🌌 Galaxy (18), 🌃 Neon City (20). Spooky stays cute.
+  - The spotlights and beat lights stay on top. A backdrop is drawn once into a hidden canvas (again only when the screen
+    size changes), so each frame only copies one picture: no extra work for the tablet. Stage Together uses it too.
+  - Saved: `stage.backdrop` (`'classic'` by default), owned as `backdrop:<id>`.
+- **🏛️ Museum pieces** (decorations in the Shop, with a new 🏛️ Museum theme chip; the ✨ Studio is a natural museum):
+  - Standing: Pedestal (10), Tall Pedestal (14), Display Counter (25), Velvet Rope (12), Museum Bench (15),
+    Dino Bones (35, a friendly model skeleton). Wall: Wall Case (20, a shelf), Gold Frame (15), Spotlight (12, glows at night),
+    Museum Plaque (6, "⭐ My Collection").
+  - Pedestals and the counter work like shelves: a trophy, glove, plush, pot or anything standing dropped on top sits there
+    and moves with it. New: things on a standing shelf are drawn just in front of it (today only wall shelves exist).
+- **Extras:** 3 stickers (a pet home, a backdrop, 3 museum pieces); one new visitor wish at the end of the list
+  ("Show me your treasures!": 2 museum pieces + a prize in the room). The museum pieces count for 🔍 I Spy by themselves.
+- **Code:** a new file `51-spend.js` (split into a second file if it passes ~40 KB). Save version 30 → 31 (`pet.home`,
+  `stage.backdrop`), defaults filled in by `normalize()`; old backups still restore.
+- **Smoke test:** buy and show each pet home; buy, pick and play a song with each backdrop; put a trophy on a pedestal and
+  check it is drawn in front and moves with it; the new wish can be met; speed and spelling checks still pass.
 
 #### v1.49 plan details: 🔍 I Spy (agreed 2026-11-19)
 Why: her room fills up as she decorates, but nothing asks her to look at it again. I Spy turns whatever she has built into
