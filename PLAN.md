@@ -366,8 +366,87 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   and 🏛️ museum display pieces for showing off her prizes. One PR.
 - ✅ **👠 Runway (v1.51, built; plan details below, agreed 2026-11-20):** pick a theme card, dress for it (her own clothes or
   borrowed ones), walk the catwalk; three visitor friends hold up cheer cards. Judges only cheer.
-- **Later, any order:** 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
-  loop) and Soccer trick shots.
+- **🎸 Stage Jam (v1.52, plan details below, waiting for the owner's OK):** one of her 🎹 Music Maker loops plays on the Stage
+  and she taps big pads to play her own notes on top. Every note fits, no score.
+- **🎯 Soccer Trick Shots (v1.53, plan details below, waiting for the owner's OK):** a 🎯 Tricks tab with 12 fixed trick
+  shots (stars, hoops, balloons, a wall of friends to curve around). Unlimited tries, coins the first time, a prize for all 12.
+- **Later, any order:** 🐾 more pet play (walks, hide-and-seek).
+
+#### v1.52 plan details: 🎸 Stage Jam (written 2026-11-20, waiting for the owner's OK)
+Why: the Music Maker makes loops, but a loop can only be listened to. The Stage only plays fixed songs. Jam joins the two:
+her own loop becomes the band, and she plays on top of it, like a real show. It works for all four children, because
+nothing can sound wrong. Owner's answers (2026-11-20): **jam over her loop** (not a tap-along chart made from the loop);
+Jam and Trick Shots are **two PRs**.
+- **The way in:** a 🎸 Jam tab in the Stage's tabs (after 💃 Dance), and a 🎸 Jam button in the 🎹 Music Maker next to
+  💃 Dance (it takes the loop on the grid straight to the Stage). Back goes to where she came from (Stage songs or Music Maker).
+- **1. Pick the band:** big loop cards with the small grid picture the Music Maker already draws (no reading needed):
+  🎹 My loop now (the loop on the Music Maker's grid, if it has notes), her saved loops 1–3 (empty slots are left out), and the
+  3 ready-made ideas (🦇 Bat Bop, 🐰 Bunny Hop, ⭐ Sleepy Stars). Each loop plays with its own kit and speed.
+  A row of 3 **jam sounds** to play with: ✨ Sparkle (bells), 🎸 Pluck (a guitar-like pluck), 🎺 Toot (a soft horn). All free.
+- **2. Jam:** the Stage scene she knows (her 🎨 backdrop, spotlights, the light row flashing on the beat, her buddy bouncing).
+  The loop plays round and round. **5 big pads** in a row at the bottom, colored like the Music Maker's note rows, playing
+  the same 5 notes (C D E G A), one step higher than the loop's melody. Those 5 notes always fit together, so any tap sounds
+  right. A tap lights the pad and sends a little note shape floating up toward her buddy; the spotlights take that pad's color.
+  Every 16 notes the crowd cheers with a short word (✨ "Wow!", 🔥 "On fire!", 🎉 "Encore!"). No falling notes, no score,
+  no "Oops", no timer: she plays as long as she wants. Slide a finger across the pads to play a run (a glissando).
+- **3. Stop:** ⏹️ Stop (or Back) ends the jam with a small cheer box: "Great jam! 🎸" and how many notes she played.
+  A jam with at least 20 notes pays **+2 coins, 3 jams a day** (6 coins, like the Music Maker's 3 a day). After that it
+  still plays, with one gentle note. No coins for a jam under 20 notes, but it still gets the cheer.
+- **Stickers** (🎤 Stage page): 🎸 First Jam (one jam of 20+ notes), 🎶 Jam Band (10 jams), 🎹 My Own Song (jam over one of
+  her own saved loops). 126 in all.
+- **Not in this PR:** no recording of the jam, no two-player jam, no notes snapped to the beat (a delay feels slow on a
+  tablet), no Dance Maker link.
+- **Light on the device:** the Stage is already a main-loop screen (`LOOP_SCREENS`); the jam draws in the same canvas and
+  only while the Stage is open. The loop is scheduled a little ahead on the audio clock with the Music Maker's voices
+  (`muVoice`), so the band never drifts from what she hears. The buddy picture moves as a whole (the `#fuzz` filter isn't redrawn).
+- **Code:** a new file `53-jam.js` (+ a little markup in `index.html`, styles in `app.css`). `drawStage()` hands over to
+  `drawJam()` while `STG.state==='jam'`, and the canvas taps go to `jamTap()`. Save version 32 → 33: `jam{sound, pay{day,n}}`
+  and `stats.jams`, `stats.jamOwn`; defaults in `normalize()`, old backups still restore. Song stars and bests never change.
+- **Smoke test:** open Jam from the Stage tabs and from the Music Maker; every loop card plays (the loop's notes are scheduled);
+  each jam sound plays; taps on all 5 pads; Stop pays +2 for 20+ notes and nothing under 20; the 3-a-day limit; the 3
+  stickers; leaving the screen stops the loop; speed and spelling checks still pass.
+
+#### v1.53 plan details: 🎯 Soccer Trick Shots (written 2026-11-20, waiting for the owner's OK)
+Why: Kick and Keep are both "5 shots against a keeper". Once she wins the trophies, there's nothing new to learn, and the
+curve she can put on the ball (a bent swipe) is never needed. Trick Shots are little fixed challenges that teach aiming, height
+and curve, with no keeper and no failing. Owner's answers (2026-11-20): **a fixed trick list**, its own PR after Jam.
+- **The way in:** a 🎯 Tricks tab next to ⚽ Kick and 🧤 Keep (remembered like those: `soccer.mode` = `trick`). The level tabs
+  hide in Tricks mode; instead a big card at the top names the trick ("⭐ Hit the star!") with a ◀ ▶ to change trick and a
+  🎯 button for the picker (a popup with all 12 tricks as pictures, ✅ on the done ones). Every trick is open from the start.
+- **How a trick plays:** the same field, goal, ball and swipe as ⚽ Kick (tap the goal for a straight shot, swipe for power,
+  a bent swipe for curve). No keeper in goal. The keeper friends Mochi, Boo and Flap stand at the side and cheer, or
+  stand together as a **wall** in front of the goal in the wall tricks. Unlimited tries, nothing counted against her. A miss
+  just says "So close! Try again ⚽". After 3 misses on the same trick, a dotted 💡 hint line shows one swipe that works.
+- **The 12 tricks** (about easiest to hardest):
+  1. ⭐ Star Kick: a big star in the middle of the goal.
+  2. ↖️ Top Corner: a star in the top-left corner.
+  3. ↘️ Low and Right: a star low in the right corner (a soft kick stays low).
+  4. 🍩 Hoop Shot: kick through a ring hanging in the goal.
+  5. 🎈 Balloon Pop: 3 balloons across the goal; pop all 3 (a popped one stays popped, misses are free).
+  6. 🔔 Ring the Bell: hit the crossbar where a bell hangs (a "hit the bar" is the goal here!).
+  7. 🧱 Over the Wall: the 3 friends stand in the middle; chip the ball over them into the goal.
+  8. 🌀 Curve It: the wall stands on the left; bend the ball around it into the left side of the goal.
+  9. 🎯 Moving Star: a star slides slowly from side to side.
+  10. 🦇 Bat Hoop: a ring held by a little bat that floats up and down.
+  11. 🍌 Banana Kick: the wall and a hoop behind it; curve around the wall and through the hoop.
+  12. 🌈 Rainbow Row: 3 stars (red, yellow, blue) to hit in order, left to right; a miss keeps the ones already hit.
+- **Coins and prizes:** +3 coins the first time each trick is done (36 in all), and **+1 each replay, 10 a day**. Doing all 12
+  gives a 🏅 **Trick Shot Star** (a prize decoration, `award:1`, never in the Shop) in the **Backyard**, next to the gloves.
+  The ⚽ Kick kit bonus (+1 with 2+ soccer clothes) does not apply here.
+- **Stickers** (⚽ Soccer page): 🎯 First Trick, 🍌 Banana Kick (a curve trick: 8 or 11), 🏅 Trick Master (all 12). 129 in all.
+- **Not in this PR:** no trick shots in 👯 Duel, no made-up (🎲) tricks, no keeper in tricks.
+- **Light on the device:** the Soccer screen is already a main-loop screen. Tricks reuse the field, net, posts, ball and the
+  keeper drawings (drawn flat on the canvas, no `#fuzz`). Targets are a few simple canvas shapes.
+- **Code:** a new file `54-tricks.js` (+ a little markup, styles). `drawSoccer()` hands over to `drawTrick()` in Tricks mode,
+  the canvas pointer handlers to the trick ones, and shots use the same swipe maths (`socAim`) and ball path (`ballPos`).
+  A wall is checked where the ball passes it (its height and the curve's bend at that point). Tricks are text recipes in
+  `TRICKS` with ids `t1`…`t12`, saved in `soccer.tricks[]`: never rename them; new tricks go at the end. Save version 33 → 34:
+  `soccer.tricks[]`, `soccer.trick` (the trick on screen), `soccer.trickPay{day,n}`, `stats.tricks`; defaults in `normalize()`.
+  An older app that restores a backup with `soccer.mode='trick'` simply opens ⚽ Kick.
+- **Smoke test:** open 🎯 Tricks; for every trick, a fixed shot is proven to work (like the keeper shots) and a plain straight
+  shot is proven not to work where the trick needs curve or height; Balloon Pop and Rainbow Row need all three; +3 the first
+  time, +1 replays and the 10-a-day limit; all 12 gives the Trick Shot Star in the Backyard once; the 3 stickers; ⚽ Kick,
+  🧤 Keep and 👯 Duel still work; speed and spelling checks still pass.
 
 #### v1.51 plan details: 👠 Runway (agreed 2026-11-20)
 Why: dressing up has no goal. She owns many clothes (112 in the Closet) but nothing asks her to put an outfit together.

@@ -1281,8 +1281,13 @@ _Last updated: 2026-11-20_
 24. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 👠 Runway (v1.51), 2026-11-20.
     Plan written in `PLAN.md` ("v1.51 plan details") on branch `feature/runway`.
 25. ~~Owner: OK the v1.51 Runway plan in `PLAN.md`, then build it on `feature/runway`.~~ Agreed and built.
-26. Owner: build v1.51, try 👠 Runway from the Closet (see PR #51), and merge it.
-27. Then pick the next item from the "Later, any order" list: 🐾 more pet play, Stage freestyle or Soccer trick shots.
+26. ~~Owner: build v1.51, try 👠 Runway from the Closet (see PR #51), and merge it.~~ Merged.
+27. ~~Then pick the next item from the "Later, any order" list.~~ Picked 🎸 Stage freestyle and 🎯 Soccer trick shots, 2026-11-20.
+    Owner's answers: freestyle = **jam over her own loop** (no falling notes, no score); trick shots = **a fixed list of 12
+    tricks**; **two PRs** (Jam v1.52, then Trick Shots v1.53). Both plans written in `PLAN.md` on branch `feature/freestyle`.
+28. Owner: OK the v1.52 Jam and v1.53 Trick Shots plans in `PLAN.md`, then build Jam on `feature/freestyle`.
+29. Then build 🎯 Trick Shots (v1.53) on `feature/tricks` (from `feature/freestyle`).
+30. Then the last "Later" item: 🐾 more pet play.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
