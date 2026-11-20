@@ -82,7 +82,7 @@ _Last updated: 2026-11-19_
     "Later" list and planned 2026-11-19 (see "Little Ones' Corner" under Decisions and `PLAN.md`). **Merged** (PR #46).
   - **💃 Dance Maker: built as v1.47** on branch `feature/dance` (from `main` after #46). Picked from the "Later" list and
     planned 2026-11-19 (see "Dance Maker" under Decisions and `PLAN.md`). Also moves the Loft's 🎤 Stage sign above the keyboard.
-  - **🌱 Backyard garden: built as v1.48** on branch `feature/garden` (from `feature/dance`, as #47 is still open).
+  - **🌱 Backyard garden: built, PR #48 open as v1.48** on branch `feature/garden` (from `feature/dance`, as #47 is still open).
     Picked from the "Later" list 2026-11-19. Owner's answers: plants grow by themselves (one step a day, never wilt), picking gives
     +3 coins and the first time a pot, 4 free seeds + 8 to buy, 6 plots. Full plan in `PLAN.md` ("v1.48 plan details"); agreed and built.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
@@ -141,7 +141,7 @@ _Last updated: 2026-11-19_
 - PR #45 "Word Builder word bank (v1.45)": merged.
 - PR #46 "Little Ones' Corner (v1.46)": merged.
 - PR #47 "Dance Maker (v1.47)" on branch `feature/dance`: open.
-- "Backyard Garden (v1.48)" on branch `feature/garden` (stacked on `feature/dance`): PR to open.
+- PR #48 "Backyard Garden (v1.48)" on branch `feature/garden` (built on `feature/dance`; merge #47 first): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
