@@ -131,6 +131,22 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Runway (since version 1.51)
+Tap **👠 Runway** in the 👗 Closet (next to 🎲 Surprise me) to put on a little fashion show.
+- **Pick a theme card:** 3 big cards at a time (🔀 shows others). There are 14, like 🦇 Spooky Night, ⚽ Game Day,
+  🚀 Space Day, 🦕 Dino Day, 🐚 Beach Day and 🌌 Spooky Space. **✨ Anything Goes** has no theme at all (good for the little ones).
+- **Dress for it:** it starts from your outfit. Clothes that fit the card come first, marked ✨. Anything you don't own
+  shows **👜** and is **borrowed free, for this show only**: you never have to buy anything. Three sparkles fill up as
+  matching things go on. **🎲 Theme surprise** dresses you in matching things with one tap.
+- **🚶 Walk!** Your buddy struts down the catwalk to a beat, spins and walks back. Three visitor friends hold up cheer
+  cards: 💖 for any outfit, 🌟 for some matching things, 🤩 with confetti for 3 or more. **Every walk gets cheers**; there
+  is no score and no "try again".
+- **+3 coins a show, 15 a day.** After that it still plays, with one gentle note. **👗 Wear it home** puts the outfit on for
+  real, but only the things you own; borrowed things go back to the rack. Your outfit never changes otherwise.
+- 3 new stickers on the Room & Style page: 👠 First Walk, 🌈 Theme Hopper (8 different cards), 🤩 Crowd Favorite
+  (🤩 on a themed card 3 times).
+- Save version 32 (`runway`, `stats.walks`, `stats.wows`); every older backup still restores (with no shows walked yet).
+
 ## New things to buy (since version 1.50)
 More ways to spend the coins she earns. Everything is bought once and kept, like the rest of the Shop (6–35 coins each).
 - **🏠 Pet homes:** tap your pet, then **🏠 Home**. The cushion bed stays free; 8 homes cost 12–30 coins: 🦇 Bat Tent,

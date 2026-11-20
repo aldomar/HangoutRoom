@@ -186,7 +186,7 @@ Object.assign(DECOR,{
     +`<path d="M-70 -96 Q-110 -96 -140 -60" fill="none" stroke="#2b2235" stroke-width="13" stroke-linecap="round"/><path d="M-70 -96 Q-110 -96 -140 -60" fill="none" stroke="#fbf2e6" stroke-width="7" stroke-linecap="round" stroke-dasharray="10 4"/>`
     +`<path d="M66 -100 Q96 -150 96 -186" fill="none" stroke="#2b2235" stroke-width="13" stroke-linecap="round"/><path d="M66 -100 Q96 -150 96 -186" fill="none" stroke="#fbf2e6" stroke-width="7" stroke-linecap="round" stroke-dasharray="10 4"/>`
     +`<path d="M-76 -96 Q0 -112 72 -98" fill="none" stroke="#2b2235" stroke-width="12" stroke-linecap="round"/><path d="M-76 -96 Q0 -112 72 -98" fill="none" stroke="#fbf2e6" stroke-width="6" stroke-linecap="round"/>`
-    +[-50,-26,-2,22,46].map(x=>`<path d="M${x} -104 Q${x-6} -80 ${x} -66" fill="none" ${b}/>`).join('')
+    +[-50,-26,-2,22,46].map(x=>`<path d="M${x} -104 Q${x-6} -80 ${x} -66" ${b.replace(/fill="[^"]*"/,'fill="none"')}/>`).join('')
     +`<path d="M80 -206 Q86 -224 110 -222 Q140 -218 140 -200 Q138 -184 112 -182 L88 -184 Q78 -190 80 -206Z" ${b}/>`
     +`<circle cx="104" cy="-206" r="6" fill="#2b2235"/><circle cx="106" cy="-208" r="2" fill="#fff"/><path d="M116 -192 Q126 -188 134 -194" fill="none" stroke="#2b2235" stroke-width="3" stroke-linecap="round"/><circle cx="124" cy="-198" r="4" fill="#ffc1dc"/>`;}},
   wallCase:{name:'Wall Case',price:20,wall:1,shelf:{w:220,top:44},box:'-125 -222 250 224',d:()=>`<rect x="-112" y="-214" width="224" height="174" rx="8" fill="${spGold}" ${spL}/>`

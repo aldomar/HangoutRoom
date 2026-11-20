@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('120 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50), ids all different, 6 or more per page', await ev(`STICKERS.length===120&&new Set(STICKERS.map(s=>s.id)).size===120&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('123 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51), ids all different, 6 or more per page', await ev(`STICKERS.length===123&&new Set(STICKERS.map(s=>s.id)).size===123&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -3765,7 +3765,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     const mb=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
     await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
     await ev(`closeModal();stkPaused=true;{const p=P();p.easy=false;applyEasy();Object.keys(p.night).forEach(k=>delete p.night[k]);p.coins=1000;}goRoom(1);show('room')`); await sleep(300);
-    check('save version 31; every room has the cushion and the Classic backdrop', await ev(`DB_VERSION===31&&DB.version===31&&DB.profiles.every(p=>p.pet.home===''&&p.stage.backdrop==='classic')`));
+    check('save version 31 or later; every room has the cushion and the Classic backdrop', await ev(`DB_VERSION>=31&&DB.version===DB_VERSION&&DB.profiles.every(p=>p.pet.home===''&&p.stage.backdrop==='classic')`));
     check('save version 31 adds the home and backdrop to older saves', await ev(`(()=>{const d={profiles:[{name:'Old',pet:{kind:'bat'},stage:{level:'easy'}}]};MIGRATIONS[31](d);return d.profiles[0].pet.home===''&&d.profiles[0].stage.backdrop==='classic';})()`));
     // 🏠 pet homes
     await ev(`{const p=P();p.pet.kind='bat';if(!('bat' in p.pet.hearts))p.pet.hearts.bat=0;renderRoom();}`); await sleep(150);
@@ -3858,7 +3858,127 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('odd home and backdrop data is made safe', await ev(`DB.profiles[0].pet.home===''&&DB.profiles[0].stage.backdrop==='classic'`));
     await ev(`closeModal();doRestore(${JSON.stringify(spendB)})`); await sleep(400);
     await ev(`closeModal();{const p=P();p.room4.items=JSON.parse(window.muKeep);}stkPaused=false;goRoom(1);show('room')`);
-    check('v1.50 is in the Gift Story and the app says 1.50', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.50')&&APP_VERSION==='1.50'`));
+    check('v1.50 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.50')`));
+  }
+
+  console.log('Runway (v1.51)');
+  {
+    const mb=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`closeModal();stkPaused=true;window.RW_TEST_FAST=true;{const p=P();p.easy=false;applyEasy();p.coins=500;window.rwOwned=JSON.stringify(p.owned);window.rwLook=JSON.stringify(p.look);}goRoom(1);show('room')`); await sleep(300);
+    check('save version 32; every room starts the Runway with nothing walked', await ev(`DB_VERSION>=32&&DB.profiles.every(p=>p.runway&&p.runway.cards.length===0&&p.runway.pay.n===0&&p.stats.walks===0&&p.stats.wows===0)`));
+    check('save version 32 adds the Runway to older saves', await ev(`(()=>{const d={profiles:[{name:'Old'}]};MIGRATIONS[32](d);return d.profiles[0].runway.cards.length===0&&d.profiles[0].runway.pay.n===0;})()`));
+    check('14 theme cards with different ids, 3 judges each (visitor friends), themes that exist', await ev(`RW_CARDS.length===14&&new Set(RW_CARDS.map(c=>c.id)).size===14&&RW_CARDS.every(c=>c.judges.length===3&&new Set(c.judges).size===3&&c.judges.every(j=>VISIT_FRIENDS[j])&&c.th.every(t=>THEMES[t])&&c.icon&&c.name&&c.say)`));
+    const thin=await ev(`RW_CARDS.filter(c=>c.th.length&&RW_CATS.filter(k=>CLOSET[k].items.some(it=>rwFits(c,k,it))).length<3).map(c=>c.id)`);
+    check('every themed card has matching clothes in 3 or more closet tabs', thin.length===0, thin);
+    const weak=await ev(`RW_CARDS.filter(c=>Array.from({length:25}).some(()=>rwLevel(c,rwSurprise(c,P().look))<3)).map(c=>c.id)`);
+    check('🎲 Theme surprise always gives 3+ matching pieces (🤩), for every card', weak.length===0, weak);
+    // A picture made from an SVG must be strict XML: a repeated attribute (st() already has stroke-linejoin) shows a broken image
+    // on the Runway, in the Dance Maker and in 📷 snapshots, though the same drawing looks fine inside the page (v1.51 fix).
+    const xmlBad=await ev(`(async()=>{const bad=[],base=newProfile('x').look,X='xmlns="http://www.w3.org/2000/svg"';
+      const xml=(s,t)=>{if(new DOMParser().parseFromString(s,'image/svg+xml').querySelector('parsererror'))bad.push(t);};
+      const looks=[];Object.keys(BUDDIES).forEach(k=>looks.push(['kind:'+k,{kind:k}]));Object.keys(FACES).forEach(k=>looks.push(['face:'+k,{face:k}]));
+      Object.keys(FUR).forEach(k=>looks.push(['fur:'+k,{fur:k}]));Object.keys(HAIR_COLORS).forEach(k=>looks.push(['hc:'+k,{hairColor:k}]));
+      Object.keys(CLOSET).forEach(c=>CLOSET[c].items.forEach(it=>looks.push([c+':'+it.id,{[c]:it.id}])));
+      looks.forEach(([t,L])=>xml(mascotSVG(Object.assign({},base,L),null,'width="200" height="270"'),t));
+      Object.keys(DECOR).forEach(k=>xml('<svg '+X+'>'+DECOR[k].d({})+'</svg>','decor:'+k));
+      xml('<svg '+X+'>'+furniture()+loftFurniture()+yardFurniture()+'</svg>','furniture');
+      for(const k of ['dino','fox','bunny']){RW.imgKey='';const src=rwArt(Object.assign({},base,{kind:k}));
+        if(!await new Promise(r=>{const i=new Image();i.onload=()=>r(true);i.onerror=()=>r(false);i.src=src;}))bad.push('image:'+k);}
+      RW.imgKey='';return bad;})()`);
+    check('every buddy, face, fur, hair color, closet item, decoration and room piece is strict XML (so its picture never breaks)', xmlBad.length===0, xmlBad);
+    check('cheer levels: nothing matching = 💖 (level 0), Anything Goes = 🤩 always', await ev(`(()=>{const L=Object.assign({},P().look);RW_CATS.forEach(k=>L[k]='none');return rwLevel(rwCardOf('farm'),L)===0&&rwLevel(rwCardOf('any'),L)===3&&RW_CHEERS.length===4;})()`));
+    // the way in
+    await ev(`show('closet')`); await sleep(200);
+    check('the Closet has a 👠 Runway button, 48 px or more', await ev(`(r=>r.width>=48&&r.height>=48)(document.querySelector('#runwayBtn').getBoundingClientRect())`));
+    await ev(`document.querySelector('#runwayBtn').click()`); await sleep(200);
+    check('…which opens 3 theme cards', await ev(`cur==='runway'&&RW.view==='cards'&&document.querySelectorAll('#rwCardList [data-card]').length===3`));
+    await shot('RW1-cards');
+    const first=await ev(`[...document.querySelectorAll('#rwCardList [data-card]')].map(b=>b.dataset.card).join()`);
+    await ev(`document.querySelector('#rwShuffle').click()`); await sleep(100);
+    check('🔀 shows 3 other cards', await ev(`[...document.querySelectorAll('#rwCardList [data-card]')].map(b=>b.dataset.card).join()`)!==first);
+    // dress
+    await ev(`RW.deck=RW_CARDS.map(c=>c.id).sort((a,b)=>(b==='farm')-(a==='farm'));RW.at=0;rwCards();document.querySelector('#rwCardList [data-card=farm]').click()`); await sleep(200);
+    check('a card opens the dressing room on her own outfit, with 7 tabs (no Buddy, Fur or Face)', await ev(`RW.view==='dress'&&RW.card.id==='farm'&&RW_CATS.every(k=>RW.look[k]===P().look[k])&&document.querySelectorAll('#rwTabs [data-rcat]').length===7&&document.querySelector('#rwCardChip').textContent.includes('Farm Fair')`));
+    check('matching clothes come first, marked ✨', await ev(`(t=>t.length>1&&t.findIndex(x=>!x.classList.contains('rw-fit')&&x.dataset.id!=='none')>t.findLastIndex(x=>x.classList.contains('rw-fit')))([...document.querySelectorAll('#rwGrid .tile')])`));
+    const bor=await ev(`(t=>t&&t.dataset.id)(document.querySelector('#rwGrid .tile.rw-fit:has(.rw-borrow)'))`);
+    check('clothes she does not own show 👜 (borrow) instead of a price', !!bor&&await ev(`!document.querySelector('#rwGrid .tile .tp:not(.rw-borrow)')`));
+    await ev(`document.querySelector('#rwGrid [data-id="${bor}"]').click()`); await sleep(120);
+    check('borrowing puts it on for the show only: her outfit, coins and things are unchanged', await ev(`RW.look[RW.cat]==='${bor}'&&JSON.stringify(P().look)===window.rwLook&&JSON.stringify(P().owned)===window.rwOwned&&P().coins===500`));
+    check('…and the bag says what is borrowed', await ev(`document.querySelector('#rwBag').textContent.includes('borrowed')`));
+    await ev(`document.querySelector('#rwSurprise').click()`); await sleep(150);
+    check('🎲 Theme surprise lights all 3 sparkles', await ev(`rwMatches(RW.card,RW.look)>=3&&document.querySelectorAll('#rwSpark i.on').length===3`));
+    await shot('RW2-dress');
+    // walk
+    await ev(`window.RW_TEST_FAST=false;document.querySelector('#rwWalk').click()`); await sleep(1500);
+    check('🚶 Walk shows the catwalk, the buddy picture and 3 judges', await ev(`RW.view==='walk'&&RW.walking&&document.querySelector('#rwWalker.go')&&document.querySelector('#rwBuddyImg').src.startsWith('data:image/svg')&&document.querySelectorAll('#rwJudges .rw-judge svg').length===3`));
+    await shot('RW3-walk');
+    check('the room music rests during the walk', await ev(`musicTimer===null`));
+    await ev(`rwBackKey()`); await sleep(100);
+    check('Back during the walk stops it (no coins) and goes back to dressing', await ev(`!RW.walking&&RW.view==='dress'&&P().coins===500&&P().stats.walks===0`));
+    await ev(`document.querySelector('#rwWalk').click()`); await sleep(4700);
+    check('after the walk, the judges hold up 🤩 cheer cards', await ev(`[...document.querySelectorAll('#rwJudges .rw-judge')].every(j=>j.classList.contains('show')&&j.querySelector('.rw-cheer').textContent==='🤩')`));
+    await shot('RW4-cheers'); await sleep(1800);
+    check('then a cheer box: +3 coins, the walk and card counted, a 🤩 on a themed card', await ev(`/What a show/.test(document.querySelector('#modalTitle').textContent)&&P().coins===503&&P().stats.walks===1&&P().stats.wows===1&&P().runway.cards.join()==='farm'&&P().runway.pay.n===3`));
+    check('…with 🔁 Another card and 🏠 Done; 👗 Wear it home only when something she owns would change', await ev(`!!(${mb('Another card')}&&${mb('Done')})&&!!${mb('Wear it home')}===RW_CATS.some(k=>RW.look[k]!==P().look[k]&&rwOwns(P(),k,RW.look[k]))`));
+    check('…and her things are unchanged (nothing borrowed was kept)', await ev(`JSON.stringify(P().owned)===window.rwOwned&&JSON.stringify(P().look)===window.rwLook`));
+    await shot('RW5-done');
+    await ev(`${mb('Another card')}.click()`); await sleep(150);
+    check('🔁 Another card goes back to the cards', await ev(`RW.view==='cards'&&document.querySelectorAll('#rwCardList [data-card]').length===3`));
+    // the daily limit (fast walks from here)
+    await ev(`window.RW_TEST_FAST=true;P().runway.pay.n=12;RW.card=rwCardOf('any');RW.look=Object.assign({},P().look);RW.view='dress';renderRunway();document.querySelector('#rwWalk').click()`); await sleep(400);
+    check('Anything Goes gets 🤩 too, pays up to 15 a day, and is not a themed 🤩', await ev(`P().coins===506&&P().runway.pay.n===15&&P().stats.wows===1&&P().stats.walks===2&&P().runway.cards.includes('any')`));
+    await ev(`closeModal();RW.view='dress';renderRunway();document.querySelector('#rwWalk').click()`); await sleep(400);
+    check('after 15 coins a day it still plays, with a gentle note and no coins', await ev(`P().coins===506&&P().stats.walks===3&&document.querySelector('#modalBody').textContent.includes('full for today')`));
+    await ev(`closeModal();P().runway.pay.day='old';RW.view='dress';renderRunway();rwWalk()`); await sleep(400);
+    check('a new day pays again', await ev(`P().coins===509&&P().runway.pay.n===3`));
+    // 👗 Wear it home: owned pieces only
+    await ev(`closeModal()`);
+    check('👗 Wear it home puts on the pieces she owns; borrowed ones go back (and are not owned)', await ev(`(()=>{const p=P(),own=CLOSET.top.items.find(i=>i.id!=='none'&&isOwned(p,'top',i)&&i.id!==p.look.top),not=CLOSET.legs.items.find(i=>!isOwned(p,'legs',i));
+      RW.card=rwCardOf('any');RW.look=Object.assign({},p.look,{top:own.id,legs:not.id});const legs=p.look.legs;rwWearHome();
+      return p.look.top===own.id&&p.look.legs===legs&&!p.owned.includes('legs:'+not.id)&&cur==='closet';})()`));
+    await ev(`P().look=JSON.parse(window.rwLook);save()`);
+    // Back
+    await ev(`rwOpen();document.querySelector('#rwCardList [data-card]').click()`); await sleep(150);
+    await ev(`androidBack()`); await sleep(100);
+    check('Back: dressing room → cards', await ev(`cur==='runway'&&RW.view==='cards'`));
+    await ev(`androidBack()`); await sleep(100);
+    check('Back: cards → Closet', await ev(`cur==='closet'`));
+    await ev(`rwOpen();document.querySelector('#rwCardList [data-card]').click();window.RW_TEST_FAST=false;rwWalk();show('room')`); await sleep(100);
+    check('leaving the screen during a walk stops it', await ev(`!RW.walking&&RW.timers.length===0`));
+    await ev(`window.RW_TEST_FAST=true`);
+    // Easy mode and small screens
+    await ev(`{const p=P();p.easy=true;}rwOpen()`); await sleep(150);
+    await shot('RW6-easy-cards');
+    for(const [w,h,name] of [[412,860,'phone'],[360,740,'small phone'],[820,1180,'tablet upright'],[860,412,'phone sideways']]){
+      await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:true});
+      await ev(`RW.view='cards';renderRunway()`); await sleep(150);
+      check(name+': the 3 cards and 🔀 fit on the screen', await ev(`[...document.querySelectorAll('#rwCardList [data-card]'),document.querySelector('#rwShuffle')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.height>=48;})&&document.documentElement.scrollWidth<=innerWidth+1`));
+      await shot('RW7-'+name.replace(/ /g,'-')+'-cards');
+      await ev(`document.querySelector('#rwCardList [data-card]').click()`); await sleep(150);
+      check(name+': 🚶 Walk and 🎲 are on screen in the dressing room', await ev(`['#rwWalk','#rwSurprise'].every(s=>{const r=document.querySelector(s).getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight+1&&r.right<=innerWidth+1&&r.height>=40;})`));
+      await shot('RW7-'+name.replace(/ /g,'-')+'-dress');
+      await ev(`window.RW_TEST_FAST=false;rwWalk()`); await sleep(1700);
+      check(name+': the judges fit on the catwalk screen', await ev(`[...document.querySelectorAll('#rwJudges .rw-judge')].every(j=>{const r=j.getBoundingClientRect();return r.left>=-1&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1&&r.height>40;})`));
+      await shot('RW7-'+name.replace(/ /g,'-')+'-walk');
+      await ev(`rwStop();window.RW_TEST_FAST=true;closeModal()`);
+    }
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`P().easy=false;applyEasy();show('room')`);
+    // stickers
+    check('3 new stickers on the 🏠 Room & Style page: First Walk, Theme Hopper, Crowd Favorite', await ev(`['walk1','walk8','wow3'].every(id=>(s=>s&&s.page==='room')(STICKERS.find(s=>s.id===id)))`));
+    check('…First Walk is done; Theme Hopper needs 8 cards, Crowd Favorite 3 🤩', await ev(`stkDone(P(),STICKERS.find(s=>s.id==='walk1'))&&!stkDone(P(),STICKERS.find(s=>s.id==='walk8'))&&(P().runway.cards=RW_CARDS.slice(0,8).map(c=>c.id),P().stats.wows=3,stkDone(P(),STICKERS.find(s=>s.id==='walk8'))&&stkDone(P(),STICKERS.find(s=>s.id==='wow3')))`));
+    // backups
+    const rwB=await ev(`JSON.stringify(DB)`);
+    await ev(`(()=>{const d=JSON.parse(${JSON.stringify(rwB)});d.version=31;d.profiles.forEach(p=>{delete p.runway;delete p.stats.walks;delete p.stats.wows;});doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('a v1.50 backup restores with an empty Runway', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.runway.cards.length===0&&p.stats.walks===0&&p.stats.wows===0)`));
+    await ev(`closeModal();doRestore(${JSON.stringify(rwB)})`); await sleep(400);
+    check('a v1.51 backup keeps the cards walked and the counts', await ev(`DB.profiles.some(p=>p.runway.cards.length===8&&p.stats.walks===4&&p.stats.wows===3)`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(rwB)});d.profiles[0].runway={pay:'x',cards:[5,'farm','farm']};d.profiles[0].stats.walks='lots';doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd Runway data is made safe', await ev(`DB.profiles[0].runway.pay.n===0&&DB.profiles[0].runway.cards.join()==='farm'&&DB.profiles[0].stats.walks===0`));
+    await ev(`closeModal();doRestore(${JSON.stringify(rwB)})`); await sleep(400);
+    await ev(`closeModal();stkPaused=false;window.RW_TEST_FAST=false;goRoom(1);show('room')`);
+    check('v1.51 is in the Gift Story and the app says 1.51', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.51')&&APP_VERSION==='1.51'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);
