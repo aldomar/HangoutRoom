@@ -26,6 +26,7 @@ function show(n){
   if(n==='music') renderMusic(); else muStop(); // section 40
   if(n==='little') renderLittle(); else ltStop(); // 🧸 Play (section 46)
   if(n==='dance') renderDance(); else dnStop(); // 💃 Dance Maker (section 48)
+  if(n==='garden') renderGarden(); // 🌱 Garden (section 49)
   if(n==='stickers') renderStickers(); // section 21
   if(n==='about') renderAbout(); // section 25
   if(n==='room') stkDot();
@@ -155,6 +156,7 @@ function handleHot(h){
   else if(h==='stage'){SFX.click();show('stage');}
   else if(h==='code'){SFX.click();show('code');}
   else if(h==='brain'){SFX.click();show('brain');} // the Backyard's chalkboard (v1.25)
+  else if(h==='garden'){SFX.click();show('garden');} // the Backyard's garden shed (v1.48)
   else if(h==='music'){SFX.click();show('music');} // the Loft's keyboard (v1.38)
   else if(h==='pet'){petTap();} // section 22
   else if(h==='gift'){giftOpen();} // section 32

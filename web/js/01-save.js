@@ -8,9 +8,9 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.47';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.48';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=28;          // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=29;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
 // pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
 const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:'',seenNew:'',lastBackup:0}; // lastBackup (v1.30): when a backup was last saved on this device (ms) // seenNew (v1.22): last version whose What's New was shown
@@ -97,7 +97,9 @@ const MIGRATIONS={
   // v1.46 Little Ones' Corner: little {colors{picId:[...]}, hung{picId:{art,sig}}, pay{day,n}} (sections 46-47). normalize() checks it.
   27: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.little||typeof p.little!=='object'||Array.isArray(p.little))) p.little={colors:{},hung:{},pay:{day:'',n:0}}; }); },
   // v1.47 Dance Maker: dance {cur, music, slots[3], songs[], pay{day,n}} (section 48). normalize() checks it.
-  28: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.dance||typeof p.dance!=='object'||Array.isArray(p.dance))) p.dance={cur:'........',music:'beat',slots:[null,null,null],songs:[],pay:{day:'',n:0}}; }); }
+  28: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.dance||typeof p.dance!=='object'||Array.isArray(p.dance))) p.dance={cur:'........',music:'beat',slots:[null,null,null],songs:[],pay:{day:'',n:0}}; }); },
+  // v1.48 Garden: garden {plots[6], grown[]} (section 49), stats.planted / harvests. normalize() checks it.
+  29: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.garden||typeof p.garden!=='object'||Array.isArray(p.garden))) p.garden={plots:[null,null,null,null,null,null],grown:[]}; }); }
 };
 
 // Hair ids from before v1.11 (one closet item per color) -> the color they had. They stay readable forever:

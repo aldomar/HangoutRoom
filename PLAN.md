@@ -358,9 +358,52 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   🖍️ Tap-to-Color (12 pictures, 🖼️ hang one in the Gallery), 🎵 Sound Mat and 👀 Peekaboo. Nothing can go wrong.
 - ✅ **💃 Dance Maker (v1.47, built; plan details below, agreed 2026-11-19):** 8 beats of whole-body moves, danced to a beat,
   a Music Maker loop or a Stage song; 🕺 free dance while it plays. Also (owner's request) the 🎤 Stage sign hangs above the 🎹 keyboard.
+- ✅ **🌱 Backyard garden (v1.48, built; plan details below, agreed 2026-11-19):** the garden shed opens a 6-plot
+  garden. Plants grow one step a day by themselves and never wilt; picking one gives coins and, the first time, a potted plant.
 - **Later, any order:** 👗 Runway (style a look for a theme
-  card; judges only cheer), 🌱 Backyard garden (grows over real days, never wilts), 🔍 I Spy in her own room, 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
+  card; judges only cheer), 🔍 I Spy in her own room, 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
   loop), Soccer trick shots, and new things to spend coins on (pet house, a collections museum, Stage backdrops).
+
+#### v1.48 plan details: 🌱 Backyard garden (agreed 2026-11-19)
+Why: the Backyard has a shed that was "a spot for a future game", and nothing in the app grows over time. A garden gives a
+gentle reason to visit, with nothing to lose. Owner's answers: plants **grow by themselves**; picking gives **coins + a pot**;
+**4 free seeds + 8 to buy**; **6 plots**.
+- **The way in:** tap the 🏡 Garden Shed in the Backyard (it becomes a hotspot, with a 🌱 Garden sign in Easy mode). It opens
+  a garden screen: a big raised bed with **6 plots** (2 rows of 3; on a phone held upright, 3 rows of 2) and a seed tray
+  underneath. Back goes to the Backyard. A small flower box under the shed's window shows up to 3 blooms that are ready.
+- **Planting:** tap an empty plot → the seed tray glows → tap a seed packet (a picture of the grown plant on it) → it's
+  planted, with a little "pat pat" sound. Or tap a seed first, then a plot. One seed per plot. No coins to plant.
+- **Growing, by itself:** 4 steps: 🟤 seed → 🌱 sprout → 🌿 bud → 🌸 ready. It moves **one step each new day** (from the device
+  date, like the daily gift), so a seed planted today is ready in 3 days. Nothing ever wilts, dries out or goes away.
+  If the date goes backwards, a plant never shrinks. Each plot shows the step as a picture; growth is never a number or a countdown.
+  - 💧 **Watering is just for fun:** a watering can she drags or taps over a plot makes sparkles, a splash sound and a happy
+    wiggle. It doesn't change growth, so forgetting it costs nothing. No "your plant is thirsty" messages, ever.
+  - `README.md` tells grown-ups that plants grow by the device date (so changing the date changes them too).
+- **Picking:** tap a ready plant: it pops out with a cheer, the plot is empty again. **+3 coins** every time (6 plots × one
+  harvest per 3 days, so about 6 coins a day at most). The **first time** she grows a kind, a **potted version** goes into
+  My Stuff (an `award:1` decoration for any room, never sold in the Shop), with a "New pot! 🪴" box that offers Place it.
+- **12 seeds** (all original, drawn in code): free: 🌻 Sunflower, 🍓 Strawberry, 🥕 Bunny Carrot, 🌷 Tulip.
+  To buy once (5–15 coins, then planted forever, owned as `seed:<id>`): ⭐ Star Flower (glows at night), 🦇 Bat-Wing Bloom,
+  🌙 Moon Bell, 🍄 Puff Mushroom, 🎃 Mini Pumpkin, 🦖 Dino Fern, 🚀 Rocket Pepper, 🍭 Candy Swirl. Every kind can be grown in any
+  season (no limited-time seeds). They get theme chips (the 🦇, ⭐ and 🦖 ones join those themes), so Visitors' wishes and the
+  Shop filters find the pots.
+- **Stickers** (🏠 Room & Style page): 🌱 First Sprout (plant a seed), 🪴 Green Thumb (10 plants picked), 🌻 Garden Party
+  (all 6 plots growing at once), 🏡 Master Gardener (every kind grown once). Totals only, never streaks.
+- **Night:** the Star Flower and Moon Bell pots get `NIGHT_GLOW` entries, so they glow in 🌙 night mode.
+- **Light on the device:** no main loop. Plants are drawn once per change (SVG); wiggles and sparkles are CSS animations.
+- **Read to me** names every seed and plot ("Sunflower, ready to pick"). Big tap targets (each plot is 96 px or more).
+- **Save:** `garden{plots[6], grown[], pay?}` per profile, where a plot is `null` or `{seed, day}` (the day it was planted;
+  the step comes from today's date), `grown` lists every kind picked at least once; `stats.harvests`. Save version 29
+  (`normalize` + `MIGRATIONS[29]`). Seed ids and pot keys (`pot<Name>`) are saved: never rename them; new seeds go at the end.
+  Older backups restore with an empty garden.
+- **Files:** new `49-garden.js` (seeds, plant drawings, the screen, the pots, stickers) and a new `scr-garden` screen in
+  `index.html`; a small hook in `26-backyard.js` (the shed becomes `data-hot="garden"`, plus the window box).
+- **Smoke test:** the shed opens the garden (also on a phone); planting from plot-first and seed-first; growth by test day
+  (`FP_TEST_DAY`): 0, 1, 2, 3 days and a date going backwards; watering changes nothing saved; picking pays +3 and gives the
+  pot once (placing it works in every room); buying a seed; all 12 plants draw at every step; the stickers; Back; a restore
+  from v1.47; tap targets 48 px+ and phone layouts fit.
+- As built: a new pot is put straight into the Backyard (next to the garden), like a visitor's plush, rather than My Stuff;
+  she can move it anywhere in Decorate. Tapping a growing plant waters it, and 💧 waters them all. Seeds to buy cost 8–15.
 
 #### v1.40 plan details (agreed 2026-11-17; built as planned)
 - Save: `room4{wall,floor,items[]}` per profile, starting wall and floor from `ROOM_START`; `night['4']`, `presets['4']`.

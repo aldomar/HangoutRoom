@@ -149,7 +149,9 @@ const GIFT_TIMELINE=[
   {v:'1.46',d:'2026-11-19',i:'🧸',n:"Little Ones' Corner",why:'So the youngest players have toys where nothing can go wrong',
     news:['🧸 Play is in the top bar of every room','🖍️ Tap-to-Color: 12 pictures, and 🖼️ hang them in your Gallery','🎵 A Sound Mat and 👀 Peekaboo with your friends']},
   {v:'1.47',d:'2026-11-19',i:'💃',n:'Dance Maker',why:'So your buddy can dance to the music you make',
-    news:['💃 Dance is in the 🎹 Music Maker and on the Stage','Pick 8 moves, then ▶️ watch your buddy dance','🎤 The Stage sign now hangs over the Loft keyboard']}
+    news:['💃 Dance is in the 🎹 Music Maker and on the Stage','Pick 8 moves, then ▶️ watch your buddy dance','🎤 The Stage sign now hangs over the Loft keyboard']},
+  {v:'1.48',d:'2026-11-19',i:'🌱',n:'Backyard Garden',why:'So something new can grow for you every day',
+    news:['🏡 Tap the Backyard shed for your 🌱 Garden','Plant seeds: they grow a little every day and never wilt','Pick them for 🪙 coins and a 🪴 pot for your room']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

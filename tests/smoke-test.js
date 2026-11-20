@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('110 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47), ids all different, 6 or more per page', await ev(`STICKERS.length===110&&new Set(STICKERS.map(s=>s.id)).size===110&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('114 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48), ids all different, 6 or more per page', await ev(`STICKERS.length===114&&new Set(STICKERS.map(s=>s.id)).size===114&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -3417,7 +3417,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   {
     await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
     await ev(`closeModal();stkPaused=true;P().easy=false;goRoom(1);show('room')`); await sleep(300);
-    check('save version 28; every room has an empty dance to start', await ev(`DB_VERSION===28&&DB.profiles.every(p=>p.dance&&p.dance.cur===DN_EMPTY&&p.dance.slots.length===3&&Array.isArray(p.dance.songs)&&p.dance.pay.n===0)`));
+    check('save version 28 or later; every room has an empty dance to start', await ev(`DB_VERSION>=28&&DB.profiles.every(p=>p.dance&&p.dance.cur===DN_EMPTY&&p.dance.slots.length===3&&Array.isArray(p.dance.songs)&&p.dance.pay.n===0)`));
     check('8 moves, one letter each (saved ids), and 3 ideas that use only them', await ev(`DN_CODES.join('')==='hspwbcjo'&&DN_IDEAS.length===3&&DN_IDEAS.every(z=>dnOk(z.g)&&(z.music==='beat'||SONGS[z.music]))`));
     // the Stage sign hangs over the Loft keyboard (v1.47, the owner's request)
     await ev(`goRoom(2)`); await sleep(300);
@@ -3539,7 +3539,111 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(dnB)});d.profiles[0].dance={cur:'hhhhhhhx',music:7,slots:['hs......','abc',null,'jjjjjjjj'],songs:['bats','bats',3],pay:'x'};doRestore(JSON.stringify(d));})()`); await sleep(400);
     check('odd dance data is made safe', await ev(`(d=>d.cur===DN_EMPTY&&d.music==='beat'&&d.slots.length===3&&d.slots[0]==='hs......'&&d.slots[1]===null&&d.songs.join()==='bats'&&d.pay.n===0)(DB.profiles[0].dance)`));
     await ev(`closeModal();stkPaused=false;show('room')`);
-    check('v1.47 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.47')&&APP_VERSION==='1.47'`));
+    check('v1.47 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.47')`));
+  }
+
+  console.log('Backyard Garden (v1.48)');
+  {
+    const gdDay=n=>{const d=new Date(Date.UTC(2026,10,19+n));return d.toISOString().slice(0,10);};
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`closeModal();stkPaused=true;P().easy=false;window.FP_TEST_DAY='${gdDay(0)}';goRoom(1);show('room')`); await sleep(300);
+    check('save version 29; every room has an empty garden of 6 plots', await ev(`DB_VERSION===29&&DB.profiles.every(p=>p.garden&&p.garden.plots.length===6&&p.garden.plots.every(x=>x===null)&&p.garden.grown.length===0&&p.stats.planted===0&&p.stats.harvests===0)`));
+    check('12 seeds with different ids: 4 free, the others 5–15 coins', await ev(`GD_SEEDS.length===12&&new Set(GD_SEEDS.map(s=>s.id)).size===12&&GD_SEEDS.filter(s=>!s.price).length===4&&GD_SEEDS.filter(s=>s.price).every(s=>s.price>=5&&s.price<=15)`));
+    check('every plant draws at every step (and in a pot)', await ev(`GD_SEEDS.every(s=>[0,1,2,3].every(k=>{const h=gdPlant(s.id,k);return h.length>80&&!/undefined|NaN/.test(h);})&&!/undefined|NaN/.test(gdPlant(s.id,3,true)))`));
+    check('every seed has a pot: a prize (never in the Shop) with a theme chip and 🌳 Outdoor', await ev(`GD_SEEDS.every(s=>{const k=gdPotKey(s),d=DECOR[k];return d&&d.award&&!d.price&&themesOf('decor:'+k,d).includes('yard')&&themesOf('decor:'+k,d).includes(s.th)&&!/undefined|NaN/.test(d.d());})`));
+    check('the Star Flower and Moon Bell pots glow at night', await ev(`!!NIGHT_GLOW.potStar&&!!NIGHT_GLOW.potMoonbell`));
+    // the Backyard shed
+    await ev(`goRoom(3)`); await sleep(300);
+    check('the Backyard shed is now the 🌱 Garden hotspot (Read to me: Garden)', await ev(`!!document.querySelector('#roomSvg [data-hot=garden][data-piece=shed]')&&HOT_WORDS.garden==='Garden'`));
+    await ev(`P().easy=true;applyEasy();renderRoom()`); await sleep(150);
+    check('Easy mode: a 🌱 Garden label over the shed, inside the picture', await ev(`(()=>{const s=document.querySelector('#roomSvg [data-hot=garden] .sign'),r=s&&s.getBoundingClientRect(),w=roomSvg.getBoundingClientRect();return !!s&&s.textContent.includes('Garden')&&r.right<=w.right+1&&r.top>=w.top;})()`));
+    await shot('G01-yard-shed'); await ev(`P().easy=false;applyEasy();renderRoom()`);
+    await ev(`document.querySelector('#roomSvg [data-hot=garden]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(250);
+    check('tapping the shed opens the Garden: 6 empty plots, 12 seed packets, ⬅ Yard', await ev(`cur==='garden'&&document.querySelectorAll('#gdBed .gd-plot.gd-empty').length===6&&document.querySelectorAll('#gdSeeds .gd-seed').length===12&&document.querySelector('#gdBack').textContent.includes('Yard')`));
+    check('seeds to buy show a price; free ones do not', await ev(`GD_SEEDS.every(s=>!!document.querySelector('#gdSeeds [data-seed="'+s.id+'"] .tp')===!!s.price)`));
+    // planting: plot first
+    const gc0=await ev(`P().coins`);
+    await ev(`document.querySelector('#gdBed [data-plot="0"]').click()`); await sleep(80);
+    check('tapping an empty plot picks it and the seed tray glows', await ev(`GD.plot===0&&document.querySelector('#gdBed [data-plot="0"]').classList.contains('on')&&document.querySelector('#gdTray').classList.contains('pick')&&document.querySelector('#gdHint').textContent.includes('seed')`));
+    await ev(`document.querySelector('#gdSeeds [data-seed=sunflower]').click()`); await sleep(80);
+    check('…then a seed plants it there (free, no question)', await ev(`(x=>x&&x.seed==='sunflower'&&x.day===FP_TEST_DAY&&x.step===0)(P().garden.plots[0])&&P().coins===${gc0}&&P().stats.planted===1&&document.querySelector('#modal').classList.contains('hidden')&&!document.querySelector('#gdTray').classList.contains('pick')`));
+    // planting: seed first, several in a row
+    await ev(`GD.sel='';renderGarden();document.querySelector('#gdSeeds [data-seed=tulip]').click()`); await sleep(80);
+    check('tapping a seed picks it', await ev(`GD.sel==='tulip'&&document.querySelector('#gdSeeds [data-seed=tulip]').classList.contains('on')`));
+    await ev(`document.querySelector('#gdBed [data-plot="1"]').click()`); await sleep(60); await ev(`document.querySelector('#gdBed [data-plot="2"]').click()`); await sleep(60);
+    check('…then each empty plot tapped gets one', await ev(`P().garden.plots[1].seed==='tulip'&&P().garden.plots[2].seed==='tulip'&&P().stats.planted===3`));
+    // buying a seed
+    await ev(`P().coins=50;updateCoins();document.querySelector('#gdSeeds [data-seed=star]').click()`); await sleep(100);
+    check('a seed to buy asks first', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&!P().owned.includes('seed:star')`));
+    await ev(`document.querySelectorAll('#modalBtns button')[1].click()`); await sleep(100);
+    check('…buying it costs its price once, then it is picked', await ev(`P().owned.includes('seed:star')&&P().coins===50-GD_SEEDS.find(s=>s.id==='star').price&&GD.sel==='star'&&!document.querySelector('#gdSeeds [data-seed=star] .tp')`));
+    await ev(`document.querySelector('#gdBed [data-plot="3"]').click()`); await sleep(60);
+    check('a bought seed plants like a free one', await ev(`P().garden.plots[3].seed==='star'`));
+    await shot('G02-garden-planted');
+    // growing by the date
+    const stepsAt=async n=>{await ev(`FP_TEST_DAY='${gdDay(n)}';renderGarden()`);await sleep(50);return ev(`P().garden.plots.slice(0,4).map(x=>gdStep(x)).join()`);};
+    check('the day it is planted: a seed', (await stepsAt(0))==='0,0,0,0');
+    check('the next day: a sprout', (await stepsAt(1))==='1,1,1,1');
+    check('2 days: a bud', (await stepsAt(2))==='2,2,2,2');
+    check('3 days: ready, with a glow and ✨', (await stepsAt(3))==='3,3,3,3'&&await ev(`document.querySelectorAll('#gdBed .gd-plot.ready .gd-tag').length===4&&document.querySelector('#gdBed [data-plot="0"]').getAttribute('aria-label')==='Sunflower, ready to pick'`));
+    check('weeks later: still ready, never wilted', (await stepsAt(30))==='3,3,3,3');
+    check('if the date goes backwards, plants keep how big they were', (await stepsAt(-5))==='3,3,3,3');
+    await shot('G03-garden-ready');
+    // watering is just for fun
+    await ev(`FP_TEST_DAY='${gdDay(4)}';GD.sel='';renderGarden();document.querySelector('#gdBed [data-plot="4"]').click()`); await sleep(60);
+    await ev(`document.querySelector('#gdSeeds [data-seed=strawberry]').click()`); await sleep(60);
+    const gdBefore=await ev(`JSON.stringify(P().garden)`);
+    await ev(`document.querySelector('#gdBed [data-plot="4"]').click()`); await sleep(60);
+    check('tapping a growing plant waters it: a wiggle and a note, nothing saved changes', await ev(`document.querySelector('#gdBed [data-plot="4"]').classList.contains('wet')&&JSON.stringify(P().garden)===${JSON.stringify(gdBefore)}&&/growing/.test(document.querySelector('#toast').textContent)&&!/day|tomorrow/.test(document.querySelector('#toast').textContent)`));
+    await ev(`document.querySelector('#gdWater').click()`); await sleep(200);
+    check('💧 waters every growing plant, and changes nothing saved', await ev(`JSON.stringify(P().garden)===${JSON.stringify(gdBefore)}`));
+    // the shed's flower box
+    await ev(`show('room')`); await sleep(200);
+    check('the shed\'s flower box shows up to 3 plants ready to pick', await ev(`document.querySelector('#roomSvg [data-gbox]').dataset.gbox==='3'`));
+    await ev(`document.querySelector('#roomSvg [data-hot=garden]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(200);
+    // picking
+    const gc1=await ev(`P().coins`), items0=await ev(`P().room3.items.length`);
+    await ev(`document.querySelector('#gdBed [data-plot="0"]').click()`); await sleep(150);
+    check('picking a ready plant: +3 coins and the plot is empty again', await ev(`P().coins===${gc1}+3&&P().garden.plots[0]===null&&P().stats.harvests===1&&document.querySelector('#gdBed [data-plot="0"]').classList.contains('gd-empty')`));
+    check('the first Sunflower: a 🪴 pot in the Backyard, with a box', await ev(`P().garden.grown.join()==='sunflower'&&P().room3.items.length===${items0}+1&&P().room3.items.some(i=>i.type==='potSunflower'&&i.placed)&&document.querySelector('#modalTitle').textContent.includes('pot')`));
+    await shot('G04-new-pot'); await ev(`closeModal()`);
+    await ev(`P().garden.plots[0]={seed:'sunflower',day:FP_TEST_DAY,step:3};renderGarden();document.querySelector('#gdBed [data-plot="0"]').click()`); await sleep(150);
+    check('another Sunflower: +3 again, but no second pot and no box', await ev(`P().coins===${gc1}+6&&P().room3.items.filter(i=>i.type==='potSunflower').length===1&&document.querySelector('#modal').classList.contains('hidden')&&P().stats.harvests===2`));
+    await ev(`document.querySelector('#gdBed [data-plot="1"]').click()`); await sleep(150); await ev(`closeModal()`);
+    check('a different kind gives its own pot', await ev(`P().garden.grown.join()==='sunflower,tulip'&&P().room3.items.some(i=>i.type==='potTulip')`));
+    await ev(`show('room')`); await sleep(200);
+    check('the pots are drawn in the Backyard', await ev(`!!document.querySelector('#roomSvg .deco[data-uid="'+P().room3.items.find(i=>i.type==='potTulip').uid+'"]')`));
+    await shot('G05-yard-pots');
+    check('pots are not sold in the Shop', await ev(`(()=>{enterDecorate();decoTab='shop';themePick.shop='all';renderDecoGrid();const t=document.querySelector('#decoGrid').innerHTML;exitDecorate();return !GD_SEEDS.some(s=>t.includes('"'+gdPotKey(s)+'"'));})()`));
+    // stickers
+    check('4 garden stickers on the Room & Style page', await ev(`['sprout1','harvest10','garden6','gardenAll'].every(id=>(s=>s&&s.page==='room')(STICKERS.find(s=>s.id===id)))`));
+    check('First Sprout: a seed planted', await ev(`(s=>stkDone(P(),s)&&!stkDone(Object.assign({},P(),{stats:Object.assign({},P().stats,{planted:0})}),s))(STICKERS.find(s=>s.id==='sprout1'))`));
+    check('Green Thumb: 10 plants picked', await ev(`(s=>!stkDone(P(),s)&&stkDone(Object.assign({},P(),{stats:Object.assign({},P().stats,{harvests:10})}),s))(STICKERS.find(s=>s.id==='harvest10'))`));
+    check('Garden Party: all 6 plots growing at once', await ev(`(s=>!stkDone(P(),s)&&stkDone(Object.assign({},P(),{garden:{plots:Array(6).fill({seed:'tulip',day:FP_TEST_DAY,step:0}),grown:[]}}),s))(STICKERS.find(s=>s.id==='garden6'))`));
+    check('Master Gardener: every kind grown once', await ev(`(s=>!stkDone(P(),s)&&stkDone(Object.assign({},P(),{garden:{plots:[],grown:GD_SEEDS.map(x=>x.id)}}),s))(STICKERS.find(s=>s.id==='gardenAll'))`));
+    // Back
+    await ev(`show('garden')`); await sleep(150);
+    check('Android Back goes from the Garden to the Backyard', await ev(`androidBack()&&cur==='room'&&roomNo===3`));
+    // layouts
+    const gdEls=`[...document.querySelectorAll('#gdBed .gd-plot,#gdSeeds .gd-seed,#gdWater,#gdHint')]`;
+    for(const [w,h,name] of [[412,860,'phone'],[360,740,'small phone'],[860,412,'phone landscape'],[1180,820,'tablet'],[820,1180,'tablet upright']]){
+      await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<1000});
+      await ev(`show('garden')`); await sleep(250);
+      check(name+': the plots, the seeds and the buttons fit on screen', await ev(`${gdEls}.every(e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1&&r.top>=0;})`), await ev(`${gdEls}.filter(e=>{const r=e.getBoundingClientRect();return !(r.left>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1&&r.top>=0);}).map(e=>(e.id||e.className)+':'+JSON.stringify(e.getBoundingClientRect())).join(' ')`));
+      check(name+': seed packets are 48 px or more and plots are big', await ev(`[...document.querySelectorAll('#gdSeeds .gd-seed,#gdWater')].every(e=>{const r=e.getBoundingClientRect();return r.width>=47.5&&r.height>=47.5;})&&[...document.querySelectorAll('#gdBed .gd-plot')].every(e=>{const r=e.getBoundingClientRect();return r.width>=96&&r.height>=96;})`), await ev(`JSON.stringify([document.querySelector('#gdSeeds .gd-seed').getBoundingClientRect().width,document.querySelector('#gdBed .gd-plot').getBoundingClientRect().width,document.querySelector('#gdBed .gd-plot').getBoundingClientRect().height])`));
+      await shot('G06-'+name.replace(/ /g,'-'));
+    }
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    // backups
+    const gdB=await ev(`JSON.stringify(DB)`);
+    await ev(`show('room');(()=>{const d=JSON.parse(${JSON.stringify(gdB)});d.version=28;d.profiles.forEach(p=>{delete p.garden;delete p.stats.planted;delete p.stats.harvests;});doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('a v1.47 backup restores with an empty garden', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.garden.plots.every(x=>x===null)&&p.garden.grown.length===0&&p.stats.harvests===0)`));
+    await ev(`closeModal();doRestore(${JSON.stringify(gdB)})`); await sleep(400);
+    check('a v1.48 backup keeps the plants and what was grown', await ev(`DB.profiles.some(p=>p.garden.plots[3]&&p.garden.plots[3].seed==='star'&&p.garden.grown.includes('tulip'))`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(gdB)});d.profiles[0].garden={plots:[{seed:'tulip',day:'yesterday'},{seed:'nope',day:'2026-11-19',step:9},'x',{seed:4,day:'2026-11-19'}],grown:['tulip','tulip',5]};doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd garden data is made safe (an unknown seed just shows an empty plot)', await ev(`(g=>g.plots.length===6&&g.plots[0]===null&&g.plots[1].step===3&&g.plots[2]===null&&g.plots[3]===null&&g.grown.join()==='tulip'&&gdPlot(DB.profiles[0],1)===null)(DB.profiles[0].garden)`));
+    await ev(`closeModal();stkPaused=false;delete window.FP_TEST_DAY;show('room')`);
+    check('v1.48 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.48')&&APP_VERSION==='1.48'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

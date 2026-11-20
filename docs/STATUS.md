@@ -82,6 +82,9 @@ _Last updated: 2026-11-19_
     "Later" list and planned 2026-11-19 (see "Little Ones' Corner" under Decisions and `PLAN.md`). **Merged** (PR #46).
   - **💃 Dance Maker: built as v1.47** on branch `feature/dance` (from `main` after #46). Picked from the "Later" list and
     planned 2026-11-19 (see "Dance Maker" under Decisions and `PLAN.md`). Also moves the Loft's 🎤 Stage sign above the keyboard.
+  - **🌱 Backyard garden: built, PR #48 open as v1.48** on branch `feature/garden` (from `feature/dance`, as #47 is still open).
+    Picked from the "Later" list 2026-11-19. Owner's answers: plants grow by themselves (one step a day, never wilt), picking gives
+    +3 coins and the first time a pot, 4 free seeds + 8 to buy, 6 plots. Full plan in `PLAN.md` ("v1.48 plan details"); agreed and built.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -138,6 +141,7 @@ _Last updated: 2026-11-19_
 - PR #45 "Word Builder word bank (v1.45)": merged.
 - PR #46 "Little Ones' Corner (v1.46)": merged.
 - PR #47 "Dance Maker (v1.47)" on branch `feature/dance`: open.
+- PR #48 "Backyard Garden (v1.48)" on branch `feature/garden` (built on `feature/dance`; merge #47 first): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -590,6 +594,12 @@ _Last updated: 2026-11-19_
   already means "span the whole row" in the app's CSS, so they are `fc-none` now.
   Not tested automatically: tapping pizza slices with a finger on the tablet.
 
+- **Backyard Garden (v1.48)**: 1504 checks, all passing, no console errors. New checks: the shed is the 🌱 Garden hotspot
+  (Easy label, Read to me); planting plot-first and seed-first; buying a seed once; growth by test date (0–3 days, weeks later,
+  and a date going backwards never shrinks a plant); watering changes nothing saved and never shows a countdown; the shed's
+  flower box; picking pays +3 and gives each kind's pot once, drawn in the Backyard and never in the Shop; the 4 stickers;
+  Back to the Backyard; 5 screen sizes (plots and 48 px seed packets fit); a v1.47 backup restores with an empty garden,
+  and odd garden data is made safe. Not tested automatically: how it feels over real days on the tablet.
 - **Dance Maker (v1.47)**: 1453 checks, all passing, no console errors. New checks: the Stage sign hangs right above the
   Loft keyboard (and the Easy label doesn't cover it); 💃 from the Music Maker and the Stage (Back goes to each); filling and
   emptying beats; ▶ Play moves on the beat with the main loop on, room music quiet; 🕺 free dance on the next beat; ⏹ stops the
@@ -967,6 +977,11 @@ _Last updated: 2026-11-19_
   room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
   short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
   so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
+- **Backyard Garden (built as v1.48, `49-garden.js`), agreed 2026-11-19.** Picked by the owner from the Phase 12 "Later" list.
+  Owner's answers: plants **grow by themselves** (one step a day by the device date, ready in 3 days, never wilt); picking gives
+  **+3 coins and, the first time, a pot**; **4 free seeds + 8 to buy** (8–15 coins, once); **6 plots**. The shed (the old "spot for a
+  future game") opens it. Watering is only for fun, so forgetting it costs nothing. A plot remembers the biggest step it reached,
+  so moving the date back never shrinks a plant. A new pot goes straight into the Backyard, like a visitor's plush.
 - **Dance Maker (built as v1.47, `48-dance.js`), agreed 2026-11-19.** Picked by the owner from the Phase 12 "Later" list.
   Owner's answers: opened from **the Music Maker and the Stage**; **8 free moves**; **8 beats**. The buddy can't move its arms
   or legs on its own (sleeves and arm warmers are drawn on top of the body), so moves are whole-body CSS animations on a picture
@@ -1222,12 +1237,15 @@ _Last updated: 2026-11-19_
 13. ~~Owner: build v1.46, try 🧸 Play with the little ones (see the PR), and merge it.~~ Merged.
 14. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 💃 Dance Maker (v1.47), planned and built.
 15. Owner: build v1.47, try 💃 Dance (see the PR), and merge it.
-16. Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).
+16. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 🌱 Backyard garden (v1.48); plan written.
+17. ~~Owner: OK the v1.48 garden plan in `PLAN.md`, then build it on `feature/garden`.~~ Agreed and built.
+18. Owner: merge #47, then build v1.48, try the 🌱 Garden over a few days (see the PR), and merge it.
+19. Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 28 since v1.47 (Dance Maker: `dance`). It was 27 in v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 29 since v1.48 (Garden: `garden`, `stats.planted/harvests`). It was 28 in v1.47 (Dance Maker: `dance`). It was 27 in v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
