@@ -3873,6 +3873,20 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('every themed card has matching clothes in 3 or more closet tabs', thin.length===0, thin);
     const weak=await ev(`RW_CARDS.filter(c=>Array.from({length:25}).some(()=>rwLevel(c,rwSurprise(c,P().look))<3)).map(c=>c.id)`);
     check('🎲 Theme surprise always gives 3+ matching pieces (🤩), for every card', weak.length===0, weak);
+    // A picture made from an SVG must be strict XML: a repeated attribute (st() already has stroke-linejoin) shows a broken image
+    // on the Runway, in the Dance Maker and in 📷 snapshots, though the same drawing looks fine inside the page (v1.51 fix).
+    const xmlBad=await ev(`(async()=>{const bad=[],base=newProfile('x').look,X='xmlns="http://www.w3.org/2000/svg"';
+      const xml=(s,t)=>{if(new DOMParser().parseFromString(s,'image/svg+xml').querySelector('parsererror'))bad.push(t);};
+      const looks=[];Object.keys(BUDDIES).forEach(k=>looks.push(['kind:'+k,{kind:k}]));Object.keys(FACES).forEach(k=>looks.push(['face:'+k,{face:k}]));
+      Object.keys(FUR).forEach(k=>looks.push(['fur:'+k,{fur:k}]));Object.keys(HAIR_COLORS).forEach(k=>looks.push(['hc:'+k,{hairColor:k}]));
+      Object.keys(CLOSET).forEach(c=>CLOSET[c].items.forEach(it=>looks.push([c+':'+it.id,{[c]:it.id}])));
+      looks.forEach(([t,L])=>xml(mascotSVG(Object.assign({},base,L),null,'width="200" height="270"'),t));
+      Object.keys(DECOR).forEach(k=>xml('<svg '+X+'>'+DECOR[k].d({})+'</svg>','decor:'+k));
+      xml('<svg '+X+'>'+furniture()+loftFurniture()+yardFurniture()+'</svg>','furniture');
+      for(const k of ['dino','fox','bunny']){RW.imgKey='';const src=rwArt(Object.assign({},base,{kind:k}));
+        if(!await new Promise(r=>{const i=new Image();i.onload=()=>r(true);i.onerror=()=>r(false);i.src=src;}))bad.push('image:'+k);}
+      RW.imgKey='';return bad;})()`);
+    check('every buddy, face, fur, hair color, closet item, decoration and room piece is strict XML (so its picture never breaks)', xmlBad.length===0, xmlBad);
     check('cheer levels: nothing matching = 💖 (level 0), Anything Goes = 🤩 always', await ev(`(()=>{const L=Object.assign({},P().look);RW_CATS.forEach(k=>L[k]='none');return rwLevel(rwCardOf('farm'),L)===0&&rwLevel(rwCardOf('any'),L)===3&&RW_CHEERS.length===4;})()`));
     // the way in
     await ev(`show('closet')`); await sleep(200);

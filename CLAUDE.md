@@ -412,4 +412,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 - **American English (since v1.44).** The children learn American spelling, so everything the app shows and every code comment
   uses it (color, favorite, gray, center, cozy, tire; the season is "Fall"). Saved ids never change to match (the season id
   stays `autumn`). The smoke test fails on British spellings in `web/` and `index.html`. New doc text uses American spelling too.
+- **Drawings must be strict XML (since v1.51).** Never repeat an attribute on one element: `st()` already writes
+  `stroke`, `stroke-width`, `stroke-linejoin` and `stroke-linecap`, so don't add those after `${st(...)}` (or `${HL}`), and don't put a
+  `fill` before a shared attribute string that has its own. Inside the page the browser ignores the repeat, but a picture made from the
+  SVG (the Runway and Dance Maker buddy, 📷 snapshots) shows as a broken image. The smoke test parses every look and decoration as XML.
 - Use the existing palette (`:root` CSS variables; pink `#ff8cc6`, purple `#a97cff`, mint `#8ff0d0`, gold `#ffd166`, dark `#231b2e`).

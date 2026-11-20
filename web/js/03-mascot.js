@@ -25,9 +25,9 @@ const BUDDIES={
   bear:{name:'Bear Cub',back:(f,l)=>[58,142].map(x=>`<circle cx="${x}" cy="50" r="20" fill="${f.c}" ${st(l)}/><circle cx="${x}" cy="52" r="10" fill="${f.e}"/>`).join('')},
   puppy:{name:'Puppy',front:(f,l)=>{const ear=bdShade(f.c,f.c==='#3d3547'?.2:-.16);
     return [0,1].map(k=>`<path d="M64 56 C44 52 28 80 33 118 C35 134 51 136 57 121 C63 100 67 80 64 56Z" fill="${ear}" ${st(l)}${k?' transform="translate(200 0) scale(-1 1)"':''}/>`).join('');}},
-  dino:{name:'Little Dino',back:(f,l)=>`<path d="M68 54 L78 22 L92 46Z M89 45 L100 10 L111 45Z M108 46 L122 22 L132 54Z" fill="${f.e}" ${st(l)} stroke-linejoin="round"/>`,
-    tail:(f,l)=>`<path d="M132 198 C160 202 184 214 196 242 C172 236 150 230 132 226Z" fill="${f.c}" ${st(l)}/><path d="M148 203 L155 190 L161 207Z M166 210 L175 199 L178 216Z" fill="${f.e}" ${st(l)} stroke-linejoin="round"/>`},
-  fox:{name:'Fox',back:(f,l)=>[0,1].map(k=>`<g${k?' transform="translate(200 0) scale(-1 1)"':''}><path d="M46 82 L52 12 L98 50Z" fill="${f.c}" ${st(l)} stroke-linejoin="round"/><path d="M57 64 L60 30 L84 52Z" fill="${f.e}"/></g>`).join(''),
+  dino:{name:'Little Dino',back:(f,l)=>`<path d="M68 54 L78 22 L92 46Z M89 45 L100 10 L111 45Z M108 46 L122 22 L132 54Z" fill="${f.e}" ${st(l)}/>`,
+    tail:(f,l)=>`<path d="M132 198 C160 202 184 214 196 242 C172 236 150 230 132 226Z" fill="${f.c}" ${st(l)}/><path d="M148 203 L155 190 L161 207Z M166 210 L175 199 L178 216Z" fill="${f.e}" ${st(l)}/>`},
+  fox:{name:'Fox',back:(f,l)=>[0,1].map(k=>`<g${k?' transform="translate(200 0) scale(-1 1)"':''}><path d="M46 82 L52 12 L98 50Z" fill="${f.c}" ${st(l)}/><path d="M57 64 L60 30 L84 52Z" fill="${f.e}"/></g>`).join(''),
     tail:(f,l)=>`<path d="M132 204 C168 206 190 182 184 146 C180 128 164 124 158 138 C170 158 158 182 132 188Z" fill="${f.c}" ${st(l)}/><path d="M184 146 C180 128 164 124 158 138 C166 144 176 148 184 146Z" fill="#fff" ${st(l)}/>`}
 };
 // Face styles (v1.20), all free. Ids are saved in look.face: never rename them.
@@ -83,7 +83,7 @@ const CLOSET={
         +`<path d="${starPath(54,60,10)} ${starPath(146,60,10)}" fill="#ffd166" ${st('#b8860b',2)}/>`},
     // Short styles (v1.20).
     {id:'buzz',name:'Buzz Cut',price:0,d:(f,l,H)=>`<path d="M46 84 Q46 40 100 40 Q154 40 154 84 Q150 70 138 65 Q120 58 100 58 Q80 58 62 65 Q50 70 46 84Z" fill="${H.c}" ${HL}/>`+hShine('M70 52 Q100 44 130 52')+hStreak(H,'M92 46 Q100 50 108 46')},
-    {id:'messy',name:'Messy Mop',price:10,d:(f,l,H)=>`<path d="M44 90 L40 66 L54 70 L52 46 L68 56 L72 34 L86 50 L96 28 L106 48 L120 30 L126 52 L144 40 L142 62 L160 62 L154 90 Q146 74 130 74 L122 84 L112 72 L100 84 L90 72 L78 84 L68 74 Q54 78 44 90Z" fill="${H.c}" ${HL} stroke-linejoin="round"/>`+hStreak(H,'M96 36 L100 60 M120 38 L118 60')},
+    {id:'messy',name:'Messy Mop',price:10,d:(f,l,H)=>`<path d="M44 90 L40 66 L54 70 L52 46 L68 56 L72 34 L86 50 L96 28 L106 48 L120 30 L126 52 L144 40 L142 62 L160 62 L154 90 Q146 74 130 74 L122 84 L112 72 L100 84 L90 72 L78 84 L68 74 Q54 78 44 90Z" fill="${H.c}" ${HL}/>`+hStreak(H,'M96 36 L100 60 M120 38 L118 60')},
     {id:'sidePart',name:'Side Part',price:15,d:(f,l,H)=>`<path d="M44 88 Q42 44 96 38 Q150 36 158 80 Q156 90 152 96 Q146 74 124 66 Q104 74 76 72 Q56 72 44 88Z" fill="${H.c}" ${HL}/><path d="M84 42 Q80 56 74 70" stroke="#00000033" stroke-width="3" fill="none" stroke-linecap="round"/>`+hShine('M98 46 Q128 44 146 62')+hStreak(H,'M110 44 Q132 52 140 70')}
   ]},
   top:{label:'Tops',icon:'👕',vb:'26 110 148 100',items:[

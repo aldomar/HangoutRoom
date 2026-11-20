@@ -1005,6 +1005,10 @@ _Last updated: 2026-11-20_
   in the Closet**. 14 theme cards tied to theme chips (✨ Anything Goes has none and always gets 🤩). Her outfit changes only with
   👗 Wear it home (owned pieces only). Save version 32: `runway{pay, cards[]}`, `stats.walks/wows`. 3 stickers (123 in all);
   Crowd Favorite counts 🤩 on themed cards only. No visitor wish (each friend has exactly 3).
+  **Bug found by the owner (2026-11-20), fixed in the same PR:** a second room's buddy showed as a broken image on the Runway.
+  The 🦕 Little Dino and 🦊 Fox buddies and the Messy Mop hair repeated `stroke-linejoin` (already in `st()`), which a page
+  forgives but a picture made from the SVG does not. The 💃 Dance Maker and 📷 snapshots had the same problem with those looks,
+  and so did 🏛️ Dino Bones (a repeated `fill`). All fixed; the smoke test now parses every look and decoration as strict XML.
 - **Backyard Garden (built as v1.48, `49-garden.js`), agreed 2026-11-19.** Picked by the owner from the Phase 12 "Later" list.
   Owner's answers: plants **grow by themselves** (one step a day by the device date, ready in 3 days, never wilt); picking gives
   **+3 coins and, the first time, a pot**; **4 free seeds + 8 to buy** (8–15 coins, once); **6 plots**. The shed (the old "spot for a
