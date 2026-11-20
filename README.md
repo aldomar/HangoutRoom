@@ -131,6 +131,20 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Pet Hide & Seek and Fetch (since version 1.54)
+Tap your pet: two big new buttons at the top of its menu. Both games play in whichever room you are in.
+- **🙈 Hide & Seek:** close your eyes (1… 2… 3…) and the pet hides behind something in the room: a standing decoration, the
+  closet, the desk, the tree, the shed… A bit of it peeks out (ears, a wing, a tail). At night 🌙 you see two glowing eyes.
+  Tap where it is hiding. A wrong guess just says "Not here!"; after 3 the right spot sparkles. Found: **+2 hearts** ❤️.
+  🔁 hides it again somewhere else. A room with almost nothing in it (a bare Studio) needs a few things first.
+- **🎾 Fetch:** swipe to throw the toy (or tap a spot on the floor). The pet runs, picks it up and brings it back: **+1 heart**.
+  Every 5th fetch in a row it shows off a trick.
+- **Fetch toys:** 🎾 Ball (free), 🦴 Squeaky Bone (6 coins), 🧶 Yarn Ball (8, leaves a wiggly string) and 🥏 Star Disc (10, flies farther).
+  Pick one in the Fetch bar at the top.
+- **✖** (or Back) stops the game. The pet still earns hearts only, never coins.
+- 4 new stickers on the Room & Style page: 🙈 Found You!, 🔎 Seek Champ (25 finds), 🎾 Good Catch, 🥏 Fetch Fan (50 fetches).
+- Save version 35 (`pet.toy`, `stats.seeks`, `stats.fetches`); every older backup still restores.
+
 ## Trick Shots (since version 1.53)
 A third Soccer mode: tap **🎯 Tricks** next to ⚽ Kick and 🧤 Keep. There's no keeper; Mochi, Boo and Flap cheer at the side.
 - **12 trick shots**, from easy to tricky: ⭐ Star Kick, ↖️ Top Corner, ↘️ Low and Right, 🍩 Hoop Shot, 🎈 Balloon Pop (pop all 3),
@@ -564,6 +578,7 @@ Like everything else, they are for anyone to use. All are bought with coins she 
   - **🍪 Treat:** 2 coins, 3 hearts.
   - **🎀 Dress:** a bow, a star collar, a scarf, a tiny witch hat or a crown (5–15 coins, bought once, worn by any pet).
   - **✏️ Name** and **🔄 Change** (pick another pet).
+  - **🙈 Hide & Seek** and **🎾 Fetch** (since v1.54, see "Pet Hide & Seek and Fetch").
 - **Hearts only go up.** The pet never gets hungry or sad, and nothing is lost if she doesn't play with it.
   New tricks come at 10, 30, 60 and 100 hearts (Spin, Hop, Flip, Dance). The pet doesn't earn coins.
 - There are 4 pet stickers in the Sticker Book (🏠 Room & Style page).

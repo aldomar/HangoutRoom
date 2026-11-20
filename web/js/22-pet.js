@@ -122,10 +122,11 @@ function petMenu(){
   modal(`🐾 ${esc(petName(p))}`,`<div class="pet-card"><svg class="pet-big" viewBox="-62 -104 124 110">${petArt(k,petAcc(p))}</svg>`
     +`<div class="pet-info"><div class="pet-h">❤️ ${h}</div><div class="pet-sub">${nx?`New trick at ❤️ ${nx.at}`:'Knows every trick! 🌟'}</div>`
     +`<div class="pet-tricks">${PET_TRICKS.map(t=>`<span class="${h>=t.at?'on':''}" title="${t.name}">${h>=t.at?t.icon:'🔒'}<small>${t.name}</small></span>`).join('')}</div></div></div>`
+    +`<div class="pet-play"><button class="btn pp-go" data-pa="hide">🙈 Hide &amp; Seek</button><button class="btn pp-go" data-pa="fetch">🎾 Fetch</button></div>`
     +`<div class="pet-acts"><button class="btn pink" data-pa="pat">🤚 Pet</button><button class="btn" data-pa="treat">🍪 Treat <small>🪙${PET_TREAT}</small></button>`
     +`<button class="btn ghost" data-pa="dress">🎀 Dress</button><button class="btn ghost" data-pa="home">🏠 Home</button><button class="btn ghost" data-pa="name">✏️ Name</button><button class="btn ghost" data-pa="change">🔄 Change</button></div>`,
     [{text:'Close',cls:'ghost'}]);
-  $$('#modalBody [data-pa]').forEach(b=>b.onclick=()=>{SFX.click();({pat:petPat,treat:petTreat,dress:petDress,home:petHomes,name:petRename,change:petChoose})[b.dataset.pa]();});
+  $$('#modalBody [data-pa]').forEach(b=>b.onclick=()=>{SFX.click();({hide:()=>ppStart('hide'),fetch:()=>ppStart('fetch'),pat:petPat,treat:petTreat,dress:petDress,home:petHomes,name:petRename,change:petChoose})[b.dataset.pa]();});
 }
 function petChoose(){
   const p=P(), k=petKind(p);

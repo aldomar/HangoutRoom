@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('129 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53), ids all different, 6 or more per page', await ev(`STICKERS.length===129&&new Set(STICKERS.map(s=>s.id)).size===129&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('133 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54), ids all different, 6 or more per page', await ev(`STICKERS.length===133&&new Set(STICKERS.map(s=>s.id)).size===133&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -4216,6 +4216,137 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`closeModal();doRestore(${JSON.stringify(trB)})`); await sleep(400);
     await ev(`closeModal();P().soccer.mode=window.trMode;save();stkPaused=false;window.FP_TEST_DAY=null;goRoom(1);show('room')`);
     check('v1.53 is in the Gift Story and the app says 1.53', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.53')&&APP_VERSION==='1.53'`));
+  }
+
+  console.log('Pet Hide & Seek + Fetch (v1.54)');
+  {
+    const box=`(!document.querySelector('#modal').classList.contains('hidden'))`;
+    const waitFor=async(cond,ms)=>{for(let i=0;i<(ms||3000)/50;i++){if(await ev(cond))return true;await sleep(50);}return false;};
+    const click=async([x,y])=>{await mouse('mousePressed',x,y);await mouse('mouseReleased',x,y);};
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`closeModal();stkPaused=true;PP_TEST_FAST=true;{const p=P();p.easy=false;applyEasy();p.night={};window.ppSaved={kind:p.pet.kind,hearts:JSON.stringify(p.pet.hearts),coins:p.coins,r4:JSON.stringify(p.room4)};p.pet.kind='';save();}goRoom(1);show('room')`); await sleep(300);
+    check('save version 35; every room starts with the ball and no finds or fetches', await ev(`DB_VERSION>=35&&DB.profiles.every(p=>p.pet.toy==='ball'&&p.stats.seeks===0&&p.stats.fetches===0)`));
+    check('save version 35 gives older saves the ball', await ev(`(()=>{const d={profiles:[{name:'Old',pet:{kind:'bat'}}]};MIGRATIONS[35](d);return d.profiles[0].pet.toy==='ball'&&d.profiles[0].pet.kind==='bat';})()`));
+    check('4 fetch toys, the ball free, the others 6-10 coins, every drawing is strict XML', await ev(`Object.keys(PET_TOYS).join()==='ball,bone,yarn,disc'&&PET_TOYS.ball.price===0&&['bone','yarn','disc'].every(k=>PET_TOYS[k].price>=6&&PET_TOYS[k].price<=10)&&Object.values(PET_TOYS).every(T=>!new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg">'+T.d()+'</svg>','image/svg+xml').querySelector('parsererror'))`));
+    await ev(`petTap()`); await sleep(150);
+    check('before she has a pet: the pet bed asks her to pick one (no games yet)', await ev(`${box}&&!document.querySelector('#modalBody [data-pa=hide]')`));
+    await ev(`closeModal();{const p=P();p.pet.kind='bat';p.pet.hearts.bat=0;save();}renderRoom();petTap()`); await sleep(150);
+    check('with a pet: 🙈 Hide & Seek and 🎾 Fetch are the first buttons in its menu', await ev(`${box}&&(b=>b.length===2&&b[0].dataset.pa==='hide'&&b[1].dataset.pa==='fetch')(document.querySelectorAll('#modalBody .pet-play [data-pa]'))`));
+    await shot('PP01-pet-menu');
+    // 🙈 Hide & Seek
+    await ev(`document.querySelector('#modalBody [data-pa=hide]').click()`); await sleep(20);
+    check('🙈 starts: the menu closes, the card takes the top bar place, a curtain covers the room', await ev(`!${box}&&PP.on&&PP.mode==='hide'&&document.body.classList.contains('petplay')&&!document.querySelector('#ppCard').classList.contains('hidden')&&getComputedStyle(document.querySelector('#scr-room .topbar')).display==='none'&&getComputedStyle(document.querySelector('#roomTabs')).display==='none'&&!!document.querySelector('#ppCurtain')`));
+    await shot('PP02-curtain');
+    check('…then the pet hides', await waitFor(`PP.phase==='seek'`));
+    const spot=await ev(`(()=>{const pet=$('#ppPet'),n=pet&&pet.nextElementSibling;return {key:PP.spot.key,behind:!!n&&(n.classList.contains('deco')||n.classList.contains('fixed')),share:ppShows(),seen:PP.seen.length,home:getComputedStyle(document.querySelector('#petG .pet-bob')).display};})()`);
+    check('the pet is drawn just behind a hiding spot, with only a little of it showing, and not at home', spot.behind&&spot.share>=0.08&&spot.share<=0.45&&spot.seen>=4&&spot.home==='none', spot);
+    await shot('PP03-hiding');
+    check('the peeking pet wiggles in steps (light on the device)', await ev(`(a=>!!a&&/^steps\\(/.test(getComputedStyle(a.effect.target).animationTimingFunction))(document.getAnimations().find(a=>a.animationName==='ppWig'))`));
+    const h0=await ev(`petHearts(P())`), c0=await ev(`P().coins`);
+    // a wrong tap: on the buddy
+    const fz=await ev(`(r=>[r.left+r.width/2,r.top+r.height*0.4])(document.querySelector('#mascotG').getBoundingClientRect())`);
+    await click(fz); await sleep(100);
+    check('a wrong tap counts nothing ("Not here!"); the game goes on', await ev(`PP.wrong===1&&!PP.found&&PP.phase==='seek'&&petHearts(P())===${h0}&&!${box}`));
+    await click(fz); await click(fz); await sleep(100);
+    check('after 3 wrong taps the right spot sparkles', await ev(`!!document.querySelector('#ppRing')&&!!document.querySelector('#roomSvg .spy-spark')`));
+    await shot('PP04-hint');
+    await ev(`renderRoom()`); await sleep(50);
+    check('a redraw of the room keeps the pet in the same spot', await ev(`PP.spot&&PP.spot.key===${JSON.stringify(spot.key)}&&!!document.querySelector('#ppPet')`));
+    const seen=await ev(`PP.seen[Math.floor(PP.seen.length/2)]`);
+    await click(seen); await sleep(100);
+    check('a tap on the peeking pet finds it: +2 hearts, 🔁 Again shows, no coins', await ev(`PP.found&&petHearts(P())===${h0}+2&&P().stats.seeks===1&&!!document.querySelector('#ppAgain')&&P().coins===${c0}`));
+    await shot('PP05-found');
+    check('…and then it is back at home', await waitFor(`!document.querySelector('#ppPet')&&getComputedStyle(document.querySelector('#petG .pet-bob')).display!=='none'`));
+    await ev(`document.querySelector('#ppAgain').click()`);
+    check('🔁 Again hides it somewhere else', await waitFor(`PP.phase==='seek'`)&&await ev(`PP.spot.key!==${JSON.stringify(spot.key)}`));
+    await ev(`(()=>{const s=ppSpots().find(x=>x.key===PP.spot.key);const r=s.el.getBoundingClientRect();window.__spotPt=[r.left+r.width/2,r.top+r.height/2];})()`);
+    await click(await ev(`__spotPt`)); await sleep(100);
+    check('a tap on the hiding spot itself finds it too', await ev(`PP.found&&P().stats.seeks===2`));
+    // every room
+    for(const n of [2,3]){
+      await ev(`ppEnd();goRoom(${n});ppStart('hide')`);
+      check(`it hides in the ${['','Room','Loft','Backyard'][n]} too`, await waitFor(`PP.phase==='seek'`)&&await ev(`(f=>f>=0.08&&f<=0.45)(ppShows())`), await ev(`[PP.phase,PP.spot&&PP.spot.key]`));
+      await shot('PP06-hide-room'+n);
+    }
+    check('Easy mode: more of the pet peeks out', await ev(`(()=>{ppEnd();P().easy=true;goRoom(1);ppStart('hide');return true;})()`)&&await waitFor(`PP.phase==='seek'`)&&await ev(`(f=>f>=0.16&&f<=0.45)(ppShows())`));
+    await shot('PP06-hide-easy');
+    await ev(`ppEnd();P().easy=false;P().room4.items=[];save();goRoom(4);ppStart('hide')`);
+    check('in a bare room: "Put out a few more things first!" and the game ends', await waitFor(`!PP.on`)&&await ev(`!document.body.classList.contains('petplay')`));
+    await ev(`P().room4=JSON.parse(ppSaved.r4);save();goRoom(1)`);
+    // night
+    await ev(`P().night['1']=true;save();renderRoom();ppStart('hide')`);
+    check('at night: two glowing eyes peek out instead', await waitFor(`PP.phase==='seek'`)&&await ev(`!!document.querySelector('#ppEyes')&&document.querySelector('#ppEyes').parentNode===roomSvg&&!document.querySelector('#nightBtn').offsetWidth`));
+    await shot('PP07-night-eyes');
+    check('Android Back ends the game, in the room', await ev(`androidBack()&&!PP.on&&cur==='room'&&!document.body.classList.contains('petplay')&&getComputedStyle(document.querySelector('#scr-room .topbar')).display!=='none'`));
+    await ev(`P().night={};save();renderRoom();ppStart('hide')`); await sleep(20);
+    await ev(`show('closet')`);
+    check('leaving the room ends it too', await ev(`!PP.on&&!document.body.classList.contains('petplay')`));
+    await ev(`show('room')`); await sleep(100);
+    // 🎾 Fetch
+    await ev(`petTap()`); await sleep(100); await ev(`document.querySelector('#modalBody [data-pa=fetch]').click()`); await sleep(100);
+    check('🎾 starts: the toy waits by the buddy, the card shows 4 toys with the ball on', await ev(`PP.on&&PP.mode==='fetch'&&PP.phase==='ready'&&!!document.querySelector('#ppToy')&&document.querySelectorAll('#ppCard [data-toy]').length===4&&document.querySelector('#ppCard .pp-toy.on').dataset.toy==='ball'`));
+    await shot('PP08-fetch');
+    check('a throw always lands on the floor (and bounces off the sides)', await ev(`[[2000,100],[-500,900],[500,300],[980,690]].every(([x,y])=>{const L=ppLand(x,y);return L.x>=PP_FLOOR.x0&&L.x<=PP_FLOOR.x1&&L.y>=PP_FLOOR.y0&&L.y<=PP_FLOOR.y1;})&&ppLand(1000,600).x===880`));
+    const h1=await ev(`petHearts(P())`);
+    const hand=await ev(`(r=>[r.left+r.width/2,r.top+r.height/2])(document.querySelector('#ppToy').getBoundingClientRect())`);
+    await ev(`PP_TEST_FAST=false`);
+    await mouse('mousePressed',hand[0],hand[1]); await mouse('mouseMoved',hand[0]-80,hand[1]+20); await mouse('mouseReleased',hand[0]-160,hand[1]+40); await sleep(30);
+    check('a swipe throws the toy and the pet runs after it', await ev(`PP.phase==='fly'&&!!document.querySelector('#ppRun')&&!!document.querySelector('#ppToyFly')&&getComputedStyle(document.querySelector('#petG .pet-bob')).display==='none'`));
+    await sleep(300); await shot('PP09-throw'); await ev(`PP_TEST_FAST=true`);
+    check('…it brings it back: +1 heart, no coins', await waitFor(`PP.phase==='wag'||PP.phase==='ready'&&P().stats.fetches===1`,4000)&&await ev(`P().stats.fetches===1&&petHearts(P())===${h1}+1&&P().coins===${c0}`));
+    await shot('PP10-fetched');
+    check('…and the toy is back by the buddy, ready again', await waitFor(`PP.phase==='ready'&&!!document.querySelector('#ppToy')&&!document.querySelector('#ppRun')`));
+    await ev(`P().coins=20;save();document.querySelector('#ppCard [data-toy=bone]').click()`); await sleep(100);
+    check('a toy to buy asks first', await ev(`${box}&&!P().owned.includes('pettoy:bone')`));
+    await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(100);
+    check('…buying it puts it to use (20 - 6 coins)', await ev(`P().owned.includes('pettoy:bone')&&P().pet.toy==='bone'&&P().coins===14&&document.querySelector('#ppCard .pp-toy.on').dataset.toy==='bone'`));
+    await ev(`{const p=P();p.owned.push('pettoy:yarn','pettoy:disc');p.pet.toy='yarn';save();}ppCard();ppHand();ppThrow(200,520)`); await sleep(80);
+    check('the yarn ball leaves a wiggly string', await ev(`!!document.querySelector('#ppTrail')`));
+    await shot('PP11-yarn');
+    await waitFor(`PP.phase==='ready'`,4000);
+    await ev(`P().pet.toy='disc';save();ppCard();ppHand();ppThrow(900,520)`);
+    check('the disc flies and comes back too', await waitFor(`PP.phase==='ready'&&P().stats.fetches===3`,4000));
+    const floorPt=await ev(`(()=>{const m=roomSvg.getScreenCTM();return [m.a*300+m.e,m.d*640+m.f];})()`);
+    await click(floorPt); await sleep(30);
+    check('a tap on the floor throws to that spot', await ev(`PP.phase==='fly'&&Math.abs(PP.fly.L.x-300)<3&&Math.abs(PP.fly.L.y-640)<3`));
+    await waitFor(`PP.phase==='ready'`,4000);
+    check('an unknown or not-owned toy falls back to the ball', await ev(`(()=>{const p=P(),t=p.pet.toy;p.pet.toy='rocket';const a=ppToy(p);p.pet.toy='disc';p.owned=p.owned.filter(k=>k!=='pettoy:disc');const b=ppToy(p);p.owned.push('pettoy:disc');p.pet.toy=t;return a==='ball'&&b==='ball';})()`));
+    await ev(`document.querySelector('#ppX').click()`); await sleep(50);
+    check('✖ stops: the room is back as before', await ev(`!PP.on&&!document.querySelector('#ppToy')&&getComputedStyle(document.querySelector('#scr-room .topbar')).display!=='none'`));
+    check('pet play never opens anything in the room (taps go to the game)', await ev(`(()=>{ppStart('fetch');const c=cur;document.querySelector('[data-hot=closet]').dispatchEvent(new MouseEvent('click',{bubbles:true}));const ok=cur===c&&cur==='room';ppEnd();return ok;})()`));
+    // Decorating and I Spy still win
+    await ev(`enterDecorate();ppStart('hide')`); await sleep(50);
+    check('no pet games while decorating', await ev(`!PP.on`));
+    await ev(`exitDecorate()`);
+    // small screens
+    for(const [w,h,name] of [[412,860,'phone'],[360,740,'small phone'],[860,412,'phone sideways']]){
+      await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:true});
+      await ev(`ppStart('fetch')`); await sleep(150);
+      check(name+': the Fetch card fits, buttons 48 px or more', await ev(`[...document.querySelectorAll('#ppCard button')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.height>=48&&r.width>=48;})&&document.documentElement.scrollWidth<=innerWidth+1`));
+      await shot('PP12-'+name.replace(/ /g,'-'));
+      await ev(`ppEnd();petTap()`); await sleep(100);
+      check(name+': the pet menu buttons fit', await ev(`[...document.querySelectorAll('#modalBody .pet-play button')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.height>=48;})`));
+      await ev(`closeModal()`);
+    }
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`P().easy=true;applyEasy();renderRoom();ppStart('fetch')`); await sleep(100);
+    check('Easy mode: Fetch works with a short tip', await ev(`PP.on&&document.querySelector('#ppText').textContent.includes('Swipe')`));
+    await shot('PP13-easy');
+    await ev(`ppEnd();P().easy=false;applyEasy();renderRoom()`);
+    // stickers
+    check('4 new stickers on the 🏠 Room & Style page: Found You!, Seek Champ, Good Catch, Fetch Fan', await ev(`['ppFind1','ppFind','ppFetch1','ppFetch'].every(id=>(s=>s&&s.page==='room')(STICKERS.find(s=>s.id===id)))`));
+    check('…Found You! and Good Catch are done now', await ev(`['ppFind1','ppFetch1'].every(id=>stkDone(P(),STICKERS.find(s=>s.id===id)))&&!stkDone(P(),STICKERS.find(s=>s.id==='ppFetch'))`));
+    // backups
+    const ppB=await ev(`JSON.stringify(DB)`);
+    await ev(`(()=>{const d=JSON.parse(${JSON.stringify(ppB)});d.version=34;d.profiles.forEach(p=>{delete p.pet.toy;delete p.stats.seeks;delete p.stats.fetches;});doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('a v1.53 backup restores with the ball and no finds', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.pet.toy==='ball'&&p.stats.seeks===0&&p.stats.fetches===0)`));
+    await ev(`closeModal();doRestore(${JSON.stringify(ppB)})`); await sleep(400);
+    check('a v1.54 backup keeps the toy, the toys owned and the totals', await ev(`DB.profiles.some(p=>p.pet.toy==='disc'&&p.owned.includes('pettoy:bone')&&p.stats.seeks===2&&p.stats.fetches>=4)`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(ppB)});d.profiles[0].pet.toy=7;d.profiles[0].stats.seeks='lots';d.profiles[0].stats.fetches=-3;doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd pet play data is made safe', await ev(`(p=>p.pet.toy==='ball'&&p.stats.seeks===0&&p.stats.fetches===0)(DB.profiles[0])`));
+    await ev(`closeModal();doRestore(${JSON.stringify(ppB)})`); await sleep(400);
+    await ev(`closeModal();{const p=P();p.pet.kind=ppSaved.kind;p.pet.hearts=JSON.parse(ppSaved.hearts);p.coins=ppSaved.coins;save();}PP_TEST_FAST=false;stkPaused=false;goRoom(1);show('room')`);
+    check('v1.54 is in the Gift Story and the app says 1.54', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.54')&&APP_VERSION==='1.54'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

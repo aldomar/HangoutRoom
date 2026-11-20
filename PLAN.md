@@ -370,12 +370,14 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   and she taps big pads to play her own notes on top. Every note fits, no score.
 - ✅ **🎯 Soccer Trick Shots (v1.53, built; plan details below, agreed 2026-11-20):** a 🎯 Tricks tab with 12 fixed trick
   shots (stars, hoops, balloons, a wall of friends to curve around). Unlimited tries, coins the first time, a prize for all 12.
-- **🐾 More pet play (the last "Later" item; plans below, waiting for the owner's OK):** picked 2026-11-20. Owner's answers:
+- **🐾 More pet play (the last "Later" item; plans below, agreed 2026-11-20):** picked 2026-11-20. Owner's answers:
   **🙈 Hide & Seek, 🎾 Fetch and 🦮 Walks**; pet play gives **❤️ hearts and stickers, no coins** (the pet still never earns coins);
   a walk is **its own path scene**. Proposed as two PRs: 🙈 Hide & Seek + 🎾 Fetch in the rooms (v1.54), then 🦮 Walks (v1.55).
   Phase 12 is done when both are merged.
+  - ✅ **🙈 Hide & Seek + 🎾 Fetch (v1.54, built).**
+  - **🦮 Walks (v1.55):** next.
 
-#### v1.54 plan details: 🙈 Pet Hide & Seek + 🎾 Fetch (proposed 2026-11-20)
+#### v1.54 plan details: 🙈 Pet Hide & Seek + 🎾 Fetch (agreed 2026-11-20, built)
 Why: the pet can only be patted, fed and dressed, so after the tricks are learned there is nothing to *do* with it. Hide &
 Seek and Fetch are short, no-fail games in the room she has decorated, so every decoration becomes a hiding spot or
 something to throw past. Both work for all four children (the 3-year-old can find a pet whose ears stick out).
@@ -417,8 +419,12 @@ something to throw past. Both work for all four children (the 3-year-old can fin
   spot and a peek part shows (`spySeen`-style check), a wrong tap counts nothing, the hint after 3, a find gives +2 hearts and
   a new spot on 🔁; too few things says so; Fetch: a throw lands inside the floor area, the pet brings it back, +1 heart; toys
   buy and switch; no coins change; the 4 stickers; I Spy, decorating and the room tabs still work; speed and spelling checks pass.
+- *Changed while building:* a room needs only **2** hiding spots (a new Loft has just the keyboard and the computer desk). The pet
+  can also hide higher up, behind a solid part (the monitor, the keyboard, the closet top), because a desk or keyboard stand has open
+  legs. At least 8% of the pet peeks out (16% in Easy mode, so the little ones find it), and at most 45%. The 🌙 button hides while
+  a game is on (like the room tabs), so the lights can't change mid-game.
 
-#### v1.55 plan details: 🦮 Pet Walks (proposed 2026-11-20)
+#### v1.55 plan details: 🦮 Pet Walks (agreed 2026-11-20)
 Why: pet play in the room stays in the room. A walk takes her buddy and the pet somewhere new, with little things to
 discover and collect. It is calm, has no wrong answers and suits the little ones as much as the older two.
 - **The way in:** 🦮 **Walk** in the pet menu (next to 🙈 and 🎾). It opens a new screen, `scr-walk`. Back goes to the room.

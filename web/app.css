@@ -1050,3 +1050,25 @@ body.easy .rw-ci{font-size:70px}
 @media (max-width:620px){#socTabs [data-mode=trick] span{display:none}#socTabs .tab.mode{padding:8px 10px}#socTabs [data-lvl]{padding:6px 9px}#socTabs{gap:4px}#socTabs .tab{min-height:44px}}
 @media (max-width:400px){#socTabs .tab.mode .w{display:none}#socTabs .tab.mode{padding:8px 12px}}
 @media (max-width:440px){.tr-name{font-size:15px;padding:0 8px}.tr-count{display:none}}
+/* 🙈 Hide & Seek and 🎾 Fetch with the pet (v1.54, section 55) */
+.pet-play{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.pet-play .btn{min-height:60px;font-size:20px}
+.btn.pp-go{background:var(--purple);color:#fff;border-color:var(--purple-dk)}
+body.petplay #roomSvg .deco{pointer-events:all} /* so a tap on a thing (and the hiding check) finds it, like I Spy */
+body.petplay #scr-room .topbar,body.petplay #roomTabs,body.petplay #spyBtn,body.petplay #roomSnapBtn,body.petplay #nightBtn,body.petplay #emoteBar{display:none}
+.pp-card .spy-txt span{font-size:19px}
+.pp-toys{flex-wrap:wrap;justify-content:flex-end}
+.pp-toy{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px}
+.pp-toy svg{width:34px;height:34px;display:block}
+.pp-toy.on{border-color:var(--gold);box-shadow:0 0 0 3px #ffd16666}
+.pp-toy.locked svg{opacity:.55}
+.pp-toy small{font-size:12px;font-weight:800;line-height:1}
+#roomSvg .pp-wig{transform-box:fill-box;transform-origin:50% 100%;animation:ppWig 3s steps(15) infinite}
+#roomSvg .pp-shake{transform-box:fill-box;transform-origin:50% 100%;animation:ppShake .45s ease}
+#roomSvg .pp-curtain{animation:ppFade .3s ease-out}
+#roomSvg .pp-toy-wait{animation:ppFade .3s ease-out}
+@keyframes ppWig{0%,76%,100%{transform:none}82%{transform:rotate(-7deg)}88%{transform:rotate(6deg)}94%{transform:rotate(-3deg)}}
+@keyframes ppShake{25%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}75%{transform:rotate(-2deg)}}
+@keyframes ppFade{from{opacity:0}}
+@media (max-width:620px){.pp-toy svg{width:28px;height:28px}.pp-card .spy-txt span{font-size:17px}}
+#petG.pp-away .pet-bob{display:none}
