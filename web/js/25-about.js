@@ -157,7 +157,9 @@ const GIFT_TIMELINE=[
   {v:'1.50',d:'2026-11-19',i:'🪙',n:'New Things to Buy',why:'So your coins always have something fun to save up for',
     news:['🏠 A home for your pet: tap your pet, then 🏠 Home','🎨 Stage backdrops under the song list','🏛️ Museum pieces in the Shop to show off your prizes']},
   {v:'1.51',d:'2026-11-20',i:'👠',n:'Runway',why:'So every outfit gets its own little show',
-    news:['👠 Runway in the Closet: pick a theme card and dress for it','👜 Borrow any clothes for the show, free','🤩 Walk the catwalk and the judges cheer']}
+    news:['👠 Runway in the Closet: pick a theme card and dress for it','👜 Borrow any clothes for the show, free','🤩 Walk the catwalk and the judges cheer']},
+  {v:'1.52',d:'2026-11-20',i:'🎸',n:'Stage Jam',why:'So the loops she makes can be the band for her own show',
+    news:['🎸 Jam on the Stage: your 🎹 loop is the band','✨ Tap 5 big circles to play along. Every note fits!','🎶 Pick a jam sound: Sparkle, Pluck or Toot']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

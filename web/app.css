@@ -679,7 +679,7 @@ body.easy .chip{font-size:24px;min-width:56px;min-height:56px}body.easy .chips{m
 .mc.on{background:var(--k);border-color:#ffffffaa;box-shadow:inset 0 -4px 0 #0003}
 .mc.drum.on{border-radius:50%}
 .mc.now{outline:3px solid var(--gold);outline-offset:1px}
-.mu-side{display:flex;flex-direction:column;gap:10px;align-items:center;width:300px}
+.mu-side{display:flex;flex-direction:column;gap:10px;align-items:center;width:380px} /* 380: Ideas, 🗑️, Dance and Jam (v1.52) fit on one line */
 .mu-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .mu-b{min-width:56px;min-height:48px;font-size:22px}
 .mu-play{font-size:22px;min-width:180px;min-height:60px}
@@ -1017,3 +1017,15 @@ body.easy .rw-ci{font-size:70px}
 @media (max-height:520px) and (orientation:landscape){.rw-card{min-height:150px}.rw-ci{font-size:42px}.rw-say{display:none}.rw-judge .rw-jsvg{max-height:22vh}.rw-cheer{font-size:30px}}
 #runwayBtn,#rwShuffle{min-height:48px}
 @media (orientation:portrait) and (max-width:560px){.rw-dress .closet-preview{flex-basis:48%;gap:6px;padding:6px}.rw-note,.rw-bag{display:none}.rw-spark{font-size:22px}.rw-chip{font-size:16px;padding:2px 12px}}
+
+/* 🎸 Stage Jam (v1.52, section 53) */
+.tab.jam{border-color:var(--pink)}
+.jam-loop .jam-mini{flex:0 0 auto;width:52px;height:58px;display:flex;align-items:center;justify-content:center;background:#1a1424;border-radius:12px;padding:4px}
+.jam-loop .jam-mini svg{width:100%;height:100%}
+.jam-loop.own{border-color:var(--mint)}
+.jam-sounds{width:min(1000px,100%);display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.jam-sounds .bd-t{width:100%;text-align:center;font-weight:900;font-size:17px;color:var(--muted)}
+.jam-snd{font-size:18px;min-height:52px;min-width:110px;border:3px solid var(--line)}
+.jam-snd.on{border-color:var(--gold)}
+.jam-stop{position:absolute;top:8px;right:10px;z-index:2;min-height:52px;font-size:18px}
+@media (max-width:620px){.jam-loop .jam-mini{width:46px;height:52px}}

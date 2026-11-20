@@ -366,13 +366,13 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   and 🏛️ museum display pieces for showing off her prizes. One PR.
 - ✅ **👠 Runway (v1.51, built; plan details below, agreed 2026-11-20):** pick a theme card, dress for it (her own clothes or
   borrowed ones), walk the catwalk; three visitor friends hold up cheer cards. Judges only cheer.
-- **🎸 Stage Jam (v1.52, plan details below, waiting for the owner's OK):** one of her 🎹 Music Maker loops plays on the Stage
+- ✅ **🎸 Stage Jam (v1.52, built; plan details below, agreed 2026-11-20):** one of her 🎹 Music Maker loops plays on the Stage
   and she taps big pads to play her own notes on top. Every note fits, no score.
-- **🎯 Soccer Trick Shots (v1.53, plan details below, waiting for the owner's OK):** a 🎯 Tricks tab with 12 fixed trick
+- **🎯 Soccer Trick Shots (v1.53, plan details below, agreed 2026-11-20):** a 🎯 Tricks tab with 12 fixed trick
   shots (stars, hoops, balloons, a wall of friends to curve around). Unlimited tries, coins the first time, a prize for all 12.
 - **Later, any order:** 🐾 more pet play (walks, hide-and-seek).
 
-#### v1.52 plan details: 🎸 Stage Jam (written 2026-11-20, waiting for the owner's OK)
+#### v1.52 plan details: 🎸 Stage Jam (agreed 2026-11-20)
 Why: the Music Maker makes loops, but a loop can only be listened to. The Stage only plays fixed songs. Jam joins the two:
 her own loop becomes the band, and she plays on top of it, like a real show. It works for all four children, because
 nothing can sound wrong. Owner's answers (2026-11-20): **jam over her loop** (not a tap-along chart made from the loop);
@@ -385,7 +385,7 @@ Jam and Trick Shots are **two PRs**.
   A row of 3 **jam sounds** to play with: ✨ Sparkle (bells), 🎸 Pluck (a guitar-like pluck), 🎺 Toot (a soft horn). All free.
 - **2. Jam:** the Stage scene she knows (her 🎨 backdrop, spotlights, the light row flashing on the beat, her buddy bouncing).
   The loop plays round and round. **5 big pads** in a row at the bottom, colored like the Music Maker's note rows, playing
-  the same 5 notes (C D E G A), one step higher than the loop's melody. Those 5 notes always fit together, so any tap sounds
+  the same 5 notes (C D E G A; ✨ Sparkle plays them an octave higher, like bells). Those 5 notes always fit together, so any tap sounds
   right. A tap lights the pad and sends a little note shape floating up toward her buddy; the spotlights take that pad's color.
   Every 16 notes the crowd cheers with a short word (✨ "Wow!", 🔥 "On fire!", 🎉 "Encore!"). No falling notes, no score,
   no "Oops", no timer: she plays as long as she wants. Slide a finger across the pads to play a run (a glissando).
@@ -393,7 +393,7 @@ Jam and Trick Shots are **two PRs**.
   A jam with at least 20 notes pays **+2 coins, 3 jams a day** (6 coins, like the Music Maker's 3 a day). After that it
   still plays, with one gentle note. No coins for a jam under 20 notes, but it still gets the cheer.
 - **Stickers** (🎤 Stage page): 🎸 First Jam (one jam of 20+ notes), 🎶 Jam Band (10 jams), 🎹 My Own Song (jam over one of
-  her own saved loops). 126 in all.
+  her own saved loops). 126 in all. *Changed while building:* the loop on the grid counts as her own too.
 - **Not in this PR:** no recording of the jam, no two-player jam, no notes snapped to the beat (a delay feels slow on a
   tablet), no Dance Maker link.
 - **Light on the device:** the Stage is already a main-loop screen (`LOOP_SCREENS`); the jam draws in the same canvas and
@@ -406,7 +406,7 @@ Jam and Trick Shots are **two PRs**.
   each jam sound plays; taps on all 5 pads; Stop pays +2 for 20+ notes and nothing under 20; the 3-a-day limit; the 3
   stickers; leaving the screen stops the loop; speed and spelling checks still pass.
 
-#### v1.53 plan details: 🎯 Soccer Trick Shots (written 2026-11-20, waiting for the owner's OK)
+#### v1.53 plan details: 🎯 Soccer Trick Shots (agreed 2026-11-20)
 Why: Kick and Keep are both "5 shots against a keeper". Once she wins the trophies, there's nothing new to learn, and the
 curve she can put on the ball (a bent swipe) is never needed. Trick Shots are little fixed challenges that teach aiming, height
 and curve, with no keeper and no failing. Owner's answers (2026-11-20): **a fixed trick list**, its own PR after Jam.
