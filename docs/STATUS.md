@@ -100,7 +100,7 @@ _Last updated: 2026-11-20_
   - **🎸 Stage Jam: built, PR #52 open as v1.52** on branch `feature/freestyle` (from `main` after #51). Picked 2026-11-20 together with 🎯 Soccer
     Trick Shots (v1.53, next). Owner's answers: jam over her own loop (no falling notes, no score); two PRs. Plans agreed ("go for it").
     Full plan in `PLAN.md` ("v1.52 plan details").
-  - **🎯 Soccer Trick Shots: built as v1.53** on branch `feature/tricks` (from `feature/freestyle`, as #52 is still open). Owner's answer:
+  - **🎯 Soccer Trick Shots: built, PR #53 open as v1.53** on branch `feature/tricks` (from `feature/freestyle`, as #52 is still open). Owner's answer:
     a fixed list of 12 tricks. Full plan in `PLAN.md` ("v1.53 plan details").
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
@@ -163,7 +163,7 @@ _Last updated: 2026-11-20_
 - PR #50 "New things to buy (v1.50)": merged.
 - PR #51 "Runway (v1.51)": merged.
 - PR #52 "Stage Jam (v1.52)" on branch `feature/freestyle`: open.
-- PR "Trick Shots (v1.53)" on branch `feature/tricks` (on top of #52): open.
+- PR #53 "Trick Shots (v1.53)" on branch `feature/tricks` (on top of #52): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -1320,7 +1320,7 @@ _Last updated: 2026-11-20_
 28. ~~Owner: OK the v1.52 Jam and v1.53 Trick Shots plans in `PLAN.md`, then build Jam on `feature/freestyle`.~~ Agreed and built.
 28b. Owner: build v1.52, try 🎸 Jam from the Stage and from the Music Maker (see PR #52), and merge it.
 29. ~~Then build 🎯 Trick Shots (v1.53) on `feature/tricks` (from `feature/freestyle`).~~ Built.
-29b. Owner: merge #52 first, then build v1.53, try 🎯 Tricks in Soccer (see the PR), and merge it.
+29b. Owner: merge #52 first, then build v1.53, try 🎯 Tricks in Soccer (see PR #53), and merge it.
 30. Then the last "Later" item: 🐾 more pet play.
 
 ## How versions and save upgrades work (since v1.2)
