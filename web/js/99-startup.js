@@ -33,6 +33,7 @@ window.androidBack=function(){
   if(cur==='stage'&&STG.state==='jamdone'){closeModal();jamPickView();return true;} // the 🎸 jam's cheer box: Back = the loops (section 53)
   if(!$('#modal').classList.contains('hidden')){closeModal();return true;}
   if(cur==='room'&&SPY.on){spyEnd();return true;} // 🔍 I Spy -> the room (section 50)
+  if(cur==='room'&&PP.on){ppEnd();return true;} // 🙈🎾 pet play -> the room (section 55)
   if(decorating){exitDecorate();return true;}
   if(cur==='fidget'||cur==='closet'){show('room');return true;}
   if(cur==='art'){artBack();return true;}

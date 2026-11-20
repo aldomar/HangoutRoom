@@ -161,7 +161,9 @@ const GIFT_TIMELINE=[
   {v:'1.52',d:'2026-11-20',i:'🎸',n:'Stage Jam',why:'So the loops she makes can be the band for her own show',
     news:['🎸 Jam on the Stage: your 🎹 loop is the band','✨ Tap 5 big circles to play along. Every note fits!','🎶 Pick a jam sound: Sparkle, Pluck or Toot']},
   {v:'1.53',d:'2026-11-20',i:'🎯',n:'Trick Shots',why:'So there is always a new kick to learn, even after every trophy is won',
-    news:['🎯 Trick Shots in Soccer: 12 tricks to try','🍌 Curve the ball around a wall of friends','🏅 Do all 12 to win the Trick Shot Star']}
+    news:['🎯 Trick Shots in Soccer: 12 tricks to try','🍌 Curve the ball around a wall of friends','🏅 Do all 12 to win the Trick Shot Star']},
+  {v:'1.54',d:'2026-11-20',i:'🙈',n:'Pet Hide & Seek + Fetch',why:'So there is always something to play with your pet, even after it knows every trick',
+    news:['🙈 Hide & Seek: your pet hides behind something in your room','🎾 Fetch: swipe to throw a toy and your pet brings it back','🦴 New fetch toys to get']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

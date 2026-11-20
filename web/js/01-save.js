@@ -8,9 +8,9 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.53';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.54';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=34;          // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=35;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
 // pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
 const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:'',seenNew:'',lastBackup:0}; // lastBackup (v1.30): when a backup was last saved on this device (ms) // seenNew (v1.22): last version whose What's New was shown
@@ -111,7 +111,9 @@ const MIGRATIONS={
   // v1.52 Stage Jam: jam {sound, pay{day,n}} (section 53), stats.jams / jamOwn. normalize() checks it.
   33: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.jam||typeof p.jam!=='object'||Array.isArray(p.jam))) p.jam={sound:'sparkle',pay:{day:'',n:0}}; }); },
   // v1.53 Trick Shots: soccer.tricks[], soccer.trick, soccer.trickPay{day,n} (section 54), stats.tricks. normalize() checks it.
-  34: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&p.soccer&&typeof p.soccer==='object'&&!Array.isArray(p.soccer)&&!Array.isArray(p.soccer.tricks)) Object.assign(p.soccer,{tricks:[],trick:'t1',trickPay:{day:'',n:0}}); }); }
+  34: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&p.soccer&&typeof p.soccer==='object'&&!Array.isArray(p.soccer)&&!Array.isArray(p.soccer.tricks)) Object.assign(p.soccer,{tricks:[],trick:'t1',trickPay:{day:'',n:0}}); }); },
+  // v1.54 Pet play: pet.toy (the fetch toy, section 55), stats.seeks / fetches. normalize() checks it.
+  35: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&p.pet&&typeof p.pet==='object'&&!Array.isArray(p.pet)&&typeof p.pet.toy!=='string') p.pet.toy='ball'; }); }
 };
 
 // Hair ids from before v1.11 (one closet item per color) -> the color they had. They stay readable forever:

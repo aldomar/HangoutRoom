@@ -6,6 +6,7 @@ let cur='profiles';
 function show(n){
   if(n!=='room'&&decorating) exitDecorate(true);
   if(n!=='room'&&SPY.on) spyEnd(true); // 🔍 (section 50)
+  if(n!=='room'&&PP.on) ppEnd(true); // 🙈🎾 pet play (section 55)
   cur=n; $$('.screen').forEach(s=>s.classList.toggle('on',s.id==='scr-'+n));
   const ep=n==='profiles'?null:P(); applyEasy();
   if(ep&&ep.easy){if(n==='soccer'){ep.soccer.level='easy';ep.soccer.keep.level='easy';}if(n==='stage')ep.stage.level='easy';if(n==='code')ep.code.level='easy';if(n==='brain')Object.keys(ep.brain.level).forEach(g=>{ep.brain.level[g]='easy';});} // Easy mode opens games on Easy
@@ -135,6 +136,7 @@ function renderRoom(){
   $('#roomTitle').textContent=`${p.name}'s ${ROOM_NAMES[roomNo]}`;
   roomTabs(); // the arrow tabs to the next rooms (section 41, v1.40)
   updateCoins();
+  if(PP.on) ppRedraw(); // 🙈🎾 a pet game keeps going after a redraw (section 55, v1.54)
 }
 function say(text){
   const old=$('#bubble'); if(old) old.remove();
@@ -169,6 +171,7 @@ function handleHot(h){
 roomSvg.addEventListener('click',e=>{
   if(decorating) return;
   if(SPY.on){spyTap(e);return;} // 🔍 I Spy: taps look for the clue, nothing opens (section 50, v1.49)
+  if(PP.on){ppTap(e);return;} // 🙈🎾 pet play: nothing opens while it is on (section 55, v1.54)
   const hot=e.target.closest('[data-hot]'); if(hot){handleHot(hot.dataset.hot);return;}
   if(e.target.closest('#mascotG')) mascotTap();
 });

@@ -370,7 +370,90 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   and she taps big pads to play her own notes on top. Every note fits, no score.
 - ✅ **🎯 Soccer Trick Shots (v1.53, built; plan details below, agreed 2026-11-20):** a 🎯 Tricks tab with 12 fixed trick
   shots (stars, hoops, balloons, a wall of friends to curve around). Unlimited tries, coins the first time, a prize for all 12.
-- **Later, any order:** 🐾 more pet play (walks, hide-and-seek).
+- **🐾 More pet play (the last "Later" item; plans below, agreed 2026-11-20):** picked 2026-11-20. Owner's answers:
+  **🙈 Hide & Seek, 🎾 Fetch and 🦮 Walks**; pet play gives **❤️ hearts and stickers, no coins** (the pet still never earns coins);
+  a walk is **its own path scene**. Proposed as two PRs: 🙈 Hide & Seek + 🎾 Fetch in the rooms (v1.54), then 🦮 Walks (v1.55).
+  Phase 12 is done when both are merged.
+  - ✅ **🙈 Hide & Seek + 🎾 Fetch (v1.54, built).**
+  - **🦮 Walks (v1.55):** next.
+
+#### v1.54 plan details: 🙈 Pet Hide & Seek + 🎾 Fetch (agreed 2026-11-20, built)
+Why: the pet can only be patted, fed and dressed, so after the tricks are learned there is nothing to *do* with it. Hide &
+Seek and Fetch are short, no-fail games in the room she has decorated, so every decoration becomes a hiding spot or
+something to throw past. Both work for all four children (the 3-year-old can find a pet whose ears stick out).
+- **The way in:** the pet menu (tap the pet) gets two big buttons at the top: 🙈 **Hide & Seek** and 🎾 **Fetch**. They show
+  only once she has picked a pet. Both play in whichever room is on screen (all 4 rooms). Not while decorating or in 🔍 I Spy.
+  While a game is on, the top bar and room tabs hide (like I Spy) and a small card at the top shows the game with a ✖ Stop
+  button; Back, Stop or leaving the room ends it quietly.
+- **🙈 Hide & Seek:**
+  1. Fuzzy says "Close your eyes! 🙈" and a soft curtain covers the room picture for a short count (1… 2… 3…, about 2 s,
+     with little footstep sounds). Then "Ready or not! 🐾".
+  2. The pet has hidden behind one thing in the room: a **standing decoration** or a **built-in floor piece** (closet, desk,
+     tree, shed…) big enough to hide it. Spots come from the drawn room, the same way 🔍 I Spy finds things (`spyThings`,
+     `spySeen`), so every new decoration is a hiding spot automatically. Wall items and rugs are left out.
+  3. A bit of the pet **peeks out** from the side of its spot: ears, a tail or a wing tip, with a small wiggle every few
+     seconds. At 🌙 night it is two little glowing eyes instead (cute, not scary).
+  4. She taps things. A wrong spot gives a little shake and "Not here! 🤭" (nothing is counted). After 3 wrong taps the right
+     spot sparkles. Found: the pet pops out with a trick and floats ❤️❤️ **+2 hearts**. 🔁 Again picks a different spot.
+  - A room with fewer than 3 hiding spots: Fuzzy says "Put out a few more things first! 🛋️" (like I Spy). The bare Studio has
+    no built-ins, so it needs a few decorations first.
+- **🎾 Fetch:**
+  1. A toy appears in Fuzzy's hand. She **swipes** (or taps a spot on the floor) to throw it. A longer swipe throws farther;
+     the toy arcs, lands on the floor area, bounces a little and rolls to a stop (it bounces back off the room's sides).
+  2. The pet runs to it (pets that fly, like the bat and the ghost kitten, float), picks it up and trots back, drops it at
+     Fuzzy's feet and wags: **+1 heart**. Every 5th fetch in a row it shows off a trick it knows. It always brings it back.
+  3. **Fetch toys:** 🎾 Ball (free), and 3 to buy, a new thing to spend coins on: 🦴 Squeaky Bone (6), 🥏 Star Disc (10,
+     glides farther) and 🧶 Yarn Ball (8, leaves a short wiggly string trail). Owned as `pettoy:<id>`; a 🎾 toy row in the
+     Fetch card switches toys (buying goes through `tryBuy`, so Easy mode and the PIN work as usual).
+- **Hearts:** finds and fetches only add hearts (tricks unlock sooner); nothing is ever lost. No coins.
+- **Stickers** (🏠 Room & Style page): 🙈 Found You! (first find), 🔎 Seek Champ (25 finds), 🎾 Good Catch (first fetch),
+  🥏 Fetch Fan (50 fetches). 133 in all.
+- **Not in this PR:** no 🦮 walks (v1.55), no two-player hide & seek, no pet hiding by itself when she isn't playing.
+- **Light on the device:** no main loop. The pet is moved as one group with CSS transforms (the throw and the run use a short
+  `requestAnimationFrame` only while the toy is moving, then stop). The `#fuzz` filter is never redrawn; the pet has none.
+- **Code:** a new file `55-petplay.js` (+ a little markup, styles). While a game is on, the room's click handler hands taps to
+  it (like `spyTap`). The pet is drawn at its hiding spot just *behind* that thing in the floor layer, so the thing covers it.
+  Save version 34 → 35: `pet.toy` (the fetch toy, default `ball`), `stats.seeks`, `stats.fetches`; defaults in `normalize()`,
+  old backups still restore. Toy ids are saved: never rename them.
+- **Smoke test:** the 🙈/🎾 buttons only with a pet; Hide & Seek in every room with enough things: the pet is behind a real
+  spot and a peek part shows (`spySeen`-style check), a wrong tap counts nothing, the hint after 3, a find gives +2 hearts and
+  a new spot on 🔁; too few things says so; Fetch: a throw lands inside the floor area, the pet brings it back, +1 heart; toys
+  buy and switch; no coins change; the 4 stickers; I Spy, decorating and the room tabs still work; speed and spelling checks pass.
+- *Changed while building:* a room needs only **2** hiding spots (a new Loft has just the keyboard and the computer desk). The pet
+  can also hide higher up, behind a solid part (the monitor, the keyboard, the closet top), because a desk or keyboard stand has open
+  legs. At least 8% of the pet peeks out (16% in Easy mode, so the little ones find it), and at most 45%. The 🌙 button hides while
+  a game is on (like the room tabs), so the lights can't change mid-game.
+
+#### v1.55 plan details: 🦮 Pet Walks (agreed 2026-11-20)
+Why: pet play in the room stays in the room. A walk takes her buddy and the pet somewhere new, with little things to
+discover and collect. It is calm, has no wrong answers and suits the little ones as much as the older two.
+- **The way in:** 🦮 **Walk** in the pet menu (next to 🙈 and 🎾). It opens a new screen, `scr-walk`. Back goes to the room.
+- **1. Pick a path:** 4 big picture cards, all free: 🌼 **Flower Meadow**, 🦆 **Duck Pond**, 🏘️ **Town Sidewalk** and
+  🌙 **Starry Path** (fireflies and a big moon; cozy, not dark). Each shows how many of its finds she has (🧺 3/8).
+- **2. Walk:** a side view. Her buddy and the pet walk along the path while the scenery slides by (2–3 layers, the far ones
+  slower). **Hold the big 👣 button** (or the path itself) to walk; let go to stop and look around. Now and then the pet
+  stops and sniffs: a "❗" bubble and a bush, puddle or patch of grass wiggles. Tap it and the pet digs or pokes in and finds
+  something: a **find** card pops up ("🐚 A spiral shell!"). Visitor friends sometimes wave from the path (just for fun).
+  A walk has 5 sniff spots; then the path reaches a bench and home: "What a lovely walk! 🐾" **+3 hearts**, and +1 heart a find.
+- **3. Finds:** 8 per path, 32 in all, all original little drawings (for example the meadow: daisy, ladybug*, butterfly*,
+  four-leaf clover, feather, acorn, smooth stone, lost ball; the pond: spiral shell, duck feather, frog*, lily flower, pebble
+  heart, cattail…). *Animals are "seen", not taken: "Hello, little frog! 🐸 Bye bye!".* A sniff spot picks a find she
+  doesn't have yet when there is one (so a path fills in about 2 walks), then any find from the path. The 🧺 **Walk Finds**
+  book (a button on the path picker) shows all 32 as gray shapes until found; tapping one says its name.
+- **Prizes:** all 8 finds of a path give that path's **treasure jar** decoration (🫙 Meadow Jar, Pond Jar, Town Jar,
+  Star Jar; `award:1`, never in the Shop), which goes to My Stuff for her to place in any room.
+- **Stickers** (🏠 Room & Style page): 🦮 First Walk, 🧺 Collector (all finds of one path), 🌟 Treasure Hunter (all 32).
+  136 in all.
+- **Not in this PR:** no leash or "pull" (the pet always walks with her), no walking the pet in the Backyard picture, no coins.
+- **Light on the device:** no main loop. The scenery is a few wide SVG strips moved by CSS transform animations that pause when
+  she lets go (`animation-play-state`); her buddy is drawn once into a picture (like the Dance Maker and Runway) and bobs with CSS.
+- **Code:** a new file `56-walk.js` (+ screen markup in `index.html`, styles in `app.css`). Paths and finds are lists
+  (`WALK_PATHS`, `WALK_FINDS` with a `d()` drawing each). Save version 35 → 36: `walk{path, finds[]}` (find ids), `stats.petWalks`,
+  `stats.finds`; defaults in `normalize()`, old backups still restore. Path ids, find ids and jar keys are saved: never rename
+  them; new finds go at the end of their path.
+- **Smoke test:** open a walk from the pet menu; every path draws and walks (a test switch skips the wait); 5 sniff spots then
+  home with the right hearts; a find card for each spot, new finds first; the Walk Finds book; all 8 finds of a path give its
+  jar once (into My Stuff); no coins change; the 3 stickers; every find drawing parses as XML; speed and spelling checks pass.
 
 #### v1.52 plan details: 🎸 Stage Jam (agreed 2026-11-20)
 Why: the Music Maker makes loops, but a loop can only be listened to. The Stage only plays fixed songs. Jam joins the two:

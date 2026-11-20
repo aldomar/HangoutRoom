@@ -99,9 +99,12 @@ _Last updated: 2026-11-20_
     Full plan in `PLAN.md` ("v1.51 plan details"). **Merged** (PR #51).
   - **🎸 Stage Jam: built, PR #52 open as v1.52** on branch `feature/freestyle` (from `main` after #51). Picked 2026-11-20 together with 🎯 Soccer
     Trick Shots (v1.53, next). Owner's answers: jam over her own loop (no falling notes, no score); two PRs. Plans agreed ("go for it").
-    Full plan in `PLAN.md` ("v1.52 plan details").
+    Full plan in `PLAN.md` ("v1.52 plan details"). **Merged** (PR #52).
   - **🎯 Soccer Trick Shots: built, PR #53 open as v1.53** on branch `feature/tricks` (from `feature/freestyle`, as #52 is still open). Owner's answer:
-    a fixed list of 12 tricks. Full plan in `PLAN.md` ("v1.53 plan details").
+    a fixed list of 12 tricks. Full plan in `PLAN.md` ("v1.53 plan details"). **Merged** (PR #53, 2026-11-20).
+  - **🐾 More pet play: plans agreed 2026-11-20 ("go for it"); 🙈 Hide & Seek + 🎾 Fetch built as v1.54** on branch `feature/petplay` (from `main` after #53). The last
+    "Later" item. Owner's answers (2026-11-20): 🙈 Hide & Seek, 🎾 Fetch and 🦮 Walks; ❤️ hearts and stickers only (no coins); a walk
+    is its own path scene. Two PRs: v1.54 (Hide & Seek + Fetch), v1.55 (Walks). Full plans in `PLAN.md`. Phase 12 is done when both are merged.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -162,8 +165,9 @@ _Last updated: 2026-11-20_
 - PR #49 "I Spy (v1.49)": merged.
 - PR #50 "New things to buy (v1.50)": merged.
 - PR #51 "Runway (v1.51)": merged.
-- PR #52 "Stage Jam (v1.52)" on branch `feature/freestyle`: open.
-- PR #53 "Trick Shots (v1.53)" on branch `feature/tricks` (on top of #52): open.
+- PR #52 "Stage Jam (v1.52)": merged.
+- PR #53 "Trick Shots (v1.53)": merged.
+- PR #54 "Pet Hide & Seek + Fetch (v1.54)" on branch `feature/petplay`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -650,6 +654,14 @@ _Last updated: 2026-11-20_
   The Soccer tabs were measured at 360, 412, 620 and 1180 px in all 3 modes: on phones they are now tighter (44 px tall), and under
   400 px ⚽ and 🧤 show icons only. A first full run failed the ⚡ speed check with every screen ~2× slower (the machine was busy); the
   rerun was normal (Shop 1080 ms). Not tested automatically: how hard a curved swipe feels on the real tablet.
+- **Pet Hide & Seek + Fetch (v1.54)**: `tests/smoke-test.js` has 1786 checks (about 55 new). The full run passed 1785 with no console errors; the
+  one failure was the v1.53 section still expecting the app to say 1.53, fixed like the older sections (it now only checks the Gift Story).
+  New checks: the menu buttons only with a pet; the curtain, then the pet behind a real spot with 8–45% showing (16%+ in Easy mode) and the
+  stepped wiggle; wrong taps count nothing; the hint after 3; a redraw keeps the spot; finding by the pet or the spot (+2 hearts, no coins);
+  🔁 picks another spot; the Loft and the Backyard; a bare Studio says so; glowing eyes at night; Back and leaving end it; Fetch by swipe and by
+  tap (lands on the floor, +1 heart, no coins); buying and switching toys; the yarn string; no games while decorating; 3 screen sizes;
+  stickers; backups and odd data. Speed check: Shop 1363 ms (under 1.5 s), the room doing nothing 87 ms/s. Not tested automatically: how easy
+  a peeking pet is to spot for the little ones, and how a throw swipe feels on the real tablet.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -1020,6 +1032,10 @@ _Last updated: 2026-11-20_
   room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
   short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
   so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
+- **Pet Hide & Seek + Fetch (built as v1.54, `55-petplay.js`), agreed 2026-11-20.** Owner's answers: Hide & Seek, Fetch and Walks, hearts and
+  stickers only (no coins), a walk on its own path scene; plans agreed ("go for it"), two PRs. Built as planned, except: a room needs 2 hiding
+  spots (not 3), the pet may also hide higher up behind a solid part (desks and keyboard stands have open legs), at least 8% peeks out (16% in
+  Easy mode), and 🌙 hides during a game. Toys: ball (free), bone 6, yarn 8, disc 10. Save version 35. 4 stickers (133 in all).
 - **Trick Shots (built as v1.53, `54-tricks.js`), agreed 2026-11-20.** Picked with Stage Jam from the Phase 12 "Later" list. Owner's answer:
   **a fixed trick list** (not endless targets). 12 tricks, unlimited tries, a 💡 dotted path after 3 misses, +3 the first time, +1 a replay
   (10 a day), the 🏅 Trick Shot Star in the Backyard for all 12 (at `TROPHY_SPOTS.trickStar`, 745/695). No keeper: Mochi, Boo and Flap
@@ -1318,15 +1334,20 @@ _Last updated: 2026-11-20_
     Owner's answers: freestyle = **jam over her own loop** (no falling notes, no score); trick shots = **a fixed list of 12
     tricks**; **two PRs** (Jam v1.52, then Trick Shots v1.53). Both plans written in `PLAN.md` on branch `feature/freestyle`.
 28. ~~Owner: OK the v1.52 Jam and v1.53 Trick Shots plans in `PLAN.md`, then build Jam on `feature/freestyle`.~~ Agreed and built.
-28b. Owner: build v1.52, try 🎸 Jam from the Stage and from the Music Maker (see PR #52), and merge it.
+28b. ~~Owner: build v1.52, try 🎸 Jam from the Stage and from the Music Maker (see PR #52), and merge it.~~ Merged.
 29. ~~Then build 🎯 Trick Shots (v1.53) on `feature/tricks` (from `feature/freestyle`).~~ Built.
-29b. Owner: merge #52 first, then build v1.53, try 🎯 Tricks in Soccer (see PR #53), and merge it.
-30. Then the last "Later" item: 🐾 more pet play.
+29b. ~~Owner: merge #52 first, then build v1.53, try 🎯 Tricks in Soccer (see PR #53), and merge it.~~ Merged (2026-11-20).
+30. ~~Then the last "Later" item: 🐾 more pet play.~~ Picked 2026-11-20. Owner's answers: 🙈 Hide & Seek, 🎾 Fetch and 🦮 Walks;
+    ❤️ hearts and stickers only (no coins); a walk is its own path scene. Plans written in `PLAN.md` on branch `feature/petplay`:
+    v1.54 (Hide & Seek + Fetch) and v1.55 (Walks), two PRs.
+31. ~~Owner: OK the v1.54 and v1.55 plans in `PLAN.md`, then build v1.54 on `feature/petplay`.~~ Agreed ("go for it") and built.
+31b. Owner: build v1.54, try 🙈 Hide & Seek and 🎾 Fetch in a few rooms (see PR #54), and merge it.
+32. Then build v1.55 (🦮 Walks) on `feature/walks`. Phase 12 is done when both are merged.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 34 since v1.53 (Trick Shots: `soccer.tricks/trick/trickPay`, `stats.tricks`). It was 33 in v1.52 (Stage Jam: `jam`, `stats.jams/jamOwn`). It was 32 in v1.51 (Runway: `runway`, `stats.walks/wows`). It was 31 in v1.50 (new things to buy: `pet.home`, `stage.backdrop`). It was 30 in v1.49 (I Spy: `spy`, `stats.spied/spyRounds`). It was 29 in v1.48 (Garden: `garden`, `stats.planted/harvests`). It was 28 in v1.47 (Dance Maker: `dance`). It was 27 in v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 35 since v1.54 (Pet play: `pet.toy`, `stats.seeks/fetches`). It was 34 in v1.53 (Trick Shots: `soccer.tricks/trick/trickPay`, `stats.tricks`). It was 33 in v1.52 (Stage Jam: `jam`, `stats.jams/jamOwn`). It was 32 in v1.51 (Runway: `runway`, `stats.walks/wows`). It was 31 in v1.50 (new things to buy: `pet.home`, `stage.backdrop`). It was 30 in v1.49 (I Spy: `spy`, `stats.spied/spyRounds`). It was 29 in v1.48 (Garden: `garden`, `stats.planted/harvests`). It was 28 in v1.47 (Dance Maker: `dance`). It was 27 in v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
