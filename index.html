@@ -140,6 +140,7 @@
       <div class="closet-row">
         <button class="btn small ghost" id="mascotNameBtn">Fuzzy ✏️</button>
         <button class="btn small ghost" id="randomBtn">🎲 Surprise me</button>
+        <button class="btn pink" id="runwayBtn" aria-label="Runway">👠 Runway</button>
       </div>
       <div class="looks-row" id="looksRow"></div>
     </div>
@@ -348,6 +349,43 @@
   </div>
 </div>
 
+<!-- RUNWAY (v1.51, from the Closet) -->
+<div id="scr-runway" class="screen" data-view="cards">
+  <div class="topbar">
+    <button class="btn small ghost" id="rwBack">⬅ Closet</button>
+    <div class="title">👠 Runway</div>
+    <div class="coins coinsDisp"></div>
+  </div>
+  <div class="rw-pick">
+    <div class="rw-hint">Pick a theme card!</div>
+    <div class="rw-cards" id="rwCardList"></div>
+    <button class="btn ghost" id="rwShuffle" aria-label="Other cards">🔀 <span class="tn">Other cards</span></button>
+  </div>
+  <div class="closet-body rw-dress">
+    <div class="closet-preview">
+      <div class="rw-chip" id="rwCardChip"></div>
+      <div id="rwMascot"></div>
+      <div class="rw-spark" id="rwSpark" role="img"></div>
+      <div class="rw-note" id="rwNote"></div>
+      <div class="rw-bag" id="rwBag"></div>
+      <div class="closet-row">
+        <button class="btn small ghost" id="rwSurprise" aria-label="Theme surprise">🎲 <span class="tn">Theme surprise</span></button>
+        <button class="btn pink" id="rwWalk" aria-label="Walk">🚶 Walk!</button>
+      </div>
+    </div>
+    <div class="closet-shop">
+      <div class="tabs" id="rwTabs"></div>
+      <div class="grid" id="rwGrid"></div>
+    </div>
+  </div>
+  <div class="rw-stage">
+    <div class="rw-lights"><i></i><i></i></div>
+    <div class="rw-walkway"></div>
+    <div class="rw-walker" id="rwWalker"><img id="rwBuddyImg" alt="" draggable="false"></div>
+    <div class="rw-judges" id="rwJudges"></div>
+  </div>
+</div>
+
 <!-- GARDEN (v1.48, the Backyard's garden shed) -->
 <div id="scr-garden" class="screen">
   <div class="topbar">
@@ -456,6 +494,7 @@
 <script src="web/js/49-garden.js"></script>
 <script src="web/js/50-ispy.js"></script>
 <script src="web/js/51-spend.js"></script>
+<script src="web/js/52-runway.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

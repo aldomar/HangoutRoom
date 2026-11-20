@@ -962,3 +962,58 @@ body.easy .spy-pic{width:76px;height:76px}
 .bd .tp{position:absolute;top:2px;right:2px;background:#3a2c18;color:var(--gold);font-size:14px;font-weight:900;padding:1px 7px;border-radius:999px;border:1px solid #6b5220}
 body.easy .bd.poor{opacity:.5}
 @media (max-width:620px){.bd{width:96px}.bd img{width:80px;height:54px}}
+/* ---------- 👠 Runway (v1.51, section 52) ---------- */
+#scr-runway:not([data-view=cards]) .rw-pick,#scr-runway:not([data-view=dress]) .rw-dress,#scr-runway:not([data-view=walk]) .rw-stage{display:none}
+.rw-pick{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:12px 16px}
+.rw-hint{font-size:20px;font-weight:900}
+.rw-cards{display:grid;grid-template-columns:repeat(3,minmax(0,240px));gap:14px;width:100%;justify-content:center}
+.rw-card{position:relative;min-height:190px;border:4px solid var(--purple);border-radius:22px;background:linear-gradient(160deg,var(--panel2),var(--panel));color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;cursor:pointer;box-shadow:0 5px 0 #1a1424}
+.rw-card:active{transform:translateY(3px);box-shadow:0 2px 0 #1a1424}
+.rw-card b{font-size:20px;text-align:center}
+.rw-ci{font-size:56px;line-height:1}
+.rw-say{font-size:15px;text-align:center;color:var(--muted)}
+.rw-th{font-size:20px}
+.rw-done{position:absolute;top:8px;right:10px;font-size:20px}
+body.easy .rw-say{display:none}
+body.easy .rw-ci{font-size:70px}
+.rw-chip{font-size:18px;background:var(--panel2);border:3px solid var(--gold);border-radius:999px;padding:4px 14px;white-space:nowrap}
+#rwMascot{width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+#rwMascot svg{height:100%;max-width:100%;transform-origin:50% 95%}
+#rwMascot.hop svg{animation:hop2 .5s ease}
+.rw-spark{display:flex;gap:6px;font-size:28px}
+.rw-spark i{font-style:normal;filter:grayscale(1) brightness(.6);opacity:.45;transition:transform .2s}
+.rw-spark i.on{filter:none;opacity:1;transform:scale(1.15)}
+.rw-note{font-size:16px;font-weight:800;text-align:center}
+.rw-bag{font-size:14px;color:var(--muted);min-height:18px}
+#rwWalk{min-height:56px;font-size:20px;padding:0 22px}
+.tile.rw-fit{border-color:var(--gold)}
+.tile .tp.rw-borrow{background:var(--panel2);color:var(--ink);border-color:var(--line);font-size:15px}
+.rw-stage{position:relative;flex:1;min-height:0;overflow:hidden;background:radial-gradient(ellipse 60% 50% at 50% 0,#4b2f7a,transparent 70%),linear-gradient(#21143a,#0f0a18)}
+.rw-lights i{position:absolute;top:-10%;width:40%;height:90%;background:radial-gradient(ellipse 50% 100% at 50% 0,#fff6c955,transparent 70%);pointer-events:none}
+.rw-lights i:first-child{left:6%;transform:rotate(-14deg)}
+.rw-lights i:last-child{right:6%;transform:rotate(14deg)}
+.rw-walkway{position:absolute;left:50%;bottom:0;width:min(70%,520px);height:78%;transform:translateX(-50%);clip-path:polygon(38% 0,62% 0,100% 100%,0 100%);
+  background:repeating-linear-gradient(90deg,transparent 0 47%,#ffd16655 47% 53%,transparent 53% 100%),linear-gradient(#5b3a99,#ff8cc6)}
+.rw-walker{position:absolute;left:50%;bottom:30%;height:52%;aspect-ratio:200/270;transform:translate(-50%,-40%) scale(.45);transform-origin:50% 100%;--wt:4200ms}
+.rw-walker img{width:100%;height:100%;display:block;transform-origin:50% 95%;pointer-events:none;user-select:none;-webkit-user-select:none}
+.rw-walker.go{animation:rwWalk var(--wt) ease-in-out forwards}
+.rw-walker.go img{animation:rwStrut var(--wt) linear forwards}
+@keyframes rwWalk{0%{transform:translate(-50%,-40%) scale(.45)}40%,62%{transform:translate(-50%,0) scale(1)}100%{transform:translate(-50%,-40%) scale(.45)}}
+@keyframes rwStrut{0%,8%,16%,24%,32%,66%,74%,82%,90%,100%{transform:none}4%,20%,70%,86%{transform:translateY(-4%) rotate(-4deg)}12%,28%,78%,94%{transform:translateY(-4%) rotate(4deg)}
+  40%{transform:scale(1.06,.94)}46%{transform:rotateY(180deg)}52%{transform:rotateY(360deg) scale(1.05)}58%{transform:rotateY(360deg)}}
+.rw-judges{position:absolute;left:0;right:0;bottom:6px;display:flex;justify-content:space-between;padding:0 12px;pointer-events:none}
+.rw-judge{position:relative;display:flex;flex-direction:column;align-items:center;width:min(28%,150px)}
+.rw-judge .rw-jsvg{width:100%;height:auto;max-height:18vh}
+.rw-judge span{font-size:14px;font-weight:800;color:#fff}
+.rw-cheer{font-size:40px;background:#fff;border-radius:14px;padding:2px 10px;border:4px solid var(--gold);opacity:0;transform:scale(.3)}
+.rw-line{font-size:15px;font-weight:800;color:var(--gold);min-height:18px;opacity:0;text-align:center}
+.rw-judge.show .rw-cheer{animation:rwCard .5s calc(var(--k)*.2s) ease-out forwards}
+.rw-judge.show .rw-line{animation:rwCard .5s calc(var(--k)*.2s + .3s) ease-out forwards}
+@keyframes rwCard{0%{opacity:0;transform:scale(.3) rotate(-10deg)}60%{opacity:1;transform:scale(1.15) rotate(4deg)}100%{opacity:1;transform:none}}
+.rw-end{text-align:center;font-size:18px;line-height:1.5}
+.rw-big{font-size:52px}
+@media (orientation:portrait){.rw-cards{grid-template-columns:minmax(0,420px)}.rw-card{min-height:0;flex-direction:row;flex-wrap:wrap;gap:4px 12px;padding:10px 14px}.rw-card .rw-ci{font-size:44px}}
+@media (max-height:520px) and (orientation:landscape){.rw-card{min-height:150px}.rw-ci{font-size:42px}.rw-say{display:none}.rw-judge .rw-jsvg{max-height:22vh}.rw-cheer{font-size:30px}}
+#runwayBtn,#rwShuffle{min-height:48px}
+@media (orientation:portrait) and (max-width:560px){.rw-dress .closet-preview{flex-basis:48%;gap:6px;padding:6px}.rw-note,.rw-bag{display:none}.rw-spark{font-size:22px}.rw-chip{font-size:16px;padding:2px 12px}}

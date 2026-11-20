@@ -93,7 +93,7 @@ _Last updated: 2026-11-20_
     Owner's answers: one PR; the museum is display pieces she arranges (not self-filling cases). Plan agreed ("go for it")
     and built (`PLAN.md`, "v1.50 plan details"). Left out on purpose: the visitor wish (it would give one friend 4 wishes
     and delay that friend's plush). **Merged** (PR #50, 2026-11-20).
-  - **👠 Runway: plan written, waiting for the owner's OK** (v1.51, branch `feature/runway` from `main` after #50). Picked from the
+  - **👠 Runway: built as v1.51** on branch `feature/runway` (from `main` after #50). Plan agreed 2026-11-20 ("go for it"). Picked from the
     "Later" list 2026-11-20. Owner's answers: her own clothes plus a 👜 Borrow rack (borrowed for one show, never owned); the
     judges (3 visitor friends) hold up cheer cards, every walk gets cheers; +3 coins a show, 15 a day; a 👠 button in the Closet.
     Full plan in `PLAN.md` ("v1.51 plan details").
@@ -998,6 +998,12 @@ _Last updated: 2026-11-20_
   room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
   short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
   so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
+- **Runway (built as v1.51, `52-runway.js`), agreed 2026-11-20.** Picked by the owner from the Phase 12 "Later" list. Owner's
+  answers: her own clothes **plus a 👜 Borrow rack** (any closet item for one show, free, never owned); the judges (3 visitor
+  friends) hold up **cheer cards** (💖 / 🌟 / 🤩, every walk gets cheers, no score); **+3 coins a show, 15 a day**; a **👠 button
+  in the Closet**. 14 theme cards tied to theme chips (✨ Anything Goes has none and always gets 🤩). Her outfit changes only with
+  👗 Wear it home (owned pieces only). Save version 32: `runway{pay, cards[]}`, `stats.walks/wows`. 3 stickers (123 in all);
+  Crowd Favorite counts 🤩 on themed cards only. No visitor wish (each friend has exactly 3).
 - **Backyard Garden (built as v1.48, `49-garden.js`), agreed 2026-11-19.** Picked by the owner from the Phase 12 "Later" list.
   Owner's answers: plants **grow by themselves** (one step a day by the device date, ready in 3 days, never wilt); picking gives
   **+3 coins and, the first time, a pot**; **4 free seeds + 8 to buy** (8–15 coins, once); **6 plots**. The shed (the old "spot for a
@@ -1269,13 +1275,14 @@ _Last updated: 2026-11-20_
 23. ~~Owner: build v1.50, try a 🏠 pet home, a 🎨 Stage backdrop and 🏛️ a trophy on a pedestal (see the PR), and merge it.~~ Merged.
 24. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 👠 Runway (v1.51), 2026-11-20.
     Plan written in `PLAN.md` ("v1.51 plan details") on branch `feature/runway`.
-25. Owner: OK the v1.51 Runway plan in `PLAN.md`, then build it on `feature/runway`.
-26. Then pick the next item from the "Later, any order" list: 🐾 more pet play, Stage freestyle or Soccer trick shots.
+25. ~~Owner: OK the v1.51 Runway plan in `PLAN.md`, then build it on `feature/runway`.~~ Agreed and built.
+26. Owner: build v1.51, try 👠 Runway from the Closet (see the PR), and merge it.
+27. Then pick the next item from the "Later, any order" list: 🐾 more pet play, Stage freestyle or Soccer trick shots.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 31 since v1.50 (new things to buy: `pet.home`, `stage.backdrop`). It was 30 in v1.49 (I Spy: `spy`, `stats.spied/spyRounds`). It was 29 in v1.48 (Garden: `garden`, `stats.planted/harvests`). It was 28 in v1.47 (Dance Maker: `dance`). It was 27 in v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 32 since v1.51 (Runway: `runway`, `stats.walks/wows`). It was 31 in v1.50 (new things to buy: `pet.home`, `stage.backdrop`). It was 30 in v1.49 (I Spy: `spy`, `stats.spied/spyRounds`). It was 29 in v1.48 (Garden: `garden`, `stats.planted/harvests`). It was 28 in v1.47 (Dance Maker: `dance`). It was 27 in v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13

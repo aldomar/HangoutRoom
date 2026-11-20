@@ -364,12 +364,12 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   theme hint) for things in her own room; tap to find, 5 a round, nothing can go wrong; a 🔦 flashlight at night.
 - ✅ **🪙 New things to spend coins on (v1.50, built; plan details below, agreed 2026-11-19):** 🏠 pet homes, 🎤 Stage backdrops
   and 🏛️ museum display pieces for showing off her prizes. One PR.
-- **👠 Runway (v1.51, plan details below, waiting for the owner's OK):** pick a theme card, dress for it (her own clothes or
+- ✅ **👠 Runway (v1.51, built; plan details below, agreed 2026-11-20):** pick a theme card, dress for it (her own clothes or
   borrowed ones), walk the catwalk; three visitor friends hold up cheer cards. Judges only cheer.
 - **Later, any order:** 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
   loop) and Soccer trick shots.
 
-#### v1.51 plan details: 👠 Runway (picked 2026-11-20)
+#### v1.51 plan details: 👠 Runway (agreed 2026-11-20)
 Why: dressing up has no goal. She owns many clothes (112 in the Closet) but nothing asks her to put an outfit together.
 Runway gives every outfit a reason and a little show, and works for all four children. Owner's answers (2026-11-20):
 her own clothes **plus a 👜 Borrow rack**; the judges hold up **cheer cards**; **+3 coins a show, 15 a day**; a **👠 Runway
@@ -393,7 +393,8 @@ button in the Closet**.
   🔁 Another card, 👗 Wear it home (puts on only the pieces she owns; borrowed ones go back to the rack), 🏠 Done.
   Her saved outfit never changes unless she taps Wear it home, and borrowing never adds anything to `owned`.
 - **Stickers** (🏠 Room & Style page): 👠 First Walk (one show), 🌈 Theme Hopper (8 different cards), 🤩 Crowd Favorite
-  (three 🤩 cards). 123 in all.
+  (three 🤩 cards). 123 in all. *Changed while building:* Crowd Favorite counts 🤩 on themed cards only (✨ Anything Goes
+  always gets 🤩, so it would be too easy).
 - **Not in this PR:** no visitor wish (each friend has exactly 3 wishes; see v1.50), no photocard from the show, no two-player.
 - **Light on the device:** no main loop. The buddy is drawn once into a picture (like the Dance Maker), so the `#fuzz`
   filter is not redrawn while it walks; the walk, confetti and cheer cards are CSS animations. Judges are drawn once, flat.
