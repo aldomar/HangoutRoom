@@ -654,6 +654,14 @@ _Last updated: 2026-11-20_
   The Soccer tabs were measured at 360, 412, 620 and 1180 px in all 3 modes: on phones they are now tighter (44 px tall), and under
   400 px ⚽ and 🧤 show icons only. A first full run failed the ⚡ speed check with every screen ~2× slower (the machine was busy); the
   rerun was normal (Shop 1080 ms). Not tested automatically: how hard a curved swipe feels on the real tablet.
+- **Pet Hide & Seek + Fetch (v1.54)**: `tests/smoke-test.js` has 1786 checks (about 55 new). The full run passed 1785 with no console errors; the
+  one failure was the v1.53 section still expecting the app to say 1.53, fixed like the older sections (it now only checks the Gift Story).
+  New checks: the menu buttons only with a pet; the curtain, then the pet behind a real spot with 8–45% showing (16%+ in Easy mode) and the
+  stepped wiggle; wrong taps count nothing; the hint after 3; a redraw keeps the spot; finding by the pet or the spot (+2 hearts, no coins);
+  🔁 picks another spot; the Loft and the Backyard; a bare Studio says so; glowing eyes at night; Back and leaving end it; Fetch by swipe and by
+  tap (lands on the floor, +1 heart, no coins); buying and switching toys; the yarn string; no games while decorating; 3 screen sizes;
+  stickers; backups and odd data. Speed check: Shop 1363 ms (under 1.5 s), the room doing nothing 87 ms/s. Not tested automatically: how easy
+  a peeking pet is to spot for the little ones, and how a throw swipe feels on the real tablet.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).

@@ -4215,7 +4215,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('an unknown trick id opens the first trick', await ev(`trIdx(DB.profiles[0])===0`));
     await ev(`closeModal();doRestore(${JSON.stringify(trB)})`); await sleep(400);
     await ev(`closeModal();P().soccer.mode=window.trMode;save();stkPaused=false;window.FP_TEST_DAY=null;goRoom(1);show('room')`);
-    check('v1.53 is in the Gift Story and the app says 1.53', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.53')&&APP_VERSION==='1.53'`));
+    check('v1.53 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.53')`));
   }
 
   console.log('Pet Hide & Seek + Fetch (v1.54)');
