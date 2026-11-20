@@ -131,6 +131,21 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## New things to buy (since version 1.50)
+More ways to spend the coins she earns. Everything is bought once and kept, like the rest of the Shop (6–35 coins each).
+- **🏠 Pet homes:** tap your pet, then **🏠 Home**. The cushion bed stays free; 8 homes cost 12–30 coins: 🦇 Bat Tent,
+  ☁️ Cloud Bed, ⭐ Star Dome, 🏡 Tiny Cottage, 🚀 Rocket Pod, 🥚 Dino Egg Bed, 🐚 Seashell Bed and 🏰 Mini Castle.
+  The home shows under your pet in every room. Switch any time; homes you own stay yours.
+- **🎨 Stage backdrops:** on the 🎤 Stage, under the song list, a row of pictures. ✨ Classic is free; 7 cost 10–20 coins:
+  🌙 Starry Night, 🍭 Candy Clouds, 🦇 Bat Castle, 🐠 Under the Sea, 🦖 Dino Jungle, 🌌 Galaxy and 🌃 Neon City.
+  The one you pick shows behind the lanes while you play (also when playing 👯 Together).
+- **🏛️ Museum pieces:** in 🛋️ Decorate → Shop, with a new **🏛️ Museum** chip: Pedestal, Tall Pedestal, Display Counter,
+  Velvet Rope, Museum Bench, Dino Bones, Wall Case, Gold Frame, Spotlight (glows at night) and a "⭐ My Collection" plaque.
+  **Pedestals and the counter work like shelves:** drop a trophy, glove, plush, pot or anything that stands on top and it
+  sits there and moves with it. The ✨ Studio makes a good museum.
+- 3 new stickers: 🏠 Home Sweet Home and 🏛️ Museum Maker (Room & Style page), 🎨 Set Designer (Stage page).
+- Save version 31 (`pet.home`, `stage.backdrop`); every older backup still restores (with the cushion and the Classic backdrop).
+
 ## I Spy (since version 1.49)
 Tap the round **🔍** button on the room picture (next to 🌙) to play I Spy in whichever room you're in: your Room, the Loft,
 the Backyard or the Studio. The game uses the things you have put in that room, so it changes every time you decorate.

@@ -119,6 +119,7 @@ function stgPickView(){
       +`<div class="ss">${[1,2,3].map(i=>`<span class="${i<=b.stars?'':'off'}">★</span>`).join('')}</div></span></button>`;}).join('');
   $('#stgHint').textContent=!DB.settings.sound?'🔇 Sounds are off. Turn them on in ⚙️ Settings to hear the songs!'
     :n===1?'Tap anywhere when a star reaches the circle! 🌟':`Tap the ${n} circles when the notes reach them! 🎵`;
+  stgBdRow(); // 🎨 the backdrop row (section 51, v1.50)
   tgStagePick(); // 👯 Together marks its tab and names the two players (section 43)
   const o=DB.settings.stageOffset||0; $('#stgLate').textContent=o?(o>0?'+':'')+o+' ms':'0 ms';
 }
@@ -227,8 +228,7 @@ function drawStage(dt){
   const xs=Array.from({length:n},(_,i)=>cx+(i-(n-1)/2)*lw), pr=Math.min(lw*0.36,H*0.075,58);
   STG.g={n,cx,lw,xs,yh,pr};
   // background: stage gradient, swinging spotlights and a row of lights that flash on the beat
-  const bg=ctx.createLinearGradient(0,0,0,H); bg.addColorStop(0,'#2b1846'); bg.addColorStop(1,'#120a1e');
-  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+  stgBackdrop(ctx,W,H); // 🎨 her backdrop, drawn once into a hidden canvas (section 51, v1.50)
   ['#ff8cc6','#8ff0d0','#ffd166'].forEach((c,i)=>{const a=Math.sin(STG.time*0.7+i*2.1)*0.35, bx=W*(0.15+i*0.35), len=H*1.1;
     ctx.globalAlpha=0.1+onBeat*0.06; ctx.fillStyle=c; ctx.beginPath(); ctx.moveTo(bx,0);
     ctx.lineTo(bx+Math.sin(a-0.14)*len,Math.cos(a-0.14)*len); ctx.lineTo(bx+Math.sin(a+0.14)*len,Math.cos(a+0.14)*len); ctx.fill();});
