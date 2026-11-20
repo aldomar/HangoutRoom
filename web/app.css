@@ -1029,3 +1029,24 @@ body.easy .rw-ci{font-size:70px}
 .jam-snd.on{border-color:var(--gold)}
 .jam-stop{position:absolute;top:8px;right:10px;z-index:2;min-height:52px;font-size:18px}
 @media (max-width:620px){.jam-loop .jam-mini{width:46px;height:52px}}
+
+/* 🎯 Trick Shots (v1.53, section 54) */
+#socTabs.trick [data-lvl],#socTabs.trick .soc-gap{display:none}
+.tr-bar{position:absolute;top:8px;left:50%;transform:translateX(-50%);display:flex;gap:6px;align-items:center;z-index:2;max-width:calc(100% - 16px)}
+.tr-bar .btn{min-height:48px}
+.tr-arrow{min-width:48px;font-size:20px;padding:0 10px}
+.tr-name{background:var(--panel);font-size:18px;white-space:nowrap;padding:0 14px;border:3px solid var(--line)}
+.tr-name.done{border-color:var(--mint)}
+.tr-name .tr-i{font-size:22px}
+.tr-count{background:#2f2540cc;padding:6px 10px;border-radius:999px;font-weight:900;font-size:15px;color:#fff;white-space:nowrap}
+.soc-stage.trick .soc-score{top:66px}
+.tr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media (min-width:700px){.tr-grid{grid-template-columns:repeat(4,1fr)}}
+.tr-card{background:var(--panel2);border:3px solid var(--line);border-radius:16px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:78px;position:relative;font-weight:800;font-size:14px;color:#fff}
+.tr-card .tr-i{font-size:28px;line-height:1}
+.tr-card.done{border-color:var(--mint)}
+.tr-card.on{border-color:var(--gold);box-shadow:0 0 0 3px #ffd16666}
+.tr-card b{position:absolute;top:2px;right:5px;font-size:14px}
+@media (max-width:620px){#socTabs [data-mode=trick] span{display:none}#socTabs .tab.mode{padding:8px 10px}#socTabs [data-lvl]{padding:6px 9px}#socTabs{gap:4px}#socTabs .tab{min-height:44px}}
+@media (max-width:400px){#socTabs .tab.mode .w{display:none}#socTabs .tab.mode{padding:8px 12px}}
+@media (max-width:440px){.tr-name{font-size:15px;padding:0 8px}.tr-count{display:none}}

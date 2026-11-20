@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('126 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52), ids all different, 6 or more per page', await ev(`STICKERS.length===126&&new Set(STICKERS.map(s=>s.id)).size===126&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('129 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53), ids all different, 6 or more per page', await ev(`STICKERS.length===129&&new Set(STICKERS.map(s=>s.id)).size===129&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -4090,7 +4090,132 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('an unknown jam sound plays as ✨ Sparkle', await ev(`jamSound(DB.profiles[0])==='sparkle'`));
     await ev(`closeModal();doRestore(${JSON.stringify(jmB)})`); await sleep(400);
     await ev(`closeModal();{const p=P();p.music=JSON.parse(window.jmMusic);}save();stkPaused=false;window.FP_TEST_DAY=null;goRoom(1);show('room')`);
-    check('v1.52 is in the Gift Story and the app says 1.52', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.52')&&APP_VERSION==='1.52'`));
+    check('v1.52 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.52')`));
+  }
+
+  console.log('Trick Shots (v1.53)');
+  {
+    const mb=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
+    const box=`(!document.querySelector('#modal').classList.contains('hidden'))`, boxText=`document.querySelector('#modalBody').textContent`;
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`closeModal();stkPaused=true;window.FP_TEST_DAY='2026-12-05';{const p=P();p.easy=false;applyEasy();window.trMode=p.soccer.mode;}goRoom(1);show('room')`); await sleep(300);
+    check('save version 34; every room starts with no tricks done, on the first trick', await ev(`DB_VERSION>=34&&DB.profiles.every(p=>Array.isArray(p.soccer.tricks)&&p.soccer.tricks.length===0&&p.soccer.trick==='t1'&&p.soccer.trickPay.n===0&&p.stats.tricks===0)`));
+    check('save version 34 adds Trick Shots to older saves', await ev(`(()=>{const d={profiles:[{name:'Old',soccer:{level:'easy'}}]};MIGRATIONS[34](d);const s=d.profiles[0].soccer;return s.tricks.length===0&&s.trick==='t1'&&s.trickPay.n===0&&s.level==='easy';})()`));
+    check('12 tricks, ids t1-t12 in order, one working shot per target, every target inside the goal', await ev(`TRICKS.length===12&&TRICKS.every((t,i)=>t.id==='t'+(i+1)&&t.icon&&t.name&&t.say&&t.sol.length===t.targets.length&&t.targets.every(x=>Math.abs(x.u)+(x.mu?x.mu.a:0)<0.5&&x.v-(x.mv?x.mv.a:0)>0&&x.v+(x.mv?x.mv.a:0)<1))`));
+    // the rules: every trick can be done, with the shots in its recipe
+    const unsolved=await ev(`TRICKS.filter(tr=>{const hit=[];return !tr.sol.every((sh,k)=>{const j=trJudge(tr,{u:sh[0],v:sh[1],curve:sh[3]},0,hit);if(j.target!==k)return false;hit[k]=true;return true;});}).map(t=>t.id)`);
+    check('every trick can be done: its shots hit every target, in order', unsolved.length===0, unsolved);
+    const lazy=await ev(`['t8','t11'].filter(id=>{const tr=TRICKS.find(t=>t.id===id);for(let u=-0.6;u<=0.6;u+=0.01)for(let v=0.03;v<=1.3;v+=0.02)if(trJudge(tr,{u,v,curve:0},0,[]).target>=0)return true;return false;})`);
+    check('🌀 Curve It and 🍌 Banana Kick need a curve: no straight shot gets past the wall to the target', lazy.length===0, lazy);
+    check('…and their curved shots really go around the wall', await ev(`['t8','t11'].every(id=>{const tr=TRICKS.find(t=>t.id===id),sh=tr.sol[0];return !trWallHit(tr.wall,{u:sh[0],v:sh[1],curve:sh[3]})&&Math.abs(sh[3])<=0.5;})`));
+    check('🧱 Over the Wall: a low kick at the star hits the wall, a high one goes over', await ev(`(()=>{const tr=TRICKS[6];return trJudge(tr,{u:0,v:0.55,curve:0},0,[]).res==='wall'&&trJudge(tr,{u:0,v:0.82,curve:0},0,[]).target===0;})()`));
+    check('🌈 Rainbow Row: the middle star does not count before the red one', await ev(`(()=>{const tr=TRICKS[11];return trJudge(tr,{u:0,v:0.5,curve:0},0,[]).target===-1&&trJudge(tr,{u:0,v:0.5,curve:0},0,[true]).target===1;})()`));
+    check('🎯 Moving Star: where the star is depends on the time', await ev(`(()=>{const tr=TRICKS[8];return trJudge(tr,{u:0,v:0.5,curve:0},0,[]).target===0&&trJudge(tr,{u:0,v:0.5,curve:0},Math.PI/1.6,[]).target===-1&&trJudge(tr,{u:0.3,v:0.5,curve:0},Math.PI/1.6,[]).target===0;})()`));
+    check('a shot wide of the goal never counts', await ev(`trJudge(TRICKS[0],{u:0.7,v:0.45,curve:0},0,[]).res==='wide'&&trJudge(TRICKS[0],{u:0.7,v:0.45,curve:0},0,[]).target===-1`));
+    // the way in
+    await ev(`show('soccer')`); await sleep(300);
+    check('Soccer has a 🎯 Tricks tab that Read to me calls Trick Shots', await ev(`(b=>!!b&&speakLabel(b)==='Trick Shots')(document.querySelector('#socTabs [data-mode=trick]'))`));
+    await ev(`document.querySelector('#socTabs [data-mode=trick]').click()`); await sleep(300);
+    check('🎯 opens Trick Shots: remembered, the level tabs hide, the trick bar shows the first trick', await ev(`P().soccer.mode==='trick'&&socTrick()&&document.querySelector('#socTitle').textContent.includes('Trick')&&[...document.querySelectorAll('#socTabs [data-lvl]')].every(b=>getComputedStyle(b).display==='none')&&!document.querySelector('#trBar').classList.contains('hidden')&&document.querySelector('#trPick').textContent.includes('Star Kick')&&/0\\/12/.test(document.querySelector('#trBar').textContent)`));
+    await shot('T01-tricks-star');
+    check('the tip says what to do; no keeper match dots', await ev(`document.querySelector('#socTip').textContent===TRICKS[0].say&&!document.querySelector('#socScore .dot')`));
+    await ev(`document.querySelector('#trBar [data-tr="1"]').click()`); await sleep(100);
+    check('▶ goes to the next trick (remembered)', await ev(`P().soccer.trick==='t2'&&document.querySelector('#trPick').textContent.includes('Top Corner')`));
+    await ev(`document.querySelector('#trBar [data-tr="-1"]').click();document.querySelector('#trBar [data-tr="-1"]').click()`); await sleep(100);
+    check('◀ goes back, and from the first trick round to the last', await ev(`P().soccer.trick==='t12'`));
+    await ev(`document.querySelector('#trPick').click()`); await sleep(150);
+    check('tapping the trick name opens a picker with all 12 tricks', await ev(`${box}&&document.querySelectorAll('#modalBody .tr-card').length===12&&document.querySelector('#modalBody .tr-card.on').dataset.pick==='11'`));
+    await shot('T02-tricks-picker');
+    await ev(`document.querySelector('#modalBody [data-pick="0"]').click()`); await sleep(150);
+    check('picking a trick closes the picker and opens it', await ev(`!${box}&&P().soccer.trick==='t1'`));
+    // a real tap in the goal does the first trick
+    const c0=await ev('P().coins');
+    const pt=await ev(`(()=>{const r=socCv.getBoundingClientRect(),q=toScr(TR.g,0,0.45);return [r.left+q.x,r.top+q.y];})()`);
+    await mouse('mousePressed',pt[0],pt[1]); await mouse('mouseReleased',pt[0],pt[1]); await sleep(150);
+    check('a tap in the goal kicks the ball', await ev(`TR.state==='fly'||TR.state==='result'`));
+    await sleep(1900);
+    check('⭐ Star Kick done: the trick box, +3 coins, ✅ and 1/12', await ev(`${box}&&/did the trick/.test(${boxText})&&P().coins===${c0}+3&&P().soccer.tricks.join()==='t1'&&P().stats.tricks===1&&/1\\/12/.test(document.querySelector('#trBar').textContent)&&document.querySelector('#trPick').classList.contains('done')`), await ev(`P().coins-${c0}`));
+    await shot('T03-trick-done');
+    await ev(`${mb('Again')}.click()`); await sleep(100);
+    check('🔁 Again: the same trick, ready to kick', await ev(`!${box}&&P().soccer.trick==='t1'&&TR.state==='aim'&&!TR.shot`));
+    await ev(`trShoot(0,0.45,1,0)`); await sleep(2100);
+    check('doing a trick again pays +1', await ev(`P().coins===${c0}+4&&P().soccer.trickPay.n===1&&P().stats.tricks===2`));
+    await ev(`closeModal();trRender();P().soccer.trickPay.n=10;trShoot(0,0.45,1,0)`); await sleep(2100);
+    check('after 10 replay coins a day: no coins, a gentle note', await ev(`P().coins===${c0}+4&&/full for today/.test(${boxText})`));
+    await ev(`${mb('Next')}.click()`); await sleep(100);
+    check('▶ Next trick goes to a trick not done yet', await ev(`!${box}&&P().soccer.trick==='t2'`));
+    await ev(`window.FP_TEST_DAY='2026-12-06';trGo(0);trShoot(0,0.45,1,0)`); await sleep(2100);
+    check('the next day replays pay again', await ev(`P().coins===${c0}+5&&P().soccer.trickPay.n===1`));
+    await ev(`closeModal();trRender()`);
+    // misses, the wall and the hint
+    await ev(`trGo(6);trShoot(0,0.45,1,0)`); await sleep(400);
+    await shot('T04-wall-flying');
+    await sleep(900);
+    check('🧱 a low kick bounces off the wall: a miss, nothing lost', await ev(`TR.shot&&TR.shot.res==='wall'&&TR.miss===1&&P().soccer.tricks.length===1`));
+    await sleep(1000);
+    check('after a miss she can kick again', await ev(`TR.state==='aim'`));
+    await ev(`TR.miss=3;trScore()`); await sleep(200);
+    check('after 3 misses the 💡 dotted hint shows', await ev(`document.querySelector('#socTip').textContent.includes('💡')`));
+    await shot('T05-wall-hint');
+    await ev(`trShoot(0,0.82,1,0)`); await sleep(2100);
+    check('…and following it (a high kick) does 🧱 Over the Wall', await ev(`${box}&&P().soccer.tricks.includes('t7')`));
+    await ev(`closeModal()`);
+    // more than one target
+    await ev(`trGo(4);trShoot(-0.3,0.6,1,0)`); await sleep(1400);
+    check('🎈 one balloon popped: 2 more to go (dots show it), not done yet', await ev(`TR.hit[0]&&!TR.hit[1]&&!P().soccer.tricks.includes('t5')&&document.querySelectorAll('#socScore .dot').length===3&&document.querySelectorAll('#socScore .dot.miss').length===2&&!${box}`));
+    await shot('T06-balloon-pop');
+    await ev(`trGo(4)`);
+    check('changing trick starts it fresh', await ev(`TR.hit.length===0&&TR.miss===0`));
+    // every trick, drawn
+    for(let i=0;i<12;i++){await ev(`trGo(${i})`);await sleep(150);await shot('T07-trick-'+(i+1));}
+    check('every trick draws without errors', true);
+    // the prize: all 12
+    await ev(`{const p=P();p.soccer.tricks=TRICKS.slice(1).map(t=>t.id);p.room3.items=p.room3.items.filter(i=>i.type!==TR_PRIZE);}trGo(0);trShoot(0,0.45,1,0)`); await sleep(2100);
+    check('all 12 tricks: the 🏅 Trick Shot Star in the Backyard, at its own spot', await ev(`/Trick Shot Star/.test(${boxText})&&(g=>g.length===1&&g[0].placed&&g[0].x===TROPHY_SPOTS.trickStar.x)(P().room3.items.filter(i=>i.type==='trickStar'))&&!P().room.items.some(i=>i.type==='trickStar')`));
+    await shot('T08-trick-prize');
+    await ev(`closeModal()`);
+    check('…given once, a prize (never in the Shop), clear of the buddy', await ev(`!trGivePrize()&&DECOR.trickStar.award&&!DECOR.trickStar.price&&(s=>s.x-70>580||s.x+70<420||s.y>604)(TROPHY_SPOTS.trickStar)`));
+    // the other modes still work
+    await ev(`document.querySelector('#socTabs [data-mode=kick]').click()`); await sleep(200);
+    check('⚽ Kick: the level tabs and match dots come back, the trick bar hides', await ev(`P().soccer.mode==='kick'&&document.querySelector('#trBar').classList.contains('hidden')&&getComputedStyle(document.querySelector('#socTabs [data-lvl]')).display!=='none'&&document.querySelectorAll('#socScore .dot').length===5&&SOC.state==='aim'`));
+    await ev(`socShoot(0.3,0.5,1,0)`); await sleep(200);
+    check('…and kicks as before', await ev(`SOC.state==='fly'||SOC.state==='result'`));
+    await ev(`document.querySelector('#socTabs [data-mode=keep]').click()`); await sleep(200);
+    check('🧤 Keep still works', await ev(`P().soccer.mode==='keep'&&KP.state!=='off'&&document.querySelector('#trBar').classList.contains('hidden')`));
+    await ev(`document.querySelector('#socTabs [data-mode=trick]').click()`); await sleep(200);
+    check('back to 🎯: the trick she was on', await ev(`socTrick()&&!document.querySelector('#trBar').classList.contains('hidden')&&P().soccer.trick==='t1'`));
+    await ev(`androidBack()`); await sleep(150);
+    check('Android Back goes to the room', await ev(`cur==='room'`));
+    // Easy mode and small screens
+    await ev(`P().easy=true;show('soccer')`); await sleep(300);
+    check('Easy mode keeps Trick Shots', await ev(`socTrick()&&!document.querySelector('#trBar').classList.contains('hidden')`));
+    for(const [w,h,name] of [[412,860,'phone'],[360,740,'small phone'],[820,1180,'tablet upright'],[860,412,'phone sideways']]){
+      await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:true});
+      await ev(`trGo(10)`); await sleep(250);
+      check(name+': the trick bar fits, its buttons 48 px tall, and the tabs fit', await ev(`[...document.querySelectorAll('#socTabs .tab')].filter(b=>b.offsetWidth).every(b=>b.getBoundingClientRect().right<=innerWidth+1)&&[...document.querySelectorAll('#trBar button')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.height>=48;})&&document.documentElement.scrollWidth<=innerWidth+1`));
+      await shot('T09-'+name.replace(/ /g,'-'));
+      await ev(`document.querySelector('#trPick').click()`); await sleep(150);
+      check(name+': the picker fits', await ev(`[...document.querySelectorAll('#modalBody .tr-card')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.height>=48;})`));
+      await ev(`closeModal()`);
+    }
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`P().easy=false;applyEasy();show('room')`);
+    // stickers
+    check('3 new stickers on the ⚽ Soccer page: First Trick, Banana Kick, Trick Master', await ev(`['trick1','banana','trickAll'].every(id=>(s=>s&&s.page==='soccer')(STICKERS.find(s=>s.id===id)))`));
+    check('…all done now; Banana Kick needs a curve trick', await ev(`['trick1','banana','trickAll'].every(id=>stkDone(P(),STICKERS.find(s=>s.id===id)))&&(()=>{const q={soccer:{tricks:['t1','t7']}};return !stkDone(q,STICKERS.find(s=>s.id==='banana'))&&(q.soccer.tricks.push('t11'),stkDone(q,STICKERS.find(s=>s.id==='banana')));})()`));
+    // backups
+    const trB=await ev(`JSON.stringify(DB)`);
+    await ev(`(()=>{const d=JSON.parse(${JSON.stringify(trB)});d.version=33;d.profiles.forEach(p=>{delete p.soccer.tricks;delete p.soccer.trick;delete p.soccer.trickPay;delete p.stats.tricks;});doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('a v1.52 backup restores with no tricks done', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.soccer.tricks.length===0&&p.soccer.trick==='t1'&&p.stats.tricks===0)`));
+    await ev(`closeModal();doRestore(${JSON.stringify(trB)})`); await sleep(400);
+    check('a v1.53 backup keeps the tricks done and the trick mode', await ev(`DB.profiles.some(p=>p.soccer.tricks.length===12&&p.soccer.mode==='trick'&&p.stats.tricks>=5)`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(trB)});const s=d.profiles[0].soccer;s.tricks=[3,'t2','t2'];s.trick=9;s.trickPay='x';s.mode='juggle';d.profiles[0].stats.tricks='lots';doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd Trick Shots data is made safe (an unknown mode opens ⚽ Kick)', await ev(`(s=>s.tricks.join()==='t2'&&s.trick==='t1'&&s.trickPay.n===0&&s.mode==='kick')(DB.profiles[0].soccer)&&DB.profiles[0].stats.tricks===0`));
+    await ev(`DB.profiles[0].soccer.trick='t99'`);
+    check('an unknown trick id opens the first trick', await ev(`trIdx(DB.profiles[0])===0`));
+    await ev(`closeModal();doRestore(${JSON.stringify(trB)})`); await sleep(400);
+    await ev(`closeModal();P().soccer.mode=window.trMode;save();stkPaused=false;window.FP_TEST_DAY=null;goRoom(1);show('room')`);
+    check('v1.53 is in the Gift Story and the app says 1.53', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.53')&&APP_VERSION==='1.53'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

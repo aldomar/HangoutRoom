@@ -100,6 +100,8 @@ _Last updated: 2026-11-20_
   - **🎸 Stage Jam: built, PR #52 open as v1.52** on branch `feature/freestyle` (from `main` after #51). Picked 2026-11-20 together with 🎯 Soccer
     Trick Shots (v1.53, next). Owner's answers: jam over her own loop (no falling notes, no score); two PRs. Plans agreed ("go for it").
     Full plan in `PLAN.md` ("v1.52 plan details").
+  - **🎯 Soccer Trick Shots: built as v1.53** on branch `feature/tricks` (from `feature/freestyle`, as #52 is still open). Owner's answer:
+    a fixed list of 12 tricks. Full plan in `PLAN.md` ("v1.53 plan details").
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -161,6 +163,7 @@ _Last updated: 2026-11-20_
 - PR #50 "New things to buy (v1.50)": merged.
 - PR #51 "Runway (v1.51)": merged.
 - PR #52 "Stage Jam (v1.52)" on branch `feature/freestyle`: open.
+- PR "Trick Shots (v1.53)" on branch `feature/tricks` (on top of #52): open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -640,6 +643,13 @@ _Last updated: 2026-11-20_
   Easy mode, 4 screen sizes, the 3 stickers, restoring v1.51 and v1.52 backups and odd data. The Music Maker's button row was
   checked on a sideways phone (it wrapped; the side column is now 380 px). Not tested automatically: how in time the pads feel
   with the band on the real tablet's speakers.
+- **Trick Shots (v1.53)**: `tests/smoke-test.js` has 1736 checks, all passing with no console errors (58 new + 16 changed). New checks: every
+  trick can be done with its recipe shots; 🌀 and 🍌 can't be done with any straight shot (every tap position is tried); 🧱, 🌈 order and
+  the 🎯 moving star; a real tap does ⭐; +3 / +1 / 10 a day / a new day; a wall bounce, misses and the 💡 hint; a balloon partly popped;
+  every trick drawn; the prize once at its spot; Kick and Keep still work; Back; Easy mode; 4 screen sizes; stickers; backups and odd data.
+  The Soccer tabs were measured at 360, 412, 620 and 1180 px in all 3 modes: on phones they are now tighter (44 px tall), and under
+  400 px ⚽ and 🧤 show icons only. A first full run failed the ⚡ speed check with every screen ~2× slower (the machine was busy); the
+  rerun was normal (Shop 1080 ms). Not tested automatically: how hard a curved swipe feels on the real tablet.
 
 ## Decisions made
 - Main idea: the "hangout room" (chosen because it can grow, and the younger sister can have her own profile).
@@ -1010,6 +1020,11 @@ _Last updated: 2026-11-20_
   room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
   short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
   so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
+- **Trick Shots (built as v1.53, `54-tricks.js`), agreed 2026-11-20.** Picked with Stage Jam from the Phase 12 "Later" list. Owner's answer:
+  **a fixed trick list** (not endless targets). 12 tricks, unlimited tries, a 💡 dotted path after 3 misses, +3 the first time, +1 a replay
+  (10 a day), the 🏅 Trick Shot Star in the Backyard for all 12 (at `TROPHY_SPOTS.trickStar`, 745/695). No keeper: Mochi, Boo and Flap
+  cheer at the side or stand as the wall. The bell hangs under the crossbar (a swipe can't reach the bar). Save version 34. 3 stickers
+  (129 in all). On a phone the 🎯 tab shows its icon only.
 - **Stage Jam (built as v1.52, `53-jam.js`), agreed 2026-11-20.** Picked by the owner from the Phase 12 "Later" list ("Stage freestyle").
   Owner's answers: **jam over her loop** (her 🎹 loop is the band, she taps 5 pads on top; not a tap-along chart made from the loop);
   Jam and 🎯 Trick Shots are **two PRs**. 5 pads = the Music Maker's C D E G A (✨ Sparkle an octave up); 3 free jam sounds
@@ -1304,13 +1319,14 @@ _Last updated: 2026-11-20_
     tricks**; **two PRs** (Jam v1.52, then Trick Shots v1.53). Both plans written in `PLAN.md` on branch `feature/freestyle`.
 28. ~~Owner: OK the v1.52 Jam and v1.53 Trick Shots plans in `PLAN.md`, then build Jam on `feature/freestyle`.~~ Agreed and built.
 28b. Owner: build v1.52, try 🎸 Jam from the Stage and from the Music Maker (see PR #52), and merge it.
-29. Then build 🎯 Trick Shots (v1.53) on `feature/tricks` (from `feature/freestyle`).
+29. ~~Then build 🎯 Trick Shots (v1.53) on `feature/tricks` (from `feature/freestyle`).~~ Built.
+29b. Owner: merge #52 first, then build v1.53, try 🎯 Tricks in Soccer (see the PR), and merge it.
 30. Then the last "Later" item: 🐾 more pet play.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
   `versionName` in `android/app/build.gradle.kts`. Both go up with every PR.
-- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 33 since v1.52 (Stage Jam: `jam`, `stats.jams/jamOwn`). It was 32 in v1.51 (Runway: `runway`, `stats.walks/wows`). It was 31 in v1.50 (new things to buy: `pet.home`, `stage.backdrop`). It was 30 in v1.49 (I Spy: `spy`, `stats.spied/spyRounds`). It was 29 in v1.48 (Garden: `garden`, `stats.planted/harvests`). It was 28 in v1.47 (Dance Maker: `dance`). It was 27 in v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
+- `DB_VERSION` is the version of the save-data *shape*, and is separate from the app version. It is 34 since v1.53 (Trick Shots: `soccer.tricks/trick/trickPay`, `stats.tricks`). It was 33 in v1.52 (Stage Jam: `jam`, `stats.jams/jamOwn`). It was 32 in v1.51 (Runway: `runway`, `stats.walks/wows`). It was 31 in v1.50 (new things to buy: `pet.home`, `stage.backdrop`). It was 30 in v1.49 (I Spy: `spy`, `stats.spied/spyRounds`). It was 29 in v1.48 (Garden: `garden`, `stats.planted/harvests`). It was 28 in v1.47 (Dance Maker: `dance`). It was 27 in v1.46 (Little Ones' Corner: `little`, `stats.colored/peeks/pads`). It was 26 in v1.43 (Free Play: `free`, `potd`, `stats.free`, `stats.potd`). It was 25 in v1.42 (Two-player: `duo`). It was 24 in v1.41 (Visitors: `visit`). It was 23 in v1.40 (Studio: `room4`). It was 22 in v1.38 (Music Maker: `music`). It was 21 in v1.36 (Fidget allowance: `fidPay`; v1.37 added only puzzles, mazes and stickers). It was 20 in v1.30 (v1.33 and v1.34 added game ids only, v1.35 only new items, no new shape) (Grown-up helpers: `speak`, `stats.snaps`). It was 19 in v1.29 (Big dreams: `dream`). It was 18 in v1.28 (Gifts & layouts: `gifts`, `presets`, `stats.gifts`). It was 17 in v1.27 (Looks & night: `looks`, `night`, `stats.nights`). It was 16 in v1.25 (Brain Games: `brain`). It was 15 in v1.24 (Be the Keeper: `soccer.mode`, `soccer.keep`, `stats.saves`). It was 14 in v1.23 (Backyard: `room3`). It was 13 in v1.20 (Buddies: `look.kind`, `look.face`, `tint`, `furn`).
   It was 12 in v1.19 (Pet: `pet{kind, acc, names{},
   hearts{}}`). It was 11 in v1.18 (Sticker Book: `stickers[]`, `stickerNew[]`, `stats.dailies`). It was 10 in v1.16 (New fidgets:
   `maze{solved[]}`, `fid.slime/cube/marble`, `stats.stretches/clicks/mazes`). It was 9 in v1.13
