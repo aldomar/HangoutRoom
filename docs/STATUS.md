@@ -1,6 +1,6 @@
 # Status / handover
 
-_Last updated: 2026-11-19_
+_Last updated: 2026-11-20_
 
 ## Where we are
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
@@ -92,7 +92,11 @@ _Last updated: 2026-11-19_
   - **🪙 New things to spend coins on: built, PR #50 open as v1.50** on branch `feature/spend` (from `main` after #49). Picked 2026-11-19.
     Owner's answers: one PR; the museum is display pieces she arranges (not self-filling cases). Plan agreed ("go for it")
     and built (`PLAN.md`, "v1.50 plan details"). Left out on purpose: the visitor wish (it would give one friend 4 wishes
-    and delay that friend's plush).
+    and delay that friend's plush). **Merged** (PR #50, 2026-11-20).
+  - **👠 Runway: plan written, waiting for the owner's OK** (v1.51, branch `feature/runway` from `main` after #50). Picked from the
+    "Later" list 2026-11-20. Owner's answers: her own clothes plus a 👜 Borrow rack (borrowed for one show, never owned); the
+    judges (3 visitor friends) hold up cheer cards, every walk gets cheers; +3 coins a show, 15 a day; a 👠 button in the Closet.
+    Full plan in `PLAN.md` ("v1.51 plan details").
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -1262,9 +1266,11 @@ _Last updated: 2026-11-19_
 21. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 🪙 new things to spend
     coins on (v1.50), 2026-11-19: pet homes, Stage backdrops, museum display pieces, one PR. Plan written in `PLAN.md`.
 22. ~~Owner: OK the v1.50 plan in `PLAN.md`, then build it on `feature/spend`.~~ Agreed and built.
-23. Owner: build v1.50, try a 🏠 pet home, a 🎨 Stage backdrop and 🏛️ a trophy on a pedestal (see the PR), and merge it.
-24. Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12): 👗 Runway, 🐾 more pet play,
-    Stage freestyle or Soccer trick shots.
+23. ~~Owner: build v1.50, try a 🏠 pet home, a 🎨 Stage backdrop and 🏛️ a trophy on a pedestal (see the PR), and merge it.~~ Merged.
+24. ~~Then pick the next item from the "Later, any order" list in `PLAN.md` (Phase 12).~~ Picked 👠 Runway (v1.51), 2026-11-20.
+    Plan written in `PLAN.md` ("v1.51 plan details") on branch `feature/runway`.
+25. Owner: OK the v1.51 Runway plan in `PLAN.md`, then build it on `feature/runway`.
+26. Then pick the next item from the "Later, any order" list: 🐾 more pet play, Stage freestyle or Soccer trick shots.
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

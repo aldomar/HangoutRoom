@@ -364,9 +364,46 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   theme hint) for things in her own room; tap to find, 5 a round, nothing can go wrong; a 🔦 flashlight at night.
 - ✅ **🪙 New things to spend coins on (v1.50, built; plan details below, agreed 2026-11-19):** 🏠 pet homes, 🎤 Stage backdrops
   and 🏛️ museum display pieces for showing off her prizes. One PR.
-- **Later, any order:** 👗 Runway (style a look for a theme
-  card; judges only cheer), 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
+- **👠 Runway (v1.51, plan details below, waiting for the owner's OK):** pick a theme card, dress for it (her own clothes or
+  borrowed ones), walk the catwalk; three visitor friends hold up cheer cards. Judges only cheer.
+- **Later, any order:** 🐾 more pet play (walks, hide-and-seek), Stage freestyle (play her own
   loop) and Soccer trick shots.
+
+#### v1.51 plan details: 👠 Runway (picked 2026-11-20)
+Why: dressing up has no goal. She owns many clothes (112 in the Closet) but nothing asks her to put an outfit together.
+Runway gives every outfit a reason and a little show, and works for all four children. Owner's answers (2026-11-20):
+her own clothes **plus a 👜 Borrow rack**; the judges hold up **cheer cards**; **+3 coins a show, 15 a day**; a **👠 Runway
+button in the Closet**.
+- **The way in:** a big 👠 Runway button in the Closet, next to 🎲 Surprise me. It opens a new screen, `scr-runway`.
+  Back goes to the Closet.
+- **1. Pick a theme card:** 3 big cards at a time (🔀 shows 3 others). About 14 cards, each tied to theme chips, for example
+  🦇 Spooky Night (Emo), ☁️ Cloud Picnic (Cute), ⚽ Game Day (Sport), 🎤 Concert Star (Stage), 🚀 Space Day, 🦕 Dino Day,
+  🤖 Hero Training, 🧁 Cafe Date, 🐚 Beach Day, 🐮 Farm Fair, 🚗 Road Trip, 🍵 Cozy Sleepover, 🌌 Spooky Space (Emo + Space),
+  and ✨ Anything Goes (no theme, always the biggest cheer; good for the little ones). Every card's theme has clothes in at
+  least 3 closet categories (the smoke test checks).
+- **2. Dress:** her buddy on the left, closet tabs on the right (no Buddy/Fur/Face tabs). It starts from her outfit. Clothes
+  that match the card are listed first with a ✨. Clothes she owns are worn as usual; anything else shows 👜 and can be
+  **borrowed for this show** for free. A row of 3 sparkles fills as matching pieces go on (no numbers). 🎲 Theme surprise
+  dresses her in matching pieces with one tap (great for the younger ones).
+- **3. Walk:** 🚶 Walk! The buddy struts down a drawn catwalk under spotlights, turns, poses and walks back (about 4 s), to a
+  short generated runway beat. Three of the six visitor friends (Mochi, Boo, Flap, Hop, Bolt, Zip) sit by the catwalk and
+  then hold up cheer cards: 0 matching pieces 💖💖💖 "So cute!", 1 💖🌟💖, 2 🌟🌟🌟, 3 or more 🤩🤩🤩 with confetti.
+  **Every walk gets cheers**; there is no score, no number and no "try again".
+- **4. After the show:** +3 coins (15 a day, `RW_DAILY`; after that it still plays, with one gentle note). Buttons:
+  🔁 Another card, 👗 Wear it home (puts on only the pieces she owns; borrowed ones go back to the rack), 🏠 Done.
+  Her saved outfit never changes unless she taps Wear it home, and borrowing never adds anything to `owned`.
+- **Stickers** (🏠 Room & Style page): 👠 First Walk (one show), 🌈 Theme Hopper (8 different cards), 🤩 Crowd Favorite
+  (three 🤩 cards). 123 in all.
+- **Not in this PR:** no visitor wish (each friend has exactly 3 wishes; see v1.50), no photocard from the show, no two-player.
+- **Light on the device:** no main loop. The buddy is drawn once into a picture (like the Dance Maker), so the `#fuzz`
+  filter is not redrawn while it walks; the walk, confetti and cheer cards are CSS animations. Judges are drawn once, flat.
+- **Code:** a new file `52-runway.js` (+ screen markup in `index.html`, styles in `app.css`). Save version 31 → 32:
+  `runway{pay{day,n}, cards[]}` (cards walked, for Theme Hopper) and `stats.walks`, `stats.wows`; defaults in `normalize()`,
+  old backups still restore.
+- **Smoke test:** open Runway from the Closet; every card has matching clothes in 3+ categories; 🎲 Theme surprise gives 3+
+  matching pieces; borrow, walk (a test switch skips the wait) and check the cheer level, +3 coins and the 15-a-day limit;
+  borrowed pieces are not owned and the outfit is unchanged; Wear it home keeps only owned pieces; the 3 stickers; speed and
+  spelling checks still pass.
 
 #### v1.50 plan details: 🪙 New things to spend coins on (agreed 2026-11-19)
 Why: the last few PRs added many ways to earn coins (Garden, I Spy, Dance Maker, 🧸 Play, Free Play) but nothing new to
