@@ -155,7 +155,8 @@ _Last updated: 2026-11-20_
 - PR #47 "Dance Maker (v1.47)": merged.
 - PR #48 "Backyard Garden (v1.48)": merged.
 - PR #49 "I Spy (v1.49)": merged.
-- PR #50 "New things to buy (v1.50)" on branch `feature/spend`: open.
+- PR #50 "New things to buy (v1.50)": merged.
+- PR #51 "Runway (v1.51)" on branch `feature/runway`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
