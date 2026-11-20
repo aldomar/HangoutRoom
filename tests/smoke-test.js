@@ -4243,8 +4243,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await shot('PP03-hiding');
     check('the peeking pet wiggles in steps (light on the device)', await ev(`(a=>!!a&&/^steps\\(/.test(getComputedStyle(a.effect.target).animationTimingFunction))(document.getAnimations().find(a=>a.animationName==='ppWig'))`));
     const h0=await ev(`petHearts(P())`), c0=await ev(`P().coins`);
-    // a wrong tap: on the buddy
-    const fz=await ev(`(r=>[r.left+r.width/2,r.top+r.height*0.4])(document.querySelector('#mascotG').getBoundingClientRect())`);
+    // a wrong tap: somewhere well away from the hiding spot and the pet
+    const fz=await ev(`(()=>{const s=ppSpots().find(x=>x.key===PP.spot.key).el.getBoundingClientRect(),q=document.querySelector('#ppPet').getBoundingClientRect(),R=roomSvg.getBoundingClientRect();
+      for(let i=1;i<10;i++)for(let j=1;j<10;j++){const x=R.left+R.width*i/10,y=R.top+R.height*j/10,far=r=>x<r.left-30||x>r.right+30||y<r.top-30||y>r.bottom+30;if(far(s)&&far(q))return [x,y];}return null;})()`);
     await click(fz); await sleep(100);
     check('a wrong tap counts nothing ("Not here!"); the game goes on', await ev(`PP.wrong===1&&!PP.found&&PP.phase==='seek'&&petHearts(P())===${h0}&&!${box}`));
     await click(fz); await click(fz); await sleep(100);
