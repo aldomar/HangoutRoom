@@ -107,7 +107,7 @@ _Last updated: 2026-11-21_
     "Later" item. Owner's answers (2026-11-20): 🙈 Hide & Seek, 🎾 Fetch and 🦮 Walks; ❤️ hearts and stickers only (no coins); a walk
     is its own path scene. Two PRs: v1.54 (Hide & Seek + Fetch), v1.55 (Walks). Full plans in `PLAN.md`. **Both merged** (PR #54 and #55,
     2026-11-20), so **Phase 12 is done**.
-- **📱 iPad + iPhone: built as v1.59** on branch `feature/ios` (from `main` after #58). The owner found (2026-11-21) that all the
+- **📱 iPad + iPhone: built, PR #59 open as v1.59** on branch `feature/ios` (from `main` after #58). The owner found (2026-11-21) that all the
   children's tablets are iPads, and the oldest also has an iPhone. Plan agreed 2026-11-21: a Home Screen web app on GitHub Pages
   (free, works offline after the first visit, each device keeps its own saves), plus iOS fixes (Read to me, tilt, backup/picture
   saving, sound, iPhone haptics). The owner made the About words generic ("Kids") and moved them into the built-in defaults.
@@ -191,7 +191,7 @@ _Last updated: 2026-11-21_
 - PR #56 "Curve Balls (v1.56)": merged.
 - PR #57 "Brain Games Free Play coins (v1.57)": merged.
 - PR #58 "Content Pack 5: Finish the Outfits (v1.58)": merged.
-- "iPad + iPhone (v1.59)" on branch `feature/ios`: PR to be opened.
+- PR #59 "iPad + iPhone (v1.59)" on branch `feature/ios`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
