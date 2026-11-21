@@ -107,7 +107,7 @@ _Last updated: 2026-11-20_
     "Later" item. Owner's answers (2026-11-20): 🙈 Hide & Seek, 🎾 Fetch and 🦮 Walks; ❤️ hearts and stickers only (no coins); a walk
     is its own path scene. Two PRs: v1.54 (Hide & Seek + Fetch), v1.55 (Walks). Full plans in `PLAN.md`. **Both merged** (PR #54 and #55,
     2026-11-20), so **Phase 12 is done**.
-- **🧩 Content Pack 5: Finish the Outfits: built, PR open as v1.58** on branch `feature/pack5` (from `main` after #57). The owner
+- **🧩 Content Pack 5: Finish the Outfits: built, PR #58 open as v1.58** on branch `feature/pack5` (from `main` after #57). The owner
   noticed (2026-11-21) that some outfit pieces had nothing to match (the Racing Pants, the Fire Rescue Jacket) and agreed a plan for 25
   clothes: the missing pieces of 10 outfits plus pieces for theme tabs that were empty. New field `p5` (read by `themesOf`), `P5_SETS`
   for 3 stickers. No save changes. No hero cape (would need a new drawing layer; a possible later plan).
@@ -185,7 +185,7 @@ _Last updated: 2026-11-20_
 - PR #55 "Pet Walks (v1.55)": merged.
 - PR #56 "Curve Balls (v1.56)": merged.
 - PR #57 "Brain Games Free Play coins (v1.57)": merged.
-- PR "Content Pack 5: Finish the Outfits (v1.58)" on branch `feature/pack5`: open.
+- PR #58 "Content Pack 5: Finish the Outfits (v1.58)" on branch `feature/pack5`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -1401,7 +1401,7 @@ _Last updated: 2026-11-20_
 33c. The owner asked for +2 uncapped Brain Games Free Play coins (v1.57, built on `feature/brain-coins`).
 33d. ~~Owner: build v1.57, try a few 🎲 puzzles in Pattern Train (+2 each, past 10 a day) (see PR #57), and merge it.~~ Merged.
 33e. The owner asked to finish the half outfits; plan agreed 2026-11-21 and built as 🧩 Content Pack 5 (v1.58, `feature/pack5`).
-33f. Owner: build v1.58, dress up the 10 outfits in the Closet (see the PR), and merge it.
+33f. Owner: build v1.58, dress up the 10 outfits in the Closet (see PR #58), and merge it.
 34. Then talk about what comes next (a Phase 13, or a rest).
 
 ## How versions and save upgrades work (since v1.2)
