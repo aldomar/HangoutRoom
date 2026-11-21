@@ -67,6 +67,7 @@ FP_MAKERS.word={
   }
 };
 FP_BRAIN.push('word');   // 🎲 in Word Builder too
+FP_THINK.push('word');   // and it pays +2 with no cap (v1.57)
 POTD_GAMES.push('word'); // and the 📅 daily turn has 6 games
 
 /* ---------- playing a word from the bank ---------- */

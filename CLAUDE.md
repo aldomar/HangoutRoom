@@ -427,7 +427,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   Fidgets (v1.16): 1 per 5 slime stretches, 1 per 25 clicker clicks, Marble Maze +3 per new maze, +1 per replay, +5 once for all.
   Sticker Book (v1.18): +2 per sticker, once each. Pet (v1.19): earns nothing; a treat costs 2. Music Maker (v1.38): +3 per saved new loop, 3 a day.
   Two-player (v1.42): +3 per finished game to each player's room (not a Guest), 15 a day (`TG_DAILY`).
-  Free Play (v1.43): +1 per made-up puzzle, 10 a day (`FREE_DAILY`); 📅 Puzzle of the Day +5 once a day (no streak).
+  Free Play (v1.43): +1 per made-up puzzle, 10 a day (`FREE_DAILY`); since v1.57 the Brain Games in `FP_THINK` (all but Memory Match,
+  + word) pay +2 (`FREE_THINK`, `fpThinkPay`) with no cap and leave `p.free.n` alone; 📅 Puzzle of the Day +5 once a day (no streak).
   🧸 Play (v1.46): +1 per finished picture or Peekaboo friend found, 10 a day (`LITTLE_DAILY`); the Sound Mat pays nothing;
   🖼️ Hang it up goes through the drawing rules (+5, first 5 a day).
   Dance Maker (v1.47): +3 per saved new dance, 3 a day (`DN_DAILY`). Garden (v1.48): +3 per plant picked (each plant takes 3 days).

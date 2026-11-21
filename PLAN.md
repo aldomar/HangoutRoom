@@ -381,6 +381,9 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   - ✅ **🦮 Walks (v1.55, built).** Both merged 2026-11-20: **Phase 12 is done.**
 - ✅ **🌀 Soccer curve balls (v1.56, built):** the owner's fix after Phase 12, so a perfect game against Flap takes skill, not
   luck. Details under Phase 4.
+- ✅ **🎲 Brain Games Free Play coins (v1.57, built, asked 2026-11-20):** 🎲 Free Play in the Brain Games except Memory Match pays
+  +2 a puzzle with no daily cap, so the thinking games are always worth coming back to. Memory Match, the Maze and the Code Lab keep
+  +1 and the shared 10 a day. The owner accepted that Easy could be farmed.
 
 #### v1.54 plan details: 🙈 Pet Hide & Seek + 🎾 Fetch (agreed 2026-11-20, built)
 Why: the pet can only be patted, fed and dressed, so after the tricks are learned there is nothing to *do* with it. Hide &
@@ -755,7 +758,7 @@ Owner's answers so far (2026-11-19): Free Play is **always open**; **+1 coin eac
     toy blocks; the block limit comes from the shortest answer (found by search), plus a little room. Medium boards need 🔁.
     My Move, If and Challenge stay fixed (they are hand-checked puzzles).
   - Solving shows the usual cheer and a box with **🎲 Another one!** and **⬅ Back**. **+1 coin each, up to 10 a day**
-    (`FREE_DAILY`, shared by all the games), then one gentle note ("Free Play coins are full for today! Keep playing for
+    (`FREE_DAILY`, shared by all the games; since v1.57 the Brain Games in `FP_THINK`, all but Memory Match, pay +2 with no cap), then one gentle note ("Free Play coins are full for today! Keep playing for
     fun ✨"), and it keeps working. It refills quietly when the date changes. No countdown, no "come back".
   - Free Play never changes `brain.solved`, `maze.solved`, `code.solved`, the level bonuses, Brain Champ or the puzzle ticks.
 - **📅 Puzzle of the Day:** a card at the top of the Brain Games menu (`BR_MENU_TOP`, next to 👯 Memory for 2). The game turns

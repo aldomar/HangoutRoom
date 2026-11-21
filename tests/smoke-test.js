@@ -3113,18 +3113,26 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await shot('U05-free-pop');
   const fpc1=await ev('P().coins');
   await ev('_fpSolve()'); await sleep(1100);
-  check('solved: +1 coin, the box offers 🎲 Another one!, nothing marked solved', await ev(`P().coins===${fpc1}+1&&P().stats.free===1&&/Another one/.test(document.querySelector('#modalBtns').textContent)&&JSON.stringify([P().brain.solved,P().maze.solved,P().code.solved])===_fpBest`));
+  check('solved: +2 coins (no cap in the thinking games), the box offers 🎲 Another one!, nothing marked solved', await ev(`P().coins===${fpc1}+2&&P().stats.free===1&&P().free.n===0&&/Another one/.test(document.querySelector('#modalBtns').textContent)&&JSON.stringify([P().brain.solved,P().maze.solved,P().code.solved])===_fpBest`));
   const fpKey=await ev('BR.free.key');
   await ev(`[...document.querySelectorAll('#modalBtns button')].find(b=>/Another/.test(b.textContent)).click()`); await sleep(150);
   check('🎲 Another one! makes a new one', await ev(`!!BR.free&&BR.free.key!==${JSON.stringify(fpKey)}&&!BR.won`));
   await ev(`document.querySelector('#brTabs [data-lvl=hard]').click()`); await sleep(150);
   check('a level tab in Free Play makes a new one at that level', await ev(`!!BR.free&&!BR.free.daily&&BR.lvl==='hard'&&BR.free.lvl==='hard'`));
-  // every game and level, through the screen (18 puzzles: the coins stop at 10 a day)
+  // every game and level, through the screen (18 puzzles: +2 each in FP_THINK, Memory Match +1 within the 10 a day)
   await ev(`P().free={day:FP_TEST_DAY,n:0};P().stats.free=0`); const fpc2=await ev('P().coins');
   const fpWon=await ev(`(()=>{const out=[];FP_BRAIN.forEach(g=>BRAIN_LVLS.forEach(l=>{fpBrain(g,l);if(!_fpSolve())out.push(g+':'+l);}));return out;})()`);
   check('a made-up puzzle of every game and level can be solved on screen', fpWon.length===0, fpWon);
   await sleep(1100);
-  check('18 solved: +10 coins (10 a day), all 18 count for stickers', await ev(`P().coins===${fpc2}+10&&P().free.n===10&&P().stats.free===18`), await ev(`[P().coins-${fpc2},P().free.n,P().stats.free]`));
+  const fpWant=await ev(`(()=>{let c=0,n=0;FP_BRAIN.forEach(g=>BRAIN_LVLS.forEach(()=>{if(FP_THINK.includes(g))c+=FREE_THINK;else if(n<FREE_DAILY){n++;c++;}}));return [c,n];})()`);
+  check('Memory Match is the only Brain Game 🎲 on the 10-a-day cap', await ev(`FP_BRAIN.filter(g=>!FP_THINK.includes(g)).join()==='memory'&&FREE_THINK===2`));
+  check('18 solved: +2 each in the thinking games, +1 each in Memory Match, all 18 count for stickers', await ev(`P().coins===${fpc2}+${fpWant[0]}&&P().free.n===${fpWant[1]}&&P().stats.free===18`), await ev(`[P().coins-${fpc2},P().free.n,P().stats.free,${JSON.stringify(fpWant)}]`));
+  await ev(`closeModal();P().free={day:FP_TEST_DAY,n:FREE_DAILY}`); const fpCap=await ev('P().coins');
+  await ev(`fpBrain('train','easy');_fpSolve()`); await sleep(1100);
+  check('with the 10 a day used up, a 🎲 Pattern Train still pays +2', await ev(`P().coins===${fpCap}+2&&/[+]2/.test(document.querySelector('#modalBody').textContent)`));
+  await ev(`closeModal();fpToldDay='';fpBrain('memory','easy');_fpSolve()`); await sleep(1100);
+  check('…while a 🎲 Memory Match pays nothing more, with the gentle note', await ev(`P().coins===${fpCap}+2&&/full for today/.test(document.querySelector('#modalBody').textContent)`));
+  await ev('closeModal()');
   check('the full note is gentle (once, no countdown, no "come back")', await ev(`(()=>{fpToldDay='';const h=fpPay();return /full for today/.test(h)&&!/come back|hours|minutes|tomorrow/i.test(h)&&fpPay()==='';})()`));
   await ev(`closeModal();window.FP_TEST_DAY='2027-01-01'`); const fpc3=await ev('P().coins');
   check('a new day refills the Free Play coins quietly', await ev(`fpPay()==='+1 🪙'&&P().coins===${fpc3}+1&&P().free.n===1&&P().free.day===FP_TEST_DAY`));
@@ -4485,7 +4493,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('a curve down the middle sends Flap away from the bend', k.res==='goal'&&k.fooled&&k.dive===0.32, k);
     await waitFor(`SOC.state==='done'`);
     await ev(`closeModal();Math.random=window._rand2;(()=>{const p=P(),s=window._cbSaved;p.soccer.level=s.level;p.soccer.mode=s.mode;p.coins=s.coins;p.soccer.best=JSON.parse(s.best);save();})();stkPaused=false;show('room')`);
-    check('v1.56 is in the Gift Story and the app says 1.56', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.56')&&APP_VERSION==='1.56'`));
+    check('v1.56 is in the Gift Story and the app says 1.57', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.56')&&APP_VERSION==='1.57'`));
+    check('v1.57 (Brain Games Free Play coins) is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.57')`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

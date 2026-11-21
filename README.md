@@ -131,6 +131,14 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## More coins for Brain Games Free Play (since version 1.57)
+The thinking games are now always worth coming back to.
+- **🎲 Free Play** in 🧁 Snack Stand, 🫧 Number Pop, 🚂 Pattern Train, 🍕 Fraction Bakery and 🔤 Word Builder pays
+  **+2 coins for every puzzle**, with **no daily limit**.
+- 🃏 Memory Match, the 🎲 Marble Maze and the 🎲 Code Lab boards are unchanged: +1 coin each, up to 10 a day together.
+- The 📅 Puzzle of the Day is unchanged (+5 once a day). Made-up puzzles still never count as "solved".
+- No change to the save data.
+
 ## Curve Balls in Soccer (since version 1.56)
 In ⚽ Kick, **bend your swipe** (a little curve, like a banana) and the ball curves on its way to the goal.
 - A curved shot is **harder for the keeper to guess**, and sometimes the keeper **dives the wrong way**: "Curve ball! 🌀".
@@ -299,7 +307,7 @@ timers, nothing to lose. Tap **🧸 Play** in the top bar of any room, then one 
 🔤 Word Builder now has a word bank made from the family's own spelling list, sorted by age, so spelling practice never
 runs out. The 8 puzzles per level that were already there stay exactly the same.
 - **🎲 Free Play:** tap 🎲 after the puzzle numbers for a new word from the bank (+1 coin each, sharing the same 10 a day as
-  the other Free Play games).
+  the other Free Play games; since version 1.57 it is +2 each with no daily limit).
 - **Easy (ages 3–5):** the word's letters show faintly in the boxes, so she copies them by tapping the letters in order.
   A picture shows when the word has one (cat, fox, robot, rocket…).
 - **Medium (ages 6–8) and Hard (ages 9–13):** 👀 look at the word, tap **✋ Hide it**, then spell it from the letters.
@@ -325,7 +333,8 @@ The puzzles never run out now. The app makes new ones by itself, and checks each
   Memory Match, Number Pop, Pattern Train, Fraction Bakery), at the end of the Marble Maze's number bar, and as a
   "New" tile on the Code Lab's Easy and Medium lists. The 🎲 glows once all the fixed puzzles of that level are solved,
   but it can be used any time. Solving one shows **🎲 Another one!**
-- Free Play pays **+1 coin** per puzzle, up to **10 a day**. After that it says so once, gently, and keeps working
+- Free Play pays **+1 coin** per puzzle, up to **10 a day** (since version 1.57 the Brain Games except Memory Match
+  pay +2 each with no limit; see above). After that it says so once, gently, and keeps working
   for fun. Made-up puzzles never count as "solved" (the ticks, level bonuses and Brain Champ stay the same).
 - Word Builder and Fact Cards have no 🎲: words and facts can't be made up. A word list may come later.
 - **📅 Puzzle of the Day:** a card at the top of the Brain Games menu. Each day it is one of the 5 games above, in
