@@ -11,7 +11,7 @@ const STICKER_COINS=2;
 const STK_PAGES={
   fidget:{icon:'🫧',name:'Fidgets',color:'#ff8cc6'},
   art:{icon:'🎨',name:'Art & Cards',color:'#c9a7ff'},
-  soccer:{icon:'⚽',name:'Soccer',color:'#8ff0d0'},
+  soccer:{icon:'⚽',name:'Sports',color:'#8ff0d0'}, // Soccer + the ⚾ Ball Field (named Sports since v1.60; the id stays)
   stage:{icon:'🎤',name:'Stage',color:'#ffd166'},
   code:{icon:'💻',name:'Code Lab',color:'#7fc8ff'},
   room:{icon:'🏠',name:'Room & Style',color:'#ffab7a'}

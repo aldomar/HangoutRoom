@@ -8,7 +8,7 @@
    Also the ✨ What's New box, shown once per device after an update (DB.settings.seenNew).
    ========================================================= */
 const ABOUT_DEFAULT={
-  names:['Kids'],                 // nicknames, e.g. ['Sunny','Pip']; none = 'made just for you' (since v1.59 the owner's words live here,
+  names:['The 4 of You'],                 // nicknames, e.g. ['Sunny','Pip']; none = 'made just for you' (since v1.59 the owner's words live here,
                                   // so the hosted iPad/iPhone version shows them; web/about-local.js can still replace any of them)
   from:'Aly', // the signature
   greeting:'Hi there,',           // used when there are no names
@@ -174,7 +174,9 @@ const GIFT_TIMELINE=[
   {v:'1.58',d:'2026-11-21',i:'🧩',n:'Finish the Outfits',why:'So every dress-up idea has all its pieces, from head to toe',
     news:['🏎️ Race driver, 🚒 firefighter and 🚧 builder outfits are complete','🤖 Robot, ⭐ hero, 🦈 shark, 🚀 astronaut and 🦕 dino pieces to match','🥋 Karate pants, 🐮 overall pants, 🍵 PJ pants, 🍓 a strawberry skirt and more','🧩 3 new stickers for full outfits']},
   {v:'1.59',d:'2026-11-21',i:'📱',n:'Hangout Room on iPad + iPhone',why:'So the Hangout Room can live on every tablet and phone in the family',
-    news:['📱 Add it to your Home Screen on an iPad or iPhone, and it works without internet','🔊 Read to me works on iPad and iPhone too','📳 A tiny buzz on iPhone when you pop, kick and squish','🧭 Tilt the marble maze on iPad and iPhone (tap 📱 Tilt once)']}
+    news:['📱 Add it to your Home Screen on an iPad or iPhone, and it works without internet','🔊 Read to me works on iPad and iPhone too','📳 A tiny buzz on iPhone when you pop, kick and squish','🧭 Tilt the marble maze on iPad and iPhone (tap 📱 Tilt once)']},
+  {v:'1.60',d:'2026-11-21',i:'⚾',n:'Ball Field: Batting',why:'So everyone can step up to the plate and hit a home run',
+    news:['⚾ Tap the bat rack in the Backyard for the new Ball Field','🐧 Pip, 🦝 Rocco and 🦉 Hoot pitch: tap right on time for a ⭐ home run','🏆 Hit all 6 pitches to win a Bronze, Silver or Gold Bat','🧢 New baseball clothes and decorations in the Shop and Closet']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

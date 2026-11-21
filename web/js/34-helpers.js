@@ -37,7 +37,7 @@ function speakText(t){
 }
 const readOn=p=>!!p&&(p.speak===null?p.easy:p.speak);
 const HOT_WORDS={shelf:'Fidget shelf',closet:'Closet',desk:'Art desk',photo:'Photocards',window:'Backyard',goal:'Soccer',stage:'Stage',
-  code:'Code Lab',brain:'Brain games',music:'Music Maker',pet:'Pet',gift:'A gift!'};
+  code:'Code Lab',brain:'Brain games',music:'Music Maker',pet:'Pet',gift:'A gift!',ballfield:'Ball field'};
 function speakLabel(el){
   if(el.dataset.hot) return HOT_WORDS[el.dataset.hot]||'';
   const tn=el.querySelector&&el.querySelector('.tn');

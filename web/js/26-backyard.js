@@ -79,6 +79,7 @@ function yardBack(R){
 /* ---------- built-in pieces (colors: 🎨 Colors tab, FURN_PIECES room 3) ---------- */
 FURN_PIECES.shed={room:3,icon:'🏡',name:'Garden Shed',orig:{body:'#8fd3c0',roof:'#e85d8a',door:'#fff6e8'},map:c=>({body:c.l,roof:c.d,door:c.b})};
 FURN_PIECES.easel={room:3,icon:'📚',name:'Chalkboard',orig:{frame:'#c98b52'},map:c=>({frame:c.m})};
+FURN_PIECES.rack={room:3,icon:'⚾',name:'Bat Rack',orig:{wood:'#c98b52',bucket:'#7cc8ff'},map:c=>({wood:c.m,bucket:c.l})}; // v1.60
 function yardFurniture(split){ // split: see furniture() in section 4 (v1.39)
   const o='stroke="#2b2235" stroke-width="4" stroke-linejoin="round"', sh=furnC('shed'), ez=furnC('easel').frame, T=YARD_TREE[seasonNow()]||YARD_TREE.summer;
   let s=`<g data-ground="1">${yardSeason('ground')}</g>`; const F=[];
@@ -95,6 +96,13 @@ function yardFurniture(split){ // split: see furniture() in section 4 (v1.39)
   F.push({y:492,h:`<g class="hot" data-hot="goal"><rect x="262" y="370" width="148" height="118" fill="#ffffff2a"/><path d="${net}" stroke="#fff" stroke-width="2" opacity=".75"/>`
     +`<rect x="252" y="358" width="12" height="134" rx="4" fill="#fff" ${o}/><rect x="408" y="358" width="12" height="134" rx="4" fill="#fff" ${o}/><rect x="252" y="356" width="168" height="12" rx="4" fill="#fff" ${o}/>`
     +`<circle cx="372" cy="520" r="17" fill="#fff" stroke="#2b2235" stroke-width="3"/><path d="${starPath(372,520,8,5)}" fill="#2b2235"/>${sign(336,330,'⚽ Soccer')}</g>`});
+  // the bat rack and ball bucket: tap it for the ⚾ Ball Field (v1.60, section 59)
+  {const rk=furnC('rack'), ball=(x,y)=>`<circle cx="${x}" cy="${y}" r="11" fill="#fff" stroke="#2b2235" stroke-width="3"/><path d="M${x-6} ${y-8} Q${x-2} ${y} ${x-6} ${y+8} M${x+6} ${y-8} Q${x+2} ${y} ${x+6} ${y+8}" stroke="#ff5a6e" stroke-width="2" fill="none"/>`;
+   F.push({y:524,h:`<g class="hot" data-hot="ballfield" data-piece="rack"><rect x="588" y="400" width="104" height="128" fill="transparent"/>`
+    +`<path d="M596 524 L612 420 M680 524 L664 420" stroke="${rk.wood}" stroke-width="10" stroke-linecap="round"/><rect x="600" y="424" width="76" height="12" rx="4" fill="${rk.wood}" ${o}/>`
+    +[618,638,658].map((x,i)=>`<path d="M${x-5} 520 L${x-3} ${404+i*6} Q${x} ${396+i*6} ${x+3} ${404+i*6} L${x+5} 520Z" fill="${['#e8b97a','#ff8cc6','#e8b97a'][i]}" stroke="#5a3a1e" stroke-width="3" stroke-linejoin="round"/>`).join('')
+    +`<rect x="598" y="470" width="80" height="12" rx="4" fill="${rk.wood}" ${o}/>`
+    +ball(632,486)+ball(652,484)+`<path d="M618 488 L624 528 H662 L668 488Z" fill="${rk.bucket}" ${o}/><path d="${starPath(643,508,7)}" fill="#ffd166"/>${sign(612,326,'⚾ Ball Field')}</g>`});}
   // the chalkboard easel: 📚 Brain Games (v1.25, section 28)
   F.push({y:612,h:`<g class="hot" data-hot="brain" data-piece="easel"><path d="M712 612 L770 384 M848 612 L790 384 M780 384 L784 600" stroke="${ez}" stroke-width="10" stroke-linecap="round"/>`
     +`<rect x="694" y="400" width="172" height="124" rx="8" fill="#2f5d50" stroke="${ez}" stroke-width="10"/><rect x="694" y="400" width="172" height="124" rx="8" fill="none" stroke="#2b2235" stroke-width="3"/>`

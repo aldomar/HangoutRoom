@@ -16,7 +16,7 @@ const SPY_ROUND=5, SPY_COINS=2, SPY_DAILY=10, SPY_MIN=3;
 const SPY_LVLS={1:'⭐',2:'⭐⭐',3:'⭐⭐⭐'};
 // The rooms' own furniture that can be spied, by data-hot id (the pet is named in spyThings)
 const SPY_FURN={window:'Window',photo:'Corkboard',shelf:'Fidget Shelf',closet:'Closet',desk:'Art Desk',stage:'Stage Sign',
-  music:'Keyboard',code:'Computer',goal:'Soccer Goal',garden:'Garden Shed',brain:'Chalkboard',pet:'Pet'};
+  music:'Keyboard',code:'Computer',goal:'Soccer Goal',garden:'Garden Shed',brain:'Chalkboard',ballfield:'Bat Rack',pet:'Pet'};
 // ⭐⭐⭐ hints, by theme chip id (section 33). 'dream' is left out: there are only a few.
 const SPY_THEME_WORDS={emo:'spooky',cute:'cute',sport:'sporty',stage:'for the stage',dino:'dino',space:'from space',ride:'with wheels',
   hero:'for a hero',cozy:'cozy',cafe:'yummy',ocean:'from the ocean',farm:'from the farm',yard:'for outside'};

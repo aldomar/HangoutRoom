@@ -874,6 +874,36 @@ where **nothing can go wrong**: no words needed, no scores, no timers, nothing t
   are a bush, a gift box, a flower pot, a cloud, a door and a drum. "Peekaboo!" is spoken when sound is on (Android only).
   On a phone the room bar's button row has 5 columns.
 
+### Phase 13: ⚾ Ball Field (plan agreed 2026-11-21)
+The owner asked for baseball mini-games like the Soccer ones. Owner's answers: **all four games** (Batting, Catch, Home Run Derby,
+Duel for 2); opened from **a new built-in Backyard piece** (a bat rack); **a small set of baseball clothes and decorations** with a
+team-kit bonus, prizes and stickers; **new original animal characters**. Four stacked PRs, one game each:
+- ✅ **⚾ Ball Field + Batting (v1.60, built):** plan details below.
+- **🧤 Catch (v1.61):** like 🧤 Keep. A hitter (Easy 🐢 Tilly, Medium 🐨 Momo, Hard 🦓 Zippy) hits fly balls and grounders; a shadow
+  shows where it lands; drag the glove there. Fixed lists (`CATCH_HITS`, 15 per level, 5 a game), all proven catchable. +1/+2/+3 a
+  catch, +1 with the kit, +5 for 5/5; a 5/5 wins a Bronze/Silver/Gold Pennant (`pennantBronze` …). A sticker.
+- **🎯 Home Run Derby (v1.62):** like 🎯 Trick Shots. 12 fixed challenges (`d1`…`d12`: hit the ⭐ sign, pop the 🎈, ring the 🔔, two in
+  order…); timing aims left/right, where you tap aims high/low; each has a proven `sol` and a 💡 hint. +3 the first time, +1 a replay,
+  10 a day; all 12 = the ⚾ Golden Ball. A sticker.
+- **👯 Batting Duel (v1.63):** one pitches, one bats on the same tablet, 5 each, then swap; pays through `tgPay` only, never changes
+  bests or prizes (`p.duo.ball`).
+
+#### v1.60 plan details: ⚾ Ball Field + Batting (agreed 2026-11-21, built)
+- **Where:** a built-in bat rack and ball bucket in the Backyard (`data-hot="ballfield"`, recolorable as `FURN_PIECES.rack`), between
+  the buddy and the chalkboard. It opens `scr-ball` (`59-ballfield.js`); Back goes to the Backyard. The main loop draws it (`LOOP_SCREENS`).
+- **The view:** from behind home plate, field points `(x across, z out to the fence)` turned into the screen by `bfPt()`; the sky,
+  stands, fence and field are drawn once per screen size into a hidden canvas. Her buddy (an SVG over the canvas) holds a bat that
+  swings with a CSS animation.
+- **Batting:** tap for the pitch (the pitcher winds up), tap again to swing. `bfJudge(level, d)` turns the swing time into a ⭐ home
+  run, a hit (early = left, late = right), a foul or a miss; windows get smaller per level and wider in Easy mode. 6 pitches a game,
+  no strike-outs, no timer. Pitches are fixed lists (`BAT_PITCHES`, 18 per level, 6 a game in turn): straight, floaters and curves.
+- **Coins:** +1/+2/+3 a hit, +2 a home run, +1 with 2 of the ⚾ kit (cap, tee, pants, socks, Soccer Cleats), +5 for 6/6.
+  A 6/6 gives that level's Bronze/Silver/Gold Bat once (`batBronze` …, `award:1`) in the Backyard.
+- **Extras (`60-ballpack.js`):** 4 clothes and 4 decorations, all ⚽ Sport; the Baseball Lamp glows at night. 3 stickers on the
+  Sticker Book's Soccer page, now named Sports (the page id stays `soccer`).
+- **Save version 37:** `ball{mode, bat{level, best, prizes}, catch{…}, derby{cur, done, pay}}`, `stats.hits/homers/catches/derbies`.
+  All the later games' fields are added now, so v1.61–v1.63 need no new save version.
+
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
 
