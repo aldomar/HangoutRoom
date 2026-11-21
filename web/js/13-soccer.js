@@ -4,7 +4,8 @@
    One canvas, drawn by the main loop only while this screen is open.
    Goal coordinates: u = across the goal (-0.5 left post .. 0.5 right post), v = height (0 grass .. 1 crossbar).
    A match is 5 kicks. Swipe up from the ball (direction = aim, speed = power and height, a bent swipe curves it),
-   or tap a spot in the goal for an easy shot. Level ids (easy/medium/hard) are saved: never rename them.
+   or tap a spot in the goal for an easy shot. Since v1.56 a curved (and a hard) shot is harder for the keeper to read,
+   and a curve can send it the wrong way (CURVE_SKILL). Level ids (easy/medium/hard) are saved: never rename them.
    Since v1.24 the same screen has a 🧤 Keep mode (section 27); socField / socNet / socPosts / ballPos are shared.
    ========================================================= */
 const SOC_KICKS=5, PERFECT_COINS=5, KEEP_H=0.74; // KEEP_H = how tall the keeper covers, arms included (goal heights)
@@ -15,6 +16,11 @@ const KEEPERS={
   medium:{name:'Boo',icon:'👻',kind:'ghost',coins:2,react:0.3,speed:1.2,reach:0.19,read:0.45,stay:0.2,jump:0.3},
   hard:{name:'Flap',icon:'🦇',kind:'bat',coins:3,react:0.18,speed:1.6,reach:0.21,read:0.6,stay:0.1,jump:0.45}
 };
+// Skill shots (v1.56): a curve (and a little, a hard flick) lowers the keeper's read chance by up to these parts of it,
+// and a curved shot the keeper doesn't read sends it the wrong way up to `fool` of the time. Taps and straight shots are as before.
+// fc = how much it curves (full at 0.3 of the 0.5 the swipe allows), fp = how hard (0 at power 0.8, full at 1.6).
+const CURVE_SKILL={curve:0.3,power:0.15,fool:0.5};
+const socSkill=(power,curve)=>({fc:clamp(Math.abs(curve||0)/0.3,0,1),fp:clamp((power-0.8)/0.8,0,1)});
 const KIT=[['top','jersey'],['bottom','shorts'],['legs','soccer'],['shoes','cleats']];
 const hasKit=p=>KIT.filter(([c,id])=>p.look[c]===id).length>=2; // 2+ soccer items = +1 coin per goal
 let SOC={state:'aim',kicks:[],shot:null,t:0,time:0,keeper:{x:0,lift:0,tilt:0},swipe:null,g:null,cheer:-9,next:0};
@@ -59,18 +65,21 @@ function renderSocScore(){
   $('#socScore').innerHTML=Array.from({length:SOC_KICKS},(_,i)=>{const k=SOC.kicks[i];
     return `<span class="dot ${k===false?'miss':''} ${i===SOC.kicks.length&&SOC.state!=='done'?'now':''}">${k?'⚽':k===false?'✖':''}</span>`;}).join('')
     +`<span class="best">🏆 Best ${p.soccer.best[p.soccer.level]||0}/${SOC_KICKS}</span>`;
-  $('#socTip').textContent=SOC.state==='done'?'Tap to play again!':`${L.icon} ${L.name} is in goal! Swipe up from the ball, or tap the goal.`;
+  $('#socTip').textContent=SOC.state==='done'?'Tap to play again!':`${L.icon} ${L.name} is in goal! Swipe up from the ball, or tap the goal. Bend your swipe to curve it! 🌀`;
 }
 function socSay(txt){const m=$('#socMsg');m.textContent=txt;m.classList.remove('on');void m.offsetWidth;m.classList.add('on');}
 
 // Takes a kick. Returns false if a kick is already flying.
 function socShoot(u,v,power,curve){
   const p=P(); if(!p||SOC.state!=='aim'||SOC.kicks.length>=SOC_KICKS) return false;
-  const L=socLevel(), r=Math.random(); let dive,lift;
-  if(r<L.read){dive=clamp(u+(Math.random()-0.5)*0.12,-0.45,0.45);lift=clamp(v-0.45,0,L.jump);} // guessed right
-  else if(r<L.read+L.stay){dive=0;lift=0;}                                                 // stays in the middle
+  const L=socLevel(), k=socSkill(power,curve), r=Math.random(); let dive,lift,fooled=false;
+  const read=L.read*(1-CURVE_SKILL.curve*k.fc-CURVE_SKILL.power*k.fp); // skill makes the shot harder to read (v1.56)
+  if(r<read){dive=clamp(u+(Math.random()-0.5)*0.12,-0.45,0.45);lift=clamp(v-0.45,0,L.jump);} // guessed right
+  else if(r<read+L.stay){dive=0;lift=0;}                                                   // stays in the middle
+  else if(Math.random()<k.fc*CURVE_SKILL.fool){fooled=true;                                // a curve sends it the wrong way
+    dive=(Math.abs(u)>0.08?-Math.sign(u):-Math.sign(curve))*0.32;lift=Math.random()*L.jump*0.5;}
   else {dive=Math.random()<0.5?-0.32:0.32;lift=Math.random()*L.jump*0.5;}                  // guesses a side
-  SOC.shot={u,v,curve:curve||0,T:0.95/power,dive,lift,res:null};
+  SOC.shot={u,v,curve:curve||0,T:0.95/power,dive,lift,fooled,res:null};
   SOC.state='fly'; SOC.t=0; SFX.kick(); vibrate(20);
   const m=$('#socMascot'); m.classList.remove('kick'); void m.offsetWidth; m.classList.add('kick');
   p.stats.kicks++; saveSoon();
@@ -87,7 +96,7 @@ function resolveShot(){
   if(res==='goal'){
     p.stats.goals++; SOC.cheer=SOC.time; SFX.cheer(); vibrate(30);
     const pt=toScr(SOC.g,s.u,s.v), rc=socCv.getBoundingClientRect();
-    earn(L.coins+(hasKit(p)?1:0),'GOAL!',rc.left+pt.x,rc.top+pt.y); socSay('GOAL! ⚽');
+    earn(L.coins+(hasKit(p)?1:0),'GOAL!',rc.left+pt.x,rc.top+pt.y); socSay(s.fooled?'Curve ball! 🌀':'GOAL! ⚽'); // 🌀 = the curve sent the keeper the wrong way (v1.56)
   } else {
     save();
     if(res==='saved'){SFX.save();socSay(`Saved by ${L.name}!`);}

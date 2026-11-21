@@ -89,6 +89,9 @@ Each phase is its own branch and PR, and ends with an APK the owner installs ove
   a bent swipe curves the ball), or just tap a spot in the goal for an easy shot.
 - ✅ Three levels, all open, each with its own original keeper: Easy = Mochi the sleepy cat, Medium = Boo the ghost,
   Hard = Flap the bat. Harder keepers react faster, reach further and guess better.
+- ✅ **🌀 Curve balls (v1.56, agreed 2026-11-20):** a curved swipe (and, a little, a hard flick) makes the keeper worse at
+  guessing, and a curve can send it the wrong way. A perfect 5/5 against Flap went from pure luck (about 1 in 150–800) to
+  about 1 in 20–60 with great curved shots.
 - ✅ Coins: +1 / +2 / +3 per goal (Easy / Medium / Hard), +5 for a perfect 5/5. Team kit bonus: +1 more per goal
   with 2 or more soccer clothes on (jersey, shorts, soccer socks, cleats).
 - ✅ Best score per level. 3 new bonus photocards: First Goal!, Perfect 5/5, 50 Goals.
@@ -375,7 +378,9 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   a walk is **its own path scene**. Proposed as two PRs: 🙈 Hide & Seek + 🎾 Fetch in the rooms (v1.54), then 🦮 Walks (v1.55).
   Phase 12 is done when both are merged.
   - ✅ **🙈 Hide & Seek + 🎾 Fetch (v1.54, built).**
-  - ✅ **🦮 Walks (v1.55, built).** Phase 12 is done when both are merged.
+  - ✅ **🦮 Walks (v1.55, built).** Both merged 2026-11-20: **Phase 12 is done.**
+- ✅ **🌀 Soccer curve balls (v1.56, built):** the owner's fix after Phase 12, so a perfect game against Flap takes skill, not
+  luck. Details under Phase 4.
 
 #### v1.54 plan details: 🙈 Pet Hide & Seek + 🎾 Fetch (agreed 2026-11-20, built)
 Why: the pet can only be patted, fed and dressed, so after the tricks are learned there is nothing to *do* with it. Hide &
