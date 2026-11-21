@@ -211,6 +211,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   59. `59-ballfield.js` ⚾ Ball Field (v1.60), opened by the Backyard's bat rack (`data-hot="ballfield"`): `scr-ball`, Batting (`BAT_PITCHERS`,
       `BAT_PITCHES`, `bfJudge`, `bfTap`, `bfSwing`, `bfResult`, `bfEnd`, `giveBats`, `drawBallField`, `bfPt`, `bfDrawPitcher`, `BATS` prizes, `BF_KIT`)
   60. `60-ballpack.js` Ball Field pack (only adds 4 baseball clothes, 4 decorations, theme chips through `bpTheme`, `CARD_TAGS`)
+  61. `61-catch.js` 🧤 Catch, the Ball Field's second game (`CATCH_HITTERS`, `CATCH_HITS`, `ctCanCatch`, `ctCaught`, `ctDown/ctMove/ctUp`,
+      `ctLand`, `ctEnd`, `givePennantPrizes`, `ctDraw`, `ctBallPt`, `ctDrawHitter`, `PENNANTS` prizes)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -353,6 +355,10 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   holds the timing rules (home run / hit / foul / miss) with no drawing. 6 pitches, no strike-outs, no timer. Pitches are fixed lists
   (`BAT_PITCHES`, taken in turn). `p.ball.mode` is `bat` (later also `catch`, `derby`); mode, level and prize ids are saved: never rename them.
   A 6/6 gives `batBronze/batSilver/batGold` (`award:1`) in the Backyard. The Sticker Book's `soccer` page is named Sports since v1.60.
+  🧤 Catch (v1.61, `61-catch.js`): `bfMode()` picks the game; `renderBall`, `drawBallField` and the canvas pointer handlers hand over to
+  `ctNewGame`/`ctDraw`/`ctDown`… The view is from the outfield (z = 0 her catch line, z = 1 home), `ctPt` maps `u` (-1..1) through `g.k`,
+  which keeps the buddy on screen. Hits are fixed lists (`CATCH_HITS`, 15 per level, 5 a game); `ctCanCatch` must hold for every hit from
+  either side (the smoke test checks). A 5/5 gives `pennantBronze/pennantSilver/pennantGold` (`award:1`, `wall:1`) on the Backyard fence.
 - Visitors (since v1.41, `42-visitors.js`): one friend at a time stands at `VISIT_SPOT` in whichever room is on screen
   (`visitG`, in the floor layer, `data-hot="visitor"`). A wish is `{id, who, icon, title, say, parts[]}`; a part is one line of the
   card with `have(p, R)` and `n`, built by `vInRoom`/`vWear` (theme chips, so new themed items count automatically) or the fixed
@@ -457,6 +463,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   I Spy (v1.49): +2 per round of 5 finds, 10 a day (`SPY_DAILY`). Runway (v1.51): +3 per show, 15 a day (`RW_DAILY`).
   Stage Jam (v1.52): +2 per jam of 20+ notes, 3 jams a day (`JAM_DAILY`). Trick Shots (v1.53): +3 per trick the first time, +1 a replay, 10 a day (`TR_DAILY`). Pet play (v1.54): hearts only (+2 a find, +1 a fetch), no coins. Pet walks (v1.55): hearts only (+1 a find, +3 a walk), no coins.
   Ball Field Batting (v1.60): +1 / +2 / +3 per hit (Easy / Medium / Hard), +2 more for a home run, +1 more with 2+ baseball kit pieces on, +5 for 6/6.
+  Ball Field Catch (v1.61): +1 / +2 / +3 per catch, +1 more with the kit, +5 for 5/5.
   Visitors (v1.41): +5 per wish that comes true (one new friend a day), and a plush after a friend's 3 wishes.
   Item prices are 0–40, except ⭐ big dreams (`dream:1`, 60–100, since v1.29). Keep earning steady and fair.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).

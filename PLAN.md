@@ -879,9 +879,12 @@ The owner asked for baseball mini-games like the Soccer ones. Owner's answers: *
 Duel for 2); opened from **a new built-in Backyard piece** (a bat rack); **a small set of baseball clothes and decorations** with a
 team-kit bonus, prizes and stickers; **new original animal characters**. Four stacked PRs, one game each:
 - ✅ **⚾ Ball Field + Batting (v1.60, built):** plan details below.
-- **🧤 Catch (v1.61):** like 🧤 Keep. A hitter (Easy 🐢 Tilly, Medium 🐨 Momo, Hard 🦓 Zippy) hits fly balls and grounders; a shadow
+- ✅ **🧤 Catch (v1.61, built):** like 🧤 Keep. A hitter (Easy 🐢 Tilly, Medium 🐨 Momo, Hard 🦓 Zippy) hits fly balls and grounders; a shadow
   shows where it lands; drag the glove there. Fixed lists (`CATCH_HITS`, 15 per level, 5 a game), all proven catchable. +1/+2/+3 a
   catch, +1 with the kit, +5 for 5/5; a 5/5 wins a Bronze/Silver/Gold Pennant (`pennantBronze` …). A sticker.
+  As built (`61-catch.js`): the hitter tosses and hits it (a fungo, no pitcher); the view is from the outfield looking in; a ring on the
+  grass marks where it comes down; the buddy runs toward the finger at the hitter's `speed` and catches when within `reach`
+  (`ctCanCatch` proves every hit from the far side). Fly balls, line drives, pop-ups and grounders. Pennants hang on the fence top.
 - **🎯 Home Run Derby (v1.62):** like 🎯 Trick Shots. 12 fixed challenges (`d1`…`d12`: hit the ⭐ sign, pop the 🎈, ring the 🔔, two in
   order…); timing aims left/right, where you tap aims high/low; each has a proven `sol` and a 💡 hint. +3 the first time, +1 a replay,
   10 a day; all 12 = the ⚾ Golden Ball. A sticker.

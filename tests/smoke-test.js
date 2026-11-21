@@ -319,7 +319,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('perfect 5/5 on Hard: 5×3 + 5 coins, +10 for the bonus card', (await ev('P().coins'))===sc2+30 && (await ev('P().stats.perfects'))===1, [sc2, await ev('P().coins')]);
   check('Perfect 5/5 bonus card', await ev(`P().bonusGot.includes('perfect1')`));
   check('perfect on Hard wins the Gold Trophy (in the room)', await ev(`P().soccer.trophies.includes('hard')&&P().room.items.filter(i=>i.type==='trophyGold'&&i.placed).length===1`));
-  check('trophy stands in its own spot, not behind Fuzzy', await ev(`(()=>{const t=P().room.items.find(i=>i.type==='trophyGold');return t.x===TROPHY_SPOTS.trophyGold.x&&Object.values(TROPHY_SPOTS).every(p=>p.x+70<420||p.x-70>580||p.y>604);})()`));
+  check('trophy stands in its own spot, not behind Fuzzy', await ev(`(()=>{const t=P().room.items.find(i=>i.type==='trophyGold');return t.x===TROPHY_SPOTS.trophyGold.x&&Object.entries(TROPHY_SPOTS).every(([k,p])=>p.x+70<420||p.x-70>580||p.y>604||DECOR[k].wall&&p.y<=360);})()`));
   check('result box shows the trophy', (await ev(`document.querySelector('#modalBody').textContent`)).includes('Gold Trophy'));
   await shot('48-soccer-perfect');
   await ev(`closeModal()`);
@@ -1106,7 +1106,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('142 stickers on 8 pages (3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===142&&new Set(STICKERS.map(s=>s.id)).size===142&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('143 stickers on 8 pages (1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===143&&new Set(STICKERS.map(s=>s.id)).size===143&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1654,7 +1654,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('perfect 5/5 on Hard: 5×3 + 5 coins', (await ev('P().coins'))===kc2+20&&(await ev('P().stats.perfects'))===perf0+1, [kc2, await ev('P().coins')]);
   check('…wins the Gold Glove, shown in the result box', await ev(`P().soccer.keep.gloves.includes('hard')&&document.querySelector('#modalBody').textContent.includes('Gold Glove')`));
   check('the Gold Glove stands in the Backyard, in its own spot', await ev(`(()=>{const g=P().room3.items.filter(i=>i.type==='gloveGold');return g.length===1&&g[0].placed&&g[0].x===TROPHY_SPOTS.gloveGold.x&&!P().room.items.some(i=>/^glove/.test(i.type));})()`));
-  check('no trophy or glove spot is behind the buddy', await ev(`Object.values(TROPHY_SPOTS).every(p=>p.x+70<420||p.x-70>580||p.y>604)`));
+  check('no trophy or glove spot is behind the buddy (wall prizes like the pennants may hang above its head)', await ev(`Object.entries(TROPHY_SPOTS).every(([k,p])=>p.x+70<420||p.x-70>580||p.y>604||DECOR[k].wall&&p.y<=360)`));
   await ev(`closeModal()`);
   check('Android Back from Keep goes to the room', await ev(`window.androidBack()===true&&cur==='room'`));
   await ev(`P().soccer.keep.best.medium=5;show('room')`); await sleep(300);
@@ -4706,7 +4706,90 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('odd Ball Field data is made safe', await ev(`(b=>b.mode==='bat'&&b.bat.level==='easy'&&b.bat.best.easy===0&&b.bat.best.hard===0&&b.bat.prizes.join()==='easy'&&b.catch.level==='easy'&&b.derby.cur==='d1'&&b.derby.done.join()==='d1'&&b.derby.pay.n===0&&DB.profiles[0].stats.hits===0)(DB.profiles[0].ball)`));
     await ev(`closeModal();doRestore(${JSON.stringify(bfB)})`); await sleep(400);
     await ev(`closeModal();(()=>{const s=${bfSaved};const p=P();p.coins=s.coins;p.look=s.look;p.owned=s.owned;p.ball=s.ball;p.stats=s.stats;p.room3.items=s.room3;save();})();stkPaused=false;show('room');goRoom(1)`);
-    check('v1.60 is in the Gift Story and the app says 1.60', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.60')&&APP_VERSION==='1.60'`));
+    check('v1.60 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.60')`));
+  }
+
+  console.log('Ball Field: 🧤 Catch (v1.61)');
+  {
+    const waitFor=async(cond,ms)=>{for(let i=0;i<(ms||5000)/50;i++){if(await ev(cond))return true;await sleep(50);}return false;};
+    const mb=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
+    await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();show('room');goRoom(3)`); await sleep(200);
+    const ctSaved=await ev(`JSON.stringify({coins:P().coins,look:P().look,ball:P().ball,stats:P().stats,room3:P().room3.items})`);
+    await ev(`P().ball.mode='bat';show('ball')`); await sleep(300);
+    check('the Ball Field has ⚾ Bat and 🧤 Catch tabs', await ev(`!!document.querySelector('#bfTabs [data-mode=bat]')&&!!document.querySelector('#bfTabs [data-mode=catch]')`));
+    await ev(`document.querySelector('#bfTabs [data-mode=catch]').click()`); await sleep(300);
+    check('🧤 Catch: saved, the title changes, Tilly / Momo / Zippy on the tabs, the glove instead of the bat', await ev(`P().ball.mode==='catch'&&document.querySelector('#bfTitle').textContent.includes('Catch')&&[...document.querySelectorAll('#bfTabs [data-lvl] i')].map(i=>i.textContent).join('')==='🐢🐨🦓'&&!!document.querySelector('#bfMascot .ct-glove')&&!document.querySelector('#bfMascot .bf-bat')&&BF.state==='off'&&CT.state==='ready'`));
+    check('5 empty dots; the tip names Tilly', await ev(`document.querySelectorAll('#bfScore .dot').length===5&&document.querySelector('#bfTip').textContent.includes('Tilly')`));
+    await sleep(200); await shot('CT1-ready');
+
+    console.log('Ball Field: Catch rules');
+    check('15 fixed hits per level, all inside the field, every kind used', await ev(`['easy','medium','hard'].every(l=>CATCH_HITS[l].length===15&&CATCH_HITS[l].every(([u,T,k])=>Math.abs(u)<=CT_U&&T>=1.3&&T<=2.6&&[0,1,2,3].includes(k)))&&[0,1,2,3].every(k=>CATCH_HITS.hard.some(h=>h[2]===k))`));
+    check('every hit can be caught, even running from the far side', await ev(`['easy','medium','hard'].every(l=>CATCH_HITS[l].every(h=>ctCanCatch(l,-CT_U,h)&&ctCanCatch(l,CT_U,h)))`));
+    check('harder hitters: faster hits, a smaller glove; standing still in the middle catches at most 3 of 15 on Medium and Hard', await ev(`(()=>{const avg=l=>CATCH_HITS[l].reduce((a,h)=>a+h[1],0)/15;return avg('easy')>avg('medium')&&avg('medium')>avg('hard')&&CATCH_HITTERS.easy.reach>CATCH_HITTERS.medium.reach&&CATCH_HITTERS.medium.reach>CATCH_HITTERS.hard.reach&&['medium','hard'].every(l=>CATCH_HITS[l].filter(h=>ctCaught(h[0],0,CATCH_HITTERS[l].reach)).length<=3);})()`));
+    check('every hit flies inside the canvas from home plate to her line', await ev(`(()=>{const g=BF.G;return !!g&&['easy','medium','hard'].every(l=>CATCH_HITS[l].every(([u,T,kind])=>{for(let e=0;e<=1;e+=0.05){const b=ctBallPt(g,{u,T,kind},e);if(!(b.x>0&&b.x<g.W&&b.y>0&&b.y<g.H&&b.r>0))return false;}return true;}));})()`));
+
+    console.log('Ball Field: Catch play');
+    const cv=await ev(`(()=>{const r=document.querySelector('#bfCv').getBoundingClientRect();return {x:r.left,y:r.top,w:r.width,h:r.height};})()`);
+    // touch the canvas at u (where the buddy should run), then hold until the ball comes down
+    const at=u=>ev(`BF.G.cx+(${u})*BF.G.k`).then(x=>cv.x+x);
+    const c0=await ev('P().coins');
+    let x=await at(0); await mouse('mousePressed',x,cv.y+cv.h*0.8); await mouse('mouseReleased',x,cv.y+cv.h*0.8);
+    check('a tap starts the hit (Tilly tosses and swings)', await ev(`CT.state==='wind'&&CT.hit.u===CATCH_HITS.easy[0][0]`));
+    await waitFor(`CT.state==='fly'`); await sleep(500); await shot('CT2-fly');
+    await waitFor(`CT.state==='result'`,4000);
+    check('standing on the ring: Great catch! +1, a 🧤 dot, the ball in the glove', await ev(`CT.res[0]===true&&P().coins===${c0}+1&&P().stats.catches===1&&document.querySelector('#bfScore .dot').textContent==='🧤'&&CT.caughtAt!=null`));
+    await shot('CT3-caught');
+    // hit 2 lands at u=0.4: drag there while it flies
+    await waitFor(`CT.state==='ready'`,3000);
+    x=await at(0); await mouse('mousePressed',x,cv.y+cv.h*0.8); const x2=await at(0.4);
+    for(let i=1;i<=6;i++) await mouse('mouseMoved',x+(x2-x)*i/6,cv.y+cv.h*0.8);
+    await waitFor(`CT.state==='result'`,5000); await mouse('mouseReleased',x2,cv.y+cv.h*0.8);
+    check('dragging to the right ring: caught (+1)', await ev(`CT.res[1]===true&&P().coins===${c0}+2&&Math.abs(CT.bu-0.4)<0.05`), await ev('CT.bu'));
+    // hit 3 lands at u=-0.4: run the other way (too far) and miss
+    await waitFor(`CT.state==='ready'`,3000);
+    x=await at(0.85); await mouse('mousePressed',x,cv.y+cv.h*0.8);
+    await waitFor(`CT.state==='result'`,5000); await mouse('mouseReleased',x,cv.y+cv.h*0.8);
+    check('running the wrong way: "Missed it!", a ✖ dot, no coins lost', await ev(`CT.res[2]===false&&P().coins===${c0}+2&&document.querySelector('#bfMsg').textContent.includes('Missed')`));
+    await sleep(300); await shot('CT4-missed');
+    await ev(`P().look.acc='ballCap';P().look.legs='ballSocks';renderBall()`); await sleep(100);
+    check('a new game when the kit goes on; the badge shows', await ev(`CT.state==='ready'&&CT.res.length===0&&!document.querySelector('#bfKit').classList.contains('hidden')`));
+    // a perfect game: put the buddy under each hit (the finger follows the hit's ring)
+    const c1=await ev('P().coins');
+    for(let i=0;i<5;i++){await waitFor(`CT.state==='ready'`,3000); await ev(`(()=>{const e={pointerId:7,clientX:0};ctDown(e);CT.down=null;})()`); await ev(`CT.tx=CT.hit.u`); await waitFor(`CT.state==='result'||CT.state==='done'`,5000);}
+    await waitFor(`CT.state==='done'`,4000);
+    check('5/5 with the kit: each catch +2, +5 perfect, best 5/5 on Easy, the Bronze Pennant on the fence', await ev(`P().coins===${c1}+5*2+5&&P().ball.catch.best.easy===5&&P().ball.catch.prizes.join()==='easy'&&P().room3.items.filter(i=>i.type==='pennantBronze').length===1&&document.querySelector('#modalBody').textContent.includes('Bronze Pennant')`), [await ev('P().coins'),c1]);
+    await shot('CT5-perfect');
+    await ev(`${mb('Play again')}.click()`); await sleep(100);
+    check('Play again: a new catch game', await ev(`CT.state==='ready'&&CT.res.length===0`));
+    check('the pennant is given only once; batting bests and bats are untouched', await ev(`(givePennantPrizes(),P().room3.items.filter(i=>i.type==='pennantBronze').length===1)&&P().ball.bat.prizes.length===JSON.parse(${JSON.stringify(ctSaved)}).ball.bat.prizes.length`));
+    await ev(`document.querySelector('#bfTabs [data-lvl=hard]').click()`); await sleep(100);
+    check('Hard: Zippy bats, saved per game (batting keeps its own level)', await ev(`P().ball.catch.level==='hard'&&document.querySelector('#bfTip').textContent.includes('Zippy')`));
+    await ev(`ctDown({pointerId:8,clientX:0});CT.down=null`); await waitFor(`CT.state==='fly'`); await sleep(400); await shot('CT6-hard-fly'); await waitFor(`CT.state==='result'`,4000);
+    await ev(`document.querySelector('#bfTabs [data-lvl=medium]').click()`); await sleep(100);
+    await ev(`ctDown({pointerId:9,clientX:0});CT.down=null`); await waitFor(`CT.state==='wind'`); await sleep(500); await shot('CT7-medium-swing'); await waitFor(`CT.state==='result'`,4000);
+    check('Back to ⚾ Bat: the bat is back and Pip / Rocco / Hoot pitch', await ev(`(document.querySelector('#bfTabs [data-mode=bat]').click(),P().ball.mode==='bat'&&!!document.querySelector('#bfMascot .bf-bat')&&BF.state==='ready'&&CT.state==='off'&&[...document.querySelectorAll('#bfTabs [data-lvl] i')].map(i=>i.textContent).join('')==='🐧🦝🦉')`));
+    await ev(`document.querySelector('#bfTabs [data-mode=catch]').click()`); await sleep(100);
+    check('Android Back from Catch goes to the Backyard and stops the game', await ev(`window.androidBack()===true&&cur==='room'&&roomNo===3&&CT.state==='off'`));
+    await ev(`show('ball')`); await sleep(150);
+    check('the Ball Field remembers Catch', await ev(`P().ball.mode==='catch'&&CT.state==='ready'`));
+    await ev(`P().easy=true;show('ball')`); await sleep(150);
+    check('Easy mode: Catch on Easy (Tilly), a bigger glove', await ev(`P().ball.catch.level==='easy'&&document.querySelector('#bfTip').textContent.includes('Tilly')&&ctReach()>CATCH_HITTERS.easy.reach`));
+    await ev(`P().easy=false;show('room')`);
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true}); await ev(`show('ball')`); await sleep(300);
+    await ev(`CT.bu=-CT_U;CT.tx=-CT_U;CT.state='fly';CT.hit={u:-CT_U,T:99,kind:0};CT.t=0`); await sleep(150);
+    check('phone: the tabs fit, and the buddy stays on screen at the far left and right', await ev(`(()=>{const t=document.querySelector('#bfTabs'),a=document.querySelector('#bfMascot').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&a.left>=0;})()`)&&await ev(`(async()=>{CT.bu=CT_U;CT.tx=CT_U;CT.hit.u=CT_U;await new Promise(r=>setTimeout(r,150));const a=document.querySelector('#bfMascot').getBoundingClientRect();return a.right<=innerWidth;})()`));
+    await shot('CT8-phone');
+    await ev(`ctNewGame()`);
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await ev(`show('room');goRoom(3)`); await sleep(200);
+    check('3 pennants (prizes, wall items, strict XML) and their fence spots', await ev(`Object.values(PENNANTS).every(k=>DECOR[k].award&&DECOR[k].wall&&TROPHY_SPOTS[k]&&!new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg">'+DECOR[k].d()+'</svg>','image/svg+xml').querySelector('parsererror'))`));
+    await ev(`(()=>{const p=P();['pennantSilver','pennantGold'].forEach(t=>p.room3.items.push(Object.assign({uid:uid(),type:t,placed:true},spot(t))));renderRoom();})()`); await sleep(150);
+    await shot('CT9-backyard-pennants');
+    check('Great Catch sticker on the Sports page, and it arrives', await ev(`(s=>s&&s.page==='soccer')(STICKERS.find(s=>s.id==='catch1'))`)&&await ev(`(stkPaused=false,(r=>(stkPaused=true,closeModal(),r))(checkStickers().some(s=>s.id==='catch1')))`));
+    const ctB=await ev(`JSON.stringify(DB)`);
+    await ev(`closeModal();doRestore(${JSON.stringify(ctB)})`); await sleep(400);
+    check('a v1.61 backup keeps Catch mode, the best, the pennant and the catches', await ev(`DB.profiles.some(p=>p.ball.mode==='catch'&&p.ball.catch.best.easy===5&&p.ball.catch.prizes.includes('easy')&&p.stats.catches>=7)`));
+    await ev(`closeModal();(()=>{const s=${ctSaved};const p=P();p.coins=s.coins;p.look=s.look;p.ball=s.ball;p.stats=s.stats;p.room3.items=s.room3;save();})();stkPaused=false;show('room');goRoom(1)`);
+    check('v1.61 is in the Gift Story and the app says 1.61', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.61')&&APP_VERSION==='1.61'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

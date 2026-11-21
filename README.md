@@ -2,7 +2,7 @@
 Mini game app for niblings: a cozy virtual bedroom with a fuzzy emo bunny, fidget toys,
 dress-up, decorating, an Art Desk for drawing, a Photocard Wall for making collectible bunny cards,
 a Fidget Shelf (pop-it, squishy, spinner, slime, clicker cube and a tilt marble maze), a Soccer Field for penalty kicks
-(or being the goalie), a Ball Field for baseball batting,
+(or being the goalie), a Ball Field for baseball (batting and catching),
 a Stage where the bunny performs to 8 original songs (tap to the beat), five animal buddies to choose from,
 a Code Lab where she "programs" the bunny with arrow blocks (a first taste of coding), Brain Games (counting,
 memory and number puzzles), saved outfits, buddy emotes and a 🌙 night mode.
@@ -136,6 +136,17 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Ball Field: Catch (since version 1.61)
+The Ball Field's second game: tap **🧤 Catch** next to ⚾ Bat. It remembers which one was played last.
+- The view turns around: your buddy stands in the outfield with a glove, and an original hitter at home plate tosses the
+  ball up and hits it: 🐢 **Tilly** the turtle (Easy), 🐨 **Momo** the koala (Medium) and 🦓 **Zippy** the zebra (Hard).
+- Tap to get the hit. A **ring on the grass** shows where the ball will come down: **drag** (or tap) to run there before it
+  lands. Fly balls, line drives, high pop-ups and grounders that roll along the grass.
+- 5 hits a game, from fixed lists (practice pays off). A drop costs nothing. Easy mode (🐣) gives a bigger glove.
+- **Coins:** +1 / +2 / +3 a catch, +1 more with the ⚾ Team kit, +5 for 5 out of 5. A 5/5 wins that level's **Bronze, Silver or
+  Gold Pennant**, which hangs on top of the Backyard fence (once each).
+- 1 new sticker: 🧤 Great Catch. No save changes (the fields came with version 1.60).
+
 ## Ball Field: Batting (since version 1.60)
 A baseball field: tap the **⚾ bat rack** in the Backyard (between the buddy and the chalkboard). Back goes to the Backyard.
 - **⚾ Bat:** your buddy steps up to home plate with a bat. Tap anywhere to get the pitch, then **tap again to swing** when
@@ -150,7 +161,7 @@ A baseball field: tap the **⚾ bat rack** in the Backyard (between the buddy an
 - **New in the Closet and Shop** (⚽ Sport chip): Baseball Cap, Baseball Tee, Baseball Pants, Baseball Socks; Home Plate Rug,
   Ball Bucket, Ball Scoreboard and a Baseball Lamp (it glows in 🌙 night mode). The Soccer Cleats count for the team kit too.
 - 3 new stickers: ⚾ First Hit, ⭐ Home Run! and 🏟️ Perfect Game. The Sticker Book's Soccer page is now called **Sports**.
-- Coming next (each its own update): 🧤 Catch (fielding), 🎯 Home Run Derby and 👯 a Batting Duel for two players.
+- Coming next (each its own update): 🎯 Home Run Derby and 👯 a Batting Duel for two players (🧤 Catch came in version 1.61).
 - Save version 37 (`ball`, `stats.hits/homers/catches/derbies`); every older backup still restores.
 
 ## iPad and iPhone (since version 1.59)
