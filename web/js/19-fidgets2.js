@@ -214,15 +214,19 @@ function mzBar(){
   const p=P(); if(!p) return;
   $('#mazeBar').innerHTML=MAZES.map((m,i)=>`<button class="tab mzb${i===MZ.i&&!MZ.free?' on':''}" data-mz="${i}">${i+1}${p.maze.solved.includes(m.id)?' ⭐':''}</button>`).join('')
     +(typeof fpMazeBtn==='function'?fpMazeBtn():'') // 🎲 Free Play (section 44)
-    +(MZ.tilt.seen?`<button class="tab mzb" id="mzTilt">📱 ${MZ.tilt.on?'Tilt ON':'Tilt OFF'}</button>`:'');
+    +(MZ.tilt.seen?`<button class="tab mzb" id="mzTilt">📱 ${MZ.tilt.on?'Tilt ON':'Tilt OFF'}</button>`
+      :mzAskTilt()?'<button class="tab mzb" id="mzAsk">📱 Tilt</button>':''); // (v1.59) iPad/iPhone ask once before the tilt sensor works
   const on=$('#mazeBar .mzb.on'), bar=$('#mazeBar'); // (v1.37) a scrolling bar keeps the current maze in view
   if(on&&bar.scrollWidth>bar.clientWidth) bar.scrollLeft=on.offsetLeft-(bar.clientWidth-on.offsetWidth)/2;
 }
 $('#mazeBar').onclick=e=>{
   if(e.target.closest('#mzDice')){SFX.click();fpMaze();return;}
+  if(e.target.closest('#mzAsk')){SFX.click();try{DeviceOrientationEvent.requestPermission().then(r=>{MZ.tilt.asked=r;mzBar();},()=>{MZ.tilt.asked='denied';mzBar();});}catch(_){MZ.tilt.asked='denied';mzBar();}return;}
   if(e.target.closest('#mzTilt')){MZ.tilt.on=!MZ.tilt.on;MZ.tilt.base=null;SFX.click();mzBar();return;}
   const b=e.target.closest('[data-mz]'); if(!b) return; SFX.click(); mzStart(+b.dataset.mz);
 };
+// iOS 13+ only sends tilt readings after a tap on 📱 Tilt says yes (MZ.tilt.asked: '', 'granted' or 'denied'; never saved)
+const mzAskTilt=()=>typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'&&!MZ.tilt.asked;
 // the tilt sensor is only listened to while the maze is on screen
 function mzOrient(e){
   if(e.beta==null||e.gamma==null) return;

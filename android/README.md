@@ -28,8 +28,14 @@ same computer or keep a copy of that file. Use the in-app **Settings > Backup** 
 ## The personal About words (since version 1.22)
 The letter and nicknames in **⚙️ Settings > 💌 About** come from `../web/about-local.js`. That file is kept off GitHub
 (it is git-ignored), but the build copies the whole `web/` folder, so an APK built on this computer includes it.
-An APK built from a fresh copy of the repo (without the file) shows a generic About instead. Keep a copy of
+An APK built from a fresh copy of the repo (without the file) shows the built-in About words instead. Keep a copy of
 `about-local.js` somewhere safe, next to the debug key.
+Since version 1.59 the letter and names are built in (`ABOUT_DEFAULT` in `web/js/25-about.js`), so the iPad/iPhone copy
+shows them too. `about-local.js` is now optional: anything in it still replaces the built-in words.
+
+## iPad and iPhone (since version 1.59)
+They don't use this folder. See `../docs/IOS.md`. The new files for them (`sw.js`, `manifest.webmanifest` at the repo root)
+are not copied into the APK, and the Android app works exactly as before.
 
 ## What the wrapper does
 - No internet permission: the app can't go online.

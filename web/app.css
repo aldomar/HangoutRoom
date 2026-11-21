@@ -1128,3 +1128,10 @@ body.easy .wk-go{min-height:76px;font-size:28px}
 @keyframes wkWiggle{0%,100%{transform:none}30%{transform:rotate(-3deg)}60%{transform:rotate(3deg)}}
 @keyframes wkBang{50%{transform:translateY(-8px)}}
 @media (max-width:620px){.wk-paths{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.wk-cn{font-size:15px}.wk-go{min-width:110px;font-size:20px}.wk-go .tn{display:none}#wkTip{font-size:16px}}
+
+/* ---------- 58. iPad + iPhone (v1.59) ---------- */
+html,body{touch-action:manipulation} /* no double-tap zoom (iOS ignores user-scalable=no); canvases keep touch-action:none */
+.topbar{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))} /* clear of an iPhone's notch on its side */
+.ios-tick{position:fixed;left:-200px;top:0;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden}
+.ios-pic{display:block;max-width:100%;max-height:55vh;margin:0 auto 10px;border-radius:14px;box-shadow:0 0 0 4px var(--line);-webkit-touch-callout:default;user-select:auto;-webkit-user-select:auto}
+.ios-pic-tip{font-size:16px;text-align:center}

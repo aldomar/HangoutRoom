@@ -82,7 +82,7 @@ const wbPic=pic=>/^[a-z]:/.test(pic)?`<span class="wb-art">${memPic(pic)}</span>
 // The letter tiles for Medium and Hard: the word's letters and the extra ones, in a fixed shuffled order.
 const wbTiles=(pz,l,idx)=>brShuffle([...pz.w,...pz.x],brId('word',l,idx));
 let WB={got:0};
-function wbSay(w){if(canSpeak())try{window.AndroidBridge.speak(w.toLowerCase());}catch(e){}}
+function wbSay(w){if(canSpeak())speakText(w.toLowerCase());}
 BRAIN_GAMES.word={icon:'🔤',name:'Word Builder',desc:'Letters and words',color:'#ffd166',
   puzzles:WB_PUZ,
   start(pz,l,idx){

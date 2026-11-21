@@ -39,6 +39,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   // stickers pay coins, so they are paused (also after a reload) until their own checks; other games' exact coin checks still add up
   await send('Page.addScriptToEvaluateOnNewDocument',{source:'window.STK_TEST_PAUSE=true'});
+  // (v1.59) no built-in voices, like most browsers the app runs in: the iPad + iPhone checks fake a device voice themselves
+  await send('Page.addScriptToEvaluateOnNewDocument',{source:'if(window.speechSynthesis)try{window.speechSynthesis.getVoices=()=>[];}catch(e){}'});
   await send('Page.navigate',{url:URL}); await sleep(1200);
   // a cold start (e.g. right after files changed) can be slow: wait until the page has fully loaded
   for(let i=0;i<60&&!(await ev('document.readyState==="complete"'));i++) await sleep(250);
@@ -48,6 +50,22 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const allSrc=await ev(`[...document.scripts].map(s=>s.getAttribute('src'))`), loaded=allSrc.filter(s=>s.startsWith('web/js/'));
   check('index.html loads every web/js file, in number order', JSON.stringify(loaded)===JSON.stringify(jsFiles.map(f=>'web/js/'+f)), [loaded,jsFiles]);
   check('the personal About file (git-ignored) is loaded after 25-about.js, before startup', allSrc.indexOf('web/about-local.js')===allSrc.indexOf('web/js/25-about.js')+1&&allSrc.indexOf('web/js/99-startup.js')>allSrc.indexOf('web/about-local.js'), allSrc.slice(-3));
+  { // (v1.59) iPad/iPhone: the offline file list, the manifest and the icon
+    const R=path.join(__dirname,'..'), swTxt=fs.readFileSync(path.join(R,'sw.js'),'utf8');
+    const swFiles=[...(swTxt.match(/const FILES=\[([\s\S]*?)\];/)||['',''])[1].matchAll(/'([^']+)'/g)].map(m=>m[1]);
+    const want=['./','index.html','manifest.webmanifest','web/app.css','web/icon-180.png',...loaded];
+    check('sw.js keeps every file the page loads, in order (add a new web/js file there too)', JSON.stringify(swFiles)===JSON.stringify(want), [want.filter(x=>!swFiles.includes(x)),swFiles.filter(x=>!want.includes(x))]);
+    check('sw.js lists only files that exist (and never the git-ignored about-local.js)', swFiles.every(x=>x==='./'||fs.existsSync(path.join(R,x)))&&!swFiles.some(x=>/about-local/.test(x)));
+    const swV=(swTxt.match(/const VERSION='([^']+)'/)||[])[1];
+    check('sw.js VERSION is APP_VERSION, so every update gets fresh files', swV===await ev('APP_VERSION'), swV);
+    check('sw.js only answers for its own site and names no web address', /origin!==location\.origin\) return/.test(swTxt)&&!/https?:\/\//.test(swTxt));
+    let man=null; try{man=JSON.parse(fs.readFileSync(path.join(R,'manifest.webmanifest'),'utf8'));}catch(e){}
+    check('the app manifest: name, starts here, full screen, its icons exist', !!man&&man.name==='Hangout Room'&&man.start_url==='./'&&man.display==='standalone'&&man.icons.length>0&&man.icons.every(i=>fs.existsSync(path.join(R,i.src))));
+    const ico=await ev(`(l=>l?l.getAttribute('href'):'')(document.querySelector('link[rel=apple-touch-icon]'))`);
+    check('the Home Screen icon is a small PNG (under 60 KB)', !!ico&&fs.existsSync(path.join(R,ico))&&fs.statSync(path.join(R,ico)).size<60000, ico);
+    check('.nojekyll is there, so GitHub Pages serves the files as they are', fs.existsSync(path.join(R,'.nojekyll')));
+    check('from file:// there is no manifest link and no service worker (only the hosted copy uses them)', await ev(`!document.querySelector('link[rel=manifest]')&&!(navigator.serviceWorker&&navigator.serviceWorker.controller)`));
+  }
   check('the CSS loaded', await ev(`getComputedStyle(document.body).backgroundColor==='rgb(35, 27, 46)'`));
   check('the last file ran (startup)', await ev(`cur==='profiles'&&document.querySelector('#scr-profiles').classList.contains('on')`));
 
@@ -1816,7 +1834,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const realLocal=await ev(`JSON.stringify(window.ABOUT_LOCAL||null)`);
   check('the example About file is in the repo', fs.existsSync(path.join(__dirname,'..','web','about-local.example.js')));
   await ev(`window.ABOUT_LOCAL=undefined;renderAbout()`); await sleep(150); await shot('C01-about-generic');
-  check('with no local file: generic greeting, letter and signature, "made just for you"', await ev(`(()=>{const t=document.querySelector('#abPage').textContent,c=document.querySelector('#abCert').textContent;return t.includes(ABOUT_DEFAULT.greeting)&&t.includes(ABOUT_DEFAULT.from)&&t.includes(ABOUT_DEFAULT.letter[0])&&c.includes('made just for')&&c.includes('you');})()`));
+  check('with no local file: the default names (or greeting), letter and signature, "made just for"', await ev(`(()=>{const t=document.querySelector('#abPage').textContent,c=document.querySelector('#abCert').textContent,N=ABOUT_DEFAULT.names;return t.includes(N.length?'Dear '+joinNames(N,'and')+',':ABOUT_DEFAULT.greeting)&&t.includes(ABOUT_DEFAULT.from)&&t.includes(ABOUT_DEFAULT.letter[0])&&c.includes('made just for')&&c.includes(N.length?joinNames(N,'&'):'you');})()`));
   const tl=await ev(`GIFT_TIMELINE.map(t=>t.v)`);
   check('the gift timeline has every version from 1.0 to APP_VERSION, in order', tl[0]==='1.0'&&tl[tl.length-1]===appV&&tl.every((v,i)=>v==='1.'+i), tl);
   check('every timeline entry has a date, icon, name and why line', await ev(`GIFT_TIMELINE.every(t=>/^\\d{4}-\\d\\d-\\d\\d$/.test(t.d)&&t.i&&t.n&&t.why)`));
@@ -1827,7 +1845,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('a local file\'s nicknames, letter and signature are used', await ev(`(()=>{const t=document.querySelector('#abPage').textContent;return t.includes('Dear Zip, Bean and Moss,')&&document.querySelector('#abCert').textContent.includes('Zip, Bean & Moss')&&t.includes('Hello from the test.')&&!t.includes(ABOUT_DEFAULT.letter[0])&&t.includes('Love, Test Cousin');})()`));
   check('a local why line replaces only its own update', await ev(`document.querySelector('.ab-row[data-v="1.5"]').textContent.includes('For Zip')&&document.querySelector('.ab-row[data-v="1.3"]').textContent.includes('Because you love to draw')`));
   await ev(`window.ABOUT_LOCAL={names:'oops',letter:[3,''],from:'  ',why:null};renderAbout()`); await sleep(100);
-  check('odd local words fall back to the generic ones', await ev(`(()=>{const t=document.querySelector('#abPage').textContent;return t.includes(ABOUT_DEFAULT.greeting)&&t.includes(ABOUT_DEFAULT.letter[0])&&t.includes(ABOUT_DEFAULT.from);})()`));
+  check('odd local words fall back to the generic ones', await ev(`(()=>{const t=document.querySelector('#abPage').textContent,N=ABOUT_DEFAULT.names;return t.includes(N.length?'Dear '+joinNames(N,'and')+',':ABOUT_DEFAULT.greeting)&&t.includes(ABOUT_DEFAULT.letter[0])&&t.includes(ABOUT_DEFAULT.from);})()`));
   const tapBuddy=async()=>{for(let i=0;i<5;i++){await ev(`document.querySelector('#abBuddy').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}))`);await sleep(60);}};
   await tapBuddy();
   check('with no secret, tapping the buddy 5 times shows nothing', await ev(`document.querySelector('#abSecret').classList.contains('hidden')`));
@@ -2059,7 +2077,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('save version 20 or newer: Read to me follows Easy mode everywhere; the device has a last-backup time', await ev(`DB_VERSION>=20&&DB.version===DB_VERSION&&DB.profiles.every(p=>p.speak===null||typeof p.speak==='boolean')&&typeof DB.settings.lastBackup==='number'`));
   await ev(`settingsModal()`);
   check('Settings shows "Last backup: never" for the grown-up', await ev(`document.querySelector('#bkLast').textContent==='💾 Last backup: never'`));
-  check('in the browser there is no Read to me switch (it cannot speak)', await ev(`!document.querySelector('#sSpeak')`));
+  check('in this browser there is no Read to me switch (no Android voice and no voice built into the device)', await ev(`!document.querySelector('#sSpeak')`));
   await ev(`closeModal();downloadFile('{}')`); await sleep(200);
   check('saving a backup file notes the time', await ev(`Date.now()-DB.settings.lastBackup<5000`));
   await ev(`settingsModal()`);
@@ -4547,7 +4565,51 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('Pit Crew, Rescue Ready and Full Outfit arrive', p5Got==='p5fire,p5racer,p5sets', p5Got);
     check('...and they pay +2 each (with any other sticker that came at the same time)', p5s1>=p5s0+6&&(p5s1-p5s0)%2===0, [p5s0,p5s1]);
     await ev(`(()=>{const s=${p5Saved};const p=P();p.look=s.look;p.coins=s.coins;p.owned=s.owned;p.stickers=s.stickers;save();show('room');})()`);
-    check('v1.58 is in the Gift Story and the app says 1.58', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.58')&&APP_VERSION==='1.58'`));
+    check('v1.58 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.58')`));
+  }
+
+  console.log('iPad + iPhone (v1.59)');
+  {
+    await ev(`closeModal();show('room');goRoom(1)`); await sleep(150);
+    check('this desktop browser is not taken for an iPad or iPhone', await ev(`IS_IOS===false&&iosPicture('x')===false&&iosSaveFile('{}','x.json')===false`));
+    check('off iOS, vibrate() is safe and adds no tap switch', await ev(`(vibrate(8),iosTick(8),!document.querySelector('.ios-tick'))`));
+    // pretend to be iOS (IOS_FAKE): the tap switch, the share sheet and press-and-hold pictures
+    await ev(`IOS_FAKE=true;iosTickAt=0;window._clicks=0;window._ch=()=>window._clicks++;document.addEventListener('click',window._ch)`);
+    check('📳 on iOS: one hidden switch, flipped once per buzz (no faster than every 45 ms)', await ev(`(()=>{iosTick(8);iosTick(8);return document.querySelectorAll('.ios-tick').length===1&&document.querySelector('.ios-tick input').checked===true;})()`));
+    await sleep(60); await ev(`iosTick(8)`);
+    check('…the next buzz flips it back, and the room never sees those taps', await ev(`document.querySelector('.ios-tick input').checked===false&&window._clicks===0`), await ev('window._clicks'));
+    await ev(`document.removeEventListener('click',window._ch)`);
+    check('the switch is hidden and takes no taps', await ev(`(r=>getComputedStyle(document.querySelector('.ios-tick')).pointerEvents==='none'&&r.right<=0)(document.querySelector('.ios-tick').getBoundingClientRect())`));
+    await ev(`window._shared=null;window._realShare=navigator.share;window._realCan=navigator.canShare;navigator.share=d=>{window._shared=d.files[0];return Promise.resolve();};navigator.canShare=()=>true;DB.settings.lastBackup=0;downloadFile('{"a":1}')`); await sleep(100);
+    check('💾 on iOS the backup file goes to the share sheet (Save to Files), and counts as a backup', await ev(`!!window._shared&&/^hangout-room-backup-.*\\.json$/.test(window._shared.name)&&DB.settings.lastBackup>0`), await ev(`window._shared&&window._shared.name`));
+    await ev(`navigator.share=d=>Promise.reject(Object.assign(new Error('x'),{name:'AbortError'}));DB.settings.lastBackup=0;downloadFile('{}')`); await sleep(80);
+    check('closing the share sheet saves nothing and says nothing', await ev(`DB.settings.lastBackup===0`));
+    await ev(`navigator.share=window._realShare;navigator.canShare=window._realCan`);
+    await ev(`closeModal();snapRoom()`); await sleep(900);
+    check('📷 on iOS the picture opens big, with how to save it (press and hold)', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&!!document.querySelector('#modalBody img.ios-pic')&&/Press and hold/.test(document.querySelector('#modalBody').textContent)`));
+    check('…and the picture can be pressed and held (the iOS picture menu is allowed on it)', await ev(`getComputedStyle(document.querySelector('.ios-pic')).webkitTouchCallout!=='none'`), await ev(`getComputedStyle(document.querySelector('.ios-pic')).webkitTouchCallout`));
+    await shot('IOS1-picture');
+    await ev(`closeModal();IOS_FAKE=false;document.querySelectorAll('.ios-tick').forEach(e=>e.remove());iosTickEl=null`);
+    // Read to me with a voice built into the device (speechSynthesis), faked here: the headless browser has no voices
+    await ev(`window._spoke=[];window._realSS=window.speechSynthesis;webVoice={lang:'en-US',name:'Test Voice',localService:true};Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{cancel(){},speak(u){window._spoke.push(u.text);},getVoices(){return [];}}});DB.activeId=DB.profiles[0].id;P().speak=true;settingsModal()`); await sleep(100);
+    check('🔊 with a built-in voice, Settings has Read to me', await ev(`canSpeak()&&!!document.querySelector('#sSpeak')`));
+    await ev(`closeModal();window._spoke=[];document.querySelector('#littleBtn').click()`); await sleep(120);
+    check('tapping a button says its name with the device voice', await ev(`window._spoke.join()==='Play'`), await ev('window._spoke'));
+    await ev(`show('room');window._spoke=[];wbSay('FOX')`); await sleep(50);
+    check('Word Builder 🔊 says the word with it', await ev(`window._spoke.join()==='fox'`), await ev('window._spoke'));
+    check('only a voice that lives on the device is ever picked (never an online one)', await ev(`(()=>{const v=[{lang:'en-US',localService:false,name:'Online'},{lang:'en-GB',localService:true,name:'Local GB'}];Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{getVoices(){return v;}}});findWebVoice();const a=!!webVoice&&webVoice.name==='Local GB';v.length=1;findWebVoice();return a&&webVoice===null;})()`));
+    await ev(`Object.defineProperty(window,'speechSynthesis',{configurable:true,value:window._realSS});findWebVoice();P().speak=null`);
+    check('…and with no voice it is quiet again (no Read to me switch)', await ev(`!canSpeak()`));
+    // Marble maze: iOS asks before the tilt sensor works
+    await ev(`window._hadDOE=typeof window.DeviceOrientationEvent==='function';if(!window._hadDOE)window.DeviceOrientationEvent=function(){};window._askN=0;window.DeviceOrientationEvent.requestPermission=()=>{window._askN++;return Promise.resolve('granted');};MZ.tilt.asked='';MZ.tilt.seen=false;show('fidget');setFidTab('maze')`); await sleep(250);
+    check('🧭 the maze shows 📱 Tilt (48 px+) when the device must ask first', await ev(`(b=>!!b&&b.getBoundingClientRect().height>=48)(document.querySelector('#mzAsk'))`));
+    await shot('IOS2-maze-tilt');
+    await ev(`document.querySelector('#mzAsk').click()`); await sleep(80);
+    check('tapping it asks once, then the question goes (tilt readings take over)', await ev(`window._askN===1&&MZ.tilt.asked==='granted'&&!document.querySelector('#mzAsk')`));
+    await ev(`delete window.DeviceOrientationEvent.requestPermission;if(!window._hadDOE)delete window.DeviceOrientationEvent;MZ.tilt.asked='';mzBar()`);
+    check('no 📱 Tilt question where the browser does not ask (Android, desktop)', await ev(`!document.querySelector('#mzAsk')`), await ev(`[window._hadDOE,typeof window.DeviceOrientationEvent,mzAskTilt()]`));
+    await ev(`show('room')`); await sleep(100);
+    check('v1.59 is in the Gift Story and the app says 1.59', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.59')&&APP_VERSION==='1.59'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);
