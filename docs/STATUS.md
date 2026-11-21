@@ -116,7 +116,8 @@ _Last updated: 2026-11-21_
   games like the Soccer ones. Owner's answers: all four games (⚾ Batting, 🧤 Catch, 🎯 Home Run Derby, 👯 Duel for 2), opened from a new
   Backyard piece (a bat rack), a small set of baseball clothes + decorations with a team-kit bonus, prizes and stickers, and new original
   animals (pitchers 🐧 Pip, 🦝 Rocco, 🦉 Hoot; hitters 🐢 Tilly, 🐨 Momo, 🦓 Zippy).
-  - **⚾ Ball Field + Batting: built as v1.60** on branch `feature/baseball` (from `feature/ios`, as #59 is still open). Save version 37
+  - **⚾ Ball Field + Batting: built, PR #60 open as v1.60** on branch `feature/baseball` (from `feature/ios`; #59 was merged meanwhile, so
+    the PR goes to `main`). It also carries the owner's About change (names: "The 4 of You"). Save version 37
     (`ball`, with the fields for all four games, so v1.61–v1.63 need no new save version). The Sticker Book's Soccer page is now "Sports".
   - Next: 🧤 Catch (v1.61), 🎯 Home Run Derby (v1.62), 👯 Batting Duel (v1.63), each on top of the one before.
 - **🧩 Content Pack 5: Finish the Outfits: merged as v1.58 (PR #58)** on branch `feature/pack5` (from `main` after #57). The owner
