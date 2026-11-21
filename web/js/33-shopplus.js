@@ -24,7 +24,7 @@ const THEME_IDS={
   hero:'decor:gaming decor:castleBunk'
 };
 const THEME_OF={}; Object.entries(THEME_IDS).forEach(([t,s])=>s.split(' ').forEach(k=>{(THEME_OF[k]=THEME_OF[k]||[]).push(t);}));
-function themesOf(key,it){const t=(THEME_OF[key]||[]).slice();if(it.p2)t.push(it.p2);if(it.p3)t.push(it.p3);if(it.p4)t.push(it.p4);if(it.yard)t.push('yard');if(it.dream)t.push('dream');return t;}
+function themesOf(key,it){const t=(THEME_OF[key]||[]).slice();if(it.p2)t.push(it.p2);if(it.p3)t.push(it.p3);if(it.p4)t.push(it.p4);if(it.p5)t.push(it.p5);if(it.yard)t.push('yard');if(it.dream)t.push('dream');return t;}
 const themePick={closet:'all',shop:'all'};
 // list = [[key, item]...]; returns the list for the chosen chip, and the chips' html (where = 'closet' | 'shop')
 function themeFilter(where,list){

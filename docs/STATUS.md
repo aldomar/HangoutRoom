@@ -107,7 +107,11 @@ _Last updated: 2026-11-20_
     "Later" item. Owner's answers (2026-11-20): 🙈 Hide & Seek, 🎾 Fetch and 🦮 Walks; ❤️ hearts and stickers only (no coins); a walk
     is its own path scene. Two PRs: v1.54 (Hide & Seek + Fetch), v1.55 (Walks). Full plans in `PLAN.md`. **Both merged** (PR #54 and #55,
     2026-11-20), so **Phase 12 is done**.
-- **🎲 Brain Games Free Play coins: built, PR #57 open as v1.57** on branch `feature/brain-coins` (from `main` after #56). The owner
+- **🧩 Content Pack 5: Finish the Outfits: built, PR open as v1.58** on branch `feature/pack5` (from `main` after #57). The owner
+  noticed (2026-11-21) that some outfit pieces had nothing to match (the Racing Pants, the Fire Rescue Jacket) and agreed a plan for 25
+  clothes: the missing pieces of 10 outfits plus pieces for theme tabs that were empty. New field `p5` (read by `themesOf`), `P5_SETS`
+  for 3 stickers. No save changes. No hero cape (would need a new drawing layer; a possible later plan).
+- **🎲 Brain Games Free Play coins: built and merged as v1.57 (PR #57)** on branch `feature/brain-coins` (from `main` after #56). The owner
   asked (2026-11-20) for steady coins in Brain Games Free Play so the older children keep coming back to the thinking games: +2 a puzzle,
   no cap, in every Brain Game with 🎲 except Memory Match (farming Easy is accepted). Memory Match, the Maze and the Code Lab keep +1 and
   the shared 10 a day (owner's choice). No save changes.
@@ -180,7 +184,8 @@ _Last updated: 2026-11-20_
 - PR #54 "Pet Hide & Seek + Fetch (v1.54)": merged.
 - PR #55 "Pet Walks (v1.55)": merged.
 - PR #56 "Curve Balls (v1.56)": merged.
-- PR #57 "Brain Games Free Play coins (v1.57)" on branch `feature/brain-coins`: open.
+- PR #57 "Brain Games Free Play coins (v1.57)": merged.
+- PR "Content Pack 5: Finish the Outfits (v1.58)" on branch `feature/pack5`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -683,6 +688,10 @@ _Last updated: 2026-11-20_
   letting go keeps the distance; the sniff, the find card (+1 heart, no coins), 5 different new finds, home (+3); an animal is waved goodbye;
   new finds first; the 8th find gives the jar once in My Stuff; the book (32, gray when not found); Back at every step; leaving stops the
   walk; every path drawn; 4 screen sizes (the buddy, pet and bush on screen); Easy mode; stickers; backups and odd data; strict XML.
+- **Content Pack 5 (v1.58)**: 1866 checks, all passing, no console errors (21 new, in their own section at the end): 25 clothes with real theme chips, every piece
+  drawn on every buddy as strict XML, prices and photocard rows, each of the 10 outfits shares a theme chip, the Closet lists every
+  piece, chip lists for Ride tops / Hero shoes / Stage legs / Cozy bottoms / Emo shoes, buying the Racing Jacket, Runway matches, the 3
+  stickers, a screenshot of each outfit (`P1`–`P10`). The old "Dino has no arm warmers" chip check now uses 🐮 Farm (Dino has Claw Mitts).
 - **Brain Games Free Play coins (v1.57)**: 1845 checks (4 new in the Free Play section: +2 a 🎲 puzzle with free.n untouched, the
   18-puzzle run adds up to +2 each in the thinking games and +1 each in Memory Match, Pattern Train still pays +2 after the 10 a day, Memory
   Match then pays nothing with the gentle note; and one v1.57 version check). The full run passed with no console errors, apart from the
@@ -1390,7 +1399,9 @@ _Last updated: 2026-11-20_
 33. ~~Then talk about what comes next.~~ The owner asked for 🌀 curve balls in Soccer first (v1.56, built on `feature/curve`).
 33b. ~~Owner: build v1.56, try curving shots past Flap on Hard (see PR #56), and merge it.~~ Merged.
 33c. The owner asked for +2 uncapped Brain Games Free Play coins (v1.57, built on `feature/brain-coins`).
-33d. Owner: build v1.57, try a few 🎲 puzzles in Pattern Train (+2 each, past 10 a day) (see PR #57), and merge it.
+33d. ~~Owner: build v1.57, try a few 🎲 puzzles in Pattern Train (+2 each, past 10 a day) (see PR #57), and merge it.~~ Merged.
+33e. The owner asked to finish the half outfits; plan agreed 2026-11-21 and built as 🧩 Content Pack 5 (v1.58, `feature/pack5`).
+33f. Owner: build v1.58, dress up the 10 outfits in the Closet (see the PR), and merge it.
 34. Then talk about what comes next (a Phase 13, or a rest).
 
 ## How versions and save upgrades work (since v1.2)

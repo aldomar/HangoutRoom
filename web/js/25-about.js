@@ -169,7 +169,9 @@ const GIFT_TIMELINE=[
   {v:'1.56',d:'2026-11-20',i:'🌀',n:'Curve Balls',why:'So scoring on the keepers takes skill, not just luck',
     news:['🌀 Bend your swipe to curve the ball: the keepers find it harder to guess','💨 A hard flick is a bit harder to stop too','🏆 The Gold Trophy is now within reach with great shots']},
   {v:'1.57',d:'2026-11-20',i:'🎲',n:'Brain Coins',why:'So the thinking games are always worth coming back to',
-    news:['🎲 Free Play in the Brain Games: +2 coins for every puzzle','♾️ No daily limit: keep solving, keep earning','🃏 Memory Match, mazes and Code Lab boards stay the same']}
+    news:['🎲 Free Play in the Brain Games: +2 coins for every puzzle','♾️ No daily limit: keep solving, keep earning','🃏 Memory Match, mazes and Code Lab boards stay the same']},
+  {v:'1.58',d:'2026-11-21',i:'🧩',n:'Finish the Outfits',why:'So every dress-up idea has all its pieces, from head to toe',
+    news:['🏎️ Race driver, 🚒 firefighter and 🚧 builder outfits are complete','🤖 Robot, ⭐ hero, 🦈 shark, 🚀 astronaut and 🦕 dino pieces to match','🥋 Karate pants, 🐮 overall pants, 🍵 PJ pants, 🍓 a strawberry skirt and more','🧩 3 new stickers for full outfits']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

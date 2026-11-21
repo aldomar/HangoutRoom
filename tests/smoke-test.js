@@ -1088,7 +1088,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('136 stickers on 8 pages (4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===136&&new Set(STICKERS.map(s=>s.id)).size===136&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('139 stickers on 8 pages (3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===139&&new Set(STICKERS.map(s=>s.id)).size===139&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -2009,6 +2009,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('🦇 Emo shows only the emo tops', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).sort().join()==='batSweater,tee,zip'&&document.querySelector('#closetGrid [data-theme=emo]').classList.contains('on')`), await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).join()`));
   await ev(`document.querySelector('#closetGrid [data-theme=dino]').click()`); await sleep(50);
   check('🦕 Dino shows the dino hoodie (Pack 2) and the Dino Nugget Tee (Pack 4)', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).sort().join()==='dinoHoodie,nuggetTee'`));
+  // 🐮 Farm has a top but no arm warmers (Dino has Claw Mitts since v1.58)
+  await ev(`document.querySelector('#closetGrid [data-theme=farm]').click()`); await sleep(50);
   await ev(`[...document.querySelectorAll('#closetTabs [data-cat]')].find(b=>b.dataset.cat==='arms').click()`); await sleep(50);
   check('a tab with nothing of that theme goes back to All', await ev(`themePick.closet==='all'&&document.querySelectorAll('#closetGrid .tile').length===CLOSET.arms.items.length`));
   await ev(`closetCat='top';themePick.closet='all';renderCloset()`);
@@ -4493,8 +4495,59 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('a curve down the middle sends Flap away from the bend', k.res==='goal'&&k.fooled&&k.dive===0.32, k);
     await waitFor(`SOC.state==='done'`);
     await ev(`closeModal();Math.random=window._rand2;(()=>{const p=P(),s=window._cbSaved;p.soccer.level=s.level;p.soccer.mode=s.mode;p.coins=s.coins;p.soccer.best=JSON.parse(s.best);save();})();stkPaused=false;show('room')`);
-    check('v1.56 is in the Gift Story and the app says 1.57', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.56')&&APP_VERSION==='1.57'`));
+    check('v1.56 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.56')`));
     check('v1.57 (Brain Games Free Play coins) is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.57')`));
+  }
+
+  console.log('Content Pack 5 (v1.58): finish the outfits');
+  {
+    await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();show('room');goRoom(1)`); await sleep(200);
+    const p5Saved=await ev(`JSON.stringify({look:P().look,coins:P().coins,owned:P().owned,stickers:P().stickers})`);
+    const p5Clothes=JSON.parse(await ev(`JSON.stringify(Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p5).map(i=>[c,i.id])))`));
+    check('25 new clothes, each with a real theme chip (and no other pack field)', p5Clothes.length===25&&await ev(`Object.values(CLOSET).every(c=>c.items.filter(i=>i.p5).every(i=>THEMES[i.p5]&&!i.p2&&!i.p3&&!i.p4))`), p5Clothes.length);
+    check('every new piece draws on every buddy, with no broken numbers, as strict XML', await ev(`${JSON.stringify(p5Clothes)}.every(([c,id])=>Object.keys(BUDDIES).every(k=>{const s=mascotSVG(Object.assign({},DEFAULT_LOOK,{kind:k,[c]:id}));return s.length>500&&!/NaN|undefined/.test(s)&&!new DOMParser().parseFromString(s,'image/svg+xml').querySelector('parsererror');}))`));
+    check('nothing says "boy" or "girl", every price is 10–40, every piece is on a photocard row', await ev(`${JSON.stringify(p5Clothes)}.every(([c,id])=>{const i=CLOSET[c].items.find(x=>x.id===id);return !/\\b(boy|girl)s?\\b/i.test(i.name)&&i.price>=10&&i.price<=40&&Object.values(CARD_TAGS).some(t=>t.includes(c+':'+id));})`));
+    check('10 outfits; each names real clothes, one piece per tab, and has a Pack 5 piece', await ev(`(()=>{const S=Object.values(P5_SETS);return S.length===10&&S.every(s=>{const its=s.keys.map(k=>{const [c,i]=k.split(':');return CLOSET[c]&&CLOSET[c].items.find(x=>x.id===i);});return its.every(Boolean)&&new Set(s.keys.map(k=>k.split(':')[0])).size===s.keys.length&&its.some(i=>i.p5);});})()`));
+    check('every piece of an outfit shares one theme chip, so the chip finds the whole outfit', await ev(`Object.values(P5_SETS).every(s=>{const ts=s.keys.map(k=>{const [c,i]=k.split(':');return themesOf(k,CLOSET[c].items.find(x=>x.id===i));});return ts[0].some(t=>ts.every(l=>l.includes(t)));})`));
+    await ev(`themePick.closet='all';show('closet')`); await sleep(150);
+    const p5Missing=[];
+    for(const [c,i] of p5Clothes){await ev(`document.querySelector('[data-cat=${c}]').click()`); if(!(await ev(`!!document.querySelector('#closetGrid [data-id=${i}] svg')`))) p5Missing.push(c+':'+i);}
+    check('the Closet lists all 25 new pieces', p5Missing.length===0, p5Missing);
+    const chip=async(cat,th)=>{await ev(`document.querySelector('[data-cat=${cat}]').click()`); await sleep(50); await ev(`document.querySelector('#closetGrid [data-theme=${th}]').click()`); await sleep(80);
+      return ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).sort().join()`);};
+    let got=await chip('top','ride'); check('🚗 Ride tops: Fire Rescue Jacket, Racing Jacket, Builder Vest', got==='fireTop,racingJacket,safetyVest', got);
+    await shot('P0-pack5-ride-tops');
+    got=await chip('shoes','hero'); check('🤖 Hero shoes: Hero Boots, Robot Boots, Shark Slippers', got==='heroBoots,robotBoots,sharkSlippers', got);
+    got=await chip('legs','stage'); check('🎤 Stage now has leg warmers', got==='starLegs', got);
+    got=await chip('bottom','cozy'); check('🍵 Cozy now has bottoms', got==='pjPants', got);
+    got=await chip('shoes','emo'); check('🦇 Emo shoes: Platform Boots and Checker Sneakers', got==='boots,checkKicks', got);
+    await ev(`themePick.closet='all';P().coins=200;document.querySelector('[data-cat=top]').click()`); await sleep(80);
+    await ev(`document.querySelector('#closetGrid [data-id=racingJacket]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
+    check('bought and wearing the Racing Jacket (20)', await ev(`P().look.top==='racingJacket'&&P().owned.includes('top:racingJacket')&&P().coins===180`), await ev('P().coins'));
+    // each finished outfit on a different buddy
+    const kinds=await ev('Object.keys(BUDDIES)'), furs=['white','pink','black','mint','cocoa','sky','ginger','lavender','stone','white'];
+    let n=0;
+    for(const id of await ev('Object.keys(P5_SETS)')){
+      await ev(`(()=>{const L=Object.assign({},DEFAULT_LOOK,{kind:'${kinds[n%kinds.length]}',fur:'${furs[n]}',hair:'none',top:'none',bottom:'none',legs:'none',arms:'none',shoes:'none',acc:'none'});P5_SETS.${id}.keys.forEach(k=>{const [c,i]=k.split(':');L[c]=i;});P().look=L;renderCloset();})()`);
+      await sleep(80); await shot(`P${++n}-pack5-${id}`);
+    }
+    check('👠 Runway: the full race driver outfit fits Road Trip in 4 tabs', await ev(`(()=>{const L=Object.assign({},DEFAULT_LOOK);P5_SETS.racer.keys.forEach(k=>{const [c,i]=k.split(':');L[c]=i;});return rwMatches(rwCardOf('road'),L)>=4;})()`));
+    check('👠 Runway: the robot outfit fits Hero Training in 5 tabs', await ev(`(()=>{const L=Object.assign({},DEFAULT_LOOK);P5_SETS.robot.keys.forEach(k=>{const [c,i]=k.split(':');L[c]=i;});return rwMatches(rwCardOf('hero'),L)>=5;})()`));
+
+    console.log('Content Pack 5: stickers');
+    check('3 new stickers on the Room & Style page', await ev(`['p5racer','p5fire','p5sets'].every(id=>STICKERS.some(s=>s.id===id&&s.page==='room'))`));
+    await ev(`P().owned=P().owned.filter(k=>!Object.values(P5_SETS).some(s=>s.keys.includes(k)))`);
+    check('no outfit pieces: 0 sets done', await ev(`p5SetsDone(P())===0&&p5SetHave(P(),'racer')===0`));
+    await ev(`P().owned.push('top:racingJacket','bottom:racePants','arms:racingGloves')`);
+    check('3 of 4 race driver pieces: not done yet', await ev(`p5SetHave(P(),'racer')===3&&p5SetsDone(P())===0`));
+    await ev(`P().owned.push('acc:racingHelmet',...P5_SETS.fire.keys,...P5_SETS.builder.keys)`);
+    check('race driver, firefighter and builder done: 3 sets', await ev(`p5SetsDone(P())===3`));
+    const p5s0=await ev('P().coins');
+    await ev(`stkPaused=false`); const p5Got=await ev(`checkStickers().map(s=>s.id).filter(id=>/^p5/.test(id)).sort().join()`); const p5s1=await ev('P().coins'); await ev(`stkPaused=true;closeModal()`);
+    check('Pit Crew, Rescue Ready and Full Outfit arrive', p5Got==='p5fire,p5racer,p5sets', p5Got);
+    check('...and they pay +2 each (with any other sticker that came at the same time)', p5s1>=p5s0+6&&(p5s1-p5s0)%2===0, [p5s0,p5s1]);
+    await ev(`(()=>{const s=${p5Saved};const p=P();p.look=s.look;p.coins=s.coins;p.owned=s.owned;p.stickers=s.stickers;save();show('room');})()`);
+    check('v1.58 is in the Gift Story and the app says 1.58', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.58')&&APP_VERSION==='1.58'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

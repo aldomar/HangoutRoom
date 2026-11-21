@@ -384,6 +384,10 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
 - ✅ **🎲 Brain Games Free Play coins (v1.57, built, asked 2026-11-20):** 🎲 Free Play in the Brain Games except Memory Match pays
   +2 a puzzle with no daily cap, so the thinking games are always worth coming back to. Memory Match, the Maze and the Code Lab keep
   +1 and the shared 10 a day. The owner accepted that Easy could be farmed.
+- ✅ **🧩 Content Pack 5: Finish the Outfits (v1.58, built, plan agreed 2026-11-21):** `57-pack5.js`, 25 clothes that finish
+  the half outfits (race driver, firefighter, builder, karate, farmer, robot, star hero, shark, astronaut, dino) and fill empty theme
+  tabs (Stage leg warmers, Cozy and Cafe bottoms, Emo shoes). Field `p5` (any `THEMES` key) read by `themesOf`; `P5_SETS` lists
+  the 10 outfits for 3 stickers. Clothes only, no save change. A hero cape was left out (Extras is one slot; it would need a new layer).
 
 #### v1.54 plan details: 🙈 Pet Hide & Seek + 🎾 Fetch (agreed 2026-11-20, built)
 Why: the pet can only be patted, fed and dressed, so after the tricks are learned there is nothing to *do* with it. Hide &
