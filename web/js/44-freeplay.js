@@ -6,17 +6,20 @@
    (solvable, one answer, choices hold the answer); if a check fails the dice roll again. Nothing about a made puzzle is
    saved and it never counts as solved: brain.solved, maze.solved, code.solved, level bonuses and Brain Champ don't change.
    - 🎲 Free Play: a button in 5 Brain Games (not Word Builder or Fact Cards), the Marble Maze bar and the Code Lab's Easy
-     and Medium lists. It glows once that level's fixed puzzles are all solved. +1 coin each, FREE_DAILY a day in all
-     (p.free), then one gentle note; it refills quietly the next day.
+     and Medium lists. It glows once that level's fixed puzzles are all solved. Since v1.57 the thinking Brain Games
+     (FP_THINK: all but Memory Match) pay +FREE_THINK each with no daily cap, so there is always a reason to come back to them.
+     Memory Match, the Maze and the Code Lab pay +1 each, FREE_DAILY a day in all (p.free), then one gentle note; it refills
+     quietly the next day.
    - 📅 Puzzle of the Day: a card at the top of the Brain Games menu. The game turns through POTD_GAMES by the date and the
      seed is the date, so it is the same puzzle all day. +POTD_COINS once a day (p.potd.day); no streaks, no "missed it".
    Hooks: brPuzzle(g,l,idx,fz) / brWin / brKey (28), memory + pop shuffles (29), mzStart(i,free) / mzCur / mzWin (19),
    clOpen(lvl,idx,free) / clPz / clWin (18).
    Saved per room: free{day, n}, potd{day}, stats.free, stats.potd.
    ========================================================= */
-const FREE_DAILY=10, POTD_COINS=5;
+const FREE_DAILY=10, POTD_COINS=5, FREE_THINK=2;
 const POTD_GAMES=['train','pop','snack','memory','bake']; // the daily turn (+ word in 45; the Maze and Code Lab live on other screens)
 const FP_BRAIN=['snack','memory','pop','train','bake'];   // Brain Games with 🎲 (+ word from the word bank in 45; facts can't be made up)
+const FP_THINK=['snack','pop','train','bake'];          // 🎲 Brain Games that pay +FREE_THINK with no cap (+ word in 45)
 let fpToldDay='';
 
 /* ---------- the dice ---------- */
@@ -261,6 +264,12 @@ function fpPay(x,y){
   fpToldDay=p.id+day; return '<br><small>Free Play coins are full for today! Keep playing for fun ✨</small>';
 }
 
+// +FREE_THINK per Free Play puzzle in a thinking Brain Game (FP_THINK), no daily cap; p.free.n is left for the others.
+function fpThinkPay(x,y){
+  const p=P(); p.stats.free++;
+  earn(FREE_THINK,'Free Play',x,y); return `+${FREE_THINK} 🪙`;
+}
+
 /* ---------- 🎲 in the Brain Games ---------- */
 function fpDice(g,l){
   if(!FP_BRAIN.includes(g)) return '';
@@ -279,7 +288,7 @@ function fpBrainWin(){
   if(fz.daily){
     if(p.potd.day!==fz.day){p.potd.day=fz.day;p.stats.potd++;earn(POTD_COINS,'Puzzle of the Day!');line=`+${POTD_COINS} 🪙`;}
     else {save();line=p.easy?'':'<br>Practice makes perfect ✨';}
-  } else line=fpPay();
+  } else line=FP_THINK.includes(g)?fpThinkPay():fpPay();
   BR.timer=setTimeout(()=>{
     if(cur!=='brain'||BR.view!=='play'||BR.tok!==tok) return;
     modal(fz.daily?'📅 Puzzle of the Day solved!':`🎲 ${G.icon} Solved!`,`<div style="text-align:center;font-size:18px">🎉 ${line}</div>`,

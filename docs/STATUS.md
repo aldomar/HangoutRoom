@@ -107,7 +107,11 @@ _Last updated: 2026-11-20_
     "Later" item. Owner's answers (2026-11-20): 🙈 Hide & Seek, 🎾 Fetch and 🦮 Walks; ❤️ hearts and stickers only (no coins); a walk
     is its own path scene. Two PRs: v1.54 (Hide & Seek + Fetch), v1.55 (Walks). Full plans in `PLAN.md`. **Both merged** (PR #54 and #55,
     2026-11-20), so **Phase 12 is done**.
-- **🌀 Curve balls (a Soccer fix, not a new phase): built, PR #56 open as v1.56** on branch `feature/curve` (from `main` after #55).
+- **🎲 Brain Games Free Play coins: built, PR #57 open as v1.57** on branch `feature/brain-coins` (from `main` after #56). The owner
+  asked (2026-11-20) for steady coins in Brain Games Free Play so the older children keep coming back to the thinking games: +2 a puzzle,
+  no cap, in every Brain Game with 🎲 except Memory Match (farming Easy is accepted). Memory Match, the Maze and the Code Lab keep +1 and
+  the shared 10 a day (owner's choice). No save changes.
+- **🌀 Curve balls (a Soccer fix, not a new phase): built and merged as v1.56 (PR #56)** on branch `feature/curve` (from `main` after #55).
   The owner noticed Flap was too hard: a perfect 5/5 on Hard (the 🥇 Gold Trophy) was pure luck, about 1 match in 150–400 whatever she did.
   Now a curved swipe (and, a little, a hard flick) makes the keeper worse at guessing, and a curve can send it the wrong way.
   The owner agreed the numbers ("these numbers make sense", 2026-11-20): with great curved shots to the corners about 1 in 20–60.
@@ -175,7 +179,8 @@ _Last updated: 2026-11-20_
 - PR #53 "Trick Shots (v1.53)": merged.
 - PR #54 "Pet Hide & Seek + Fetch (v1.54)": merged.
 - PR #55 "Pet Walks (v1.55)": merged.
-- PR #56 "Curve Balls (v1.56)" on branch `feature/curve`: open.
+- PR #56 "Curve Balls (v1.56)": merged.
+- PR #57 "Brain Games Free Play coins (v1.57)" on branch `feature/brain-coins`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -678,6 +683,10 @@ _Last updated: 2026-11-20_
   letting go keeps the distance; the sniff, the find card (+1 heart, no coins), 5 different new finds, home (+3); an animal is waved goodbye;
   new finds first; the 8th find gives the jar once in My Stuff; the book (32, gray when not found); Back at every step; leaving stops the
   walk; every path drawn; 4 screen sizes (the buddy, pet and bush on screen); Easy mode; stickers; backups and odd data; strict XML.
+- **Brain Games Free Play coins (v1.57)**: 1845 checks (4 new in the Free Play section: +2 a 🎲 puzzle with free.n untouched, the
+  18-puzzle run adds up to +2 each in the thinking games and +1 each in Memory Match, Pattern Train still pays +2 after the 10 a day, Memory
+  Match then pays nothing with the gentle note; and one v1.57 version check). The full run passed with no console errors, apart from the
+  old "app says 1.56" version check, then updated to 1.57.
 - **Curve Balls (v1.56)**: `tests/smoke-test.js` has 1841 checks (8 new, in their own section). The full run passed all 1841 with no
   console errors. `Math.random` is set to a fixed list so the keeper's choices are known:
   the tip mentions curving; the skill numbers; a straight shot Flap reads is saved, but the same roll with a big curve goes in; a big
@@ -1379,7 +1388,9 @@ _Last updated: 2026-11-20_
 32. ~~Then build v1.55 (🦮 Walks) on `feature/walks`.~~ Built (on top of `feature/petplay`).
 32b. ~~Owner: merge #54 first, then build v1.55, go for a 🦮 walk on each path (see PR #55), and merge it.~~ Merged. Phase 12 is done.
 33. ~~Then talk about what comes next.~~ The owner asked for 🌀 curve balls in Soccer first (v1.56, built on `feature/curve`).
-33b. Owner: build v1.56, try curving shots past Flap on Hard (see PR #56), and merge it.
+33b. ~~Owner: build v1.56, try curving shots past Flap on Hard (see PR #56), and merge it.~~ Merged.
+33c. The owner asked for +2 uncapped Brain Games Free Play coins (v1.57, built on `feature/brain-coins`).
+33d. Owner: build v1.57, try a few 🎲 puzzles in Pattern Train (+2 each, past 10 a day) (see PR #57), and merge it.
 34. Then talk about what comes next (a Phase 13, or a rest).
 
 ## How versions and save upgrades work (since v1.2)

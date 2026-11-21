@@ -167,7 +167,9 @@ const GIFT_TIMELINE=[
   {v:'1.55',d:'2026-11-20',i:'🦮',n:'Pet Walks',why:'So her pet can take her somewhere new, with little treasures to find on the way',
     news:['🦮 Walk your pet on 4 paths: meadow, pond, town and a starry night','🧺 32 little things to find for your Walk Finds','🫙 Find a whole path for its treasure jar']},
   {v:'1.56',d:'2026-11-20',i:'🌀',n:'Curve Balls',why:'So scoring on the keepers takes skill, not just luck',
-    news:['🌀 Bend your swipe to curve the ball: the keepers find it harder to guess','💨 A hard flick is a bit harder to stop too','🏆 The Gold Trophy is now within reach with great shots']}
+    news:['🌀 Bend your swipe to curve the ball: the keepers find it harder to guess','💨 A hard flick is a bit harder to stop too','🏆 The Gold Trophy is now within reach with great shots']},
+  {v:'1.57',d:'2026-11-20',i:'🎲',n:'Brain Coins',why:'So the thinking games are always worth coming back to',
+    news:['🎲 Free Play in the Brain Games: +2 coins for every puzzle','♾️ No daily limit: keep solving, keep earning','🃏 Memory Match, mazes and Code Lab boards stay the same']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
