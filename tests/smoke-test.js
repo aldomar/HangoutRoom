@@ -4458,7 +4458,34 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('odd walk data is made safe (unknown finds are ignored by the book and stickers)', await ev(`(p=>p.walk.path==='meadow'&&p.walk.finds.join()==='daisy,nope'&&p.stats.finds===0&&wkHave(p,'meadow')===1)(DB.profiles[0])`));
     await ev(`closeModal();doRestore(${JSON.stringify(wkB)})`); await sleep(400);
     await ev(`closeModal();{const p=P();p.pet.kind=wkSaved.kind;p.pet.hearts=JSON.parse(wkSaved.hearts);p.coins=wkSaved.coins;save();}WK_TEST_FAST=false;stkPaused=false;goRoom(1);show('room')`);
-    check('v1.55 is in the Gift Story and the app says 1.55', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.55')&&APP_VERSION==='1.55'`));
+    check('v1.55 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.55')`));
+  }
+
+  console.log('Curve Balls (v1.56)');
+  {
+    const waitFor=async(cond,ms)=>{for(let i=0;i<(ms||4000)/50;i++){if(await ev(cond))return true;await sleep(50);}return false;};
+    // Math.random walks through a fixed list, so the keeper's choices are known.
+    await ev(`window._rand2=Math.random;window._seq=a=>{let i=0;Math.random=()=>a[i++%a.length];};stkPaused=true`);
+    await ev(`(()=>{const p=P();window._cbSaved={level:p.soccer.level,mode:p.soccer.mode,coins:p.coins,best:JSON.stringify(p.soccer.best)};p.soccer.level='hard';p.soccer.mode='kick';show('soccer');})()`); await sleep(400);
+    check('the tip says to bend the swipe', await ev(`document.querySelector('#socTip').textContent.includes('curve')&&document.querySelector('#socTip').textContent.includes('Flap')`));
+    check('skill: no curve = 0, a big curve = 1; a tap = a little power, a hard flick = 1', await ev(`(n=>(a=>a.fc===0&&n(a.fp,0.25))(socSkill(1,0))&&(a=>a.fc===1&&a.fp===1)(socSkill(1.8,-0.4))&&n(socSkill(1,0.15).fc,0.5))((x,y)=>Math.abs(x-y)<1e-9)`));
+    const kick=async(seq,u,curve)=>{await waitFor(`SOC.state==='aim'`);await ev(`_seq(${JSON.stringify(seq)});socShoot(${u},0.5,1,${curve})`);
+      await waitFor(`SOC.state==='result'`);return ev(`JSON.stringify({res:SOC.shot.res,fooled:SOC.shot.fooled,dive:SOC.shot.dive,msg:document.querySelector('#socMsg').textContent})`).then(JSON.parse);};
+    // roll 0.45: below Flap's read for a straight tap (0.6 × 0.9625), above it for a big curve (0.6 × 0.6625), so Flap stays in the middle
+    let k=await kick([0.45],0.3,0);
+    check('a straight shot Flap reads is saved', k.res==='saved'&&!k.fooled&&k.dive>0.2, k);
+    k=await kick([0.45],0.3,0.3);
+    check('the same roll with a big curve: Flap misreads it and the ball goes in', k.res==='goal'&&!k.fooled&&k.dive===0, k);
+    // roll 0.99, then 0.1: not read, then fooled by the curve (0.1 < 0.5): dives the wrong way
+    k=await kick([0.99,0.1,0.5],0.3,0.3);
+    check('a big curve sends Flap the wrong way: "Curve ball!"', k.res==='goal'&&k.fooled&&k.dive===-0.32&&k.msg.includes('Curve ball'), k);
+    k=await kick([0.99,0.1,0.5],0.3,0);
+    check('a straight shot never fools Flap (it guesses a side as before)', k.res==='saved'&&!k.fooled&&k.dive===0.32, k);
+    k=await kick([0.99,0.1,0.5],0.04,-0.3);
+    check('a curve down the middle sends Flap away from the bend', k.res==='goal'&&k.fooled&&k.dive===0.32, k);
+    await waitFor(`SOC.state==='done'`);
+    await ev(`closeModal();Math.random=window._rand2;(()=>{const p=P(),s=window._cbSaved;p.soccer.level=s.level;p.soccer.mode=s.mode;p.coins=s.coins;p.soccer.best=JSON.parse(s.best);save();})();stkPaused=false;show('room')`);
+    check('v1.56 is in the Gift Story and the app says 1.56', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.56')&&APP_VERSION==='1.56'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

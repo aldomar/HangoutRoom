@@ -131,6 +131,15 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Curve Balls in Soccer (since version 1.56)
+In ⚽ Kick, **bend your swipe** (a little curve, like a banana) and the ball curves on its way to the goal.
+- A curved shot is **harder for the keeper to guess**, and sometimes the keeper **dives the wrong way**: "Curve ball! 🌀".
+  A hard, quick flick is a bit harder to stop too.
+- Before, beating Flap 5 out of 5 (for the 🥇 Gold Trophy) was pure luck, about 1 match in 150 or worse. With great curved
+  shots into the corners it's now about **1 match in 20 to 60**, so practice pays off.
+- Taps and straight shots work just like before. Mochi and Boo fall for curves too.
+- Nothing new is saved; old backups are unchanged.
+
 ## Pet Walks (since version 1.55)
 Tap your pet → **🦮 Walk**. Your buddy and your pet go for a stroll.
 - **Pick a path** (all free): 🌼 Flower Meadow, 🦆 Duck Pond, 🏘️ Town Sidewalk or 🌙 Starry Path. Each card shows how many of its

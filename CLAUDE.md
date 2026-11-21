@@ -204,6 +204,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   with `flat` (no `#fuzz` filter).
 - Soccer: one canvas drawn by the main loop only while `cur==='soccer'`. Goal coordinates are `u` (-0.5..0.5 across)
   and `v` (0..1 up). Each level has its own original keeper: Easy = Mochi (cat), Medium = Boo (ghost), Hard = Flap (bat).
+  The keeper picks its dive once, when she kicks (`socShoot`): one roll for guess right (`read`), stay in the middle (`stay`) or a side.
+  Since v1.56 a curve and a hard flick lower `read` (`CURVE_SKILL`, `socSkill`), and a curve can send it the wrong way (`shot.fooled`,
+  "Curve ball! 🌀"); tuned so a 5/5 against Flap is about 1 in 20–60 with great curved shots (straight shots stay as they were).
   Level ids `easy/medium/hard` are saved: never rename them. A perfect 5/5 gives that level's trophy once
   (`TROPHIES`, `giveTrophies()`): a room item `trophyBronze` / `trophySilver` / `trophyGold`. Decorations with
   `award:1` are prizes and never appear in the Shop.

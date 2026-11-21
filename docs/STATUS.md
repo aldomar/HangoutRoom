@@ -105,7 +105,12 @@ _Last updated: 2026-11-20_
   - **🐾 More pet play: plans agreed 2026-11-20 ("go for it"); 🙈 Hide & Seek + 🎾 Fetch built, PR #54 open as v1.54** on branch `feature/petplay` (from `main` after #53);
     **🦮 Walks built, PR #55 open as v1.55** on branch `feature/walks` (on top of #54). The last
     "Later" item. Owner's answers (2026-11-20): 🙈 Hide & Seek, 🎾 Fetch and 🦮 Walks; ❤️ hearts and stickers only (no coins); a walk
-    is its own path scene. Two PRs: v1.54 (Hide & Seek + Fetch), v1.55 (Walks). Full plans in `PLAN.md`. Phase 12 is done when both are merged.
+    is its own path scene. Two PRs: v1.54 (Hide & Seek + Fetch), v1.55 (Walks). Full plans in `PLAN.md`. **Both merged** (PR #54 and #55,
+    2026-11-20), so **Phase 12 is done**.
+- **🌀 Curve balls (a Soccer fix, not a new phase): built, PR #56 open as v1.56** on branch `feature/curve` (from `main` after #55).
+  The owner noticed Flap was too hard: a perfect 5/5 on Hard (the 🥇 Gold Trophy) was pure luck, about 1 match in 150–400 whatever she did.
+  Now a curved swipe (and, a little, a hard flick) makes the keeper worse at guessing, and a curve can send it the wrong way.
+  The owner agreed the numbers ("these numbers make sense", 2026-11-20): with great curved shots to the corners about 1 in 20–60.
 - The first APK built in Android Studio with no errors (2026-11-14). The owner checked on the device that saves
   survive closing the app and that Back works (popup → room → profiles → exit).
 - The app and the Android wrapper were built in a Claude chat session and written into `D:\HangoutRoom`.
@@ -168,8 +173,9 @@ _Last updated: 2026-11-20_
 - PR #51 "Runway (v1.51)": merged.
 - PR #52 "Stage Jam (v1.52)": merged.
 - PR #53 "Trick Shots (v1.53)": merged.
-- PR #54 "Pet Hide & Seek + Fetch (v1.54)" on branch `feature/petplay`: open.
-- PR #55 "Pet Walks (v1.55)" on branch `feature/walks` (on top of #54): open.
+- PR #54 "Pet Hide & Seek + Fetch (v1.54)": merged.
+- PR #55 "Pet Walks (v1.55)": merged.
+- PR #56 "Curve Balls (v1.56)" on branch `feature/curve`: open.
 - Android Studio should open only the `android/` folder. Its generated files (`android/.gradle/`, `android/.idea/`,
   `android/app/build/`, `android/local.properties`, and since v1.30 `android/app/release/`, where Generate Signed APK
   puts the APK) are ignored.
@@ -672,6 +678,13 @@ _Last updated: 2026-11-20_
   letting go keeps the distance; the sniff, the find card (+1 heart, no coins), 5 different new finds, home (+3); an animal is waved goodbye;
   new finds first; the 8th find gives the jar once in My Stuff; the book (32, gray when not found); Back at every step; leaving stops the
   walk; every path drawn; 4 screen sizes (the buddy, pet and bush on screen); Easy mode; stickers; backups and odd data; strict XML.
+- **Curve Balls (v1.56)**: `tests/smoke-test.js` has 1841 checks (8 new, in their own section). The full run passed all 1841 with no
+  console errors. `Math.random` is set to a fixed list so the keeper's choices are known:
+  the tip mentions curving; the skill numbers; a straight shot Flap reads is saved, but the same roll with a big curve goes in; a big
+  curve sends Flap the wrong way ("Curve ball! 🌀"); a straight shot never does; a curve down the middle sends Flap away from the bend.
+  The older Soccer checks are unchanged (their shots are straight). The odds were worked out with a simulation that copies the keeper's
+  movement frame by frame (40,000 kicks per shot type), not in the smoke test. Not tested automatically: how easy a curve is to swipe on
+  the real tablet.
   Speed check: Shop 1386 ms (under 1.5 s), a room doing nothing 111 ms/s. Not tested automatically: how holding 👣 feels on the tablet.
 
 ## Decisions made
@@ -1043,6 +1056,12 @@ _Last updated: 2026-11-20_
   room picture is a band in the middle, and the tall side tabs covered a big part of it. There the ⬅️/➡️ tabs become wide,
   short pills in the empty strip under the picture (the ⬆️ tab was already in the strip above), and the emote bar moves up
   so it doesn't cover them. Tablets, landscape phones and Easy mode's bigger tabs elsewhere are unchanged.
+- **Curve Balls (built as v1.56, in `13-soccer.js`), agreed 2026-11-20.** The owner asked how Flap decides where to dive, then asked for
+  more skill (like the Trick Shots' curves) so a perfect game is nearer 1 in 50. How the keeper picks: when she kicks, one roll picks
+  "guess right" (`read`), "stay in the middle" (`stay`) or "guess a side". Since v1.56 the read chance is lowered by up to 30% for a big
+  curve and 15% for a hard flick (`CURVE_SKILL`, `socSkill`), and a curved shot that isn't read sends the keeper the wrong way up to half
+  the time (`shot.fooled`, "Curve ball! 🌀"). Applies to all three keepers. Taps and straight shots are nearly unchanged. Simulated odds
+  of a 5/5 against Flap: tap near a post 1 in 120 (was 155), big curve + hard flick to a corner 1 in 22 (was 800). No save changes.
 - **Pet Walks (built as v1.55, `56-walk.js`), agreed 2026-11-20** (the owner said "start on walk pr"). Built as planned: 4 free paths, hold 👣 to
   walk, 5 sniffs a walk, 32 finds (animals only said hello to), +1 heart a find and +3 a walk, a 🫙 treasure jar per full path into My Stuff.
   The first sticker is called Walk Buddy (Runway already has "First Walk", id `walk1`, so these ids start with `petWalk`). Save version 36.
@@ -1356,10 +1375,12 @@ _Last updated: 2026-11-20_
     ❤️ hearts and stickers only (no coins); a walk is its own path scene. Plans written in `PLAN.md` on branch `feature/petplay`:
     v1.54 (Hide & Seek + Fetch) and v1.55 (Walks), two PRs.
 31. ~~Owner: OK the v1.54 and v1.55 plans in `PLAN.md`, then build v1.54 on `feature/petplay`.~~ Agreed ("go for it") and built.
-31b. Owner: build v1.54, try 🙈 Hide & Seek and 🎾 Fetch in a few rooms (see PR #54), and merge it.
+31b. ~~Owner: build v1.54, try 🙈 Hide & Seek and 🎾 Fetch in a few rooms (see PR #54), and merge it.~~ Merged.
 32. ~~Then build v1.55 (🦮 Walks) on `feature/walks`.~~ Built (on top of `feature/petplay`).
-32b. Owner: merge #54 first, then build v1.55, go for a 🦮 walk on each path (see PR #55), and merge it. Phase 12 is then done.
-33. Then talk about what comes next (a Phase 13, or a rest).
+32b. ~~Owner: merge #54 first, then build v1.55, go for a 🦮 walk on each path (see PR #55), and merge it.~~ Merged. Phase 12 is done.
+33. ~~Then talk about what comes next.~~ The owner asked for 🌀 curve balls in Soccer first (v1.56, built on `feature/curve`).
+33b. Owner: build v1.56, try curving shots past Flap on Hard (see PR #56), and merge it.
+34. Then talk about what comes next (a Phase 13, or a rest).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
