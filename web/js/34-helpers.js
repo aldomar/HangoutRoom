@@ -6,7 +6,8 @@
    ⚙️ Settings shows "Last backup: 12 days ago" in small grown-up text. Nothing for the children, no pop-ups.
    🔊 Read to me: tapping a button also says its name, through AndroidBridge.speak(text) (Android's built-in offline
    voice). p.speak is null (follow Easy mode: on in Easy mode, off otherwise) or true/false once someone switches it in
-   Settings. The switch only shows when the wrapper can speak; the browser version stays quiet.
+   Settings. The switch only shows when the app can speak: the Android wrapper, or (since v1.59, for iPad/iPhone) a voice
+   that lives on the device (speechSynthesis, localService only, so no words ever leave it). speakText(t) says it either way.
    📷 Snapshot: the 📷 button under 🌙 saves a picture of the room on screen; "📷 Save picture" on a photocard saves
    the card. The SVG is drawn into a canvas and saved as a PNG through AndroidBridge.saveImage(base64, fileName)
    (Android's save picker) or a download in the browser.
@@ -20,7 +21,20 @@ function lastBackupText(){
 }
 
 /* ---------- read to me ---------- */
-const canSpeak=()=>!!(window.AndroidBridge&&typeof window.AndroidBridge.speak==='function');
+let webVoice=null; // (v1.59) an English voice built into the device; online voices are never used
+function findWebVoice(){
+  try{const vs=window.speechSynthesis.getVoices().filter(v=>v.localService&&/^en/i.test(v.lang));
+    webVoice=vs.find(v=>/^en[-_]US/i.test(v.lang)&&v.default)||vs.find(v=>/^en[-_]US/i.test(v.lang))||vs[0]||null;}catch(_){webVoice=null;}
+}
+if(window.speechSynthesis){findWebVoice();try{window.speechSynthesis.addEventListener('voiceschanged',findWebVoice);}catch(_){}}
+const hasBridgeVoice=()=>!!(window.AndroidBridge&&typeof window.AndroidBridge.speak==='function');
+const canSpeak=()=>hasBridgeVoice()||!!webVoice;
+function speakText(t){
+  if(!t) return;
+  if(hasBridgeVoice()){try{window.AndroidBridge.speak(t);}catch(_){}return;}
+  if(!webVoice) return;
+  try{const S=window.speechSynthesis;S.cancel();const u=new SpeechSynthesisUtterance(t);u.lang=webVoice.lang;u.rate=0.95;try{u.voice=webVoice;}catch(_){}S.speak(u);}catch(_){}
+}
 const readOn=p=>!!p&&(p.speak===null?p.easy:p.speak);
 const HOT_WORDS={shelf:'Fidget shelf',closet:'Closet',desk:'Art desk',photo:'Photocards',window:'Backyard',goal:'Soccer',stage:'Stage',
   code:'Code Lab',brain:'Brain games',music:'Music Maker',pet:'Pet',gift:'A gift!'};
@@ -38,7 +52,7 @@ document.addEventListener('click',e=>{
   const el=e.target.closest('button,.tile,[data-hot],.chip'); if(!el) return;
   const t=speakLabel(el); if(!t) return;
   const now=Date.now(); if(t===lastSaid.t&&now-lastSaid.at<800) return; lastSaid={t,at:now};
-  try{window.AndroidBridge.speak(t);}catch(_){}
+  speakText(t);
 },true);
 
 /* ---------- snapshots ---------- */
@@ -58,6 +72,7 @@ function svgPng(svgEl,w,h){
 function savePng(url,name){
   const p=P(); if(p){p.stats.snaps++;save();}
   if(window.AndroidBridge&&typeof window.AndroidBridge.saveImage==='function'){window.AndroidBridge.saveImage(url.split(',')[1],name);}
+  else if(typeof iosPicture==='function'&&iosPicture(url)){} // iPad/iPhone: press and hold to save (section 58)
   else{try{const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),500);toast('Picture saved 📷');}catch(e){toast('Saving pictures is not supported here');}}
   checkStickers();
 }

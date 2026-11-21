@@ -162,7 +162,7 @@ function ltPeekTap(i){
   K.found=true; const p=P();
   SFX.cheer(); giftConfetti();
   const F=ltFriends(p).find(f=>f.k===K.who);
-  if(DB.settings.sound&&canSpeak()) try{window.AndroidBridge.speak('Peekaboo! '+(F?F.say:''));}catch(_){}
+  if(DB.settings.sound&&canSpeak()) speakText('Peekaboo! '+(F?F.say:''));
   $('#ltPeek').insertAdjacentHTML('beforeend',ltBubble(K));
   p.stats.peeks++; ltPay(); checkStickers();
   ltPeekStop(); ltPeekStop.t=setTimeout(()=>{if(cur==='little'&&LT.view==='peek'){ltPeekNew();renderLittle();}},2600);

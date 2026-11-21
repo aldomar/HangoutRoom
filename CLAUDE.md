@@ -14,6 +14,8 @@ spinner), a closet for dress-up, coins and room decorating.
 
 - The app is **one web page**: `index.html` at the repo root plus the `web/` folder (CSS and code). It runs offline in any browser.
 - `android/` is a thin WebView wrapper that builds a **sideloaded APK**. It is never published.
+- **iPads and iPhones (since v1.59)**: the children's devices are iPads (and one iPhone). The same files are hosted on GitHub Pages
+  (from `main`) and added to the Home Screen; `sw.js` keeps them offline after the first visit. Steps in `docs/IOS.md`.
 - **Family only.** It is never sold, published to an app store, or shared beyond the family.
 
 Her interests (use these for themes): K-pop (currently ILLIT and Hearts2Hearts), soccer, Roblox, art,
@@ -38,7 +40,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   - Art is drawn in code (SVG / canvas). Sounds and music are generated with the Web Audio API.
   - Third-party assets only if CC0/public domain *and* approved by the owner; record them in `docs/STATUS.md`.
 - **Kid-safe and private.**
-  - No internet use: the APK has no `INTERNET` permission. Don't add it.
+  - No internet use: the APK has no `INTERNET` permission. Don't add it. The hosted iPad/iPhone copy (since v1.59) only loads
+    its own files (first visit and updates, through `sw.js`); the app never sends or fetches anything else.
   - No accounts, chat, sharing, ads, analytics, crash reporting or telemetry.
   - No external links and no real-money purchases. Coins are earned only by playing.
 - **No pressure mechanics.** No punishing timers, streaks she can lose, "come back or lose it" messages,
@@ -65,6 +68,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   - Classic `<script src>` only: no ES modules, no `import`. Every file starts with `'use strict';`.
   - No `fetch()`/XHR of local files, no CDNs, no downloaded web fonts.
   - No npm/build step needed to run it.
+  - **Every file the page loads must be in `sw.js`'s `FILES` list** (the iPad/iPhone offline copy, since v1.59), in the same
+    order, and `sw.js`'s `VERSION` must equal `APP_VERSION`. The smoke test checks both. A new `web/js` file goes in both places.
+  - The service worker and the manifest link only start over `https` (`58-ios.js`), so `file://` and the APK never use them.
 - **Files (since v1.9):** `index.html` holds only the page shell and screen markup; CSS is `web/app.css`; code is
   `web/js/NN-name.js`, one file per numbered section, listed in order by `<script src>` tags at the bottom of `index.html`.
   - All files share one global scope, but code that **runs while a file loads** (top-level statements, `x.onclick=fn`)
@@ -107,7 +113,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 ## Versions and pull requests
 - Every pull request raises the minor version by one (1.0 → 1.1 → 1.2), committed on the branch before the PR:
   - `versionName` **and** `versionCode` (+1) in `android/app/build.gradle.kts`.
-  - `APP_VERSION` in `web/js/01-save.js` (shown in Settings).
+  - `APP_VERSION` in `web/js/01-save.js` (shown in Settings), **and** `VERSION` in `sw.js` (since v1.59).
   - A `GIFT_TIMELINE` entry for the new version in `web/js/25-about.js` (since v1.22).
 - Put the version in the PR title, for example "Art Desk (v1.2)".
 - When several PRs are open, each takes the next number after the highest already used on any branch.
@@ -119,7 +125,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   It loads the page in a headless browser with a throwaway profile, makes a test room, opens every screen,
   exercises the Art Desk, Photocards, Soccer, the Stage and backup/restore, fails on any console error, and saves screenshots to `tests/shots/` (ignored by git).
   Run it before every PR, and extend it when you add a feature. Use invented names only.
-- **On the device:** the owner builds the APK in Android Studio and sideloads it.
+- **On the device:** the owner builds the APK in Android Studio and sideloads it. iPads/iPhones get each merge from GitHub Pages.
+- iOS-only code paths are tried in the smoke test with `IOS_FAKE=true` and fakes for `navigator.share`, `speechSynthesis` and
+  `DeviceOrientationEvent.requestPermission`. Haptics, the share sheet and Add to Home Screen can only be checked on a real device.
 
 ## Layout
 - `index.html` (markup) + `web/app.css` + `web/js/`, one file per section, in order:
@@ -157,7 +165,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   31. `31-looks.js` Looks, emotes + night mode (`renderLooks`, `wearLook`, `EMOTES`, `playEmote`, `emoteBar`, `NIGHT_GLOW`, `nightLayer`, `nightBtn`)
   32. `32-gifts.js` Gifts + room layouts (`giveModal`, `sendGift`, `giftG`, `giftOpen`, `GIFT_SPOT`, `layoutGrid`, `layoutSave`, `layoutLoad`)
   33. `33-shopplus.js` Shop filters + big dreams (`THEMES`, `THEME_IDS`, `themesOf`, `themeFilter`, the 5 `dream:1` decorations, `dreamBar`, `dreamTap`)
-  34. `34-helpers.js` Grown-up helpers (`backupSaved`, `lastBackupText`, `readOn`, `canSpeak`, `speakLabel`, `svgPng`, `snapRoom`, `snapCard`)
+  34. `34-helpers.js` Grown-up helpers (`backupSaved`, `lastBackupText`, `readOn`, `canSpeak`, `speakText` (Android or a device voice), `speakLabel`, `svgPng`, `snapRoom`, `snapCard`)
   35. `35-brain3.js` Brain Games 3: 🚂 Pattern Train (`TR_PUZ`, `trTrain`, `trWagon`) and 🔤 Word Builder (`WB_PUZ`, `wbTiles`, `wbTap`)
   36. `36-brain4.js` Brain Games 4: 🍕 Fraction Bakery (`FB_PUZ`, `fbTreat`, `fbCheck`) and 🪐 Fact Cards (`FACT_PUZ`, `factCard`, the 📇 binder `factBinder`)
   37. `37-pack3.js` Content Pack 3 (stage, cozy, cafe, ocean; only adds entries, each with `p3:<theme>`; `P3_THEMES`, `p3Have`,
@@ -198,6 +206,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
       `wkStart`, `wkWalk`, `wkSniff`, `wkDig`, `wkHome`, `wkGiveJar`, `wkBook`, `wkStop`, `wkBackKey`; `WK_TEST_FAST` for the smoke test)
   57. `57-pack5.js` Content Pack 5: Finish the Outfits (only adds clothes, each with `p5:<any THEMES key>`; `P5_SETS` = the 10 finished
       outfits, `p5SetHave`, `p5SetsDone` for its 3 stickers)
+  58. `58-ios.js` iPad + iPhone (v1.59): `IS_IOS`, `onIOS()` (`IOS_FAKE` for the smoke test), the https-only manifest link + `sw.js`
+      registration, `iosTick` (iPhone haptics through a hidden `<input switch>`), `iosSaveFile` (share sheet), `iosPicture` (press and hold)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -386,9 +396,10 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   `furnC(piece)` (classic colours when `p.furn[piece]` is missing or unknown). A new built-in piece that should be
   recolourable gets a `FURN_PIECES` entry. Piece ids (`desk closet shelf curtain desk2 beams window2 lamp shed easel`) and colour ids
   are saved: never rename them.
-- About (since v1.22): ⚙️ Settings → 💌 About (`scr-about`). The personal words (nicknames, letter, secret, per-version
-  `why` lines) are in `web/about-local.js`, which is **git-ignored and must never be committed, read into a PR, or
-  quoted on GitHub**; `index.html` loads it right after `25-about.js`, and each field falls back to `ABOUT_DEFAULT`.
+- About (since v1.22): ⚙️ Settings → 💌 About (`scr-about`). Since v1.59 the owner's generic words ("Kids", the letter, the
+  signature) are the built-in `ABOUT_DEFAULT`, so the hosted iPad/iPhone copy shows them. Anything personal (nicknames, secret,
+  per-version `why` lines) goes in `web/about-local.js`, which is **git-ignored and must never be committed, read into a PR, or
+  quoted on GitHub** (and so is never on GitHub Pages); `index.html` loads it right after `25-about.js`, and each field falls back to `ABOUT_DEFAULT`.
   `web/about-local.example.js` (in git) uses invented names only. **Every PR adds a `GIFT_TIMELINE` entry** for its
   version (date, icon, name, generic `why`, and a short `news` list for the ✨ What's New box). `settings.seenNew` is
   the last version whose What's New was shown; it belongs to the device, so `doRestore()` keeps it (like the PIN).

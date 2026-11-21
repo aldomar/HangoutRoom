@@ -14,7 +14,9 @@ Everything is original (no real idols, characters or logos) and nothing costs mo
 ## Constraints
 - **$0:** free tools only (VS Code, Android Studio, GitHub free, Chrome). Claude subscription is the only cost.
 - **Offline, no server.** It runs from `file://` in a browser or inside the APK's WebView.
-- **Sideloaded APK.** No app stores.
+  Since v1.59 the same files are also hosted on GitHub Pages (free) for iPads and iPhones, which add it to the Home Screen;
+  after the first visit it runs offline there too (`sw.js`), and it never sends anything anywhere.
+- **Sideloaded APK.** No app stores. iPads and iPhones use the Home Screen web app instead (`docs/IOS.md`).
 - **Original art and sound only**, all made in code.
 
 ## How it fits together
@@ -388,6 +390,27 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   the half outfits (race driver, firefighter, builder, karate, farmer, robot, star hero, shark, astronaut, dino) and fill empty theme
   tabs (Stage leg warmers, Cozy and Cafe bottoms, Emo shoes). Field `p5` (any `THEMES` key) read by `themesOf`; `P5_SETS` lists
   the 10 outfits for 3 stickers. Clothes only, no save change. A hero cape was left out (Extras is one slot; it would need a new layer).
+- ✅ **📱 iPad + iPhone (v1.59, built, plan agreed 2026-11-21):** all the children's devices turned out to be iPads/iPhones. Plan details below.
+
+#### v1.59 plan details: 📱 iPad + iPhone (agreed 2026-11-21, built)
+Options looked at: a native iOS wrapper needs a Mac and either re-signing every 7 days (free Apple ID) or $99 a year, so it
+breaks "free only". Opening `index.html` from the Files app doesn't run the scripts. A PC server at home needs https to work
+offline. Chosen: **a Home Screen web app hosted on GitHub Pages** (the repo is public; free).
+- **Hosting:** GitHub Pages from `main`, root folder (`.nojekyll` so files are served as they are). Each merge updates it.
+- **About words:** the owner's generic words ("Kids", the letter, the signature) moved into `ABOUT_DEFAULT`, so the hosted copy
+  shows them. `about-local.js` stays git-ignored and optional.
+- **Offline:** `sw.js` keeps every app file on the device (only over https; file:// and the APK never use it). `VERSION` =
+  `APP_VERSION`; a new version replaces the old files quietly, shown the next time the app opens (no pop-ups).
+- **Home Screen:** `manifest.webmanifest` (added from code only over https) + iOS meta tags + `web/icon-180.png` (the buddy,
+  drawn by `tools/make-icons.js`). `noindex` for search engines. In the Home Screen app, storage is asked to be kept for good.
+- **iOS fixes (`58-ios.js`, all feature-detected):** 🔊 Read to me falls back to a voice built into the device (`speechSynthesis`,
+  local voices only; `speakText()` in 34); 🔊 sound plays like a game's (`audioSession` playback) and also unlocks on touchend/click;
+  🔮 the marble maze asks for tilt with a 📱 Tilt button; 💾 the backup file goes through the share sheet (Save to Files);
+  📷 pictures open big to press and hold (Save to Photos); no pinch or double-tap zoom; the top bar stays clear of a notch.
+- **📳 iPhone haptics:** iPhones have no `navigator.vibrate`; `vibrate()` calls `iosTick()`, which flips a hidden
+  `<input type=checkbox switch>` (iOS 18+ taps). iPads have no buzzer. One of the children has an iPhone, so it is in.
+- **No save changes**, no Android wrapper changes. The smoke test checks the offline file list, the manifest, the icon and the iOS paths
+  (faked in the desktop browser with `IOS_FAKE`). To try on a real device after merging: see `docs/IOS.md`.
 
 #### v1.54 plan details: 🙈 Pet Hide & Seek + 🎾 Fetch (agreed 2026-11-20, built)
 Why: the pet can only be patted, fed and dressed, so after the tricks are learned there is nothing to *do* with it. Hide &

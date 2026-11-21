@@ -8,13 +8,14 @@
    Also the ✨ What's New box, shown once per device after an update (DB.settings.seenNew).
    ========================================================= */
 const ABOUT_DEFAULT={
-  names:[],                       // nicknames, e.g. ['Sunny','Pip']; none = "made just for you"
-  from:'With love, your family',  // the signature
+  names:['Kids'],                 // nicknames, e.g. ['Sunny','Pip']; none = 'made just for you' (since v1.59 the owner's words live here,
+                                  // so the hosted iPad/iPhone version shows them; web/about-local.js can still replace any of them)
+  from:'Aly', // the signature
   greeting:'Hi there,',           // used when there are no names
   letter:[
-    'This Hangout Room was planned and built just for you, one update at a time, around the things you love.',
-    "It isn't in any app store, and there's no other copy like it anywhere. There's only one Hangout Room, and it's yours.",
-    'Keep playing, keep making things, and if you have an idea for something new, ask! Your ideas are how this place grows.'
+    'I made this little world just for you. Every room, every outfit, every squishy and every song was planned and built with you in mind: soccer and stages, art and anime, cozy emo stripes, dinosaurs, rockets, trucks and sharks.',
+    "It isn't in any app store, and nobody else has one. There is only one Hangout Room in the whole world, and it belongs to the four of you.",
+    'Keep playing, keep making things, and keep being exactly who you are. If you have an idea for something new, tell me! Your ideas are how this place grows.'
   ],
   started:'2026-11-14'
 };
@@ -171,7 +172,9 @@ const GIFT_TIMELINE=[
   {v:'1.57',d:'2026-11-20',i:'🎲',n:'Brain Coins',why:'So the thinking games are always worth coming back to',
     news:['🎲 Free Play in the Brain Games: +2 coins for every puzzle','♾️ No daily limit: keep solving, keep earning','🃏 Memory Match, mazes and Code Lab boards stay the same']},
   {v:'1.58',d:'2026-11-21',i:'🧩',n:'Finish the Outfits',why:'So every dress-up idea has all its pieces, from head to toe',
-    news:['🏎️ Race driver, 🚒 firefighter and 🚧 builder outfits are complete','🤖 Robot, ⭐ hero, 🦈 shark, 🚀 astronaut and 🦕 dino pieces to match','🥋 Karate pants, 🐮 overall pants, 🍵 PJ pants, 🍓 a strawberry skirt and more','🧩 3 new stickers for full outfits']}
+    news:['🏎️ Race driver, 🚒 firefighter and 🚧 builder outfits are complete','🤖 Robot, ⭐ hero, 🦈 shark, 🚀 astronaut and 🦕 dino pieces to match','🥋 Karate pants, 🐮 overall pants, 🍵 PJ pants, 🍓 a strawberry skirt and more','🧩 3 new stickers for full outfits']},
+  {v:'1.59',d:'2026-11-21',i:'📱',n:'Hangout Room on iPad + iPhone',why:'So the Hangout Room can live on every tablet and phone in the family',
+    news:['📱 Add it to your Home Screen on an iPad or iPhone, and it works without internet','🔊 Read to me works on iPad and iPhone too','📳 A tiny buzz on iPhone when you pop, kick and squish','🧭 Tilt the marble maze on iPad and iPhone (tap 📱 Tilt once)']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

@@ -373,6 +373,7 @@ function downloadFile(txt){
   const name='hangout-room-backup-'+new Date().toISOString().slice(0,10)+'.json';
   // Inside the Android app, the wrapper opens a "save file" picker for us.
   if(window.AndroidBridge&&window.AndroidBridge.saveBackup){window.AndroidBridge.saveBackup(txt,name);return;}
+  if(typeof iosSaveFile==='function'&&iosSaveFile(txt,name)) return; // iPad/iPhone: the share sheet (section 58)
   try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);toast('Backup file saved 💾');backupSaved();}
   catch(e){toast('Saving files is not supported here — use Copy code');}
 }

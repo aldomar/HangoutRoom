@@ -108,7 +108,7 @@ function spyCard(){
 const spyWords=t=>t.replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}]/gu,'').replace(/\s+/g,' ').trim();
 function spySpeak(force){
   const p=P(), c=SPY.clue; if(!c||!canSpeak()||!(force||readOn(p))) return;
-  try{window.AndroidBridge.speak('I spy. '+spyWords(c.text));}catch(_){}
+  speakText('I spy. '+spyWords(c.text));
 }
 
 /* ---------- taps ---------- */

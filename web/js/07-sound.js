@@ -7,7 +7,7 @@ function ac(){
   if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;try{AC=new C();}catch(e){return null;}
     master=AC.createGain();master.gain.value=0.9;master.connect(AC.destination);
     musicBus=AC.createGain();musicBus.gain.value=0.6;musicBus.connect(AC.destination);}
-  if(AC.state==='suspended') AC.resume();
+  if(AC.state==='suspended'||AC.state==='interrupted') AC.resume(); // iOS says 'interrupted' after a call or another app's sound
   return AC;
 }
 function tone(f,dur,type,vol,slide,delay,bus){
@@ -68,4 +68,5 @@ function hum(speed){
   if(!humO){humO=AC.createOscillator();humO.type='triangle';humG=AC.createGain();humG.gain.value=0;const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=900;humO.connect(lp);lp.connect(humG);humG.connect(master);humO.start();}
   const t=AC.currentTime; humO.frequency.setTargetAtTime(70+speed*7,t,0.05); humG.gain.setTargetAtTime(Math.min(0.08,speed*0.0018),t,0.05);
 }
-function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms);}catch(e){}}
+// A tiny buzz. iPhones have no navigator.vibrate, so iosTick() (section 58) gives the same tap there; iPads have no buzzer.
+function vibrate(ms){try{if(navigator.vibrate)navigator.vibrate(ms);else if(typeof iosTick==='function')iosTick(ms);}catch(e){}}

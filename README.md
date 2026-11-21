@@ -15,6 +15,11 @@ Since version 1.9 the app is `index.html` **plus the `web` folder** next to it. 
 ## Put it on an Android tablet or phone
 See `android/README.md`. In short: open the `android` folder in Android Studio, build the APK, copy it to the device and tap to install.
 
+## Put it on an iPad or iPhone (since version 1.59)
+See `docs/IOS.md`. In short: turn on GitHub Pages once, open the address in Safari on each device, then
+Share → Add to Home Screen. After the first visit it works offline, and each device keeps its own rooms.
+Free, with no Mac and no Apple developer account needed.
+
 ## Which version is this?
 In the app: ⚙️ Settings. The version is shown at the bottom (for example "version 1.8").
 
@@ -130,6 +135,15 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
 - Each wish gives **+5 coins**. After all 3 of a friend's wishes, they leave **a plush of themselves** in the room
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
+
+## iPad and iPhone (since version 1.59)
+The Hangout Room now works on iPads and iPhones as a Home Screen app (see `docs/IOS.md` to set it up).
+- It works offline after the first visit, and updates arrive by themselves the next time it's opened online.
+- 🔊 Read to me uses the voice built into the device. 🔮 The marble maze asks once for tilt (📱 Tilt).
+- 📳 iPhones give a tiny tap when you pop, kick or squish (iOS 18 or newer). iPads have no buzzer.
+- 💾 Backup saves through the share sheet (Save to Files). 📷 Pictures open big: press and hold to save them to Photos.
+- The letter in 💌 About is now built in, so the hosted copy shows it too.
+- Nothing changes on the Android tablet or when `index.html` is opened on a computer.
 
 ## Content Pack 5: Finish the Outfits (since version 1.58)
 Some dress-up outfits only had one or two pieces (Racing Pants with no jacket, a Fire Rescue Jacket with no pants).
