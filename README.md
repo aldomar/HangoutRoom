@@ -131,6 +131,21 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Content Pack 5: Finish the Outfits (since version 1.58)
+Some dress-up outfits only had one or two pieces (Racing Pants with no jacket, a Fire Rescue Jacket with no pants).
+This pack adds 25 clothes (15–25 coins each, open to everyone) so every outfit goes from head to toe.
+- 🏎️ **Race driver:** Racing Jacket, Racing Helmet and Racing Gloves (to go with the Racing Pants).
+- 🚒 **Firefighter:** Fire Rescue Pants and Fire Boots. 🚧 **Builder:** Builder Vest and Work Boots.
+- 🥋 **Karate Pants** for the Karate Gi, and 🐮 **Overall Pants** in the same denim as the Farm Overalls.
+- 🤖 **Robot Legs** and Robot Boots; ⭐ **Hero Tights** and Hero Boots; 🦈 a **Shark Hoodie** (with side fins) and Shark Slippers.
+- 🚀 **Astronaut Suit** and Astronaut Pants; 🦕 a **Dino Hood** and Dino Claw Mitts.
+- Pieces for themes that had empty Closet tabs: 🎤 Star Sparkle Warmers, 🍵 Cozy PJ Pants and Knit Arm Warmers,
+  🧁 a Strawberry Skirt and Sprinkle Socks, 🦇 Checker Sneakers.
+- Every piece has a theme chip, so the 🔎 chips, 👠 Runway cards and visitor wishes find them too.
+- 3 new stickers on the **Room & Style** page: 🏎️ Pit Crew (the whole race driver outfit), 🚒 Rescue Ready (the whole
+  firefighter outfit) and 🧩 Full Outfit (every piece of any 3 outfits).
+- No change to the save data. There is still no cape: it needs its own layer behind the body (maybe later).
+
 ## More coins for Brain Games Free Play (since version 1.57)
 The thinking games are now always worth coming back to.
 - **🎲 Free Play** in 🧁 Snack Stand, 🫧 Number Pop, 🚂 Pattern Train, 🍕 Fraction Bakery and 🔤 Word Builder pays
