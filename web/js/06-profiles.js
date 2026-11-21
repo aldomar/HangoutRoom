@@ -18,7 +18,7 @@ function newProfile(name,fur,color,badge,look){
 function normalize(p){
   if(!p.id) p.id=uid();
   if(!p.name) p.name='Room';
-  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0,seeks:0,fetches:0,petWalks:0,finds:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
+  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0,seeks:0,fetches:0,petWalks:0,finds:0,hits:0,homers:0,catches:0,derbies:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.fidPay=Object.assign({day:'',n:0},p.fidPay&&typeof p.fidPay==='object'?p.fidPay:{}); if(typeof p.fidPay.n!=='number'||!(p.fidPay.n>=0)) p.fidPay.n=0; // v1.36: fidget coins paid today (see FID_DAILY)
   // Music Maker (v1.38, section 40): sound kit, speed (0-2), the loop on the grid now, 3 saved loops, music coins paid today.
@@ -99,6 +99,16 @@ function normalize(p){
   {const w=p.walk&&typeof p.walk==='object'&&!Array.isArray(p.walk)?p.walk:{};
    p.walk={path:typeof w.path==='string'?w.path:'meadow',finds:Array.isArray(w.finds)?w.finds.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[]};
    ['petWalks','finds'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));});}
+  // Ball Field (v1.60, section 59): the game on screen, then per game the level, best score per level and prizes won (level ids).
+  // catch (🧤) and derby (🎯) are filled in now so later updates need no new save version.
+  {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, b=o(p.ball), L=['easy','medium','hard'], n=v=>Math.max(0,Math.floor(Number(v)||0));
+   const game=g=>{const x=o(b[g]),best=o(x.best);return {level:L.includes(x.level)?x.level:'easy',best:{easy:n(best.easy),medium:n(best.medium),hard:n(best.hard)},
+     prizes:Array.isArray(x.prizes)?x.prizes.filter((l,i,a)=>L.includes(l)&&a.indexOf(l)===i):[]};};
+   const dy=o(b.derby), pay=o(dy.pay);
+   p.ball={mode:['bat','catch','derby'].includes(b.mode)?b.mode:'bat',bat:game('bat'),catch:game('catch'),
+     derby:{cur:typeof dy.cur==='string'?dy.cur:'d1',done:Array.isArray(dy.done)?dy.done.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[],
+       pay:{day:typeof pay.day==='string'?pay.day:'',n:n(pay.n)}}};
+   ['hits','homers','catches','derbies'].forEach(k=>{p.stats[k]=n(p.stats[k]);});}
   const petObj=o=>o&&typeof o==='object'&&!Array.isArray(o)?o:{};
   p.pet.names=Object.fromEntries(Object.entries(petObj(p.pet.names)).filter(([k,v])=>typeof v==='string'&&v.trim()).map(([k,v])=>[k,v.slice(0,12)]));
   p.pet.hearts=Object.fromEntries(Object.entries(petObj(p.pet.hearts)).map(([k,v])=>[k,Math.max(0,Math.floor(Number(v)||0))]));

@@ -9,7 +9,7 @@ function show(n){
   if(n!=='room'&&PP.on) ppEnd(true); // 🙈🎾 pet play (section 55)
   cur=n; $$('.screen').forEach(s=>s.classList.toggle('on',s.id==='scr-'+n));
   const ep=n==='profiles'?null:P(); applyEasy();
-  if(ep&&ep.easy){if(n==='soccer'){ep.soccer.level='easy';ep.soccer.keep.level='easy';}if(n==='stage')ep.stage.level='easy';if(n==='code')ep.code.level='easy';if(n==='brain')Object.keys(ep.brain.level).forEach(g=>{ep.brain.level[g]='easy';});} // Easy mode opens games on Easy
+  if(ep&&ep.easy){if(n==='soccer'){ep.soccer.level='easy';ep.soccer.keep.level='easy';}if(n==='ball'){ep.ball.bat.level='easy';ep.ball.catch.level='easy';}if(n==='stage')ep.stage.level='easy';if(n==='code')ep.code.level='easy';if(n==='brain')Object.keys(ep.brain.level).forEach(g=>{ep.brain.level[g]='easy';});} // Easy mode opens games on Easy
   if(n==='room'||n==='cards') checkBonus(); // gives any milestone cards she has earned (section 12)
   if(n==='room'||n==='soccer'){const t=giveTrophies();if(t.length)setTimeout(()=>toast(`🏆 ${t.join(' and ')} added to your room!`),400); // section 13
     const gl=giveGloves();if(gl.length)setTimeout(()=>toast(`🧤 ${gl.join(' and ')} added to your Backyard!`),t.length?2400:400);} // section 27
@@ -29,6 +29,7 @@ function show(n){
   if(n==='little') renderLittle(); else ltStop(); // 🧸 Play (section 46)
   if(n==='dance') renderDance(); else dnStop(); // 💃 Dance Maker (section 48)
   if(n==='garden') renderGarden(); // 🌱 Garden (section 49)
+  if(n==='ball') renderBall(); else bfStop(); // ⚾ Ball Field (section 59)
   if(n==='runway') renderRunway(); else rwStop(); // 👠 Runway (section 52)
   if(n==='walk') renderWalk(); else wkStop(); // 🦮 Pet walks (section 56)
   if(n==='stickers') renderStickers(); // section 21
@@ -163,6 +164,7 @@ function handleHot(h){
   else if(h==='code'){SFX.click();show('code');}
   else if(h==='brain'){SFX.click();show('brain');} // the Backyard's chalkboard (v1.25)
   else if(h==='garden'){SFX.click();show('garden');} // the Backyard's garden shed (v1.48)
+  else if(h==='ballfield'){SFX.click();show('ball');} // the Backyard's bat rack: the ⚾ Ball Field (v1.60)
   else if(h==='music'){SFX.click();show('music');} // the Loft's keyboard (v1.38)
   else if(h==='pet'){petTap();} // section 22
   else if(h==='gift'){giftOpen();} // section 32

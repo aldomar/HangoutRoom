@@ -1106,7 +1106,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('139 stickers on 8 pages (3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===139&&new Set(STICKERS.map(s=>s.id)).size===139&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('142 stickers on 8 pages (3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===142&&new Set(STICKERS.map(s=>s.id)).size===142&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1551,7 +1551,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`document.querySelector('#decoGrid [data-buy=stringLights]').click()`); await sleep(150); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(200);
   check('String Lights hang on the fence, not up in the sky', await ev(`(()=>{const i=P().room3.items.find(i=>i.type==='stringLights');return i&&i.y>=340&&i.y<=420;})()`));
   await ev(`document.querySelector('[data-dt=colors]').click()`); await sleep(150);
-  check('Colors tab in the Backyard: the shed and the chalkboard', await ev(`[...document.querySelectorAll('#decoGrid [data-furn]')].every(b=>['shed','easel'].includes(b.dataset.furn))&&document.querySelectorAll('#decoGrid .furn-row').length===2`));
+  check('Colors tab in the Backyard: the shed, the chalkboard and (since v1.60) the bat rack', await ev(`[...document.querySelectorAll('#decoGrid [data-furn]')].every(b=>['shed','easel','rack'].includes(b.dataset.furn))&&document.querySelectorAll('#decoGrid .furn-row').length===3`));
   await ev(`document.querySelector('#decoGrid [data-furn=shed][data-fc=sky]').click()`); await sleep(150);
   check('painting the shed Sky is free and shows', await ev(`P().furn.shed==='sky'&&P().coins===425&&yardFurniture().includes(FURN_COLORS.sky.l)`));
   await ev(`exitDecorate();goRoom(1);enterDecorate();document.querySelector('[data-dt=wall]').click()`); await sleep(150);
@@ -1565,7 +1565,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`exitDecorate();goRoom(3)`);
   // every outdoor decoration draws
   const yardKeys=await ev(`Object.keys(DECOR).filter(k=>DECOR[k].yard)`);
-  check('10 outdoor decorations (8, and the Hay Bale and Toy Tractor since v1.36), priced 10-30, not in the Seasons tab', yardKeys.length===10&&(await ev(`Object.keys(DECOR).filter(k=>DECOR[k].yard).every(k=>DECOR[k].price>=10&&DECOR[k].price<=30&&!DECOR[k].season)`)), yardKeys);
+  check('12 outdoor decorations (8, the Hay Bale and Toy Tractor since v1.36, the Ball Bucket and Ball Scoreboard since v1.60), priced 10-30, not in the Seasons tab', yardKeys.length===12&&(await ev(`Object.keys(DECOR).filter(k=>DECOR[k].yard).every(k=>DECOR[k].price>=10&&DECOR[k].price<=30&&!DECOR[k].season)`)), yardKeys);
   await ev(`{const R=P().room3;R.items=R.items.filter(i=>!DECOR[i.type].yard);for(const k of ${JSON.stringify(yardKeys)})R.items.push(Object.assign({uid:'yd'+k,type:k,placed:true},spot(k)));}save();renderRoom()`); await sleep(200); await shot('F04-yard-all');
   check('every outdoor decoration draws in the Backyard', await ev(`${JSON.stringify(yardKeys)}.every(k=>{const g=document.querySelector('#roomSvg .deco[data-uid="yd'+k+'"]');return g&&g.getBBox().width>20;})`));
   for(const w of ['picket','hedge','stoneWall','rainbowFence','batFence']){await ev(`P().room3.wall='${w}';renderRoom()`);check(`the ${w} fence draws`, await ev(`(()=>{const g=document.querySelector('[data-fence=${w}]');return g&&g.getBBox().width>900;})()`));}
@@ -2479,7 +2479,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check(`closet has ${c}:${i}`, await ev(`!!document.querySelector('#closetGrid [data-id=${i}] svg')`));}
   await ev(`document.querySelector('[data-cat=top]').click()`); await sleep(100);
   await ev(`document.querySelector('#closetGrid [data-theme=sport]').click()`); await sleep(100);
-  check('⚽ Sport tops: the soccer jersey, Hoops Jersey and Karate Gi', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).sort().join()==='hoopJersey,jersey,karateGi'`), await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).join()`));
+  check('⚽ Sport tops: the soccer jersey, Hoops Jersey, Karate Gi and (since v1.60) the Baseball Tee', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).sort().join()==='ballTee,hoopJersey,jersey,karateGi'`), await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).join()`));
   await ev(`document.querySelector('#closetGrid [data-theme=farm]').click()`); await sleep(100);
   check('🐮 Farm tops: the overalls', await ev(`[...document.querySelectorAll('#closetGrid .tile')].map(t=>t.dataset.id).join()==='overalls'`));
   await ev(`themePick.closet='all';renderCloset();document.querySelector('#closetGrid [data-id=nuggetTee]').click()`); await ev(`${mbtn('Yes')}.click()`); await sleep(150);
@@ -4609,7 +4609,104 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`delete window.DeviceOrientationEvent.requestPermission;if(!window._hadDOE)delete window.DeviceOrientationEvent;MZ.tilt.asked='';mzBar()`);
     check('no 📱 Tilt question where the browser does not ask (Android, desktop)', await ev(`!document.querySelector('#mzAsk')`), await ev(`[window._hadDOE,typeof window.DeviceOrientationEvent,mzAskTilt()]`));
     await ev(`show('room')`); await sleep(100);
-    check('v1.59 is in the Gift Story and the app says 1.59', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.59')&&APP_VERSION==='1.59'`));
+    check('v1.59 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.59')`));
+  }
+
+  console.log('Ball Field: Batting (v1.60)');
+  {
+    const waitFor=async(cond,ms)=>{for(let i=0;i<(ms||5000)/50;i++){if(await ev(cond))return true;await sleep(50);}return false;};
+    const mb=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
+    await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();show('room');goRoom(3)`); await sleep(250);
+    const bfSaved=await ev(`JSON.stringify({coins:P().coins,look:P().look,owned:P().owned,ball:P().ball,stats:P().stats,room3:P().room3.items})`);
+    check('save version 37; every room starts the Ball Field on ⚾ Bat, Easy, no bests or prizes', await ev(`DB_VERSION>=37&&DB.profiles.every(p=>p.ball.mode==='bat'&&p.ball.bat.level==='easy'&&p.ball.bat.best.hard===0&&p.ball.bat.prizes.length===0&&p.ball.catch.level==='easy'&&p.ball.derby.cur==='d1'&&p.ball.derby.done.length===0&&p.stats.hits===0&&p.stats.homers===0)`));
+    check('the Backyard has the ⚾ bat rack (Read to me: Ball field, I Spy: Bat Rack), recolorable', await ev(`!!document.querySelector('#roomSvg [data-hot=ballfield][data-piece=rack]')&&HOT_WORDS.ballfield==='Ball field'&&SPY_FURN.ballfield==='Bat Rack'&&FURN_PIECES.rack.room===3`));
+    check('the rack is not hidden behind the buddy or the chalkboard (tapping its middle finds it)', await ev(`(()=>{const r=document.querySelector('#roomSvg [data-hot=ballfield]').getBoundingClientRect();const e=document.elementFromPoint(r.left+r.width/2,r.top+r.height*0.6);return !!e&&!!e.closest('[data-hot=ballfield]');})()`));
+    await shot('BF0-backyard-rack');
+    await ev(`P().easy=true;applyEasy();renderRoom()`); await sleep(100); await shot('BF0b-backyard-rack-easy-signs'); await ev(`P().easy=false;applyEasy();renderRoom()`);
+    await ev(`document.querySelector('#roomSvg [data-hot=ballfield]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(400);
+    check('tapping the rack opens the Ball Field; the main loop runs there', await ev(`cur==='ball'&&loopOn&&LOOP_SCREENS.includes('ball')`));
+    check('⚾ Bat is on, Pip / Rocco / Hoot on the level tabs, the tip names Pip', await ev(`document.querySelector('#bfTabs [data-mode=bat]').classList.contains('on')&&[...document.querySelectorAll('#bfTabs [data-lvl] i')].map(i=>i.textContent).join('')==='🐧🦝🦉'&&document.querySelector('#bfTip').textContent.includes('Pip')&&BF.state==='ready'`));
+    check('6 empty dots and the best score', await ev(`document.querySelectorAll('#bfScore .dot').length===6&&document.querySelector('#bfScore .best').textContent.includes('0/6')`));
+    await sleep(300); await shot('BF1-ready');
+
+    console.log('Ball Field: the rules');
+    check('right on time = a home run; a bit early goes left, a bit late goes right; then foul; then miss', await ev(`(()=>{const j=d=>bfJudge('easy',d,false);return j(0).res==='homer'&&j(-0.1).res==='hit'&&j(-0.1).ang<0&&j(0.1).ang>0&&j(0.2).res==='foul'&&j(-0.3).res==='miss'&&j(0.3).res==='miss';})()`));
+    check('the windows get smaller on harder levels, and Easy mode makes them wider', await ev(`(()=>{const W=['easy','medium','hard'].map(l=>BAT_PITCHERS[l].win);return W.every(w=>w[0]<w[1]&&w[1]<w[2])&&[0,1,2].every(i=>W[0][i]>W[1][i]&&W[1][i]>W[2][i])&&bfJudge('hard',0.12,true).res==='hit'&&bfJudge('hard',0.12,false).res==='foul';})()`));
+    check('a hit never goes foul, a foul always does (left or right of the lines)', await ev(`['easy','medium','hard'].every(l=>{const w=BAT_PITCHERS[l].win;for(let d=-w[2];d<=w[2];d+=0.005){const j=bfJudge(l,d,false);if(j.res!=='foul'&&Math.abs(j.ang)>0.9)return false;if(j.res==='foul'&&Math.abs(j.ang)<1.1)return false;}return true;})`));
+    check('18 fixed pitches per level; never faster than 0.7 s; Easy is all slow and straight; Hard has floaters and curves', await ev(`['easy','medium','hard'].every(l=>BAT_PITCHES[l].length===18&&BAT_PITCHES[l].every(([T,k,x])=>T>=0.7&&T<=1.6&&[0,1,2].includes(k)&&Math.abs(x)<=0.4))&&BAT_PITCHES.easy.every(([T,k])=>T>=1.5&&k===0)&&BAT_PITCHES.hard.some(p=>p[1]===1)&&BAT_PITCHES.hard.some(p=>p[1]===2)`));
+    check('every pitch flies inside the field and reaches her bat at the plate (so every pitch can be hit)', await ev(`(()=>{const g=BF.G;return !!g&&['easy','medium','hard'].every(l=>BAT_PITCHES[l].every(([T,kind,x])=>{const s={T,kind,x};for(let e=0;e<=1;e+=0.05){const b=bfPitchPt(g,s,e);if(!(b.x>0&&b.x<g.W&&b.y>0&&b.y<g.H&&b.r>0))return false;}const c=bfPitchPt(g,s,1);return Math.abs(c.y-g.handY)<1&&Math.abs(c.x-g.cx)<g.bw*0.15;}));})()`));
+    check('the bat in her hand reaches the plate (the buddy stands just left of it)', await ev(`(()=>{const g=BF.G,r=document.querySelector('#bfMascot').getBoundingClientRect(),cv=document.querySelector('#bfCv').getBoundingClientRect();const tip=r.left-cv.left+r.width*(166+110)/200;return Math.abs(tip-g.cx)<g.bw*0.25&&r.left>=cv.left;})()`));
+
+    console.log('Ball Field: play');
+    // pitch = tap; wait for the throw; then swing at a set moment (d seconds from right on time)
+    const pitch=async d=>{await waitFor(`BF.state==='ready'`); await ev(`bfTap()`); await waitFor(`BF.state==='pitch'`);
+      if(d===null){await waitFor(`BF.state==='result'`,4000);} else {await ev(`BF.t=BF.pitch.T+(${d});bfTap()`); await waitFor(`BF.state==='result'`,4000);}
+      return ev(`JSON.stringify({ang:BF.fly?BF.fly.ang:null,res:BF.res[BF.res.length-1],msg:document.querySelector('#bfMsg').textContent,coins:P().coins})`).then(JSON.parse);};
+    const c0=await ev('P().coins');
+    check('a tap starts the wind-up (a tap during it does nothing)', await ev(`(bfTap(),BF.state==='wind'&&(bfTap(),BF.state==='wind'))`));
+    await waitFor(`BF.state==='pitch'`); await sleep(200); await shot('BF2-pitch');
+    await ev(`BF.t=BF.pitch.T;bfTap()`); await sleep(500); await shot('BF3-homer-flying');
+    await waitFor(`BF.state==='result'`);
+    let k=await ev(`JSON.stringify({res:BF.res[0],msg:document.querySelector('#bfMsg').textContent,coins:P().coins})`).then(JSON.parse);
+    check('right on time: ⭐ HOME RUN! +3 (1 a hit on Easy, +2 for a home run)', k.res==='homer'&&k.msg.includes('HOME RUN')&&k.coins===c0+3, [k,c0]);
+    check('…counted: 1 hit, 1 home run, a ⭐ dot', await ev(`P().stats.hits===1&&P().stats.homers===1&&document.querySelector('#bfScore .dot').textContent==='⭐'`));
+    k=await pitch(-0.1); check('a bit early: a hit to the left (+1)', k.res==='hit'&&k.ang<0&&k.coins===c0+4, k);
+    k=await pitch(null); check('no swing: "It went by!", nothing lost', k.res===false&&k.msg.includes('went by')&&k.coins===c0+4, k);
+    k=await pitch(0.2); check('late: a foul ball (no coins)', k.res===false&&k.msg.includes('Foul')&&k.coins===c0+4, k);
+    k=await pitch(-0.4); check('much too early: a miss, "Too early!"', k.res===false&&k.msg.includes('Too early')&&k.coins===c0+4, k);
+    await ev(`P().look.acc='ballCap';P().look.top='ballTee';renderBall()`); await sleep(100);
+    check('⚾ team kit (cap + tee): the badge shows, and a new game starts', await ev(`hasBallKit(P())&&!document.querySelector('#bfKit').classList.contains('hidden')&&BF.res.length===0`));
+    const c1=await ev('P().coins');
+    k=await pitch(0.1); check('a hit with the kit on pays +2 (+1 for the kit)', k.res==='hit'&&k.coins===c1+2, [k,c1]);
+    for(let i=0;i<5;i++) await pitch(0);
+    await waitFor(`BF.state==='done'`);
+    check('6/6: Perfect game box, +5, best 6/6 on Easy, the Bronze Bat in the Backyard', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#modalBody').textContent.includes('Bronze Bat')&&P().ball.bat.best.easy===6&&P().ball.bat.prizes.join()==='easy'&&P().room3.items.filter(i=>i.type==='batBronze').length===1`));
+    check('…and the coins add up: 6 hits with the kit, 5 home runs, +5 perfect', await ev(`P().coins`)===c1+2+5*(1+2+1)+5, [await ev('P().coins'),c1]);
+    await shot('BF4-perfect');
+    await ev(`${mb('Play again')}.click()`); await sleep(100);
+    check('Play again: a new game with the next pitches', await ev(`BF.state==='ready'&&BF.res.length===0&&document.querySelector('#modal').classList.contains('hidden')`));
+    await ev(`P().ball.bat.best.easy=6;giveBats()`);
+    check('the Bronze Bat is given only once', await ev(`P().room3.items.filter(i=>i.type==='batBronze').length===1`));
+    await ev(`document.querySelector('#bfTabs [data-lvl=hard]').click()`); await sleep(100);
+    check('Hard: Hoot pitches, saved', await ev(`P().ball.bat.level==='hard'&&document.querySelector('#bfTip').textContent.includes('Hoot')&&document.querySelector('#bfTabs [data-lvl=hard]').classList.contains('on')`));
+    await ev(`bfTap()`); await waitFor(`BF.state==='pitch'`); await sleep(150); await shot('BF5-hard-pitch'); await waitFor(`BF.state==='result'`,4000);
+    await ev(`document.querySelector('#bfTabs [data-lvl=medium]').click()`); await sleep(200); await shot('BF6-medium');
+    check('Android Back from the Ball Field goes to the Backyard', await ev(`window.androidBack()===true&&cur==='room'&&roomNo===3`));
+    check('leaving stops the game and the loop', await ev(`BF.state==='off'`)&&await waitFor(`!loopOn`,1000));
+    await ev(`P().easy=true;show('ball')`); await sleep(200);
+    check('Easy mode opens on Easy (Pip)', await ev(`P().ball.bat.level==='easy'&&document.querySelector('#bfTip').textContent.includes('Pip')`));
+    await ev(`bfTap()`); await waitFor(`BF.state==='pitch'`); await ev(`BF.t=BF.pitch.T-0.05`); await sleep(40); await shot('BF7-easy-swing-now');
+    await waitFor(`BF.state==='result'`,4000);
+    await ev(`P().easy=false;show('room')`);
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true}); await ev(`show('ball')`); await sleep(400);
+    check('phone: the tabs fit, the buddy is on screen, and the field fits', await ev(`(()=>{const t=document.querySelector('#bfTabs'),m=document.querySelector('#bfMascot').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&m.left>=0&&m.right<=innerWidth&&m.height>60;})()`));
+    await shot('BF8-phone');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await ev(`show('room')`); await sleep(200);
+
+    console.log('Ball Field: clothes, decorations, prizes, stickers');
+    const bfClothes=[['acc','ballCap'],['top','ballTee'],['bottom','ballPants'],['legs','ballSocks']];
+    check('4 baseball clothes, each drawn on every buddy as strict XML, 10–40 coins, ⚽ Sport chip and a photocard row', await ev(`${JSON.stringify(bfClothes)}.every(([c,id])=>{const i=CLOSET[c].items.find(x=>x.id===id);return i&&i.price>=10&&i.price<=40&&themesOf(c+':'+id,i).includes('sport')&&CARD_TAGS.sporty.includes(c+':'+id)&&Object.keys(BUDDIES).every(k=>{const s=mascotSVG(Object.assign({},DEFAULT_LOOK,{kind:k,[c]:id}));return !new DOMParser().parseFromString(s,'image/svg+xml').querySelector('parsererror')&&!/NaN|undefined/.test(s);});})`));
+    check('4 decorations for sale (⚽ Sport) and 3 bat prizes (never in the Shop), all strict XML', await ev(`['homePlate','ballBucket','ballScoreboard','ballLamp'].every(k=>DECOR[k]&&!DECOR[k].award&&DECOR[k].price>=10&&DECOR[k].price<=40&&themesOf('decor:'+k,DECOR[k]).includes('sport'))&&Object.values(BATS).every(k=>DECOR[k].award)&&[...Object.values(BATS),'homePlate','ballBucket','ballScoreboard','ballLamp'].every(k=>!new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg">'+DECOR[k].d()+'</svg>','image/svg+xml').querySelector('parsererror'))&&!!NIGHT_GLOW.ballLamp`));
+    check('the bats stand in the Backyard at their own spots', await ev(`Object.values(BATS).every(k=>TROPHY_SPOTS[k]&&TROPHY_SPOTS[k].x>=60&&TROPHY_SPOTS[k].x<=960)`));
+    await ev(`(()=>{const p=P();['batSilver','batGold'].forEach(t=>p.room3.items.push(Object.assign({uid:uid(),type:t,placed:true},spot(t))));p.room3.items.push({uid:uid(),type:'ballScoreboard',x:300,y:600,placed:true},{uid:uid(),type:'homePlate',x:500,y:680,placed:true});goRoom(3);renderRoom();})()`); await sleep(150);
+    await shot('BF9-backyard-prizes');
+    check('3 new stickers on the ⚽ Sports page: First Hit, Home Run!, Perfect Game', await ev(`STK_PAGES.soccer.name==='Sports'&&['hit1','homer1','batPerfect'].every(id=>(s=>s&&s.page==='soccer')(STICKERS.find(s=>s.id===id)))`));
+    const s0=await ev('P().coins');
+    await ev(`stkPaused=false`); const got=await ev(`checkStickers().map(s=>s.id).filter(id=>['hit1','homer1','batPerfect'].includes(id)).sort().join()`); await ev(`stkPaused=true;closeModal()`);
+    check('…and they arrive after the games above', got==='batPerfect,hit1,homer1', got);
+    await ev(`P().coins=${s0}`);
+
+    console.log('Ball Field: backups');
+    const bfB=await ev(`JSON.stringify(DB)`);
+    await ev(`(()=>{const d=JSON.parse(${JSON.stringify(bfB)});d.version=36;d.profiles.forEach(p=>{delete p.ball;['hits','homers','catches','derbies'].forEach(k=>delete p.stats[k]);});doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('a v1.59 backup restores with a fresh Ball Field', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.ball.mode==='bat'&&p.ball.bat.best.easy===0&&p.stats.hits===0)`));
+    await ev(`closeModal();doRestore(${JSON.stringify(bfB)})`); await sleep(400);
+    check('a v1.60 backup keeps the bests, the prize and the hits', await ev(`DB.profiles.some(p=>p.ball.bat.best.easy===6&&p.ball.bat.prizes.includes('easy')&&p.stats.hits>=7&&p.stats.homers>=6)`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(bfB)});d.profiles[0].ball={mode:'golf',bat:{level:'max',best:{easy:'x',hard:-3},prizes:['easy','easy','gold',4]},catch:7,derby:{cur:5,done:['d1',3,'d1'],pay:'x'}};d.profiles[0].stats.hits='lots';doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd Ball Field data is made safe', await ev(`(b=>b.mode==='bat'&&b.bat.level==='easy'&&b.bat.best.easy===0&&b.bat.best.hard===0&&b.bat.prizes.join()==='easy'&&b.catch.level==='easy'&&b.derby.cur==='d1'&&b.derby.done.join()==='d1'&&b.derby.pay.n===0&&DB.profiles[0].stats.hits===0)(DB.profiles[0].ball)`));
+    await ev(`closeModal();doRestore(${JSON.stringify(bfB)})`); await sleep(400);
+    await ev(`closeModal();(()=>{const s=${bfSaved};const p=P();p.coins=s.coins;p.look=s.look;p.owned=s.owned;p.ball=s.ball;p.stats=s.stats;p.room3.items=s.room3;save();})();stkPaused=false;show('room');goRoom(1)`);
+    check('v1.60 is in the Gift Story and the app says 1.60', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.60')&&APP_VERSION==='1.60'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

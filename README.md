@@ -2,7 +2,7 @@
 Mini game app for niblings: a cozy virtual bedroom with a fuzzy emo bunny, fidget toys,
 dress-up, decorating, an Art Desk for drawing, a Photocard Wall for making collectible bunny cards,
 a Fidget Shelf (pop-it, squishy, spinner, slime, clicker cube and a tilt marble maze), a Soccer Field for penalty kicks
-(or being the goalie),
+(or being the goalie), a Ball Field for baseball batting,
 a Stage where the bunny performs to 8 original songs (tap to the beat), five animal buddies to choose from,
 a Code Lab where she "programs" the bunny with arrow blocks (a first taste of coding), Brain Games (counting,
 memory and number puzzles), saved outfits, buddy emotes and a 🌙 night mode.
@@ -135,6 +135,23 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
 - Each wish gives **+5 coins**. After all 3 of a friend's wishes, they leave **a plush of themselves** in the room
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
+
+## Ball Field: Batting (since version 1.60)
+A baseball field: tap the **⚾ bat rack** in the Backyard (between the buddy and the chalkboard). Back goes to the Backyard.
+- **⚾ Bat:** your buddy steps up to home plate with a bat. Tap anywhere to get the pitch, then **tap again to swing** when
+  the ball reaches the dotted circle by the plate.
+- **Timing is everything:** right on time is a **⭐ home run**, a bit early goes to the left, a bit late to the right, and more
+  than that is a foul ball. A game is **6 pitches**; there are no strike-outs and no timer (each pitch waits for your tap).
+- Three original pitchers: 🐧 **Pip** the penguin (Easy, slow and straight; the circle glows and says "Swing now!"),
+  🦝 **Rocco** the raccoon (Medium, mixes speeds and floaters) and 🦉 **Hoot** the owl (Hard, faster, with floaters and curves).
+  The pitches come from fixed lists, so practice pays off. Easy mode (🐣) makes the timing more forgiving.
+- **Coins:** +1 / +2 / +3 a hit (Easy / Medium / Hard), +2 more for a home run, +1 more with 2 baseball clothes on
+  (⚾ Team kit), +5 for 6 out of 6. A perfect 6/6 wins that level's **Bronze, Silver or Gold Bat** for the Backyard (once each).
+- **New in the Closet and Shop** (⚽ Sport chip): Baseball Cap, Baseball Tee, Baseball Pants, Baseball Socks; Home Plate Rug,
+  Ball Bucket, Ball Scoreboard and a Baseball Lamp (it glows in 🌙 night mode). The Soccer Cleats count for the team kit too.
+- 3 new stickers: ⚾ First Hit, ⭐ Home Run! and 🏟️ Perfect Game. The Sticker Book's Soccer page is now called **Sports**.
+- Coming next (each its own update): 🧤 Catch (fielding), 🎯 Home Run Derby and 👯 a Batting Duel for two players.
+- Save version 37 (`ball`, `stats.hits/homers/catches/derbies`); every older backup still restores.
 
 ## iPad and iPhone (since version 1.59)
 The Hangout Room now works on iPads and iPhones as a Home Screen app (see `docs/IOS.md` to set it up).

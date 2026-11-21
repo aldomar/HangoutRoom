@@ -8,9 +8,9 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.59';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.60';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=36;          // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=37;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
 // pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
 const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:'',seenNew:'',lastBackup:0}; // lastBackup (v1.30): when a backup was last saved on this device (ms) // seenNew (v1.22): last version whose What's New was shown
@@ -115,7 +115,10 @@ const MIGRATIONS={
   // v1.54 Pet play: pet.toy (the fetch toy, section 55), stats.seeks / fetches. normalize() checks it.
   35: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&p.pet&&typeof p.pet==='object'&&!Array.isArray(p.pet)&&typeof p.pet.toy!=='string') p.pet.toy='ball'; }); },
   // v1.55 Pet walks: walk {path, finds[]} (section 56), stats.petWalks / finds. normalize() checks it.
-  36: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.walk||typeof p.walk!=='object'||Array.isArray(p.walk))) p.walk={path:'meadow',finds:[]}; }); }
+  36: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.walk||typeof p.walk!=='object'||Array.isArray(p.walk))) p.walk={path:'meadow',finds:[]}; }); },
+  // v1.60 Ball Field: ball {mode, bat{level, best, prizes[]}, catch{…}, derby{cur, done[], pay}} (section 59), stats.hits / homers /
+  // catches / derbies. normalize() fills in and checks every part.
+  37: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.ball||typeof p.ball!=='object'||Array.isArray(p.ball))) p.ball={mode:'bat'}; }); }
 };
 
 // Hair ids from before v1.11 (one closet item per color) -> the color they had. They stay readable forever:
