@@ -176,7 +176,9 @@ const GIFT_TIMELINE=[
   {v:'1.59',d:'2026-11-21',i:'📱',n:'Hangout Room on iPad + iPhone',why:'So the Hangout Room can live on every tablet and phone in the family',
     news:['📱 Add it to your Home Screen on an iPad or iPhone, and it works without internet','🔊 Read to me works on iPad and iPhone too','📳 A tiny buzz on iPhone when you pop, kick and squish','🧭 Tilt the marble maze on iPad and iPhone (tap 📱 Tilt once)']},
   {v:'1.60',d:'2026-11-21',i:'⚾',n:'Ball Field: Batting',why:'So everyone can step up to the plate and hit a home run',
-    news:['⚾ Tap the bat rack in the Backyard for the new Ball Field','🐧 Pip, 🦝 Rocco and 🦉 Hoot pitch: tap right on time for a ⭐ home run','🏆 Hit all 6 pitches to win a Bronze, Silver or Gold Bat','🧢 New baseball clothes and decorations in the Shop and Closet']}
+    news:['⚾ Tap the bat rack in the Backyard for the new Ball Field','🐧 Pip, 🦝 Rocco and 🦉 Hoot pitch: tap right on time for a ⭐ home run','🏆 Hit all 6 pitches to win a Bronze, Silver or Gold Bat','🧢 New baseball clothes and decorations in the Shop and Closet']},
+  {v:'1.61',d:'2026-11-21',i:'🧤',n:'Ball Field: Catch',why:'So everyone can make the big catch in the outfield',
+    news:['🧤 A new Catch game on the Ball Field: run to the ring and catch the ball','🐢 Tilly, 🐨 Momo and 🦓 Zippy hit fly balls, pop-ups and grounders','🏆 Catch all 5 to win a Bronze, Silver or Gold Pennant for the Backyard fence']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

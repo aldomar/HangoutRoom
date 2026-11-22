@@ -40,6 +40,8 @@ const bfCv=$('#bfCv');
 const bfP=()=>P()&&P().ball;
 const bfLvl=()=>{const b=bfP();return b&&BAT_PITCHERS[b.bat.level]?b.bat.level:'easy';};
 const bfPitcher=()=>BAT_PITCHERS[bfLvl()];
+// the game on screen: ⚾ bat, or 🧤 catch (section 61, v1.61). A mode from a newer app falls back to bat.
+const bfMode=()=>{const b=bfP();return b&&b.mode==='catch'?'catch':'bat';};
 
 /* ---------- the rules (no drawing) ---------- */
 // d = swing time minus the moment the ball reaches the plate (seconds; below 0 = early).
@@ -55,18 +57,21 @@ const bfWin=()=>bfPitcher().win[2]*(P()&&P().easy?BF_EASY_WIN:1); // the latest 
 
 /* ---------- the screen ---------- */
 function renderBall(){
-  const p=P(); if(!p) return; const b=p.ball, lvl=bfLvl();
-  $$('#bfTabs [data-mode]').forEach(t=>t.classList.toggle('on',t.dataset.mode===b.mode));
-  $$('#bfTabs [data-lvl]').forEach(t=>{t.classList.toggle('on',t.dataset.lvl===lvl);t.querySelector('i').textContent=BAT_PITCHERS[t.dataset.lvl].icon;});
-  $('#bfTitle').textContent='⚾ Batting';
+  const p=P(); if(!p) return; const mode=bfMode(), lvl=mode==='catch'?ctLvl():bfLvl(), who=mode==='catch'?CATCH_HITTERS:BAT_PITCHERS;
+  $$('#bfTabs [data-mode]').forEach(t=>t.classList.toggle('on',t.dataset.mode===mode));
+  $$('#bfTabs [data-lvl]').forEach(t=>{t.classList.toggle('on',t.dataset.lvl===lvl);t.querySelector('i').textContent=who[t.dataset.lvl].icon;});
+  $('#bfTitle').textContent=mode==='catch'?'🧤 Catch':'⚾ Batting';
   $('#bfKit').classList.toggle('hidden',!hasBallKit(p));
-  $('#bfMascot').innerHTML=mascotSVG(p.look)+bfBatSVG();
-  BF.lay=''; bfNewGame();
+  $('#bfMascot').innerHTML=mascotSVG(p.look)+(mode==='catch'?ctGloveSVG():bfBatSVG());
+  BF.lay=''; $('#bfMascot').style.left='';
+  if(mode==='catch'){bfStop();ctNewGame();return;}
+  ctStop(); bfNewGame();
 }
 $('#bfTabs').onclick=e=>{const t=e.target.closest('[data-lvl],[data-mode]'); if(!t) return; const b=bfP(); if(!b) return;
-  if(t.dataset.mode){if(b.mode===t.dataset.mode)return;b.mode=t.dataset.mode;} else {if(b.bat.level===t.dataset.lvl)return;b.bat.level=t.dataset.lvl;}
+  const g=bfMode()==='catch'?b.catch:b.bat;
+  if(t.dataset.mode){if(bfMode()===t.dataset.mode)return;b.mode=t.dataset.mode;} else {if(g.level===t.dataset.lvl)return;g.level=t.dataset.lvl;}
   save(); SFX.click(); renderBall();};
-function bfStop(){BF.state='off';BF.fly=null;BF.pitch=null;}
+function bfStop(){BF.state='off';BF.fly=null;BF.pitch=null;if(typeof ctStop==='function')ctStop();} // also 🧤 Catch (section 61)
 function bfNewGame(){BF.res=[];BF.state='ready';BF.pitch=null;BF.fly=null;BF.swung=false;BF.wait=0;$('#bfMsg').classList.remove('on');bfScore();SFX.whistle();}
 function bfScore(){
   const b=bfP(); if(!b) return; const L=bfPitcher();
@@ -141,7 +146,10 @@ function bfEnd(){
     [{text:'⬅ Backyard',cls:'ghost',on:()=>show('room')},{text:'Play again',cls:'pink',on:()=>bfNewGame()}]);
   checkStickers();
 }
-bfCv.addEventListener('pointerdown',e=>{e.preventDefault();bfTap();});
+bfCv.addEventListener('pointerdown',e=>{e.preventDefault();if(bfMode()==='catch'){ctDown(e);return;}bfTap();});
+bfCv.addEventListener('pointermove',e=>{if(bfMode()==='catch')ctMove(e);});
+bfCv.addEventListener('pointerup',e=>{if(bfMode()==='catch')ctUp(e);});
+bfCv.addEventListener('pointercancel',e=>{if(bfMode()==='catch')ctUp(e);});
 
 /* ---------- where things are on screen ---------- */
 const BF_D=0.25; // camera distance behind the plate (field units): smaller = more depth
@@ -295,6 +303,7 @@ function bfBatSVG(){
 }
 
 function drawBallField(dt){
+  if(bfMode()==='catch'){ctDraw(dt);return;} // 🧤 Catch (section 61)
   const {ctx,W,H}=fit(bfCv), g=bfGeo(W,H), L=bfPitcher(); BF.G=g; BF.time+=dt;
   const lay=`${Math.round(g.bw)},${Math.round(g.bl)},${Math.round(g.bb)}`;
   if(BF.lay!==lay){BF.lay=lay;const m=$('#bfMascot');m.style.width=g.bw+'px';m.style.height=g.bh+'px';m.style.left=g.bl+'px';m.style.bottom=g.bb+'px';}
