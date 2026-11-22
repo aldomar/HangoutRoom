@@ -127,7 +127,7 @@ _Last updated: 2026-11-21_
     catching on Medium and Hard only, Easy unchanged. No save changes.
   - #61, #62 and #63 were merged on 2026-11-22; the owner also merged #65 (the first easing of Hard Catch, 1 catch in 15 on the phone).
     The owner then asked for Medium and Hard Catch a little easier again: that commit is carried by the Duel PR.
-  - **👯 Batting Duel: built, v1.64** on branch `feature/ballduel` (from `main`). One pitches with buttons, one bats, swap every pitch,
+  - **👯 Batting Duel: built, PR #66 open as v1.64** on branch `feature/ballduel` (from `main`). One pitches with buttons, one bats, swap every pitch,
     10 pitches; `tgPay` only. Save: `duo.ball` (a default in `normalize`, no new save version). This finishes Phase 13.
 - **🧩 Content Pack 5: Finish the Outfits: merged as v1.58 (PR #58)** on branch `feature/pack5` (from `main` after #57). The owner
   noticed (2026-11-21) that some outfit pieces had nothing to match (the Racing Pants, the Fire Rescue Jacket) and agreed a plan for 25
