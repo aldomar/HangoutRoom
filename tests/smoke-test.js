@@ -4631,7 +4631,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
     console.log('Ball Field: the rules');
     check('right on time = a home run; a bit early goes left, a bit late goes right; then foul; then miss', await ev(`(()=>{const j=d=>bfJudge('easy',d,false);return j(0).res==='homer'&&j(-0.1).res==='hit'&&j(-0.1).ang<0&&j(0.1).ang>0&&j(0.2).res==='foul'&&j(-0.3).res==='miss'&&j(0.3).res==='miss';})()`));
-    check('the windows get smaller on harder levels, and Easy mode makes them wider', await ev(`(()=>{const W=['easy','medium','hard'].map(l=>BAT_PITCHERS[l].win);return W.every(w=>w[0]<w[1]&&w[1]<w[2])&&[0,1,2].every(i=>W[0][i]>W[1][i]&&W[1][i]>W[2][i])&&bfJudge('hard',0.12,true).res==='hit'&&bfJudge('hard',0.12,false).res==='foul';})()`));
+    check('the windows get smaller on harder levels, and Easy mode makes them wider', await ev(`(()=>{const W=['easy','medium','hard'].map(l=>BAT_PITCHERS[l].win);return W.every(w=>w[0]<w[1]&&w[1]<w[2])&&[0,1,2].every(i=>W[0][i]>W[1][i]&&W[1][i]>W[2][i])&&bfJudge('hard',0.08,true).res==='hit'&&bfJudge('hard',0.08,false).res==='foul';})()`));
     check('a hit never goes foul, a foul always does (left or right of the lines)', await ev(`['easy','medium','hard'].every(l=>{const w=BAT_PITCHERS[l].win;for(let d=-w[2];d<=w[2];d+=0.005){const j=bfJudge(l,d,false);if(j.res!=='foul'&&Math.abs(j.ang)>0.9)return false;if(j.res==='foul'&&Math.abs(j.ang)<1.1)return false;}return true;})`));
     check('18 fixed pitches per level; never faster than 0.7 s; Easy is all slow and straight; Hard has floaters and curves', await ev(`['easy','medium','hard'].every(l=>BAT_PITCHES[l].length===18&&BAT_PITCHES[l].every(([T,k,x])=>T>=0.7&&T<=1.6&&[0,1,2].includes(k)&&Math.abs(x)<=0.4))&&BAT_PITCHES.easy.every(([T,k])=>T>=1.5&&k===0)&&BAT_PITCHES.hard.some(p=>p[1]===1)&&BAT_PITCHES.hard.some(p=>p[1]===2)`));
     check('every pitch flies inside the field and reaches her bat at the plate (so every pitch can be hit)', await ev(`(()=>{const g=BF.G;return !!g&&['easy','medium','hard'].every(l=>BAT_PITCHES[l].every(([T,kind,x])=>{const s={T,kind,x};for(let e=0;e<=1;e+=0.05){const b=bfPitchPt(g,s,e);if(!(b.x>0&&b.x<g.W&&b.y>0&&b.y<g.H&&b.r>0))return false;}const c=bfPitchPt(g,s,1);return Math.abs(c.y-g.handY)<1&&Math.abs(c.x-g.cx)<g.bw*0.15;}));})()`));
@@ -4723,10 +4723,12 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await sleep(200); await shot('CT1-ready');
 
     console.log('Ball Field: Catch rules');
-    check('15 fixed hits per level, all inside the field, every kind used', await ev(`['easy','medium','hard'].every(l=>CATCH_HITS[l].length===15&&CATCH_HITS[l].every(([u,T,k])=>Math.abs(u)<=CT_U&&T>=1.3&&T<=2.6&&[0,1,2,3].includes(k)))&&[0,1,2,3].every(k=>CATCH_HITS.hard.some(h=>h[2]===k))`));
-    check('every hit can be caught, even running from the far side', await ev(`['easy','medium','hard'].every(l=>CATCH_HITS[l].every(h=>ctCanCatch(l,-CT_U,h)&&ctCanCatch(l,CT_U,h)))`));
-    check('harder hitters: faster hits, a smaller glove; standing still in the middle catches at most 3 of 15 on Medium and Hard', await ev(`(()=>{const avg=l=>CATCH_HITS[l].reduce((a,h)=>a+h[1],0)/15;return avg('easy')>avg('medium')&&avg('medium')>avg('hard')&&CATCH_HITTERS.easy.reach>CATCH_HITTERS.medium.reach&&CATCH_HITTERS.medium.reach>CATCH_HITTERS.hard.reach&&['medium','hard'].every(l=>CATCH_HITS[l].filter(h=>ctCaught(h[0],0,CATCH_HITTERS[l].reach)).length<=3);})()`));
-    check('every hit flies inside the canvas from home plate to her line', await ev(`(()=>{const g=BF.G;return !!g&&['easy','medium','hard'].every(l=>CATCH_HITS[l].every(([u,T,kind])=>{for(let e=0;e<=1;e+=0.05){const b=ctBallPt(g,{u,T,kind},e);if(!(b.x>0&&b.x<g.W&&b.y>0&&b.y<g.H&&b.r>0))return false;}return true;}));})()`));
+    check('15 fixed hits per level, all inside the field, every kind used, never faster than 0.9 s', await ev(`['easy','medium','hard'].every(l=>CATCH_HITS[l].length===15&&CATCH_HITS[l].every(([u,T,k])=>Math.abs(u)<=CT_U&&T>=0.9&&T<=2.6&&[0,1,2,3].includes(k)))&&[0,1,2,3].every(k=>CATCH_HITS.hard.some(h=>h[2]===k))`));
+    check('every hit can be caught, even running from the farthest corner (Medium and Hard: also from in or back)', await ev(`['easy','medium','hard'].every(l=>CATCH_HITS[l].every(h=>[-CT_U,CT_U].every(fu=>(CATCH_HITTERS[l].depth?[0,1]:[0]).every(fv=>ctCanCatch(l,fu,fv,h)))))`));
+    check('since v1.63 Medium and Hard are tight: from the worst corner, Medium hits leave at most 0.4 s to spare and Hard at most 0.25 s (once each at least 0.1 s)', await ev(`['medium','hard'].every(l=>{const c=CATCH_HITTERS[l],m=l==='hard'?0.25:0.4;return CATCH_HITS[l].every(([u,T,k,v])=>{let w=0;for(const fu of [-CT_U,CT_U])for(const fv of [0,1])w=Math.max(w,Math.max(0,ctDist(u,v,fu,fv)-c.reach)/c.speed+0.25);return T-w>=0.1-1e-9&&(T-w<=m+1e-9||T===[1.2,0.95,1.5,1.2][k]);});})`));
+    check('Easy hits stay on her line; Medium and Hard come down near and far (v 0..1, both ends used)', await ev(`CATCH_HITS.easy.every(h=>!h[3])&&!CATCH_HITTERS.easy.depth&&['medium','hard'].every(l=>CATCH_HITTERS[l].depth&&CATCH_HITS[l].every(h=>h[3]>=0&&h[3]<=1)&&CATCH_HITS[l].some(h=>h[3]>=0.8)&&CATCH_HITS[l].some(h=>h[3]<=0.2))`));
+    check('harder hitters: faster hits, a smaller glove; standing still in the middle catches at most 3 of 15 on Medium and Hard', await ev(`(()=>{const avg=l=>CATCH_HITS[l].reduce((a,h)=>a+h[1],0)/15;return avg('easy')>avg('medium')&&avg('medium')>avg('hard')&&CATCH_HITTERS.easy.reach>CATCH_HITTERS.medium.reach&&CATCH_HITTERS.medium.reach>CATCH_HITTERS.hard.reach&&['medium','hard'].every(l=>CATCH_HITS[l].filter(h=>ctCaught(h[0],h[3],0,0.5,CATCH_HITTERS[l].reach)).length<=1);})()`));
+    check('every hit flies inside the canvas from home plate to her line', await ev(`(()=>{const g=BF.G;return !!g&&['easy','medium','hard'].every(l=>CATCH_HITS[l].every(([u,T,kind,v])=>{for(let e=0;e<=1;e+=0.05){const b=ctBallPt(g,{u,T,kind,v:v||0},e);if(!(b.x>0&&b.x<g.W&&b.y>0&&b.y<g.H&&b.r>0))return false;}return true;}));})()`));
 
     console.log('Ball Field: Catch play');
     const cv=await ev(`(()=>{const r=document.querySelector('#bfCv').getBoundingClientRect();return {x:r.left,y:r.top,w:r.width,h:r.height};})()`);
@@ -4765,6 +4767,22 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`document.querySelector('#bfTabs [data-lvl=hard]').click()`); await sleep(100);
     check('Hard: Zippy bats, saved per game (batting keeps its own level)', await ev(`P().ball.catch.level==='hard'&&document.querySelector('#bfTip').textContent.includes('Zippy')`));
     await ev(`ctDown({pointerId:8,clientX:0});CT.down=null`); await waitFor(`CT.state==='fly'`); await sleep(400); await shot('CT6-hard-fly'); await waitFor(`CT.state==='result'`,4000);
+    console.log('Ball Field: Catch near and far (v1.63)');
+    await waitFor(`CT.state!=='fly'&&CT.state!=='wind'`,4000); await ev(`ctNewGame()`);
+    check('Hard: the buddy starts half way in; the tip says to watch the shadow', await ev(`CT.bv===0.5&&CT.tv===0.5&&document.querySelector('#bfTip').textContent.includes('Zippy')`));
+    const wBack=await ev(`(CT.state='fly',CT.hit={u:0,T:99,kind:0,v:0},CT.t=0,CT.tx=0,CT.tv=0,CT.bu=0,CT.bv=0,new Promise(r=>setTimeout(()=>r(document.querySelector('#bfMascot').getBoundingClientRect().width),150)))`);
+    const hard=await ev(`(()=>{const r=bfCv.getBoundingClientRect(),g=BF.G,q=ctPt(g,0.5,CT_ZMAX,0);ctFinger({clientX:r.left+q.x,clientY:r.top+q.gy});return {tx:CT.tx,tv:CT.tv};})()`);
+    check('a finger on the grass far in sends her there (across and in)', Math.abs(hard.tx-0.5)<0.02&&hard.tv>0.98, hard);
+    await sleep(1200);
+    check('…she runs in: higher up and smaller', await ev(`CT.bv>0.98&&Math.abs(CT.bu-0.5)<0.02&&document.querySelector('#bfMascot').getBoundingClientRect().width<${wBack}*0.8`));
+    await shot('CT6b-hard-in');
+    await ev(`ctNewGame();CT.bu=0;CT.bv=0;CT.tx=0;CT.tv=0;ctStart();CT.tx=CT.hit.u;CT.tv=CT.hit.v`);
+    await waitFor(`CT.state==='fly'`,3000); await sleep(400); await shot('CT6c-hard-no-ring');
+    await waitFor(`CT.state==='result'`,4000);
+    check('Hard: running to where the ball comes down (across and in) catches it', await ev(`CT.res[0]===true&&ctDist(CT.hit.u,CT.hit.v,CT.bu,CT.bv)<=ctReach()`));
+    await waitFor(`CT.state==='ready'`,3000); await ev(`ctStart();CT.tx=CT.hit.u;CT.tv=CT.hit.v>0.5?0:1`); await waitFor(`CT.state==='result'`,4000);
+    check('…but the right side at the wrong depth is a miss', await ev(`CT.res[1]===false`));
+    await waitFor(`CT.state==='ready'`,3000);
     await ev(`document.querySelector('#bfTabs [data-lvl=medium]').click()`); await sleep(100);
     await ev(`ctDown({pointerId:9,clientX:0});CT.down=null`); await waitFor(`CT.state==='wind'`); await sleep(500); await shot('CT7-medium-swing'); await waitFor(`CT.state==='result'`,4000);
     check('Back to ⚾ Bat: the bat is back and Pip / Rocco / Hoot pitch', await ev(`(document.querySelector('#bfTabs [data-mode=bat]').click(),P().ball.mode==='bat'&&!!document.querySelector('#bfMascot .bf-bat')&&BF.state==='ready'&&CT.state==='off'&&[...document.querySelectorAll('#bfTabs [data-lvl] i')].map(i=>i.textContent).join('')==='🐧🦝🦉')`));
@@ -4881,7 +4899,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`closeModal();doRestore(${JSON.stringify(hrB)})`); await sleep(400);
     check('a v1.62 backup keeps the Derby, the 12 done and the Golden Ball', await ev(`DB.profiles.some(p=>p.ball.mode==='derby'&&p.ball.derby.done.length===12&&p.stats.derbies>=14&&p.room3.items.some(i=>i.type==='goldenBall'))`));
     await ev(`closeModal();(()=>{const s=${hrSaved};const p=P();p.coins=s.coins;p.ball=s.ball;p.stats=s.stats;p.room3.items=s.room3;save();})();stkPaused=false;show('room');goRoom(1)`);
-    check('v1.62 is in the Gift Story and the app says 1.62', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.62')&&APP_VERSION==='1.62'`));
+    check('v1.62 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.62')`));
+    check('v1.63 is in the Gift Story and the app says 1.63', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.63')&&APP_VERSION==='1.63'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);
