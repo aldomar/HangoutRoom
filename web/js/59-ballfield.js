@@ -41,7 +41,7 @@ const bfP=()=>P()&&P().ball;
 const bfLvl=()=>{const b=bfP();return b&&BAT_PITCHERS[b.bat.level]?b.bat.level:'easy';};
 const bfPitcher=()=>BAT_PITCHERS[bfLvl()];
 // the game on screen: ⚾ bat, or 🧤 catch (section 61, v1.61). A mode from a newer app falls back to bat.
-const bfMode=()=>{const b=bfP();return b&&b.mode==='catch'?'catch':'bat';};
+const bfMode=()=>{const b=bfP();return b&&(b.mode==='catch'||b.mode==='derby')?b.mode:'bat';}; // 🎯 derby: section 62
 
 /* ---------- the rules (no drawing) ---------- */
 // d = swing time minus the moment the ball reaches the plate (seconds; below 0 = early).
@@ -58,20 +58,22 @@ const bfWin=()=>bfPitcher().win[2]*(P()&&P().easy?BF_EASY_WIN:1); // the latest 
 /* ---------- the screen ---------- */
 function renderBall(){
   const p=P(); if(!p) return; const mode=bfMode(), lvl=mode==='catch'?ctLvl():bfLvl(), who=mode==='catch'?CATCH_HITTERS:BAT_PITCHERS;
+  $('#bfTabs').classList.toggle('derby',mode==='derby'); $('#bfStage').classList.toggle('derby',mode==='derby'); $('#hrBar').classList.toggle('hidden',mode!=='derby');
   $$('#bfTabs [data-mode]').forEach(t=>t.classList.toggle('on',t.dataset.mode===mode));
   $$('#bfTabs [data-lvl]').forEach(t=>{t.classList.toggle('on',t.dataset.lvl===lvl);t.querySelector('i').textContent=who[t.dataset.lvl].icon;});
-  $('#bfTitle').textContent=mode==='catch'?'🧤 Catch':'⚾ Batting';
+  $('#bfTitle').textContent=mode==='catch'?'🧤 Catch':mode==='derby'?'🎯 Home Run Derby':'⚾ Batting';
   $('#bfKit').classList.toggle('hidden',!hasBallKit(p));
   $('#bfMascot').innerHTML=mascotSVG(p.look)+(mode==='catch'?ctGloveSVG():bfBatSVG());
   BF.lay=''; $('#bfMascot').style.left='';
   if(mode==='catch'){bfStop();ctNewGame();return;}
-  ctStop(); bfNewGame();
+  if(mode==='derby'){bfStop();$('#bfStage').classList.add('derby');hrRender();return;}
+  ctStop(); hrStop(); bfNewGame();
 }
 $('#bfTabs').onclick=e=>{const t=e.target.closest('[data-lvl],[data-mode]'); if(!t) return; const b=bfP(); if(!b) return;
   const g=bfMode()==='catch'?b.catch:b.bat;
   if(t.dataset.mode){if(bfMode()===t.dataset.mode)return;b.mode=t.dataset.mode;} else {if(g.level===t.dataset.lvl)return;g.level=t.dataset.lvl;}
   save(); SFX.click(); renderBall();};
-function bfStop(){BF.state='off';BF.fly=null;BF.pitch=null;if(typeof ctStop==='function')ctStop();} // also 🧤 Catch (section 61)
+function bfStop(){BF.state='off';BF.fly=null;BF.pitch=null;if(typeof ctStop==='function')ctStop();if(typeof hrStop==='function')hrStop();} // also 🧤 Catch (61) and 🎯 Derby (62)
 function bfNewGame(){BF.res=[];BF.state='ready';BF.pitch=null;BF.fly=null;BF.swung=false;BF.wait=0;$('#bfMsg').classList.remove('on');bfScore();SFX.whistle();}
 function bfScore(){
   const b=bfP(); if(!b) return; const L=bfPitcher();
@@ -146,7 +148,7 @@ function bfEnd(){
     [{text:'⬅ Backyard',cls:'ghost',on:()=>show('room')},{text:'Play again',cls:'pink',on:()=>bfNewGame()}]);
   checkStickers();
 }
-bfCv.addEventListener('pointerdown',e=>{e.preventDefault();if(bfMode()==='catch'){ctDown(e);return;}bfTap();});
+bfCv.addEventListener('pointerdown',e=>{e.preventDefault();const m=bfMode();if(m==='catch'){ctDown(e);return;}if(m==='derby'){hrDown(e);return;}bfTap();});
 bfCv.addEventListener('pointermove',e=>{if(bfMode()==='catch')ctMove(e);});
 bfCv.addEventListener('pointerup',e=>{if(bfMode()==='catch')ctUp(e);});
 bfCv.addEventListener('pointercancel',e=>{if(bfMode()==='catch')ctUp(e);});
@@ -230,13 +232,13 @@ function bfBack(g){
   ctx.strokeStyle='#ffffffbb'; ctx.lineWidth=2; [-1,1].forEach(sd=>{ctx.strokeRect(hp.x+sd*pw*1.4-(sd<0?pw*2.2:0),hp.y-pw*0.9,pw*2.2,pw*1.8);});
   BF.bg=c; BF.bgKey=key; return c;
 }
-function bfCrowd(ctx,g,cheering){
+function bfCrowd(ctx,g,cheering,noBoard){
   const fy=bfPt(g,0,1,0).gy, ft=fy-g.H*0.045, top=g.yH*0.75, cr=(ft-top)/7, cols=['#ff8cc6','#a97cff','#8ff0d0','#ffd166','#4dabf7','#ff6b8a'];
   for(let row=0;row<3;row++) for(let i=0,x=cr*(row%2?2.2:1.2);x<g.W;i++,x+=cr*2.4){
     const jump=cheering?Math.abs(Math.sin(BF.time*12+i*1.7))*cr*0.8:0;
     ctx.fillStyle=cols[(i*7+row*3)%cols.length]; ctx.beginPath(); ctx.arc(x,top+cr*(1.4+row*2)-jump,cr*0.85,0,TAU); ctx.fill();}
   // the scoreboard's lights: HITS and the pitch number
-  const s=BF.sb; if(!s) return;
+  const s=BF.sb; if(!s||noBoard) return;
   ctx.fillStyle='#2f5d50'; ctx.strokeStyle='#2b2235'; ctx.lineWidth=3; ctx.beginPath(); if(ctx.roundRect)ctx.roundRect(s.x,s.y,s.w,s.h,8); else ctx.rect(s.x,s.y,s.w,s.h); ctx.fill(); ctx.stroke();
   ctx.fillStyle='#ffe9a8'; ctx.font=`900 ${Math.round(s.h*0.3)}px sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
   const hits=BF.res.filter(Boolean).length;
@@ -304,6 +306,7 @@ function bfBatSVG(){
 
 function drawBallField(dt){
   if(bfMode()==='catch'){ctDraw(dt);return;} // 🧤 Catch (section 61)
+  if(bfMode()==='derby'){hrDraw(dt);return;} // 🎯 Home Run Derby (section 62)
   const {ctx,W,H}=fit(bfCv), g=bfGeo(W,H), L=bfPitcher(); BF.G=g; BF.time+=dt;
   const lay=`${Math.round(g.bw)},${Math.round(g.bl)},${Math.round(g.bb)}`;
   if(BF.lay!==lay){BF.lay=lay;const m=$('#bfMascot');m.style.width=g.bw+'px';m.style.height=g.bh+'px';m.style.left=g.bl+'px';m.style.bottom=g.bb+'px';}

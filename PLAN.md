@@ -885,9 +885,14 @@ team-kit bonus, prizes and stickers; **new original animal characters**. Four st
   As built (`61-catch.js`): the hitter tosses and hits it (a fungo, no pitcher); the view is from the outfield looking in; a ring on the
   grass marks where it comes down; the buddy runs toward the finger at the hitter's `speed` and catches when within `reach`
   (`ctCanCatch` proves every hit from the far side). Fly balls, line drives, pop-ups and grounders. Pennants hang on the fence top.
-- **🎯 Home Run Derby (v1.62):** like 🎯 Trick Shots. 12 fixed challenges (`d1`…`d12`: hit the ⭐ sign, pop the 🎈, ring the 🔔, two in
+- ✅ **🎯 Home Run Derby (v1.62, built):** like 🎯 Trick Shots. 12 fixed challenges (`d1`…`d12`: hit the ⭐ sign, pop the 🎈, ring the 🔔, two in
   order…); timing aims left/right, where you tap aims high/low; each has a proven `sol` and a 💡 hint. +3 the first time, +1 a replay,
   10 a day; all 12 = the ⚾ Golden Ball. A sticker.
+  As built (`62-derby.js`): the batting view with 🐧 Pip pitching one slow, straight pitch; no level tabs, a challenge bar (◀ name ▶, the
+  Trick Shots picker) instead. A swing is `{a, l}`: `a` from the timing (±`HR_AW` = 0.4 s = all the way left/right, more = no contact),
+  `l` from the tap height. The ball flies on a fixed path (`hrPath`); a challenge's targets sit on its own `sol` path, so `hrJudge`
+  (the rules, no drawing) proves every one. Targets: star sign, balloon, bell on a post, hoop, bucket (where it lands), fence (a homer,
+  one side or any). The 💡 shows after 3 misses: the dotted path and a 👆 at the tap height.
 - **👯 Batting Duel (v1.63):** one pitches, one bats on the same tablet, 5 each, then swap; pays through `tgPay` only, never changes
   bests or prizes (`p.duo.ball`).
 

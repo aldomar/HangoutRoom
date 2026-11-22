@@ -1146,4 +1146,7 @@ html,body{touch-action:manipulation} /* no double-tap zoom (iOS ignores user-sca
 @keyframes bfSwing{0%{transform:rotate(-8deg)}35%{transform:rotate(100deg)}70%{transform:rotate(150deg)}100%{transform:rotate(-8deg)}}
 #bfTabs .tab i{font-style:normal}
 #bfTabs .tab.mode.on{background:var(--gold);color:#2b2235}
+#bfTabs.derby [data-lvl],#bfTabs.derby .soc-gap{display:none} /* 🎯 Derby (v1.62): one slow pitcher, no levels */
+.soc-stage.derby .soc-score{top:66px}
 @media (max-width:620px){#bfTabs [data-lvl] span{display:none}#bfTabs .soc-gap{flex-basis:4px}#bfTabs [data-lvl]{font-size:21px;padding:6px 12px}#bfTabs{gap:5px;padding:8px 4px}}
+@media (max-width:480px){#bfTabs .tab.mode .w{display:none}#bfTabs .tab.mode{font-size:21px;padding:6px 10px}}

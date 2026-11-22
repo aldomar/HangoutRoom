@@ -213,6 +213,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   60. `60-ballpack.js` Ball Field pack (only adds 4 baseball clothes, 4 decorations, theme chips through `bpTheme`, `CARD_TAGS`)
   61. `61-catch.js` 🧤 Catch, the Ball Field's second game (`CATCH_HITTERS`, `CATCH_HITS`, `ctCanCatch`, `ctCaught`, `ctDown/ctMove/ctUp`,
       `ctLand`, `ctEnd`, `givePennantPrizes`, `ctDraw`, `ctBallPt`, `ctDrawHitter`, `PENNANTS` prizes)
+  62. `62-derby.js` 🎯 Home Run Derby, the Ball Field's third game (`DERBY`, `HR`, `hrPath`, `hrJudge`, `hrAim`, `hrLoft`, `hrFy`,
+      `hrRender`, `hrBar`, `hrDown`, `hrResult`, `hrWin`, `hrPicker`, `hrDraw`, `hrTarget`, the ⚾ `goldenBall` prize)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -359,6 +361,12 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   `ctNewGame`/`ctDraw`/`ctDown`… The view is from the outfield (z = 0 her catch line, z = 1 home), `ctPt` maps `u` (-1..1) through `g.k`,
   which keeps the buddy on screen. Hits are fixed lists (`CATCH_HITS`, 15 per level, 5 a game); `ctCanCatch` must hold for every hit from
   either side (the smoke test checks). A 5/5 gives `pennantBronze/pennantSilver/pennantGold` (`award:1`, `wall:1`) on the Backyard fence.
+  🎯 Home Run Derby (v1.62, `62-derby.js`): mode `derby`; the batting view, Pip only, the level tabs hidden (`#bfTabs.derby`) and the
+  `#hrBar` challenge bar (Trick Shots' `.tr-*` classes) instead of the scoreboard. A swing is `a` (timing, `hrAim`) and `l` (tap height,
+  `hrLoft`); the ball follows `hrPath(a, l, e)`. A `DERBY` challenge is `{id, icon, name, say, sol{a, l}, t:[{k, e}]}`: each target sits
+  at place `e` on the `sol` path (`hrTgt`), so `hrJudge(ch, a, l, ease)` always passes `sol` (the smoke test checks every one, and that
+  enough nearby swings work). Challenge ids `d1`… are saved in `ball.derby.done`: never rename them; new challenges go at the end.
+  All 12 = `goldenBall` (`award:1`) in the Backyard.
 - Visitors (since v1.41, `42-visitors.js`): one friend at a time stands at `VISIT_SPOT` in whichever room is on screen
   (`visitG`, in the floor layer, `data-hot="visitor"`). A wish is `{id, who, icon, title, say, parts[]}`; a part is one line of the
   card with `have(p, R)` and `n`, built by `vInRoom`/`vWear` (theme chips, so new themed items count automatically) or the fixed
@@ -464,6 +472,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   Stage Jam (v1.52): +2 per jam of 20+ notes, 3 jams a day (`JAM_DAILY`). Trick Shots (v1.53): +3 per trick the first time, +1 a replay, 10 a day (`TR_DAILY`). Pet play (v1.54): hearts only (+2 a find, +1 a fetch), no coins. Pet walks (v1.55): hearts only (+1 a find, +3 a walk), no coins.
   Ball Field Batting (v1.60): +1 / +2 / +3 per hit (Easy / Medium / Hard), +2 more for a home run, +1 more with 2+ baseball kit pieces on, +5 for 6/6.
   Ball Field Catch (v1.61): +1 / +2 / +3 per catch, +1 more with the kit, +5 for 5/5.
+  Home Run Derby (v1.62): +3 per challenge the first time, +1 a replay, 10 a day (`HR_DAILY`).
   Visitors (v1.41): +5 per wish that comes true (one new friend a day), and a plush after a friend's 3 wishes.
   Item prices are 0–40, except ⭐ big dreams (`dream:1`, 60–100, since v1.29). Keep earning steady and fair.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).
