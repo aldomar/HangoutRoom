@@ -905,6 +905,7 @@ team-kit bonus, prizes and stickers; **new original animal characters**. Four st
   + Floater on Medium, + Curve on Hard); their buddy stands on the mound as an SVG. The batting rules are section 59's, through hooks
   (`bfDuel()`; `bfLvl()` gives `BDL.lvl`, so the level tabs set speed and timing; Easy mode's help is off). It also carries the
   second Catch easing (Medium 1.75 / 0.2, Hard 1.9 / 0.18), which wasn't merged with #65.
+  Fix (v1.65): a duel started after Catch or Derby now always uses the batting view (found on the owner's phone).
 
 #### v1.60 plan details: ⚾ Ball Field + Batting (agreed 2026-11-21, built)
 - **Where:** a built-in bat rack and ball bucket in the Backyard (`data-hot="ballfield"`, recolorable as `FURN_PIECES.rack`), between

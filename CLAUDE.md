@@ -378,6 +378,7 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   the `bd*` functions; the mound shows the pitcher's buddy (`#bdPitcher`) instead of Pip/Rocco/Hoot, and the pitcher picks from `#bdBar`.
   `renderBall()` and `bfStop()` end a duel (`bdOff`). The state object is `BDL` because `BD` is the Stage backdrop canvas (section 51).
   Like every two-player game it pays through `tgPay` only and never changes bests, bats or `stats.hits/homers`.
+  `bfMode()` returns `bat` while `BDL.on` (v1.65), so a duel started after Catch or Derby still draws and plays as batting.
 - Visitors (since v1.41, `42-visitors.js`): one friend at a time stands at `VISIT_SPOT` in whichever room is on screen
   (`visitG`, in the floor layer, `data-hot="visitor"`). A wish is `{id, who, icon, title, say, parts[]}`; a part is one line of the
   card with `have(p, R)` and `n`, built by `vInRoom`/`vWear` (theme chips, so new themed items count automatically) or the fixed

@@ -148,6 +148,8 @@ Two players on one tablet or phone: tap **👯 Duel** on the Ball Field, then pi
   the other games for two (15 a day). A duel never changes batting bests, bats or hit counts.
 - Save: `duo.ball` counts duels played (an older backup gets 0).
 - Also in this update: 🐨 Medium and 🦓 Hard **Catch** are a little easier again (a faster run and a bigger glove).
+- Fixed in version 1.65: a duel started right after 🧤 Catch or 🎯 Derby kept that game's view (the levels did nothing and the
+  pitcher's buddy filled the screen). A duel is now always on the batting field.
 
 ## Ball Field: Home Run Derby (since version 1.62)
 The Ball Field's third game: tap **🎯 Derby** next to ⚾ Bat and 🧤 Catch. Like Soccer's 🎯 Trick Shots, it is a list of

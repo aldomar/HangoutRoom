@@ -42,7 +42,7 @@ const bfDuel=()=>typeof BDL!=='undefined'&&BDL.on; // 👯 Batting Duel (section
 const bfLvl=()=>{if(bfDuel())return BDL.lvl;const b=bfP();return b&&BAT_PITCHERS[b.bat.level]?b.bat.level:'easy';};
 const bfPitcher=()=>BAT_PITCHERS[bfLvl()];
 // the game on screen: ⚾ bat, or 🧤 catch (section 61, v1.61). A mode from a newer app falls back to bat.
-const bfMode=()=>{const b=bfP();return b&&(b.mode==='catch'||b.mode==='derby')?b.mode:'bat';}; // 🎯 derby: section 62
+const bfMode=()=>{if(bfDuel())return 'bat';const b=bfP();return b&&(b.mode==='catch'||b.mode==='derby')?b.mode:'bat';}; // 🎯 derby: section 62; a 👯 duel is always batting (v1.65)
 
 /* ---------- the rules (no drawing) ---------- */
 // d = swing time minus the moment the ball reaches the plate (seconds; below 0 = early).

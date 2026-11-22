@@ -4950,6 +4950,25 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`document.querySelector('#bfTabs [data-mode=bat]').click()`); await sleep(150);
     check('⚾ Bat leaves the duel: her own game, Pip / Rocco / Hoot again, no mound buddy', await ev(`!BDL.on&&P().ball.mode==='bat'&&BF.state==='ready'&&document.querySelector('#bfTitle').textContent.includes('Batting')&&document.querySelector('#bdBar').classList.contains('hidden')&&document.querySelector('#bdPitcher').classList.contains('hidden')&&[...document.querySelectorAll('#bfTabs [data-lvl] i')].map(i=>i.textContent).join('')==='🐧🦝🦉'&&document.querySelectorAll('#bfScore .dot').length===BF_PITCHES`));
     await ev(`document.querySelector('#bfTabs [data-duo=ball]').click()`); await sleep(150); await ev(`document.querySelector('#modalBody [data-tg-who=guest]').click()`); await sleep(200);
+    // v1.65: a duel started from 🧤 Catch or 🎯 Derby (on the owner's phone it kept the Catch view, the levels did nothing and the
+    // pitcher's buddy filled the screen)
+    for(const from of ['catch','derby']){
+      await ev(`bdOff();P().ball.mode='${from}';renderBall()`); await sleep(200);
+      await ev(`document.querySelector('#bfTabs [data-duo=ball]').click()`); await sleep(150); await ev(`document.querySelector('#modalBody [data-tg-who=guest]').click()`); await sleep(300);
+      check(`a duel started from ${from}: the batting view (not ${from}), its game stopped, the pitcher's buddy small and on the mound`, await ev(`(()=>{const st=document.querySelector('#bfStage').getBoundingClientRect(),r=document.querySelector('#bdPitcher').getBoundingClientRect(),m=bfPt(BF.G,0,BF_MOUND,0);return BDL.on&&bfMode()==='bat'&&CT.state==='off'&&HR.state==='off'&&!document.querySelector('#bfStage').classList.contains('derby')&&document.querySelector('#hrBar').classList.contains('hidden')&&r.height<st.height*0.3&&r.height>20&&Math.abs(r.left+r.width/2-st.left-m.x)<4;})()`));
+      await ev(`document.querySelector('#bfTabs [data-lvl=hard]').click()`); await sleep(150);
+      check(`…the level tabs work (Hard: 4 pitches)`, await ev(`BDL.lvl==='hard'&&document.querySelectorAll('#bdBar [data-pitch]').length===4&&document.querySelector('#bfTabs [data-lvl=hard]').classList.contains('on')`));
+      await ev(`document.querySelector('#bdBar [data-pitch=slow]').click()`); await waitFor(`BF.state==='pitch'`,3000);
+      const c=await ev(`(()=>{const r=document.querySelector('#bfCv').getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
+      await mouse('mousePressed',c.x,c.y); await mouse('mouseReleased',c.x,c.y);
+      check(`…and a tap on the field swings the bat`, await ev(`BF.swung===true&&CT.state==='off'`));
+      if(from==='catch') await shot('BD6-from-catch');
+      await waitFor(`BF.state==='ready'`,5000);
+      await ev(`document.querySelector('#bfTabs [data-mode=${from}]').click()`); await sleep(200);
+      check(`leaving the duel by the ${from} tab: back to ${from}`, await ev(`!BDL.on&&P().ball.mode==='${from}'&&bfMode()==='${from}'&&(${from==='catch'?"CT.state==='ready'":"HR.state==='ready'"})&&document.querySelector('#bdPitcher').classList.contains('hidden')`));
+    }
+    await ev(`P().ball.mode='bat';renderBall()`); await sleep(150);
+    await ev(`document.querySelector('#bfTabs [data-duo=ball]').click()`); await sleep(150); await ev(`document.querySelector('#modalBody [data-tg-who=guest]').click()`); await sleep(200);
     check('Android Back from a duel goes to the Backyard and ends it', await ev(`BDL.on&&window.androidBack()===true&&cur==='room'&&roomNo===3&&!BDL.on`));
     await ev(`show('ball')`); await sleep(150);
     check('back on the Ball Field: her own batting game, not the duel', await ev(`!BDL.on&&BF.state==='ready'`));
@@ -4966,7 +4985,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('odd duo.ball is made safe (0), and an older backup without it gets 0', await ev(`DB.profiles[0].duo.ball===0`)&&await ev(`(()=>{const d=JSON.parse(${JSON.stringify(bdB)});d.profiles.forEach(p=>delete p.duo.ball);closeModal();doRestore(JSON.stringify(d));return DB.profiles.every(p=>p.duo.ball===0);})()`));
     await ev(`closeModal();doRestore(${JSON.stringify(bdB)})`); await sleep(400);
     await ev(`closeModal();(()=>{const s=${bdSaved};const p=P();p.coins=s.coins;p.ball=s.ball;p.stats=s.stats;p.duo=s.duo;save();})();stkPaused=false;show('room');goRoom(1)`);
-    check('v1.64 is in the Gift Story and the app says 1.64', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.64')&&APP_VERSION==='1.64'`));
+    check('v1.64 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.64')`));
+    check('v1.65 is in the Gift Story and the app says 1.65', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.65')&&APP_VERSION==='1.65'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);
