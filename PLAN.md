@@ -897,10 +897,14 @@ team-kit bonus, prizes and stickers; **new original animal characters**. Four st
   ±0.03/0.065/0.1 s (home run/hit/foul). The help ring (Batting's circle, Catch's landing ring) shows on Easy and in Easy mode;
   on Medium it fades in late, on Hard there is none (Catch draws a darker ball shadow instead). Catch on Medium and Hard adds depth:
   each hit has `v` (0 = her line, 1 = `CT_ZMAX` in toward home); the finger's height on the grass sets how far in she runs, and the
-  buddy is drawn higher and smaller there. Run speed 1.5 / 1.7, glove 0.17 / 0.16 (Hard eased after the owner's phone test: 1 catch
-  in 15); hang times are set so every hit is catchable from the worst corner with little to spare (`ctCanCatch` from all 4 corners). Easy is unchanged. No save changes.
-- **👯 Batting Duel (v1.64):** one pitches, one bats on the same tablet, 5 each, then swap; pays through `tgPay` only, never changes
+  buddy is drawn higher and smaller there. Run speed 1.75 / 1.9, glove 0.2 / 0.18 (eased twice after the owner's phone tests;
+  first try: 1 catch in 15 on Hard); hang times are set so every hit is catchable from the worst corner with little to spare (`ctCanCatch` from all 4 corners). Easy is unchanged. No save changes.
+- ✅ **👯 Batting Duel (v1.64, built):** one pitches, one bats on the same tablet, 5 each, then swap; pays through `tgPay` only, never changes
   bests or prizes (`p.duo.ball`).
+  As built (`63-ballduel.js`): they swap after every pitch (10 in all). The pitcher picks a pitch with buttons (`BD_PITCHES`: Slow, Fast,
+  + Floater on Medium, + Curve on Hard); their buddy stands on the mound as an SVG. The batting rules are section 59's, through hooks
+  (`bfDuel()`; `bfLvl()` gives `BDL.lvl`, so the level tabs set speed and timing; Easy mode's help is off). It also carries the
+  second Catch easing (Medium 1.75 / 0.2, Hard 1.9 / 0.18), which wasn't merged with #65.
 
 #### v1.60 plan details: ⚾ Ball Field + Batting (agreed 2026-11-21, built)
 - **Where:** a built-in bat rack and ball bucket in the Backyard (`data-hot="ballfield"`, recolorable as `FURN_PIECES.rack`), between

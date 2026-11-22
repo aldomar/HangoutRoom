@@ -22,20 +22,20 @@ const CT_ZMAX=0.15, CT_VU=0.6;
 // depth = balls come down nearer or farther too (v).
 const CATCH_HITTERS={
   easy:{name:'Tilly',icon:'🐢',kind:'turtle',coins:1,wind:1.0,speed:1.6,reach:0.24},
-  medium:{name:'Momo',icon:'🐨',kind:'koala',coins:2,wind:0.85,speed:1.5,reach:0.17,depth:1},
-  hard:{name:'Zippy',icon:'🦓',kind:'zebra',coins:3,wind:0.75,speed:1.7,reach:0.16,depth:1} // eased a little after the owner's test (no ring on Hard)
+  medium:{name:'Momo',icon:'🐨',kind:'koala',coins:2,wind:0.85,speed:1.75,reach:0.2,depth:1},
+  hard:{name:'Zippy',icon:'🦓',kind:'zebra',coins:3,wind:0.75,speed:1.9,reach:0.18,depth:1} // eased twice after the owner's phone tests
 };
 const CT_EASY_REACH=1.3; // Easy mode (p.easy) makes the glove this much bigger
 // [u where it comes down, T seconds in the air, kind (0 fly ball, 1 line drive, 2 pop-up, 3 grounder), v how far in (Medium, Hard)].
 // 15 per level = 3 games. Since v1.63 Medium and Hard are tight: catchable from the worst corner with only a little time to spare
-// (Medium about 0.3 s, Hard about 0.35 s with a faster run, because Hard has no ring to show where it lands).
+// (about 0.45 s on both; eased after the owner's phone tests. Hard is still harder: a smaller glove and no ring).
 const CATCH_HITS={
   easy:[[0,2.4,0],[0.4,2.4,0],[-0.4,2.4,0],[0.2,2.6,3],[-0.5,2.4,0],[0.5,2.5,2],[-0.2,2.4,0],[0.3,2.6,3],[0,2.6,2],
     [-0.4,2.4,0],[0.5,2.4,0],[-0.3,2.6,3],[0.1,2.5,0],[-0.5,2.6,2],[0.35,2.4,0]],
-  medium:[[0.5,1.4,0,0.8],[-0.6,1.5,1,0.2],[0.2,1.25,3,1],[-0.3,1.5,2,0],[0.7,1.5,0,0.5],[-0.7,1.55,0,0.9],[0,1.15,1,1],[0.6,1.5,3,0.1],
-    [-0.5,1.4,0,0.6],[0.3,1.5,2,0],[-0.7,1.55,1,0.8],[0.7,1.55,0,0.3],[-0.1,1.2,3,1],[0.5,1.4,1,0.2],[-0.6,1.5,2,0.7]],
-  hard:[[0.8,1.55,0,1],[-0.8,1.55,1,0],[0.3,1.25,3,0.6],[-0.6,1.5,2,1],[0.85,1.55,1,0.2],[-0.85,1.6,0,0.9],[0.5,1.4,3,0],[-0.3,1.3,1,1],
-    [0.7,1.5,2,0.3],[-0.75,1.5,0,0.8],[0.85,1.6,1,0],[-0.5,1.4,3,1],[0,1.05,1,0.5],[-0.85,1.55,2,0.2],[0.6,1.45,0,1]]
+  medium:[[0.5,1.45,0,0.8],[-0.6,1.5,1,0.2],[0.2,1.3,3,1],[-0.3,1.5,2,0],[0.7,1.5,0,0.5],[-0.7,1.55,0,0.9],[0,1.2,1,1],[0.6,1.5,3,0.1],
+    [-0.5,1.4,0,0.6],[0.3,1.5,2,0],[-0.7,1.55,1,0.8],[0.7,1.55,0,0.3],[-0.1,1.25,3,1],[0.5,1.45,1,0.2],[-0.6,1.5,2,0.7]],
+  hard:[[0.8,1.55,0,1],[-0.8,1.55,1,0],[0.3,1.25,3,0.6],[-0.6,1.5,2,1],[0.85,1.55,1,0.2],[-0.85,1.55,0,0.9],[0.5,1.4,3,0],[-0.3,1.3,1,1],
+    [0.7,1.5,2,0.3],[-0.75,1.5,0,0.8],[0.85,1.6,1,0],[-0.5,1.4,3,1],[0,1.1,1,0.5],[-0.85,1.55,2,0.2],[0.6,1.45,0,1]]
 };
 const PENNANTS={easy:'pennantBronze',medium:'pennantSilver',hard:'pennantGold'};
 let CT={state:'off',res:[],hit:null,t:0,bu:0,tx:0,bv:0,tv:0,down:null,wait:0,cheer:-9,round:{easy:0,medium:0,hard:0},bg:null,bgKey:'',caughtAt:null};

@@ -136,6 +136,19 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Ball Field: Batting Duel (since version 1.64)
+Two players on one tablet or phone: tap **👯 Duel** on the Ball Field, then pick the other player's room or 👤 Guest.
+- One player bats (their buddy at the plate) and the other pitches (their buddy on the mound). They swap after every pitch,
+  10 pitches in all (5 each).
+- The pitcher picks the pitch with big buttons: 🐢 **Slow** and ⚡ **Fast**, plus 🎈 **Floater** on ⭐ Medium and 🌀 **Curve** on 🔥 Hard.
+  Then the batter taps to swing, with the same timing as ⚾ Bat.
+- The level tabs (🐣 Easy, ⭐ Medium, 🔥 Hard) set how fast the pitches are and how good the timing must be. Easy mode's extra help is
+  off in a duel, so it's the same for both players.
+- Most hits wins, but both players are cheered. **Coins:** +3 to each player's room for a finished duel (not a Guest), shared with
+  the other games for two (15 a day). A duel never changes batting bests, bats or hit counts.
+- Save: `duo.ball` counts duels played (an older backup gets 0).
+- Also in this update: 🐨 Medium and 🦓 Hard **Catch** are a little easier again (a faster run and a bigger glove).
+
 ## Ball Field: Home Run Derby (since version 1.62)
 The Ball Field's third game: tap **🎯 Derby** next to ⚾ Bat and 🧤 Catch. Like Soccer's 🎯 Trick Shots, it is a list of
 **12 challenges**: hit the ⭐ star sign, pop the 🎈 balloon, ring the 🔔 bell over the fence, drop the ball in the 🪣 bucket,
@@ -181,7 +194,7 @@ A baseball field: tap the **⚾ bat rack** in the Backyard (between the buddy an
 - **New in the Closet and Shop** (⚽ Sport chip): Baseball Cap, Baseball Tee, Baseball Pants, Baseball Socks; Home Plate Rug,
   Ball Bucket, Ball Scoreboard and a Baseball Lamp (it glows in 🌙 night mode). The Soccer Cleats count for the team kit too.
 - 3 new stickers: ⚾ First Hit, ⭐ Home Run! and 🏟️ Perfect Game. The Sticker Book's Soccer page is now called **Sports**.
-- Coming next: 👯 a Batting Duel for two players (🧤 Catch came in version 1.61, 🎯 Home Run Derby in 1.62, tougher Medium and Hard in 1.63).
+- Later: 🧤 Catch (version 1.61), 🎯 Home Run Derby (1.62), tougher Medium and Hard (1.63) and 👯 a Batting Duel for two (1.64).
 - Save version 37 (`ball`, `stats.hits/homers/catches/derbies`); every older backup still restores.
 
 ## iPad and iPhone (since version 1.59)

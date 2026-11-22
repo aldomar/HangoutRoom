@@ -46,7 +46,7 @@ function normalize(p){
   if(typeof p.coins!=='number') p.coins=0;
   // Two-player games (v1.42, section 43): the day and coins paid today for playing together, and games played together.
   {const d=p.duo&&typeof p.duo==='object'&&!Array.isArray(p.duo)?p.duo:{}, n=v=>Math.max(0,Math.floor(Number(v)||0));
-   p.duo={day:typeof d.day==='string'?d.day:'',n:n(d.n),soccer:n(d.soccer),memory:n(d.memory),stage:n(d.stage)};}
+   p.duo={day:typeof d.day==='string'?d.day:'',n:n(d.n),soccer:n(d.soccer),memory:n(d.memory),stage:n(d.stage),ball:n(d.ball)};} // ball: v1.64
   // Free Play + Puzzle of the Day (v1.43, section 44): coins today, and the last day the daily puzzle was solved.
   {const f=p.free&&typeof p.free==='object'&&!Array.isArray(p.free)?p.free:{}, d=p.potd&&typeof p.potd==='object'&&!Array.isArray(p.potd)?p.potd:{};
    p.free={day:typeof f.day==='string'?f.day:'',n:Math.max(0,Math.floor(Number(f.n)||0))};
