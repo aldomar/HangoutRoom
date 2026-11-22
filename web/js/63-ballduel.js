@@ -23,7 +23,7 @@ const bdNo=()=>BF.state==='result'||BF.state==='done'?BDL.res.length-1:BDL.res.l
 const bdBatter=()=>BDL.pl[Math.max(0,bdNo())%2], bdPitcherPl=()=>BDL.pl[(Math.max(0,bdNo())+1)%2];
 const bdChoices=lvl=>Object.keys(BD_PITCHES).filter(k=>BD_PITCHES[k].T[lvl]);
 
-function bdOff(){BDL.on=false;$('#bdBar').classList.add('hidden');$('#bdPitcher').classList.add('hidden');$('#bfTabs').classList.remove('duo');}
+function bdOff(){BDL.on=false;$('#bdBar').classList.add('hidden');$('#bdPitcher').classList.add('hidden');$('#bfTabs').classList.remove('duo');$('#bfTabs [data-duo]').classList.remove('on');}
 function bdStart(){
   const pl=tgPlayers(); if(!pl||cur!=='ball') return;
   const p=P(); ctStop(); hrStop();

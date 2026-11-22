@@ -184,7 +184,9 @@ const GIFT_TIMELINE=[
   {v:'1.63',d:'2026-11-21',i:'🦓',n:'Tougher Ball Field',why:'So the big kids get a real challenge on Medium and Hard',
     news:['🦓 Medium and Hard batting and catching are tougher now','🧤 On Medium and Hard the ball can land near or far: drag up and down too','👀 No help ring on Hard: watch the ball and its shadow']},
   {v:'1.64',d:'2026-11-21',i:'👯',n:'Batting Duel',why:'So two can play ball together, one pitching and one batting',
-    news:['👯 A new Duel on the Ball Field: one pitches, one bats, then switch','🫳 The pitcher picks Slow, Fast, Floater or Curve','⚾ 10 pitches, and both players get cheered']}
+    news:['👯 A new Duel on the Ball Field: one pitches, one bats, then switch','🫳 The pitcher picks Slow, Fast, Floater or Curve','⚾ 10 pitches, and both players get cheered']},
+  {v:'1.65',d:'2026-11-22',i:'🔧',n:'Batting Duel fix',why:'So the Duel works whichever Ball Field game was played last',
+    news:['👯 The Batting Duel now works after playing Catch or the Derby','🫳 The pitcher stands on the mound at the right size']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
