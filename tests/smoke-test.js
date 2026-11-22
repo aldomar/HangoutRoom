@@ -1106,7 +1106,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('143 stickers on 8 pages (1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===143&&new Set(STICKERS.map(s=>s.id)).size===143&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('144 stickers on 8 pages (1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===144&&new Set(STICKERS.map(s=>s.id)).size===144&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -4789,7 +4789,99 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`closeModal();doRestore(${JSON.stringify(ctB)})`); await sleep(400);
     check('a v1.61 backup keeps Catch mode, the best, the pennant and the catches', await ev(`DB.profiles.some(p=>p.ball.mode==='catch'&&p.ball.catch.best.easy===5&&p.ball.catch.prizes.includes('easy')&&p.stats.catches>=7)`));
     await ev(`closeModal();(()=>{const s=${ctSaved};const p=P();p.coins=s.coins;p.look=s.look;p.ball=s.ball;p.stats=s.stats;p.room3.items=s.room3;save();})();stkPaused=false;show('room');goRoom(1)`);
-    check('v1.61 is in the Gift Story and the app says 1.61', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.61')&&APP_VERSION==='1.61'`));
+    check('v1.61 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.61')`));
+  }
+
+  console.log('Ball Field: 🎯 Home Run Derby (v1.62)');
+  {
+    const waitFor=async(cond,ms)=>{for(let i=0;i<(ms||5000)/50;i++){if(await ev(cond))return true;await sleep(50);}return false;};
+    const mb=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
+    await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();show('room');goRoom(3)`); await sleep(200);
+    const hrSaved=await ev(`JSON.stringify({coins:P().coins,ball:P().ball,stats:P().stats,room3:P().room3.items})`);
+    await ev(`P().ball.mode='bat';P().ball.derby={cur:'d1',done:[],pay:{day:'',n:0}};show('ball')`); await sleep(300);
+    check('the Ball Field has a 🎯 Derby tab', await ev(`!!document.querySelector('#bfTabs [data-mode=derby]')`));
+    await ev(`document.querySelector('#bfTabs [data-mode=derby]').click()`); await sleep(300);
+    check('🎯 Derby: saved, the title changes, no level tabs, the challenge bar shows Star Hit and 0/12, the bat stays', await ev(`P().ball.mode==='derby'&&document.querySelector('#bfTitle').textContent.includes('Derby')&&[...document.querySelectorAll('#bfTabs [data-lvl]')].every(t=>!t.offsetWidth)&&!document.querySelector('#hrBar').classList.contains('hidden')&&document.querySelector('#hrPick').textContent.includes('Star Hit')&&document.querySelector('#hrBar').textContent.includes('0/12')&&!!document.querySelector('#bfMascot .bf-bat')&&HR.state==='ready'&&BF.state==='off'&&CT.state==='off'`));
+    await sleep(200); await shot('HR1-ready');
+
+    console.log('Ball Field: Derby rules');
+    check('12 challenges d1…d12, each with a name, a hint line, targets and a working swing', await ev(`DERBY.length===12&&DERBY.every((c,i)=>c.id==='d'+(i+1)&&c.name&&c.say&&c.t.length&&Math.abs(c.sol.a)<=1&&c.sol.l>=0&&c.sol.l<=1)`));
+    check("every challenge's swing (sol) hits all its targets, also in Easy mode", await ev(`DERBY.every(c=>hrJudge(c,c.sol.a,c.sol.l).every(Boolean)&&hrJudge(c,c.sol.a,c.sol.l,true).every(Boolean))`));
+    check('a plain straight swing only does the first challenge; Easy mode never makes a challenge harder', await ev(`DERBY.filter(c=>hrJudge(c,0,0.5).every(Boolean)).map(c=>c.id).join()==='d1'&&DERBY.every(c=>{for(let a=-1;a<=1;a+=0.1)for(let l=0;l<=1;l+=0.1)if(hrJudge(c,a,l).every(Boolean)&&!hrJudge(c,a,l,true).every(Boolean))return false;return true;})`));
+    check('each challenge forgives a little: at least 2% of all swings work (6% for the first five)', await ev(`DERBY.every((c,i)=>{let n=0,t=0;for(let a=-1;a<=1.001;a+=0.05)for(let l=0;l<=1.001;l+=0.05){t++;if(hrJudge(c,a,l).every(Boolean))n++;}return n/t>=(i<5?0.055:0.02);})`));
+    check('timing and tap height: right on time = straight, early = left, late = right, too far off = no hit; the hint height gives back the loft', await ev(`hrAim(0)===0&&hrAim(-0.2)<0&&hrAim(0.2)>0&&hrAim(0.5)===null&&hrAim(-0.5)===null&&[0,0.3,0.75,1].every(l=>Math.abs(hrLoft(hrFy(l))-l)<1e-9)&&hrLoft(0.95)===0&&hrLoft(0.1)===1`));
+    check('every target and every working swing stays inside the canvas', await ev(`(()=>{const g=BF.G;return !!g&&DERBY.every(c=>c.t.every(t=>t.k==='fence'||(q=>{const s=bfPt(g,q.x,q.z,q.h);return s.x>0&&s.x<g.W&&s.y>0&&s.y<g.H;})(hrTgt(c,t)))&&[0,0.25,0.5,0.75,1].every(e=>(q=>{const s=bfPt(g,q.x,q.z,q.h);return s.x>0&&s.x<g.W&&s.y>0&&s.y<g.H;})(hrPath(c.sol.a,c.sol.l,e))));})()`));
+
+    console.log('Ball Field: Derby play');
+    // swing at a (aim) and l (loft): set the pitch's clock to the right moment, then tap at the right height
+    const swing=(a,l)=>ev(`(()=>{const r=bfCv.getBoundingClientRect();HR.state='pitch';HR.swung=false;HR.t=HR_T+(${a})*HR_AW;hrDown({clientY:r.top+hrFy(${l})*r.height});return HR.state;})()`);
+    const cv=await ev(`(()=>{const r=document.querySelector('#bfCv').getBoundingClientRect();return {x:r.left,y:r.top,w:r.width,h:r.height};})()`);
+    await mouse('mousePressed',cv.x+cv.w/2,cv.y+cv.h/2); await mouse('mouseReleased',cv.x+cv.w/2,cv.y+cv.h/2);
+    check('a tap starts the pitch (Pip winds up)', await ev(`HR.state==='wind'`));
+    await waitFor(`HR.state==='pitch'`,3000); await sleep(800); await shot('HR2-pitch');
+    await waitFor(`HR.state==='result'`,3000);
+    check('not swinging: a miss, no coins lost', await ev(`HR.miss===1&&HR.fly===null`));
+    await waitFor(`HR.state==='ready'`,3000);
+    const c0=await ev('P().coins');
+    check('swinging far too early: no contact', await swing(-1.6,0.5)==='pitch');
+    await waitFor(`HR.state==='result'`,3000);
+    check('"Too early!", still no coins', await ev(`document.querySelector('#bfMsg').textContent.includes('Too early')&&P().coins===${c0}&&HR.miss===2`));
+    await waitFor(`HR.state==='ready'`,3000);
+    check('a late, low swing goes to the right and misses the star', await swing(0.8,0.05)==='fly'&&await ev(`HR.fly.a>0&&!HR.fly.res[0]`));
+    await waitFor(`HR.state==='result'`,3000); await waitFor(`HR.state==='ready'`,3000);
+    check('after 3 misses: the 💡 hint (the tip says when to swing)', await ev(`HR.miss===3&&document.querySelector('#bfTip').textContent.includes('💡')&&document.querySelector('#bfTip').textContent.includes('right on time')&&document.querySelector('#bfTip').textContent.includes('👆')`));
+    await sleep(150); await shot('HR3-hint');
+    await swing(0,0.5); await sleep(450); await shot('HR4-fly');
+    await waitFor(`!document.querySelector('#modal').classList.contains('hidden')`,4000);
+    check('right on time: the star! +3, Star Hit done ✅, 1/12, a box with ▶ Next', await ev(`P().coins===${c0}+3&&P().ball.derby.done.join()==='d1'&&P().stats.derbies===1&&document.querySelector('#hrPick').textContent.includes('✅')&&document.querySelector('#hrBar').textContent.includes('1/12')&&!!${mb('Next')}`));
+    await shot('HR5-done');
+    await ev(`${mb('Again')}.click()`); await sleep(100);
+    check('🔁 Again: the same challenge, ready', await ev(`HR.state==='ready'&&hrCur().id==='d1'&&HR.miss===0`));
+    await swing(0,0.5); await waitFor(`HR.state==='result'`,4000);
+    check('a replay pays +1 and is not counted twice', await ev(`P().coins===${c0}+4&&P().ball.derby.done.length===1&&P().stats.derbies===2&&P().ball.derby.pay.n===1`));
+    await waitFor(`HR.state==='ready'`,3000);
+    await ev(`P().ball.derby.pay={day:fpDay(),n:HR_DAILY}`); await swing(0,0.5); await waitFor(`HR.state==='result'`,4000);
+    check('after 10 replay coins today, replays still cheer but pay nothing', await ev(`P().coins===${c0}+4&&P().stats.derbies===3`));
+    await waitFor(`HR.state==='ready'`,3000);
+    await ev(`document.querySelector('#hrBar [data-hr="-1"]').click()`); await sleep(100);
+    check("◀ from the first challenge goes round to the last (Hoot's Hoop), saved", await ev(`P().ball.derby.cur==='d12'&&document.querySelector('#hrPick').textContent.includes('Hoot')`));
+    await sleep(150); await shot('HR6-hoop');
+    await ev(`document.querySelector('#hrPick').click()`); await sleep(150);
+    check('the challenge picker: 12 cards, Star Hit ✅, the current one marked', await ev(`document.querySelectorAll('#modalBody .tr-card').length===12&&document.querySelector('#modalBody .tr-card.done').textContent.includes('Star Hit')&&document.querySelector('#modalBody .tr-card.on').textContent.includes('Hoot')`));
+    await shot('HR7-picker');
+    await ev(`document.querySelector('#modalBody [data-pick="6"]').click()`); await sleep(150);
+    check('picking 🔔 Ring the Bell', await ev(`P().ball.derby.cur==='d7'&&document.querySelector('#modal').classList.contains('hidden')&&HR.state==='ready'`));
+    await sleep(150); await shot('HR8-bell');
+    // every other challenge with its own swing: the last one done wins the Golden Ball
+    for(const i of [1,2,3,4,5,6,7,8,9,10]){
+      await ev(`closeModal();hrGo(${i})`); const sol=await ev(`hrCur().sol`);
+      await swing(sol.a,sol.l); await waitFor(`!document.querySelector('#modal').classList.contains('hidden')`,5000);
+      if(i===8) await shot('HR9-pop-drop');
+    }
+    check('11 done, no Golden Ball yet', await ev(`P().ball.derby.done.length===11&&!allItems(P()).some(i=>i.type==='goldenBall')`));
+    await ev(`closeModal();hrGo(11)`); await swing(0.6,0.85); await waitFor(`!document.querySelector('#modal').classList.contains('hidden')`,5000);
+    check('all 12: the ⚾ Golden Ball in the Backyard, at its own spot', await ev(`P().ball.derby.done.length===12&&/Golden Ball/.test(document.querySelector('#modalBody').textContent)&&(g=>g.length===1&&g[0].placed&&g[0].x===TROPHY_SPOTS.goldenBall.x)(P().room3.items.filter(i=>i.type==='goldenBall'))&&!P().room.items.some(i=>i.type==='goldenBall')`));
+    await shot('HR10-golden');
+    await ev(`closeModal();hrGo(0)`); await swing(0,0.5); await waitFor(`HR.state==='result'`,4000); await sleep(1200);
+    check('…given once; a prize (never in the Shop, strict XML), clear of the buddy; batting and catch untouched', await ev(`P().room3.items.filter(i=>i.type==='goldenBall').length===1&&DECOR.goldenBall.award&&!DECOR.goldenBall.price&&(s=>s.x-70>580||s.x+70<420||s.y>604)(TROPHY_SPOTS.goldenBall)&&!new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg">'+DECOR.goldenBall.d()+'</svg>','image/svg+xml').querySelector('parsererror')&&JSON.stringify(P().ball.bat)===JSON.stringify(JSON.parse(${JSON.stringify(hrSaved)}).ball.bat)&&JSON.stringify(P().ball.catch)===JSON.stringify(JSON.parse(${JSON.stringify(hrSaved)}).ball.catch)`));
+    await ev(`closeModal()`);
+    check('Derby Star sticker on the Sports page, and it arrives', await ev(`(s=>s&&s.page==='soccer')(STICKERS.find(s=>s.id==='derbyAll'))`)&&await ev(`(stkPaused=false,(r=>(stkPaused=true,closeModal(),r))(checkStickers().some(s=>s.id==='derbyAll')))`));
+    check('Back to ⚾ Bat: levels come back, the bar hides, Pip / Rocco / Hoot pitch', await ev(`(document.querySelector('#bfTabs [data-mode=bat]').click(),P().ball.mode==='bat'&&document.querySelector('#hrBar').classList.contains('hidden')&&!!document.querySelector('#bfTabs [data-lvl=easy]').offsetWidth&&BF.state==='ready'&&HR.state==='off')`));
+    await ev(`document.querySelector('#bfTabs [data-mode=derby]').click()`); await sleep(100);
+    check('Android Back from the Derby goes to the Backyard and stops it', await ev(`window.androidBack()===true&&cur==='room'&&roomNo===3&&HR.state==='off'`));
+    await ev(`show('ball')`); await sleep(150);
+    check('the Ball Field remembers the Derby and the challenge', await ev(`P().ball.mode==='derby'&&HR.state==='ready'&&hrCur().id==='d1'`));
+    await ev(`show('room')`);
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true}); await ev(`show('ball')`); await sleep(300);
+    check('phone: the tabs and the challenge bar fit', await ev(`(()=>{const t=document.querySelector('#bfTabs'),b=document.querySelector('#hrBar').getBoundingClientRect();return t.scrollWidth<=t.clientWidth&&b.left>=0&&b.right<=innerWidth;})()`));
+    await ev(`hrGo(8);HR.miss=3;hrScore()`); await sleep(200); await shot('HR11-phone-hint');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await ev(`show('room');goRoom(3)`); await sleep(200);
+    await shot('HR12-backyard-golden');
+    const hrB=await ev(`JSON.stringify(DB)`);
+    await ev(`closeModal();doRestore(${JSON.stringify(hrB)})`); await sleep(400);
+    check('a v1.62 backup keeps the Derby, the 12 done and the Golden Ball', await ev(`DB.profiles.some(p=>p.ball.mode==='derby'&&p.ball.derby.done.length===12&&p.stats.derbies>=14&&p.room3.items.some(i=>i.type==='goldenBall'))`));
+    await ev(`closeModal();(()=>{const s=${hrSaved};const p=P();p.coins=s.coins;p.ball=s.ball;p.stats=s.stats;p.room3.items=s.room3;save();})();stkPaused=false;show('room');goRoom(1)`);
+    check('v1.62 is in the Gift Story and the app says 1.62', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.62')&&APP_VERSION==='1.62'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

@@ -2,7 +2,7 @@
 Mini game app for niblings: a cozy virtual bedroom with a fuzzy emo bunny, fidget toys,
 dress-up, decorating, an Art Desk for drawing, a Photocard Wall for making collectible bunny cards,
 a Fidget Shelf (pop-it, squishy, spinner, slime, clicker cube and a tilt marble maze), a Soccer Field for penalty kicks
-(or being the goalie), a Ball Field for baseball (batting and catching),
+(or being the goalie), a Ball Field for baseball (batting, catching and a Home Run Derby),
 a Stage where the bunny performs to 8 original songs (tap to the beat), five animal buddies to choose from,
 a Code Lab where she "programs" the bunny with arrow blocks (a first taste of coding), Brain Games (counting,
 memory and number puzzles), saved outfits, buddy emotes and a 🌙 night mode.
@@ -136,6 +136,20 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   (a prize, never in the Shop). 6 new stickers on a new **🚪 Friends** page of the Sticker Book.
 - Save version 24 (`visit`); every older backup still restores (with no wishes done yet).
 
+## Ball Field: Home Run Derby (since version 1.62)
+The Ball Field's third game: tap **🎯 Derby** next to ⚾ Bat and 🧤 Catch. Like Soccer's 🎯 Trick Shots, it is a list of
+**12 challenges**: hit the ⭐ star sign, pop the 🎈 balloon, ring the 🔔 bell over the fence, drop the ball in the 🪣 bucket,
+hit it over the fence, three stars in a row, Hoot's hoop way up high…
+- 🐧 Pip pitches every one, slow and straight. Two things aim the ball:
+  - **When** you tap: right on time goes straight out, a little **early goes left**, a little **late goes right**.
+  - **Where** you tap: **high** on the screen hits a long, high fly ball; **low** hits a short line drive.
+- ◀ ▶ and the challenge's name (it opens a list of all 12) pick a challenge. Done ones get a ✅.
+- No failing and no limit on tries. After 3 misses a **💡 dotted line** shows a swing that works, with a 👆 where to tap.
+  Easy mode (🐣) makes the targets bigger.
+- **Coins:** +3 the first time a challenge is done, +1 for doing it again (up to 10 a day). Finish all 12 for the
+  **⚾ Golden Ball** in the Backyard.
+- 1 new sticker: 🎯 Derby Star. No save changes (the fields came with version 1.60).
+
 ## Ball Field: Catch (since version 1.61)
 The Ball Field's second game: tap **🧤 Catch** next to ⚾ Bat. It remembers which one was played last.
 - The view turns around: your buddy stands in the outfield with a glove, and an original hitter at home plate tosses the
@@ -161,7 +175,7 @@ A baseball field: tap the **⚾ bat rack** in the Backyard (between the buddy an
 - **New in the Closet and Shop** (⚽ Sport chip): Baseball Cap, Baseball Tee, Baseball Pants, Baseball Socks; Home Plate Rug,
   Ball Bucket, Ball Scoreboard and a Baseball Lamp (it glows in 🌙 night mode). The Soccer Cleats count for the team kit too.
 - 3 new stickers: ⚾ First Hit, ⭐ Home Run! and 🏟️ Perfect Game. The Sticker Book's Soccer page is now called **Sports**.
-- Coming next (each its own update): 🎯 Home Run Derby and 👯 a Batting Duel for two players (🧤 Catch came in version 1.61).
+- Coming next: 👯 a Batting Duel for two players (🧤 Catch came in version 1.61, 🎯 Home Run Derby in 1.62).
 - Save version 37 (`ball`, `stats.hits/homers/catches/derbies`); every older backup still restores.
 
 ## iPad and iPhone (since version 1.59)
