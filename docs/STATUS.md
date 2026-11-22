@@ -130,7 +130,7 @@ _Last updated: 2026-11-21_
   - **👯 Batting Duel: built, PR #66 open as v1.64** on branch `feature/ballduel` (from `main`). One pitches with buttons, one bats, swap every pitch,
     10 pitches; `tgPay` only. Save: `duo.ball` (a default in `normalize`, no new save version). This finishes Phase 13.
     Merged 2026-11-22.
-  - **🔧 Batting Duel fix: built, v1.65** on branch `feature/duelfix` (from `main`). On the owner's phone a duel started after 🧤 Catch kept
+  - **🔧 Batting Duel fix: built, PR #67 open as v1.65** on branch `feature/duelfix` (from `main`). On the owner's phone a duel started after 🧤 Catch kept
     the Catch view: the level tabs did nothing and the pitcher's buddy filled the screen. `bfMode()` now returns `bat` during a duel, and
     `#bdPitcher` has a small default size. The smoke test now starts a duel from Catch and from Derby.
 - **🧩 Content Pack 5: Finish the Outfits: merged as v1.58 (PR #58)** on branch `feature/pack5` (from `main` after #57). The owner
