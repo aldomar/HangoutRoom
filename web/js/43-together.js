@@ -10,7 +10,8 @@
    - 🎤 Together (the Stage's 👯 tab): the 'duo' level (section 14): left pad = player 1, right pad = player 2, one team score.
    Gentle scores: both are cheered, never a loser. Coins: TG_COINS per finished game to each player's room (not a Guest),
    up to TG_DAILY a day (duo.day/duo.n). Bests, trophies, gloves, stars and "solved" puzzles are never changed here.
-   Saved per room: duo{day, n, soccer, memory, stage} (coins today + games played together).
+   - ⚾ Batting Duel (since v1.64, section 63): the Ball Field's 👯 tab.
+   Saved per room: duo{day, n, soccer, memory, stage, ball} (coins today + games played together).
    ========================================================= */
 const TG_COINS=3, TG_DAILY=15, TG_SHOTS=10;
 const TG_GUEST={id:'',name:'Guest',badge:'👤',color:'#8ff0d0',look:Object.assign({},DEFAULT_LOOK,{kind:'puppy',fur:'white',hair:'tuft',top:'hoodie',bottom:'shorts',legs:'none',shoes:'sneakers',acc:'none'})};
@@ -44,7 +45,7 @@ function tgPick(game){
 $('#modal').addEventListener('click',e=>{
   const b=e.target.closest('[data-tg-who]'); if(!b) return;
   TG.p2=b.dataset.tgWho; closeModal(); SFX.happy();
-  const g=tgPick.game; if(g==='soccer') tgSocStart(); else if(g==='memory') tgMemStart(); else if(g==='stage') tgStageOn();
+  const g=tgPick.game; if(g==='soccer') tgSocStart(); else if(g==='memory') tgMemStart(); else if(g==='stage') tgStageOn(); else if(g==='ball') bdStart(); // ⚾ Batting Duel (section 63, v1.64)
 });
 
 /* ---------- coins and counts (both rooms; a Guest gets nothing) ---------- */
@@ -308,7 +309,7 @@ function tgStageEnd(){
 }
 
 /* ---------- stickers (🚪 Friends page) ---------- */
-const tgGames=p=>['soccer','memory','stage'].filter(g=>p.duo[g]>0).length, tgAll=p=>p.duo.soccer+p.duo.memory+p.duo.stage;
+const tgGames=p=>['soccer','memory','stage'].filter(g=>p.duo[g]>0).length, tgAll=p=>p.duo.soccer+p.duo.memory+p.duo.stage+(p.duo.ball||0);
 STICKERS.push(
   stk('duo1','friends','👯','Play Date','circle','Play a game together (👯)',1,tgAll,1),
   stk('duo3','friends','🎲','Game Night','scallop','Play all 3 games together: Soccer, Memory and Stage',3,tgGames,2),

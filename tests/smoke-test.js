@@ -4900,7 +4900,73 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('a v1.62 backup keeps the Derby, the 12 done and the Golden Ball', await ev(`DB.profiles.some(p=>p.ball.mode==='derby'&&p.ball.derby.done.length===12&&p.stats.derbies>=14&&p.room3.items.some(i=>i.type==='goldenBall'))`));
     await ev(`closeModal();(()=>{const s=${hrSaved};const p=P();p.coins=s.coins;p.ball=s.ball;p.stats=s.stats;p.room3.items=s.room3;save();})();stkPaused=false;show('room');goRoom(1)`);
     check('v1.62 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.62')`));
-    check('v1.63 is in the Gift Story and the app says 1.63', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.63')&&APP_VERSION==='1.63'`));
+    check('v1.63 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.63')`));
+  }
+
+  console.log('Ball Field: 👯 Batting Duel (v1.64)');
+  {
+    const waitFor=async(cond,ms)=>{for(let i=0;i<(ms||5000)/50;i++){if(await ev(cond))return true;await sleep(50);}return false;};
+    const mb=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
+    await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();show('room');goRoom(3)`); await sleep(200);
+    const bdSaved=await ev(`JSON.stringify({coins:P().coins,ball:P().ball,stats:P().stats,duo:P().duo})`);
+    await ev(`P().ball.mode='bat';P().duo.day='';show('ball')`); await sleep(300);
+    check('the Ball Field has a 👯 Duel tab', await ev(`!!document.querySelector('#bfTabs [data-duo=ball]')`));
+    await ev(`document.querySelector('#bfTabs [data-duo=ball]').click()`); await sleep(200);
+    check('👯 asks who is playing (other rooms and 👤 Guest)', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&!!document.querySelector('#modalBody [data-tg-who=guest]')`));
+    await ev(`document.querySelector('#modalBody [data-tg-who=guest]').click()`); await sleep(300);
+    check("the duel starts: the title, the 👯 tab on, Medium, the pitcher's buttons (🐢 ⚡ 🎈), the Guest's buddy on the mound", await ev(`BDL.on&&BF.state==='ready'&&document.querySelector('#bfTitle').textContent.includes('Duel')&&document.querySelector('#bfTabs [data-duo]').classList.contains('on')&&BDL.lvl==='medium'&&[...document.querySelectorAll('#bdBar [data-pitch]')].map(b=>b.dataset.pitch).join()==='slow,fast,floater'&&!document.querySelector('#bdPitcher').classList.contains('hidden')&&!!document.querySelector('#bdPitcher svg')&&document.querySelector('#bdBar').textContent.includes('Guest')`));
+    check('two rows of 5 dots; the tip says who pitches and who bats', await ev(`document.querySelectorAll('#bfScore .tg-row').length===2&&document.querySelectorAll('#bfScore .dot').length===10&&/Guest: pick a pitch/.test(document.querySelector('#bfTip').textContent)`));
+    await sleep(300); await shot('BD1-pick');
+    const c0=await ev('P().coins'), st0=await ev('JSON.stringify([P().stats.hits,P().stats.homers,P().ball.bat])');
+    const cv=await ev(`(()=>{const r=document.querySelector('#bfCv').getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
+    await mouse('mousePressed',cv.x,cv.y); await mouse('mouseReleased',cv.x,cv.y);
+    check('tapping the field before a pitch is picked does nothing (a reminder)', await ev(`BF.state==='ready'&&document.querySelector('#bfMsg').textContent.includes('pick a pitch')`));
+    await ev(`document.querySelector('#bdBar [data-pitch=slow]').click()`); await sleep(100);
+    check('🐢 Slow: thrown at once (Medium speed), the buttons hide', await ev(`BF.state==='wind'&&BF.pitch.T===BD_PITCHES.slow.T.medium&&document.querySelector('#bdBar').classList.contains('hidden')`));
+    await waitFor(`BF.state==='pitch'`,3000); await sleep(500); await shot('BD2-pitch');
+    await ev(`BF.t=BF.pitch.T;bfSwing()`); await waitFor(`BF.state==='result'`,4000);
+    check('a swing right on time: a home run for player 1, no coins and no batting stats', await ev(`BDL.res.length===1&&BDL.res[0].by===0&&BDL.res[0].res==='homer'&&P().coins===${c0}&&JSON.stringify([P().stats.hits,P().stats.homers,P().ball.bat])===${JSON.stringify(st0)}&&document.querySelector('#bfScore .dot').textContent==='⭐'`));
+    await waitFor(`BF.state==='ready'`,4000);
+    check('switch: the Guest bats, player 1 pitches', await ev(`bdBatter().name==='Guest'&&bdPitcherPl().id===P().id&&/Switch/.test(document.querySelector('#bfMsg').textContent)&&!document.querySelector('#bdBar').classList.contains('hidden')`));
+    await ev(`document.querySelector('#bdBar [data-pitch=fast]').click()`); await waitFor(`BF.state==='result'`,5000);
+    check('no swing: a miss for the Guest', await ev(`BDL.res[1].by===1&&BDL.res[1].res===false`));
+    for(let i=2;i<10;i++){
+      await waitFor(`BF.state==='ready'`,5000);
+      await ev(`document.querySelector('#bdBar [data-pitch=${i%3===0?'floater':'slow'}]').click()`);
+      if(i%2===0){await waitFor(`BF.state==='pitch'`,3000); await ev(`BF.t=BF.pitch.T;bfSwing()`);}
+      await waitFor(`BF.state==='result'||BF.state==='done'`,5000);
+    }
+    await waitFor(`BF.state==='done'`,6000); await sleep(200);
+    check('after 10 pitches: the end box with both scores (5 and 0), a cheer for both, and +3 for player 1 only', await ev(`BF.state==='done'&&BDL.res.length===10&&/Batting Duel/.test(document.querySelector('#modalTitle').textContent)&&document.querySelectorAll('#modalBody .tg-sc').length===2&&/⚾ 5/.test(document.querySelector('#modalBody').textContent)&&/⚾ 0/.test(document.querySelector('#modalBody').textContent)&&/Great game/.test(document.querySelector('#modalBody').textContent)&&P().coins===${c0}+3`));
+    check('…counted as a game together (duo.ball), and batting bests, bats and hit counts are untouched', await ev(`P().duo.ball===JSON.parse(${JSON.stringify(bdSaved)}).duo.ball+1&&JSON.stringify([P().stats.hits,P().stats.homers,P().ball.bat])===${JSON.stringify(st0)}`));
+    await shot('BD3-end');
+    await ev(`${mb('Play again')}.click()`); await sleep(200);
+    check('👯 Play again: a new duel with the same partner', await ev(`BDL.on&&BDL.res.length===0&&BF.state==='ready'&&BDL.pl[1].name==='Guest'`));
+    await ev(`document.querySelector('#bfTabs [data-lvl=hard]').click()`); await sleep(150);
+    check('Hard: faster pitches and 🌀 Curve too', await ev(`BDL.on&&BDL.lvl==='hard'&&[...document.querySelectorAll('#bdBar [data-pitch]')].map(b=>b.dataset.pitch).join()==='slow,fast,floater,curve'&&BD_PITCHES.fast.T.hard<BD_PITCHES.fast.T.medium`));
+    await ev(`document.querySelector('#bdBar [data-pitch=curve]').click()`); await waitFor(`BF.state==='pitch'`,3000); await sleep(350); await shot('BD4-hard-curve'); await waitFor(`BF.state==='result'`,4000);
+    await ev(`document.querySelector('#bfTabs [data-lvl=easy]').click()`); await sleep(150);
+    check('Easy: only 🐢 Slow and ⚡ Fast', await ev(`BDL.lvl==='easy'&&[...document.querySelectorAll('#bdBar [data-pitch]')].map(b=>b.dataset.pitch).join()==='slow,fast'`));
+    await ev(`document.querySelector('#bfTabs [data-mode=bat]').click()`); await sleep(150);
+    check('⚾ Bat leaves the duel: her own game, Pip / Rocco / Hoot again, no mound buddy', await ev(`!BDL.on&&P().ball.mode==='bat'&&BF.state==='ready'&&document.querySelector('#bfTitle').textContent.includes('Batting')&&document.querySelector('#bdBar').classList.contains('hidden')&&document.querySelector('#bdPitcher').classList.contains('hidden')&&[...document.querySelectorAll('#bfTabs [data-lvl] i')].map(i=>i.textContent).join('')==='🐧🦝🦉'&&document.querySelectorAll('#bfScore .dot').length===BF_PITCHES`));
+    await ev(`document.querySelector('#bfTabs [data-duo=ball]').click()`); await sleep(150); await ev(`document.querySelector('#modalBody [data-tg-who=guest]').click()`); await sleep(200);
+    check('Android Back from a duel goes to the Backyard and ends it', await ev(`BDL.on&&window.androidBack()===true&&cur==='room'&&roomNo===3&&!BDL.on`));
+    await ev(`show('ball')`); await sleep(150);
+    check('back on the Ball Field: her own batting game, not the duel', await ev(`!BDL.on&&BF.state==='ready'`));
+    await ev(`show('room')`);
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true}); await ev(`show('ball');document.querySelector('#bfTabs [data-duo=ball]').click()`); await sleep(150);
+    await ev(`document.querySelector('#modalBody [data-tg-who=guest]').click();document.querySelector('#bfTabs [data-lvl=hard]').click()`); await sleep(300);
+    check('phone: the tabs (48 px or more) and the 4 pitch buttons fit', await ev(`(()=>{const t=document.querySelector('#bfTabs'),b=document.querySelector('#bdBar').getBoundingClientRect();return [...t.querySelectorAll('.tab')].every(x=>x.getBoundingClientRect().width>=48&&x.getBoundingClientRect().height>=48)&&t.scrollWidth<=t.clientWidth&&b.left>=0&&b.right<=innerWidth;})()`));
+    await shot('BD5-phone');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await ev(`show('room');goRoom(3)`); await sleep(200);
+    const bdB=await ev(`JSON.stringify(DB)`);
+    await ev(`closeModal();doRestore(${JSON.stringify(bdB)})`); await sleep(400);
+    check('a v1.64 backup keeps duo.ball', await ev(`DB.profiles.some(p=>p.duo.ball>=1)`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(bdB)});d.profiles[0].duo.ball='lots';doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd duo.ball is made safe (0), and an older backup without it gets 0', await ev(`DB.profiles[0].duo.ball===0`)&&await ev(`(()=>{const d=JSON.parse(${JSON.stringify(bdB)});d.profiles.forEach(p=>delete p.duo.ball);closeModal();doRestore(JSON.stringify(d));return DB.profiles.every(p=>p.duo.ball===0);})()`));
+    await ev(`closeModal();doRestore(${JSON.stringify(bdB)})`); await sleep(400);
+    await ev(`closeModal();(()=>{const s=${bdSaved};const p=P();p.coins=s.coins;p.ball=s.ball;p.stats=s.stats;p.duo=s.duo;save();})();stkPaused=false;show('room');goRoom(1)`);
+    check('v1.64 is in the Gift Story and the app says 1.64', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.64')&&APP_VERSION==='1.64'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

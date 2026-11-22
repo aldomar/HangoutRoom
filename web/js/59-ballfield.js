@@ -38,7 +38,8 @@ let BF={state:'off',res:[],pitch:null,t:0,time:0,d:null,swung:false,fly:null,che
   bg:null,bgKey:'',lay:'',G:null};
 const bfCv=$('#bfCv');
 const bfP=()=>P()&&P().ball;
-const bfLvl=()=>{const b=bfP();return b&&BAT_PITCHERS[b.bat.level]?b.bat.level:'easy';};
+const bfDuel=()=>typeof BDL!=='undefined'&&BDL.on; // 👯 Batting Duel (section 63)
+const bfLvl=()=>{if(bfDuel())return BDL.lvl;const b=bfP();return b&&BAT_PITCHERS[b.bat.level]?b.bat.level:'easy';};
 const bfPitcher=()=>BAT_PITCHERS[bfLvl()];
 // the game on screen: ⚾ bat, or 🧤 catch (section 61, v1.61). A mode from a newer app falls back to bat.
 const bfMode=()=>{const b=bfP();return b&&(b.mode==='catch'||b.mode==='derby')?b.mode:'bat';}; // 🎯 derby: section 62
@@ -53,11 +54,12 @@ function bfJudge(lvl,d,easy){
   if(a<=w[2]) return {res:'foul',ang:sd*(1.2+0.25*(a-w[1])/(w[2]-w[1])),q:0};
   return {res:'miss',ang:0,q:0};
 }
-const bfWin=()=>bfPitcher().win[2]*(P()&&P().easy?BF_EASY_WIN:1); // the latest a swing can still touch the ball
+const bfWin=()=>bfPitcher().win[2]*(P()&&P().easy&&!bfDuel()?BF_EASY_WIN:1); // the latest a swing can still touch the ball
 
 /* ---------- the screen ---------- */
 function renderBall(){
-  const p=P(); if(!p) return; const mode=bfMode(), lvl=mode==='catch'?ctLvl():bfLvl(), who=mode==='catch'?CATCH_HITTERS:BAT_PITCHERS;
+  const p=P(); if(!p) return; if(typeof bdOff==='function') bdOff();
+  const mode=bfMode(), lvl=mode==='catch'?ctLvl():bfLvl(), who=mode==='catch'?CATCH_HITTERS:BAT_PITCHERS;
   $('#bfTabs').classList.toggle('derby',mode==='derby'); $('#bfStage').classList.toggle('derby',mode==='derby'); $('#hrBar').classList.toggle('hidden',mode!=='derby');
   $$('#bfTabs [data-mode]').forEach(t=>t.classList.toggle('on',t.dataset.mode===mode));
   $$('#bfTabs [data-lvl]').forEach(t=>{t.classList.toggle('on',t.dataset.lvl===lvl);t.querySelector('i').textContent=who[t.dataset.lvl].icon;});
@@ -69,13 +71,16 @@ function renderBall(){
   if(mode==='derby'){bfStop();$('#bfStage').classList.add('derby');hrRender();return;}
   ctStop(); hrStop(); bfNewGame();
 }
-$('#bfTabs').onclick=e=>{const t=e.target.closest('[data-lvl],[data-mode]'); if(!t) return; const b=bfP(); if(!b) return;
+$('#bfTabs').onclick=e=>{const t=e.target.closest('[data-lvl],[data-mode],[data-duo]'); if(!t) return; const b=bfP(); if(!b) return;
+  if(t.dataset.duo){tgPick('ball');return;} // 👯 Batting Duel (section 63)
+  if(bfDuel()){if(t.dataset.lvl){bdLevel(t.dataset.lvl);return;} bdOff(); b.mode=t.dataset.mode; save(); SFX.click(); renderBall(); return;}
   const g=bfMode()==='catch'?b.catch:b.bat;
   if(t.dataset.mode){if(bfMode()===t.dataset.mode)return;b.mode=t.dataset.mode;} else {if(g.level===t.dataset.lvl)return;g.level=t.dataset.lvl;}
   save(); SFX.click(); renderBall();};
-function bfStop(){BF.state='off';BF.fly=null;BF.pitch=null;if(typeof ctStop==='function')ctStop();if(typeof hrStop==='function')hrStop();} // also 🧤 Catch (61) and 🎯 Derby (62)
+function bfStop(){if(typeof bdOff==='function')bdOff();BF.state='off';BF.fly=null;BF.pitch=null;if(typeof ctStop==='function')ctStop();if(typeof hrStop==='function')hrStop();} // also 🧤 Catch (61) and 🎯 Derby (62)
 function bfNewGame(){BF.res=[];BF.state='ready';BF.pitch=null;BF.fly=null;BF.swung=false;BF.wait=0;$('#bfMsg').classList.remove('on');bfScore();SFX.whistle();}
 function bfScore(){
+  if(bfDuel()){bdScore();return;}
   const b=bfP(); if(!b) return; const L=bfPitcher();
   $('#bfScore').innerHTML=Array.from({length:BF_PITCHES},(_,i)=>{const r=BF.res[i];
     return `<span class="dot ${r===false?'miss':''} ${i===BF.res.length&&BF.state!=='done'?'now':''}">${r==='homer'?'⭐':r?'⚾':r===false?'✖':''}</span>`;}).join('')
@@ -87,8 +92,9 @@ function bfSay(txt){const m=$('#bfMsg');m.textContent=txt;m.classList.remove('on
 // A tap: get the next pitch, swing, or start a new game.
 function bfTap(){
   const p=P(); if(!p||cur!=='ball') return;
-  if(BF.state==='done'){closeModal();bfNewGame();return;}
+  if(BF.state==='done'){if(bfDuel())return;closeModal();bfNewGame();return;}
   if(BF.state==='ready'){
+    if(bfDuel()){bdNeedPick();return;} // the pitcher picks the pitch with a button
     const lvl=bfLvl(), list=BAT_PITCHES[lvl], [T,kind,x]=list[BF.round[lvl]%list.length]; BF.round[lvl]++;
     BF.pitch={T,kind,x}; BF.state='wind'; BF.t=0; BF.swung=false; BF.d=null; bfScore(); return;
   }
@@ -97,7 +103,7 @@ function bfTap(){
 function bfSwing(){
   const p=P(), s=BF.pitch; BF.swung=true;
   const m=$('#bfMascot'); m.classList.remove('swing'); void m.offsetWidth; m.classList.add('swing'); SFX.whoosh();
-  const d=BF.t-s.T, j=bfJudge(bfLvl(),d,!!p.easy); BF.d=d;
+  const d=BF.t-s.T, j=bfJudge(bfLvl(),d,!!p.easy&&!bfDuel()); BF.d=d;
   if(j.res==='miss') return; // the ball flies on into the catcher's mitt; bfStep() calls it when it gets there
   // contact: the ball flies off into the field
   const q=j.q, fly={res:j.res,ang:j.ang,q,t:0,hz:BF.G?BF.G.hz:0.1,x0:BF.G?s.x*BF.G.bw*0.3/BF.G.Wx:0,
@@ -109,6 +115,7 @@ function bfSwing(){
   if(j.res==='homer'){BF.cheer=BF.time;SFX.cheer();}
 }
 function bfResult(res){
+  if(bfDuel()){bdResult(res);return;}
   const p=P(), L=bfPitcher(), hit=res==='homer'||res==='hit';
   BF.res.push(hit?res:false); BF.state='result'; BF.wait=BF.time+1.4;
   if(hit){
@@ -126,6 +133,7 @@ function bfResult(res){
   bfScore();
 }
 function bfNext(){
+  if(bfDuel()){bdNext();return;}
   if(BF.res.length>=BF_PITCHES){bfEnd();return;}
   BF.state='ready'; BF.pitch=null; BF.fly=null; bfScore();
 }
@@ -320,17 +328,18 @@ function drawBallField(dt){
   else if(BF.state==='result'){if(BF.fly)BF.fly.t+=dt;if(BF.pitch&&!BF.fly)BF.t+=dt;if(BF.time>=BF.wait)bfNext();}
   // draw
   ctx.drawImage(bfBack(g),0,0,W,H);
-  bfCrowd(ctx,g,BF.time-BF.cheer<1.6);
+  bfCrowd(ctx,g,BF.time-BF.cheer<1.6,bfDuel());
   const m=bfPt(g,0,BF_MOUND,0), ps=g.H*0.17*Math.pow(m.s,0.3);
   const w=BF.state==='wind'?BF.t/L.wind:BF.state==='pitch'&&BF.t<0.4?1:-1, arm=w<0?1.2:bfArm(w);
   ctx.fillStyle='#00000030'; ctx.beginPath(); ctx.ellipse(m.x,m.gy,ps*0.4,ps*0.08,0,0,TAU); ctx.fill();
-  bfDrawPitcher(ctx,L.kind,m.x,m.gy,ps,arm,BF.state==='ready'||BF.state==='done'||BF.state==='wind',BF.time);
+  if(bfDuel()) bdLayout(g,m,ps); // the other player's buddy pitches (an SVG over the canvas)
+  else bfDrawPitcher(ctx,L.kind,m.x,m.gy,ps,arm,BF.state==='ready'||BF.state==='done'||BF.state==='wind',BF.time);
   // where the ball will come: a soft ring by her bat (it glows when it's time to swing on Easy and in Easy mode).
   // Since v1.63: on Medium it only shows, faint, once the pitch is more than half way; on Hard there's no ring.
-  const tx=s?g.cx+s.x*g.bw*0.3:g.cx, hp=P(), help=bfLvl()==='easy'||!!(hp&&hp.easy);
+  const tx=s?g.cx+s.x*g.bw*0.3:g.cx, hp=P(), help=bfLvl()==='easy'||!!(hp&&hp.easy&&!bfDuel());
   const ringA=help?1:bfLvl()==='medium'&&s&&BF.state==='pitch'?clamp((BF.t/s.T-0.55)/0.25,0,1)*0.8:0;
   if(BF.state!=='hit'&&ringA>0){
-    const p=hp, now=s&&BF.state==='pitch'&&Math.abs(BF.t-s.T)<=bfPitcher().win[1]*(p&&p.easy?BF_EASY_WIN:1);
+    const p=hp, now=s&&BF.state==='pitch'&&Math.abs(BF.t-s.T)<=bfPitcher().win[1]*(p&&p.easy&&!bfDuel()?BF_EASY_WIN:1);
     ctx.globalAlpha=ringA; ctx.strokeStyle=now&&help?'#ffd166':'#ffffff88'; ctx.lineWidth=now&&help?5:3; ctx.setLineDash(now&&help?[]:[6,6]);
     ctx.beginPath(); ctx.arc(tx,g.handY,g.rb*(now&&help?1.9:1.5),0,TAU); ctx.stroke(); ctx.setLineDash([]);
     if(now&&help){ctx.font=`900 ${Math.round(g.rb*1.1)}px sans-serif`;ctx.lineWidth=5;ctx.strokeStyle='#2b2235';ctx.fillStyle='#fff';const lx=tx+g.rb*2.2,ly=g.handY-g.rb*1.6; // to the right: the buddy stands on the left

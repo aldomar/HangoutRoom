@@ -267,6 +267,7 @@
     <button class="tab mode on" data-mode="bat" aria-label="Batting">⚾ <span class="w">Bat</span></button>
     <button class="tab mode" data-mode="catch" aria-label="Catch">🧤 <span class="w">Catch</span></button>
     <button class="tab mode" data-mode="derby" aria-label="Home Run Derby">🎯 <span class="w">Derby</span></button>
+    <button class="tab mode duo" data-duo="ball" aria-label="Batting Duel for 2 players">👯 <span class="w">Duel</span></button>
     <span class="soc-gap"></span>
     <button class="tab on" data-lvl="easy" aria-label="Easy"><i>🐧</i> <span>Easy</span></button>
     <button class="tab" data-lvl="medium" aria-label="Medium"><i>🦝</i> <span>Medium</span></button>
@@ -276,6 +277,8 @@
     <canvas id="bfCv"></canvas>
     <div id="bfMascot"></div>
     <div class="tr-bar hidden" id="hrBar"></div>
+    <div id="bdPitcher" class="hidden"></div>
+    <div class="bd-bar hidden" id="bdBar"></div>
     <div class="soc-score" id="bfScore"></div>
     <div class="soc-msg" id="bfMsg"></div>
     <div class="fid-tip" id="bfTip"></div>
@@ -565,6 +568,7 @@
 <script src="web/js/60-ballpack.js"></script>
 <script src="web/js/61-catch.js"></script>
 <script src="web/js/62-derby.js"></script>
+<script src="web/js/63-ballduel.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

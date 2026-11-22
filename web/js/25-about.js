@@ -182,7 +182,9 @@ const GIFT_TIMELINE=[
   {v:'1.62',d:'2026-11-21',i:'🎯',n:'Home Run Derby',why:'So everyone can aim their hits like a real slugger',
     news:['🎯 A new Derby game on the Ball Field: 12 challenges to hit','⏱️ Swing early to hit left, late to hit right, and tap high for a big fly ball','🎈 Pop balloons, ring the bell, drop it in the bucket… finish all 12 for the Golden Ball']},
   {v:'1.63',d:'2026-11-21',i:'🦓',n:'Tougher Ball Field',why:'So the big kids get a real challenge on Medium and Hard',
-    news:['🦓 Medium and Hard batting and catching are tougher now','🧤 On Medium and Hard the ball can land near or far: drag up and down too','👀 No help ring on Hard: watch the ball and its shadow']}
+    news:['🦓 Medium and Hard batting and catching are tougher now','🧤 On Medium and Hard the ball can land near or far: drag up and down too','👀 No help ring on Hard: watch the ball and its shadow']},
+  {v:'1.64',d:'2026-11-21',i:'👯',n:'Batting Duel',why:'So two can play ball together, one pitching and one batting',
+    news:['👯 A new Duel on the Ball Field: one pitches, one bats, then switch','🫳 The pitcher picks Slow, Fast, Floater or Curve','⚾ 10 pitches, and both players get cheered']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
