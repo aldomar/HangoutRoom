@@ -8,7 +8,7 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.63';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.62';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
 const DB_VERSION=37;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)

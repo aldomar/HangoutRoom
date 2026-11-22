@@ -367,10 +367,6 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   at place `e` on the `sol` path (`hrTgt`), so `hrJudge(ch, a, l, ease)` always passes `sol` (the smoke test checks every one, and that
   enough nearby swings work). Challenge ids `d1`… are saved in `ball.derby.done`: never rename them; new challenges go at the end.
   All 12 = `goldenBall` (`award:1`) in the Backyard.
-  Since v1.63 Medium and Hard are tougher: the help ring (Batting's circle, Catch's landing ring) shows fully only on Easy and in Easy
-  mode, fades in late on Medium, and never shows on Hard. Catch on Medium/Hard (`depth:1`, `ctDepth()`) adds `v` (0..1, `CT_ZMAX` in
-  toward home) to every hit and to the buddy (`CT.bv`/`CT.tv`; `ctFinger` reads the finger's height on the grass); distances go through
-  `ctDist` (a run in costs `CT_VU` of a run across), and `ctCanCatch(lvl, fu, fv, hit)` must hold from all 4 corners.
 - Visitors (since v1.41, `42-visitors.js`): one friend at a time stands at `VISIT_SPOT` in whichever room is on screen
   (`visitG`, in the floor layer, `data-hot="visitor"`). A wish is `{id, who, icon, title, say, parts[]}`; a part is one line of the
   card with `have(p, R)` and `n`, built by `vInRoom`/`vWear` (theme chips, so new themed items count automatically) or the fixed

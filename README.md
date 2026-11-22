@@ -157,10 +157,6 @@ The Ball Field's second game: tap **🧤 Catch** next to ⚾ Bat. It remembers w
 - Tap to get the hit. A **ring on the grass** shows where the ball will come down: **drag** (or tap) to run there before it
   lands. Fly balls, line drives, high pop-ups and grounders that roll along the grass.
 - 5 hits a game, from fixed lists (practice pays off). A drop costs nothing. Easy mode (🐣) gives a bigger glove.
-- **Tougher since version 1.63:** on 🐨 Medium and 🦓 Hard the ball can come down **near or far**, so you drag **up and down**
-  too (up = run in toward home; the buddy gets smaller as it runs in). The buddy runs slower with a smaller glove, and the hits
-  leave only a little time to spare. The ring only shows on Easy; on Medium it fades in late, and on Hard there's no ring at all:
-  watch the ball and its shadow.
 - **Coins:** +1 / +2 / +3 a catch, +1 more with the ⚾ Team kit, +5 for 5 out of 5. A 5/5 wins that level's **Bronze, Silver or
   Gold Pennant**, which hangs on top of the Backyard fence (once each).
 - 1 new sticker: 🧤 Great Catch. No save changes (the fields came with version 1.60).
@@ -174,14 +170,12 @@ A baseball field: tap the **⚾ bat rack** in the Backyard (between the buddy an
 - Three original pitchers: 🐧 **Pip** the penguin (Easy, slow and straight; the circle glows and says "Swing now!"),
   🦝 **Rocco** the raccoon (Medium, mixes speeds and floaters) and 🦉 **Hoot** the owl (Hard, faster, with floaters and curves).
   The pitches come from fixed lists, so practice pays off. Easy mode (🐣) makes the timing more forgiving.
-  **Tougher since version 1.63:** Medium and Hard need much better timing, and the dotted circle by the plate only shows on
-  Easy; on Medium it appears late in the pitch, on Hard not at all.
 - **Coins:** +1 / +2 / +3 a hit (Easy / Medium / Hard), +2 more for a home run, +1 more with 2 baseball clothes on
   (⚾ Team kit), +5 for 6 out of 6. A perfect 6/6 wins that level's **Bronze, Silver or Gold Bat** for the Backyard (once each).
 - **New in the Closet and Shop** (⚽ Sport chip): Baseball Cap, Baseball Tee, Baseball Pants, Baseball Socks; Home Plate Rug,
   Ball Bucket, Ball Scoreboard and a Baseball Lamp (it glows in 🌙 night mode). The Soccer Cleats count for the team kit too.
 - 3 new stickers: ⚾ First Hit, ⭐ Home Run! and 🏟️ Perfect Game. The Sticker Book's Soccer page is now called **Sports**.
-- Coming next: 👯 a Batting Duel for two players (🧤 Catch came in version 1.61, 🎯 Home Run Derby in 1.62, tougher Medium and Hard in 1.63).
+- Coming next: 👯 a Batting Duel for two players (🧤 Catch came in version 1.61, 🎯 Home Run Derby in 1.62).
 - Save version 37 (`ball`, `stats.hits/homers/catches/derbies`); every older backup still restores.
 
 ## iPad and iPhone (since version 1.59)
