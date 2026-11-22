@@ -4965,7 +4965,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
       if(from==='catch') await shot('BD6-from-catch');
       await waitFor(`BF.state==='ready'`,5000);
       await ev(`document.querySelector('#bfTabs [data-mode=${from}]').click()`); await sleep(200);
-      check(`leaving the duel by the ${from} tab: back to ${from}`, await ev(`!BDL.on&&P().ball.mode==='${from}'&&bfMode()==='${from}'&&(${from==='catch'?"CT.state==='ready'":"HR.state==='ready'"})&&document.querySelector('#bdPitcher').classList.contains('hidden')`));
+      check(`leaving the duel by the ${from} tab: back to ${from}`, await ev(`!BDL.on&&P().ball.mode==='${from}'&&bfMode()==='${from}'&&(${from==='catch'?"CT.state==='ready'":"HR.state==='ready'"})&&document.querySelector('#bdPitcher').classList.contains('hidden')&&!document.querySelector('#bfTabs [data-duo]').classList.contains('on')&&document.querySelector('#bfTabs [data-mode='+'${from}'+']').classList.contains('on')`));
     }
     await ev(`P().ball.mode='bat';renderBall()`); await sleep(150);
     await ev(`document.querySelector('#bfTabs [data-duo=ball]').click()`); await sleep(150); await ev(`document.querySelector('#modalBody [data-tg-who=guest]').click()`); await sleep(200);
