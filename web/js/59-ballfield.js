@@ -16,8 +16,8 @@ const BF_PITCHES=6, BF_PERFECT=5, BF_HOMER=2; // pitches a game, coins for 6/6, 
 // wind = seconds of wind-up; win = [home run, hit, foul] timing windows in seconds either side of "right on time".
 const BAT_PITCHERS={
   easy:{name:'Pip',icon:'🐧',kind:'penguin',coins:1,wind:1.0,win:[0.07,0.16,0.24]},
-  medium:{name:'Rocco',icon:'🦝',kind:'raccoon',coins:2,wind:0.85,win:[0.05,0.12,0.19]},
-  hard:{name:'Hoot',icon:'🦉',kind:'owl',coins:3,wind:0.75,win:[0.04,0.1,0.16]}
+  medium:{name:'Rocco',icon:'🦝',kind:'raccoon',coins:2,wind:0.85,win:[0.045,0.09,0.14]}, // tighter since v1.63
+  hard:{name:'Hoot',icon:'🦉',kind:'owl',coins:3,wind:0.75,win:[0.03,0.065,0.1]}
 };
 const BF_EASY_WIN=1.4; // Easy mode (p.easy) makes every window this much wider
 // [T seconds from the throw to the plate, kind (0 straight, 1 floater: slow then fast, 2 curve), x where it crosses (-1..1)].
@@ -325,14 +325,17 @@ function drawBallField(dt){
   const w=BF.state==='wind'?BF.t/L.wind:BF.state==='pitch'&&BF.t<0.4?1:-1, arm=w<0?1.2:bfArm(w);
   ctx.fillStyle='#00000030'; ctx.beginPath(); ctx.ellipse(m.x,m.gy,ps*0.4,ps*0.08,0,0,TAU); ctx.fill();
   bfDrawPitcher(ctx,L.kind,m.x,m.gy,ps,arm,BF.state==='ready'||BF.state==='done'||BF.state==='wind',BF.time);
-  // where the ball will come: a soft ring by her bat (it glows when it's time to swing on Easy and in Easy mode)
-  const tx=s?g.cx+s.x*g.bw*0.3:g.cx;
-  if(BF.state!=='hit'){
-    const p=P(), now=s&&BF.state==='pitch'&&Math.abs(BF.t-s.T)<=bfPitcher().win[1]*(p&&p.easy?BF_EASY_WIN:1), help=bfLvl()==='easy'||(p&&p.easy);
-    ctx.strokeStyle=now&&help?'#ffd166':'#ffffff88'; ctx.lineWidth=now&&help?5:3; ctx.setLineDash(now&&help?[]:[6,6]);
+  // where the ball will come: a soft ring by her bat (it glows when it's time to swing on Easy and in Easy mode).
+  // Since v1.63: on Medium it only shows, faint, once the pitch is more than half way; on Hard there's no ring.
+  const tx=s?g.cx+s.x*g.bw*0.3:g.cx, hp=P(), help=bfLvl()==='easy'||!!(hp&&hp.easy);
+  const ringA=help?1:bfLvl()==='medium'&&s&&BF.state==='pitch'?clamp((BF.t/s.T-0.55)/0.25,0,1)*0.8:0;
+  if(BF.state!=='hit'&&ringA>0){
+    const p=hp, now=s&&BF.state==='pitch'&&Math.abs(BF.t-s.T)<=bfPitcher().win[1]*(p&&p.easy?BF_EASY_WIN:1);
+    ctx.globalAlpha=ringA; ctx.strokeStyle=now&&help?'#ffd166':'#ffffff88'; ctx.lineWidth=now&&help?5:3; ctx.setLineDash(now&&help?[]:[6,6]);
     ctx.beginPath(); ctx.arc(tx,g.handY,g.rb*(now&&help?1.9:1.5),0,TAU); ctx.stroke(); ctx.setLineDash([]);
     if(now&&help){ctx.font=`900 ${Math.round(g.rb*1.1)}px sans-serif`;ctx.lineWidth=5;ctx.strokeStyle='#2b2235';ctx.fillStyle='#fff';const lx=tx+g.rb*2.2,ly=g.handY-g.rb*1.6; // to the right: the buddy stands on the left
       ctx.strokeText('Swing now!',lx,ly);ctx.fillText('Swing now!',lx,ly);}
+    ctx.globalAlpha=1;
   }
   // the ball
   if(BF.fly){const f=BF.fly, e=Math.min(1,f.t/f.dur);

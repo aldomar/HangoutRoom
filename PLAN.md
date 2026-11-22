@@ -893,7 +893,13 @@ team-kit bonus, prizes and stickers; **new original animal characters**. Four st
   `l` from the tap height. The ball flies on a fixed path (`hrPath`); a challenge's targets sit on its own `sol` path, so `hrJudge`
   (the rules, no drawing) proves every one. Targets: star sign, balloon, bell on a post, hoop, bucket (where it lands), fence (a homer,
   one side or any). The 💡 shows after 3 misses: the dotted path and a 👆 at the tap height.
-- **👯 Batting Duel (v1.63):** one pitches, one bats on the same tablet, 5 each, then swap; pays through `tgPay` only, never changes
+- ✅ **🦓 Tougher Medium and Hard (v1.63, built, asked by the owner 2026-11-21):** Batting windows Medium ±0.045/0.09/0.14 s, Hard
+  ±0.03/0.065/0.1 s (home run/hit/foul). The help ring (Batting's circle, Catch's landing ring) shows on Easy and in Easy mode;
+  on Medium it fades in late, on Hard there is none (Catch draws a darker ball shadow instead). Catch on Medium and Hard adds depth:
+  each hit has `v` (0 = her line, 1 = `CT_ZMAX` in toward home); the finger's height on the grass sets how far in she runs, and the
+  buddy is drawn higher and smaller there. Run speed 1.5 on both, glove 0.17 / 0.13; hang times are set so every hit is catchable
+  from the worst corner with little to spare (`ctCanCatch` from all 4 corners). Easy is unchanged. No save changes.
+- **👯 Batting Duel (v1.64):** one pitches, one bats on the same tablet, 5 each, then swap; pays through `tgPay` only, never changes
   bests or prizes (`p.duo.ball`).
 
 #### v1.60 plan details: ⚾ Ball Field + Batting (agreed 2026-11-21, built)
@@ -910,7 +916,7 @@ team-kit bonus, prizes and stickers; **new original animal characters**. Four st
 - **Extras (`60-ballpack.js`):** 4 clothes and 4 decorations, all ⚽ Sport; the Baseball Lamp glows at night. 3 stickers on the
   Sticker Book's Soccer page, now named Sports (the page id stays `soccer`).
 - **Save version 37:** `ball{mode, bat{level, best, prizes}, catch{…}, derby{cur, done, pay}}`, `stats.hits/homers/catches/derbies`.
-  All the later games' fields are added now, so v1.61–v1.63 need no new save version.
+  All the later games' fields are added now, so v1.61–v1.64 need no new save version.
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
