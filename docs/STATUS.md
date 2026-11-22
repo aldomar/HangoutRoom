@@ -120,7 +120,7 @@ _Last updated: 2026-11-21_
     the PR goes to `main`). It also carries the owner's About change (names: "The 4 of You"). Save version 37
     (`ball`, with the fields for all four games, so v1.61–v1.63 need no new save version). The Sticker Book's Soccer page is now "Sports".
   - **🧤 Catch: built, PR #61 open as v1.61** on branch `feature/ballcatch` (#60 was merged meanwhile, so it goes to `main`). No save changes. Pennants hang on the Backyard fence top.
-  - **🎯 Home Run Derby: built, v1.62** on branch `feature/derby` (on top of `feature/ballcatch`; #61 was still open, so the PR goes to
+  - **🎯 Home Run Derby: built, PR #62 open as v1.62** on branch `feature/derby` (on top of `feature/ballcatch`; #61 was still open, so the PR goes to
     `feature/ballcatch`). No save changes. 12 challenges, the ⚾ Golden Ball for all 12.
   - Next: 👯 Batting Duel (v1.63), on top of the Derby.
 - **🧩 Content Pack 5: Finish the Outfits: merged as v1.58 (PR #58)** on branch `feature/pack5` (from `main` after #57). The owner
