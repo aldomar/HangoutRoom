@@ -5,8 +5,9 @@
    Hard = ages 9-13 (up to 11). Left out on purpose: 1-2 letter words, homophones (they need a sentence), and a few words
    that don't suit a kids' app. A made-up word puzzle is {bank:1, w, x, pic}: w = the word, x = extra letters, pic = a
    picture when there is a good one (an emoji old Android shows, or a memPic id), else ''.
-   Easy (trace): the letters show faintly in the slots; she taps them in order. Medium and Hard (look, hide, spell): she
-   sees the word, taps ✋ Hide it, then spells it; 👀 Peek shows it again any time (no timer, progress is kept).
+   Easy (trace): the letters show faintly in the slots; she taps them in order. Medium and Hard (listen, spell): since v1.66
+   the word starts hidden and is said aloud; she spells it, and 👀 Peek shows it any time (✋ hides it again; no timer,
+   progress is kept). With no voice (canSpeak() false) it starts by showing the word, as before.
    🔊 says the word (on the tablet). The 8 fixed Word Builder puzzles per level are unchanged (section 35).
    ========================================================= */
 const WB_BANK={
@@ -75,7 +76,7 @@ const wbStartFixed=BRAIN_GAMES.word.start;
 BRAIN_GAMES.word.start=function(pz,l,idx){if(pz&&pz.bank)wbBankStart(pz,l);else wbStartFixed.call(this,pz,l,idx);};
 function wbBankStart(pz,l){
   const trace=l==='easy', word=pz.w.toLowerCase();
-  WB={got:0,look:!trace};
+  WB={got:0,look:!trace&&!canSpeak()};   // with a voice the word starts hidden (v1.66)
   const say=canSpeak()?`<button class="btn small ghost wb-say" aria-label="${word}">🔊</button>`:'';
   const pic=pz.pic?`<button class="wb-pic" aria-label="${word}">${wbPic(pz.pic)}</button>`:'';
   $('#brQ').innerHTML=`<div class="br-card"><div class="br-ask" id="wbAsk"></div>${pic}<div class="wb-look" id="wbLook">${pz.w}</div>`
@@ -101,7 +102,7 @@ function wbLookView(l){
   if(q('#wbHide')) q('#wbHide').classList.toggle('hidden',!look);
   if(q('#wbPeek')) q('#wbPeek').classList.toggle('hidden',look);
   q('#wbAsk').textContent=p.easy?(look?'👀':'🔤'):trace?'Copy the word! Tap the letters in order.'
-    :look?'Look at the word. Then tap ✋ Hide it and spell it!':'Spell the word! Tap 👀 to peek.';
+    :look?'Look at the word. Then tap ✋ Hide it and spell it!':canSpeak()?'Listen and spell the word! Tap 👀 to peek.':'Spell the word! Tap 👀 to peek.';
 }
 function wbBankTap(pz,b){
   const want=pz.w[WB.got];

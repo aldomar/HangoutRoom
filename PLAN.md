@@ -390,6 +390,8 @@ tools (Art Desk, Music Maker, Photocards, Stage) don't connect. Each PR still ge
   the half outfits (race driver, firefighter, builder, karate, farmer, robot, star hero, shark, astronaut, dino) and fill empty theme
   tabs (Stage leg warmers, Cozy and Cafe bottoms, Emo shoes). Field `p5` (any `THEMES` key) read by `themesOf`; `P5_SETS` lists
   the 10 outfits for 3 stickers. Clothes only, no save change. A hero cape was left out (Extras is one slot; it would need a new layer).
+- ✅ **🦈 Shark Pants + listen and spell (v1.66, the owner's request 2026-11-22):** `sharkPants` (bottom, `p5:'hero'`) finishes the
+  Shark Hoodie's belly circle and joins `P5_SETS.shark`. Word Builder bank words on Medium/Hard start hidden when `canSpeak()`.
 - ✅ **📱 iPad + iPhone (v1.59, built, plan agreed 2026-11-21):** all the children's devices turned out to be iPads/iPhones. Plan details below.
 
 #### v1.59 plan details: 📱 iPad + iPhone (agreed 2026-11-21, built)

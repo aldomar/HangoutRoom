@@ -16,7 +16,7 @@ const P5_SETS={
   farmer: {icon:'🐮',name:'Farmer',keys:['top:overalls','bottom:overallPants','shoes:rainBoots','acc:strawHat']},
   robot:  {icon:'🤖',name:'Robot',keys:['top:robotTop','bottom:robotPants','arms:robotArms','shoes:robotBoots','acc:antennae']},
   hero:   {icon:'⭐',name:'Star Hero',keys:['top:heroSuit','legs:heroTights','shoes:heroBoots','acc:heroMask']},
-  shark:  {icon:'🦈',name:'Shark',keys:['top:sharkHoodie','shoes:sharkSlippers','acc:sharkHat']},
+  shark:  {icon:'🦈',name:'Shark',keys:['top:sharkHoodie','bottom:sharkPants','shoes:sharkSlippers','acc:sharkHat']},
   astro:  {icon:'🚀',name:'Astronaut',keys:['top:astroSuit','bottom:astroPants','shoes:rocketBoots','acc:spaceHelmet']},
   dino:   {icon:'🦕',name:'Dino',keys:['top:dinoHoodie','bottom:dinoShorts','legs:dinoSocks','arms:dinoMitts','shoes:dinoFeet','acc:dinoHood']}
 };
@@ -87,7 +87,10 @@ CLOSET.bottom.items.push(
     +`<path d="M58.3 234 H97 M103 234 H141.7" stroke="#c9b3ff" stroke-width="8"/><path d="M94 184 Q92 192 88 194 M106 184 Q108 192 112 194" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>`},
   {id:'berrySkirt',name:'Strawberry Skirt',price:15,p5:'cafe',d:()=>`<path d="M60 180 H140 L152 214 Q100 224 48 214 Z" fill="#ff6b81" ${st()}/>`
     +[[70,197],[86,205],[102,196],[118,206],[132,197],[62,208],[78,213],[94,214],[110,215],[126,213],[142,208]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="1.8" ry="2.6" fill="#ffe9a8"/>`).join('')
-    +`<path d="M60 180 H140 V185${' q-5 7 -10 0'.repeat(8)}Z" fill="#5cb85c" ${st('#2b2235',2)}/>`}
+    +`<path d="M60 180 H140 V185${' q-5 7 -10 0'.repeat(8)}Z" fill="#5cb85c" ${st('#2b2235',2)}/>`},
+  // v1.66: the white belly finishes the Shark Hoodie's belly circle (it ends just above the gap between the legs)
+  {id:'sharkPants',name:'Shark Pants',price:15,p5:'hero',under:true,d:()=>p5Pants('#7f9fbf')
+    +`<path d="M78 186 Q78 208 100 208 Q122 208 122 186Z" fill="#fff"/><path d="M58.4 232 H97 M103 232 H141.6" stroke="#4f6f90" stroke-width="7"/>`}
 );
 CLOSET.legs.items.push(
   {id:'heroTights',name:'Hero Tights',price:15,p5:'hero',d:()=>`<g fill="#4a7bff" ${st()}><rect x="69" y="188" width="27" height="52" rx="12"/><rect x="104" y="188" width="27" height="52" rx="12"/></g>`
@@ -123,7 +126,7 @@ CLOSET.acc.items.push(
     +`<path fill-rule="evenodd" d="M36 120 Q30 30 100 28 Q170 30 164 120 Q160 136 146 140 H54 Q40 136 36 120Z M52 100 a48 38 0 1 0 96 0 a48 38 0 1 0 -96 0Z" fill="#8fdc9f" ${st()}/>`
     +`<circle cx="48" cy="80" r="4" fill="#5cb85c"/><circle cx="152" cy="84" r="5" fill="#5cb85c"/><circle cx="44" cy="112" r="3" fill="#5cb85c"/>`}
 );
-CARD_TAGS.cute.push('bottom:overallPants','top:sharkHoodie','shoes:sharkSlippers','acc:dinoHood','arms:dinoMitts','legs:starLegs','bottom:pjPants','arms:knitArms','bottom:berrySkirt','legs:sprinkleSocks');
+CARD_TAGS.cute.push('bottom:overallPants','top:sharkHoodie','bottom:sharkPants','shoes:sharkSlippers','acc:dinoHood','arms:dinoMitts','legs:starLegs','bottom:pjPants','arms:knitArms','bottom:berrySkirt','legs:sprinkleSocks');
 CARD_TAGS.spooky.push('shoes:checkKicks','legs:starLegs','bottom:pjPants','top:sharkHoodie');
 CARD_TAGS.sporty.push('top:racingJacket','acc:racingHelmet','arms:racingGloves','bottom:firePants','shoes:fireBoots','top:safetyVest','shoes:workBoots','bottom:giPants',
   'bottom:robotPants','shoes:robotBoots','legs:heroTights','shoes:heroBoots','top:astroSuit','bottom:astroPants');
