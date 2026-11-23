@@ -91,7 +91,7 @@ function ctLand(){ // the ball reaches her catch line
   if(ok){
     CT.caughtAt=CT.bu; p.stats.catches++; CT.cheer=BF.time; SFX.save(); vibrate(25);
     const g=BF.G, rc=bfCv.getBoundingClientRect();
-    earn(L.coins+(hasBallKit(p)?1:0),'Catch!',rc.left+(g?ctPt(g,CT.bu,ctZ(CT.bv),0).x:0),rc.top+(g?g.handY-40:0));
+    gameEarn('catch',L.coins+(hasBallKit(p)?1:0),'Catch!',rc.left+(g?ctPt(g,CT.bu,ctZ(CT.bv),0).x:0),rc.top+(g?g.handY-40:0));
     bfSay(h.kind===3?'Got it! 🧤':h.kind===2?'Way up high! Caught! 🧤':'Great catch! 🧤');
   } else {save();SFX.whoosh();bfSay(ctDist(h.u,h.v,CT.bu,CT.bv)<ctReach()*2?'So close! Next one ⚾':'Missed it! Next one ⚾');}
   ctScore();
@@ -107,7 +107,8 @@ function ctEnd(){
   const p=P(), lvl=ctLvl(), L=ctHitter(), n=CT.res.filter(Boolean).length;
   CT.state='done';
   const best=n>(p.ball.catch.best[lvl]||0); if(best) p.ball.catch.best[lvl]=n;
-  if(n===CT_HITS) earn(CT_PERFECT,'Perfect!'); else save();
+  // The first 5/5 on a level (it wins the pennant) is paid outside the allowance; a repeat comes out of it (v1.67).
+  if(n===CT_HITS){if(!p.ball.catch.prizes.includes(lvl))earn(CT_PERFECT,'Perfect!');else gameEarn('catch',CT_PERFECT,'Perfect!');} else save();
   const won=givePennantPrizes(); SFX.whistle(); ctScore(); if(won.length) setTimeout(SFX.buy,400);
   const line=n===CT_HITS?'PERFECT! Nothing got past you! 🌟':n>=3?'Great catching! ✨':n>=1?'Nice! Keep practicing 💪':`${L.name} hit them far! Try again? ${L.icon}`;
   const pr=won.map(nm=>`<div style="margin-top:10px">You won the <b>${nm}</b>! It's in your Backyard 🧤</div><svg viewBox="${DECOR[PENNANTS[lvl]].box}" style="height:90px">${DECOR[PENNANTS[lvl]].d()}</svg>`).join('');

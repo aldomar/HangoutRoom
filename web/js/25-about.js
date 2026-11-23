@@ -188,7 +188,9 @@ const GIFT_TIMELINE=[
   {v:'1.65',d:'2026-11-22',i:'🔧',n:'Batting Duel fix',why:'So the Duel works whichever Ball Field game was played last',
     news:['👯 The Batting Duel now works after playing Catch or the Derby','🫳 The pitcher stands on the mound at the right size']},
   {v:'1.66',d:'2026-11-22',i:'🦈',n:'Shark Pants + listen and spell',why:'To finish the shark outfit, and to make spelling a real listening game',
-    news:['🦈 Shark Pants finish the shark outfit, belly and all','🔤 Word Builder: listen to the word and spell it, then tap 👀 Peek if you need to see it']}
+    news:['🦈 Shark Pants finish the shark outfit, belly and all','🔤 Word Builder: listen to the word and spell it, then tap 👀 Peek if you need to see it']},
+  {v:'1.67',d:'2026-11-23',i:'🪙',n:'Fair coins',why:'So every corner of the app is worth a visit each day',
+    news:['🪙 Each game now has its own coins for the day. When one is full, try another!','🏆 Winning a prize the first time always pays','🔊 A new button in your room turns all the sound on or off']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

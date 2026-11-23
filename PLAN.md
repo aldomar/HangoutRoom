@@ -925,6 +925,81 @@ team-kit bonus, prizes and stickers; **new original animal characters**. Four st
 - **Save version 37:** `ball{mode, bat{level, best, prizes}, catch{…}, derby{cur, done, pay}}`, `stats.hits/homers/catches/derbies`.
   All the later games' fields are added now, so v1.61–v1.64 need no new save version.
 
+### Phase 14: Before the hand-over (design review 2026-11-23)
+A whole-app review before the children get the app; the findings, the owner's answers and the ranked ideas are in
+`docs/DESIGN-REVIEW.md`. Agreed order (2026-11-23): ✅ v1.67 daily caps (built) → v1.68 🧤 Catch on Hard (reading the ball: bat
+sound, grass stripes, a shadow trail, no memorizing) → v1.69 first-time setup + age bands → v1.70 spoken instructions →
+v1.71 🧸 Little mode. Each gets its own plan first.
+
+#### v1.67 plan details: fair daily coins (agreed 2026-11-23, built)
+**Why:** the games that pay for every goal, save, hit, catch or star had no daily limit, and ⚾ Batting (added last) pays the
+most: up to 41 coins in a one-minute game on Hard and 29 on Easy. The owner chose **one allowance per game**, so that each day it
+pays to go around the app, and said that **first-time wins never count toward it**.
+
+**The rule (the same everywhere):**
+- Coins paid *per play* (a goal, a save, a hit, a catch, a song's stars, a maze replay) come out of that game's own daily allowance.
+- **Outside the allowance (always paid):**
+  - The **first** perfect game on each level (+5, the one that wins the trophy, glove, bat or pennant). Owner's choice
+    (2026-11-23): repeat perfects still pay +5, but from the allowance, so Easy perfects can't be farmed.
+  - Anything else that is a first: a new Trick Shot or Derby challenge; a new Code Lab or Brain
+    Games puzzle and its level bonus; a new marble maze and the all-mazes bonus.
+  - On the Stage, the coins for **new stars**: stars above the best already reached on that song and level.
+    Example: the first time she gets 2 ⭐ on Medium, 2 × 3 = 6 coins, outside. Later 3 ⭐ on the same song and level gives 3 more, outside.
+    A replay that only matches her best counts toward the allowance.
+- After the allowance is used up, the game works exactly as before (scores, bests, prizes, stickers), just without per-play
+  coins. One gentle note a day per game, which suggests somewhere that still pays today, for example
+  "⚾ Batting coins are full for today! Try 🎤 the Stage or 🧠 Brain Games ✨" (Easy mode: "🪙 ✔ Try 🎤 🧠").
+  It refills quietly the next day (no countdown, nothing lost).
+- If a goal is worth more than what is left, she gets what is left (like `fidEarn`).
+
+**Which games, and the proposed numbers:**
+
+| Game | Per play now | New daily allowance | Where it is saved |
+|---|---|---|---|
+| ⚽ Soccer Kick | +1/+2/+3 a goal, +1 with the kit | 20 | `soccer.pay {day, n}` |
+| 🧤 Be the Keeper | +1/+2/+3 a save, +1 with the kit | 20 | `soccer.keep.pay` |
+| ⚾ Batting | +1/+2/+3 a hit, +2 a home run, +1 with the kit | 20 | `ball.bat.pay` |
+| 🧤 Catch | +1/+2/+3 a catch, +1 with the kit | 20 | `ball.catch.pay` |
+| 🎤 Stage | 2/3/4 a star (Easy/Medium/Hard) | 20 | `stage.pay` |
+| 🔮 Marble Maze replays | +1 a replay | 10 | `maze.pay` |
+
+20 is about one to three games' worth, depending on the game and level. With the existing allowances (fidgets 30, Art 25,
+Runway 15, two-player 15, Trick Shots 10, Derby 10, I Spy 10, 🧸 Play 10, Free Play 10, Music/Dance/Jam a few each,
++10 daily gift), a child who visits everything can still earn well over 150 a day. Prices are 0–40, big dreams 60–100.
+
+**Already like this, no change:** Trick Shots and Derby (first time outside, replays capped at 10); Code Lab and Brain Games
+fixed puzzles (pay only the first time); two-player games (`tgPay`, 15 a day); fidgets (`fidEarn`); Art, Music, Dance, Runway,
+I Spy, Jam, 🧸 Play, Free Play. **Brain Games Free Play's +2 stays uncapped** (owner's choice, so the thinking games keep paying).
+
+**The "not enough coins" hint:** `needMore()` (section 8) now says "play on the Fidget Shelf" even when fidget coins are full.
+It will name up to two places that still pay today (from the same list of allowances, Brain Games always counts), for example
+"You need 7 more 🪙. Try ⚽ Soccer or 🧠 Brain Games!" Easy mode keeps the short "🔒 Need 7 more 🪙".
+
+**🔊/🔇 sound button:** a round button in the room next to 🌙 📷 🔍 switches all sound on or off (`DB.settings.sound`; music
+already stops without it). It hides with the others during 🔍 I Spy and pet play. Settings keeps its switches. The iPad audio
+session stays `playback` (sound plays even with the mute switch on, as a game's does), so this button is how to make it quiet.
+
+**How it's built:**
+- One shared helper in section 8 (`08-ui.js`): `dayLeft(o, cap)` resets a `{day, n}` object when the day changed (by `fpDay()`,
+  so the smoke test can set `FP_TEST_DAY`) and says what is left; `gameEarn(key, n, label, x, y)` pays up to what is left from
+  `GAME_PAY[key]` (`{name, icon, cap, pay: p => the {day, n}}`) and shows the note once a day; plain `earn()` stays for coins outside
+  the allowance. Later games (and, one day, the older copies of the same code) can use it too. The existing fields keep their names.
+- Calls change in `13-soccer.js` (goal), `27-keeper.js` (save), `59-ballfield.js` (hit), `61-catch.js` (catch), `14-stage.js`
+  (stars, split into new stars and the rest) and `19-fidgets2.js` (maze replay). A perfect bonus uses plain `earn()` when it wins
+  that level's prize (the prize list didn't have the level yet) and `gameEarn()` otherwise.
+- Save data: 6 new `{day:'', n:0}` fields with defaults in `normalize()`. Nothing is renamed or removed, so no new save version,
+  and every older backup still restores.
+- Smoke test: goals, saves, hits, catches, stars and maze replays stop paying exactly at 20/10 and pay again the next
+  `FP_TEST_DAY`; a first perfect on a level, new stars and a first maze still pay after the allowance is used up, and a repeat
+  perfect doesn't; a part
+  payment when 1 coin is left; the note shows once; `needMore` names places that still pay; the 🔇 button flips the setting.
+  Existing exact coin checks are updated where they play past the allowance.
+- Docs: README, this plan, STATUS, the coin list in `CLAUDE.md`, a `GIFT_TIMELINE` entry, and the version (1.67) in the four places.
+
+**Try on the tablet:** play ⚾ Batting until the note shows (coins stop, the game still works, the note names other places);
+win a level's bat after that (its +5 still comes), then get another 6/6 on that level (no +5 today); try the 🔊/🔇 button; try to buy something you can't afford and read the hint;
+the next day the coins come again.
+
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
 

@@ -182,7 +182,9 @@ function stFinish(){
   if(hits){p.stats.shows++;if(full)p.stats.fullCombos++;}
   const all=p.stage.best[id]=p.stage.best[id]||{}, old=all[lvl]||{stars:0,score:0}, newBest=STG.score>old.score;
   all[lvl]={stars:Math.max(stars,old.stars),score:Math.max(STG.score,old.score)};
-  const coins=stars*STG_LEVELS[lvl].coins; if(coins) earn(coins,'Show!'); else save();
+  // Stars above her best on this song and level are paid outside the allowance; the rest come out of it (v1.67, section 8).
+  const per=STG_LEVELS[lvl].coins, fresh=Math.max(0,stars-old.stars)*per, coins=fresh+gameTake('stage',stars*per-fresh);
+  if(coins) earn(coins,'Show!'); else save();
   const mic=giveMic(); SFX.cheer(); if(mic) setTimeout(SFX.buy,400);
   const line=!hits?'Tap the notes when they reach the circles!':full?'FULL COMBO! 🎉':stars===3?'Superstar show! 🌟':stars===2?'Great show! ✨':'Nice show! Keep practising 💜';
   const M=DECOR.goldenMic;

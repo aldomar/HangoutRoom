@@ -225,6 +225,23 @@ This pack adds 25 clothes (15–25 coins each, open to everyone) so every outfit
   firefighter outfit) and 🧩 Full Outfit (every piece of any 3 outfits).
 - No change to the save data. There is still no cape: it needs its own layer behind the body (maybe later).
 
+## Fair daily coins (since version 1.67)
+Every game that pays for each goal, save, hit, catch or star now has **its own coins for the day**, so each day it pays to
+visit different parts of the app.
+- ⚽ Soccer, 🧤 Be the Keeper, ⚾ Batting, 🧤 Catch and the 🎤 Stage: **up to 20 coins a day each**.
+  🔮 Marble Maze replays: up to 10 a day.
+- **Firsts always pay, even when the day's coins are used up:** the first perfect game on a level (the one that wins the
+  trophy, glove, bat or pennant), new ⭐ stars on a Stage song (more stars than your best on that song and level), a new
+  maze, and (as before) new Trick Shots, Derby challenges, Code Lab and Brain Games puzzles. A repeat perfect game still
+  gives +5, but from the day's coins.
+- When a game's coins are full, the game still works exactly the same (scores, bests, prizes, stickers). One gentle note
+  names somewhere that still pays today, and it fills up again the next day. Brain Games 🎲 Free Play stays without a limit.
+- "Not enough coins" now names a place that still pays today, instead of always the Fidget Shelf.
+- **🔊 / 🔇** in the room (next to 🌙 📷 🔍) turns all sound on or off, the background music too. On an iPad the app
+  plays even when the iPad is set to silent, so this is the quick way to make it quiet. It is the same switch as
+  ⚙️ Settings → Sounds.
+- Save data: 6 small "coins today" counters, added by themselves. Older backups still restore.
+
 ## More coins for Brain Games Free Play (since version 1.57)
 The thinking games are now always worth coming back to.
 - **🎲 Free Play** in 🧁 Snack Stand, 🫧 Number Pop, 🚂 Pattern Train, 🍕 Fraction Bakery and 🔤 Word Builder pays

@@ -285,11 +285,13 @@ function mzWin(){
   const p=P(), m=MAZES[MZ.i], first=!p.maze.solved.includes(m.id), G=MZ.geo, r=mzc.getBoundingClientRect();
   p.stats.mazes++; if(first) p.maze.solved.push(m.id);
   const all=first&&MAZES.every(q=>p.maze.solved.includes(q.id));
-  SFX.happy(); earn(first?3:1,first?'New maze!':'',G?r.left+G.ox+MZ.gx*G.cs:null,G?r.top+G.oy+MZ.gy*G.cs:null);
+  // A new maze pays +3; a replay +1 from today's allowance (v1.67, section 8).
+  const mx=G?r.left+G.ox+MZ.gx*G.cs:null, my=G?r.top+G.oy+MZ.gy*G.cs:null, got=first?3:gameTake('maze',1);
+  SFX.happy(); if(got) earn(got,first?'New maze!':'',mx,my); else save();
   if(all) setTimeout(()=>earn(5,'Every maze!'),700);
   mzBar();
   const last=MZ.i===MAZES.length-1;
-  modal(`⭐ ${esc(m.name)} done!`,`<div style="font-size:22px;text-align:center">+${first?3:1} 🪙${all?'<br>🏆 Every maze solved! +5 🪙':''}</div>`,
+  modal(`⭐ ${esc(m.name)} done!`,`<div style="font-size:22px;text-align:center">${got?`+${got} 🪙`:'🌟'}${all?'<br>🏆 Every maze solved! +5 🪙':''}</div>`,
     [{text:'🔁 Again',cls:'ghost',on:()=>mzStart(MZ.i)},{text:last?'▶ Maze 1':'▶ Next',cls:'pink',on:()=>mzStart(last?0:MZ.i+1)}]);
 }
 function drawMaze(dt){

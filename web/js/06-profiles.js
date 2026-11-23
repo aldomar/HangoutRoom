@@ -103,7 +103,7 @@ function normalize(p){
   // catch (🧤) and derby (🎯) are filled in now so later updates need no new save version.
   {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, b=o(p.ball), L=['easy','medium','hard'], n=v=>Math.max(0,Math.floor(Number(v)||0));
    const game=g=>{const x=o(b[g]),best=o(x.best);return {level:L.includes(x.level)?x.level:'easy',best:{easy:n(best.easy),medium:n(best.medium),hard:n(best.hard)},
-     prizes:Array.isArray(x.prizes)?x.prizes.filter((l,i,a)=>L.includes(l)&&a.indexOf(l)===i):[]};};
+     prizes:Array.isArray(x.prizes)?x.prizes.filter((l,i,a)=>L.includes(l)&&a.indexOf(l)===i):[],pay:x.pay};}; // pay: v1.67, cleaned below
    const dy=o(b.derby), pay=o(dy.pay);
    p.ball={mode:['bat','catch','derby'].includes(b.mode)?b.mode:'bat',bat:game('bat'),catch:game('catch'),
      derby:{cur:typeof dy.cur==='string'?dy.cur:'d1',done:Array.isArray(dy.done)?dy.done.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[],
@@ -147,7 +147,7 @@ function normalize(p){
   const kp=p.soccer.keep&&typeof p.soccer.keep==='object'&&!Array.isArray(p.soccer.keep)?p.soccer.keep:{};
   p.soccer.keep={level:['easy','medium','hard'].includes(kp.level)?kp.level:'easy',
     best:Object.assign({easy:0,medium:0,hard:0},kp.best&&typeof kp.best==='object'?kp.best:{}),
-    gloves:Array.isArray(kp.gloves)?kp.gloves.filter((l,i,a)=>['easy','medium','hard'].includes(l)&&a.indexOf(l)===i):[]};
+    gloves:Array.isArray(kp.gloves)?kp.gloves.filter((l,i,a)=>['easy','medium','hard'].includes(l)&&a.indexOf(l)===i):[],pay:kp.pay}; // pay: v1.67, cleaned below
   ['easy','medium','hard'].forEach(l=>{p.soccer.keep.best[l]=clamp(Math.floor(Number(p.soccer.keep.best[l])||0),0,5);});
   // Stage (v1.7): chosen level, best {stars, score} per song and level, and whether the Golden Mic was given.
   p.stage=Object.assign({level:'easy',mic:false},p.stage&&typeof p.stage==='object'?p.stage:{});
@@ -156,6 +156,10 @@ function normalize(p){
     Object.keys(b).forEach(l=>{const r=b[l];if(!r||typeof r!=='object')delete b[l];else{r.stars=Number(r.stars)||0;r.score=Number(r.score)||0;}});});
   if(!['easy','medium','hard'].includes(p.stage.level)) p.stage.level='easy';
   p.stage.mic=!!p.stage.mic; if(typeof p.stage.backdrop!=='string') p.stage.backdrop='classic'; // v1.50
+  // Daily coin allowances (v1.67, GAME_PAY in section 8): {day, n} = the day (fpDay) and the coins paid that day, one per game.
+  {const dp=v=>{const o=v&&typeof v==='object'&&!Array.isArray(v)?v:{};return {day:typeof o.day==='string'?o.day:'',n:Math.max(0,Math.floor(Number(o.n)||0))};};
+   p.soccer.pay=dp(p.soccer.pay); p.soccer.keep.pay=dp(p.soccer.keep.pay); p.ball.bat.pay=dp(p.ball.bat.pay); p.ball.catch.pay=dp(p.ball.catch.pay);
+   p.stage.pay=dp(p.stage.pay); p.maze.pay=dp(p.maze.pay);}
   // Little-sister polish (v1.8): Easy mode, and the room's color + badge on the profile screen.
   p.easy=!!p.easy;
   // Buddies (v1.20): the room's color also colors the buttons and bars. New rooms start with it on; rooms made

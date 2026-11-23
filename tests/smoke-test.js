@@ -1648,6 +1648,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`document.querySelector('[data-lvl=hard]').click()`); await sleep(300);
   check('Hard has Zip', await ev(`P().soccer.keep.level==='hard'&&document.querySelector('#socTip').textContent.includes('Zip')`));
   await kpTo('wind'); await sleep(500); await shot('G05-keep-hard');
+  await ev(`P().soccer.keep.pay={day:'',n:0}`); // a fresh daily allowance (v1.67), so the full 5×3 is paid
   const kc2=await ev('P().coins'), perf0=await ev('P().stats.perfects');
   for(let i=0;i<5;i++){await kpTo('wind');await ev(`kpDive(KP.next.u,KP.next.v)`);await kpTo('result');}
   await kpTo('done'); await sleep(300); await shot('G06-keep-perfect');
@@ -4660,12 +4661,13 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     k=await pitch(-0.4); check('much too early: a miss, "Too early!"', k.res===false&&k.msg.includes('Too early')&&k.coins===c0+4, k);
     await ev(`P().look.acc='ballCap';P().look.top='ballTee';renderBall()`); await sleep(100);
     check('⚾ team kit (cap + tee): the badge shows, and a new game starts', await ev(`hasBallKit(P())&&!document.querySelector('#bfKit').classList.contains('hidden')&&BF.res.length===0`));
+    await ev(`P().ball.bat.pay={day:'',n:0}`); // a fresh daily allowance (v1.67)
     const c1=await ev('P().coins');
     k=await pitch(0.1); check('a hit with the kit on pays +2 (+1 for the kit)', k.res==='hit'&&k.coins===c1+2, [k,c1]);
     for(let i=0;i<5;i++) await pitch(0);
     await waitFor(`BF.state==='done'`);
     check('6/6: Perfect game box, +5, best 6/6 on Easy, the Bronze Bat in the Backyard', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#modalBody').textContent.includes('Bronze Bat')&&P().ball.bat.best.easy===6&&P().ball.bat.prizes.join()==='easy'&&P().room3.items.filter(i=>i.type==='batBronze').length===1`));
-    check('…and the coins add up: 6 hits with the kit, 5 home runs, +5 perfect', await ev(`P().coins`)===c1+2+5*(1+2+1)+5, [await ev('P().coins'),c1]);
+    check('…and the coins add up: 6 hits with the kit and 5 home runs (22) stop at the 20 for the day, then +5 for the first perfect (v1.67)', await ev(`P().coins===${c1}+25&&P().ball.bat.pay.n===20`), [await ev('P().coins'),c1]);
     await shot('BF4-perfect');
     await ev(`${mb('Play again')}.click()`); await sleep(100);
     check('Play again: a new game with the next pitches', await ev(`BF.state==='ready'&&BF.res.length===0&&document.querySelector('#modal').classList.contains('hidden')`));
@@ -4993,7 +4995,100 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('v1.65 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.65')`));
     // v1.66: Shark Pants finish the shark outfit; their white belly ends above the gap between the legs (y 206)
     check('v1.66: Shark Pants are a bottom in the shark outfit, with the hero chip and a white belly', await ev(`(()=>{const i=CLOSET.bottom.items.find(x=>x.id==='sharkPants');return !!i&&i.under&&P5_SETS.shark.keys.includes('bottom:sharkPants')&&themesOf('bottom:sharkPants',i).includes('hero')&&/Q78 208 100 208[^>]*fill="#fff"/.test(i.d());})()`));
-    check('v1.66 is in the Gift Story and the app says 1.66', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.66')&&APP_VERSION==='1.66'`));
+    check('v1.66 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.66')`));
+  }
+
+  console.log('Fair daily coins (v1.67): one allowance per game');
+  {
+    const fcSaved=await ev(`JSON.stringify(P())`), fcDay=await ev(`window.FP_TEST_DAY||''`), fcSound=await ev(`DB.settings.sound`);
+    const fresh=`(()=>{const p=P();Object.keys(GAME_PAY).forEach(k=>{const o=GAME_PAY[k].pay(p);o.day='';o.n=0;});})()`;
+    const full=`(()=>{const p=P();Object.keys(GAME_PAY).forEach(k=>{const o=GAME_PAY[k].pay(p);o.day=fpDay();o.n=GAME_PAY[k].cap;});})()`;
+    const toastT=`document.querySelector('#toast').textContent`;
+    await ev(`closeModal();show('room');goRoom(1);stkPaused=true;window.FP_TEST_DAY='2031-03-01';gameTold.clear();P().coins=100;P().bonusGot=BONUS.map(b=>b.id);${fresh}`); await sleep(100);
+    check('6 allowances: 20 for Soccer, Keeper, Batting, Catch and the Stage, 10 for maze replays', await ev(`['soccer','keep','bat','catch','stage'].every(k=>GAME_PAY[k].cap===20)&&GAME_PAY.maze.cap===10&&Object.keys(GAME_PAY).length===6`));
+    for(const k of ['soccer','keep','bat','catch','stage','maze']){
+      await ev(`P().coins=100;${toastT}='';for(let i=0;i<9;i++)gameEarn('${k}',3)`); await sleep(1500);
+      const cap=await ev(`GAME_PAY['${k}'].cap`);
+      check(`${k}: pays ${cap} today, the last bit only part of a payment, then nothing`, await ev(`P().coins===100+${cap}&&GAME_PAY['${k}'].pay(P()).n===${cap}&&GAME_PAY['${k}'].pay(P()).day==='2031-03-01'&&gameEarn('${k}',3)===0&&P().coins===100+${cap}`), await ev(`[P().coins,GAME_PAY['${k}'].pay(P()).n]`));
+      check(`${k}: a gentle note suggests somewhere else that still pays (never itself, always Brain Games)`, await ev(`(()=>{const t=${toastT};return /coins are full for today! Try .*🧠 Brain Games/.test(t)&&!t.slice(t.indexOf('Try')).includes(GAME_PAY['${k}'].name)&&!/tomorrow|hours|minutes/i.test(t);})()`), await ev(toastT));
+      await ev(`${toastT}='';gameEarn('${k}',3)`); await sleep(1500);
+      check(`${k}: …and only once a day`, await ev(`${toastT}===''`));
+    }
+    await ev(`window.FP_TEST_DAY='2031-03-02';P().coins=100;gameEarn('bat',4)`); await sleep(100);
+    check('a new day refills it quietly', await ev(`P().coins===104&&P().ball.bat.pay.n===4&&P().ball.bat.pay.day==='2031-03-02'`));
+    // the sports games: per goal / save / hit / catch from the allowance; the first perfect on a level (with its prize) outside it
+    const games=[
+      ['Soccer Kick','soccer',`P().soccer.mode='kick';P().soccer.level='easy';P().soccer.trophies=P().soccer.trophies.filter(l=>l!=='easy');P().soccer.best.easy=0;show('soccer')`,`SOC.kicks=[1,1,1,1,1].map(Boolean);endMatch()`,`P().soccer.trophies.includes('easy')`],
+      ['Be the Keeper','keep',`P().soccer.mode='keep';P().soccer.keep.level='easy';P().soccer.keep.gloves=P().soccer.keep.gloves.filter(l=>l!=='easy');P().soccer.keep.best.easy=0;show('soccer')`,`KP.saves=[1,1,1,1,1].map(Boolean);kpEnd()`,`P().soccer.keep.gloves.includes('easy')`],
+      ['Batting','bat',`P().ball.mode='bat';P().ball.bat.level='easy';P().ball.bat.prizes=P().ball.bat.prizes.filter(l=>l!=='easy');P().ball.bat.best.easy=0;show('ball')`,`BF.res=Array(6).fill('hit');bfEnd()`,`P().ball.bat.prizes.includes('easy')`],
+      ['Catch','catch',`P().ball.mode='catch';P().ball.catch.level='easy';P().ball.catch.prizes=P().ball.catch.prizes.filter(l=>l!=='easy');P().ball.catch.best.easy=0;show('ball')`,`CT.res=[1,1,1,1,1].map(Boolean);ctEnd()`,`P().ball.catch.prizes.includes('easy')`]];
+    for(const [name,k,setup,win,prize] of games){
+      await ev(`closeModal();P().easy=false;${setup};${full};P().coins=100`); await sleep(250);
+      await ev(win); await sleep(200);
+      check(`${name}: the first perfect on a level pays +5 even with today's allowance used up, and wins the prize`, await ev(`P().coins===105&&${prize}`), await ev('P().coins'));
+      await ev(`closeModal();${win}`); await sleep(200);
+      check(`${name}: a repeat perfect comes out of the allowance (nothing left today)`, await ev(`P().coins===105`), await ev('P().coins'));
+      await ev(`closeModal();${fresh};${win}`); await sleep(200);
+      check(`${name}: …and is paid from it when there is room`, await ev(`P().coins===110&&GAME_PAY['${k}'].pay(P()).n===5`), await ev(`[P().coins,GAME_PAY['${k}'].pay(P()).n]`));
+    }
+    check('goals, saves, hits and catches pay through the allowance', await ev(`/gameEarn\\('soccer'/.test(String(resolveShot))&&/gameEarn\\('keep'/.test(String(kpResolve))&&/gameEarn\\('bat'/.test(String(bfResult))&&/gameEarn\\('catch'/.test(String(ctLand))&&!/[^.e]earn\\(L\\.coins/.test(String(resolveShot)+String(kpResolve)+String(bfResult)+String(ctLand))`));
+    // the Stage: new stars outside the allowance, the rest from it
+    const song=await ev(`SONG_IDS[0]`);
+    const stWin=`P().stage.level='easy';stStart('${song}');STG.counts=[STG.notes.length,0,0,0];STG.score=100*STG.notes.length;stFinish()`;
+    await ev(`closeModal();show('stage');delete P().stage.best['${song}'];${full};P().coins=100`); await sleep(200);
+    await ev(stWin); await sleep(200);
+    check('Stage: 3 new stars on Easy pay 6 even with the allowance used up', await ev(`P().coins===106`), await ev('P().coins'));
+    await ev(`closeModal();${stWin}`); await sleep(200);
+    check('Stage: the same stars again pay nothing with the allowance used up', await ev(`P().coins===106`), await ev('P().coins'));
+    await ev(`closeModal();${fresh};${stWin}`); await sleep(200);
+    check('Stage: …and 6 from the allowance when there is room', await ev(`P().coins===112&&P().stage.pay.n===6`), await ev(`[P().coins,P().stage.pay.n]`));
+    await ev(`closeModal();P().stage.best['${song}']={easy:{stars:1,score:100}};${full}`); await sleep(100);
+    await ev(`P().stage.level='easy';stStart('${song}');STG.counts=[STG.notes.length,0,0,0];STG.score=70*STG.notes.length;stFinish()`); await sleep(200);
+    check('Stage: going from 1 to 2 stars pays only the new star (2) when the allowance is used up', await ev(`P().coins===114`), await ev('P().coins'));
+    await ev(`closeModal();stgPickView()`);
+    // the marble maze: a new maze +3 always, a replay +1 from the allowance
+    await ev(`closeModal();show('fidget');setFidTab('maze');P().maze.solved=[];${full};P().coins=100;MZ.i=0;MZ.free=false;mzWin()`); await sleep(200);
+    check('Marble Maze: a new maze pays +3 even with the allowance used up', await ev(`P().coins===103`), await ev('P().coins'));
+    await ev(`closeModal();mzWin()`); await sleep(200);
+    check('Marble Maze: a replay pays nothing then, and the box shows 🌟 instead of +0', await ev(`P().coins===103&&document.querySelector('#modalBody').textContent.includes('🌟')&&!document.querySelector('#modalBody').textContent.includes('+0')`));
+    await ev(`closeModal();${fresh};mzWin()`); await sleep(200);
+    check('Marble Maze: …and +1 when there is room', await ev(`P().coins===104&&P().maze.pay.n===1`));
+    // "not enough coins" names somewhere that still pays
+    await ev(`closeModal();show('room');${full};P().fidPay={day:new Date().toDateString(),n:FID_DAILY}`);
+    check('with every allowance used up, the only tip is 🧠 Brain Games', await ev(`payTips(P()).words==='🧠 Brain Games'`));
+    await ev(`P().soccer.pay.n=0`);
+    check('…with Soccer open: "⚽ Soccer or 🧠 Brain Games"', await ev(`payTips(P()).words==='⚽ Soccer or 🧠 Brain Games'&&payTips(P()).icons==='⚽ 🧠'`));
+    await ev(`P().coins=10;needMore(P(),17)`);
+    check('the not-enough-coins message names a place that pays (not always the Fidget Shelf)', await ev(`${toastT}==='You need 7 more 🪙. Try ⚽ Soccer or 🧠 Brain Games!'`), await ev(toastT));
+    await ev(`P().easy=true;needMore(P(),17)`);
+    check('…Easy mode keeps the short one', await ev(`${toastT}==='🔒 Need 7 more 🪙'`));
+    await ev(`P().easy=false`);
+    // the 🔊/🔇 button
+    await ev(`closeModal();setSound(true);DB.settings.music=true;startMusic();show('room')`); await sleep(200);
+    check('🔊 button in the room, 48 px or more, says what a tap does', await ev(`(()=>{const b=document.querySelector('#soundBtn'),r=b.getBoundingClientRect();return !b.classList.contains('hidden')&&r.width>=48&&r.height>=48&&b.textContent==='🔊'&&b.getAttribute('aria-label')==='Sound off';})()`));
+    check('…it does not cover 🌙 📷 🔍', await ev(`(()=>{const a=document.querySelector('#soundBtn').getBoundingClientRect();return ['#nightBtn','#roomSnapBtn','#spyBtn'].every(s=>{const b=document.querySelector(s).getBoundingClientRect();return a.right<=b.left||a.left>=b.right||a.bottom<=b.top||a.top>=b.bottom;});})()`));
+    await ev(`document.querySelector('#soundBtn').click()`); await sleep(100);
+    check('a tap turns every sound off, the music too', await ev(`DB.settings.sound===false&&musicTimer===null&&document.querySelector('#soundBtn').textContent==='🔇'&&document.querySelector('#soundBtn').getAttribute('aria-label')==='Sound on'`));
+    await ev(`startMusic()`);
+    check('…and the music stays off while sound is off', await ev(`musicTimer===null`));
+    await shot('FC1-sound-off');
+    await ev(`document.querySelector('#soundBtn').click()`); await sleep(100);
+    check('another tap turns it back on (and the music, which was on)', await ev(`DB.settings.sound===true&&musicTimer!==null&&document.querySelector('#soundBtn').textContent==='🔊'`));
+    await ev(`settingsModal();document.querySelector('#sSound').click()`); await sleep(100);
+    check('the Settings switch and the button agree', await ev(`DB.settings.sound===false&&document.querySelector('#soundBtn').textContent==='🔇'&&/OFF/.test(document.querySelector('#sSound').textContent)`));
+    await ev(`closeModal();setSound(true);document.querySelector('#decoBtn').click()`); await sleep(150);
+    check('the button hides while decorating', await ev(`document.querySelector('#soundBtn').classList.contains('hidden')`));
+    await ev(`exitDecorate()`); await sleep(100);
+    check('…and comes back after', await ev(`!document.querySelector('#soundBtn').classList.contains('hidden')`));
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true}); await ev(`show('room')`); await sleep(250);
+    check('phone: the button sits on the room picture', await ev(`(()=>{const a=document.querySelector('#soundBtn').getBoundingClientRect(),s=document.querySelector('#scr-room .room-stage').getBoundingClientRect();return a.top>=s.top&&a.bottom<=s.bottom&&a.left>=s.left;})()`));
+    await shot('FC2-phone');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(150);
+    // saves
+    check('odd or missing allowances are made safe', await ev(`(()=>{const p=JSON.parse(JSON.stringify(P()));delete p.soccer.pay;p.soccer.keep.pay='x';p.ball.bat.pay={day:5,n:-3};delete p.ball.catch.pay;p.stage.pay=null;p.maze.pay=[1];normalize(p);return [p.soccer.pay,p.soccer.keep.pay,p.ball.bat.pay,p.ball.catch.pay,p.stage.pay,p.maze.pay].every(o=>o.day===''&&o.n===0);})()`));
+    check('a saved allowance survives normalize', await ev(`(()=>{const p=JSON.parse(JSON.stringify(P()));p.ball.catch.pay={day:'2031-03-02',n:7};normalize(p);return p.ball.catch.pay.day==='2031-03-02'&&p.ball.catch.pay.n===7;})()`));
+    await ev(`closeModal();(()=>{const s=JSON.parse(${JSON.stringify(fcSaved)}),q=P();Object.keys(q).forEach(k=>delete q[k]);Object.assign(q,s);})();DB.settings.music=false;stopMusic();setSound(${fcSound});window.FP_TEST_DAY=${JSON.stringify(fcDay)}||undefined;stkPaused=false;save();show('room')`);
+    check('v1.67 is in the Gift Story and the app says 1.67', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.67')&&APP_VERSION==='1.67'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

@@ -296,7 +296,7 @@ function settingsModal(){
     +(p&&canSpeak()?`<button class="btn ghost" id="sSpeak">${readOn(p)?'🔊 Read to me: ON':'🔈 Read to me: OFF'}</button>`:'') // section 34
     +(p?`<button class="btn ghost" id="sGift">🎁 Give a gift</button>`:'')
     +`<button class="btn ghost" id="sSwitch">👥 Switch Room</button><button class="btn ghost" id="sBackup">💾 Backup &amp; Restore</button><button class="btn ghost" id="sPin">${s.pin?'🔒 Grown-up PIN: ON':'🔓 Grown-up PIN: OFF'}</button><button class="btn ghost" id="sAbout">💌 About</button></div><p class="about">🐰 Hangout Room · version ${APP_VERSION}</p>`,[{text:'Close',cls:'pink'}]);
-  $('#sSound').onclick=()=>{s.sound=!s.sound;save();SFX.click();settingsModal();};
+  $('#sSound').onclick=()=>{setSound(!s.sound);SFX.click();settingsModal();}; // setSound: section 34
   $('#sMusic').onclick=()=>{s.music=!s.music;save();if(s.music)startMusic();else stopMusic();settingsModal();};
   if(p) $('#sEasy').onclick=()=>{p.easy=!p.easy;save();SFX.click();applyEasy();if(cur==='room')renderRoom();settingsModal();};
   if(p) $('#sGift').onclick=giveModal; // section 32

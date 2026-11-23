@@ -121,7 +121,7 @@ function bfResult(res){
   if(hit){
     p.stats.hits++; if(res==='homer') p.stats.homers++;
     const pt=BF.fly&&BF.G?bfFlyPt(BF.G,BF.fly,Math.min(1,BF.fly.t/BF.fly.dur)):{x:0,y:0}, rc=bfCv.getBoundingClientRect();
-    earn(L.coins+(res==='homer'?BF_HOMER:0)+(hasBallKit(p)?1:0),res==='homer'?'Home run!':'Hit!',rc.left+pt.x,rc.top+Math.max(40,pt.y));
+    gameEarn('bat',L.coins+(res==='homer'?BF_HOMER:0)+(hasBallKit(p)?1:0),res==='homer'?'Home run!':'Hit!',rc.left+pt.x,rc.top+Math.max(40,pt.y)); // today's allowance (v1.67)
     bfSay(res==='homer'?'HOME RUN! ⭐':BF.fly&&BF.fly.q>0.5?'Nice hit! ⚾':'Base hit! ⚾');
     if(res!=='homer'){SFX.happy();BF.cheer=BF.time;}
   } else {
@@ -148,7 +148,8 @@ function bfEnd(){
   const p=P(), lvl=bfLvl(), L=bfPitcher(), hits=BF.res.filter(Boolean).length, homers=BF.res.filter(r=>r==='homer').length;
   BF.state='done';
   const best=hits>(p.ball.bat.best[lvl]||0); if(best) p.ball.bat.best[lvl]=hits;
-  if(hits===BF_PITCHES) earn(BF_PERFECT,'Perfect!'); else save();
+  // The first 6/6 on a level (it wins the bat) is paid outside the allowance; a repeat comes out of it (v1.67).
+  if(hits===BF_PITCHES){if(!p.ball.bat.prizes.includes(lvl))earn(BF_PERFECT,'Perfect!');else gameEarn('bat',BF_PERFECT,'Perfect!');} else save();
   const bats=giveBats(); SFX.whistle(); bfScore(); if(bats.length) setTimeout(SFX.buy,400);
   const line=hits===BF_PITCHES?'PERFECT GAME! 🌟':hits>=4?'Great hitting! ✨':hits>=1?'Nice! Keep swinging 💪':`${L.name} was tricky! Try again? ${L.icon}`;
   const won=bats.map(n=>`<div style="margin-top:10px">You won the <b>${n}</b>! It's in your Backyard ⚾</div><svg viewBox="${DECOR[BATS[lvl]].box}" style="height:110px">${DECOR[BATS[lvl]].d()}</svg>`).join('');
