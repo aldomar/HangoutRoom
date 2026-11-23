@@ -215,6 +215,8 @@ This pack adds 25 clothes (15–25 coins each, open to everyone) so every outfit
 - 🚒 **Firefighter:** Fire Rescue Pants and Fire Boots. 🚧 **Builder:** Builder Vest and Work Boots.
 - 🥋 **Karate Pants** for the Karate Gi, and 🐮 **Overall Pants** in the same denim as the Farm Overalls.
 - 🤖 **Robot Legs** and Robot Boots; ⭐ **Hero Tights** and Hero Boots; 🦈 a **Shark Hoodie** (with side fins) and Shark Slippers.
+  Since version 1.66 there are also 🦈 **Shark Pants** (15 coins), whose white belly finishes the hoodie's belly circle; the whole
+  shark outfit for the Full Outfit sticker now includes them.
 - 🚀 **Astronaut Suit** and Astronaut Pants; 🦕 a **Dino Hood** and Dino Claw Mitts.
 - Pieces for themes that had empty Closet tabs: 🎤 Star Sparkle Warmers, 🍵 Cozy PJ Pants and Knit Arm Warmers,
   🧁 a Strawberry Skirt and Sprinkle Socks, 🦇 Checker Sneakers.
@@ -404,6 +406,8 @@ runs out. The 8 puzzles per level that were already there stay exactly the same.
   A picture shows when the word has one (cat, fox, robot, rocket…).
 - **Medium (ages 6–8) and Hard (ages 9–13):** 👀 look at the word, tap **✋ Hide it**, then spell it from the letters.
   **👀 Peek** shows the word again any time, and keeps what she has spelled. There is no timer.
+  Since version 1.66 the word starts **hidden** whenever the device can say it (tablets, iPads, iPhones): she hears it,
+  spells it, and taps 👀 Peek if she needs to see it. With no voice (a computer browser) it still starts by showing the word.
 - **🔊** says the word on the tablet (it works even when Read to me is off). It also says the word when the puzzle opens and
   when it is spelled. In a computer browser there is no voice, so the button is hidden.
 - **📅 Puzzle of the Day** now turns through 6 games: Word Builder joins the other 5.

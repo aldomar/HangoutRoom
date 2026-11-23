@@ -3255,8 +3255,10 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await sleep(1100); await ev(`closeModal()`);
     // Medium/Hard = look, hide, spell
     await ev(`brPuzzle('word','hard',0,{pz:{bank:1,w:'TEMPERATURE',x:'BDK',pic:''},key:'wtest2',idx:0,lvl:'hard'})`); await sleep(150);
+    check('with a voice, Hard starts with the word hidden: the slots, the letters and 👀 Peek show, and the word is said (v1.66)', await ev(`document.querySelector('#wbLook').classList.contains('hidden')&&!document.querySelector('#brQ .wb-slots').classList.contains('hidden')&&!document.querySelector('#brBoard .wb-tiles').classList.contains('hidden')&&!document.querySelector('#wbPeek').classList.contains('hidden')&&document.querySelector('#wbHide').classList.contains('hidden')&&_said.includes('temperature')&&document.querySelector('#wbAsk').textContent.startsWith('Listen')`));
+    await ev(`document.querySelector('#wbPeek').click()`); await sleep(100);
     await shot('V02-word-look');
-    check('Hard starts by showing the word, with ✋ Hide it; the letters wait', await ev(`document.querySelector('#wbLook').textContent==='TEMPERATURE'&&!document.querySelector('#wbLook').classList.contains('hidden')&&!document.querySelector('#wbHide').classList.contains('hidden')&&document.querySelector('#brQ .wb-slots').classList.contains('hidden')&&document.querySelector('#brBoard .wb-tiles').classList.contains('hidden')&&document.querySelector('#wbPeek').classList.contains('hidden')`));
+    check('👀 Peek shows the word, with ✋ Hide it; the letters wait', await ev(`document.querySelector('#wbLook').textContent==='TEMPERATURE'&&!document.querySelector('#wbLook').classList.contains('hidden')&&!document.querySelector('#wbHide').classList.contains('hidden')&&document.querySelector('#brQ .wb-slots').classList.contains('hidden')&&document.querySelector('#brBoard .wb-tiles').classList.contains('hidden')&&document.querySelector('#wbPeek').classList.contains('hidden')`));
     check('the slots are empty on Hard (no faint letters)', await ev(`!document.querySelector('#brQ .wb-slot i')`));
     await ev(`document.querySelector('#wbHide').click()`); await sleep(100);
     await shot('V03-word-spell');
@@ -3272,6 +3274,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     // phone width: the longest word fits
     await send('Emulation.setDeviceMetricsOverride',{width:412,height:860,deviceScaleFactor:1,mobile:true});
     await ev(`brPuzzle('word','hard',0,{pz:{bank:1,w:'ACCOMMODATE',x:'BFG',pic:''},key:'wtest3',idx:0,lvl:'hard'})`); await sleep(200);
+    await ev(`document.querySelector('#wbPeek').click()`); await sleep(100);
     await shot('V04-phone-word-look');
     check('on a phone the longest word fits on screen', await ev(`cur==='brain'&&document.querySelector('#wbLook').getBoundingClientRect().width>100&&document.querySelector('#wbLook').getBoundingClientRect().right<=innerWidth&&document.documentElement.scrollWidth<=innerWidth`));
     await ev(`document.querySelector('#wbHide').click()`); await sleep(100);
@@ -3281,6 +3284,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     // without the tablet: no 🔊
     await ev(`delete window.AndroidBridge;brPuzzle('word','medium',0,{pz:{bank:1,w:'ROBOT',x:'AEK',pic:'d:robotPal'},key:'wtest4',idx:0,lvl:'medium'})`); await sleep(100);
     check('in a browser there is no 🔊 button (it needs the tablet)', await ev(`!document.querySelector('#brQ .wb-say')&&!!document.querySelector('#brQ .wb-pic svg')`));
+    check('…and with no voice the word starts on screen, with ✋ Hide it (as before v1.66)', await ev(`!document.querySelector('#wbLook').classList.contains('hidden')&&!document.querySelector('#wbHide').classList.contains('hidden')&&document.querySelector('#brBoard .wb-tiles').classList.contains('hidden')`));
     // Easy mode words
     await ev(`P().easy=true;brPuzzle('word','medium',0,{pz:{bank:1,w:'ROBOT',x:'AEK',pic:'d:robotPal'},key:'wtest4',idx:0,lvl:'medium'})`); await sleep(100);
     check('in Easy mode the question is just 👀, then 🔤', await ev(`document.querySelector('#wbAsk').textContent==='👀'&&(document.querySelector('#wbHide').click(),document.querySelector('#wbAsk').textContent==='🔤')`));
@@ -4522,7 +4526,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();show('room');goRoom(1)`); await sleep(200);
     const p5Saved=await ev(`JSON.stringify({look:P().look,coins:P().coins,owned:P().owned,stickers:P().stickers})`);
     const p5Clothes=JSON.parse(await ev(`JSON.stringify(Object.entries(CLOSET).flatMap(([c,v])=>v.items.filter(i=>i.p5).map(i=>[c,i.id])))`));
-    check('25 new clothes, each with a real theme chip (and no other pack field)', p5Clothes.length===25&&await ev(`Object.values(CLOSET).every(c=>c.items.filter(i=>i.p5).every(i=>THEMES[i.p5]&&!i.p2&&!i.p3&&!i.p4))`), p5Clothes.length);
+    check('26 new clothes (25 + the v1.66 Shark Pants), each with a real theme chip (and no other pack field)', p5Clothes.length===26&&await ev(`Object.values(CLOSET).every(c=>c.items.filter(i=>i.p5).every(i=>THEMES[i.p5]&&!i.p2&&!i.p3&&!i.p4))`), p5Clothes.length);
     check('every new piece draws on every buddy, with no broken numbers, as strict XML', await ev(`${JSON.stringify(p5Clothes)}.every(([c,id])=>Object.keys(BUDDIES).every(k=>{const s=mascotSVG(Object.assign({},DEFAULT_LOOK,{kind:k,[c]:id}));return s.length>500&&!/NaN|undefined/.test(s)&&!new DOMParser().parseFromString(s,'image/svg+xml').querySelector('parsererror');}))`));
     check('nothing says "boy" or "girl", every price is 10–40, every piece is on a photocard row', await ev(`${JSON.stringify(p5Clothes)}.every(([c,id])=>{const i=CLOSET[c].items.find(x=>x.id===id);return !/\\b(boy|girl)s?\\b/i.test(i.name)&&i.price>=10&&i.price<=40&&Object.values(CARD_TAGS).some(t=>t.includes(c+':'+id));})`));
     check('10 outfits; each names real clothes, one piece per tab, and has a Pack 5 piece', await ev(`(()=>{const S=Object.values(P5_SETS);return S.length===10&&S.every(s=>{const its=s.keys.map(k=>{const [c,i]=k.split(':');return CLOSET[c]&&CLOSET[c].items.find(x=>x.id===i);});return its.every(Boolean)&&new Set(s.keys.map(k=>k.split(':')[0])).size===s.keys.length&&its.some(i=>i.p5);});})()`));
@@ -4986,7 +4990,10 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`closeModal();doRestore(${JSON.stringify(bdB)})`); await sleep(400);
     await ev(`closeModal();(()=>{const s=${bdSaved};const p=P();p.coins=s.coins;p.ball=s.ball;p.stats=s.stats;p.duo=s.duo;save();})();stkPaused=false;show('room');goRoom(1)`);
     check('v1.64 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.64')`));
-    check('v1.65 is in the Gift Story and the app says 1.65', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.65')&&APP_VERSION==='1.65'`));
+    check('v1.65 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.65')`));
+    // v1.66: Shark Pants finish the shark outfit; their white belly ends above the gap between the legs (y 206)
+    check('v1.66: Shark Pants are a bottom in the shark outfit, with the hero chip and a white belly', await ev(`(()=>{const i=CLOSET.bottom.items.find(x=>x.id==='sharkPants');return !!i&&i.under&&P5_SETS.shark.keys.includes('bottom:sharkPants')&&themesOf('bottom:sharkPants',i).includes('hero')&&/Q78 208 100 208[^>]*fill="#fff"/.test(i.d());})()`));
+    check('v1.66 is in the Gift Story and the app says 1.66', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.66')&&APP_VERSION==='1.66'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

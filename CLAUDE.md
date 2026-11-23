@@ -297,7 +297,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   lists. The 📅 card (`BR_MENU_TOP`) turns through `POTD_GAMES` by the date (`fpDay()`; the smoke test sets `FP_TEST_DAY`) and
   seeds with the date. A new game that can be generated gets a `FP_MAKERS` entry (and its `ok` should also pass its fixed puzzles).
   Word Builder (since v1.45) draws words from `WB_BANK` (the owner's list); a bank word is `{bank:1, w, x, pic}` and plays through
-  `wbBankStart` (Easy traces faint letters; Medium/Hard: 👀 look, ✋ hide, spell, 👀 peeks, no timer). Extra letters are never in the word.
+  `wbBankStart` (Easy traces faint letters; Medium/Hard: 👀 look, ✋ hide, spell, 👀 peeks, no timer; since v1.66 the word starts hidden
+  when `canSpeak()`, so she listens first). Extra letters are never in the word.
 - 🧸 Little Ones' Corner (since v1.46, `46-little.js` + `47-colorbook.js`): no words needed, no scores, no wrong answers. Colors are
   saved per picture as one `'#rrggbb'` or `''` per area, by the area's place in `CB_PICS[i].areas`: picture ids are saved, so never
   rename a picture or reorder, remove or insert its areas (new pictures go at the end). Areas in one region that overlap must wind
