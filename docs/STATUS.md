@@ -133,7 +133,7 @@ _Last updated: 2026-11-22_
   - **🔧 Batting Duel fix: merged as v1.65 (PR #67)** on branch `feature/duelfix` (from `main`). On the owner's phone a duel started after 🧤 Catch kept
     the Catch view: the level tabs did nothing and the pitcher's buddy filled the screen. `bfMode()` now returns `bat` during a duel, and
     `#bdPitcher` has a small default size. The smoke test now starts a duel from Catch and from Derby.
-- **🦈 Shark Pants + listen and spell: built, v1.66** on branch `feature/tweaks` (from `main` after #67). The owner's two small tweaks
+- **🦈 Shark Pants + listen and spell: built, PR #68 open as v1.66** on branch `feature/tweaks` (from `main` after #67). The owner's two small tweaks
   (2026-11-22): the shark outfit had no bottoms, so `sharkPants` (no fin, just pants whose white belly completes the hoodie's circle)
   joins `P5_SETS.shark` (an outfit already counted for the Full Outfit sticker keeps its sticker). Word Builder bank words on Medium and
   Hard now start hidden and are said aloud, because the device voice works well; 👀 Peek shows the word. With no voice
