@@ -192,7 +192,9 @@ const GIFT_TIMELINE=[
   {v:'1.67',d:'2026-11-23',i:'🪙',n:'Fair coins',why:'So every corner of the app is worth a visit each day',
     news:['🪙 Each game now has its own coins for the day. When one is full, try another!','🏆 Winning a prize the first time always pays','🔊 A new button in your room turns all the sound on or off']},
   {v:'1.68',d:'2026-11-23',i:'🧤',n:'Catch you can read',why:'So the hardest catches are about watching and listening, not remembering',
-    news:['🧤 Listen to the bat: CRACK! means stay back, tok means run in','🌱 Mowed grass and a shadow trail show where the ball is going','🦓 Zippy hits new balls every game on Hard']}
+    news:['🧤 Listen to the bat: CRACK! means stay back, tok means run in','🌱 Mowed grass and a shadow trail show where the ball is going','🦓 Zippy hits new balls every game on Hard']},
+  {v:'1.69',d:'2026-11-23',i:'👋',n:'Ready for you',why:'So every room starts at the right level, set up by a grown-up',
+    news:['🎚️ Every room has a level: 🧸 Little, 🐣 Easy, ⭐ Normal or 🔥 Challenge','🔥 Challenge rooms start new games on Medium','👋 A quick setup for grown-ups on a new device']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

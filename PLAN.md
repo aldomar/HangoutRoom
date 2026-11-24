@@ -927,8 +927,8 @@ team-kit bonus, prizes and stickers; **new original animal characters**. Four st
 
 ### Phase 14: Before the hand-over (design review 2026-11-23)
 A whole-app review before the children get the app; the findings, the owner's answers and the ranked ideas are in
-`docs/DESIGN-REVIEW.md`. Agreed order (2026-11-23): ✅ v1.67 daily caps (built) → v1.68 🧤 Catch on Hard (reading the ball: bat
-sound, grass stripes, a shadow trail, no memorizing) → v1.69 first-time setup + age bands → v1.70 spoken instructions →
+`docs/DESIGN-REVIEW.md`. Agreed order (2026-11-23): ✅ v1.67 daily caps (built) → ✅ v1.68 🧤 Catch on Hard (reading the ball: bat
+sound, grass stripes, a shadow trail, no memorizing) → ✅ v1.69 first-time setup + level bands (built) → v1.70 spoken instructions →
 v1.71 🧸 Little mode. Each gets its own plan first.
 
 #### v1.67 plan details: fair daily coins (agreed 2026-11-23, built)
@@ -1073,6 +1073,79 @@ fresh hits on Hard only; keep the word for sound-off play.
 - Listen for CRACK! (stay back) and tok (run in).
 - Watch the shadow's lane. Can you get 5/5 with practice?
 - If it's still too hard, tell me, and I'll widen the spare time.
+
+#### v1.69 plan details: 👋 First-time setup + age bands (agreed 2026-11-23, built)
+**Why:** no child has the app yet. The first time it opens on each iPad, a grown-up should be able to set it up properly in about
+a minute. Easy mode is also one ON/OFF switch, with nothing in between for the 5- and 8-year-olds and nothing extra for the 11-year-old.
+
+**1. Age bands instead of the Easy switch.** Each room gets a band, picked by the grown-up. The picker shows icons and names only (no ages):
+
+| Band | Meant for | What it does now (v1.69) | Later |
+|---|---|---|---|
+| 🧸 Little | ages 2–4 | Everything Easy mode does today, plus 🔊 Read to me on | v1.70 speaks instructions; v1.71 🧸 Little mode lock |
+| 🐣 Easy | ages 5–6 | Exactly today's Easy mode, plus 🔊 Read to me on | v1.70 speaks instructions |
+| ⭐ Normal | ages 7–9 | Exactly today's Easy mode OFF | |
+| 🔥 Challenge | ages 10+ | Easy mode OFF, and a game she has never played opens on **Medium** instead of Easy (she can still tap Easy) | |
+
+- **Brain Games 🎲 Free Play:** today, every level pays +2 with no daily cap. With bands, the +2 counts only at the child's
+  band or above (see question 1). A level below the band still pays, but +1 out of Free Play's 10-a-day allowance, like Memory
+  Match. This stops an older child farming the easiest puzzles, while the thinking games still pay for the level that's right for her.
+- **Where it's picked:** in the New Room box (a new "Level" row of 4 big buttons: icon + name) and in ✏️ Change Room. ⚙️ Settings shows
+  the room's band in place of the 🐣 Easy mode switch, and changing it there asks for the grown-up PIN when one is set.
+- Bands are about difficulty only, never about the child being a boy or a girl. Every item stays open to every band.
+
+**2. First-time setup (grown-up only).** It appears only when the device has **no rooms yet** and setup was never finished.
+Each step is one short box with big buttons and a **Skip**:
+1. **👋 Welcome:** "Hi grown-up! Let's set this up together. It takes about a minute." Buttons: **Start**, or **📂 I have a
+   backup** (opens Restore, for moving to a new iPad).
+2. **🔒 Grown-up PIN** (recommended): the same PIN pad as Settings. It protects deleting rooms, restoring and changing the band.
+3. **🏠 Make the room:** the New Room box (name, buddy, fur, color, badge) with the new **Level** row.
+4. **🔊 Can you hear me?** The buddy says "Hi! I'm your buddy!" with **✔ I heard it**, **🔁 Again** and **✖ Nothing**. If the
+   device has no voice, or nothing is heard, a short how-to shows (iPad: Settings → Accessibility → Spoken Content → Voices →
+   English; free and offline) and the app carries on without speech. Nothing is sent anywhere.
+5. **💾 Backups:** "Her room lives only on this iPad. Deleting the app or clearing Safari's data erases it. Make a backup
+   now and then (⚙️ Settings → 💾 Backup)." Buttons: **💾 Back up now** and **Later**. On an iPad opened in Safari rather than from
+   the Home Screen, this box also says to use Share → Add to Home Screen (`docs/IOS.md`).
+
+Then her room opens. ⚙️ Settings gets **🧰 Grown-up setup** (behind the PIN) to run steps 2, 4 and 5 again, for example to retest the voice.
+
+**3. Backup reminder (review idea 6).** On the rooms screen (never inside a room or a game), a small grown-up line shows when
+the last backup on this device is more than 30 days old: "💾 No backup for 30+ days · Back up". Tapping it opens Backup.
+It disappears as soon as a backup is saved. It never blocks anything and makes no sound.
+
+**Save changes (no `DB.version` bump; only added fields, like earlier versions):**
+- `p.band`: `'little' | 'easy' | 'normal' | 'challenge'`. `normalize()` gives an old room `'easy'` if `p.easy` is on, otherwise
+  `'normal'`, so **nothing changes for an existing room**. Every older backup still restores.
+- `p.easy` **stays** and is kept in step with the band (on for Little and Easy). The ~70 places that read it keep working, and an
+  older app version restoring a newer backup still sees Easy mode.
+- `p.speak` is unchanged: `null` still means "follow Easy mode", so Little and Easy hear Read to me unless someone switched it.
+- `settings.setupDone` (ms, `0` = never). It belongs to the device, so Restore keeps it, like the PIN. A device that already
+  has rooms is marked done, so **your own phone never sees the setup**. The 30-day reminder counts from the later of `lastBackup`
+  and `setupDone`.
+
+**Code:** a new file `64-setup.js` (the setup steps, `BANDS`, `bandOf`, `setBand`, the band row, the voice test, the reminder).
+Small hooks: `normalize()` (06), the New Room/Change Room box, Settings and the rooms screen (09), the first-open level in
+`show()` (09), and `fpThinkPay` (44).
+
+**Smoke test:**
+- A fresh device shows the setup and goes through every step, including Skip, Restore and the no-voice path.
+- A device that already has rooms never sees it.
+- Old rooms get the band that matches their Easy switch, and an old backup restores with the right bands.
+- Each band sets Easy mode and Read to me correctly.
+- Challenge opens a game she has never played on Medium, but not one she has played.
+- The Free Play pay follows the band.
+- Changing the band in Settings asks for the PIN when one is set.
+- The reminder shows after 30 days and hides after a backup.
+- Phone and tablet screenshots of every step.
+
+**Docs:** README, this plan, STATUS, DESIGN-REVIEW, `CLAUDE.md` (save fields and the new section), a `GIFT_TIMELINE` entry, and
+the version (1.69) in the four places.
+
+**Owner's answers (2026-11-23):**
+1. Free Play +2: Little and Easy at any level, Normal on Medium and Hard, Challenge on Hard only (below the band: +1 from the daily 10).
+2. Challenge also starts new games on Medium. (Built as: when a room becomes Challenge, every game with no progress yet is set to Medium.)
+3. Icons and names only in the picker, no ages. (The table's ages are for this plan only.)
+4. The owner sets up each iPad, but the welcome is written for any grown-up, in case a parent does it.
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.

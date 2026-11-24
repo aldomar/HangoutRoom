@@ -69,6 +69,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('the CSS loaded', await ev(`getComputedStyle(document.body).backgroundColor==='rgb(35, 27, 46)'`));
   check('the last file ran (startup)', await ev(`cur==='profiles'&&document.querySelector('#scr-profiles').classList.contains('on')`));
 
+  check('a brand-new device opens the grown-up setup (v1.69)', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#modalTitle').textContent.includes('Hi, grown-up')`));
   console.log('Make a profile + open the Art Desk');
   await ev(`(()=>{document.querySelector('#newProfBtn').click();document.querySelector('#npName').value='Testy';[...document.querySelectorAll('#modalBtns button')].pop().click();})()`);
   await sleep(900);
@@ -491,9 +492,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const sorted=a=>a.every((v,i)=>!i||a[i-1]<=v);
   check('every room has a color and a badge', await ev(`DB.profiles.every(p=>ROOM_COLORS[p.color]&&ROOM_BADGES.includes(p.badge)&&p.easy===false)`));
   await ev(`settingsModal()`); await shot('90-settings-easy-pin');
-  await ev(`document.querySelector('#sEasy').click()`); await sleep(150);
-  check('Settings turns Easy mode on', await ev(`P().easy===true&&document.body.classList.contains('easy')`));
-  check('Settings button says ON', (await ev(`document.querySelector('#sEasy').textContent`)).includes('ON'));
+  await ev(`document.querySelector('#sBand').click();document.querySelector('#stBand [data-band=easy]').click();${mbtn('Save')}.click()`); await sleep(150);
+  check('Settings → Level → 🐣 Easy turns Easy mode on', await ev(`P().easy===true&&document.body.classList.contains('easy')`));
+  check('Settings button says Easy', (await ev(`document.querySelector('#sBand').textContent`)).includes('Level: Easy'));
   check('room labels show in Easy mode', await ev(`(()=>{const L=[...document.querySelectorAll('#roomSvg .sign, svg .sign')];return L.length>=5&&L.every(g=>getComputedStyle(g).display!=='none');})()`));
   await ev(`closeModal()`); await shot('91-easy-room');
   await ev(`show('fidget');setFidTab('popit')`); await sleep(200);
@@ -527,7 +528,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('no Easy mode on the profile screen; card shows 🐣', await ev(`!document.body.classList.contains('easy')&&document.querySelector('.pcard').textContent.includes('🐣')`));
   await ev(`document.querySelector('.pcard').click()`); await sleep(300); await ev(`closeModal()`);
   check('opening the room turns Easy mode back on', await ev(`document.body.classList.contains('easy')`));
-  await ev(`settingsModal();document.querySelector('#sEasy').click();closeModal()`);
+  await ev(`settingsModal();document.querySelector('#sBand').click();document.querySelector('#stBand [data-band=normal]').click();${mbtn('Save')}.click();closeModal()`);
   check('Easy mode off again', await ev(`!P().easy&&!document.body.classList.contains('easy')`));
   check('room labels hidden when Easy mode is off', await ev(`(()=>{const L=[...document.querySelectorAll('svg .sign')];return L.length>=5&&L.every(g=>getComputedStyle(g).display==='none');})()`));
   await ev(`show('closet')`); await sleep(150);
@@ -3129,7 +3130,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`P().easy=false;applyEasy();closeModal()`);
   // 🎲 Free Play in the Brain Games
   check('🎲 sits after the puzzle numbers in the 6 games, not in Fact Cards', await ev(`FP_BRAIN.every(g=>(brOpen(g),!!document.querySelector('#brDots [data-dice]')&&document.querySelector('#brDots').lastElementChild.matches('[data-dice]')))&&!(brOpen('facts'),document.querySelector('#brDots [data-dice]'))`));
-  await ev(`P().brain.level.pop='easy';brOpen('pop');document.querySelector('#brDots [data-dice]').click()`); await sleep(150);
+  await ev(`P().brain.level.pop='medium';brOpen('pop');document.querySelector('#brDots [data-dice]').click()`); await sleep(150);
   check('🎲 opens a made-up puzzle: the dice lit, no number lit', await ev(`!!BR.free&&!BR.free.daily&&BR.game==='pop'&&document.querySelector('#brDots [data-dice]').classList.contains('on')&&!document.querySelector('#brDots [data-pz].on')`));
   await shot('U05-free-pop');
   const fpc1=await ev('P().coins');
@@ -3145,12 +3146,12 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const fpWon=await ev(`(()=>{const out=[];FP_BRAIN.forEach(g=>BRAIN_LVLS.forEach(l=>{fpBrain(g,l);if(!_fpSolve())out.push(g+':'+l);}));return out;})()`);
   check('a made-up puzzle of every game and level can be solved on screen', fpWon.length===0, fpWon);
   await sleep(1100);
-  const fpWant=await ev(`(()=>{let c=0,n=0;FP_BRAIN.forEach(g=>BRAIN_LVLS.forEach(()=>{if(FP_THINK.includes(g))c+=FREE_THINK;else if(n<FREE_DAILY){n++;c++;}}));return [c,n];})()`);
+  const fpWant=await ev(`(()=>{let c=0,n=0;FP_BRAIN.forEach(g=>BRAIN_LVLS.forEach(l=>{if(FP_THINK.includes(g)&&bandThink(P(),l))c+=FREE_THINK;else if(n<FREE_DAILY){n++;c++;}}));return [c,n];})()`);
   check('Memory Match is the only Brain Game 🎲 on the 10-a-day cap', await ev(`FP_BRAIN.filter(g=>!FP_THINK.includes(g)).join()==='memory'&&FREE_THINK===2`));
-  check('18 solved: +2 each in the thinking games, +1 each in Memory Match, all 18 count for stickers', await ev(`P().coins===${fpc2}+${fpWant[0]}&&P().free.n===${fpWant[1]}&&P().stats.free===18`), await ev(`[P().coins-${fpc2},P().free.n,P().stats.free,${JSON.stringify(fpWant)}]`));
+  check('18 solved: +2 each in the thinking games at her band (Normal: Medium and Hard), +1 each for the rest, all 18 count for stickers', await ev(`P().coins===${fpc2}+${fpWant[0]}&&P().free.n===${fpWant[1]}&&P().stats.free===18`), await ev(`[P().coins-${fpc2},P().free.n,P().stats.free,${JSON.stringify(fpWant)}]`));
   await ev(`closeModal();P().free={day:FP_TEST_DAY,n:FREE_DAILY}`); const fpCap=await ev('P().coins');
-  await ev(`fpBrain('train','easy');_fpSolve()`); await sleep(1100);
-  check('with the 10 a day used up, a 🎲 Pattern Train still pays +2', await ev(`P().coins===${fpCap}+2&&/[+]2/.test(document.querySelector('#modalBody').textContent)`));
+  await ev(`fpBrain('train','medium');_fpSolve()`); await sleep(1100);
+  check('with the 10 a day used up, a Medium 🎲 Pattern Train still pays +2', await ev(`P().coins===${fpCap}+2&&/[+]2/.test(document.querySelector('#modalBody').textContent)`));
   await ev(`closeModal();fpToldDay='';fpBrain('memory','easy');_fpSolve()`); await sleep(1100);
   check('…while a 🎲 Memory Match pays nothing more, with the gentle note', await ev(`P().coins===${fpCap}+2&&/full for today/.test(document.querySelector('#modalBody').textContent)`));
   await ev('closeModal()');
@@ -5145,7 +5146,133 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(150);
     await waitFor(`CT.state==='ready'`,5000);
     await ev(`closeModal();P().ball=JSON.parse(${JSON.stringify(cSaved)});setSound(${cSound});save();show('room');goRoom(1)`);
-    check('v1.68 is in the Gift Story and the app says 1.68', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.68')&&APP_VERSION==='1.68'`));
+    check('v1.68 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.68')`));
+  }
+
+  console.log('Level bands + first-time setup (v1.69)');
+  {
+    const waitFor=async(cond,ms)=>{for(let i=0;i<(ms||3000)/50;i++){if(await ev(cond))return true;await sleep(50);}return false;};
+    const ttl=()=>ev(`document.querySelector('#modal').classList.contains('hidden')?'':document.querySelector('#modalTitle').textContent`);
+    const body=()=>ev(`document.querySelector('#modalBody').textContent`);
+    const tap=t=>ev(`(b=>{if(b)b.click();return !!b;})(${mbtn(t)})`);
+    await ev(`closeModal();stkPaused=true;show('room');goRoom(1)`); await sleep(200);
+    await ev(`window._bdDB=JSON.stringify(DB);window._bdWv=webVoice`);
+    // the bands
+    check('4 level bands: Little, Easy, Normal, Challenge', await ev(`BAND_IDS.join()==='little,easy,normal,challenge'&&BAND_IDS.every(k=>BANDS[k].icon&&BANDS[k].name&&BANDS[k].say)`));
+    check('old rooms get the band that matches their Easy switch; a mixed-up band follows Easy mode', await ev(`(()=>{const mk=(x)=>{const q=JSON.parse(JSON.stringify(P()));delete q.band;Object.assign(q,x);normalize(q);return q;};
+      const a=mk({easy:true}),b=mk({easy:false}),c=mk({band:'little',easy:true}),d=mk({band:'challenge',easy:true}),e=mk({band:'zzz',easy:false}),f=mk({band:'normal',easy:true});
+      return a.band==='easy'&&b.band==='normal'&&c.band==='little'&&c.easy&&d.band==='easy'&&e.band==='normal'&&!e.easy&&f.band==='easy';})()`));
+    check('setBand keeps Easy mode in step, and Read to me follows it (on for Little and Easy)', await ev(`(()=>{const q=newProfile('Zed','white','pink','⭐');const r=[];
+      for(const b of BAND_IDS){setBand(q,b);r.push(q.band===b&&q.easy===(b==='little'||b==='easy')&&readOn(q)===q.easy&&bandOf(q)===b);}return r.every(x=>x);})()`));
+    check('a new Challenge room starts every game on Medium (I Spy on 2 stars)', await ev(`(()=>{const q=newProfile('Zed','white','pink','⭐');setBand(q,'challenge');
+      return q.soccer.level==='medium'&&q.soccer.keep.level==='medium'&&q.ball.bat.level==='medium'&&q.ball.catch.level==='medium'&&q.stage.level==='medium'&&q.code.level==='medium'
+        &&Object.values(q.brain.level).every(l=>l==='medium')&&q.spy.lvl===2;})()`));
+    check('…but a game that already has progress keeps its level', await ev(`(()=>{const q=newProfile('Zed','white','pink','⭐');q.soccer.best.easy=3;q.brain.solved=['snack:e1'];q.ball.bat.prizes=['easy'];
+      setBand(q,'challenge');return q.soccer.level==='easy'&&q.brain.level.snack==='easy'&&q.brain.level.memory==='medium'&&q.ball.bat.level==='easy'&&q.ball.catch.level==='medium';})()`));
+    check('…and only when it becomes Challenge (a level picked later is left alone)', await ev(`(()=>{const q=newProfile('Zed','white','pink','⭐');setBand(q,'challenge');q.soccer.level='easy';setBand(q,'challenge');return q.soccer.level==='easy';})()`));
+    check('Free Play +2 by band: Little/Easy any level, Normal Medium+, Challenge Hard only', await ev(`(()=>{const q=newProfile('Zed','white','pink','⭐'),t=b=>{setBand(q,b);return BRAIN_LVLS.map(l=>bandThink(q,l)?1:0).join('');};
+      return BRAIN_LVLS.join()==='easy,medium,hard'&&t('little')==='111'&&t('easy')==='111'&&t('normal')==='011'&&t('challenge')==='001';})()`));
+    // Free Play through the screen, in a Challenge room
+    await ev(`setBand(P(),'challenge');P().free={day:FP_TEST_DAY,n:0};fpToldDay=''`); const bc0=await ev('P().coins');
+    await ev(`show('brain');fpBrain('snack','medium');_fpSolve()`); await sleep(1100);
+    check('Challenge: a Medium 🎲 Snack Stand pays +1 from the daily 10', await ev(`P().coins===${bc0}+1&&P().free.n===1`), await ev(`[P().coins-${bc0},P().free.n]`));
+    await ev(`closeModal();fpBrain('snack','hard');_fpSolve()`); await sleep(1100);
+    check('…and a Hard one pays +2, outside the daily 10', await ev(`P().coins===${bc0}+3&&P().free.n===1&&/[+]2/.test(document.querySelector('#modalBody').textContent)`));
+    await ev(`closeModal();show('room')`); await sleep(150);
+    // Settings
+    await ev(`settingsModal()`);
+    check('Settings shows the room\'s level (no Easy mode switch any more)', await ev(`!document.querySelector('#sEasy')&&document.querySelector('#sBand').textContent.includes('🔥 Level: Challenge')&&!!document.querySelector('#sSetup')`));
+    await ev(`document.querySelector('#sBand').click()`); await sleep(100);
+    check('the Level box: 4 big buttons, icons and names only (no ages), Challenge picked', await ev(`(()=>{const b=[...document.querySelectorAll('#stBand button')];return b.length===4&&b.every(x=>x.getBoundingClientRect().height>=48)
+      &&!/[0-9]/.test(document.querySelector('#stBand').textContent+document.querySelector('#stBandSay').textContent)&&document.querySelector('#stBand .on').dataset.band==='challenge';})()`));
+    await shot('SU1-level-box');
+    await ev(`document.querySelector('#stBand [data-band=easy]').click()`);
+    check('picking a band says what it does', (await ev(`document.querySelector('#stBandSay').textContent`))===await ev(`BANDS.easy.say`));
+    await tap('Save'); await sleep(150);
+    check('Save: the room is Easy (Easy mode on) and Settings says so', await ev(`P().band==='easy'&&P().easy&&document.body.classList.contains('easy')&&document.querySelector('#sBand').textContent.includes('Easy')`));
+    await ev(`DB.settings.pin='4321';settingsModal();document.querySelector('#sBand').click()`); await sleep(100);
+    check('with a grown-up PIN, changing the level asks for it', await ev(`!!document.querySelector('#pinPad')&&!document.querySelector('#stBand')`));
+    await ev(`settingsModal();document.querySelector('#sSetup').click()`); await sleep(100);
+    check('…and so does 🧰 Grown-up setup', await ev(`!!document.querySelector('#pinPad')`));
+    await ev(`setupPin(true)`); await sleep(50);
+    check('setup again with a PIN on: it just says the PIN is on', (await ttl()).includes('Grown-up PIN')&&(await body()).includes('PIN is on'));
+    await ev(`closeModal();DB.settings.pin='';setBand(P(),'normal');applyEasy()`);
+    // New Room box
+    await ev(`show('profiles');document.querySelector('#newProfBtn').click()`); await sleep(150);
+    check('the New Room box has a Level row, Normal picked', await ev(`document.querySelectorAll('#npBand button').length===4&&document.querySelector('#npBand .on').dataset.band==='normal'`));
+    await ev(`document.querySelector('#npName').value='Rowan';document.querySelector('#npBand [data-band=challenge]').click();document.querySelector('#npBand').scrollIntoView({block:'center'})`);
+    await shot('SU2-new-room-level');
+    await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(400);
+    check('a new Challenge room: band saved, games start on Medium, Easy mode off', await ev(`P().name==='Rowan'&&P().band==='challenge'&&!P().easy&&P().soccer.level==='medium'&&P().stage.level==='medium'`));
+    await ev(`closeModal();show('profiles')`); await sleep(150);
+    check('its room card shows 🔥 Challenge', await ev(`[...document.querySelectorAll('.pcard')].some(c=>c.textContent.includes('Rowan')&&c.textContent.includes('🔥 Challenge'))`));
+    await ev(`(()=>{const p=DB.profiles.find(x=>x.name==='Rowan');document.querySelector('.pcard[data-id="'+p.id+'"] [data-act=edit]').click();})()`); await sleep(150);
+    check('✏️ Change Room shows the level too', await ev(`document.querySelector('#npBand .on').dataset.band==='challenge'`));
+    await ev(`document.querySelector('#npBand [data-band=little]').click();[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(150);
+    check('…and changing it there saves it (🧸 Little = Easy mode on)', await ev(`(p=>p.band==='little'&&p.easy)(DB.profiles.find(x=>x.name==='Rowan'))`));
+    // 👋 the first-time setup on a brand-new device
+    await ev(`DB=fixDB(null);setupSkipped=false;show('profiles');setupCheck()`); await sleep(100);
+    check('a brand-new device: the setup opens, for any grown-up', (await ttl()).includes('Hi, grown-up')&&(await body()).includes('no internet use'));
+    await shot('SU3-welcome');
+    await ev(`webVoice=null`); await tap('Start'); await sleep(100);
+    check('step 2: the grown-up PIN (Skip or Set a PIN)', (await ttl()).includes('Grown-up PIN')&&!!(await ev(`${mbtn('Skip')}`))&&!!(await ev(`${mbtn('Set a PIN')}`)));
+    await shot('SU4-pin');
+    await tap('Set a PIN'); await sleep(100);
+    await pinType('2468'); await pinType('2468'); await sleep(200);
+    check('…setting a PIN goes on to step 3: the New Room box with its Level row', await ev(`DB.settings.pin==="2468"`)&&(await ttl()).includes('New Room')&&await ev(`!!document.querySelector('#npBand')`));
+    await ev(`document.querySelector('#npName').value='Juniper';document.querySelector('#npBand [data-band=little]').click();[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(400);
+    check('the room is made (🧸 Little), it opens, and setup counts as done', await ev(`cur==='room'&&P().name==='Juniper'&&P().band==='little'&&P().easy&&DB.settings.setupDone>0`));
+    check('step 4 with no voice on the device: how to add one (iPad and Android)', (await ttl()).includes('Read to me')&&/Spoken Content/.test(await body())&&/Text-to-speech/.test(await body()));
+    await shot('SU5-no-voice');
+    await tap('Next'); await sleep(100);
+    check('step 5: backups', (await ttl()).includes('Keep the room safe')&&/Backup/.test(await body())&&!/Home Screen/.test(await body()));
+    await shot('SU6-backup');
+    await tap('Later'); await sleep(200);
+    check('Later: setup ends in the room, the buddy says all set', await ev(`document.querySelector('#modal').classList.contains('hidden')&&cur==='room'`)&&/All set/.test(await ev(`document.body.textContent`)));
+    // again from Settings, with a voice, on an iPad in Safari
+    await ev(`DB.settings.pin='';webVoice={lang:'en-US',name:'Test voice'};IOS_FAKE=true;settingsModal();document.querySelector('#sSetup').click()`); await sleep(100);
+    check('🧰 Grown-up setup from Settings starts at the PIN', (await ttl()).includes('Grown-up PIN'));
+    await tap('Skip'); await sleep(100);
+    check('with a voice: Can you hear me? (Nothing / Again / I heard it)', (await ttl()).includes('Can you hear me')&&!!(await ev(`${mbtn('Nothing')}`))&&!!(await ev(`${mbtn('Again')}`))&&!!(await ev(`${mbtn('I heard it')}`)));
+    await shot('SU7-voice');
+    await tap('Again'); await sleep(50);
+    check('🔁 Again keeps the box open', (await ttl()).includes('Can you hear me'));
+    await tap('Nothing'); await sleep(100);
+    check('✖ Nothing: check the volume, and how to add a voice', (await ttl()).includes('No voice')&&/volume/.test(await body())&&/Spoken Content/.test(await body()));
+    await tap('Next'); await sleep(100);
+    check('an iPad in Safari (not from the Home Screen): the backup step says Add to Home Screen', /Add to Home Screen/.test(await body()));
+    await tap('Back up now'); await sleep(400);
+    check('💾 Back up now opens Backup & Restore', (await ttl()).includes('Backup'));
+    await ev(`closeModal();IOS_FAKE=false;webVoice=window._bdWv`);
+    // Skip, and I have a backup
+    await ev(`DB=fixDB(null);setupSkipped=false;show('profiles');setupCheck()`); await sleep(100);
+    await tap('Skip'); await sleep(100);
+    check('Skip: just the rooms screen, and the setup stays away until the app opens again', await ev(`document.querySelector('#modal').classList.contains('hidden')&&cur==='profiles'&&(setupCheck(),document.querySelector('#modal').classList.contains('hidden'))&&!DB.settings.setupDone`));
+    await ev(`setupSkipped=false;setupCheck()`); await sleep(50); await tap('I have a backup'); await sleep(100);
+    check('📂 I have a backup opens Restore', (await ttl()).includes('Restore'));
+    await ev(`doRestore(window._bdDB)`); await sleep(300);
+    check('restoring on a new device counts as set up (no setup again)', await ev(`DB.profiles.length>0&&DB.settings.setupDone>0&&!needSetup()`));
+    check('a device that had rooms before v1.69 never sees the setup; one with none does', await ev(`fixDB({version:37,profiles:[{name:'A'}],settings:{}}).settings.setupDone>0&&fixDB({version:37,profiles:[],settings:{}}).settings.setupDone===0&&fixDB({version:37,profiles:[{name:'A'}],settings:{setupDone:0}}).settings.setupDone===0`));
+    // 💾 the backup line on the rooms screen
+    await ev(`DB.settings.lastBackup=Date.now()-31*86400000;DB.settings.setupDone=Date.now()-40*86400000;show('profiles')`); await sleep(100);
+    check('no backup for 30+ days: a small grown-up line on the rooms screen', await ev(`!document.querySelector('#bkNag').classList.contains('hidden')&&document.querySelector('#bkNag').getBoundingClientRect().height>=48`));
+    await shot('SU8-backup-line');
+    await ev(`document.querySelector('#bkNag').click()`); await sleep(400);
+    check('tapping it opens Backup', (await ttl()).includes('Backup'));
+    await ev(`closeModal();backupSaved()`);
+    check('a backup hides it', await ev(`document.querySelector('#bkNag').classList.contains('hidden')`));
+    check('…and it never shows inside a room', await ev(`(DB.settings.lastBackup=1,show('room'),getComputedStyle(document.querySelector('#scr-profiles')).display==='none')`));
+    await ev(`DB.settings.lastBackup=0;DB.settings.setupDone=Date.now();show('profiles')`);
+    check('a device set up today with no backup yet: no line yet', await ev(`document.querySelector('#bkNag').classList.contains('hidden')`));
+    // phone
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true}); await sleep(200);
+    await ev(`setupStart()`); await sleep(100); await shot('SU9-phone-welcome');
+    await ev(`roomModal(null)`); await sleep(100);
+    check('phone: the Level buttons fit across', await ev(`[...document.querySelectorAll('#npBand button')].every(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.height>=48;})`));
+    await shot('SU10-phone-new-room');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(150);
+    await ev(`closeModal();DB=fixDB(JSON.parse(window._bdDB));DB.profiles.forEach(normalize);DB.settings.pin='';save();show('profiles')`); await sleep(150);
+    check('v1.69 is in the Gift Story and the app says 1.69', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.69')&&APP_VERSION==='1.69'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

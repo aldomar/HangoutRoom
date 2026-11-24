@@ -12,13 +12,18 @@ _Last updated: 2026-11-23_
   maze replays); the first perfect on a level (with its prize) and every other first are paid outside it, repeat perfects come out
   of it; Brain Games Free Play stays uncapped. Also: the "not enough coins" hint names a place that still pays, and a 🔊/🔇 button
   in the room (the iPad audio session stays `playback`). Save: 6 `{day, n}` fields with defaults in `normalize()`, no new save version.
-- **🧤 Catch you can read: built, PR #70 open as v1.68** on branch `feature/catchhard` (from `feature/caps`; #69 is merged). Owner's
+- **🧤 Catch you can read: done (v1.68 merged, PR #70)** (branch `feature/catchhard`). Owner's
   answers 2026-11-23: cues on every level (CRACK!/WHACK/tok by depth, with the word for sound-off play; mowed lanes and bands;
   a shadow trail on Medium/Hard); fresh hits on Hard only (`ctMakeGame`, checked by `ctHitOk`); Medium slightly harder again
   (glove 0.19, ring from 55%). No save changes. Why: the owner found Hard nearly impossible (even for them), because the shadow
   showed where the ball lands too late and the 15 hits came in a fixed order, so it was memory. The owner will judge Hard on their
   phone; `CT_SPARE` (61) widens it if needed.
-- **Next after that: v1.69 first-time setup + age bands** (needs its own plan; it changes save data).
+- **👋 First-time setup + level bands: built, PR #71 open as v1.69** on branch `feature/setup` (from `main` after #70). Plan agreed 2026-11-23 (`PLAN.md`,
+  "v1.69 plan details"). Owner's answers: Free Play +2 at the band's level or above (Little/Easy any, Normal Medium+, Challenge Hard);
+  Challenge also starts new games on Medium; the picker shows icons and names only (no ages); the owner sets up each iPad, but the
+  welcome is written for any grown-up. Save: `p.band` (with `p.easy` kept in step) and `settings.setupDone` (device, kept by Restore);
+  no new save version. Also the 30-day 💾 backup line on the rooms screen (review idea 6).
+- **Next: v1.70 spoken instructions** (needs its own plan), then v1.71 🧸 Little mode.
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
 - **Phase 2 (Art Desk): done** (v1.3 merged). Checked on an Android phone: it works, and drawings survive closing the app.
 - **Phase 3 (Photocard Wall): done** (v1.4 merged). The owner checked it on the device: all checks passed (2026-11-15).

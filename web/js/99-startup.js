@@ -58,5 +58,6 @@ document.addEventListener('visibilitychange',()=>{
 
 buildDefs();
 show('profiles');
+setupCheck(); // 👋 the first-time setup, on a device with no rooms yet (section 64)
 whatsNew(); // ✨ What's New, once per device after an update (section 25)
 wakeLoop();

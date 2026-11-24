@@ -288,7 +288,7 @@ function fpBrainWin(){
   if(fz.daily){
     if(p.potd.day!==fz.day){p.potd.day=fz.day;p.stats.potd++;earn(POTD_COINS,'Puzzle of the Day!');line=`+${POTD_COINS} 🪙`;}
     else {save();line=p.easy?'':'<br>Practice makes perfect ✨';}
-  } else line=FP_THINK.includes(g)?fpThinkPay():fpPay();
+  } else line=FP_THINK.includes(g)&&bandThink(p,l)?fpThinkPay():fpPay(); // +2 only at the room's level band or above (v1.69, section 64)
   BR.timer=setTimeout(()=>{
     if(cur!=='brain'||BR.view!=='play'||BR.tok!==tok) return;
     modal(fz.daily?'📅 Puzzle of the Day solved!':`🎲 ${G.icon} Solved!`,`<div style="text-align:center;font-size:18px">🎉 ${line}</div>`,
