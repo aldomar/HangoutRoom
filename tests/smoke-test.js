@@ -5573,7 +5573,89 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`document.querySelector('#undoBtn').click()`); await sleep(100);
     check('…but not once it has been opened', await ev(`P().coins===45`));
     await ev(`(()=>{const q=JSON.parse(window._v74),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();undoOff();save();show('room')`);
-    check('v1.74 is in the Gift Story and the app says 1.74', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.74')&&APP_VERSION==='1.74'`));
+    check('v1.74 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.74')`));
+  }
+
+  console.log('Gift codes between iPads (v1.75)');
+  {
+    const vis=sel=>ev(`(e=>!!e&&e.offsetParent!==null&&getComputedStyle(e).display!=='none')(document.querySelector(${JSON.stringify(sel)}))`);
+    const mb=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
+    // no network anywhere
+    const net=['index.html'].concat(fs.readdirSync(path.join(__dirname,'..','web','js')).filter(n=>n.endsWith('.js')).map(n=>'web/js/'+n))
+      .filter(n=>/\bfetch\s*\(|XMLHttpRequest|WebSocket|sendBeacon|EventSource/.test(fs.readFileSync(path.join(__dirname,'..',n),'utf8')));
+    check('no app file uses fetch, XHR, WebSocket or sendBeacon (gift codes are read out, never sent)', net.length===0, net);
+    // the code itself
+    check('every decoration that can be given has its own fingerprint (no two share one)', await ev(`(()=>{const k=Object.keys(DECOR).filter(gcSendable),w=k.map(gcWhatOf);
+      return k.length>50&&new Set(w).size===k.length&&w.every(x=>x>=3&&x<65536)&&k.every(x=>gcKeyOf(gcWhatOf(x))===x);})()`));
+    check('every room has its own mailbox number (4 characters, a check letter that works)', await ev(`DB.profiles.every(q=>gcMailboxOk(gcMailbox(q)))&&new Set(DB.profiles.map(gcMailbox)).size===DB.profiles.length&&!gcMailboxOk('2222'.slice(0,3)+'3')`));
+    check('a code made for any gift reads back to the same gift, mailbox and id', await ev(`(()=>{const ks=Object.keys(DECOR).filter(gcSendable);
+      const ws=[0,1,2].concat(ks.map(gcWhatOf));return ws.every((w,i)=>{const m=gcMailbox(DB.profiles[i%DB.profiles.length]),gid=(i*37)%4096,c=gcMake(w,m,gid),r=gcRead(c);
+        return /^[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}$/.test(c)&&r.what===w&&r.mb===m&&r.gid===gid&&r.ver===GC_VER;});})()`));
+    check('every one-character typo and every swap of two neighbors is caught', await ev(`(()=>{const c=gcClean(gcMake(gcWhatOf('plant'),gcMailbox(P()),1234));
+      for(let i=0;i<12;i++){for(const ch of GC_ABC){if(ch===c[i])continue;const t=c.slice(0,i)+ch+c.slice(i+1);if(!gcRead(t).bad)return 'typo '+t;}
+        if(i<11&&c[i]!==c[i+1]){const t=c.slice(0,i)+c[i+1]+c[i]+c.slice(i+2);if(!gcRead(t).bad)return 'swap '+t;}}return true;})()`)===true);
+    check('…and spaces, dashes and small letters are fine; 0, O, 1 and I are explained', await ev(`(()=>{const c=gcMake(0,gcMailbox(P()),7);return gcRead(' '+c.toLowerCase().replace(/-/g,' ')+' ').what===0
+      &&gcRead(c.replace(/^./,'O')).bad==='letters'&&gcRead(c.slice(0,10)).bad==='length';})()`));
+    // sending
+    await ev(`closeModal();stkPaused=true;if(DB.profiles.length<2){const q=newProfile('Pal');normalize(q);DB.profiles.push(q);}window._v75=JSON.stringify(DB.profiles);window._v75a=DB.activeId;DB.settings.pin='';
+      {const q=P();q.coins=100;q.giftCodes={sent:[],opened:[],made:{day:'',n:0}};}show('room');giveModal()`); await sleep(150);
+    check('🎁 Give has 📥 Type a gift code and 📮 Sent at the top', await vis('#gcTypeBtn')&&await vis('#gcSentBtn'));
+    await ev(`document.querySelector('[data-gk="coins:10"]').click()`); await sleep(150);
+    check('"Who is it for?" has 📮 Another iPad', await vis('#gvWho [data-gc]'));
+    await ev(`document.querySelector('#gvWho [data-gc]').click()`); await sleep(150);
+    const otherMb=await ev(`(()=>{const q=DB.profiles.find(x=>x.id!==P().id);return gcMailbox(q);})()`);
+    await ev(`document.querySelector('#gcMb').value=gcMailbox(P());${mb('Next')}.click()`); await sleep(100);
+    check('typing her own mailbox is refused', await ev(`/own mailbox/.test(document.querySelector('#gcMsg').textContent)`));
+    await ev(`document.querySelector('#gcMb').value='${otherMb.slice(0,3)}'+(GC_ABC[(GC_ABC.indexOf('${otherMb[3]}')+1)%32]);${mb('Next')}.click()`); await sleep(100);
+    check('a mailbox number with a typo is refused', await ev(`/look right/.test(document.querySelector('#gcMsg').textContent)&&P().coins===100`));
+    await ev(`document.querySelector('#gcMb').value='${otherMb.toLowerCase()}';${mb('Next')}.click()`); await sleep(150);
+    await ev(`${mb('Make it')}.click()`); await sleep(150);
+    const code=await ev(`(document.querySelector('#gcCode')||{}).textContent||''`);
+    check('the code shows big: 10 coins leave, it is in 📮 Sent, and today\'s count went up', /^[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}$/.test(code)
+      &&await ev(`P().coins===90&&P().giftCodes.sent[0].code==='${code}'&&P().giftCodes.sent[0].mb==='${otherMb}'&&P().giftCodes.made.n===1&&P().giftCodes.made.day===fpDay()`), code);
+    check('…with no Copy or Share button, and no ↩ Undo', await ev(`![...document.querySelectorAll('#modal button')].some(b=>/copy|share/i.test(b.textContent))&&!document.querySelector('#undoBar').classList.contains('on')`));
+    await shot('GC1-code');
+    check('tablet: the code fits on one line', await ev(`(e=>e.scrollWidth<=e.clientWidth+1&&e.getBoundingClientRect().height<100)(document.querySelector('#gcCode'))`));
+    await ev(`closeModal();gcSentModal()`); await sleep(100);
+    check('📮 Sent lists it, and tapping shows it again', await ev(`document.querySelector('#gcList b').textContent==='${code}'`)&&await ev(`(document.querySelector('#gcList [data-gs]').click(),document.querySelector('#gcCode').textContent==='${code}')`));
+    // decorations, and the daily limit
+    await ev(`closeModal();{const p=P();p.room.items.push({uid:'gcPlant',type:'plant',placed:false,x:500,y:600});
+      gcSend(p,{kind:'decor',uid:'gcPlant',type:'plant'},'${otherMb}');}`); await sleep(100);
+    const code2=await ev(`document.querySelector('#gcCode').textContent`);
+    check('a decoration from My Stuff can be sent: it leaves her room', await ev(`!allItems(P()).some(i=>i.uid==='gcPlant')&&P().giftCodes.made.n===2&&gcRead('${code2}').what===gcWhatOf('plant')`));
+    await ev(`closeModal();gcSend(P(),{kind:'coins',n:5},'${otherMb}');closeModal();gcAsk({kind:'coins',n:5})`); await sleep(100);
+    check('3 codes a day: then it says "More tomorrow!" and takes nothing', await ev(`/More tomorrow/.test(document.querySelector('#modalBody').textContent)&&P().coins===85&&P().giftCodes.made.n===3`));
+    await ev(`closeModal();window.FP_TEST_DAY='2031-01-02'`);
+    check('…and the next day there are 3 again', await ev(`gcLeft(P())===3`));
+    await ev(`window.FP_TEST_DAY=''`);
+    // receiving, in the other room
+    await ev(`closeModal();DB.activeId=DB.profiles.find(x=>x.id!==P().id).id;{const q=P();q.giftCodes={sent:[],opened:[],made:{day:'',n:0}};q.gifts=[];window._rc=q.coins;window._rg=q.gifts.length;}show('room');gcTypeModal()`); await sleep(150);
+    check('📥 Type a gift code shows her mailbox number', await ev(`document.querySelector('.gc-mb b').textContent===gcMailbox(P())`));
+    await shot('GC2-type');
+    const typo=code.slice(0,2)+(code[2]==='A'?'B':'A')+code.slice(3);
+    await ev(`document.querySelector('#gcIn').value='${typo}';${mb('Open')}.click()`); await sleep(100);
+    check('a typo: "Check each letter", nothing opens', await ev(`/Check each letter/.test(document.querySelector('#gcMsg').textContent)&&P().gifts.length===_rg`));
+    await ev(`document.querySelector('#gcIn').value='${code}'.toLowerCase();${mb('Open')}.click()`); await sleep(400);
+    check('the right code opens with the usual gift box: +10 coins', await ev(`P().coins===_rc+10&&P().giftCodes.opened.length===1&&/another iPad/.test(document.querySelector('#modalTitle').textContent)`));
+    await shot('GC3-opened');
+    await ev(`closeModal();gcTypeModal();document.querySelector('#gcIn').value='${code}';${mb('Open')}.click()`); await sleep(100);
+    check('the same code again: "You already opened this one!"', await ev(`/already opened/.test(document.querySelector('#gcMsg').textContent)&&P().coins===_rc+10`));
+    await ev(`document.querySelector('#gcIn').value='${code2}';${mb('Open')}.click()`); await sleep(400);
+    check('the decoration code puts the decoration in her room', await ev(`curRoom(P()).items.some(i=>i.type==='plant'&&i.placed)`));
+    await ev(`closeModal();gcTypeModal();document.querySelector('#gcIn').value=gcMake(0,gcMailbox(DB.profiles.find(x=>x.id!==P().id)),9);${mb('Open')}.click()`); await sleep(100);
+    check('a code for another mailbox is refused (and says whose it is)', await ev(`/is for mailbox/.test(document.querySelector('#gcMsg').textContent)`));
+    await ev(`document.querySelector('#gcIn').value=gcMake(65535-(Object.keys(DECOR).filter(gcSendable).map(gcWhatOf).includes(65535)?1:0),gcMailbox(P()),9);${mb('Open')}.click()`); await sleep(100);
+    check('a decoration this app does not know yet: "update the app first", and it is not used up', await ev(`/update the app/.test(document.querySelector('#gcMsg').textContent)&&P().giftCodes.opened.length===2`));
+    check('saved: older rooms get empty gift codes, and bad entries are dropped', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));delete q.giftCodes;normalize(q);const ok1=q.giftCodes.sent.length===0&&q.giftCodes.made.n===0;
+      q.giftCodes={sent:[{code:'bad'},{code:'2345-6789-ABCD',what:1,mb:'AB3K',at:1}],opened:['x','23456789ABCD'],made:{day:5,n:-2}};normalize(q);
+      return ok1&&q.giftCodes.sent.length===1&&q.giftCodes.opened.join()==='23456789ABCD'&&q.giftCodes.made.day===''&&q.giftCodes.made.n===0;})()`));
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true}); await sleep(150);
+    await ev(`closeModal();gcShow('${code}',1,'${otherMb}',true)`); await sleep(150);
+    check('phone: the code fits on one line', await ev(`(e=>e.scrollWidth<=e.clientWidth+1&&e.getBoundingClientRect().height<120)(document.querySelector('#gcCode'))`));
+    await shot('GC4-phone');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(150);
+    await ev(`closeModal();{const o=JSON.parse(window._v75);DB.profiles.forEach(p=>{const q=o.find(x=>x.id===p.id);if(q){Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);}});DB.activeId=window._v75a;}save();show('room')`);
+    check('v1.75 is in the Gift Story and the app says 1.75', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.75')&&APP_VERSION==='1.75'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

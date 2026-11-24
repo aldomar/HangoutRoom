@@ -280,6 +280,23 @@ A behind-the-scenes tidy-up. Nothing looks different.
   - It shows in every room, Easy and 🧸 Little ones too.
 - No new save data.
 
+## 📮 Gift codes between iPads (version 1.75)
+Each child has their own iPad, so gifts can now travel between iPads as a short code that one child reads out and the other types in,
+like a phone number. **The app never sends anything over the internet**: there's no Copy or Share button, and nothing leaves the iPad.
+- **Sending:** 🎁 Give → pick coins (5, 10 or 20) or a decoration from 📦 My Stuff → **📮 Another iPad** → type their **mailbox number**
+  → ✔ Make it! The coins or decoration leave straight away, and a code like `FKRU-JWB9-LQYB` shows in big letters. Read it to them.
+  - 3 codes a day per room. **📮 Sent** (at the top of 🎁 Give) keeps the last 20 codes, in case one is lost.
+  - A code can't be taken back, so there's no ↩ Undo for it.
+- **Receiving:** 🎁 Give → **📥 Type a gift code**. The box shows this room's **📮 mailbox number** (4 letters and numbers) to read
+  to the sender first. Type the code (small letters, spaces and dashes are fine) and tap 🎁 Open: the gift opens with confetti.
+- **Safe from mistakes:**
+  - A code only opens in the room whose mailbox it was made for, and only once.
+  - A typing mistake or two swapped letters is caught ("Check each letter").
+  - Codes never use 0, O, 1 or I, so they can't be mixed up.
+- **Update first:** a decoration that's newer than the receiving iPad's app says "update the app first". The code still works after updating.
+- Where: ⚙️ Settings → 🎁 Give a gift, or the 🎁 tile at the start of 📦 My Stuff in Decorate. Not in 🧸 Little mode.
+- Save data: one new field per room, `giftCodes` (codes sent, codes opened, codes made today). Older backups still restore.
+
 ## Spoken instructions (since version 1.70)
 The app can now **say what to do** on every screen, so the children who can't read yet can play everything:
 - **Each screen, tab and game has one short spoken line**, for example "Pop them all to flip it over!" on the pop-it. In the Brain Games it's

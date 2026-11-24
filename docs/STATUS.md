@@ -15,7 +15,10 @@ _Last updated: 2026-11-24_
     - The Stage pauses instead of stopping when the app is left (⏸️ Paused, ▶ Keep going, 3-2-1).
     - ↩ Undo for 10 s after buying or giving, in every room; it puts the room back exactly as it was before.
     - Owner's answers 2026-11-24 are in `PLAN.md`. No save changes. New file `68-undo.js`.
-  - ⬜ v1.75 🎁 Gift codes between iPads.
+  - ✅ v1.74 is PR #76.
+  - ✅ v1.75 🎁 Gift codes between iPads: built, PR open (branch `feature/giftcodes`, stacked on `feature/fixes`).
+    - Owner's answers 2026-11-24: the mailbox number is required, 3 codes a day, coins or decorations (same as gifts now).
+    - New file `69-giftcodes.js`. Save: `giftCodes{sent[], opened[], made{day,n}}` (defaults in `normalize()`, no new save version).
   - ⬜ v1.76 🐾 The pet notices what the child did.
   - ⬜ v1.77 📻 Creations in the room (a boombox, Code Lab and Brain Games prizes).
   - ⬜ v1.78 🛠️ Code Lab level maker.
@@ -1500,7 +1503,7 @@ _Last updated: 2026-11-24_
    Thanksgiving), open the room, and merge it by Wednesday 2026-11-25.
 3. ~~Plan and build v1.73 🧰 Shared helpers, part 1.~~ Built, PR open.
 4. ~~Plan and build v1.74 ⏸️ Stage pause + ↩ Undo.~~ Built, PR open.
-5. Plan and build v1.75 🎁 Gift codes between iPads.
+5. ~~Plan and build v1.75 🎁 Gift codes between iPads.~~ Built, PR open.
 6. Plan and build v1.76 🐾 The pet notices.
 7. Plan and build v1.77 📻 Creations in the room.
 8. Plan and build v1.78 🛠️ Code Lab level maker (best after seeing how the 11-year-old uses the Code Lab).

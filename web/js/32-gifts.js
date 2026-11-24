@@ -20,20 +20,21 @@ const others=p=>DB.profiles.filter(q=>q.id!==p.id);
 function giftWhat(g){return g.kind==='coins'?`🪙 ${g.n} coins`:esc(DECOR[g.type].name);}
 function giveModal(){
   const p=P(); if(!p) return; SFX.click();
-  if(!others(p).length){modal('🎁 Give a gift','<p style="text-align:center">Gifts go to another room on this tablet. There is only one room right now!</p>',[{text:'OK',cls:'pink'}]);return;}
   const stuff=allItems(p).filter(giftable), seen={};
   const tiles=GIFT_COINS.map(n=>`<button class="tile gv${p.coins<n?' poor':''}" data-gk="coins:${n}"><div class="tv gv-coin">🪙<b>${n}</b></div><div class="tn">${n} coins</div></button>`).join('')
     +stuff.filter(i=>!seen[i.type]&&(seen[i.type]=1)).map(i=>`<button class="tile gv" data-gk="decor:${i.uid}"><div class="tv">${decoPrev(i.type)}</div><div class="tn">${esc(DECOR[i.type].name)}</div></button>`).join('');
-  modal('🎁 What to give?',`<div class="grid gv-grid" id="gvGrid">${tiles}</div>${stuff.length?'':'<p class="gv-note">Put things away in 📦 My Stuff to give them too.</p>'}`,[{text:'✖ Not now',cls:'ghost'}]);
+  modal('🎁 What to give?',`${gcTop()}<div class="grid gv-grid" id="gvGrid">${tiles}</div>${stuff.length?'':'<p class="gv-note">Put things away in 📦 My Stuff to give them too.</p>'}`,[{text:'✖ Not now',cls:'ghost'}]);
+  gcWire(); // 📥 Type a gift code + 📮 Sent (section 69, v1.75)
   $('#gvGrid').onclick=e=>{const b=e.target.closest('[data-gk]');if(!b)return;const [kind,v]=b.dataset.gk.split(':');
     if(kind==='coins'&&p.coins<+v){needMore(p,+v);return;}
     giveTo(kind==='coins'?{kind,n:+v}:{kind,uid:v,type:allItems(p).find(i=>i.uid===v).type});};
 }
 function giveTo(g){
   const p=P(); SFX.click();
-  modal(`🎁 Who is it for?`,`<div class="gv-who" id="gvWho">${others(p).map(q=>`<button class="btn ghost" data-to="${q.id}" style="border-color:${ROOM_COLORS[q.color]||'var(--line)'}"><span>${esc(q.badge||'🐰')}</span>${esc(q.name)}</button>`).join('')}</div><p class="gv-note">Giving ${giftWhat(g)}</p>`,
+  modal(`🎁 Who is it for?`,`<div class="gv-who" id="gvWho">${gcWhoBtn()}${others(p).map(q=>`<button class="btn ghost" data-to="${q.id}" style="border-color:${ROOM_COLORS[q.color]||'var(--line)'}"><span>${esc(q.badge||'🐰')}</span>${esc(q.name)}</button>`).join('')}</div><p class="gv-note">Giving ${giftWhat(g)}</p>`,
     [{text:'⬅ Back',cls:'ghost',keep:1,on:giveModal}]);
-  $('#gvWho').onclick=e=>{const b=e.target.closest('[data-to]');if(!b)return;const q=DB.profiles.find(x=>x.id===b.dataset.to);if(!q)return;SFX.click();
+  $('#gvWho').onclick=e=>{if(e.target.closest('[data-gc]')){gcAsk(g);return;} // 📮 Another iPad (section 69)
+    const b=e.target.closest('[data-to]');if(!b)return;const q=DB.profiles.find(x=>x.id===b.dataset.to);if(!q)return;SFX.click();
     modal(`Give ${giftWhat(g)} to ${esc(q.name)}?`,`<div class="gv-ask">${g.kind==='coins'?`🪙 ${g.n}`:`<svg viewBox="${DECOR[g.type].box}">${DECOR[g.type].d()}</svg>`}<span>➜</span>${esc(q.badge||'🐰')}</div>`,
       [{text:'✖ No',cls:'ghost'},{text:'✔ Give it!',cls:'pink',on:()=>sendGift(p,q,g)}]);};
 }
