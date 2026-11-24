@@ -73,7 +73,7 @@ function petNotice(from,to){
     if(heart){p.pet.day=fpDay();petGive(p,1);petHeartsFloat(1);}
     if(!r.lines) return;
     const line=r.lines[Math.floor(Math.random()*r.lines.length)], text=k?`🐾 ${petName(p)}: ${line}`:line;
-    NT.last={i:r.i,n:r.n,text}; say(text);
+    NT.last={i:r.i,n:r.n,text}; say(text,k?'pet':''); // over the pet when there is one (v1.79)
   };
   petNotice.t=setTimeout(go,NT_WAIT);
 }

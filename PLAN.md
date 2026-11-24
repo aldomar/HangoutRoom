@@ -1367,6 +1367,20 @@ agreed before any code (only v1.72's is written so far).
     - Unsaved changes stay as a draft (✏️) until the app closes. 🗑️ asks first.
     - 2 stickers (Level Maker, Game Designer), a pet line, spoken lines for the list and the editor.
     - Save data: `code.mine[3]`, `code.makePay{day,n}`, `stats.made` (defaults in `normalize()`, no new save version).
+- ✅ **🪜 Basement (v1.79; the owner's request, 2026-11-24; built, PR open on `feature/basement`):**
+  - A fifth room, bare like the Studio, so there is room to show off all the prizes from the games.
+  - **Owner's answers:** named Basement; a new free look (Cozy Brick wall, Gray Carpet); a 🏆 Prizes view in My Stuff and free
+    display pieces; Little mode keeps out, like the Studio.
+  - **As built** (new `73-basement.js`):
+    - A ⬇️ tab at the bottom of her room and a place on the 🗺️ map under My Room. Nothing built in; pet, gifts, visitors, I Spy,
+      🌙 night and layouts work there like in the Studio.
+    - Decorate → 📦 My Stuff has 📦 All / 🏆 Prizes. Prizes lists every prize in any room or stored, with where it is; tapping one
+      brings it into the room on screen.
+    - The free 🗄️ Trophy Case (3 shelves) and Prize Podium, listed first in the Shop; they arrive at the side, clear of the buddy.
+      Shelves can now have several tops (`shelf.tops`).
+    - A Basement Builder sticker (5 things in the Basement). Spy Everywhere still needs any 4 rooms.
+    - Also (the owner's note): the pet talks in its own speech bubble, over the pet and pointing at it (`say(text, 'pet')`).
+    - Save data: `room5` (save version 38, plus defaults in `normalize()`). Older backups restore with an empty Basement.
 - ⏸️ **Parked:**
   - A picture lock for each room (idea 13): only if iPads get shared.
   - A level for each player in duels (idea 14, risk 8): only for family visits.

@@ -212,7 +212,9 @@ const GIFT_TIMELINE=[
   {v:'1.77',d:'2026-11-25',i:'📻',n:'Made by you',why:'So what you make and finish shows up in your rooms',
     news:['🤖 Finish a Code Lab level and a robot joins you in the Loft','📚 A Brain Shelf in the Backyard fills up as you finish levels','📻 Save some music and get a boombox that plays it']},
   {v:'1.78',d:'2026-11-26',i:'🛠️',n:'Level maker',why:'So you can make Code Lab levels for yourself and your family',
-    news:['🛠️ Make your own Code Lab levels in the new Make tab','💾 Solve your level yourself to save it','🏠 Play levels made in the other rooms']}
+    news:['🛠️ Make your own Code Lab levels in the new Make tab','💾 Solve your level yourself to save it','🏠 Play levels made in the other rooms']},
+  {v:'1.79',d:'2026-11-27',i:'🪜',n:'The Basement',why:'So you have a whole new room to show off everything you have won',
+    news:['🪜 A Basement under your room: tap the arrow at the bottom','🏆 My Stuff has a Prizes button that finds every prize you have','🗄️ A free Trophy Case and Prize Podium in the Shop','🐾 Your pet now talks in its own speech bubble']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

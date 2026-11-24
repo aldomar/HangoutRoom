@@ -48,7 +48,7 @@ window.androidBack=function(){
   if(cur==='runway'){rwBackKey();return true;} // the walk -> dressing room -> cards -> Closet (section 52)
   if(cur==='little'){ltBackKey();return true;} // a toy -> the 🧸 menu -> room (section 46)
   if(cur==='brain'){brBackKey();return true;} // a puzzle -> the Brain Games menu -> room
-  if(cur==='room'){if(roomNo!==1)goRoom(1);else show('profiles');return true;} // Loft, Backyard or Studio -> room -> profiles
+  if(cur==='room'){if(roomNo!==1)goRoom(1);else show('profiles');return true;} // Loft, Backyard, Studio or Basement -> room -> profiles
   return false;
 };
 document.addEventListener('visibilitychange',()=>{

@@ -20,9 +20,9 @@ function dayIso(s){
   const m=typeof s==='string'&&/^[A-Za-z]{3} ([A-Za-z]{3}) (\d{1,2}) (\d{4})$/.exec(s.trim()), i=m?DAY_MONS.indexOf(m[1]):-1;
   return i<0?s:`${m[3]}-${String(i+1).padStart(2,'0')}-${m[2].padStart(2,'0')}`;
 }
-const APP_VERSION='1.78';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.79';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
-const DB_VERSION=37;          // version of the save-data shape; bump only when the shape changes
+const DB_VERSION=38;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
 // pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
 const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:'',seenNew:'',lastBackup:0,setupDone:0}; // lastBackup (v1.30): when a backup was last saved on this device (ms) // seenNew (v1.22): last version whose What's New was shown
@@ -130,7 +130,9 @@ const MIGRATIONS={
   36: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.walk||typeof p.walk!=='object'||Array.isArray(p.walk))) p.walk={path:'meadow',finds:[]}; }); },
   // v1.60 Ball Field: ball {mode, bat{level, best, prizes[]}, catch{…}, derby{cur, done[], pay}} (section 59), stats.hits / homers /
   // catches / derbies. normalize() fills in and checks every part.
-  37: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.ball||typeof p.ball!=='object'||Array.isArray(p.ball))) p.ball={mode:'bat'}; }); }
+  37: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.ball||typeof p.ball!=='object'||Array.isArray(p.ball))) p.ball={mode:'bat'}; }); },
+  // v1.79 Basement: room5 {wall, floor, items} (the fifth room, bare; the wall is chosen on the first visit, section 73). normalize() fills it in too.
+  38: d=>{ if(Array.isArray(d.profiles)) d.profiles.forEach(p=>{ if(p&&typeof p==='object'&&(!p.room5||typeof p.room5!=='object'||Array.isArray(p.room5))) p.room5={wall:'',floor:'',items:[]}; }); }
 };
 
 // Hair ids from before v1.11 (one closet item per color) -> the color they had. They stay readable forever:

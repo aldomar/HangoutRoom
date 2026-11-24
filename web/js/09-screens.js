@@ -115,12 +115,13 @@ let decorating=false,decoTab='mine',drag=null;
 // floor and items; My Stuff (items with placed:false) is shared, so a stored thing can be placed in either room.
 // Since v1.23 there is a third: 3 = the Backyard (p.room3, drawn in 26-backyard.js), and since v1.40 a fourth:
 // 4 = the Studio (p.room4, bare, section 41). rooms(p) lists them all. Getting around: the edge tabs and 🗺️ map (section 41).
+// Since v1.79 a fifth: 5 = the Basement (p.room5, bare like the Studio, section 73).
 let roomNo=1;
-const curRoom=p=>roomNo===4?p.room4:roomNo===3?p.room3:roomNo===2?p.room2:p.room;
-const rooms=p=>[p.room,p.room2,p.room3,p.room4];
+const curRoom=p=>roomNo===5?p.room5:roomNo===4?p.room4:roomNo===3?p.room3:roomNo===2?p.room2:p.room;
+const rooms=p=>[p.room,p.room2,p.room3,p.room4,p.room5];
 const allItems=p=>rooms(p).reduce((a,r)=>a.concat(r.items),[]);
 const ROOM_NAMES={1:'Room',2:'Loft',3:'Backyard',4:'Studio'};
-function goRoom(n){if(lockOn()&&!LOCK_ROOMS.includes(n))n=1;roomNo=n;drag=null;SFX.whoosh();if(n===4)studioStart(P());renderRoom();if(decorating)renderDecoGrid();else if(n===4)studioHi();}
+function goRoom(n){if(lockOn()&&!LOCK_ROOMS.includes(n))n=1;roomNo=n;drag=null;SFX.whoosh();if(n===4)studioStart(P());if(n===5)baseStart(P());renderRoom();if(decorating)renderDecoGrid();else if(n===4)studioHi();else if(n===5)baseHi();}
 function mascotG(p){return `<g id="mascotG" class="mascot"><ellipse cx="500" cy="604" rx="62" ry="12" fill="#00000030"/>${mascotSVG(p.look,null,'x="420" y="396" width="160" height="216"')}</g>`;}
 function renderRoom(){
   const p=P(); if(!p) return;
@@ -128,7 +129,7 @@ function renderRoom(){
   let s=roomNo===3?yardBack(R):`<rect width="1000" height="470" fill="${W.fill}"/><rect width="1000" height="470" fill="url(#${W.pat})"/>`; // the Backyard: sky + fence (section 26)
   const G=roomNo===3?FLOORS[yardFloor(R)]:F;
   s+=`<rect y="470" width="1000" height="230" fill="${G.fill}"/><rect y="470" width="1000" height="230" fill="url(#${G.pat})"/><rect y="458" width="1000" height="16" fill="#00000026"/>`;
-  const fur=roomNo===4?studioFurniture(true):roomNo===3?yardFurniture(true):roomNo===2?loftFurniture(true):furniture(true);
+  const fur=roomNo>=4?studioFurniture(true):roomNo===3?yardFurniture(true):roomNo===2?loftFurniture(true):furniture(true);
   s+=fur.wall; // windows, shelves and signs on the wall; furniture standing on the floor is sorted below (v1.39)
   s+=nightBack(p); // 🌙 the night window, behind the room's things (section 31, v1.32)
   const items=R.items.filter(i=>i.placed&&DECOR[i.type]);
@@ -153,11 +154,16 @@ function renderRoom(){
   updateCoins();
   if(PP.on) ppRedraw(); // 🙈🎾 a pet game keeps going after a redraw (section 55, v1.54)
 }
-function say(text){
+// The speech bubble. who 'pet' (v1.79) puts it over the pet, its tail pointing down at it, reaching right (away from the
+// buddy) and kept inside the picture; with no pet in the room it is the buddy's bubble, over the buddy's head.
+function say(text,who){
   tell(text); // read aloud when 🔊 Read to me is on (section 65)
   const old=$('#bubble'); if(old) old.remove();
-  const w=Math.max(120,Math.round(text.length*11+40)), x=500-w/2;
-  roomSvg.insertAdjacentHTML('beforeend',`<g id="bubble" style="pointer-events:none"><rect x="${x}" y="318" width="${w}" height="52" rx="26" fill="#fff" stroke="#2b2235" stroke-width="4"/><path d="M488 368 L500 392 L514 368" fill="#fff" stroke="#2b2235" stroke-width="4" stroke-linejoin="round"/><rect x="484" y="362" width="34" height="8" fill="#fff"/><text x="500" y="352" text-anchor="middle" font-size="22" font-weight="800" fill="#2b2235">${esc(text)}</text></g>`);
+  const w=Math.max(120,Math.round(text.length*11+40)), pet=who==='pet'&&!!petKind(P())&&!!$('#petG');
+  const tx=pet?PET_SPOT.x:500, y=pet?PET_SPOT.y-174:318, x=pet?Math.max(10,Math.min(990-w,tx-44)):500-w/2;
+  roomSvg.insertAdjacentHTML('beforeend',`<g id="bubble" data-who="${pet?'pet':'buddy'}" style="pointer-events:none"><rect x="${x}" y="${y}" width="${w}" height="52" rx="26" fill="#fff" stroke="#2b2235" stroke-width="4"/>`
+    +`<path d="M${tx-12} ${y+50} L${tx} ${y+74} L${tx+14} ${y+50}" fill="#fff" stroke="#2b2235" stroke-width="4" stroke-linejoin="round"/><rect x="${tx-16}" y="${y+44}" width="34" height="8" fill="#fff"/>`
+    +`<text x="${x+w/2}" y="${y+34}" text-anchor="middle" font-size="22" font-weight="800" fill="#2b2235">${esc(text)}</text></g>`);
   clearTimeout(say.t); say.t=setTimeout(()=>{const b=$('#bubble');if(b)b.remove();},2600);
 }
 function mascotTap(){
@@ -225,19 +231,23 @@ roomSvg.addEventListener('pointerup',endDrag);
 roomSvg.addEventListener('pointercancel',endDrag);
 function toFront(R,it){const k=R.items.indexOf(it);if(k>=0)R.items.splice(k,1);R.items.push(it);} // drawn last = in front of its layer
 // Shelves: the top of shelf s is at y = s.y - top, from s.x - w/2 to s.x + w/2. Nothing about it is saved.
+// (v1.79) A shelf can have several tops (shelf.tops, e.g. the Basement's Trophy Case); shelfTops() lists them.
 const standing=i=>i.placed&&DECOR[i.type]&&!DECOR[i.type].wall&&!DECOR[i.type].flat;
-function onShelf(s){const S=DECOR[s.type].shelf, top=s.y-S.top;
-  return curRoom(P()).items.filter(i=>standing(i)&&Math.abs(i.y-top)<3&&Math.abs(i.x-s.x)<=S.w/2+4);}
+const shelfTops=S=>S.tops||[S.top];
+const onTop=(i,s,S,pad)=>Math.abs(i.x-s.x)<=S.w/2+pad&&shelfTops(S).some(t=>Math.abs(i.y-(s.y-t))<3);
+function onShelf(s){const S=DECOR[s.type].shelf;
+  return curRoom(P()).items.filter(i=>standing(i)&&onTop(i,s,S,4));}
 // Where a standing thing is sorted front to back: on a standing shelf (a pedestal, v1.50) it goes just in front of the
 // shelf instead of by its own y (which is higher up, so it would be drawn behind it).
 function rideY(i,items){if(!standing(i)||DECOR[i.type].shelf) return i.y;
-  for(const s of items){const S=s!==i&&standing(s)&&DECOR[s.type].shelf; if(S&&Math.abs(i.y-(s.y-S.top))<3&&Math.abs(i.x-s.x)<=S.w/2+4) return s.y+0.01;}
+  for(const s of items){const S=s!==i&&standing(s)&&DECOR[s.type].shelf; if(S&&onTop(i,s,S,4)) return s.y+0.01;}
   return i.y;}
 function snapToShelf(it){ // drop a standing thing near a shelf top and it sits on it
   if(!standing(it)||DECOR[it.type].shelf) return false; let best=null, bd=31; // a pedestal never sits on a shelf (v1.50)
   for(const s of curRoom(P()).items){const S=s!==it&&s.placed&&DECOR[s.type]&&DECOR[s.type].shelf; if(!S) continue;
-    const d=Math.abs(it.y-(s.y-S.top)); if(d<bd&&Math.abs(it.x-s.x)<=S.w/2){bd=d;best=s;}}
-  if(!best) return false; it.y=best.y-DECOR[best.type].shelf.top; return true;
+    if(Math.abs(it.x-s.x)>S.w/2) continue;
+    for(const t of shelfTops(S)){const d=Math.abs(it.y-(s.y-t)); if(d<bd){bd=d;best={s,t};}}}
+  if(!best) return false; it.y=best.s.y-best.t; return true;
 }
 
 function enterDecorate(){decorating=true;$('#decoPanel').classList.remove('hidden');$('#decoBtn').innerHTML='✔<span> Done</span>';renderRoom();renderDecoGrid();SFX.click();}
@@ -250,15 +260,17 @@ function renderDecoGrid(){
   const p=P(); if(!p) return;
   $$('#decoTabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.dt===decoTab));
   let h='';
-  if(decoTab==='mine'){
+  if(decoTab==='mine'&&MINE.prizes){
+    h=prizeChips()+prizeGrid(p); // 🏆 every prize, wherever it is (section 73, v1.79)
+  } else if(decoTab==='mine'){
     const stored=allItems(p).filter(i=>!i.placed&&DECOR[i.type]), counts={};
     stored.filter(i=>!DECOR[i.type].art).forEach(i=>counts[i.type]=(counts[i.type]||0)+1);
     const keys=Object.keys(counts);
     // posters are each different, so they get one tile each
     h=stored.filter(i=>DECOR[i.type].art).map(i=>`<button class="tile" data-place-uid="${i.uid}"><div class="tv"><svg viewBox="${DECOR[i.type].box}">${DECOR[i.type].d(i)}</svg></div><div class="tn">${DECOR[i.type].name}</div></button>`).join('')
       +keys.map(k=>`<button class="tile" data-place="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${DECOR[k].name}</div><div class="tp cnt">×${counts[k]}</div></button>`).join('');
-    h=giveTile(p)+h; // 🎁 Give (section 32)
-    if(h===giveTile(p)) h+=`<div class="empty">Nothing stored right now! Drag things from your room down here to put them away, or get new stuff in the Shop 🛍️</div>`;
+    h=prizeChips()+giveTile(p)+h; // 📦 All / 🏆 Prizes (section 73) + 🎁 Give (section 32)
+    if(h===prizeChips()+giveTile(p)) h+=`<div class="empty">Nothing stored right now! Drag things from your room down here to put them away, or get new stuff in the Shop 🛍️</div>`;
   } else if(decoTab==='shop'){ // seasonal things (v1.17) have their own tab
     const yd=([k,d])=>d.first||roomNo===3&&d.yard?0:1; // the Backyard lists outdoor things first (v1.23); first:1 = always first (v1.40)
     const tf=themeFilter('shop',Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award&&!d.season).sort((a,b)=>yd(a)-yd(b)).map(([k,d])=>['decor:'+k,d])); // 🔎 theme chips + ⭐ dreams (section 33)

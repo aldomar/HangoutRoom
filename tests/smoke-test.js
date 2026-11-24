@@ -1108,7 +1108,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('146 stickers on 8 pages (2 for 🛠️ the level maker since v1.78, 1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===146&&new Set(STICKERS.map(s=>s.id)).size===146&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('147 stickers on 8 pages (1 for 🪜 the Basement since v1.79, 2 for 🛠️ the level maker since v1.78, 1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===147&&new Set(STICKERS.map(s=>s.id)).size===147&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1514,7 +1514,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   console.log('Backyard (v1.23)');
   await ev(`closeModal();stkPaused=true;P().easy=false;P().coins=500;applyEasy();show('room');goRoom(1)`); await sleep(200);
   const goBtns=()=>ev(`[...document.querySelectorAll('#roomTabs [data-go]')].map(b=>b.className.split('rt-')[1]+':'+b.dataset.go).join('|')`);
-  check('her room has ⬆️ Loft, ⬅️ Backyard and ➡️ Studio tabs', (await goBtns())==='up:2|left:3|right:4', await goBtns());
+  check('her room has ⬆️ Loft, ⬅️ Backyard, ➡️ Studio and ⬇️ Basement tabs', (await goBtns())==='up:2|left:3|right:4|down:5', await goBtns());
   await ev(`document.querySelector('#roomTabs [data-go="3"]').click()`); await sleep(250); await shot('F01-backyard');
   check('🌳 Yard opens the Backyard', await ev(`roomNo===3&&cur==='room'&&document.querySelector('#roomTitle').textContent.endsWith("'s Backyard")`));
   check('the Backyard has one ➡️ tab back to her room', (await goBtns())==='right:1', await goBtns());
@@ -2778,7 +2778,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   console.log('Studio + getting around (v1.40)');
   await ev(`(()=>{closeModal();exitDecorate(true);stkPaused=true;const p=P();p.easy=false;applyEasy();p.night={};p.coins=100;p.dream='';themePick.shop='all';p.room4={wall:'',floor:'',items:[]};save();show('room');goRoom(1);})()`); await sleep(200);
   const stTabs=()=>ev(`[...document.querySelectorAll('#roomTabs [data-go]')].map(b=>b.className.split('rt-')[1]+':'+b.dataset.go).join('|')`);
-  check('her room: ⬆️ Loft, ⬅️ Backyard and ➡️ Studio tabs, each with a spoken name', (await stTabs())==='up:2|left:3|right:4'&&await ev(`[...document.querySelectorAll('#roomTabs .rtab')].every(b=>/^Go to the /.test(b.getAttribute('aria-label')))`), await stTabs());
+  check('her room: ⬆️ Loft, ⬅️ Backyard, ➡️ Studio and ⬇️ Basement tabs, each with a spoken name', (await stTabs())==='up:2|left:3|right:4|down:5'&&await ev(`[...document.querySelectorAll('#roomTabs .rtab')].every(b=>/^Go to the /.test(b.getAttribute('aria-label')))`), await stTabs());
   check('the tabs are at least 48 px and sit inside the screen', await ev(`[...document.querySelectorAll('#roomTabs .rtab')].every(b=>{const r=b.getBoundingClientRect();return r.width>=48&&r.height>=48&&r.left>=0&&r.right<=innerWidth;})`));
   check('the left tab is clear of the 🌙 and 📷 buttons', await ev(`(()=>{const t=document.querySelector('.rt-left').getBoundingClientRect(),s=document.querySelector('#roomSnapBtn').getBoundingClientRect();return t.top>=s.bottom;})()`));
   await shot('S01-room-tabs');
@@ -2806,7 +2806,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`for(const k of ['lava','plant','disco','eggChair'])P().room4.items.push(Object.assign({uid:'st'+k,type:k,placed:true},spot(k)));exitDecorate()`); await sleep(150);
   await shot('S03-studio-decorated');
   check('5 things in the Studio earn ✨ Studio Star', await ev(`stkDone(P(),STICKERS.find(s=>s.id==='studio5'))&&STICKERS.find(s=>s.id==='studio5').page==='room'`));
-  check('allItems and rooms() include the Studio', await ev(`rooms(P()).length===4&&allItems(P()).some(i=>i.uid==='stP')`));
+  check('allItems and rooms() include the Studio', await ev(`rooms(P()).length===5&&allItems(P()).some(i=>i.uid==='stP')`));
   // night mode: the Studio has no window, so no Loft window appears
   await ev(`document.querySelector('#nightBtn').click()`); await sleep(150);
   check('🌙 works in the Studio, without the Loft window', await ev(`P().night['4']===true&&!!document.querySelector('#roomSvg .night')&&!document.querySelector('#roomSvg circle[cx="340"][cy="140"]')`));
@@ -2825,7 +2825,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('the Studio has its own layouts', await ev(`Array.isArray(P().presets[4])&&P().presets[4].length===3&&(()=>{enterDecorate();document.querySelector('[data-dt=layouts]').click();const n=document.querySelectorAll('#decoGrid *').length;exitDecorate();return n>0;})()`));
   // 🗺️ the map
   await ev(`document.querySelector('#mapBtn').click()`); await sleep(150);
-  check('🗺️ shows every room, the Studio marked ⭐ Here', await ev(`document.querySelectorAll('#modalBody [data-map]').length===4&&document.querySelector('#modalBody .hm-room.on').dataset.map==='4'&&document.querySelector('#modalBody .hm-room.on').textContent.includes('Here')`));
+  check('🗺️ shows every room, the Studio marked ⭐ Here', await ev(`document.querySelectorAll('#modalBody [data-map]').length===5&&document.querySelector('#modalBody .hm-room.on').dataset.map==='4'&&document.querySelector('#modalBody .hm-room.on').textContent.includes('Here')`));
   check('the map buttons are big enough to tap', await ev(`[...document.querySelectorAll('#modalBody .hm-room')].every(b=>{const r=b.getBoundingClientRect();return r.width>=48&&r.height>=48;})`));
   await shot('S05-map');
   await ev(`document.querySelector('[data-map="3"]').click()`); await sleep(200);
@@ -5847,7 +5847,79 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
       const r=JSON.parse(JSON.stringify(P()));r.code.mine=[{id:'z',map:['F.C'],max:4,moveMax:0,sol:'RR',move:''},'x',P().code.mine[0]];normalize(r);
       return q.code.mine.join()===',,'&&q.code.makePay.n===0&&q.stats.made===0&&r.code.mine[0]===null&&r.code.mine[1]===null&&!!r.code.mine[2];})()`));
     await ev(`closeModal();DB.profiles=DB.profiles.filter(q=>q.id!=='lmTestRoom');(()=>{const q=JSON.parse(window._v78),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();CL.mk=false;LM.drafts={};save();show('room')`);
-    check('v1.78 is in the Gift Story and the app says 1.78', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.78')&&APP_VERSION==='1.78'`));
+    check('v1.78 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.78')`));
+  }
+
+  console.log('Basement (v1.79)');
+  {
+    const tabs=()=>ev(`[...document.querySelectorAll('#roomTabs [data-go]')].map(b=>b.className.split('rt-')[1]+':'+b.dataset.go).join('|')`);
+    await ev(`closeModal();stkPaused=true;window._v79=JSON.stringify(P());{const p=P();p.room5={wall:'',floor:'',items:[]};p.easy=false;p.night={};p.little.lock=false;}applyEasy();show('room');goRoom(1)`); await sleep(200);
+    check('her room has a ⬇️ tab to the Basement, inside the screen, with a spoken name', await ev(`(b=>!!b&&b.getAttribute('aria-label')==='Go to the Basement'&&(r=>r.bottom<=innerHeight&&r.right<=innerWidth&&r.width>=48)(b.getBoundingClientRect()))(document.querySelector('#roomTabs .rt-down[data-go="5"]'))`));
+    await shot('BS1-room-tabs');
+    await ev(`document.querySelector('#roomTabs [data-go="5"]').click()`); await sleep(250);
+    check('the first visit: the Basement with a Cozy Brick wall and Gray Carpet, nothing built in', await ev(`roomNo===5&&document.querySelector('#roomTitle').textContent.endsWith("'s Basement")&&P().room5.wall==='brick'&&P().room5.floor==='grayCarpet'&&!document.querySelector('#roomSvg [data-piece]')`));
+    check('…with a friendly nudge to fill it', await ev(`/Basement/.test((document.querySelector('#bubble')||{}).textContent||'')`));
+    check('the Basement has one ⬆️ tab back to her room', (await tabs())==='up:1', await tabs());
+    await shot('BS2-first-visit');
+    await ev(`document.querySelector('#mapBtn').click()`); await sleep(150);
+    check('🗺️ shows 5 rooms, the Basement under her room, marked ⭐ Here', await ev(`document.querySelectorAll('#modalBody [data-map]').length===5&&(b=>b.classList.contains('on')&&b.style.gridRow.startsWith('3')&&b.style.gridColumn.startsWith('2'))(document.querySelector('#modalBody [data-map="5"]'))`));
+    await shot('BS3-map'); await ev(`closeModal()`);
+    check('Android Back from the Basement goes to her room', await ev(`window.androidBack()===true&&roomNo===1`));
+    await ev(`goRoom(5)`); await sleep(100);
+    check('the brick wall and gray carpet are free in every indoor room, not in the Backyard', await ev(`WALLS.brick.price===0&&FLOORS.grayCarpet.price===0&&!WALLS.brick.yard&&!FLOORS.grayCarpet.yard`));
+    // free display pieces
+    await ev(`themePick.shop='all';enterDecorate();document.querySelector('[data-dt=shop]').click()`); await sleep(150);
+    check('the Shop lists the free Trophy Case and Prize Podium first', await ev(`(t=>t.slice(0,4).includes('prizeCase')&&t.slice(0,4).includes('prizePodium'))([...document.querySelectorAll('#decoGrid [data-buy]')].map(b=>b.dataset.buy))&&DECOR.prizeCase.price===0&&DECOR.prizePodium.price===0`));
+    check('…their drawings are strict XML', await ev(`['prizeCase','prizePodium'].every(k=>!new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg">'+DECOR[k].d({})+'</svg>','image/svg+xml').querySelector('parsererror'))`));
+    await ev(`document.querySelector('#decoGrid [data-buy=prizeCase]').click()`); await sleep(150); await ev(`closeModal()`);
+    check('getting the Trophy Case puts it in the Basement, at the side (clear of the buddy)', await ev(`P().room5.items.filter(i=>i.type==='prizeCase'&&i.placed&&i.x+140<420).length===1`));
+    // 🏆 Prizes
+    await ev(`(()=>{const p=P();p.room.items.push({uid:'bsT1',type:'trophyGold',placed:true,x:850,y:660},{uid:'bsT2',type:'gloveSilver',placed:false,x:0,y:0});p.room3.items.push({uid:'bsT3',type:'potStar',placed:true,x:300,y:640});save();})();
+      document.querySelector('[data-dt=mine]').click()`); await sleep(150);
+    check('📦 My Stuff has 📦 All / 🏆 Prizes chips', await ev(`!!document.querySelector('#decoGrid [data-mine-view=all].on')&&!!document.querySelector('#decoGrid [data-mine-view=prizes]')`));
+    await ev(`document.querySelector('#decoGrid [data-mine-view=prizes]').click()`); await sleep(150);
+    check('🏆 Prizes lists every prize, wherever it is, with where it is', await ev(`(()=>{const t=id=>document.querySelector('#decoGrid [data-prize="'+id+'"]');return MINE.prizes&&!!t('bsT1')&&!!t('bsT2')&&(DECOR.potStar?!!t('bsT3'):true)
+      &&t('bsT1').textContent.includes('🏠')&&t('bsT2').textContent.includes('📦')&&!document.querySelector('#decoGrid [data-prize] ~ [data-buy]')&&[...document.querySelectorAll('#decoGrid [data-prize]')].every(b=>DECOR[allItems(P()).find(i=>i.uid===b.dataset.prize).type].award);})()`));
+    await shot('BS4-prizes');
+    await ev(`document.querySelector('#decoGrid [data-prize=bsT1]').click()`); await sleep(150);
+    check('tapping one brings it into the Basement (out of her room)', await ev(`P().room5.items.some(i=>i.uid==='bsT1'&&i.placed)&&!P().room.items.some(i=>i.uid==='bsT1')&&document.querySelector('#decoGrid [data-prize=bsT1]').textContent.includes('✔')`));
+    await ev(`document.querySelector('#decoGrid [data-prize=bsT2]').click()`); await sleep(100);
+    check('…a stored one too', await ev(`P().room5.items.some(i=>i.uid==='bsT2'&&i.placed)`));
+    // the Trophy Case's 3 shelves
+    await ev(`(()=>{const p=P(),c=p.room5.items.find(i=>i.type==='prizeCase');c.x=190;c.y=660;
+      const t=p.room5.items.find(i=>i.uid==='bsT1'),g=p.room5.items.find(i=>i.uid==='bsT2');t.x=130;t.y=660-165+12;g.x=250;g.y=660-310-20;
+      window._snap=[snapToShelf(t),snapToShelf(g)];renderRoom();})()`); await sleep(100);
+    check('the Trophy Case has 3 shelves: dropped near one, a prize sits on it', await ev(`(()=>{const p=P(),t=p.room5.items.find(i=>i.uid==='bsT1'),g=p.room5.items.find(i=>i.uid==='bsT2');return _snap.every(Boolean)&&t.y===495&&g.y===350;})()`));
+    check('…they move with the case, and are drawn in front of it', await ev(`(()=>{const p=P(),c=p.room5.items.find(i=>i.type==='prizeCase'),r=onShelf(c).map(i=>i.uid).sort().join();return r==='bsT1,bsT2'&&rideY(p.room5.items.find(i=>i.uid==='bsT1'),p.room5.items)>c.y;})()`));
+    check('…and plain one-top shelves still work', await ev(`shelfTops(DECOR.shelfL.shelf).join()==='44'&&shelfTops(DECOR.prizeCase.shelf).join()==='20,165,310'`));
+    await ev(`exitDecorate()`); await sleep(150); await shot('BS5-trophy-case');
+    await ev(`document.querySelector('#nightBtn').click()`); await sleep(150);
+    check('🌙 works in the Basement', await ev(`P().night['5']===true&&!!document.querySelector('#roomSvg .night')`));
+    await ev(`document.querySelector('#nightBtn').click()`); await sleep(100);
+    check('the Basement has its own layouts', await ev(`Array.isArray(P().presets[5])&&P().presets[5].length===3`));
+    // 🧸 Little mode keeps out
+    await ev(`P().little.lock=true;LOCK.open='';goRoom(1)`); await sleep(100);
+    check('🧸 Little mode: no Basement tab, and it can\'t be opened', await ev(`!document.querySelector('#roomTabs [data-go="5"]')&&(goRoom(5),roomNo===1)`));
+    await ev(`P().little.lock=false;renderRoom()`);
+    check('a Basement Builder sticker; Spy Everywhere still needs 4 rooms', await ev(`!!STICKERS.find(s=>s.id==='basement5')&&(s=>s.need===4&&/4 rooms/.test(s.hint))(STICKERS.find(s=>s.id==='spyAll'))`));
+    check('saved: save version 38; older rooms and backups get an empty Basement; night and layouts take room 5', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));delete q.room5;q.night={'5':true,'9':true};delete q.presets[5];normalize(q);
+      const d={version:37,profiles:[{name:'x'}]};MIGRATIONS[38](d);
+      return DB_VERSION===38&&q.room5.wall===''&&q.room5.items.length===0&&JSON.stringify(q.night)==='{"5":true}'&&q.presets[5].length===3&&d.profiles[0].room5.items.length===0;})()`));
+    await ev(`closeModal();(()=>{const q=JSON.parse(window._v79),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();MINE.prizes=false;save();goRoom(1)`);
+    // 🐾 the pet's own speech bubble
+    const bub=()=>ev(`(b=>b?{who:b.dataset.who,tip:(m=>m&&[+m[1],+m[2]])(b.querySelector('path').getAttribute('d').match(/L(-?[\\d.]+) (-?[\\d.]+)/)),box:(r=>[+r.getAttribute('x'),+r.getAttribute('y'),+r.getAttribute('width')])(b.querySelector('rect'))}:null)(document.querySelector('#bubble'))`);
+    await ev(`window._pk=P().pet.kind;P().pet.kind='bat';show('room');goRoom(1);petSay('Yay, a pat! 💜')`); await sleep(100);
+    let b=await bub();
+    check('🐾 a pet line: the bubble points down at the pet, not the buddy', !!b&&b.who==='pet'&&b.tip[0]===await ev('PET_SPOT.x')&&b.tip[1]<await ev('PET_SPOT.y')-80&&b.tip[1]>await ev('PET_SPOT.y')-120, JSON.stringify(b));
+    await shot('BS6-pet-bubble');
+    await ev(`say('🐾 Nibbles: You scored 3 goals and saved 2 penalties! What a match! ⚽','pet')`); b=await bub();
+    check('…a long line stays inside the picture', b.box[0]>=0&&b.box[0]+b.box[2]<=1000&&b.tip[0]>b.box[0]+10&&b.tip[0]<b.box[0]+b.box[2]-10, JSON.stringify(b));
+    await ev(`say('Hi! 💜')`); b=await bub();
+    check('the buddy still talks in its own bubble', b.who==='buddy'&&b.tip[0]===500&&b.tip[1]===392, JSON.stringify(b));
+    await ev(`P().pet.kind='';renderRoom();say('🐾 hello','pet')`); b=await bub();
+    await ev(`P().pet.kind=window._pk;save();renderRoom()`);
+    check('no pet yet: the line goes in the buddy bubble', b.who==='buddy', JSON.stringify(b));
+    check('v1.79 is in the Gift Story and the app says 1.79', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.79')&&APP_VERSION==='1.79'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

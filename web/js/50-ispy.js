@@ -179,5 +179,5 @@ $('#spyLvl').onclick=()=>{const p=P(); if(!p||p.easy) return; p.spy.lvl=p.spy.lv
 STICKERS.push(
   stk('spy1','room','🔍','Sharp Eyes','circle','Finish a round of 🔍 I Spy (the 🔍 button in a room)',1,p=>p.stats.spyRounds||0),
   stk('spy100','room','🕵️','Super Spy','star','Find 100 things in 🔍 I Spy',100,p=>p.stats.spied||0,1),
-  stk('spyAll','room','🗺️','Spy Everywhere','heart','Finish a round of 🔍 I Spy in all 4 rooms',4,p=>p.spy.rooms.length,1)
+  stk('spyAll','room','🗺️','Spy Everywhere','heart','Finish a round of 🔍 I Spy in 4 rooms',4,p=>p.spy.rooms.length,1)
 );
