@@ -2167,7 +2167,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   for(const [w,h,easy] of [[360,740,false],[360,740,true],[412,860,false]]){
     await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:true});
     await ev(`P().easy=${easy};P().name='Testy';goRoom(2);applyEasy()`); await sleep(300);
-    const bar=await ev(`(()=>{const t=document.querySelector('#roomTitle'),bs=[...document.querySelectorAll('#scr-room .topbar .btn')].map(b=>b.getBoundingClientRect());return {tw:Math.round(t.getBoundingClientRect().width),full:t.scrollWidth<=t.clientWidth,minB:Math.round(Math.min(...bs.map(b=>b.width))),fit:bs.every(b=>b.right<=innerWidth)};})()`);
+    const bar=await ev(`(()=>{const t=document.querySelector('#roomTitle'),bs=[...document.querySelectorAll('#scr-room .topbar .btn')].map(b=>b.getBoundingClientRect()).filter(r=>r.width>0);return {tw:Math.round(t.getBoundingClientRect().width),full:t.scrollWidth<=t.clientWidth,minB:Math.round(Math.min(...bs.map(b=>b.width))),fit:bs.every(b=>b.right<=innerWidth)};})()`);
     check(`phone ${w}px${easy?' (Easy)':''}: the room name shows in full and the buttons are 48 px+`, bar.full&&bar.tw>=150&&bar.minB>=48&&bar.fit, bar);
     if(w===360&&!easy) await shot('J01-phone-room-bar');
   }
@@ -5348,7 +5348,117 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`delete window.AndroidBridge;window._spWv=webVoice;webVoice=null;sayBtns()`);
     check('no voice on the device: no 🔊 buttons', await ev(`[...document.querySelectorAll('.say-btn')].every(b=>b.classList.contains('hidden'))`));
     await ev(`webVoice=window._spWv;sayBtns();closeModal();{const q=JSON.parse(window._spSaved),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);}DB.settings.sound=window._spSound;save();show('room');goRoom(1);applyEasy()`);
-    check('v1.70 is in the Gift Story and the app says 1.70', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.70')&&APP_VERSION==='1.70'`));
+    check('v1.70 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.70')`));
+  }
+
+  console.log('Little mode (v1.71)');
+  {
+    const vis=sel=>ev(`(e=>!!e&&e.offsetParent!==null&&getComputedStyle(e).display!=='none')(document.querySelector(${JSON.stringify(sel)}))`);
+    const press=async(ms)=>{await ev(`document.querySelector('#lockBtn').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:1}))`);await sleep(ms);
+      await ev(`(b=>{b.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,pointerId:1}));b.dispatchEvent(new MouseEvent('click',{bubbles:true}));})(document.querySelector('#lockBtn'))`);await sleep(150);};
+    await ev(`closeModal();stkPaused=true;window._lkSaved=JSON.stringify(P());window._lkSound=DB.settings.sound;window._lkPin=DB.settings.pin;DB.settings.pin='';
+      window._said=[];window.AndroidBridge={speak(t){window._said.push(t);}};DB.settings.sound=true;show('room');goRoom(1)`); await sleep(150);
+    // save data
+    check('saved: Little mode is on for Little rooms and off for the others (older saves too)', await ev(`(()=>{const mk=o=>{const q=JSON.parse(JSON.stringify(P()));Object.assign(q,o);delete q.little.lock;normalize(q);return q;};
+      return mk({band:'little',easy:true}).little.lock===true&&mk({band:'easy',easy:true}).little.lock===false&&mk({band:'normal',easy:false}).little.lock===false
+        &&(q=>{q.little.lock=true;q.band='normal';q.easy=false;normalize(q);return q.little.lock===true;})(JSON.parse(JSON.stringify(P())));})()`));
+    check('changing the level to Little turns it on, and away from Little turns it off', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));q.band='normal';q.easy=false;const r=[];
+      setBand(q,'little');r.push(q.little.lock);setBand(q,'easy');r.push(!q.little.lock);q.little.lock=true;setBand(q,'normal');r.push(q.little.lock);return r.every(x=>x);})()`));
+    // locked
+    await ev(`setBand(P(),'little');LOCK.open='';show('room');goRoom(1)`); await sleep(150);
+    check('a Little room is locked: only 🧸 Play and 🔒 in the top bar', await ev(`document.body.classList.contains('locked')&&lockOn()`)&&await vis('#littleBtn')&&await vis('#lockBtn')
+      &&!(await vis('#mapBtn'))&&!(await vis('#decoBtn'))&&!(await vis('#setBtn'))&&!(await vis('#stkBtn'))&&!(await vis('#spyBtn'))&&!(await vis('#roomSnapBtn')));
+    check('…🌙 and 🔊 stay', await vis('#nightBtn')&&await vis('#soundBtn'));
+    check('…the 🔒 is 48 px', await ev(`(r=>r.width>=48&&r.height>=48)(document.querySelector('#lockBtn').getBoundingClientRect())`));
+    await shot('LK1-locked-room');
+    check('only one room arrow: the Backyard', await ev(`(a=>a.length===1&&a[0]==='3')([...document.querySelectorAll('#roomTabs [data-go]')].map(b=>b.dataset.go))`));
+    check('the Loft and the Studio stay shut (goRoom), the Backyard opens', await ev(`(()=>{goRoom(2);const a=roomNo;goRoom(4);const b=roomNo;goRoom(3);const c=roomNo;goRoom(1);return a===1&&b===1&&c===3;})()`));
+    const out=await ev(`(()=>{const bad=[];['art','cards','stage','code','music','dance','runway','stickers','about','profiles'].forEach(n=>{show(n);if(cur!=='room')bad.push(n);});return bad;})()`);
+    check('every other screen sends her back to the room (rooms list, Art, Stage, Code Lab, Music, About…)', out.length===0, out);
+    const ins=await ev(`(()=>{const bad=[];LOCK_SCREENS.forEach(n=>{show(n);if(cur!==n)bad.push(n);});show('room');return bad;})()`);
+    check('…and the safe ones open: Play, fidgets, Closet, sports, Brain Games, Garden, Walks', ins.length===0, ins);
+    check('the desk sign says 🧸 Play, and the corkboard has no sign', await ev(`document.querySelector('#roomSvg [data-hot=desk]').textContent.includes('Play')&&!document.querySelector('#roomSvg [data-hot=desk]').textContent.includes('Art')&&!document.querySelector('#roomSvg [data-hot=photo]').textContent.includes('Photocards')`));
+    await ev(`P().speak=true;window._said=[];document.querySelector('#roomSvg [data-hot=photo]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(100);
+    check('the corkboard only wiggles: nothing opens and nothing is said', await ev(`cur==='room'&&document.querySelector('#roomSvg [data-hot=photo]').classList.contains('lk-wig')&&window._said.length===0`), await ev(`JSON.stringify(window._said)`));
+    await ev(`window._said=[];document.querySelector('#roomSvg [data-hot=desk]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(100);
+    check('the desk opens 🧸 Play (Coloring, Sound Mat, Peekaboo) and says its line', await ev(`cur==='little'&&LT.view==='menu'&&window._said.length===1&&window._said[0]===spkClean(SPK_FIXED.littleMenu)`), await ev(`JSON.stringify(window._said)`));
+    await ev(`show('room')`); await sleep(100);
+    await ev(`document.querySelector('#roomSvg [data-hot=shelf]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(100);
+    check('the shelf opens the Fidget Shelf', await ev(`cur==='fidget'`));
+    await ev(`window._said=[];show('room')`); await sleep(100);
+    check('back in the room it says what she can tap (short, no emoji)', await ev(`window._said.length===1&&window._said[0]===lockLine()&&!/[\\p{Extended_Pictographic}]/u.test(lockLine())&&lockLine().split(' ').length<=20`), await ev(`JSON.stringify(window._said)`));
+    await ev(`window._said=[];document.querySelector('#lockBtn').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(100);
+    check('tapping 🔒 never tells her to press and hold', await ev(`!window._said.some(t=>/hold/i.test(t))`));
+    await ev(`P().speak=null`);
+    check('no visitors while locked', await ev(`visitG(P())===''`));
+    check('Android Back never leaves the room', await ev(`androidBack()&&cur==='room'&&androidBack()&&cur==='room'`));
+    check('…but still goes back inside a game (Fidget Shelf → room)', await ev(`(show('fidget'),androidBack())&&cur==='room'`));
+    check('closing and opening the app: straight back into the locked room', await ev(`(()=>{show('room');cur='profiles';lockStart();return cur==='room'&&lockOn();})()`));
+    // the games
+    await ev(`P().soccer.mode='trick';P().soccer.level='hard';P().soccer.keep.level='medium';show('soccer')`); await sleep(150);
+    check('Soccer: Tricks becomes Kick, on Easy', await ev(`P().soccer.mode==='kick'&&P().soccer.level==='easy'&&P().soccer.keep.level==='easy'`));
+    check('…only ⚽ Kick, 🧤 Keep and Easy show (no Tricks, Duel, Medium, Hard)', await vis('#socTabs [data-mode=kick]')&&await vis('#socTabs [data-mode=keep]')&&await vis('#socTabs [data-lvl=easy]')
+      &&!(await vis('#socTabs [data-mode=trick]'))&&!(await vis('#socTabs [data-duo]'))&&!(await vis('#socTabs [data-lvl=medium]'))&&!(await vis('#socTabs [data-lvl=hard]')));
+    await shot('LK2-soccer');
+    await ev(`P().ball.mode='derby';P().ball.bat.level='hard';show('ball')`); await sleep(150);
+    check('Ball Field: Derby becomes Bat, on Easy; only Bat, Catch and Easy show', await ev(`P().ball.mode==='bat'&&P().ball.bat.level==='easy'`)&&await vis('#bfTabs [data-mode=catch]')
+      &&!(await vis('#bfTabs [data-mode=derby]'))&&!(await vis('#bfTabs [data-duo]'))&&!(await vis('#bfTabs [data-lvl=medium]')));
+    await ev(`P().brain.level.snack='hard';show('brain')`); await sleep(150);
+    check('Brain Games: every game on Easy, no 📅 Puzzle of the Day or 👯 Memory for 2', await ev(`Object.values(P().brain.level).every(l=>l==='easy')`)&&!(await vis('#brMenu [data-potd]'))&&!(await vis('#brMenu .tg-mem-btn')));
+    await ev(`brOpen('memory')`); await sleep(150);
+    check('…inside a game only the Easy tab shows', await vis('#brTabs [data-lvl=easy]')&&!(await vis('#brTabs [data-lvl=medium]'))&&!(await vis('#brTabs [data-lvl=hard]'))&&!(await vis('#brTabs [data-duo]')));
+    await ev(`show('closet')`); await sleep(150);
+    check('Closet: dress-up stays (🎲 Surprise me, 🎨 Dress like…); no ✏️ rename or 👠 Runway', await vis('#randomBtn')&&await vis('#dressBtn')&&await vis('#closetGrid')&&!(await vis('#mascotNameBtn'))&&!(await vis('#runwayBtn')));
+    await shot('LK3-closet');
+    await ev(`show('room');if(!petKind(P()))P().pet.kind='bat';petMenu()`); await sleep(150);
+    check('the pet menu: no ✏️ Name or 🔄 Change', !(await vis('#modalBody [data-pa=name]'))&&!(await vis('#modalBody [data-pa=change]'))&&await vis('#modalBody [data-pa=pat]'));
+    await ev(`closeModal()`);
+    // 🔒 press and hold
+    await press(400);
+    check('a quick press only shakes: still locked', await ev(`lockOn()&&document.querySelector('#lockBtn').classList.contains('shake')`));
+    await press(3300);
+    check('press and hold 3 seconds (no PIN): unlocked, and the full room is back', await ev(`!lockOn()&&!document.body.classList.contains('locked')`)&&await vis('#setBtn')&&await vis('#decoBtn'));
+    check('…the 🔒 is now "Lock", and other screens open', await ev(`document.querySelector('#lockBtn').textContent.includes('Lock')&&(show('art'),cur==='art')`));
+    await ev(`show('room')`); await sleep(100); await shot('LK4-unlocked');
+    await ev(`document.querySelector('#lockBtn').click()`); await sleep(150);
+    check('tapping 🔒 Lock locks it again', await ev(`lockOn()&&document.body.classList.contains('locked')`));
+    await ev(`DB.settings.pin='1357'`); await press(3300);
+    check('with a PIN: the hold asks for it', (await title()).includes('PIN')&&await ev(`lockOn()`));
+    await pinType('1357');
+    check('…and the right PIN unlocks it', await ev(`!lockOn()&&document.querySelector('#modal').classList.contains('hidden')`));
+    await ev(`DB.settings.pin=''`);
+    // ⚙️ Settings → Level
+    await ev(`bandModal()`); await sleep(100);
+    check('⚙️ Settings → Level has the 🧸 Little mode switch (On here)', await ev(`!!document.querySelector('#stLock')&&document.querySelector('#stLock').textContent.includes('On')`));
+    await shot('LK5-level-switch');
+    await ev(`document.querySelector('#stBand [data-band=easy]').click()`);
+    check('…picking 🐣 Easy turns it Off', await ev(`document.querySelector('#stLock').textContent.includes('Off')`));
+    await ev(`document.querySelector('#stLock').click();${mbtn('Save')}.click()`); await sleep(200);
+    check('…the switch can turn it on for an Easy room; saving keeps the grown-up in until they tap 🔒 Lock', await ev(`P().band==='easy'&&P().little.lock===true&&!lockOn()`));
+    await ev(`closeModal();bandModal();document.querySelector('#stLock').click();${mbtn('Save')}.click()`); await sleep(200);
+    check('…and Off saves Off', await ev(`P().little.lock===false&&!lockOn()`));
+    await ev(`closeModal()`);
+    // 🎨 Dress like…
+    await ev(`(()=>{const p=P();['top:jersey','bottom:shorts','legs:soccer','shoes:cleats'].forEach(k=>{if(!p.owned.includes(k))p.owned.push(k);});p.look.top='tee';show('closet');})()`); await sleep(150);
+    await ev(`document.querySelector('#dressBtn').click()`); await sleep(150);
+    check('🎨 Dress like… shows the themes she has clothes for', await ev(`!!document.querySelector('#modalBody [data-dress=sport]')&&[...document.querySelectorAll('#modalBody [data-dress]')].every(b=>dressThemes(P())[b.dataset.dress])`));
+    await shot('LK6-dress-like');
+    const before=await ev(`JSON.stringify({kind:P().look.kind,face:P().look.face,fur:P().look.fur})`);
+    await ev(`document.querySelector('#modalBody [data-dress=sport]').click()`); await sleep(150);
+    check('…tapping ⚽ Sport puts on her sport clothes and keeps the buddy, fur and face', await ev(`(()=>{const l=P().look,th=k=>themesOf(k,itemOf(k.split(':')[0],k.split(':')[1])).includes('sport');
+      return document.querySelector('#modal').classList.contains('hidden')&&th('top:'+l.top)&&th('bottom:'+l.bottom)&&th('shoes:'+l.shoes);})()`)
+      &&before===await ev(`JSON.stringify({kind:P().look.kind,face:P().look.face,fur:P().look.fur})`));
+    check('…it only ever uses clothes she owns', await ev(`Object.values(dressThemes(P())).every(l=>l.every(([c,id])=>isOwned(P(),c,itemOf(c,id))))`));
+    // phone
+    await ev(`P().little.lock=true;LOCK.open='';show('room')`);
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true}); await sleep(200);
+    check('phone: the locked room\'s top bar fits', await ev(`(b=>b.scrollWidth<=b.clientWidth+1)(document.querySelector('#scr-room .topbar'))`)&&await vis('#lockBtn'));
+    await shot('LK7-phone-locked');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(150);
+    await ev(`LOCK.open='';delete window.AndroidBridge;closeModal();{const q=JSON.parse(window._lkSaved),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);}
+      DB.settings.sound=window._lkSound;DB.settings.pin=window._lkPin;save();show('room');goRoom(1);applyEasy()`);
+    check('back to normal afterwards', await ev(`!lockOn()&&!document.body.classList.contains('locked')`));
+    check('v1.71 is in the Gift Story and the app says 1.71', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.71')&&APP_VERSION==='1.71'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

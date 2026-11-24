@@ -225,6 +225,29 @@ This pack adds 25 clothes (15–25 coins each, open to everyone) so every outfit
   firefighter outfit) and 🧩 Full Outfit (every piece of any 3 outfits).
 - No change to the save data. There is still no cape: it needs its own layer behind the body (maybe later).
 
+## 🧸 Little mode (since version 1.71)
+**Little mode keeps the youngest in the easy, safe parts of the app**, so they can play on their own:
+- **Rooms:** only their own room and the Backyard. The Loft, the Studio and the 🗺️ map stay shut.
+- **The top bar:** only 🧸 Play and a small 🔒. Decorate, ⚙️ Settings, the Sticker Book, 🔍 I Spy, 📷 and visitors are hidden.
+  🌙 and 🔊/🔇 stay.
+- **What still works:**
+  - 🧸 Play, the whole Fidget Shelf, the buddy and the pet (patting, Hide & Seek, Fetch, Walks)
+  - 👗 the Closet: wearing clothes, buying new ones with the short Easy buy box, 🎲 Surprise me, ⭐ My Looks, 🎨 Dress like…
+  - Every sport on Easy: ⚽ Kick, 🧤 Keep, ⚾ Batting and 🧤 Catch
+  - 🧠 every Brain game on Easy (and 🎲 Free Play on Easy), and the 🌱 Garden
+- **The desk becomes the way to 🧸 Play** (its sign says Play): Coloring, the Sound Mat and Peekaboo. The corkboard loses its sign.
+- **Everything else in the room only wiggles** when tapped. Nothing opens and nothing is said. Android's Back button never leaves the room.
+- **It's on by default for 🧸 Little rooms.** ⚙️ Settings → Level has a switch to turn it off, or on for another room (for example an 🐣 Easy room).
+- **To leave it, a grown-up presses and holds 🔒 for 3 seconds** (a ring fills), then types the PIN if one is set.
+  **Setting a PIN is a good idea**, so a child who holds 🔒 long enough still can't get out.
+- **It locks again** when a grown-up taps **🔒 Lock** in the room, or when the app is closed and opened again.
+- Coins work as usual. With no Shop, they pile up for later.
+
+**🎨 Dress like… (every room's Closet):** tap a theme (🦇 Emo, ☁️ Cute, ⚽ Sport, 🦕 Dino…) and the buddy puts on clothes from that
+theme. It only uses clothes the room already owns, and keeps the buddy, fur and face. Tap it again for another mix.
+
+Save data: one new field per room, `little.lock`. Older backups still restore.
+
 ## Spoken instructions (since version 1.70)
 The app can now **say what to do** on every screen, so the children who can't read yet can play everything:
 - **Each screen, tab and game has one short spoken line**, for example "Pop them all to flip it over!" on the pop-it. In the Brain Games it's

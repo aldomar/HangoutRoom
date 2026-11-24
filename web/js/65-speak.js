@@ -70,6 +70,7 @@ function clSpeak(lvl,pz){return (CL_SPEAK[lvl]||CL_SPEAK.easy)+(pz&&pz.map&&pz.m
 function speakLine(){
   const p=cur==='profiles'?null:P(); if(!p) return null;
   switch(cur){
+    case 'room': return lockOn()&&!SPY.on&&!PP.on?{k:'room:lock'+roomNo,t:lockLine()}:null; // 🧸 Little mode's home (section 66)
     case 'closet': return {k:'closet',t:SPK_FIXED.closet};
     case 'art': return {k:'art',t:SPK_FIXED.art};
     case 'cards': return CARD.view==='make'?{k:'cards:make',t:SPK_FIXED.cardsMake}:{k:'cards:binder',t:SPK_FIXED.cardsBinder};

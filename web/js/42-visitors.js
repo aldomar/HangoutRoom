@@ -129,6 +129,7 @@ function visitArrive(p){
 }
 // Drawn by renderRoom (section 9) in the floor layer, in every room. Fades while decorating, like the pet and gifts.
 function visitG(p){
+  if(lockOn()) return ''; // no visitors in 🧸 Little mode: their wishes need the Shop (section 66)
   if(visitArrive(p)) setTimeout(()=>{if(cur==='room'&&!decorating){SFX.knock();say(`Knock knock! ${VISIT_FRIENDS[vWishOf(p.visit.cur).who].name} is here!`);}},300);
   const w=vWishOf(p.visit.cur); if(!w) return '';
   const F=VISIT_FRIENDS[w.who];

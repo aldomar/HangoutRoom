@@ -28,7 +28,7 @@ function roomLinks(n){
 const roomGoWords=n=>n===1?'Back to my room':`Go to the ${roomInfo(n).name}`;
 function roomTabs(){
   const box=$('#roomTabs'); if(!box) return;
-  box.innerHTML=decorating?'':roomLinks(roomNo).map(l=>{const r=roomInfo(l.to);
+  box.innerHTML=decorating?'':roomLinks(roomNo).filter(l=>!lockOn()||LOCK_ROOMS.includes(l.to)).map(l=>{const r=roomInfo(l.to);
     return `<button class="rtab rt-${l.dir}" data-go="${l.to}" aria-label="${roomGoWords(l.to)}"><b>${RT_ARROW[l.dir]}</b><i>${r.icon}</i></button>`;}).join('');
 }
 $('#roomTabs').onclick=e=>{const b=e.target.closest('[data-go]');if(b)goRoom(+b.dataset.go);};

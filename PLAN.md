@@ -929,7 +929,7 @@ team-kit bonus, prizes and stickers; **new original animal characters**. Four st
 A whole-app review before the children get the app; the findings, the owner's answers and the ranked ideas are in
 `docs/DESIGN-REVIEW.md`. Agreed order (2026-11-23): ✅ v1.67 daily caps (built) → ✅ v1.68 🧤 Catch on Hard (reading the ball: bat
 sound, grass stripes, a shadow trail, no memorizing) → ✅ v1.69 first-time setup + level bands (built) → ✅ v1.70 spoken instructions (built) →
-v1.71 🧸 Little mode. Each gets its own plan first.
+✅ v1.71 🧸 Little mode (built). Each gets its own plan first.
 
 #### v1.67 plan details: fair daily coins (agreed 2026-11-23, built)
 **Why:** the games that pay for every goal, save, hit, catch or star had no daily limit, and ⚾ Batting (added last) pays the
@@ -1216,6 +1216,47 @@ a `GIFT_TIMELINE` entry, and the version (1.70) in the four places.
 2. The recommended set: instructions, questions, try-again hints, the buddy's bubble and visitor wishes.
 3. A little slower in 🧸 Little and 🐣 Easy rooms.
 4. No: Read to me stays in ⚙️ Settings.
+
+#### v1.71 plan details: 🧸 Little mode (agreed 2026-11-24, built)
+**Why:** a 3-year-old could tap from 🧸 Play into the full app: the Shop, Decorate, Settings, other rooms and the rooms list.
+The owner prefers a lock inside the app to iPad settings like Guided Access.
+
+**What it does** (new file `web/js/66-littlemode.js`):
+- **The Little home is her own room, locked down.**
+  - **Top bar:** only 🧸 Play and 🔒. Map, Decorate, Settings, Sticker Book, 🔍, 📷 and visitors are hidden; 🌙 and 🔊/🔇 stay.
+  - **Rooms:** her room and the Backyard only (one arrow).
+  - **What opens:** 🧸 Play, the Fidget Shelf, the Closet, the pet, Soccer, the Ball Field, Brain Games, the Garden and pet Walks.
+  - **The desk opens 🧸 Play** and its sign says Play (the owner asked for this, so nothing labeled just wiggles); the corkboard has no sign.
+  - **Everything else:** it only wiggles, and nothing is said.
+- **One check in `show()`** (`lockGuard`) sends any other screen back to the room, so a path that was missed still can't get out.
+  The rooms list (`show('profiles')`) is one of them, so Android Back never leaves, and the app opens straight into a locked room.
+- **Games:**
+  - Every game opens on Easy.
+  - Soccer: Kick and Keep only (no Tricks or Duel).
+  - Ball Field: Bat and Catch only (no Derby or Duel).
+  - Brain Games: Easy only, plus 🎲 Free Play on Easy. No 📅 Puzzle of the Day and no 👯 Memory for 2.
+  - The level tabs other than Easy are hidden.
+- **Closet:** wearing, the Easy buy box, 🎲 Surprise me, ⭐ My Looks and the new 🎨 Dress like… stay; ✏️ rename and 👠 Runway are hidden.
+- **Pet menu:** ✏️ Name and 🔄 Change are hidden.
+- **Unlocking and locking again:**
+  - **Unlock:** press and hold 🔒 for 3 s (a ring fills), then the PIN if one is set. A quick tap only shakes it.
+  - **Relock:** it stays unlocked until 🔒 Lock is tapped or the app is opened again (`LOCK.open` is never saved).
+- **Speech:** the room gets a spoken line while locked ("Tap Play, the shelf, the closet, your buddy or your pet!"). A wiggle says
+  nothing, and tapping 🔒 never says "press and hold".
+- **Who:** `p.little.lock`, on for 🧸 Little rooms, with a switch in ⚙️ Settings → Level (behind the PIN).
+  - Picking Little turns it on; leaving Little turns it off.
+  - Switching it on from Settings keeps the grown-up in until they tap 🔒 Lock.
+- **🎨 Dress like… (every room's Closet):** a big button for each theme the room owns clothes from. It dresses the buddy in owned
+  pieces of that theme, a different one where it can, and keeps the buddy, fur and face.
+
+**Save:** `little.lock` (a default in `normalize()` from the band), no new save version.
+
+**Owner's answers (2026-11-24):**
+1. The Little home is her own room, locked down.
+2. Every sport on Easy (Kick, Keep, Bat, Catch) and the Brain Games on Easy are in. The Closet stays for real dress-up (not only
+   Surprise me), plus a new theme dress-up: 🎨 Dress like…, in every room's Closet. The Garden shed opens too.
+3. On by default for Little rooms, with a switch in Settings for any room.
+4. It locks again when the app is reopened, and with 🔒 Lock.
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.

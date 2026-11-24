@@ -4,12 +4,13 @@
    ========================================================= */
 let cur='profiles';
 function show(n){
+  n=lockGuard(n); // 🧸 Little mode keeps her in the safe screens (section 66)
   if(n!=='room'&&decorating) exitDecorate(true);
   if(n!=='room'&&SPY.on) spyEnd(true); // 🔍 (section 50)
   if(n!=='room'&&PP.on) ppEnd(true); // 🙈🎾 pet play (section 55)
   cur=n; $$('.screen').forEach(s=>s.classList.toggle('on',s.id==='scr-'+n));
-  const ep=n==='profiles'?null:P(); applyEasy();
-  if(ep&&ep.easy){if(n==='soccer'){ep.soccer.level='easy';ep.soccer.keep.level='easy';}if(n==='ball'){ep.ball.bat.level='easy';ep.ball.catch.level='easy';}if(n==='stage')ep.stage.level='easy';if(n==='code')ep.code.level='easy';if(n==='brain')Object.keys(ep.brain.level).forEach(g=>{ep.brain.level[g]='easy';});} // Easy mode opens games on Easy
+  const ep=n==='profiles'?null:P(); applyEasy(); applyLock();
+  if(ep&&(ep.easy||lockOn())){if(n==='soccer'){ep.soccer.level='easy';ep.soccer.keep.level='easy';}if(n==='ball'){ep.ball.bat.level='easy';ep.ball.catch.level='easy';}if(n==='stage')ep.stage.level='easy';if(n==='code')ep.code.level='easy';if(n==='brain')Object.keys(ep.brain.level).forEach(g=>{ep.brain.level[g]='easy';});} // Easy mode opens games on Easy
   if(n==='room'||n==='cards') checkBonus(); // gives any milestone cards she has earned (section 12)
   if(n==='room'||n==='soccer'){const t=giveTrophies();if(t.length)setTimeout(()=>toast(`🏆 ${t.join(' and ')} added to your room!`),400); // section 13
     const gl=giveGloves();if(gl.length)setTimeout(()=>toast(`🧤 ${gl.join(' and ')} added to your Backyard!`),t.length?2400:400);} // section 27
@@ -99,7 +100,7 @@ function enterRoom(){
   const p=P(); if(!p) return; roomNo=1; show('room'); loadArtThumbs();
   const today=new Date().toDateString();
   if(p.lastDaily!==today){p.lastDaily=today;p.stats.dailies++;save();setTimeout(()=>{earn(10,'Daily gift!',innerWidth/2,innerHeight/2);toast('🎁 Daily gift! +10 coins');},600);}
-  if(!p.seenTip){p.seenTip=true;save();setTimeout(()=>say(`Hi ${p.name}! Tap the shelf, closet or desk ✨`),1200);}
+  if(!p.seenTip){p.seenTip=true;save();setTimeout(()=>say(lockOn()?`Hi ${p.name}! Tap the desk, the shelf or the closet ✨`:`Hi ${p.name}! Tap the shelf, closet or desk ✨`),1200);}
 }
 
 /* ---------- room ---------- */
@@ -114,7 +115,7 @@ const curRoom=p=>roomNo===4?p.room4:roomNo===3?p.room3:roomNo===2?p.room2:p.room
 const rooms=p=>[p.room,p.room2,p.room3,p.room4];
 const allItems=p=>rooms(p).reduce((a,r)=>a.concat(r.items),[]);
 const ROOM_NAMES={1:'Room',2:'Loft',3:'Backyard',4:'Studio'};
-function goRoom(n){roomNo=n;drag=null;SFX.whoosh();if(n===4)studioStart(P());renderRoom();if(decorating)renderDecoGrid();else if(n===4)studioHi();}
+function goRoom(n){if(lockOn()&&!LOCK_ROOMS.includes(n))n=1;roomNo=n;drag=null;SFX.whoosh();if(n===4)studioStart(P());renderRoom();if(decorating)renderDecoGrid();else if(n===4)studioHi();}
 function mascotG(p){return `<g id="mascotG" class="mascot"><ellipse cx="500" cy="604" rx="62" ry="12" fill="#00000030"/>${mascotSVG(p.look,null,'x="420" y="396" width="160" height="216"')}</g>`;}
 function renderRoom(){
   const p=P(); if(!p) return;
@@ -162,9 +163,10 @@ function mascotTap(){
   say(lines[Math.floor(Math.random()*lines.length)]);
 }
 function handleHot(h){
+  if(!lockHotOk(h)){lockWiggle(h);return;} // 🧸 Little mode: it only wiggles (section 66)
   if(h==='shelf'){SFX.click();show('fidget');}
   else if(h==='closet'){SFX.click();show('closet');}
-  else if(h==='desk'){SFX.click();show('art');}
+  else if(h==='desk'){SFX.click();if(lockOn()){LT.view='menu';show('little');}else show('art');} // 🧸 Little mode: the desk is the way to Play (section 66)
   else if(h==='photo'){SFX.click();show('cards');}
   else if(h==='window'){goRoom(3);} // her window: a shortcut out to the Backyard (v1.40; it opened Soccer before)
   else if(h==='goal'){SFX.click();show('soccer');} // the Backyard's soccer goal (v1.23), the way to Soccer since v1.40

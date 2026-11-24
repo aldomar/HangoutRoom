@@ -196,7 +196,9 @@ const GIFT_TIMELINE=[
   {v:'1.69',d:'2026-11-23',i:'👋',n:'Ready for you',why:'So every room starts at the right level, set up by a grown-up',
     news:['🎚️ Every room has a level: 🧸 Little, 🐣 Easy, ⭐ Normal or 🔥 Challenge','🔥 Challenge rooms start new games on Medium','👋 A quick setup for grown-ups on a new device']},
   {v:'1.70',d:'2026-11-23',i:'🗣️',n:'Tell me what to do',why:'So the ones who are still learning to read can play everything',
-    news:['🗣️ Every game can tell you what to do, out loud','🔊 Tap the 🔊 at the top to hear it again','🐢 The voice is a little slower in Little and Easy rooms']}
+    news:['🗣️ Every game can tell you what to do, out loud','🔊 Tap the 🔊 at the top to hear it again','🐢 The voice is a little slower in Little and Easy rooms']},
+  {v:'1.71',d:'2026-11-24',i:'🧸',n:'Little mode',why:'So the littlest ones can play safely on their own',
+    news:['🧸 Little mode keeps the littlest ones in the easy, safe parts','🔒 A grown-up presses and holds 🔒 to leave it','🎨 Dress like… puts on your clothes from one theme']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

@@ -1174,3 +1174,27 @@ html,body{touch-action:manipulation} /* no double-tap zoom (iOS ignores user-sca
 @media (max-width:560px){.bd-pitch .tn{display:none}.bd-pitch{font-size:24px;padding:0 10px}.bd-who{font-size:13px;padding:4px 8px}}
 @media (max-width:620px){#bfTabs [data-lvl] span{display:none}#bfTabs .soc-gap{flex-basis:4px}#bfTabs [data-lvl]{font-size:21px;padding:6px 12px}#bfTabs{gap:5px;padding:8px 4px}}
 @media (max-width:480px){#bfTabs .tab.mode .w{display:none}#bfTabs .tab.mode,#bfTabs [data-lvl]{font-size:19px;padding:6px 4px;min-width:48px;min-height:48px;justify-content:center}#bfTabs{gap:3px;padding:8px 2px}}
+
+/* 🧸 Little mode (v1.71, section 66): body.locked hides the grown-up and older-kid parts */
+body.locked #mapBtn,body.locked #stkBtn,body.locked #decoBtn,body.locked #setBtn,body.locked #spyBtn,body.locked #roomSnapBtn,
+body.locked #mascotNameBtn,body.locked #runwayBtn,body.locked [data-pa="name"],body.locked [data-pa="change"],
+body.locked #socTabs [data-mode="trick"],body.locked #socTabs [data-duo],body.locked #socTabs [data-lvl]:not([data-lvl="easy"]),
+body.locked #bfTabs [data-mode="derby"],body.locked #bfTabs [data-duo],body.locked #bfTabs [data-lvl]:not([data-lvl="easy"]),
+body.locked #brTabs [data-lvl]:not([data-lvl="easy"]),body.locked #brTabs [data-duo],body.locked [data-potd],body.locked .tg-mem-btn,
+body.locked [data-give]{display:none!important}
+.lock-btn{position:relative;min-width:48px;min-height:48px;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.lock-btn .lk-ring{position:absolute;inset:-3px;width:calc(100% + 6px);height:calc(100% + 6px);pointer-events:none;transform:rotate(-90deg);opacity:0}
+.lock-btn .lk-ring circle{fill:none;stroke:var(--pink);stroke-width:4;stroke-linecap:round;stroke-dasharray:107;stroke-dashoffset:107}
+.lock-btn.holding .lk-ring{opacity:1}
+.lock-btn.holding .lk-ring circle{animation:lkRing 3s linear forwards}
+@keyframes lkRing{to{stroke-dashoffset:0}}
+.lock-btn.shake{animation:lkShake .4s}
+@keyframes lkShake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+#roomSvg .lk-wig{transform-box:fill-box;transform-origin:50% 100%;animation:lkWig .5s}
+@keyframes lkWig{25%{transform:rotate(-2deg)}75%{transform:rotate(2deg)}}
+.lock-sw{display:block;margin:12px auto 0;min-height:48px}
+.dress-themes{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.dress-th{background:var(--panel2);border:3px solid transparent;border-radius:16px;min-height:84px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.dress-th i{font-style:normal;font-size:34px;line-height:1}
+.dress-th span{font-size:15px;font-weight:800}
+.dress-th:active{border-color:var(--pink);background:var(--hi)}

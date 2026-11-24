@@ -42,7 +42,9 @@ const HOT_WORDS={shelf:'Fidget shelf',closet:'Closet',desk:'Art desk',photo:'Pho
   code:'Code Lab',brain:'Brain games',music:'Music Maker',pet:'Pet',gift:'A gift!',ballfield:'Ball field'};
 function speakLabel(el){
   if(el.classList&&el.classList.contains('say-btn')) return ''; // 🔊 says the screen's line instead (section 65)
-  if(el.dataset.hot) return HOT_WORDS[el.dataset.hot]||'';
+  if(el.dataset.hot==='desk'&&lockOn()) return 'Play'; // 🧸 Little mode: the desk opens Play (section 66)
+  if(el.dataset.hot) return lockHotOk(el.dataset.hot)?HOT_WORDS[el.dataset.hot]||'':''; // 🧸 a wiggle says nothing (section 66)
+  if(el.id==='lockBtn'&&lockOn()) return ''; // never tells a little one to press and hold
   const tn=el.querySelector&&el.querySelector('.tn');
   const raw=el.getAttribute('aria-label')||(tn&&tn.textContent)||el.textContent||'';
   const t=raw.replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}\u{20E3}\u{1F3FB}-\u{1F3FF}]/gu,'').replace(/[✔✖⬅➜•·]/g,' ').replace(/\s+/g,' ').trim();
