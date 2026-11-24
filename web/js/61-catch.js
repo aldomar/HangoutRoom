@@ -22,7 +22,7 @@ const CT_ZMAX=0.15, CT_VU=0.6;
 // depth = balls come down nearer or farther too (v).
 const CATCH_HITTERS={
   easy:{name:'Tilly',icon:'🐢',kind:'turtle',coins:1,wind:1.0,speed:1.6,reach:0.24},
-  medium:{name:'Momo',icon:'🐨',kind:'koala',coins:2,wind:0.85,speed:1.75,reach:0.2,depth:1},
+  medium:{name:'Momo',icon:'🐨',kind:'koala',coins:2,wind:0.85,speed:1.75,reach:0.19,depth:1}, // glove 0.2 → 0.19 in v1.68 (the new cues help)
   hard:{name:'Zippy',icon:'🦓',kind:'zebra',coins:3,wind:0.75,speed:1.9,reach:0.18,depth:1} // eased twice after the owner's phone tests
 };
 const CT_EASY_REACH=1.3; // Easy mode (p.easy) makes the glove this much bigger
@@ -50,20 +50,59 @@ const ctDist=(u,v,bu,bv)=>Math.hypot(u-bu,((v||0)-(bv||0))*CT_VU);
 // Can a buddy standing at (fu, fv) get to a hit [u, T, kind, v] in time? (with a quarter second to react)
 const ctCanCatch=(lvl,fu,fv,[u,T,,v])=>Math.max(0,ctDist(u,v,fu,fv)-CATCH_HITTERS[lvl].reach)/CATCH_HITTERS[lvl].speed+0.25<=T;
 const ctCaught=(u,v,bu,bv,reach)=>ctDist(u,v,bu,bv)<=reach;
+// What every hit must meet (v1.68): inside the field, never faster than its kind allows, catchable from every corner, and on
+// Medium and Hard tight: 0.1 to 0.55 s to spare from the worst corner (unless it is as fast as its kind allows).
+// The fixed lists pass it, and so does every made-up Hard hit (the smoke test checks both).
+const CT_KIND_MIN=[1.2,0.95,1.5,1.2]; // the fastest each kind may be (seconds in the air): fly ball, line drive, pop-up, grounder
+function ctNeed(lvl,[u,,,v]){ // the time needed from the worst corner (with a quarter second to react)
+  const c=CATCH_HITTERS[lvl]; let w=0;
+  for(const fu of [-CT_U,CT_U]) for(const fv of (c.depth?[0,1]:[0])) w=Math.max(w,Math.max(0,ctDist(u,v||0,fu,fv)-c.reach)/c.speed+0.25);
+  return w;
+}
+function ctHitOk(lvl,h){
+  const [u,T,k,v]=h, c=CATCH_HITTERS[lvl];
+  if(!c||![0,1,2,3].includes(k)||!(Math.abs(u)<=CT_U)||!(T>=0.9&&T<=2.6)||T<CT_KIND_MIN[k]-1e-9) return false;
+  if(c.depth?!(v>=0&&v<=1):!!v) return false;
+  if(![-CT_U,CT_U].every(fu=>(c.depth?[0,1]:[0]).every(fv=>ctCanCatch(lvl,fu,fv,h)))) return false;
+  if(!c.depth) return true;
+  const spare=T-ctNeed(lvl,h); return spare>=0.1-1e-9&&(spare<=0.55+1e-9||Math.abs(T-CT_KIND_MIN[k])<1e-9);
+}
+// 🎲 Fresh hits on Hard (v1.68): each game makes 5 from a seed, so winning is about reading the ball, not remembering the order.
+// A game has 3+ kinds, both sides, and at most 1 hit she could catch without moving from where she starts (the middle, half way in).
+const CT_SPARE=[0.15,0.45]; // the time to spare a made-up hit leaves from the worst corner: widen this if Hard is still too hard
+function ctMakeGame(seed){
+  const r=brRand(seed), L='hard', c=CATCH_HITTERS[L];
+  for(let tries=0;tries<200;tries++){
+    const g=[];
+    for(let n=0;g.length<CT_HITS&&n<100;n++){
+      const k=Math.floor(r()*4), u=(r()<0.5?-1:1)*Math.round((0.1+0.75*r())*100)/100, v=Math.round(r()*100)/100;
+      const h=[u,0,k,v], spare=CT_SPARE[0]+(CT_SPARE[1]-CT_SPARE[0])*r();
+      h[1]=Math.max(CT_KIND_MIN[k],Math.round((ctNeed(L,h)+spare)*100)/100);
+      if(ctHitOk(L,h)) g.push(h);
+    }
+    const kinds=new Set(g.map(h=>h[2])).size, still=g.filter(h=>ctCaught(h[0],h[3],0,0.5,c.reach)).length;
+    if(g.length===CT_HITS&&kinds>=3&&g.some(h=>h[0]<0)&&g.some(h=>h[0]>0)&&still<=1) return g;
+  }
+  return CATCH_HITS.hard.slice(0,CT_HITS); // never needed in practice (the smoke test makes 300 games)
+}
 
 /* ---------- the game ---------- */
 function ctStop(){CT.state='off';CT.hit=null;CT.down=null;}
-function ctNewGame(){CT.res=[];CT.state='ready';CT.hit=null;CT.bu=0;CT.tx=0;CT.bv=CT.tv=ctDepth()?0.5:0;CT.wait=0;CT.caughtAt=null;$('#bfMsg').classList.remove('on');ctScore();SFX.whistle();}
+function ctNewGame(){CT.game=ctLvl()==='hard'&&ctDepth()?ctMakeGame(fpSeed()):null; // 🎲 fresh Hard hits (v1.68; fpSeed: section 44)
+  CT.res=[];CT.state='ready';CT.hit=null;CT.bu=0;CT.tx=0;CT.bv=CT.tv=ctDepth()?0.5:0;CT.wait=0;CT.caughtAt=null;$('#bfMsg').classList.remove('on');ctScore();SFX.whistle();}
 function ctScore(){
   const b=bfP(); if(!b) return; const L=ctHitter();
   $('#bfScore').innerHTML=Array.from({length:CT_HITS},(_,i)=>{const r=CT.res[i];
     return `<span class="dot ${r===false?'miss':''} ${i===CT.res.length&&CT.state!=='done'?'now':''}">${r?'🧤':r===false?'✖':''}</span>`;}).join('')
     +`<span class="best">🏆 Best ${b.catch.best[ctLvl()]||0}/${CT_HITS}</span>`;
   $('#bfTip').textContent=CT.state==='done'?'Tap to play again!':CT.state==='ready'?`${L.icon} ${L.name} is batting! Tap when you're ready`
-    :ctLvl()==='hard'&&ctDepth()?"Watch the ball's shadow and drag there! Up = run in 🧤":ctDepth()?'Drag to the ball: left, right, up and down! 🧤':'Drag to the ring to catch it! 🧤';
+    :ctLvl()==='hard'&&ctDepth()?"CRACK! = stay back, tok = run in! Watch the shadow 🧤":ctDepth()?'CRACK! = stay back, tok = run in! Drag to the ball 🧤':'Drag to the ring to catch it! 🧤';
 }
 function ctStart(){
-  const lvl=ctLvl(), list=CATCH_HITS[lvl], [u,T,kind,v]=list[CT.round[lvl]%list.length]; CT.round[lvl]++;
+  const lvl=ctLvl(), list=CATCH_HITS[lvl]; let hit;
+  if(lvl==='hard'&&CT.game) hit=CT.game[CT.res.length%CT.game.length]; // made-up Hard hits (v1.68)
+  else {hit=list[CT.round[lvl]%list.length]; CT.round[lvl]++;}
+  const [u,T,kind,v]=hit; CT.word=null;
   CT.hit={u,T,kind,v:ctDepth()?v||0:0}; CT.state='wind'; CT.t=0; CT.caughtAt=null; ctScore();
 }
 // The finger sets where the buddy runs to (a tap works too): across from x, and (Medium, Hard) how far in from y,
@@ -128,6 +167,25 @@ function ctBallPt(g,h,e){
   const p=ctPt(g,u,z,ht); return {x:p.x,y:p.y,gx:p.x,gy:p.gy,r:g.rb*p.s};
 }
 
+/* ---------- the bat tells how far (v1.68) ---------- */
+// A loud CRACK! = a deep ball (stay back), WHACK = half way, a dull tok = a short one (run in). The word also pops up by the hitter,
+// so it works with the sound off. Every level (Easy balls all come down on her line, so they're all CRACK!).
+const CT_CRACKS=[{w:'CRACK!',k:1,c:'#ffd166'},{w:'WHACK',k:0.8,c:'#ffffff'},{w:'tok',k:0.62,c:'#c9e7ff'}];
+const ctTier=v=>(v||0)<0.34?0:(v||0)<=0.67?1:2;
+function ctCrack(h){
+  const i=ctTier(h.v); CT.word={i,at:BF.time};
+  if(i===0){tone(1300,0.05,'square',0.16,600);noise(0.1,0.42,6500,1500);}
+  else if(i===1){tone(900,0.05,'square',0.1,450);noise(0.08,0.26,3800,900);}
+  else {tone(420,0.07,'triangle',0.14,300);noise(0.05,0.1,1400,500);}
+}
+function ctWord(ctx,g,x,y,hs){
+  const W=CT.word; if(!W) return; const a=BF.time-W.at; if(a<0||a>=0.7) return;
+  const C=CT_CRACKS[W.i], fs=Math.max(16,Math.round(hs*0.5*C.k*(1+Math.min(a,0.15))));
+  ctx.save(); ctx.globalAlpha=a<0.5?1:1-(a-0.5)/0.2; ctx.font=`900 ${fs}px "Trebuchet MS",system-ui,sans-serif`; ctx.textAlign='center';
+  ctx.lineJoin='round'; ctx.lineWidth=Math.max(3,fs*0.18); ctx.strokeStyle='#2b2235'; ctx.fillStyle=C.c;
+  const tx=Math.min(g.W-fs*2,x+hs*0.7), ty=Math.max(fs,y-hs*1.15); ctx.strokeText(C.w,tx,ty); ctx.fillText(C.w,tx,ty); ctx.restore();
+}
+
 /* ---------- drawing ---------- */
 // the field from the outfield, looking in: stands behind home, the infield far away, big outfield grass in front
 function ctBack(g){
@@ -140,7 +198,15 @@ function ctBack(g){
   ctx.fillStyle='#4a3d63'; ctx.fillRect(0,top,W,gy-top); // the stands behind home (the crowd is drawn every frame)
   ctx.fillStyle='#3a3050'; ctx.fillRect(0,gy-H*0.03,W,H*0.03); // the backstop wall
   const gr=ctx.createLinearGradient(0,gy,0,H); gr.addColorStop(0,'#5cb85f'); gr.addColorStop(1,'#74d478'); ctx.fillStyle=gr; ctx.fillRect(0,gy,W,H-gy);
-  ctx.fillStyle='#ffffff14'; for(let i=0;i<10;i+=2){const a=ctPt(g,0,1.25-i/8,0).gy,b=ctPt(g,0,1.25-(i+1)/8,0).gy;ctx.fillRect(0,a,W,b-a);}
+  ctx.fillStyle='#ffffff14'; for(let i=0;i<8;i+=2){const a=ctPt(g,0,1.25-i/8,0).gy,b=ctPt(g,0,1.25-(i+1)/8,0).gy;ctx.fillRect(0,a,W,b-a);}
+  // Mowed grass (v1.68): light lanes fanning out from home plate (a ball's shadow runs straight out along one from the bat) and
+  // 3 bands near her line for how far in. Drawn once here, so they cost nothing per frame. They never mark where a ball lands.
+  const lane=(u0,u1)=>{ctx.beginPath();
+    for(let i=0;i<=24;i++){const e=i/24*1.25,q=ctPt(g,u0*e,1-e,0);i?ctx.lineTo(q.x,q.gy):ctx.moveTo(q.x,q.gy);}
+    for(let i=24;i>=0;i--){const e=i/24*1.25,q=ctPt(g,u1*e,1-e,0);ctx.lineTo(q.x,q.gy);}
+    ctx.closePath();ctx.fill();};
+  ctx.fillStyle='#ffffff1c'; for(let i=0;i<6;i+=2) lane(-1.2+i*0.4,-1.2+(i+1)*0.4);
+  [[0,1/3,'#0000001a'],[1/3,2/3,'#ffffff14'],[2/3,1,'#0000001a']].forEach(([a,b,col])=>{const ya=ctPt(g,0,ctZ(a),0).gy,yb=ctPt(g,0,ctZ(b),0).gy;ctx.fillStyle=col;ctx.fillRect(0,yb,W,ya-yb);});
   const poly=(pts,fill)=>{ctx.beginPath();pts.forEach(([u,z],i)=>{const q=bfPt(g,u,z,0);i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);});ctx.closePath();ctx.fillStyle=fill;ctx.fill();};
   poly([[0,1.08],[0.4,0.75],[0,0.42],[-0.4,0.75]],'#e0a96d');
   poly([[0,0.95],[0.22,0.75],[0,0.56],[-0.22,0.75]],'#5cb85f');
@@ -214,7 +280,7 @@ function ctDraw(dt){
   if(BF.lay!==lay){BF.lay=lay;const m=$('#bfMascot');m.style.width=g.bw*f+'px';m.style.height=g.bh*f+'px';m.style.left=left+'px';m.style.bottom=(g.bb+up)+'px';}
   // move things on
   const h=CT.hit;
-  if(CT.state==='wind'){CT.t+=dt;if(CT.t>=L.wind){CT.state='fly';CT.t=0;tone(1250,0.05,'square',0.1,600);noise(0.08,0.3,5000,1200);}}
+  if(CT.state==='wind'){CT.t+=dt;if(CT.t>=L.wind){CT.state='fly';CT.t=0;ctCrack(h);}}
   else if(CT.state==='fly'){CT.t+=dt;if(CT.t>=h.T)ctLand();}
   else if(CT.state==='result'){CT.t+=dt;if(CT.t>=CT.wait){if(CT.res.length>=CT_HITS)ctEnd();else{CT.state='ready';CT.hit=null;ctScore();}}}
   // draw
@@ -223,11 +289,12 @@ function ctDraw(dt){
   const hp=bfPt(g,0,1,0), hs=g.H*0.15*Math.pow(hp.s,0.3);
   ctx.fillStyle='#00000030'; ctx.beginPath(); ctx.ellipse(hp.x,hp.gy,hs*0.35,hs*0.07,0,0,TAU); ctx.fill();
   ctDrawHitter(ctx,L.kind,hp.x,hp.gy,hs,CT.state==='wind'?CT.t/L.wind:0,BF.time);
+  if(CT.state==='fly'||CT.state==='result') ctWord(ctx,g,hp.x,hp.gy,hs); // CRACK! / WHACK / tok (v1.68)
   // where it comes down: a soft ring on the grass. Easy (and Easy mode): bright all the way; Medium: it fades in for the
   // last part of the flight; Hard: no ring, only the ball's shadow (drawn darker below).
   const p=P(), help=ctLvl()==='easy'||!!(p&&p.easy);
   if(h&&CT.state==='fly'){
-    const k=Math.min(1,CT.t/h.T), a=help?0.9:ctLvl()==='medium'?clamp((k-0.45)/0.3,0,1)*0.6:0;
+    const k=Math.min(1,CT.t/h.T), a=help?0.9:ctLvl()==='medium'?clamp((k-0.55)/0.3,0,1)*0.6:0; // from 55% of the flight (45% before v1.68)
     if(a>0){const q=ctPt(g,h.u,ctZ(h.v),0), r=ctReach()*g.k*Math.pow(q.s,0.6);
       ctx.globalAlpha=a; ctx.strokeStyle=help?'#ffd166':'#ffffff'; ctx.lineWidth=help?5:3;
       ctx.beginPath(); ctx.ellipse(q.x,q.gy,r,r*0.25,0,0,TAU); ctx.stroke();
@@ -237,7 +304,9 @@ function ctDraw(dt){
   if(h&&(CT.state==='fly'||CT.state==='result')){
     if(CT.caughtAt!=null){const gp={x:hx,y:handY-g.bh*f*0.02,gx:hx,gy:bp.gy,r:g.rb*f};bfBall(ctx,gp,0,1);}
     else {const e=CT.t/h.T; if(CT.state==='fly'||e<1.8){const b=ctBallPt(g,h,Math.min(e,1.8));
-      if(!help&&CT.state==='fly'){ctx.fillStyle='#00000038';ctx.beginPath();ctx.ellipse(b.gx,b.gy,b.r*1.6,b.r*0.5,0,0,TAU);ctx.fill();} // a clearer shadow
+      if(!help&&CT.state==='fly'){ // a short fading trail first, so the shadow's direction shows at once (v1.68)
+        for(let j=5;j>=1;j--){const e2=e-j*0.04;if(e2<=0)continue;const t=ctBallPt(g,h,e2);ctx.fillStyle=`rgba(0,0,0,${(0.2*(1-j/6)).toFixed(3)})`;ctx.beginPath();ctx.ellipse(t.gx,t.gy,t.r*1.3,t.r*0.4,0,0,TAU);ctx.fill();}
+        ctx.fillStyle='#00000038';ctx.beginPath();ctx.ellipse(b.gx,b.gy,b.r*1.6,b.r*0.5,0,0,TAU);ctx.fill();} // a clearer shadow
       bfBall(ctx,b,CT.t*12,CT.state==='result'?Math.max(0,1-(CT.t-h.T)*1.5):1);}}
   }
 }

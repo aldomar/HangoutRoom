@@ -1000,6 +1000,80 @@ session stays `playback` (sound plays even with the mute switch on, as a game's 
 win a level's bat after that (its +5 still comes), then get another 6/6 on that level (no +5 today); try the 🔊/🔇 button; try to buy something you can't afford and read the hint;
 the next day the coins come again.
 
+#### v1.68 plan details: 🧤 Catch you can read (agreed 2026-11-23, built)
+**Why:** the owner finds Hard Catch close to impossible, even for themselves, and doesn't want the "go here" ring back.
+From the code (`61-catch.js`):
+- **Where the ball lands across the field** shows early, but only faintly. The shadow moves in a straight line from home plate
+  (`ctBallPt`: ground point `(u·e, 1 − e·(1 − ctZ(v)))`), but home is tiny and far away, so the first half second is hard to read.
+- **How far in it lands** (`v`) hardly shows at all until the end. All landing spots are within `CT_ZMAX` = 0.15 of her
+  line, so a deep ball and a short one look the same until the last moment.
+- **The 15 Hard hits always come in the same order** (`CT.round`), so winning becomes remembering.
+
+The fix gives her the cues a real outfielder uses. Nothing marks the landing spot.
+
+**1. The bat tells how far (sound + a comic word).** When the hitter hits it, the crack depends on `v`:
+- Deep (`v` < 0.34, her line or behind it): a loud, high **CRACK!**
+- Middle: a **WHACK**
+- Short (`v` > 0.67, she must run in): a dull, quiet **tok**
+
+The same word pops up by the hitter for about half a second, big for CRACK!, small for tok. It works with the sound off, and
+it's in the style of a comic. One of the 3 sounds and words for each hit; nothing new is saved.
+
+**2. Mowed grass to judge against.** The outfield gets real mowing patterns, drawn once into the background (`ctBack`), so
+they cost nothing per frame:
+- **Wedges from home plate**: alternating light and dark lanes that fan out from home (about 6 lanes across her line). The shadow
+  runs straight along its lane from the moment it leaves the bat, so "which lane" tells left or right early.
+- **3 bands near her line** for how far in (her line, half way, all the way in), so the end of the flight is easier to judge.
+
+The old faint bands stay farther out. The stripes are part of the field, like the foul lines; they don't light up or point anywhere.
+
+**3. A short trail behind the shadow.** The last 5 shadow positions (along the same path, 0.04 of the flight apart), fading out,
+so the shadow's direction is clear as soon as it starts moving. They're computed from the flight, nothing stored. Hard and Medium only
+(Easy has the ring).
+
+**4. No memorizing: fresh hits on Hard.** Each Hard game makes 5 new hits from a seed (`brRand`, like Free Play). A new rule
+`ctHitOk(lvl, hit)` holds what every hit must meet, and the fixed lists must pass it too:
+- Inside the field (`|u| ≤ CT_U`, `v` 0..1).
+- Catchable from all 4 corners (`ctCanCatch`).
+- Tight: 0.1–0.55 s to spare from the worst corner, unless it's as slow as its kind allows.
+- Never faster than its kind allows (fly 1.2 s, line drive 0.95, pop-up 1.5, grounder 1.2).
+
+The maker picks a kind, a side, a depth and a spare time (0.15–0.45 s). A game must have at least 3 kinds, both sides, and at most
+1 hit she could catch without moving. If the dice give a hit that breaks a rule, they roll again. Medium keeps its fixed 15 (it's
+winnable as it is). Easy is unchanged.
+
+**What doesn't change:** the glove size, run speed and time to react, so Hard is no easier to *do*. It just becomes possible to
+*read*. The pennants, best scores, coins (the v1.67 allowance), the Batting Duel and Easy mode are unchanged. No save changes.
+
+**If it's still too hard after your phone test (idea 5):** widen the spare time on Hard (for example 0.25–0.5 s). It's one number.
+
+**Smoke test:**
+- `ctHitOk` passes all 45 fixed hits.
+- 300 made-up Hard games all pass it, each has 3+ kinds and both sides, and at most 1 hit can be caught standing still.
+- The same seed gives the same game, and every made-up hit flies inside the canvas.
+- Each depth gets its sound and word (CRACK! / WHACK / tok), and the word shows with the sound off too.
+- The trail draws only while the ball flies, on Medium and Hard.
+- The background has the wedges and bands, and a screenshot of each level is saved.
+- The old checks still pass: catching where it lands catches it, and the wrong depth misses.
+
+**Docs:** README, this plan, STATUS, `CLAUDE.md` (the Catch notes), a `GIFT_TIMELINE` entry, and the version (1.68) in the four places.
+
+**Owner's answers (2026-11-23):** the stripes and the word on every level, with Medium nudged slightly harder again to make up
+for the new cues (built: glove 0.2 → 0.19, the ring from 55% of the flight instead of 45%; speed and hang times unchanged);
+fresh hits on Hard only; keep the word for sound-off play.
+
+**The questions were:**
+1. Stripes and the CRACK!/tok word on **every level** (they're part of the field and the hitter; Medium gets a little easier to
+   read), or on **Hard only**? Recommended: every level.
+2. Fresh hits on **Hard only** (recommended; Medium is already winnable), or **Medium too**?
+3. Is a small comic word by the hitter OK, or **sound only**? Recommended: keep the word, so it also works with the sound off.
+
+**Try on your phone:**
+- Play Hard a few times: the hits are different each game.
+- Listen for CRACK! (stay back) and tok (run in).
+- Watch the shadow's lane. Can you get 5/5 with practice?
+- If it's still too hard, tell me, and I'll widen the spare time.
+
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
 

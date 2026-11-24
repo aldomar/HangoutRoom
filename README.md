@@ -225,6 +225,18 @@ This pack adds 25 clothes (15–25 coins each, open to everyone) so every outfit
   firefighter outfit) and 🧩 Full Outfit (every piece of any 3 outfits).
 - No change to the save data. There is still no cape: it needs its own layer behind the body (maybe later).
 
+## Catch you can read (since version 1.68)
+🧤 Catch on the Ball Field gives the clues a real outfielder uses, instead of a "go here" ring:
+- **Listen to the bat:** a loud **CRACK!** means a deep ball (stay back), **WHACK** half way, a quiet **tok** a short one (run in).
+  The word also pops up by the hitter, so it works with the sound off. On every level.
+- **Mowed grass:** light lanes fan out from home plate (the ball's shadow runs straight out along one), and 3 bands near your
+  line show how far in. On every level.
+- **A short trail** behind the shadow on Medium and Hard, so you can see where it's heading straight away.
+- **Hard:** 🦓 Zippy hits 5 new balls every game, so it's about watching and listening, not remembering the order. Every ball
+  can still be caught from anywhere, with the same tight timing as before.
+- **Medium** is a touch harder again to make up for the new clues: a slightly smaller glove, and the landing ring shows a
+  little later. Easy is unchanged. No change to the save data.
+
 ## Fair daily coins (since version 1.67)
 Every game that pays for each goal, save, hit, catch or star now has **its own coins for the day**, so each day it pays to
 visit different parts of the app.

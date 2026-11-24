@@ -5088,7 +5088,64 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('odd or missing allowances are made safe', await ev(`(()=>{const p=JSON.parse(JSON.stringify(P()));delete p.soccer.pay;p.soccer.keep.pay='x';p.ball.bat.pay={day:5,n:-3};delete p.ball.catch.pay;p.stage.pay=null;p.maze.pay=[1];normalize(p);return [p.soccer.pay,p.soccer.keep.pay,p.ball.bat.pay,p.ball.catch.pay,p.stage.pay,p.maze.pay].every(o=>o.day===''&&o.n===0);})()`));
     check('a saved allowance survives normalize', await ev(`(()=>{const p=JSON.parse(JSON.stringify(P()));p.ball.catch.pay={day:'2031-03-02',n:7};normalize(p);return p.ball.catch.pay.day==='2031-03-02'&&p.ball.catch.pay.n===7;})()`));
     await ev(`closeModal();(()=>{const s=JSON.parse(${JSON.stringify(fcSaved)}),q=P();Object.keys(q).forEach(k=>delete q[k]);Object.assign(q,s);})();DB.settings.music=false;stopMusic();setSound(${fcSound});window.FP_TEST_DAY=${JSON.stringify(fcDay)}||undefined;stkPaused=false;save();show('room')`);
-    check('v1.67 is in the Gift Story and the app says 1.67', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.67')&&APP_VERSION==='1.67'`));
+    check('v1.67 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.67')`));
+  }
+
+  console.log('Catch you can read (v1.68)');
+  {
+    const waitFor=async(cond,ms)=>{for(let i=0;i<(ms||5000)/50;i++){if(await ev(cond))return true;await sleep(50);}return false;};
+    const cSaved=await ev(`JSON.stringify(P().ball)`), cSound=await ev(`DB.settings.sound`);
+    await ev(`closeModal();P().easy=false;show('room');goRoom(3);P().ball.mode='catch';P().ball.catch.level='hard';show('ball')`); await sleep(400);
+    check('the hit rules (ctHitOk) pass all 45 fixed hits', await ev(`['easy','medium','hard'].every(l=>CATCH_HITS[l].length===15&&CATCH_HITS[l].every(h=>ctHitOk(l,h)))`));
+    check('…and turn down hits that break them (too fast, outside, not catchable, too much spare time on Hard)', await ev(`!ctHitOk('hard',[0.2,0.8,1,0.5])&&!ctHitOk('hard',[0.95,1.5,0,0.5])&&!ctHitOk('hard',[0.85,1.0,1,1])&&!ctHitOk('hard',[0,2.4,0,0.5])&&!ctHitOk('easy',[0,2.4,0,0.5])`));
+    check('Medium a little harder again: glove 0.19 (was 0.2), the ring from 55% of the flight (was 45%)', await ev(`CATCH_HITTERS.medium.reach===0.19&&CATCH_HITTERS.medium.speed===1.75&&/k-0\\.55/.test(String(ctDraw))`));
+    const mk=await ev(`(()=>{for(let i=0;i<300;i++){const g=ctMakeGame('t'+i);
+      if(g.length!==5||!g.every(h=>ctHitOk('hard',h)))return 'a hit breaks the rules: '+i;
+      if(new Set(g.map(h=>h[2])).size<3||!g.some(h=>h[0]<0)||!g.some(h=>h[0]>0))return 'not mixed: '+i;
+      if(g.filter(h=>ctCaught(h[0],h[3],0,0.5,CATCH_HITTERS.hard.reach)).length>1)return 'too many without moving: '+i;
+      if(JSON.stringify(g)===JSON.stringify(CATCH_HITS.hard.slice(0,5)))return 'fell back to the fixed list: '+i;}return 'ok';})()`);
+    check('300 made-up Hard games: every hit passes the rules, 3+ kinds, both sides, at most 1 catchable without moving', mk==='ok', mk);
+    check('the same seed makes the same game; another seed another game', await ev(`JSON.stringify(ctMakeGame('a'))===JSON.stringify(ctMakeGame('a'))&&JSON.stringify(ctMakeGame('a'))!==JSON.stringify(ctMakeGame('b'))`));
+    check('across games, made-up hits use deep and short balls, every kind, and the spare time stays in range', await ev(`(()=>{const all=[];for(let i=0;i<60;i++)all.push(...ctMakeGame('s'+i));const sp=all.map(h=>h[1]-ctNeed('hard',h));return all.some(h=>h[3]<0.2)&&all.some(h=>h[3]>0.8)&&[0,1,2,3].every(k=>all.some(h=>h[2]===k))&&sp.every((x,i)=>x>=0.1-1e-9&&(x<=0.55+1e-9||all[i][1]===CT_KIND_MIN[all[i][2]]));})()`));
+    check('every made-up hit flies inside the canvas', await ev(`(()=>{const g=BF.G;if(!g)return false;for(let i=0;i<40;i++)for(const [u,T,kind,v] of ctMakeGame('c'+i))for(let e=0;e<=1;e+=0.05){const b=ctBallPt(g,{u,T,kind,v},e);if(!(b.x>0&&b.x<g.W&&b.y>0&&b.y<g.H&&b.r>0))return false;}return true;})()`));
+    await ev(`ctNewGame()`);
+    check('a new Hard game makes 5 fresh hits, and the first ball is the first of them', await ev(`CT.game&&CT.game.length===5&&(ctStart(),CT.hit.u===CT.game[0][0]&&CT.hit.T===CT.game[0][1]&&CT.hit.v===CT.game[0][3])`));
+    check('…and the next game is different (nothing to memorize)', await ev(`(()=>{const a=JSON.stringify(CT.game);ctNewGame();return JSON.stringify(CT.game)!==a;})()`));
+    await ev(`document.querySelector('#bfTabs [data-lvl=medium]').click()`); await sleep(150);
+    check('Medium keeps its fixed 15 (no made-up game)', await ev(`CT.game===null&&ctLvl()==='medium'`));
+    check('the tip says what the bat means', await ev(`(ctStart(),CT.state='wind',ctScore(),document.querySelector('#bfTip').textContent.includes('CRACK! = stay back, tok = run in'))`));
+    await ev(`ctNewGame()`);
+    // the crack of the bat: sound and word by depth, the word also with the sound off
+    check('the bat tells how far: deep = CRACK!, middle = WHACK, short = tok', await ev(`ctTier(0)===0&&ctTier(0.33)===0&&ctTier(0.5)===1&&ctTier(0.67)===1&&ctTier(0.68)===2&&ctTier(1)===2&&CT_CRACKS.map(c=>c.w).join()==='CRACK!,WHACK,tok'`));
+    await ev(`document.querySelector('#bfTabs [data-lvl=hard]').click()`); await sleep(150);
+    await ev(`setSound(false);CT.game[0]=[0.3,1.5,0,0.9];CT.bu=0;CT.tx=0;ctStart()`); await waitFor(`CT.state==='fly'`,3000); await sleep(120);
+    check('Hard, a short ball, sound off: the word "tok" pops up by the hitter', await ev(`!!CT.word&&CT.word.i===2&&BF.time-CT.word.at<0.7`));
+    await shot('CR1-hard-tok-trail');
+    await waitFor(`CT.state==='result'`,4000); await sleep(800);
+    check('…and is gone after a moment', await ev(`BF.time-CT.word.at>=0.7`));
+    await ev(`setSound(true)`);
+    await waitFor(`CT.state==='ready'`,3000);
+    await ev(`CT.game[1]=[-0.4,1.5,0,0];ctStart()`); await waitFor(`CT.state==='fly'`,3000); await sleep(100);
+    check('a deep ball: CRACK!', await ev(`CT.word.i===0`));
+    await shot('CR2-hard-crack');
+    check('the shadow trail is drawn on Medium and Hard (not Easy, which has the ring)', await ev(`/e-j\\*0\\.04/.test(String(ctDraw))&&/if\\(!help&&CT\\.state==='fly'\\)\\{ \\/\\/ a short fading trail/.test(String(ctDraw))`));
+    // the mowed grass, drawn once into the background
+    check('mowed lanes fan out across the outfield (light and dark across a row of grass)', await ev(`(()=>{const g=BF.G,c=CT.bg;if(!c)return false;const d=c.width/g.W,y=Math.round(ctPt(g,0,0.3,0).gy*d),row=c.getContext('2d').getImageData(0,y,c.width,1).data;let ch=0,prev=null;for(let i=0;i<c.width;i+=2){const v=row[i*4+1];if(prev!==null&&Math.abs(v-prev)>3)ch++;prev=v;}return ch>=4;})()`));
+    check('…and 3 bands near her line (half way in is lighter)', await ev(`(()=>{const g=BF.G,c=CT.bg,d=c.width/g.W,px=z=>c.getContext('2d').getImageData(2,Math.round(ctPt(g,0,z,0).gy*d),1,1).data[1];return px(ctZ(0.5))>px(ctZ(0.15))&&px(ctZ(0.5))>px(ctZ(0.85));})()`));
+    await waitFor(`CT.state==='ready'`,4000);
+    for(const l of ['easy','medium']){
+      await ev(`document.querySelector('#bfTabs [data-lvl=${l}]').click()`); await sleep(150); await ev(`ctStart()`); await waitFor(`CT.state==='fly'`,3000); await sleep(350);
+      if(l==='easy') check('Easy balls all land on her line, so the bat always says CRACK!', await ev(`CT.word&&CT.word.i===0&&CATCH_HITS.easy.every(h=>ctTier(h[3])===0)`));
+      await shot('CR3-'+l); await waitFor(`CT.state==='ready'`,5000);
+    }
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true}); await sleep(200);
+    await ev(`document.querySelector('#bfTabs [data-lvl=hard]').click()`); await sleep(150); await ev(`CT.game[0]=[0.8,1.5,0,0];ctStart()`); await waitFor(`CT.state==='fly'`,3000); await sleep(100);
+    check('phone: the CRACK! word stays inside the field', await ev(`(()=>{const g=BF.G,hp=bfPt(g,0,1,0),hs=g.H*0.15*Math.pow(hp.s,0.3),fs=Math.max(16,Math.round(hs*0.5*1.15));return Math.min(g.W-fs*2,hp.x+hs*0.7)+fs*1.8<=g.W&&Math.max(fs,hp.gy-hs*1.15)-fs>=-2;})()`));
+    await shot('CR4-phone');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(150);
+    await waitFor(`CT.state==='ready'`,5000);
+    await ev(`closeModal();P().ball=JSON.parse(${JSON.stringify(cSaved)});setSound(${cSound});save();show('room');goRoom(1)`);
+    check('v1.68 is in the Gift Story and the app says 1.68', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.68')&&APP_VERSION==='1.68'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

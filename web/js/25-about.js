@@ -190,7 +190,9 @@ const GIFT_TIMELINE=[
   {v:'1.66',d:'2026-11-22',i:'🦈',n:'Shark Pants + listen and spell',why:'To finish the shark outfit, and to make spelling a real listening game',
     news:['🦈 Shark Pants finish the shark outfit, belly and all','🔤 Word Builder: listen to the word and spell it, then tap 👀 Peek if you need to see it']},
   {v:'1.67',d:'2026-11-23',i:'🪙',n:'Fair coins',why:'So every corner of the app is worth a visit each day',
-    news:['🪙 Each game now has its own coins for the day. When one is full, try another!','🏆 Winning a prize the first time always pays','🔊 A new button in your room turns all the sound on or off']}
+    news:['🪙 Each game now has its own coins for the day. When one is full, try another!','🏆 Winning a prize the first time always pays','🔊 A new button in your room turns all the sound on or off']},
+  {v:'1.68',d:'2026-11-23',i:'🧤',n:'Catch you can read',why:'So the hardest catches are about watching and listening, not remembering',
+    news:['🧤 Listen to the bat: CRACK! means stay back, tok means run in','🌱 Mowed grass and a shadow trail show where the ball is going','🦓 Zippy hits new balls every game on Hard']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

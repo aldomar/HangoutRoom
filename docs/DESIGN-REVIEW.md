@@ -183,7 +183,7 @@ numbers (for example `K7P2-9QXM-4T`), using no easily confused characters (no 0/
 - Does each iPad have an English voice on the device? The voice test in the setup will show it.
 
 ## Next step
-**v1.67 (daily caps) is built** on branch `feature/caps` (`PLAN.md`, "v1.67 plan details"). Next: plan **v1.68 (Catch on Hard)**.
+**v1.67 (daily caps) is built** on branch `feature/caps` (`PLAN.md`, "v1.67 plan details"). **v1.68 (Catch on Hard) is built** on branch `feature/catchhard` (`PLAN.md`, "v1.68 plan details"). Next: plan **v1.69 (first-time setup + age bands)**.
 
 **Raised by the owner (2026-11-23): 🧤 Catch on Hard is still too hard,** even for the owner, and with capped coins it may just be
 frustrating. Why, from the code (`61-catch.js`): with no ring, the only cue is the ball's shadow, which starts at home plate (tiny,
