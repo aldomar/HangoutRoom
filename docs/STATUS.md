@@ -10,7 +10,11 @@ _Last updated: 2026-11-24_
   - ✅ v1.73 🧰 Shared helpers, part 1: built, PR open (branch `feature/shared`, stacked on `feature/holidays`). One "today" = `fpDay()`
     (moved to 01), one `dailyPay` helper (08). Owner's answer 2026-11-24: old "Tue Nov 24 2026" days in saves are converted
     (`dayIso` in `normalize()`), so nothing pays twice on the update day. No new save fields. (`feature/helpers` was already used by v1.30.)
-  - ⬜ v1.74 ⏸️ Small fixes: the Stage pauses instead of stopping when the app is left; ↩ Undo for 10 s after buying or giving.
+  - ✅ v1.73 is PR #75.
+  - ✅ v1.74 ⏸️ Small fixes: built, PR open (branch `feature/fixes`, stacked on `feature/shared`).
+    - The Stage pauses instead of stopping when the app is left (⏸️ Paused, ▶ Keep going, 3-2-1).
+    - ↩ Undo for 10 s after buying or giving, in every room; it puts the room back exactly as it was before.
+    - Owner's answers 2026-11-24 are in `PLAN.md`. No save changes. New file `68-undo.js`.
   - ⬜ v1.75 🎁 Gift codes between iPads.
   - ⬜ v1.76 🐾 The pet notices what the child did.
   - ⬜ v1.77 📻 Creations in the room (a boombox, Code Lab and Brain Games prizes).
@@ -1495,7 +1499,7 @@ _Last updated: 2026-11-24_
 2. ~~Build v1.72 🎉 Holiday greetings on `feature/holidays`.~~ Built, PR open. Owner: set the phone's date to a holiday (or wait for
    Thanksgiving), open the room, and merge it by Wednesday 2026-11-25.
 3. ~~Plan and build v1.73 🧰 Shared helpers, part 1.~~ Built, PR open.
-4. Plan and build v1.74 ⏸️ Stage pause + ↩ Undo.
+4. ~~Plan and build v1.74 ⏸️ Stage pause + ↩ Undo.~~ Built, PR open.
 5. Plan and build v1.75 🎁 Gift codes between iPads.
 6. Plan and build v1.76 🐾 The pet notices.
 7. Plan and build v1.77 📻 Creations in the room.

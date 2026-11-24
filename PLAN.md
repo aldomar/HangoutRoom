@@ -1276,12 +1276,24 @@ agreed before any code (only v1.72's is written so far).
     Runway, Jam, Trick Shots, Derby), and `gameTake` uses it too.
   - The rest of idea 10 (a screen list for `show()`/`androidBack`, one results box, one prize giver) waits. The exception is
     when `09-screens.js` (at the ~40 KB limit) next has to grow.
-- ⬜ **⏸️ Small fixes (v1.74; risk 7 + idea 12):** no save changes.
+- ✅ **⏸️ Small fixes (v1.74; risk 7 + idea 12; built, PR open on `feature/fixes`):** no save changes.
   - **Stage pause:** leaving the app mid-song pauses it instead of ending it. `AC.suspend()` already freezes the audio clock
     the song runs on, so coming back shows "Ready? ▶" with a 3-2-1 and carries on.
   - **↩ Undo for 10 seconds:** the message after a purchase or a gift gets an Undo button.
     - A purchase is refunded, and the item is removed from `owned` or from the room.
     - A gift can be taken back only while it is still unopened in the other room's `gifts[]`.
+  - **Owner's answers (2026-11-24):**
+    - Undo goes back to just before: the whole room as it was (coins, owned things, what was worn, applied or placed). It's offered
+      for 10 s, and only while she stays on the same screen.
+    - Coming back to a paused song shows ⏸️ Paused with ▶ Keep going, then 3-2-1.
+    - Undo shows in every room, Easy and 🧸 Little ones too.
+  - **As built:**
+    - **Stage pause** (`14-stage.js`): `STG.paused` goes `'wait'` → `'count'` → `''`. The audio clock stays suspended until the
+      3-2-1 ends; `ac()` (07) and the return to the app (99) don't wake it.
+    - Leaving a paused song drops the notes already sent to the speaker (the stage bus is disconnected). Jams still end quietly, as before.
+    - **Undo** (new `68-undo.js`): `undoArm()` copies the profile just before `tryBuy`/`buyConsumable`/`sendGift` change anything.
+      `undoShow()` then shows a big ↩ button with a 10 s bar, and `show()` to another screen ends it. The card maker's picked stage
+      or frame is put back too.
 - ⬜ **🎁 Gift codes between iPads (v1.75; idea 7):** as described in `docs/DESIGN-REVIEW.md`.
   - The code: about 12 characters, a check letter, and a short hash of the `DECOR` key. The smoke test checks that no two keys
     share a hash.

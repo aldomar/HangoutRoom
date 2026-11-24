@@ -227,6 +227,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   67. `67-holidays.js` 🎉 Holiday greetings (v1.72): `HOLIDAYS` (`{id, icon, words, cols, date(year)}`; `hdFixed`, `hdNth` for "the Nth weekday",
       `hdEaster`), `holidayToday(day)` (by `fpDay()`), `holidayGreet(p, wait)` called by `enterRoom()` (09); confetti through `giftConfetti(cols)` (32).
       Nothing saved, no coins. Holiday ids aren't saved, so they can change.
+  68. `68-undo.js` ↩ Undo (v1.74): `undoArm()` (a copy of the profile just before), `undoShow(u, back)`, `undoDo`, `undoOff`, `undoLeave`
+      (called by `show()`), `#undoBar`. Hooked into `tryBuy`, `buyConsumable` (08) and `sendGift` (32). **A new shop must buy through
+      `tryBuy`/`buyConsumable`** so it gets Undo; a new way to spend or give coins outside them should call `undoArm`/`undoShow` itself.
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -262,6 +265,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   (`stSongT()`), so taps line up with what she hears. Song ids `starlight/bats/sugar` (and since v1.26 `neon/clap/dino/rocket/lullaby`, in `30-songs2.js`) and level ids are saved: never rename them.
   `SONG_IDS` is made when 14 loads, so a song file must push its new ids onto it. A new song must pass the smoke test's chart rules
   (55–75 s long, Easy < Medium < Hard notes, so keep 3–4 melody notes in most bars). Encore! is pinned to the first 3 songs.
+  Leaving the app mid-song pauses it (since v1.74): `stPause` → `#stgPause` ▶ `stGo` → a 3-2-1 → `stCountDone`; `STG.paused` keeps the audio
+  clock suspended (`ac()` checks it) and `stUnpause()` drops the queued notes when she leaves instead.
   3 stars on Hard gives the Golden Mic (`goldenMic`, `award:1`) once (`stage.mic`). Background music pauses during a song.
 - Level bands (since v1.69, section 64): each room has `p.band` 🧸 little / 🐣 easy / ⭐ normal / 🔥 challenge, picked by a grown-up in the New Room box,
   ✏️ Change Room and ⚙️ Settings → Level (behind `askPin`), shown as icons and names only (no ages). `p.easy` stays saved and follows it

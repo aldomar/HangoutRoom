@@ -101,6 +101,28 @@ function sKick(at){const o=AC.createOscillator(),g=AC.createGain();o.frequency.s
 function sSnare(at){sNoise(at,0.15,0.22,'bandpass',1800);sTone(220,at,0.08,'triangle',0.07);}
 function sHat(at){sNoise(at,0.04,0.08,'highpass',7000);}
 
+/* ---------- ⏸️ pause (v1.74) ---------- */
+// Leaving the app mid-song pauses it instead of ending it. The audio clock the song runs on is suspended (99), so the song is
+// frozen at STG.pT; coming back shows ⏸️ Paused with ▶ Keep going, then 3-2-1 (STG.paused 'wait' -> 'count' -> ''), and the
+// clock starts again right where it stopped. Leaving the song while paused drops the notes already sent to the speaker.
+function stPause(){
+  if(STG.state!=='play'||STG.paused) return;
+  STG.pT=stSongT(); STG.paused='wait'; STG.press=[0,0,0];
+  $('#stgPause').classList.remove('hidden');
+}
+function stGo(){if(STG.paused!=='wait')return;STG.paused='count';STG.cd=performance.now();$('#stgPause').classList.add('hidden');SFX.click();}
+function stCountDone(){
+  STG.paused='';
+  if(AC&&(AC.state==='suspended'||AC.state==='interrupted')) AC.resume();
+  if(STG.clock!=='ac') STG.t0=stNow()-stLat()-STG.pT; // the 'ac' clock was frozen with the song; the other one kept going
+}
+function stUnpause(){
+  $('#stgPause').classList.add('hidden'); if(!STG.paused) return; STG.paused='';
+  if(stageBus){stageBus.disconnect();stageBus=null;} // the queued notes go nowhere
+  if(AC&&!document.hidden) AC.resume();
+}
+$('#stgGo').onclick=stGo;
+
 /* ---------- clock ---------- */
 const stNow=()=>STG.clock==='ac'&&AC?AC.currentTime:performance.now()/1000;
 const stLat=()=>(STG.clock==='ac'&&AC?(AC.outputLatency||AC.baseLatency||0):0)+(DB.settings.stageOffset||0)/1000;
@@ -109,6 +131,7 @@ const stSongT=()=>stNow()-STG.t0-stLat(); // the song time she is hearing right 
 /* ---------- song picker ---------- */
 function renderStage(){if(P())stgPickView();}
 function stgPickView(){
+  stUnpause(); // ⏸️ leaving a paused song (v1.74)
   const p=P(); if(!p) return; STG.state='pick';
   $('#stgPick').classList.remove('hidden'); $('#stgPlay').classList.add('hidden'); $('#stgTabs').classList.remove('hidden');
   $('#stgBack').textContent='⬅ Room'; jamHide(); // 🎸 Jam (section 53)
@@ -133,7 +156,7 @@ function stStart(id){
   const p=P(); if(!p||!SONGS[id]) return;
   const lvl=TGT.on?'duo':p.stage.level, b=buildSong(id,lvl), a=DB.settings.sound?ac():null;
   stopMusic();
-  Object.assign(STG,{state:'play',song:id,lvl,notes:b.notes,ev:b.ev,ei:0,end:b.end,first:b.first,beat:b.beat,bar:b.bar,
+  stUnpause(); Object.assign(STG,{state:'play',song:id,lvl,notes:b.notes,ev:b.ev,ei:0,end:b.end,first:b.first,beat:b.beat,bar:b.bar,
     score:0,combo:0,maxCombo:0,counts:[0,0,0,0],fx:[],press:[0,0,0],time:0});
   STG.clock=a&&a.state==='running'?'ac':'perf'; STG.t0=stNow()+0.4;
   $('#stgPick').classList.add('hidden'); $('#stgTabs').classList.add('hidden'); $('#stgPlay').classList.remove('hidden');
@@ -141,14 +164,14 @@ function stStart(id){
   $('#stgMascot').innerHTML=lvl==='duo'?tgStageBuddies():mascotSVG(p.look); $('#stgMascot').classList.toggle('duo',lvl==='duo');
   stHud(); SFX.click(); tgStageNames();
 }
-function stgStop(){jamEnd(true);if(STG.state!=='pick')STG.state='pick';} // leaving the screen ends the song (no coins, nothing lost); a jam keeps its coins
+function stgStop(){stUnpause();jamEnd(true);if(STG.state!=='pick')STG.state='pick';} // leaving the screen ends the song (no coins, nothing lost); a jam keeps its coins
 function stHud(){
   $('#stgScore').textContent=STG.score?'🎵 '+STG.score:'';
   $('#stgCombo').textContent=STG.combo>=5?STG.combo+' combo!':'';
 }
 // Tap on a lane at song time t. Returns the rating index (0 Perfect, 1 Great, 2 Good) or -1 if no note was near.
 function stTap(lane,t){
-  if(STG.state!=='play') return -1;
+  if(STG.state!=='play'||STG.paused) return -1;
   STG.press[lane]=0.18;
   const w=STG_LEVELS[STG.lvl].win, far=JUDGE[JUDGE.length-1][1]*w; let best=null;
   for(const n of STG.notes){if(n.t>t+far)break;if(n.r||n.lane!==lane)continue;if(Math.abs(n.t-t)<=far&&(!best||Math.abs(n.t-t)<Math.abs(best.t-t)))best=n;}
@@ -224,8 +247,8 @@ function drawStage(dt){
   const {ctx,W,H}=fit(stgCv), L=STG_LEVELS[STG.lvl], n=L.lanes, now=stNow(); STG.time+=dt;
   // send the next bit of the song to the speaker (a little ahead, so it never stutters)
   const live=DB.settings.sound&&AC&&AC.state==='running';
-  while(STG.ei<STG.ev.length&&STG.ev[STG.ei].t<now-STG.t0+0.2){const e=STG.ev[STG.ei++];if(live){const at=AC.currentTime+(STG.t0+e.t-now);if(at>=AC.currentTime-0.01)e.f(Math.max(at,AC.currentTime));}}
-  const t=stSongT(), beatF=t/STG.beat, ph=((beatF%1)+1)%1, onBeat=t>0?Math.pow(1-ph,3):0;
+  while(!STG.paused&&STG.ei<STG.ev.length&&STG.ev[STG.ei].t<now-STG.t0+0.2){const e=STG.ev[STG.ei++];if(live){const at=AC.currentTime+(STG.t0+e.t-now);if(at>=AC.currentTime-0.01)e.f(Math.max(at,AC.currentTime));}}
+  const t=STG.paused?STG.pT:stSongT(), beatF=t/STG.beat, ph=((beatF%1)+1)%1, onBeat=t>0?Math.pow(1-ph,3):0;
   // layout: Fuzzy at the top, lanes fan out from the stage below Fuzzy down to the pads
   const mh=H*0.3, mw=mh*200/270, y0=H*0.34, yh=H-Math.max(64,H*0.13), lw=Math.min(170,(W-24)/n,W*0.3), cx=W/2;
   const xs=Array.from({length:n},(_,i)=>cx+(i-(n-1)/2)*lw), pr=Math.min(lw*0.36,H*0.075,58);
@@ -261,8 +284,12 @@ function drawStage(dt){
     const txt=t<STG.bar?'Get ready! 🎵':['3','2','1','Go!'][clamp(k,0,3)];
     ctx.font=`900 ${Math.round(Math.min(W,H)*0.09)}px sans-serif`; ctx.lineWidth=6; ctx.strokeStyle='#2b2235';
     ctx.strokeText(txt,cx,H*0.6); ctx.fillStyle='#fff'; ctx.fillText(txt,cx,H*0.6);}
-  stgBounce(cx,y0,mw,mh,H,t>0,ph,onBeat);
-  if(STG.state==='play'&&t>STG.end) stFinish();
+  if(STG.paused==='count'){const k=Math.floor((performance.now()-STG.cd)/1000); // ⏸️ 3-2-1, then the song carries on (v1.74)
+    if(k>=3) stCountDone();
+    else {ctx.fillStyle='#0008';ctx.fillRect(0,0,W,H);ctx.font=`900 ${Math.round(Math.min(W,H)*0.16)}px sans-serif`;ctx.lineWidth=8;ctx.strokeStyle='#2b2235';
+      ctx.strokeText(String(3-k),cx,H*0.6);ctx.fillStyle='#ffd166';ctx.fillText(String(3-k),cx,H*0.6);}}
+  stgBounce(cx,y0,mw,mh,H,t>0&&!STG.paused,ph,onBeat);
+  if(STG.state==='play'&&!STG.paused&&t>STG.end) stFinish();
 }
 // The stage behind a song or a 🎸 Jam (v1.52): her backdrop, swinging spotlights (spot = one color for all three, or null)
 // and a row of lights that flash on the beat.
