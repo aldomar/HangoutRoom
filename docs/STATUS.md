@@ -18,7 +18,7 @@ _Last updated: 2026-11-23_
   (glove 0.19, ring from 55%). No save changes. Why: the owner found Hard nearly impossible (even for them), because the shadow
   showed where the ball lands too late and the 15 hits came in a fixed order, so it was memory. The owner will judge Hard on their
   phone; `CT_SPARE` (61) widens it if needed.
-- **👋 First-time setup + level bands: built as v1.69** on branch `feature/setup` (from `main` after #70). Plan agreed 2026-11-23 (`PLAN.md`,
+- **👋 First-time setup + level bands: built, PR #71 open as v1.69** on branch `feature/setup` (from `main` after #70). Plan agreed 2026-11-23 (`PLAN.md`,
   "v1.69 plan details"). Owner's answers: Free Play +2 at the band's level or above (Little/Easy any, Normal Medium+, Challenge Hard);
   Challenge also starts new games on Medium; the picker shows icons and names only (no ages); the owner sets up each iPad, but the
   welcome is written for any grown-up. Save: `p.band` (with `p.easy` kept in step) and `settings.setupDone` (device, kept by Restore);
