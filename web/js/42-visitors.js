@@ -149,6 +149,7 @@ function visitTap(msg){
     +`<div class="vs-parts">${rows.map(({pt,have},i)=>`<button class="vs-row${have>=pt.n?' ok':''}" data-vs-help="${i}" aria-label="${esc(pt.name)}"><i>${pt.icon}</i><span class="tn">${esc(pt.name)}</span><b>${have>=pt.n?'✔':`${have} / ${pt.n}`}</b></button>`).join('')}</div>`
     +(msg?`<div class="vs-msg">${msg}</div>`:`<div class="vs-tip">Tap a line for 💡 help</div>`),
     [{text:'🔄 Other wish',cls:'ghost',on:()=>visitSwap(),hide:left<2},{text:'✅ Show me!',cls:'pink',keep:true,on:()=>visitCheck()}].filter(b=>!b.hide));
+  if(!msg) setTimeout(()=>tell(`${F.name} is visiting! ${w.title}. ${w.say}`),0); // after the tap's own words (section 65, v1.70)
 }
 // Not yet: say what is still missing, kindly, and keep the card open.
 function visitCheck(){

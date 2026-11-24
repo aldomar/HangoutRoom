@@ -67,7 +67,7 @@ BRAIN_GAMES.bake={icon:'🍕',name:'Fraction Bakery',desc:'Halves, quarters and 
       $('#brBoard').innerHTML=`<div class="br-choices">`+fbOpts(pz).map(o=>`<button class="br-ch fb-ch" data-o="${o}" aria-label="${o.endsWith('u')?'not equal':o+' equal pieces'}">${fbTreat(pz.k,parseInt(o,10),!o.endsWith('u'))}</button>`).join('')+`</div>`;
       $('#brBoard').onclick=e=>{const b=e.target.closest('[data-o]');if(!b||BR.won)return;
         if(b.dataset.o===String(pz.n)){b.classList.add('right');SFX.happy();brWin();}
-        else{brOops(b);if(!p.easy)brSay(b.dataset.o.endsWith('u')?'Those pieces are not the same size. Try again! 💪':`That one has ${parseInt(b.dataset.o,10)} pieces. Try again! 💪`);}};
+        else{brOops(b);brHint(b.dataset.o.endsWith('u')?'Those pieces are not the same size. Try again! 💪':`That one has ${parseInt(b.dataset.o,10)} pieces. Try again! 💪`);}};
     } else if(l==='medium'){
       FB={on:Array(pz.n).fill(false)};
       $('#brQ').innerHTML=`<div class="br-card"><div class="br-ask">${p.easy?'🍕':`Put toppings on`} ${fbFrac(pz.a,pz.b)} ${p.easy?'':`of the ${pz.k}!`}</div>`
@@ -92,7 +92,7 @@ function fbCheck(pz){
   const want=pz.a*pz.n/pz.b, n=FB.on.filter(Boolean).length;
   if(n===want){SFX.happy();brWin();return;}
   brOops($('#brBoard .fb-big'));
-  if(!P().easy) brSay(n<want?`A little more! You need ${pz.a}/${pz.b}. 💪`:`Too many! Take some off. 💪`);
+  brHint(n<want?`A little more! You need ${pz.a}/${pz.b}. 💪`:`Too many! Take some off. 💪`);
 }
 
 /* ---------- 🪐 Fact Cards ---------- */

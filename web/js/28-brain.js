@@ -67,7 +67,9 @@ $('#brDots').onclick=e=>{if(e.target.closest('[data-dice]')){SFX.click();fpBrain
   const b=e.target.closest('[data-pz]');if(b){SFX.click();brPuzzle(BR.game,BR.lvl,Number(b.dataset.pz));}};
 function brSay(t){const m=$('#brMsg');m.textContent=t;m.classList.remove('pop');void m.offsetWidth;m.classList.add('pop');}
 function brWobble(el){if(!el)return;el.classList.remove('wob');void el.offsetWidth;el.classList.add('wob');}
-function brOops(el){SFX.locked();vibrate(15);brWobble(el);brSay(P().easy?'🙈 🔁':'Not quite. Try again! 💪');}
+function brOops(el){SFX.locked();vibrate(15);brWobble(el);brSay(P().easy?'🙈 🔁':'Not quite. Try again! 💪');tell('Not quite. Try again!');} // tell: section 65
+// A try-again hint: shown in words (not in Easy mode) and said when Read to me is on (v1.70).
+function brHint(t){if(!P().easy)brSay(t);tell(t);}
 // Solved: coins the first time (+ the level bonus when the whole level is done), then a box with Next.
 function brWin(){
   const p=P(), g=BR.game, l=BR.lvl, idx=BR.idx, id=brId(g,l,idx), first=!p.brain.solved.includes(id), G=BRAIN_GAMES[g];

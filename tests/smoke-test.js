@@ -2110,12 +2110,13 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`decoTab='shop';themePick.shop='all';renderDecoGrid();document.querySelector('#decoGrid [data-buy=plant]').click()`); await sleep(50);
   check('a Shop tile says its name', await ev(`window._said.includes('Happy Plant')`));
   await ev(`closeModal();exitDecorate();window._said=[];document.querySelector('#roomSvg [data-hot=closet]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(100);
-  check('a room hotspot says what it is', await ev(`window._said[0]==='Closet'`));
-  await ev(`show('room');document.body.insertAdjacentHTML('beforeend','<button id="tSpk">✨ Hello</button>');window._said=[];const s=STG.state;cur='stage';STG.state='play';document.querySelector('#tSpk').click();STG.state=s;cur='room'`);
+  check('a room hotspot that opens a screen says what to do there (v1.70: the Closet\'s line, not just "Closet")', await ev(`window._said[0]===spkClean(SPK_FIXED.closet)`), await ev(`JSON.stringify(window._said)`));
+  await ev(`show('room');document.body.insertAdjacentHTML('beforeend','<button id="tSpk">✨ Hello</button>');window._said=[];window._s0=STG.state;cur='stage';STG.state='play';document.querySelector('#tSpk').click()`); await sleep(50);
   check('it never talks during a song', await ev(`window._said.length===0`));
-  await ev(`document.querySelector('#tSpk').click();document.querySelector('#tSpk').click()`);
+  await ev(`STG.state=window._s0;cur='room';spkLast=''`);
+  await ev(`document.querySelector('#tSpk').click();document.querySelector('#tSpk').click()`); await sleep(50);
   check('a double tap says it once', await ev(`window._said.join()==='Hello'`));
-  await ev(`P().speak=false;window._said=[];document.querySelector('#tSpk').click();document.querySelector('#tSpk').remove()`);
+  await ev(`P().speak=false;window._said=[];document.querySelector('#tSpk').click();document.querySelector('#tSpk').remove()`); await sleep(50);
   check('with it off, nothing is said', await ev(`window._said.length===0`));
   // snapshots
   check('the 📷 button sits under 🌙, big enough', await ev(`(()=>{const a=document.querySelector('#nightBtn').getBoundingClientRect(),b=document.querySelector('#roomSnapBtn').getBoundingClientRect();return b.top>=a.bottom&&b.width>=48&&b.height>=48&&!document.querySelector('#roomSnapBtn').classList.contains('hidden');})()`));
@@ -4600,7 +4601,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`window._spoke=[];window._realSS=window.speechSynthesis;webVoice={lang:'en-US',name:'Test Voice',localService:true};Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{cancel(){},speak(u){window._spoke.push(u.text);},getVoices(){return [];}}});DB.activeId=DB.profiles[0].id;P().speak=true;settingsModal()`); await sleep(100);
     check('🔊 with a built-in voice, Settings has Read to me', await ev(`canSpeak()&&!!document.querySelector('#sSpeak')`));
     await ev(`closeModal();window._spoke=[];document.querySelector('#littleBtn').click()`); await sleep(120);
-    check('tapping a button says its name with the device voice', await ev(`window._spoke.join()==='Play'`), await ev('window._spoke'));
+    check('tapping a button speaks with the device voice (v1.70: 🧸 Play opens a screen that says what to do)', await ev(`window._spoke.join()===spkClean(SPK_FIXED.littleMenu)`), await ev('window._spoke'));
     await ev(`show('room');window._spoke=[];wbSay('FOX')`); await sleep(50);
     check('Word Builder 🔊 says the word with it', await ev(`window._spoke.join()==='fox'`), await ev('window._spoke'));
     check('only a voice that lives on the device is ever picked (never an online one)', await ev(`(()=>{const v=[{lang:'en-US',localService:false,name:'Online'},{lang:'en-GB',localService:true,name:'Local GB'}];Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{getVoices(){return v;}}});findWebVoice();const a=!!webVoice&&webVoice.name==='Local GB';v.length=1;findWebVoice();return a&&webVoice===null;})()`));
@@ -5272,7 +5273,82 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await shot('SU10-phone-new-room');
     await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(150);
     await ev(`closeModal();DB=fixDB(JSON.parse(window._bdDB));DB.profiles.forEach(normalize);DB.settings.pin='';save();show('profiles')`); await sleep(150);
-    check('v1.69 is in the Gift Story and the app says 1.69', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.69')&&APP_VERSION==='1.69'`));
+    check('v1.69 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.69')`));
+  }
+
+  console.log('Spoken instructions (v1.70)');
+  {
+    const said=()=>ev(`window._said.slice()`);
+    const last=()=>ev(`window._said[window._said.length-1]||''`);
+    const clean=t=>ev(`spkClean(${JSON.stringify(t)})`);
+    await ev(`closeModal();stkPaused=true;window._spSaved=JSON.stringify(P());window._spSound=DB.settings.sound;window._said=[];window.AndroidBridge={speak(t){window._said.push(t);}};
+      DB.settings.sound=true;P().speak=null;setBand(P(),'easy');show('room');goRoom(1);applyEasy()`); await sleep(200);
+    const lineOk=`(t,max)=>{const c=spkClean(t);return !!c&&!/[\\p{Extended_Pictographic}]/u.test(c)&&c.split(' ').length<=(max||20);}`;
+    // every place has a line
+    const places=await ev(`(()=>{const ok=${lineOk},bad=[],at=(name,fn)=>{try{fn();const L=speakLine();if(!L||!ok(L.t))bad.push(name+': '+(L&&L.t));}catch(e){bad.push(name+' ✖ '+e.message);}};
+      at('closet',()=>show('closet'));at('art',()=>show('art'));at('photocards',()=>{show('cards');setCardView('make');});at('binder',()=>setCardView('binder'));
+      at('stickers',()=>openStickers('room'));
+      ['popit','squish','spin','slime','cube','maze'].forEach(t=>at('fidget '+t,()=>{show('fidget');setFidTab(t);}));
+      ['kick','keep','trick'].forEach(m=>at('soccer '+m,()=>{P().soccer.mode=m;show('soccer');}));
+      ['bat','catch','derby'].forEach(m=>at('ball '+m,()=>{P().ball.mode=m;show('ball');}));
+      at('stage',()=>show('stage'));at('code list',()=>show('code'));at('code puzzle',()=>clOpen('easy',0));
+      at('brain menu',()=>show('brain'));at('brain puzzle',()=>brPuzzle('snack','easy',0));at('fact cards',()=>factBinder());
+      at('music',()=>show('music'));at('dance',()=>show('dance'));at('garden',()=>show('garden'));at('walk',()=>wkOpen());
+      at('runway',()=>{show('closet');rwOpen();});at('little',()=>show('little'));at('little coloring',()=>ltGo('colorPick'));at('sound mat',()=>ltGo('mat'));
+      show('room');return bad;})()`);
+    check('every screen, tab and mode has a spoken line (short, no emoji)', places.length===0, places);
+    const brBad=await ev(`(()=>{const ok=${lineOk},bad=[];Object.keys(BRAIN_GAMES).forEach(g=>['easy','medium','hard'].forEach(l=>(BRAIN_GAMES[g].puzzles[l]||[]).forEach((pz,i)=>{
+      if(!BR_SPEAK[g]||!ok(BR_SPEAK[g](pz,l),30))bad.push(g+':'+l+i+' '+(BR_SPEAK[g]&&BR_SPEAK[g](pz,l)));})));return bad;})()`);
+    check('every fixed Brain Games puzzle has a spoken question (no emoji, 30 words at most)', brBad.length===0, brBad.slice(0,6));
+    check('…and Word Builder bank words: trace, look and listen', await ev(`(()=>{const ok=${lineOk},pz={bank:1,w:'CAT'},r=[];['easy','medium','hard'].forEach(l=>{WB.look=true;r.push(BR_SPEAK.word(pz,l));WB.look=false;r.push(BR_SPEAK.word(pz,l));});
+      return r.every(t=>ok(t)&&t.includes('cat'))&&r[0].startsWith('Copy')&&r[2].startsWith('Look')&&r[3].startsWith('Listen');})()`));
+    check('every Code Lab puzzle has a spoken line, and its oops lines say no emoji', await ev(`(()=>{const ok=${lineOk};return Object.keys(CODE_PUZZLES).every(l=>CODE_PUZZLES[l].every(pz=>ok(clSpeak(l,pz))))&&Object.values(CL_OOPS).every(o=>ok(o[1],25));})()`));
+    check('fractions and coins are said as words', (await clean('Put 1/2 and 3/4 on it. 5 🪙'))==='Put one half and 3 fourths on it. 5 coins', await clean('Put 1/2 and 3/4 on it. 5 🪙'));
+    // by itself, in an Easy room
+    await ev(`window._said=[];spkLast='';document.querySelector('#roomSvg [data-hot=shelf]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(100);
+    check('tapping the shelf in an Easy room: it says what to do there, not just "Fidget shelf"', await ev(`cur==='fidget'&&window._said.length===1&&window._said[0]===spkClean(speakLine().t)`), await said());
+    await ev(`window._said=[];setFidTab('spin');spkCheck()`);
+    check('a new fidget tab says its own line', (await last())===await clean(await ev(`document.querySelector('#fid-spin .fid-tip').textContent`)));
+    await ev(`window._said=[];spkCheck()`);
+    check('…and staying in the same place says nothing again', (await said()).length===0);
+    await ev(`show('brain');brPuzzle('train','easy',0);window._said=[];spkCheck()`);
+    check('Easy mode: the screen shows only "🚂 ❓", but it says the question', await ev(`document.querySelector('#brQ .br-ask').textContent.includes('❓')`)&&(await last())==='Which wagon goes in the empty spot?', await last());
+    await ev(`window._said=[];brOops(document.querySelector('#brQ'))`);
+    check('a wrong answer says "Not quite. Try again!"', (await last())==='Not quite. Try again!');
+    await ev(`window._said=[];brHint('A little more! You need 3/4. 💪')`);
+    check('a Fraction Bakery hint is said in words (and only said in Easy mode)', (await last())==='A little more! You need 3 fourths.'&&await ev(`!document.querySelector('#brMsg').textContent.includes('3/4')`), await last());
+    await ev(`show('room');window._said=[];say('Hi there! ✨')`);
+    check('the buddy\'s speech bubble is read aloud', (await last())==='Hi there!');
+    await ev(`(()=>{const p=P();if(!p.visit.cur)p.visit.cur=VISIT_WISHES[0].id;window._said=[];visitTap();})()`); await sleep(100);
+    check('a visitor\'s wish is read aloud', /is visiting!/.test(await last()), await last());
+    await ev(`closeModal()`);
+    check('slower in Little and Easy rooms (0.8), the usual speed otherwise', await ev(`(()=>{const a=spkRate();setBand(P(),'normal');const b=spkRate();setBand(P(),'little');const c=spkRate();setBand(P(),'easy');return a===0.8&&b===0.95&&c===0.8;})()`));
+    // when it stays quiet
+    await ev(`P().speak=false;window._said=[];spkLast='';show('closet')`); await sleep(100);
+    check('with Read to me off, nothing is said by itself', (await said()).length===0);
+    await ev(`document.querySelector('#scr-closet .say-btn').click()`); await sleep(50);
+    check('…but 🔊 says it again when she asks', (await last())===await clean(await ev(`SPK_FIXED.closet`)));
+    await ev(`P().speak=null;DB.settings.sound=false;window._said=[];spkLast='';show('art')`); await sleep(100);
+    check('🔇 sound off: nothing by itself (not even a button\'s name)', (await said()).length===0&&await ev(`(document.querySelector('#scr-art .say-btn').click(),window._said.length===1)`));
+    await ev(`DB.settings.sound=true;show('room')`);
+    check('never during a Stage song', await ev(`(()=>{cur='stage';STG.state='play';window._said=[];tell('Hello there');const n=window._said.length;STG.state='pick';cur='room';return n===0;})()`));
+    // the 🔊 buttons
+    check('a 🔊 button in every screen\'s top bar (not the rooms, the room or About), 48 px, labeled', await ev(`(()=>{const b=[...document.querySelectorAll('.say-btn')];return b.length===16&&b.every(x=>x.getAttribute('aria-label')==='Say it again'&&!x.classList.contains('hidden'))
+      &&!document.querySelector('#scr-room .say-btn,#scr-profiles .say-btn,#scr-about .say-btn');})()`), await ev(`document.querySelectorAll('.say-btn').length`));
+    await ev(`show('closet')`); await sleep(50);
+    check('…48 px', await ev(`(r=>r.width>=48&&r.height>=48)(document.querySelector('#scr-closet .say-btn').getBoundingClientRect())`));
+    await shot('SP1-closet-say');
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true}); await sleep(200);
+    const tight=await ev(`(()=>{const bad=[];['closet','fidget','art','cards','soccer','ball','stage','code','music','dance','runway','garden','little','brain','stickers'].forEach(n=>{try{show(n);}catch(e){}
+      const s=document.querySelector('#scr-'+n),b=s&&s.querySelector('.say-btn'),bar=s&&s.querySelector('.topbar');if(!b)return;const r=b.getBoundingClientRect();
+      if(r.right>innerWidth+0.5||r.width<48||bar.scrollWidth>bar.clientWidth+1)bad.push(n);});show('room');return bad;})()`);
+    check('phone: every 🔊 fits in its top bar', tight.length===0, tight);
+    await ev(`show('cards')`); await sleep(100); await shot('SP2-phone-cards-say');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(150);
+    await ev(`delete window.AndroidBridge;window._spWv=webVoice;webVoice=null;sayBtns()`);
+    check('no voice on the device: no 🔊 buttons', await ev(`[...document.querySelectorAll('.say-btn')].every(b=>b.classList.contains('hidden'))`));
+    await ev(`webVoice=window._spWv;sayBtns();closeModal();{const q=JSON.parse(window._spSaved),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);}DB.settings.sound=window._spSound;save();show('room');goRoom(1);applyEasy()`);
+    check('v1.70 is in the Gift Story and the app says 1.70', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.70')&&APP_VERSION==='1.70'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

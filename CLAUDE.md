@@ -219,6 +219,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
       `bdResult`, `bdNext`, `bdEnd`, `bdOff`, `bdLevel`, `bdLayout`, `bdBatter`, `bdPitcherPl`)
   64. `64-setup.js` 👋 First-time setup + level bands (v1.69): `BANDS`, `BAND_IDS`, `bandOf`, `setBand`, `bandFresh`, `bandThink`, `bandPick`/`bandWire`,
       `bandModal`, `needSetup`, `setupCheck`, `setupStart`, `setupPin`, `setupVoice`, `setupBackup`, the 💾 `#bkNag` line (`bkNagDue`, `bkNag`)
+  65. `65-speak.js` 🗣️ Spoken instructions (v1.70): `SPK_FIXED`, `BR_SPEAK` (per Brain game), `CL_SPEAK`/`clSpeak`, `speakLine` (where she is → `{k, t}`),
+      `spkClean` (emoji out, fractions and 🪙 as words), `spkAuto`, `tell`, `spkCheck`, `spkAgain`, the 🔊 `.say-btn` in each top bar (`sayBtns`)
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.
@@ -261,6 +263,12 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   it through `setBand`. Becoming Challenge sets every game with no progress yet to Medium (`bandFresh`). Brain Games 🎲 Free Play's +2 only pays
   at the band's level or above (`bandThink`), otherwise `fpPay`. Band ids are saved: never rename them. The first-time setup shows only when
   `!settings.setupDone` and there are no rooms; `roomModal(p, then, back)` takes the setup's next step. Restoring counts as set up.
+- Spoken instructions (since v1.70, section 65): `speakLine()` names where she is (screen + tab/mode/view/puzzle) and its line. `spkCheck()` runs
+  after every tap (the Read to me click listener in 34, which now says a button's name just after the tap, unless a place's line was said) and
+  after `show()`; it speaks when the place changed and `spkAuto()` (Read to me on, sound on, no song or loop). `tell(t)` says one-off lines the
+  same way (`say()`, a visitor's wish, `brOops`, `brHint`, Code Lab's oops). The 🔊 button always speaks. **A new screen, tab, mode or Brain game
+  needs a line in `speakLine`/`BR_SPEAK`** (the smoke test checks every one: no emoji, 20 words at most, 30 for a puzzle). Speech is slower
+  (`spkRate`, 0.8) in Little and Easy rooms.
 - Easy mode (per profile, `p.easy`): `applyEasy()` puts `easy` on `<body>` while that room is open; CSS under `body.easy`
   makes things bigger and hides tips. The pink room labels (`sign()`, class `sign`) only show under `body.easy` (since v1.12). Shop grids go through `easySort()`, `poorCls()` and `priceTag()`; buying goes through
   `tryBuy`/`buyConsumable`, which switch to the short Easy buy box. New shops should use the same helpers.

@@ -14,6 +14,7 @@ function show(n){
   if(n==='room'||n==='soccer'){const t=giveTrophies();if(t.length)setTimeout(()=>toast(`🏆 ${t.join(' and ')} added to your room!`),400); // section 13
     const gl=giveGloves();if(gl.length)setTimeout(()=>toast(`🧤 ${gl.join(' and ')} added to your Backyard!`),t.length?2400:400);} // section 27
   if(n==='profiles') renderProfiles();
+  setTimeout(spkCheck,0); // 🗣️ say what to do here (section 65)
   if(n==='room') renderRoom();
   if(n==='closet') renderCloset();
   if(n==='fidget') setFidTab(fidTab);
@@ -147,6 +148,7 @@ function renderRoom(){
   if(PP.on) ppRedraw(); // 🙈🎾 a pet game keeps going after a redraw (section 55, v1.54)
 }
 function say(text){
+  tell(text); // read aloud when 🔊 Read to me is on (section 65)
   const old=$('#bubble'); if(old) old.remove();
   const w=Math.max(120,Math.round(text.length*11+40)), x=500-w/2;
   roomSvg.insertAdjacentHTML('beforeend',`<g id="bubble" style="pointer-events:none"><rect x="${x}" y="318" width="${w}" height="52" rx="26" fill="#fff" stroke="#2b2235" stroke-width="4"/><path d="M488 368 L500 392 L514 368" fill="#fff" stroke="#2b2235" stroke-width="4" stroke-linejoin="round"/><rect x="484" y="362" width="34" height="8" fill="#fff"/><text x="500" y="352" text-anchor="middle" font-size="22" font-weight="800" fill="#2b2235">${esc(text)}</text></g>`);

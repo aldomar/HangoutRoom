@@ -29,16 +29,19 @@ function findWebVoice(){
 if(window.speechSynthesis){findWebVoice();try{window.speechSynthesis.addEventListener('voiceschanged',findWebVoice);}catch(_){}}
 const hasBridgeVoice=()=>!!(window.AndroidBridge&&typeof window.AndroidBridge.speak==='function');
 const canSpeak=()=>hasBridgeVoice()||!!webVoice;
+// A little slower in 🧸 Little and 🐣 Easy rooms (v1.70). The Android voice keeps its own speed.
+const spkRate=()=>{const p=cur==='profiles'?null:P();return p&&p.easy?0.8:0.95;};
 function speakText(t){
   if(!t) return;
   if(hasBridgeVoice()){try{window.AndroidBridge.speak(t);}catch(_){}return;}
   if(!webVoice) return;
-  try{const S=window.speechSynthesis;S.cancel();const u=new SpeechSynthesisUtterance(t);u.lang=webVoice.lang;u.rate=0.95;try{u.voice=webVoice;}catch(_){}S.speak(u);}catch(_){}
+  try{const S=window.speechSynthesis;S.cancel();const u=new SpeechSynthesisUtterance(t);u.lang=webVoice.lang;u.rate=spkRate();try{u.voice=webVoice;}catch(_){}S.speak(u);}catch(_){}
 }
 const readOn=p=>!!p&&(p.speak===null?p.easy:p.speak);
 const HOT_WORDS={shelf:'Fidget shelf',closet:'Closet',desk:'Art desk',photo:'Photocards',window:'Backyard',goal:'Soccer',stage:'Stage',
   code:'Code Lab',brain:'Brain games',music:'Music Maker',pet:'Pet',gift:'A gift!',ballfield:'Ball field'};
 function speakLabel(el){
+  if(el.classList&&el.classList.contains('say-btn')) return ''; // 🔊 says the screen's line instead (section 65)
   if(el.dataset.hot) return HOT_WORDS[el.dataset.hot]||'';
   const tn=el.querySelector&&el.querySelector('.tn');
   const raw=el.getAttribute('aria-label')||(tn&&tn.textContent)||el.textContent||'';
@@ -46,13 +49,17 @@ function speakLabel(el){
   return t.length>60?'':t;
 }
 let lastSaid={t:'',at:0};
+// Since v1.70 the name is said just after the tap has done its work: if the tap opened a place with its own spoken line
+// (spkCheck, section 65), that line is said instead. 🔇 (the room's sound button) also keeps it quiet.
 document.addEventListener('click',e=>{
-  const p=cur==='profiles'?null:P(); if(!canSpeak()||!readOn(p)) return;
-  if(cur==='stage'&&typeof STG!=='undefined'&&STG.state==='play') return; // never talk over a song
-  const el=e.target.closest('button,.tile,[data-hot],.chip'); if(!el) return;
-  const t=speakLabel(el); if(!t) return;
-  const now=Date.now(); if(t===lastSaid.t&&now-lastSaid.at<800) return; lastSaid={t,at:now};
-  speakText(t);
+  const el=e.target.closest('button,.tile,[data-hot],.chip'), t=el?speakLabel(el):'';
+  setTimeout(()=>{
+    if(spkCheck()||Date.now()-spkToldAt<400) return; // a place's line, or something just told (the buddy's bubble…)
+    const p=cur==='profiles'?null:P(); if(!t||!canSpeak()||!readOn(p)||!DB.settings.sound) return;
+    if(cur==='stage'&&typeof STG!=='undefined'&&STG.state==='play') return; // never talk over a song
+    const now=Date.now(); if(t===lastSaid.t&&now-lastSaid.at<800) return; lastSaid={t,at:now};
+    speakText(t);
+  },0);
 },true);
 
 /* ---------- snapshots ---------- */

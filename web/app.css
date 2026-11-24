@@ -599,6 +599,8 @@ body.easy .br-ch{min-width:120px;min-height:120px}body.easy .nbub{width:96px;hei
 @media (max-width:620px){.br-games{grid-template-columns:1fr}.br-game{min-height:0;flex-direction:row;flex-wrap:wrap;justify-content:center;padding:12px}.br-gi{font-size:44px}.mem-grid{gap:6px}.nbub{width:66px;height:66px}.br-ch{min-width:80px;min-height:80px}.br-ask{font-size:18px}.wb-slot{width:40px;height:48px;font-size:24px}.wb-tiles .br-ch{min-width:60px;min-height:60px}.wb-pic{width:120px;height:120px}.wb-look{font-size:32px;letter-spacing:3px}.wb-emo{font-size:76px}}
 /* 31. Looks, emotes + night mode (v1.27) */
 .room-stage{position:relative}
+/* 🔊 say it again (v1.70, section 65) */
+.say-btn{flex:0 0 auto;min-width:48px;min-height:48px;padding:0 6px;border-radius:999px;font-size:22px;line-height:1}
 .night-btn{position:absolute;left:10px;top:10px;width:56px;height:56px;border-radius:50%;border:3px solid var(--line);background:var(--panel);font-size:28px;cursor:pointer;box-shadow:0 3px 0 #0003;z-index:2}
 .night-btn.on{background:#2a2350;border-color:#ffd166}
 .emote-bar{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:8px;z-index:2;background:var(--panel);border:3px solid var(--line);border-radius:22px;box-shadow:0 4px 0 #0004;padding:6px}
