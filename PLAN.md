@@ -1321,7 +1321,13 @@ Why this order:
   - 3 slots in `code.mine[]`.
   - Chosen over a maze maker because a maze can only be proven by playing it (it uses physics).
 
-#### v1.72 plan details: 🎉 Holiday greetings (proposed 2026-11-24, to agree)
+#### v1.72 plan details: 🎉 Holiday greetings (agreed 2026-11-24)
+**Owner's answers (2026-11-24):**
+- The holidays: the 7 defaults below, plus Christmas Eve and Christmas Day 🎄, Easter 🐣, Mother's Day 💐 (the 2nd Sunday of May)
+  and Father's Day 👔 (the 3rd Sunday of June).
+- Not included: the federal days and other family celebrations.
+- Yes to confetti in the holiday's colors.
+
 **Why:** the owner asked for the buddy to say "Happy Thanksgiving!" (and so on) when the room opens on a big US holiday.
 
 **What it does** (new file `web/js/67-holidays.js`):

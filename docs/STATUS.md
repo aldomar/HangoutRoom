@@ -37,7 +37,7 @@ _Last updated: 2026-11-24_
 - **Next: Phase 15** (order agreed 2026-11-24, `PLAN.md`, "Phase 15"):
   v1.72 🎉 holiday greetings → v1.73 shared helpers (one "today", one allowance helper) → v1.74 Stage pause + ↩ Undo →
   v1.75 🎁 gift codes between iPads → v1.76 the pet notices → v1.77 creations in the room → v1.78 Code Lab level maker.
-  v1.72 is on branch `feature/holidays`. Its plan ("v1.72 plan details") is waiting for the owner's holiday list.
+  v1.72 is on branch `feature/holidays`. Its plan ("v1.72 plan details") is agreed (12 holidays + confetti).
   It has to be merged by Wednesday 2026-11-25 to greet on Thanksgiving.
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
 - **Phase 2 (Art Desk): done** (v1.3 merged). Checked on an Android phone: it works, and drawings survive closing the app.
