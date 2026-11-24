@@ -27,7 +27,11 @@ _Last updated: 2026-11-24_
   - ✅ v1.77 📻 Creations in the room: built, PR open (branch `feature/creations`, stacked on `feature/petnotice`).
     - Owner's answers 2026-11-24: a prize for every level; the boombox is free with the first saved loop.
     - New file `71-creations.js`. Save: `code.prizes[]`, `brain.shelf`, `music.box`.
-  - ⬜ v1.78 🛠️ Code Lab level maker.
+  - ✅ v1.77 is PR #79.
+  - ✅ v1.78 🛠️ Code Lab level maker: built, PR open (branch `feature/levelmaker`, stacked on `feature/creations`).
+    - Owner's answers 2026-11-24: build now; every piece; 4×4 to 6×6; +3 a level, 3 a day; other rooms can play them.
+    - New file `72-levelmaker.js`. Save: `code.mine[3]`, `code.makePay`, `stats.made`.
+  - Phase 15 is built. Next: the owner reviews and merges PRs #74–#80 in order, then tries them on the iPads.
   - ⏸️ Parked: a picture lock for each room (idea 13), a level for each player in duels (idea 14).
 - **✅ Phase 14: before the hand-over (done, v1.67–v1.71).** **📋 Design review (2026-11-23): read `docs/DESIGN-REVIEW.md` first.** A whole-app review before the children get the app,
   the owner's answers (each child has their own iPad; the app isn't handed over yet), the ranked ideas and the agreed
@@ -1512,7 +1516,8 @@ _Last updated: 2026-11-24_
 5. ~~Plan and build v1.75 🎁 Gift codes between iPads.~~ Built, PR open.
 6. ~~Plan and build v1.76 🐾 The pet notices.~~ Built, PR open.
 7. ~~Plan and build v1.77 📻 Creations in the room.~~ Built, PR open.
-8. Plan and build v1.78 🛠️ Code Lab level maker (best after seeing how the 11-year-old uses the Code Lab).
+8. ~~Plan and build v1.78 🛠️ Code Lab level maker.~~ Built, PR open.
+9. Owner: review and merge PRs #74–#80 in order; then decide what comes after Phase 15 (ideas 13 and 14 stay parked).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

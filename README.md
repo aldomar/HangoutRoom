@@ -297,6 +297,20 @@ like a phone number. **The app never sends anything over the internet**: there's
 - Where: ⚙️ Settings → 🎁 Give a gift, or the 🎁 tile at the start of 📦 My Stuff in Decorate. Not in 🧸 Little mode.
 - Save data: one new field per room, `giftCodes` (codes sent, codes opened, codes made today). Older backups still restore.
 
+## 🛠️ Code Lab level maker (version 1.78)
+She can now **make her own Code Lab levels** in the new **🛠️ Make** tab:
+- **3 slots.** Tap ➕ to start one. Pick a size (4×4, 5×5 or 6×6), then paint the map with 🧸 toy blocks, ⭐ stars (5 at most),
+  💧 puddles, her buddy's start and the 🥕 carrot. Tap a square to paint it, tap it again to clear it, or drag to paint a line.
+- **Set the challenge.** 🧩 − / + sets how many blocks fit (2 to 16). ✨ My Move adds the My Move row (2 to 6 blocks).
+  The blocks come from the map: 🌟 when there are stars, ❓ when there are puddles.
+- **▶️ Test it.** She has to solve her own level within the limit to save it, so every saved level can be solved.
+- **Coins:** +3 for each new level, 3 levels a day. Saving the same level again pays nothing.
+- **🏠 Family levels.** Levels saved in the other rooms on the same iPad show under her slots. Solving one pays like Free Play
+  (+1, up to 10 a day).
+- Made levels never count as Code Lab puzzles, so they don't change level bonuses or the 🤖 robots.
+- New stickers: 🛠️ Level Maker and Game Designer. The pet notices a new level too.
+- Save data: `code.mine` (the 3 levels), `code.makePay` (coins today) and `stats.made`. Older backups still restore.
+
 ## 📻 Made by you (version 1.77)
 What she makes and finishes now shows up in her rooms, as prizes that can't be bought or given away:
 - **🤖 A robot for every Code Lab level.** Solve every puzzle of a level and its robot joins the row in the Loft, in front of the

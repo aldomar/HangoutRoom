@@ -326,7 +326,7 @@ body.easy .rtab{width:68px;min-height:96px}
 .cl-tag{display:flex;align-items:center;justify-content:center;width:34px;font-size:24px;flex:0 0 auto}
 .clhop.jump{animation:clJump .38s ease;transform-box:fill-box;transform-origin:50% 100%}
 @keyframes clJump{50%{transform:translateY(-38px)}}
-@media (max-width:760px){#clTabs .tab span{display:none}#clTabs .tab{font-size:22px;padding:8px 16px}}
+@media (max-width:760px){#clTabs .tab span{display:none}#clTabs .tab{font-size:22px;padding:8px 10px}#clTabs{gap:4px}}
 .clb small{font-size:16px;font-weight:900}
 .cl-pal .clb{width:64px;height:64px;font-size:32px}
 .clslot{width:56px;height:56px;border-radius:14px;border:3px dashed #5a4a78}
@@ -649,6 +649,24 @@ body.easy .lk-label span{display:none}
 .gv-coin b{font-size:20px;color:var(--gold)}
 .tile.gv.poor{opacity:.5}
 .gv-tile .tv{font-size:46px}
+/* 🛠️ Code Lab level maker (v1.78) */
+.lm-head{grid-column:1/-1;text-align:center;font-weight:900;font-size:17px;color:var(--muted);margin-top:4px}
+.lm-new{font-size:46px;line-height:1}
+.clp.lm-draft{border-style:dashed}
+.clp.lm-draft::after{content:'✏️';position:absolute;top:4px;right:8px;font-size:20px}
+.lm-who{position:absolute;left:4px;right:4px;bottom:4px;text-align:center;font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.clp.lm-other{padding-bottom:24px}
+#lmBoard{width:100%;height:100%;display:block;touch-action:none;cursor:pointer}
+.lm-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.lm-row .btn{min-height:48px;min-width:56px;font-size:18px}
+.lm-row .btn.on{outline:4px solid var(--gold);outline-offset:2px}
+.lm-tools .clb{background:var(--panel2);box-shadow:0 4px 0 #1a1424;border:3px solid var(--line)}
+.lm-tools .clb.on{border-color:var(--gold);background:#3a2d52}
+.lm-tools .clb svg{width:40px;height:48px}
+.lm-step{display:flex;align-items:center;gap:6px;background:var(--panel);border-radius:16px;padding:4px 8px;font-weight:900;font-size:18px}
+.lm-step b{min-width:28px;text-align:center}
+.lm-blocks{text-align:center;font-size:22px;line-height:1.5}
+.lm-blocks small{font-size:16px}
 /* 🎉 Creations in the room (v1.77) */
 .cr-got{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
 .cr-got svg{height:110px;max-width:140px}
