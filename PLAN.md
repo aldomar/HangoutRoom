@@ -925,7 +925,7 @@ team-kit bonus, prizes and stickers; **new original animal characters**. Four st
 - **Save version 37:** `ball{mode, bat{level, best, prizes}, catch{…}, derby{cur, done, pay}}`, `stats.hits/homers/catches/derbies`.
   All the later games' fields are added now, so v1.61–v1.64 need no new save version.
 
-### Phase 14: Before the hand-over (design review 2026-11-23)
+### ✅ Phase 14: Before the hand-over (design review 2026-11-23, done)
 A whole-app review before the children get the app; the findings, the owner's answers and the ranked ideas are in
 `docs/DESIGN-REVIEW.md`. Agreed order (2026-11-23): ✅ v1.67 daily caps (built) → ✅ v1.68 🧤 Catch on Hard (reading the ball: bat
 sound, grass stripes, a shadow trail, no memorizing) → ✅ v1.69 first-time setup + level bands (built) → ✅ v1.70 spoken instructions (built) →
@@ -1258,21 +1258,51 @@ The owner prefers a lock inside the app to iPad settings like Guided Access.
 3. On by default for Little rooms, with a switch in Settings for any room.
 4. It locks again when the app is reopened, and with 🔒 Lock.
 
-### Phase 15: After the hand-over list (order agreed 2026-11-24)
+### Phase 15: Holidays + the rest of the design review (order agreed 2026-11-24)
 Phase 14 finished the review's first five ideas. This phase covers the rest of `docs/DESIGN-REVIEW.md` (ideas 7–14 and the risks
-still open), plus the owner's holiday greeting. Order agreed 2026-11-24. Each step still gets its own detailed plan, agreed
-before any code.
-
-| Version | What | Review item | Size |
-|---|---|---|---|
-| v1.72 | 🎉 Holiday greetings: the buddy says "Happy Thanksgiving!" and similar on big US holidays | new (owner, 2026-11-24) | S |
-| v1.73 | Shared helpers, part 1: one "today" and one daily-allowance helper (nothing the children can see changes) | idea 10, risk 6 | M |
-| v1.74 | Small fixes: the Stage pauses instead of stopping; ↩ Undo for 10 seconds after buying or giving | risk 7, idea 12 | S–M |
-| v1.75 | 🎁 Gift codes between iPads | idea 7 | M |
-| v1.76 | 🐾 The pet notices what the child did | idea 8 | M |
-| v1.77 | 📻 Creations in the room: a boombox for saved loops, prizes for Code Lab and Brain Games levels | idea 9 | M |
-| v1.78 | 🛠️ A Code Lab level maker for the oldest | idea 11 | L |
-| parked | A picture lock for each room (only if iPads get shared); a level for each player in duels (only for family visits) | ideas 13, 14, risk 8 | — |
+still open), plus the owner's 🎉 holiday greeting. One PR for each version, in this order. Each still gets its own detailed plan,
+agreed before any code (only v1.72's is written so far).
+- 🔜 **🎉 Holiday greetings (v1.72, plan agreed, next to build):** the owner's idea (2026-11-24). On 12 US holidays the buddy says
+  "Happy Thanksgiving!" (and so on) when the room opens, with confetti. No coins, nothing for a limited time. Plan details below.
+- ⬜ **🧰 Shared helpers, part 1 (v1.73; review idea 10 + risk 6):** nothing the children can see changes.
+  - Everything uses `fpDay()` for "today". That removes `ltToday`, `rwToday`, `spyToday`, `jamToday`, `trToday`, `hrToday` and the
+    `toDateString()` calls in 08, 09, 10, 11, 40, 42, 43, 46, 48 and 52.
+  - One helper, `dailyPay(o, cap, n)`, built on `dayLeft` (08), replaces the 12 copied `pay{day,n}` resets.
+  - No new save fields. Old `day` values are in the other date format, so each counter starts fresh once on the update day
+    (one extra allowance, once).
+  - The rest of idea 10 (a screen list for `show()`/`androidBack`, one results box, one prize giver) waits. The exception is
+    when `09-screens.js` (at the ~40 KB limit) next has to grow.
+- ⬜ **⏸️ Small fixes (v1.74; risk 7 + idea 12):** no save changes.
+  - **Stage pause:** leaving the app mid-song pauses it instead of ending it. `AC.suspend()` already freezes the audio clock
+    the song runs on, so coming back shows "Ready? ▶" with a 3-2-1 and carries on.
+  - **↩ Undo for 10 seconds:** the message after a purchase or a gift gets an Undo button.
+    - A purchase is refunded, and the item is removed from `owned` or from the room.
+    - A gift can be taken back only while it is still unopened in the other room's `gifts[]`.
+- ⬜ **🎁 Gift codes between iPads (v1.75; idea 7):** as described in `docs/DESIGN-REVIEW.md`.
+  - The code: about 12 characters, a check letter, and a short hash of the `DECOR` key. The smoke test checks that no two keys
+    share a hash.
+  - Save data: `giftCodes{sent[], opened[]}`.
+  - No Copy or Share buttons. The smoke test checks that no code uses `fetch`, XHR or WebSocket.
+  - An older app copy that doesn't know a decoration says "Update first".
+  - Questions for the plan: the mailbox step (required, optional or left out), a limit on codes per day, and what can be sent.
+- ⬜ **🐾 The pet notices (v1.76; idea 8):**
+  - Back in the room after a game, the pet says one line about it in Fuzzy's bubble ("You scored 3 goals! ⚽"). The line is
+    spoken for the Little and Easy levels.
+  - The child's first activity of the day gives the pet +1 heart. Hearts only, never coins, never a sad line.
+  - Save data: `pet.day` only; what the child just did stays in memory.
+- ⬜ **📻 Creations in the room (v1.77; idea 9):**
+  - A boombox decoration plays a saved Music Maker loop once when tapped.
+  - New `award:1` prizes for finished Code Lab levels (in the Loft, by the desk) and Brain Games levels (in the Backyard, by the chalkboard).
+  - Questions for the plan: which levels give a prize, and is the boombox free?
+- ⬜ **🛠️ Code Lab level maker (v1.78; idea 11):**
+  - She paints a map and sets the block limit. To save the level she must solve it herself within that limit, checked by `codeSim()`,
+    so every saved level can be solved.
+  - 3 slots in `code.mine[]`.
+  - Chosen over a maze maker because a maze can only be proven by playing it (it uses physics).
+  - Best after seeing how the 11-year-old uses the Code Lab.
+- ⏸️ **Parked:**
+  - A picture lock for each room (idea 13): only if iPads get shared.
+  - A level for each player in duels (idea 14, risk 8): only for family visits.
 
 Why this order:
 - **Holidays first** so Thanksgiving (Thursday 2026-11-26) works. It has to be merged by Wednesday to reach the iPads in time.
@@ -1281,45 +1311,7 @@ Why this order:
 - **The small fixes come before the hand-over** if possible. A song lost to a phone call, or coins spent by mistake, are
   the first things a young child would notice.
 - **Gift codes come before the other new features.** With one child per iPad, they are the only way gifting can actually happen.
-- **The level maker comes last.** It's the largest step, and it's worth seeing first how the 11-year-old uses the Code Lab.
-
-#### v1.73–v1.78 outlines (each needs its own detailed plan)
-- **v1.73 Shared helpers, part 1.**
-  - Everything uses `fpDay()` for "today". That removes `ltToday`, `rwToday`, `spyToday`, `jamToday`, `trToday`, `hrToday` and the
-    `toDateString()` calls in 08, 09, 10, 11, 40, 42, 43, 46, 48 and 52.
-  - One helper, `dailyPay(o, cap, n)`, built on `dayLeft` (08), replaces the 12 copied `pay{day,n}` resets.
-  - No new save fields. Old `day` values are in the other date format, so each counter starts fresh once on the update day
-    (one extra allowance, once).
-  - The rest of idea 10 (a screen list for `show()`/`androidBack`, one results box, one prize giver) waits. The exception is
-    when `09-screens.js` (at the ~40 KB limit) next has to grow.
-- **v1.74 Small fixes.**
-  - **Stage pause:** leaving the app mid-song pauses it instead of ending it. `AC.suspend()` already freezes the audio clock
-    the song runs on, so coming back shows "Ready? ▶" with a 3-2-1 and carries on.
-  - **↩ Undo for 10 seconds:** the message after a purchase or a gift gets an Undo button.
-    - A purchase is refunded, and the item is removed from `owned` or from the room.
-    - A gift can be taken back only while it is still unopened in the other room's `gifts[]`.
-  - No save changes.
-- **v1.75 Gift codes:** as described in `docs/DESIGN-REVIEW.md`.
-  - The code: about 12 characters, a check letter, and a short hash of the `DECOR` key. The smoke test checks that no two keys
-    share a hash.
-  - Save data: `giftCodes{sent[], opened[]}`.
-  - No Copy or Share buttons. The smoke test checks that no code uses `fetch`, XHR or WebSocket.
-  - An older app copy that doesn't know a decoration says "Update first".
-  - Questions for the plan: the mailbox step (required, optional or left out), a limit on codes per day, and what can be sent.
-- **v1.76 The pet notices.**
-  - Back in the room after a game, the pet says one line about it in Fuzzy's bubble ("You scored 3 goals! ⚽"). The line is
-    spoken for the Little and Easy levels.
-  - The child's first activity of the day gives the pet +1 heart. Hearts only, never coins, never a sad line.
-  - Save data: `pet.day` only; what the child just did stays in memory.
-- **v1.77 Creations in the room.**
-  - A 📻 boombox decoration plays a saved Music Maker loop once when tapped.
-  - New `award:1` prizes for finished Code Lab levels (in the Loft, by the desk) and Brain Games levels (in the Backyard, by the chalkboard).
-  - Questions: which levels give a prize, and is the boombox free?
-- **v1.78 Code Lab level maker.**
-  - She paints a map and sets the block limit. To save the level she must solve it herself within that limit, checked by `codeSim()`,
-    so every saved level can be solved.
-  - 3 slots in `code.mine[]`.
-  - Chosen over a maze maker because a maze can only be proven by playing it (it uses physics).
+- **The level maker comes last.** It's the largest step.
 
 #### v1.72 plan details: 🎉 Holiday greetings (agreed 2026-11-24)
 **Owner's answers (2026-11-24):**

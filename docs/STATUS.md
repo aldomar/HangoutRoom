@@ -3,7 +3,17 @@
 _Last updated: 2026-11-24_
 
 ## Where we are
-- **📋 Design review (2026-11-23): read `docs/DESIGN-REVIEW.md` first.** A whole-app review before the children get the app,
+- **Phase 15: 🎉 Holidays + the rest of the design review (order agreed 2026-11-24, see "Phase 15" in `PLAN.md`).** One PR each:
+  - 🔜 v1.72 🎉 Holiday greetings: plan agreed (12 holidays + confetti); branch `feature/holidays`. Must be merged by
+    Wednesday 2026-11-25 to greet on Thanksgiving (2026-11-26).
+  - ⬜ v1.73 🧰 Shared helpers, part 1 (one "today" = `fpDay()`, one daily-allowance helper; nothing visible changes).
+  - ⬜ v1.74 ⏸️ Small fixes: the Stage pauses instead of stopping when the app is left; ↩ Undo for 10 s after buying or giving.
+  - ⬜ v1.75 🎁 Gift codes between iPads.
+  - ⬜ v1.76 🐾 The pet notices what the child did.
+  - ⬜ v1.77 📻 Creations in the room (a boombox, Code Lab and Brain Games prizes).
+  - ⬜ v1.78 🛠️ Code Lab level maker.
+  - ⏸️ Parked: a picture lock for each room (idea 13), a level for each player in duels (idea 14).
+- **✅ Phase 14: before the hand-over (done, v1.67–v1.71).** **📋 Design review (2026-11-23): read `docs/DESIGN-REVIEW.md` first.** A whole-app review before the children get the app,
   the owner's answers (each child has their own iPad; the app isn't handed over yet), the ranked ideas and the agreed
   order: v1.67 daily caps → v1.68 🧤 Catch on Hard → v1.69 first-time setup + age bands → v1.70 spoken instructions →
   v1.71 🧸 Little mode.
@@ -27,18 +37,12 @@ _Last updated: 2026-11-24_
   2026-11-23 (`PLAN.md`, "v1.70 plan details"). Owner's answers: 🔇 also stops the automatic voice (🔊 still speaks when tapped);
   it speaks instructions, questions, try-again hints, the buddy's bubble and visitor wishes; a little slower in Little and Easy rooms;
   Read to me stays in Settings (not in the setup). No save changes. On a 390 px phone the Photocards title gets squeezed by the 🔊.
-- **🧸 Little mode: built, PR #73 open as v1.71** on branch `feature/littlemode` (from `main` after #72). Plan agreed 2026-11-24 (`PLAN.md`,
+- **🧸 Little mode: done (v1.71 merged, PR #73)** on branch `feature/littlemode` (from `main` after #72). Plan agreed 2026-11-24 (`PLAN.md`,
   "v1.71 plan details"). Owner's answers: the Little home is her own room, locked down; every sport on Easy (Kick, Keep, Bat,
   Catch), the Brain Games on Easy and the Garden are in; the Closet stays for real dress-up, plus 🎨 Dress like… (a theme dress-up
   from owned clothes, in every room's Closet); on by default for Little rooms with a switch in Settings → Level; relocks when the
   app is reopened and with 🔒 Lock. Unlock = hold 🔒 3 s, then the PIN. Save: `little.lock`; no new save version.
   This finishes the agreed design-review order (v1.67–v1.71).
-- **🧸 Little mode was merged** (PR #73, 2026-11-24).
-- **Next: Phase 15** (order agreed 2026-11-24, `PLAN.md`, "Phase 15"):
-  v1.72 🎉 holiday greetings → v1.73 shared helpers (one "today", one allowance helper) → v1.74 Stage pause + ↩ Undo →
-  v1.75 🎁 gift codes between iPads → v1.76 the pet notices → v1.77 creations in the room → v1.78 Code Lab level maker.
-  v1.72 is on branch `feature/holidays`. Its plan ("v1.72 plan details") is agreed (12 holidays + confetti).
-  It has to be merged by Wednesday 2026-11-25 to greet on Thanksgiving.
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
 - **Phase 2 (Art Desk): done** (v1.3 merged). Checked on an Android phone: it works, and drawings survive closing the app.
 - **Phase 3 (Photocard Wall): done** (v1.4 merged). The owner checked it on the device: all checks passed (2026-11-15).
@@ -1305,6 +1309,12 @@ _Last updated: 2026-11-24_
   `BR_MENU_EXTRA`; a game may give `winExtra(pz,l,idx,first)` for extra HTML in its win box. Facts were checked for
   accuracy and kept simple; the topics are 5 dinosaur, 9 space and 10 ocean cards. No save version change.
 
+- **Phase 15 order (agreed 2026-11-24).** The owner agreed the order for the rest of the design review and added a
+  🎉 holiday greeting, which goes first (v1.72) so it works on Thanksgiving. The v1.72 answers: 12 holidays (New Year's Day,
+  Valentine's Day, St. Patrick's Day, Easter, Mother's Day, Father's Day, the Fourth of July, Halloween, Thanksgiving, Christmas
+  Eve, Christmas Day, New Year's Eve; no federal days or other celebrations) and confetti with each greeting. No coins and nothing
+  for a limited time (the no-pressure rule). Ideas 13 and 14 are parked.
+
 ## Owner's working preferences
 - Personal gift for family; practice project. Never for sale or public sharing.
 - $0 beyond the Claude subscription. Use free tiers and free tools only.
@@ -1475,7 +1485,18 @@ _Last updated: 2026-11-24_
 33d. ~~Owner: build v1.57, try a few 🎲 puzzles in Pattern Train (+2 each, past 10 a day) (see PR #57), and merge it.~~ Merged.
 33e. The owner asked to finish the half outfits; plan agreed 2026-11-21 and built as 🧩 Content Pack 5 (v1.58, `feature/pack5`).
 33f. Owner: build v1.58, dress up the 10 outfits in the Closet (see PR #58), and merge it.
-34. Then talk about what comes next (a Phase 13, or a rest).
+34. ~~Then talk about what comes next (a Phase 13, or a rest).~~ Phase 13 (⚾ Ball Field) and Phase 14 (the design review) are done.
+
+## Next steps (Phase 15)
+1. ~~Plan Phase 15 (the rest of `docs/DESIGN-REVIEW.md` + holiday greetings) and get the order agreed.~~ Agreed 2026-11-24.
+2. Build v1.72 🎉 Holiday greetings on `feature/holidays` (plan agreed). Owner: set the phone's date to a holiday (or wait for
+   Thanksgiving), open the room, and merge it by Wednesday 2026-11-25.
+3. Plan and build v1.73 🧰 Shared helpers, part 1.
+4. Plan and build v1.74 ⏸️ Stage pause + ↩ Undo.
+5. Plan and build v1.75 🎁 Gift codes between iPads.
+6. Plan and build v1.76 🐾 The pet notices.
+7. Plan and build v1.77 📻 Creations in the room.
+8. Plan and build v1.78 🛠️ Code Lab level maker (best after seeing how the 11-year-old uses the Code Lab).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match
