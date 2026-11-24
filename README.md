@@ -297,6 +297,21 @@ like a phone number. **The app never sends anything over the internet**: there's
 - Where: ⚙️ Settings → 🎁 Give a gift, or the 🎁 tile at the start of 📦 My Stuff in Decorate. Not in 🧸 Little mode.
 - Save data: one new field per room, `giftCodes` (codes sent, codes opened, codes made today). Older backups still restore.
 
+## 💃 Dancing Buddy (version 1.80)
+- **Your saved dances, right in the room:** tap your buddy, then **💃 Dance**. If she has saved dances in the 💃 Dance Maker
+  (💾 1 2 3), the buddy dances one of them, all 8 moves, with music. Each tap does the next saved dance.
+- **💾 Saved dances keep their music.** Saving a dance in the Dance Maker also keeps the music that was on: 🥁 the beat, a Stage song,
+  or a copy of 🎹 her loop or a 💾 saved loop (a copy, so changing the loop later doesn't change the dance). Tapping a saved dance
+  shows its music under the moves, and **▶ Load** brings back both. A loop kept this way is listed in 🎵 Music as "💃 Dance 1 music".
+  Saving the same moves with new music just changes the music (no extra coins).
+- **The music in the room** is the dance's own. For a Stage song, the room plays the 8 beats right after its drum intro (the start of
+  the tune), at the song's own speed. Dances saved before this version use whatever is picked in the Dance Maker. With the sound off,
+  the buddy still dances.
+- Tapping another emote, decorating or leaving the room stops the dance straight away. The room music rests while she dances.
+- No saved dances yet? 💃 Dance does the same little wiggle as before.
+- **📻 Boombox fix:** tapping the boombox (from version 1.77) now really plays her music. Before, the tap went straight through it.
+- Save data: one new field, `dance.tracks` (the music of the 3 saved dances). Older backups still restore; their dances have no music kept.
+
 ## 🪜 The Basement (version 1.79)
 A fifth room, under her room, for showing off everything she has won:
 - **Getting there:** the ⬇️ arrow at the bottom of her room, or the 🗺️ map (it's under My Room). ⬆️ goes back up.
@@ -744,7 +759,7 @@ Lots of new things to buy with coins (10–40 each). Everything is open to every
   - To change a full spot, tap 💾 and then the spot (it asks first).
   - A look keeps the clothes and the hair. It never changes the buddy, the face or the fur.
 - **Emotes:** tap your buddy in the room and 4 big buttons appear at the bottom: 👋 Wave, 💃 Dance, 😂 Laugh and
-  💤 Nap. They go away by themselves after a few seconds.
+  💤 Nap. They go away by themselves after a few seconds. (Since version 1.80, 💃 Dance does her saved Dance Maker dances.)
 - **🌙 Night mode:** the round 🌙 button in the room's top-left corner turns the lights off in that room; ☀️ turns them
   back on. Each room (Room, Loft, Backyard, Studio) remembers its own setting.
   - At night, lamps and lights glow: the Lava Lamp, Fairy Lights, Neon Heart, Moon Lamp, Disco Ball, Volcano Lamp and more.

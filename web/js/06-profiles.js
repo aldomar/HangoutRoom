@@ -65,8 +65,12 @@ function normalize(p){
    ['free','potd'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));});}
   // Dance Maker (v1.47, section 48): the dance now and 3 saved dances (8 move codes each, '.' = empty), the music id,
   // the Stage songs danced to, and coins paid today. Move codes are fixed here; the music id is checked when it is read (dnMusic).
+  // Since v1.80 each saved dance keeps its music in tracks[i]: null, an id ('beat' or a song id, checked when read) or a loop copy {g, kit, speed}.
   {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, dn=o(p.dance), py=o(dn.pay), ok=g=>typeof g==='string'&&/^[hspwbcjo.]{8}$/.test(g), sl=Array.isArray(dn.slots)?dn.slots:[];
+   const tk=Array.isArray(dn.tracks)?dn.tracks:[], tOk=t=>typeof t==='string'&&t?t:t&&typeof t==='object'&&typeof t.g==='string'&&/^[01]{72}$/.test(t.g)
+     ?{g:t.g,kit:typeof t.kit==='string'?t.kit:'soft',speed:[0,1,2].includes(t.speed)?t.speed:1}:null;
    p.dance={cur:ok(dn.cur)?dn.cur:'........',music:typeof dn.music==='string'?dn.music:'beat',slots:[0,1,2].map(i=>ok(sl[i])?sl[i]:null),
+     tracks:[0,1,2].map(i=>tOk(tk[i])),
      songs:Array.isArray(dn.songs)?[...new Set(dn.songs.filter(s=>typeof s==='string'))]:[],
      pay:{day:typeof py.day==='string'?py.day:'',n:Math.max(0,Math.floor(Number(py.n)||0))}};}
   // Garden (v1.48, section 49): 6 plots (null or {seed, day 'YYYY-MM-DD' planted, step 0-3}) and the seed ids grown once.

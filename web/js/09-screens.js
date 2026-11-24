@@ -6,6 +6,7 @@ let cur='profiles';
 function show(n){
   n=lockGuard(n); // 🧸 Little mode keeps her in the safe screens (section 66)
   undoLeave(n); // ↩ Undo lasts only on its own screen (section 68)
+  if(n!=='room') rdStop(); // 💃 a saved dance stops when she leaves the room (section 48)
   petNotice(cur,n); // 🐾 back in the room, the pet says what she just did (section 70)
   if(n==='room'||n==='code'||n==='brain'||n==='music') setTimeout(crCheck,400); // 🎉 Code Lab robots, Brain Shelf, Boombox (section 71)
   if(n!=='room'&&decorating) exitDecorate(true);
@@ -147,6 +148,7 @@ function renderRoom(){
     .sort((a,b)=>a.y-b.y).map(e=>e.h).join('');
   s+=nightLayer(p,R); // 🌙 night mode (section 31, v1.27)
   s+=spyDark(p,R); // 🔦 I Spy in the dark (section 50, v1.49)
+  if(decorating) rdStop(); // 💃 a redraw otherwise keeps a saved dance going (each beat finds the new #mascotG)
   roomSvg.innerHTML=s; emoteBar(false); nightBtn();
   roomSvg.classList.toggle('decorating',decorating);
   $('#roomTitle').textContent=`${p.name}'s ${ROOM_NAMES[roomNo]}`;

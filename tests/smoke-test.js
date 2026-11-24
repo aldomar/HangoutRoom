@@ -1906,7 +1906,38 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('💤 Nap switches to the nap (one emote at a time)', await ev(`(()=>{const c=document.querySelector('#mascotG').classList;return c.contains('em-nap')&&!c.contains('em-dance');})()`));
   await sleep(3400);
   check('the emote ends by itself', await ev(`![...document.querySelector('#mascotG').classList].some(c=>c.startsWith('em-'))`));
+  // 💃 her saved dances in the room (v1.80, section 48)
+  const rmOn=`[...document.querySelector('#mascotG').classList].filter(c=>c.startsWith('rm-')).join()`;
+  await ev(`P().dance.slots=['hhbchhbj',null,'swwwpcjo'];P().dance.music='beat';RD.n=0;mascotTap();document.querySelector('[data-emote=dance]').click()`); await sleep(120);
+  check('💃 with saved dances: the buddy dances 💾 1 (its first move, no old wiggle)', await ev(`${rmOn}==='rm-h'&&!document.querySelector('#mascotG').classList.contains('em-dance')&&document.querySelector('#bubble').textContent.includes('Dance 1')&&RD.t.length===9`), await ev(rmOn));
+  check('the room move really animates (2D, on the SVG buddy)', await ev(`getComputedStyle(document.querySelector('#mascotG')).animationName==='rmHop'`), await ev(`getComputedStyle(document.querySelector('#mascotG')).animationName`));
+  await ev(`document.querySelector('[data-emote=dance]').click()`); await sleep(120);
+  check('the next 💃 dances the next saved one (skipping the empty slot)', await ev(`${rmOn}==='rm-s'&&document.querySelector('#bubble').textContent.includes('Dance 3')`), await ev(rmOn));
+  await sleep(1250);
+  check('…and moves on with the beat (beat 3 = Wiggle)', await ev(`${rmOn}==='rm-w'`), await ev(rmOn));
+  await ev(`renderRoom()`); await sleep(650);
+  check('a redraw of the room keeps the dance going', await ev(`RD.t.length===9&&/^rm-/.test(${rmOn})`), await ev(rmOn));
+  await ev(`document.querySelector('[data-emote=wave]')||mascotTap();document.querySelector('[data-emote=wave]').click()`); await sleep(100);
+  check('another emote stops the dance at once', await ev(`RD.t.length===0&&${rmOn}===''&&document.querySelector('#mascotG').classList.contains('em-wave')`), await ev(rmOn));
+  await ev(`RD.n=0;mascotTap();document.querySelector('[data-emote=dance]').click();show('closet')`); await sleep(100);
+  check('leaving the room stops the dance', await ev(`RD.t.length===0`));
+  await ev(`show('room')`); await sleep(150);
+  await ev(`DB.settings.sound=false;RD.n=0;mascotTap();document.querySelector('[data-emote=dance]').click()`); await sleep(120);
+  check('with the sound off she still dances', await ev(`${rmOn}==='rm-h'`), await ev(rmOn));
+  await ev(`DB.settings.sound=true`); await sleep(8*577+300);
+  check('the dance ends by itself after 8 beats', await ev(`RD.t.length===0&&${rmOn}===''`), await ev(rmOn));
+  { // read from the file: a file:// page can't read its own CSS rules
+    const ks=fs.readFileSync(__dirname+'/../web/app.css','utf8').match(/@keyframes rm\w+\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g)||[];
+    check('the room moves are 2D with no % (SVG): no rotateX/rotateY', ks.length===9&&ks.every(k=>!/rotate[XY3]|translate[XY]?\([^)]*%/.test(k)), ks.length);
+  }
+  await ev(`P().dance.music='starlight';RD.n=0;mascotTap();document.querySelector('[data-emote=dance]').click()`); await sleep(120);
+  check('with a Stage song picked: the dance goes at the song\'s speed, and the 8 beats after the intro have melody notes', await ev(`(()=>{const b=buildSong('starlight','easy');
+    return document.querySelector('#mascotG').style.getPropertyValue('--bt')===b.beat.toFixed(3)+'s'&&b.first===8*b.beat&&b.notes.some(n=>n.t>=b.first&&n.t<b.first+8*b.beat);})()`));
+  await ev(`P().dance.music='beat'`);
+  await ev(`RD.n=0;mascotTap();document.querySelector('[data-emote=dance]').click()`); await sleep(80);
   await ev(`enterDecorate()`);
+  check('decorating stops a dance', await ev(`RD.t.length===0&&${rmOn}===''`), await ev(rmOn));
+  await ev(`P().dance.slots=[null,null,null];RD.n=0`);
   check('decorating hides the emote buttons and the 🌙 button', await ev(`document.querySelector('#emoteBar').classList.contains('hidden')&&document.querySelector('#nightBtn').classList.contains('hidden')`));
   await ev(`exitDecorate()`);
   check('the 🌙 button is in the room corner, big enough', await ev(`(()=>{const r=document.querySelector('#nightBtn').getBoundingClientRect();return !document.querySelector('#nightBtn').classList.contains('hidden')&&r.width>=48&&r.height>=48;})()`));
@@ -3527,6 +3558,29 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('a new day pays again', await ev(`P().coins===${dn0}+12&&P().dance.pay.n===1`));
     await ev(`document.querySelector('#dnSaves [data-slot="0"]').click()`); await sleep(100); await ev(`document.querySelectorAll('#modalBtns button')[0].click()`); await sleep(100);
     check('▶ Load puts a saved dance back', await ev(`P().dance.cur==='hhc.....'`));
+    // 🎵 saved dances keep their music (v1.80)
+    await ev(`closeModal();P().dance.music='starlight';P().dance.cur='hhj.....';document.querySelector('#dnSaves [data-slot="1"]').click()`); await sleep(100); await ev(`document.querySelectorAll('#modalBtns button')[1].click()`); await sleep(100);
+    check('saving keeps the song with the dance', await ev(`P().dance.tracks[1]==='starlight'&&P().dance.slots[1]==='hhj.....'`), await ev(`JSON.stringify(P().dance.tracks)`));
+    const dnC=await ev(`P().coins`);
+    await ev(`P().dance.music='bats';document.querySelector('#dnSaves [data-slot="1"]').click()`); await sleep(100); await ev(`document.querySelectorAll('#modalBtns button')[1].click()`); await sleep(100);
+    check('the same moves with new music: the music changes, no coins', await ev(`P().dance.tracks[1]==='bats'&&P().coins===${dnC}`));
+    await ev(`P().music.cur='1'.repeat(8)+'0'.repeat(64);P().music.kit='chip';P().music.speed=2;P().dance.music='loop';P().dance.cur='sss.....';document.querySelector('#dnSaves [data-slot="2"]').click()`); await sleep(100); await ev(`document.querySelectorAll('#modalBtns button')[1].click()`); await sleep(100);
+    check('saving with My loop keeps a copy of the loop', await ev(`(t=>t&&t.g==='1'.repeat(8)+'0'.repeat(64)&&t.kit===muKit(P())&&t.speed===muSpeed(P()))(P().dance.tracks[2])`), await ev(`JSON.stringify(P().dance.tracks[2])`));
+    await ev(`P().music.cur='0'.repeat(72)`);
+    check('changing the loop later leaves the copy alone, and it is a music choice', await ev(`P().dance.tracks[2].g==='1'.repeat(8)+'0'.repeat(64)&&dnChoices(P()).some(c=>c.id==='d2'&&c.name==='Dance 3 music')`));
+    await ev(`P().dance.music='beat';P().dance.cur=P().dance.slots[0];document.querySelector('#dnSaves [data-slot="2"]').click()`); await sleep(100);
+    check('a saved dance shows its music', await ev(`document.querySelector('#modalBody .dn-track').textContent.includes('Dance 3 music')`));
+    await ev(`document.querySelectorAll('#modalBtns button')[0].click()`); await sleep(100);
+    check('▶ Load brings back its moves and its music', await ev(`P().dance.cur==='sss.....'&&P().dance.music==='d2'&&dnMusic(P()).id==='d2'`));
+    await ev(`dnPlay()`); await sleep(100);
+    check('…which plays as the copied loop at its own speed', await ev(`DN.kind==='loop'&&Math.abs(DN.beat-60/MU_SPEEDS[P().dance.tracks[2].speed].bpm)<1e-6`));
+    await ev(`dnStop();document.querySelector('#dnSaves [data-slot="1"]').click()`); await sleep(100); await ev(`document.querySelectorAll('#modalBtns button')[0].click()`); await sleep(100);
+    check('▶ Load of a song dance picks the song', await ev(`P().dance.cur==='hhj.....'&&P().dance.music==='bats'`));
+    await ev(`P().dance.music='beat';P().dance.tracks[0]=null;P().dance.cur=P().dance.slots[0];show('room');RD.n=1;mascotTap();document.querySelector('[data-emote=dance]').click()`); await sleep(120);
+    check('in the room, a dance dances to its own song (not the Dance Maker\'s 🥁)', await ev(`document.querySelector('#mascotG').style.getPropertyValue('--bt')===buildSong('bats','easy').beat.toFixed(3)+'s'&&document.querySelector('#bubble').textContent.includes('Dance 2')`));
+    await ev(`rdStop();RD.n=0;document.querySelector('[data-emote=dance]').click()`); await sleep(120);
+    check('…and a dance saved before v1.80 uses the Dance Maker\'s music', await ev(`document.querySelector('#mascotG').style.getPropertyValue('--bt')===(60/104).toFixed(3)+'s'`));
+    await ev(`rdStop();show('dance')`); await sleep(150);
     await ev(`P().dance.cur='pppp....';document.querySelector('#dnIdeas').click()`); await sleep(100); await ev(`document.querySelectorAll('#modalBtns button')[1].click()`); await sleep(100);
     check('loading an idea over a dance that is not saved asks first', await ev(`document.querySelector('#modalTitle').textContent.includes('not saved')&&P().dance.cur==='pppp....'`));
     await ev(`document.querySelectorAll('#modalBtns button')[1].click()`); await sleep(100);
@@ -3569,11 +3623,13 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     // backups
     const dnB=await ev(`JSON.stringify(DB)`);
     await ev(`(()=>{const d=JSON.parse(${JSON.stringify(dnB)});d.version=27;d.profiles.forEach(p=>delete p.dance);doRestore(JSON.stringify(d));})()`); await sleep(400);
-    check('a v1.46 backup restores with no dances yet', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.dance.cur===DN_EMPTY&&p.dance.slots.every(s=>s===null)&&p.dance.music==='beat')`));
+    check('a v1.46 backup restores with no dances yet', await ev(`DB.version===DB_VERSION&&DB.profiles.every(p=>p.dance.cur===DN_EMPTY&&p.dance.slots.every(s=>s===null)&&p.dance.tracks.every(t=>t===null)&&p.dance.music==='beat')`));
     await ev(`closeModal();doRestore(${JSON.stringify(dnB)})`); await sleep(400);
     check('a v1.47 backup keeps the dances', await ev(`DB.profiles.some(p=>p.dance.cur==='hspwbcjo'&&p.dance.slots[0]===DN_IDEAS[1].g)`));
-    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(dnB)});d.profiles[0].dance={cur:'hhhhhhhx',music:7,slots:['hs......','abc',null,'jjjjjjjj'],songs:['bats','bats',3],pay:'x'};doRestore(JSON.stringify(d));})()`); await sleep(400);
-    check('odd dance data is made safe', await ev(`(d=>d.cur===DN_EMPTY&&d.music==='beat'&&d.slots.length===3&&d.slots[0]==='hs......'&&d.slots[1]===null&&d.songs.join()==='bats'&&d.pay.n===0)(DB.profiles[0].dance)`));
+    await ev(`closeModal();(()=>{const d=JSON.parse(${JSON.stringify(dnB)});d.profiles[0].dance={cur:'hhhhhhhx',music:7,slots:['hs......','abc',null,'jjjjjjjj'],songs:['bats','bats',3],pay:'x',
+      tracks:[{g:'x'},'neon',{g:'01'.repeat(36),kit:3,speed:9},'bats']};doRestore(JSON.stringify(d));})()`); await sleep(400);
+    check('odd dance data is made safe', await ev(`(d=>d.cur===DN_EMPTY&&d.music==='beat'&&d.slots.length===3&&d.slots[0]==='hs......'&&d.slots[1]===null&&d.songs.join()==='bats'&&d.pay.n===0
+      &&d.tracks.length===3&&d.tracks[0]===null&&d.tracks[1]==='neon'&&d.tracks[2].g==='01'.repeat(36)&&d.tracks[2].kit==='soft'&&d.tracks[2].speed===1)(DB.profiles[0].dance)`));
     await ev(`closeModal();stkPaused=false;show('room')`);
     check('v1.47 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.47')`));
   }
@@ -5731,9 +5787,13 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('the first saved loop: a Boombox in My Stuff', await ev(`P().music.box===true&&allItems(P()).filter(i=>i.type==='boombox'&&!i.placed).length===1`)&&/prize/i.test(await title()));
     await ev(`closeModal();muSaveSlot(1)`); await sleep(200);
     check('…only once', await ev(`allItems(P()).filter(i=>i.type==='boombox').length===1`));
-    await ev(`closeModal();show('room');{const it=allItems(P()).find(i=>i.type==='boombox');rooms(P()).forEach(r=>{r.items=r.items.filter(i=>i!==it);});it.placed=true;it.x=300;it.y=650;curRoom(P()).items.push(it);}
-      DB.settings.sound=true;CR.until=0;CR.boom=0;renderRoom()`); await sleep(200);
-    await ev(`document.querySelector('#roomSvg .deco[data-uid="'+allItems(P()).find(i=>i.type==='boombox').uid+'"]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(150);
+    await ev(`closeModal();show('room');{const it=allItems(P()).find(i=>i.type==='boombox');rooms(P()).forEach(r=>{r.items=r.items.filter(i=>i!==it);});it.placed=true;it.x=300;it.y=650;curRoom(P()).items=[it];}
+      P().gifts=[];closeModal();emoteBar(false);DB.settings.sound=true;CR.until=0;CR.boom=0;renderRoom()`); await sleep(200); // a clear room: no gift pile (GIFT_SPOT) in front (the profile is put back after this section)
+    // a real tap: whatever is on top at the boombox's middle gets the click (decorations let taps through, so this must be the boombox)
+    const boomHit=await ev(`(()=>{const g=document.querySelector('#roomSvg .deco[data-uid="'+allItems(P()).find(i=>i.type==='boombox').uid+'"] .bb'),b=g.getBoundingClientRect();
+      const e=document.elementFromPoint(b.left+b.width/2,b.top+b.height*0.75); if(e) e.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+      return e?e.tagName+'#'+e.id+'.'+(e.getAttribute('class')||'')+' in .'+(e.parentNode.getAttribute&&e.parentNode.getAttribute('class')||''):'nothing';})()`); await sleep(150);
+    if(!/in \.bb/.test(boomHit)) console.log('    (the boombox tap hit '+boomHit+')');
     check('tapping it plays her loop twice through (nothing else opens)', await ev(`CR.notes===8&&CR.boom===1&&cur==='room'&&document.querySelector('#modal').classList.contains('hidden')&&!!document.querySelector('#roomSvg .boom-play')`), await ev('CR.notes'));
     await shot('CR4-boombox');
     await ev(`CR.until=0;crBoomTap(document.querySelector('#roomSvg .boom-play')||document.createElementNS('http://www.w3.org/2000/svg','g'))`);
@@ -5919,7 +5979,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`P().pet.kind='';renderRoom();say('🐾 hello','pet')`); b=await bub();
     await ev(`P().pet.kind=window._pk;save();renderRoom()`);
     check('no pet yet: the line goes in the buddy bubble', b.who==='buddy', JSON.stringify(b));
-    check('v1.79 is in the Gift Story and the app says 1.79', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.79')&&APP_VERSION==='1.79'`));
+    check('v1.79 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.79')`));
+    check('v1.80 is in the Gift Story and the app says 1.80', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.80')&&APP_VERSION==='1.80'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);
