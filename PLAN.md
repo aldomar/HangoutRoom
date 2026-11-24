@@ -928,7 +928,7 @@ team-kit bonus, prizes and stickers; **new original animal characters**. Four st
 ### Phase 14: Before the hand-over (design review 2026-11-23)
 A whole-app review before the children get the app; the findings, the owner's answers and the ranked ideas are in
 `docs/DESIGN-REVIEW.md`. Agreed order (2026-11-23): ✅ v1.67 daily caps (built) → ✅ v1.68 🧤 Catch on Hard (reading the ball: bat
-sound, grass stripes, a shadow trail, no memorizing) → ✅ v1.69 first-time setup + level bands (built) → v1.70 spoken instructions →
+sound, grass stripes, a shadow trail, no memorizing) → ✅ v1.69 first-time setup + level bands (built) → ✅ v1.70 spoken instructions (built) →
 v1.71 🧸 Little mode. Each gets its own plan first.
 
 #### v1.67 plan details: fair daily coins (agreed 2026-11-23, built)
@@ -1146,6 +1146,76 @@ the version (1.69) in the four places.
 2. Challenge also starts new games on Medium. (Built as: when a room becomes Challenge, every game with no progress yet is set to Medium.)
 3. Icons and names only in the picker, no ages. (The table's ages are for this plan only.)
 4. The owner sets up each iPad, but the welcome is written for any grown-up, in case a parent does it.
+
+#### v1.70 plan details: 🔊 Spoken instructions (agreed 2026-11-23, built)
+**Why:** the 3- and 5-year-olds can't read. 🔊 Read to me only says a button's name when it is tapped (`34-helpers.js`). Only
+Word Builder, Peekaboo and I Spy speak by themselves. Everything else that tells a child *what to do* is silent text:
+- puzzle questions (`#brQ`)
+- game tips (`#socTip`, `#bfTip`, `.fid-tip`, `#clHint` …)
+- the buddy's speech bubble (`say()`)
+- visitor wishes
+
+Worse, in Easy mode many of these show only emoji ("🔤 ❓", "➕"), so there is nothing to read even for a grown-up helping.
+
+**1. Every screen and game can say what to do.** A new file `65-speak.js` holds one short spoken line for each place, written for
+listening: short, American English, no emoji, about 15 words at most.
+- **The line comes from its own list, not from the screen.** So an Easy-mode screen that shows "🔤 ❓" still says "What letter does
+  it start with?"
+- **Where lines are needed:**
+  - Fidget tabs: pop-it, squishy, spinner, slime, clicker, marble maze.
+  - Making things: the Closet, Art Desk, Photocards, Music Maker, Dance Maker, Jam, Garden, Runway, pet walks.
+  - Sports: Soccer (Kick / Keep / Trick Shots), the Ball Field (Batting / Catch / Derby), the Stage.
+  - Puzzles and other screens: Code Lab, Brain Games (the menu and each game), 🧸 Play (menu, coloring, Sound Mat), the Sticker Book.
+- **Some lines fill in the puzzle in front of her.** For example:
+  - 🫧 Number Pop: "Pop every bubble with a 3."
+  - 🍕 Fraction Bakery: "Which one is cut into 4 equal pieces?"
+  - 🧁 Snack Stand: "How many treats in this order?"
+
+  Every fixed puzzle in every Brain game gets one.
+- **Code Lab** says how to play at the start of a puzzle ("Tap the arrows to make a path to the carrot, then tap Go"), and its oops lines.
+
+**2. When it speaks by itself:** whenever 🔊 Read to me is on for the room. That's 🧸 Little and 🐣 Easy rooms by default; a
+grown-up can turn it on for any room in ⚙️ Settings.
+- **When:** when a screen or game tab opens, when a new puzzle starts, and when the buddy's speech bubble or a visitor's wish appears.
+- **Brain Games:** the gentle "try again" hints are spoken too (the ones that are text today, like "A little more! You need 3/4").
+- **Never spoken:** coins, toasts and the win boxes (the sounds already cover those). Never during a Stage song, a Music Maker,
+  Dance Maker or Jam loop, or a sports throw or kick in the air.
+- **When things overlap:** a new line cuts off the one before (no queue), and a button's name is skipped when the tap opens a
+  screen that speaks its own line.
+
+**3. A 🔊 "say it again" button on every screen that has a line.** A round 48 px button in the top bar (added in code to each of
+the 18 top bars, with `aria-label="Say it again"`).
+- It works for every band, even with Read to me off, so the 8-year-old (or a grown-up) can listen when she wants.
+- It only shows when the device has a voice (`canSpeak()`).
+
+**What doesn't change:** no new save data (it uses `p.speak` and the band), and no internet: the device's own voice only,
+the same as Read to me today. No main loop, so nothing runs per frame. The words on screen stay as they are.
+
+**Code:** `65-speak.js`:
+- `SPEAK` (lines by screen / tab / mode), `BR_SPEAK` (a function per Brain game: `(pz, lvl) → sentence`), `CL_SPEAK`.
+- `tell(text)` (speaks when Read to me is on and it's a quiet moment), `tellScreen()`, `lastTell`, and the 🔊 buttons (`sayBtns`).
+
+Small hooks call `tellScreen()` or `tell()`:
+- `show()` (09), `setFidTab` (10), the Soccer and Ball Field mode buttons, `brPuzzle` and `brOops` (28), `clOpen` (18)
+- `say()` (09), the visitor's wish (42), `ltGo` (46)
+
+**Smoke test:** a fake voice records what is said.
+- **Every screen, tab and mode has a line.**
+- **Every fixed Brain puzzle and Code Lab level gives a sentence.** It must be non-empty, have no emoji, have 20 words at most,
+  and use American spelling.
+- **Easy mode:** an emoji-only screen still says a real sentence.
+- **Speaking by itself:** it happens only with Read to me on, and never during a Stage song.
+- **🔊 again:** it repeats the line and works with Read to me off.
+- **The button:** it's hidden with no voice, it's 48 px with a label, and it fits on a phone.
+
+**Docs:** README, this plan, STATUS, DESIGN-REVIEW, `CLAUDE.md` (the new section, and "a new game or screen adds a `SPEAK` line"),
+a `GIFT_TIMELINE` entry, and the version (1.70) in the four places.
+
+**Owner's answers (2026-11-23):**
+1. Yes: 🔇 also stops the automatic voice; tapping 🔊 say it again still speaks.
+2. The recommended set: instructions, questions, try-again hints, the buddy's bubble and visitor wishes.
+3. A little slower in 🧸 Little and 🐣 Easy rooms.
+4. No: Read to me stays in ⚙️ Settings.
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.

@@ -194,7 +194,9 @@ const GIFT_TIMELINE=[
   {v:'1.68',d:'2026-11-23',i:'🧤',n:'Catch you can read',why:'So the hardest catches are about watching and listening, not remembering',
     news:['🧤 Listen to the bat: CRACK! means stay back, tok means run in','🌱 Mowed grass and a shadow trail show where the ball is going','🦓 Zippy hits new balls every game on Hard']},
   {v:'1.69',d:'2026-11-23',i:'👋',n:'Ready for you',why:'So every room starts at the right level, set up by a grown-up',
-    news:['🎚️ Every room has a level: 🧸 Little, 🐣 Easy, ⭐ Normal or 🔥 Challenge','🔥 Challenge rooms start new games on Medium','👋 A quick setup for grown-ups on a new device']}
+    news:['🎚️ Every room has a level: 🧸 Little, 🐣 Easy, ⭐ Normal or 🔥 Challenge','🔥 Challenge rooms start new games on Medium','👋 A quick setup for grown-ups on a new device']},
+  {v:'1.70',d:'2026-11-23',i:'🗣️',n:'Tell me what to do',why:'So the ones who are still learning to read can play everything',
+    news:['🗣️ Every game can tell you what to do, out loud','🔊 Tap the 🔊 at the top to hear it again','🐢 The voice is a little slower in Little and Easy rooms']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

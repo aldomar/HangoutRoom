@@ -23,7 +23,11 @@ _Last updated: 2026-11-23_
   Challenge also starts new games on Medium; the picker shows icons and names only (no ages); the owner sets up each iPad, but the
   welcome is written for any grown-up. Save: `p.band` (with `p.easy` kept in step) and `settings.setupDone` (device, kept by Restore);
   no new save version. Also the 30-day 💾 backup line on the rooms screen (review idea 6).
-- **Next: v1.70 spoken instructions** (needs its own plan), then v1.71 🧸 Little mode.
+- **🗣️ Spoken instructions: built as v1.70** on branch `feature/speak` (from `feature/setup`, as #71 is still open). Plan agreed
+  2026-11-23 (`PLAN.md`, "v1.70 plan details"). Owner's answers: 🔇 also stops the automatic voice (🔊 still speaks when tapped);
+  it speaks instructions, questions, try-again hints, the buddy's bubble and visitor wishes; a little slower in Little and Easy rooms;
+  Read to me stays in Settings (not in the setup). No save changes. On a 390 px phone the Photocards title gets squeezed by the 🔊.
+- **Next: v1.71 🧸 Little mode** (needs its own plan).
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
 - **Phase 2 (Art Desk): done** (v1.3 merged). Checked on an Android phone: it works, and drawings survive closing the app.
 - **Phase 3 (Photocard Wall): done** (v1.4 merged). The owner checked it on the device: all checks passed (2026-11-15).

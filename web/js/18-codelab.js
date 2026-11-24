@@ -322,7 +322,7 @@ function clDone(){
   CL.state='oops';
   const last=CL.ev[CL.ev.length-1], none=CL.end==='short'||CL.end==='stars'||!last;
   CL.bad=none?[]:last.bs; CL.badM=none?[]:last.bm;
-  clSay(CL_OOPS[CL.end][p.easy?0:1]); clProg();
+  clSay(CL_OOPS[CL.end][p.easy?0:1]); tell(CL_OOPS[CL.end][1]); clProg(); // tell: section 65
 }
 function clWin(){
   if(CL.free){fpCodeWin();return;}

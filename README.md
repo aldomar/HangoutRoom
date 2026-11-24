@@ -225,6 +225,19 @@ This pack adds 25 clothes (15–25 coins each, open to everyone) so every outfit
   firefighter outfit) and 🧩 Full Outfit (every piece of any 3 outfits).
 - No change to the save data. There is still no cape: it needs its own layer behind the body (maybe later).
 
+## Spoken instructions (since version 1.70)
+The app can now **say what to do** on every screen, so the children who can't read yet can play everything:
+- **Each screen, tab and game has one short spoken line**, for example "Pop them all to flip it over!" on the pop-it. In the Brain Games it's
+  the puzzle's question, such as "Pop every bubble with 3" or "Which one is cut into 4 equal pieces?" In Easy rooms the screen
+  often shows only pictures (like "🔤 ❓"), but the voice still says the whole question.
+- **By itself:** when 🔊 Read to me is on. That's 🧸 Little and 🐣 Easy rooms by default, and it can be turned on for any room
+  in ⚙️ Settings. It speaks when a screen, tab or puzzle opens, for try-again hints, for the buddy's speech bubble and for a
+  visitor's wish. It never talks over a Stage song or a music loop, and never says coins or prize boxes.
+- **🔊 Say it again:** a round button at the top of every screen. Any child can tap it, even with Read to me off.
+- **🔇 in the room** (the sound button) also keeps the voice quiet. Tapping 🔊 still speaks, because she asked.
+- The voice is **a little slower in Little and Easy rooms**. The Android app keeps the device's own speed.
+- It uses the voice built into the device (no internet), like Read to me. No change to the save data.
+
 ## Setting up a new device, and room levels (since version 1.69)
 **The first time the app opens on a device with no rooms,** a short setup for a grown-up appears. Each step can be skipped:
 1. 👋 Welcome. **📂 I have a backup** goes straight to Restore (for moving to a new iPad).
