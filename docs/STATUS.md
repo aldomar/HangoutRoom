@@ -33,7 +33,12 @@ _Last updated: 2026-11-24_
   from owned clothes, in every room's Closet); on by default for Little rooms with a switch in Settings → Level; relocks when the
   app is reopened and with 🔒 Lock. Unlock = hold 🔒 3 s, then the PIN. Save: `little.lock`; no new save version.
   This finishes the agreed design-review order (v1.67–v1.71).
-- **Next:** nothing scheduled. Later ideas (each needs a plan) are in `docs/DESIGN-REVIEW.md`, such as offline gift codes between iPads.
+- **🧸 Little mode was merged** (PR #73, 2026-11-24).
+- **Next: Phase 15** (order agreed 2026-11-24, `PLAN.md`, "Phase 15"):
+  v1.72 🎉 holiday greetings → v1.73 shared helpers (one "today", one allowance helper) → v1.74 Stage pause + ↩ Undo →
+  v1.75 🎁 gift codes between iPads → v1.76 the pet notices → v1.77 creations in the room → v1.78 Code Lab level maker.
+  v1.72 is on branch `feature/holidays`. Its plan ("v1.72 plan details") is waiting for the owner's holiday list.
+  It has to be merged by Wednesday 2026-11-25 to greet on Thanksgiving.
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
 - **Phase 2 (Art Desk): done** (v1.3 merged). Checked on an Android phone: it works, and drawings survive closing the app.
 - **Phase 3 (Photocard Wall): done** (v1.4 merged). The owner checked it on the device: all checks passed (2026-11-15).
