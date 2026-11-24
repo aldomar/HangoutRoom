@@ -1262,7 +1262,7 @@ The owner prefers a lock inside the app to iPad settings like Guided Access.
 Phase 14 finished the review's first five ideas. This phase covers the rest of `docs/DESIGN-REVIEW.md` (ideas 7–14 and the risks
 still open), plus the owner's 🎉 holiday greeting. One PR for each version, in this order. Each still gets its own detailed plan,
 agreed before any code (only v1.72's is written so far).
-- 🔜 **🎉 Holiday greetings (v1.72, plan agreed, next to build):** the owner's idea (2026-11-24). On 12 US holidays the buddy says
+- ✅ **🎉 Holiday greetings (v1.72, built, PR open on `feature/holidays`):** the owner's idea (2026-11-24). On 12 US holidays the buddy says
   "Happy Thanksgiving!" (and so on) when the room opens, with confetti. No coins, nothing for a limited time. Plan details below.
 - ⬜ **🧰 Shared helpers, part 1 (v1.73; review idea 10 + risk 6):** nothing the children can see changes.
   - Everything uses `fpDay()` for "today". That removes `ltToday`, `rwToday`, `spyToday`, `jamToday`, `trToday`, `hrToday` and the

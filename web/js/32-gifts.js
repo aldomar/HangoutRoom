@@ -54,10 +54,11 @@ function giftG(p){
     +(n>2?giftBox(26,-6,cols[2],0):'')+(n>1?giftBox(-26,-4,cols[1],0):'')+giftBox(0,0,cols[0],1)
     +(n>1?`<circle cx="44" cy="-74" r="18" fill="#ff4fa3" stroke="#fff" stroke-width="3"/><text x="44" y="-67" text-anchor="middle" font-size="20" font-weight="900" fill="#fff">${n}</text>`:'')+`</g></g>`;
 }
-function giftConfetti(){
+// cols: the confetti colors (a holiday's own, section 67); the gift colors when left out.
+function giftConfetti(cols){
   const d=document.createElement('div'); d.className='confetti';
-  const cols=['#ff8cc6','#a97cff','#8ff0d0','#ffd166','#7fc8ff'];
-  d.innerHTML=Array.from({length:36},(_,i)=>`<i style="left:${(i*137)%100}%;background:${cols[i%5]};animation-delay:${(i%9)*0.07}s;transform:rotate(${i*40}deg)"></i>`).join('');
+  cols=cols||['#ff8cc6','#a97cff','#8ff0d0','#ffd166','#7fc8ff'];
+  d.innerHTML=Array.from({length:36},(_,i)=>`<i style="left:${(i*137)%100}%;background:${cols[i%cols.length]};animation-delay:${(i%9)*0.07}s;transform:rotate(${i*40}deg)"></i>`).join('');
   document.body.appendChild(d); setTimeout(()=>d.remove(),2600);
 }
 function giftOpen(){

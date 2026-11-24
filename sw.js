@@ -5,7 +5,7 @@
    - FILES must list every file index.html loads (the smoke test checks). A new web/js file goes here too.
    - It never asks the internet for anything but these files. web/about-local.js is git-ignored, so it isn't hosted:
      when it's missing, an empty script is used. */
-const VERSION='1.71';
+const VERSION='1.72';
 const STORE='hangout-room-'+VERSION;
 const FILES=['./','index.html','manifest.webmanifest','web/app.css','web/icon-180.png',
   'web/js/01-save.js','web/js/02-art-helpers.js','web/js/03-mascot.js','web/js/04-room.js',
@@ -23,7 +23,7 @@ const FILES=['./','index.html','manifest.webmanifest','web/app.css','web/icon-18
   'web/js/50-ispy.js','web/js/51-spend.js','web/js/52-runway.js','web/js/53-jam.js',
   'web/js/54-tricks.js','web/js/55-petplay.js','web/js/56-walk.js','web/js/57-pack5.js',
   'web/js/58-ios.js','web/js/59-ballfield.js','web/js/60-ballpack.js','web/js/61-catch.js',
-  'web/js/62-derby.js','web/js/63-ballduel.js','web/js/64-setup.js','web/js/65-speak.js','web/js/66-littlemode.js','web/js/99-startup.js'];
+  'web/js/62-derby.js','web/js/63-ballduel.js','web/js/64-setup.js','web/js/65-speak.js','web/js/66-littlemode.js','web/js/67-holidays.js','web/js/99-startup.js'];
 
 self.addEventListener('install',e=>{
   // cache:'reload' skips the browser's own HTTP cache, so a new version never mixes in old files
