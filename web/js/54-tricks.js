@@ -37,7 +37,6 @@ let TR={state:'aim',shot:null,t:0,time:0,swipe:null,g:null,hit:[],miss:0,cheer:-
 const trIdx=p=>Math.max(0,TRICKS.findIndex(t=>t.id===p.soccer.trick));
 const trCur=()=>TRICKS[trIdx(P())];
 const trDoneN=p=>TRICKS.filter(t=>p.soccer.tricks.includes(t.id)).length;
-const trToday=()=>fpDay();
 
 /* ---------- the rules (no drawing): where the targets are, walls, what a shot hits ---------- */
 function trTargets(tr,time){
@@ -126,8 +125,7 @@ function trWin(){
   const tr=trCur(), first=!p.soccer.tricks.includes(tr.id); TR.state='done';
   p.stats.tricks++; let line;
   if(first){p.soccer.tricks.push(tr.id);earn(TR_COINS,'Trick!');line=`New trick! +${TR_COINS} 🪙`;}
-  else {if(p.soccer.trickPay.day!==trToday())p.soccer.trickPay={day:trToday(),n:0};
-    if(p.soccer.trickPay.n<TR_DAILY){p.soccer.trickPay.n++;earn(TR_REPLAY,'Trick!');line=`+${TR_REPLAY} 🪙`;}
+  else {if(dailyPay(p.soccer.trickPay,TR_DAILY,1)){earn(TR_REPLAY,'Trick!');line=`+${TR_REPLAY} 🪙`;}
     else {save();line='Trick coins are full for today. Keep kicking for fun ✨';}}
   const prize=trGivePrize(), D=DECOR[TR_PRIZE];
   const nextI=TRICKS.findIndex((t,i)=>i>trIdx(p)&&!p.soccer.tricks.includes(t.id)), go=nextI>=0?nextI:TRICKS.findIndex(t=>!p.soccer.tricks.includes(t.id));

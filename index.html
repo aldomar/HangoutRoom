@@ -321,6 +321,7 @@
     <div id="stgMascot"></div>
     <div class="stg-hud"><span id="stgScore"></span><span id="stgCombo"></span></div>
     <div class="stg-names hidden" id="stgNames"><span id="stgN1"></span><span id="stgN2"></span></div>
+    <div class="stg-pause hidden" id="stgPause"><div class="stg-pause-box"><div class="stg-pause-t">⏸️ Paused</div><button class="btn pink" id="stgGo" aria-label="Keep going">▶ <span class="tn">Keep going</span></button></div></div>
   </div>
 </div>
 
@@ -338,6 +339,7 @@
     <button class="tab" data-lvl="move">✨ <span>My Move</span></button>
     <button class="tab" data-lvl="if">❓ <span>If</span></button>
     <button class="tab" data-lvl="challenge">🧠 <span>Challenge</span></button>
+    <button class="tab" data-make="1" aria-label="Make a level">🛠️ <span>Make</span></button>
   </div>
   <div class="cl-pick" id="clPick">
     <div class="stg-note" id="clHint"></div>
@@ -354,6 +356,21 @@
         <button class="btn ghost" id="clUndo">↩️</button>
         <button class="btn ghost" id="clClear">🗑️</button>
         <button class="btn pink" id="clRun">▶️ <span>Run</span></button>
+      </div>
+    </div>
+  </div>
+  <!-- 🛠️ level maker (v1.78, section 72) -->
+  <div class="cl-play cl-make hidden" id="clMake">
+    <div class="cl-board"><svg id="lmBoard" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet"></svg></div>
+    <div class="cl-side">
+      <div class="cl-msg hint" id="lmMsg"></div>
+      <div class="lm-row" id="lmSize"></div>
+      <div class="cl-pal lm-tools" id="lmTools"></div>
+      <div class="lm-row" id="lmLimits"></div>
+      <div class="lm-blocks" id="lmBlocks"></div>
+      <div class="cl-ctl">
+        <button class="btn ghost" id="lmDel" aria-label="Remove this level">🗑️</button>
+        <button class="btn pink" id="lmTest">▶️ <span>Test it</span></button>
       </div>
     </div>
   </div>
@@ -506,6 +523,7 @@
 
 <div id="modal" class="modal hidden"><div class="modal-card"><div id="modalTitle"></div><div id="modalBody"></div><div id="modalBtns"></div></div></div>
 <div id="toast"></div>
+<div id="undoBar" class="undo-bar"><button class="btn" id="undoBtn" aria-label="Undo">↩ <span class="tn">Undo</span></button><i></i></div>
 <div id="flash"></div>
 
 <script src="web/js/01-save.js"></script>
@@ -577,6 +595,11 @@
 <script src="web/js/65-speak.js"></script>
 <script src="web/js/66-littlemode.js"></script>
 <script src="web/js/67-holidays.js"></script>
+<script src="web/js/68-undo.js"></script>
+<script src="web/js/69-giftcodes.js"></script>
+<script src="web/js/70-petnotice.js"></script>
+<script src="web/js/71-creations.js"></script>
+<script src="web/js/72-levelmaker.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

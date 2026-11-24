@@ -800,7 +800,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await shot('A25-code-hard-solved'); await ev(`closeModal()`);
   await ev(`CODE_STEP=400;clSolve('hard',5)`); await sleep(200); await ev(`show('room')`); await sleep(900);
   check('leaving during a run stops it (nothing paid)', await ev(`CL.state!=='run'&&!P().code.solved.includes('h6')`));
-  await ev(`CODE_STEP=40;show('code');clOpen('hard',0)`); await sleep(100);
+  await ev(`CODE_STEP=40;show('code')`); await sleep(600); await ev(`closeModal()`); // a 🤖 prize box (v1.77) may pop up first
+  await ev(`clOpen('hard',0)`); await sleep(100);
   check('Back from a puzzle goes to the list, then the Loft', await ev(`window.androidBack()&&cur==='code'&&CL.view==='pick'&&window.androidBack()&&cur==='room'&&roomNo===2`));
   await ev(`P().easy=true;P().code.level='hard';show('code')`); await sleep(200);
   check('Easy mode opens the Code Lab on Easy', await ev(`P().code.level==='easy'&&document.querySelector('#clTabs .tab.on').dataset.lvl==='easy'`));
@@ -1107,7 +1108,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('144 stickers on 8 pages (1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===144&&new Set(STICKERS.map(s=>s.id)).size===144&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('146 stickers on 8 pages (2 for 🛠️ the level maker since v1.78, 1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===146&&new Set(STICKERS.map(s=>s.id)).size===146&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1441,7 +1442,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`show('code');clOpen('hard',3)`); await sleep(300); await shot('A27-phone-code');
   check('phone: Code Lab board and Run button both on screen', await ev(`(()=>{const b=document.querySelector('#clBoard').getBoundingClientRect(),r=document.querySelector('#clRun').getBoundingClientRect();return b.height>150&&r.bottom<=innerHeight&&r.height>=48;})()`));
   await ev(`clPickView()`); await sleep(150); await shot('A35-phone-code-tabs');
-  check('phone: all 6 Code Lab tabs fit without scrolling', await ev(`(()=>{const t=document.querySelector('#clTabs');return t.scrollWidth<=t.clientWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`));
+  check('phone: all 7 Code Lab tabs (6 levels + 🛠️ Make) fit without scrolling', await ev(`(()=>{const t=document.querySelector('#clTabs');return t.scrollWidth<=t.clientWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`));
   await ev(`clOpen('challenge',7);CL.move=[...'QRQUS'];CL.prog=['4','M'];clProg()`); await sleep(200); await shot('A43-phone-code-challenge');
   check('phone: Challenge puzzle (10 palette blocks, both rows) fits with ▶️ Run on screen', await ev(`(()=>{const r=document.querySelector('#clRun').getBoundingClientRect(),b=document.querySelector('#clBoard').getBoundingClientRect();return r.bottom<=innerHeight&&b.height>120;})()`));
   await ev(`clOpen('move',4);CL.move=[...'2R2U'];CL.prog=['2','M'];clProg()`); await sleep(200); await shot('A36-phone-code-mymove');
@@ -2578,16 +2579,16 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();show('room');{const p=P();p.fidPay={day:'',n:0};p.coins=100;fidToldDay='';}`); await sleep(100);
   check('fidget coins share an allowance of 30 a day', await ev(`FID_DAILY===30`));
   await ev(`for(let k=0;k<6;k++)fidEarn(5)`); await sleep(100);
-  check('the first 30 fidget coins are paid as usual', await ev(`P().coins===130&&P().fidPay.n===30&&P().fidPay.day===new Date().toDateString()`), await ev('[P().coins,P().fidPay.n]'));
+  check('the first 30 fidget coins are paid as usual', await ev(`P().coins===130&&P().fidPay.n===30&&P().fidPay.day===fpDay()`), await ev('[P().coins,P().fidPay.n]'));
   check('…and a gentle note says they are full for today (no countdown)', await ev(`/full for today/.test(document.querySelector('#toast')?.textContent||document.body.textContent)&&!/tomorrow|hours|minutes/i.test(document.querySelector('#toast')?.textContent||'')`));
   await ev(`fidEarn(1);fidEarn(5)`); await sleep(100);
   check('after that, fidgets pay nothing more today', await ev(`P().coins===130&&P().fidPay.n===30`));
-  await ev(`P().fidPay={day:new Date().toDateString(),n:28};fidEarn(5)`); await sleep(100);
+  await ev(`P().fidPay={day:fpDay(),n:28};fidEarn(5)`); await sleep(100);
   check('a flip bonus near the limit pays only what is left (2 of 5)', await ev(`P().coins===132&&P().fidPay.n===30`));
   await ev(`P().fidPay={day:'Mon Jan 01 2001',n:30};fidEarn(1)`); await sleep(100);
   check('a new day refills it quietly', await ev(`P().coins===133&&P().fidPay.n===1`));
   // a real pop-it board when the allowance is used up: it still pops and flips, it just pays nothing
-  await ev(`P().fidPay={day:new Date().toDateString(),n:30};P().fid.pop='rainbow';P().fid.popShape='classic';show('fidget');setFidTab('popit')`); await sleep(250);
+  await ev(`P().fidPay={day:fpDay(),n:30};P().fid.pop='rainbow';P().fid.popShape='classic';show('fidget');setFidTab('popit')`); await sleep(250);
   const fa0=await ev('P().coins'), ff0=await ev('P().stats.flips'), fp0=await ev('P().stats.pops');
   await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').forEach(b=>popAt(b))`); await sleep(1300);
   check('with the allowance used, the pop-it still pops and flips (counted for stickers) but pays nothing', await ev(`P().stats.flips===${ff0}+1&&P().stats.pops>${fp0}&&P().coins===${fa0}`), [fa0,await ev('P().coins')]);
@@ -2924,7 +2925,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`vMeet(vWishOf('mochi1'));renderRoom();visitTap()`); await sleep(150);
   check('…the card ticks the lines that are done', await ev(`document.querySelectorAll('#modalBody .vs-row.ok').length===2`));
   await ev(`[...document.querySelectorAll('#modalBtns .btn')].find(b=>/Show me/.test(b.textContent)).click()`); await sleep(250);
-  check('done: +5 coins, the wish is saved, and a thank-you', await ev(`P().coins===105&&P().visit.done.join()==='mochi1'&&P().visit.cur===''&&P().visit.day===new Date().toDateString()&&/loves it/.test(document.querySelector('#modalTitle').textContent)`));
+  check('done: +5 coins, the wish is saved, and a thank-you', await ev(`P().coins===105&&P().visit.done.join()==='mochi1'&&P().visit.cur===''&&P().visit.day===fpDay()&&/loves it/.test(document.querySelector('#modalTitle').textContent)`));
   await shot('V03-thank-you');
   await ev(`closeModal();renderRoom()`);
   check('no new friend the same day', await ev(`P().visit.cur===''&&!document.querySelector('#roomSvg .visitor')`));
@@ -3398,7 +3399,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`pkTap(LT.peek.friend);ltGo('menu');ltGo('peek')`);
     check('leaving right after finding a friend: coming back starts a fresh round', await ev(`!LT.peek.found&&LT.peek.open.length===0`));
     // coins: 10 a day in all
-    await ev(`P().little.pay={day:ltToday(),n:9};LT.noted=''`);
+    await ev(`P().little.pay={day:fpDay(),n:9};LT.noted=''`);
     const cc0=await ev('P().coins');
     await ev(`ltPay();ltPay()`);
     check('+1 coins stop at 10 a day', await ev(`P().coins===${cc0}+1&&P().little.pay.n===10`));
@@ -5056,7 +5057,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`closeModal();${fresh};mzWin()`); await sleep(200);
     check('Marble Maze: …and +1 when there is room', await ev(`P().coins===104&&P().maze.pay.n===1`));
     // "not enough coins" names somewhere that still pays
-    await ev(`closeModal();show('room');${full};P().fidPay={day:new Date().toDateString(),n:FID_DAILY}`);
+    await ev(`closeModal();show('room');${full};P().fidPay={day:fpDay(),n:FID_DAILY}`);
     check('with every allowance used up, the only tip is 🧠 Brain Games', await ev(`payTips(P()).words==='🧠 Brain Games'`));
     await ev(`P().soccer.pay.n=0`);
     check('…with Soccer open: "⚽ Soccer or 🧠 Brain Games"', await ev(`payTips(P()).words==='⚽ Soccer or 🧠 Brain Games'&&payTips(P()).icons==='⚽ 🧠'`));
@@ -5474,7 +5475,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('…and holidayToday() finds each one (and nothing on an ordinary day)', await ev(`HOLIDAYS.every(h=>holidayToday(h.date(2027)).id===h.id)&&!holidayToday('2026-11-24')&&!holidayToday('2027-07-05')`));
     check('every greeting is short and has no money or time pressure in it', await ev(`HOLIDAYS.every(h=>h.words.split(' ').length<=5&&!/coin|today only|hurry/i.test(h.words)&&h.cols.length>=3)`));
     await ev(`closeModal();stkPaused=true;window._hdSaved=JSON.stringify({tip:P().seenTip,daily:P().lastDaily,coins:P().coins,sound:DB.settings.sound,speak:P().speak});
-      window._said=[];window.AndroidBridge={speak(t){window._said.push(t);}};DB.settings.sound=true;P().speak=true;P().seenTip=true;P().lastDaily=new Date().toDateString();
+      window._said=[];window.AndroidBridge={speak(t){window._said.push(t);}};DB.settings.sound=true;P().speak=true;P().seenTip=true;P().lastDaily='2026-11-26';
       window.FP_TEST_DAY='2026-11-26';show('profiles');enterRoom()`); await sleep(1300);
     check('on Thanksgiving, opening the room: the buddy says "Happy Thanksgiving, <name>! 🦃"', await ev(`(b=>!!b&&b.textContent===('Happy Thanksgiving, '+P().name+'! 🦃'))(document.querySelector('#bubble'))`), await ev(`(b=>b&&b.textContent)(document.querySelector('#bubble'))`));
     check('…with confetti in the holiday colors, and the voice says it without the emoji', await ev(`!!document.querySelector('.confetti i')&&HOLIDAYS.find(h=>h.id==='thanksgiving').cols.some(c=>document.querySelector('.confetti i').getAttribute('style').includes(c))&&window._said.includes('Happy Thanksgiving, '+P().name+'!')`), await ev(`JSON.stringify(window._said)`));
@@ -5494,7 +5495,359 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('on an ordinary day: no greeting', await ev(`!document.querySelector('#bubble')`));
     await ev(`window.FP_TEST_DAY='';delete window.AndroidBridge;{const o=JSON.parse(window._hdSaved),p=P();p.seenTip=o.tip;p.lastDaily=o.daily;p.coins=o.coins;p.speak=o.speak;DB.settings.sound=o.sound;}
       document.querySelectorAll('.confetti').forEach(c=>c.remove());save();show('room');goRoom(1)`);
-    check('v1.72 is in the Gift Story and the app says 1.72', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.72')&&APP_VERSION==='1.72'`));
+    check('v1.72 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.72')`));
+  }
+
+  console.log('Shared helpers (v1.73): one "today", one daily allowance');
+  {
+    const jsFiles=fs.readdirSync(path.join(__dirname,'..','web','js')).filter(n=>n.endsWith('.js'));
+    const oldDay=jsFiles.filter(n=>/\.toDateString\(\)|\b(lt|rw|spy|jam|tr|hr|v)Today\b/.test(fs.readFileSync(path.join(__dirname,'..','web','js',n),'utf8')));
+    check('no file keeps its own "today" any more (everything uses fpDay)', oldDay.length===0, oldDay);
+    const resets=jsFiles.filter(n=>n!=='08-ui.js'&&/\.day!==[\w.()]+?\)\s*(\{\s*)?[\w.]+(=\{day[^}]*n:0|\.day=[^}]*\.n=0)/.test(fs.readFileSync(path.join(__dirname,'..','web','js',n),'utf8')));
+    check('no copied "new day, start at 0" resets are left (dailyPay does it)', resets.length===0, resets);
+    check('dayIso turns the old saved days into 2026-11-24 and leaves the rest alone', await ev(`dayIso('Tue Nov 24 2026')==='2026-11-24'&&dayIso('Wed Mar 03 2027')==='2027-03-03'&&dayIso('Sat Jan 1 2028')==='2028-01-01'
+      &&dayIso('2026-11-24')==='2026-11-24'&&dayIso('')===''&&dayIso('hello')==='hello'&&dayIso(undefined)===undefined`));
+    check('dailyPay: pays up to the limit, counts it, and a new day starts again at 0', await ev(`(()=>{const o={day:'2000-01-01',n:9};
+      const a=dailyPay(o,10,3),b=dailyPay(o,10,9),c=dailyPay(o,10,1);return a===3&&b===7&&c===0&&o.n===10&&o.day===fpDay();})()`));
+    check('…the day comes from fpDay(), so FP_TEST_DAY moves it', await ev(`(()=>{const o={day:'',n:0};window.FP_TEST_DAY='2031-05-05';dailyPay(o,5,2);const d=o.day;window.FP_TEST_DAY='';return d==='2031-05-05';})()`));
+    check('an older save: every old-style day becomes today\'s date, and the counts stay', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P())),old=new Date().toDateString();
+      q.lastDaily=old;[q.artPay,q.fidPay,q.music.pay,q.dance.pay,q.little.pay,q.runway.pay,q.visit,q.duo].forEach(o=>{o.day=old;o.n=2;});normalize(q);
+      return q.lastDaily===fpDay()&&[q.artPay,q.fidPay,q.music.pay,q.dance.pay,q.little.pay,q.runway.pay,q.duo].every(o=>o.day===fpDay()&&o.n===2)&&q.visit.day===fpDay();})()`));
+    await ev(`closeModal();stkPaused=true;window._shSaved=JSON.stringify({daily:P().lastDaily,fid:P().fidPay,coins:P().coins});P().lastDaily=new Date().toDateString();P().fidPay={day:new Date().toDateString(),n:30};
+      normalize(P());window._shC=P().coins;show('profiles');enterRoom()`); await sleep(900);
+    check('…so a daily gift already opened today (before the update) is not given again', await ev(`P().coins===window._shC&&P().lastDaily===fpDay()`));
+    await ev(`fidEarn(3)`);
+    check('…and full fidget coins stay full', await ev(`P().coins===window._shC&&P().fidPay.n===30`));
+    await ev(`{const o=JSON.parse(window._shSaved),p=P();p.lastDaily=o.daily;p.fidPay=o.fid;p.coins=o.coins;}save();show('room')`);
+    check('v1.73 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.73')`));
+  }
+
+  console.log('Stage pause + Undo (v1.74)');
+  {
+    const vis=sel=>ev(`(e=>!!e&&e.offsetParent!==null&&getComputedStyle(e).display!=='none')(document.querySelector(${JSON.stringify(sel)}))`);
+    const hide=h=>ev(`Object.defineProperty(document,'hidden',{value:${h},configurable:true});document.dispatchEvent(new Event('visibilitychange'))`);
+    const yes=`[...document.querySelectorAll('#modalBtns button')].pop().click()`;
+    await ev(`closeModal();stkPaused=true;window._v74=JSON.stringify(P());P().stage.level='easy';show('stage');stgPickView();stStart('starlight')`); await sleep(2500);
+    // ⏸️ Stage pause
+    await hide(true); await sleep(100);
+    check('leaving the app mid-song pauses it (it does not end)', await ev(`STG.state==='play'&&STG.paused==='wait'&&STG.pT>0`));
+    const pT=await ev('STG.pT');
+    await sleep(1500); await hide(false); await sleep(300);
+    check('coming back: ⏸️ Paused with ▶ Keep going, and the song is still frozen', await vis('#stgPause')&&await vis('#stgGo')&&await ev(`STG.paused==='wait'&&STG.pT===${pT}`));
+    check('…a tap on the notes does nothing while paused', await ev(`stTap(0,STG.pT)===-1`));
+    check('…the 🔊 line says it is paused', await ev(`speakLine().k==='stage:paused'&&speakLine().t.length>0`));
+    await shot('UN1-stage-paused');
+    await ev(`document.querySelector('#stgGo').click()`); await sleep(1200);
+    check('▶ counts 3-2-1 (still frozen while it counts)', await ev(`STG.paused==='count'&&!document.querySelector('#stgPause').offsetParent`));
+    await shot('UN2-stage-count');
+    await sleep(2300);
+    check('…then the song carries on from where it stopped', await ev(`STG.state==='play'&&STG.paused===''`)&&Math.abs(await ev('stSongT()')-pT)<1.2, [pT, await ev('stSongT()')]);
+    await hide(true); await sleep(100); await hide(false); await sleep(100);
+    await ev(`document.querySelector('#stgBack').click()`); await sleep(150);
+    check('⬅ Songs while paused goes back to the song list and lets the sound go again', await ev(`STG.state==='pick'&&!STG.paused`)&&!(await vis('#stgPause')));
+    await ev(`delete document.hidden`);
+    // ↩ Undo after buying
+    await ev(`(()=>{const p=P();p.coins=200;const it=CLOSET.top.items.find(i=>i.price>0&&!p.owned.includes('top:'+i.id));window._uk=it.id;window._wasTop=p.look.top;
+      show('closet');tryBuy('top:'+it.id,it.price,it.name,()=>{p.look.top=it.id;save();renderCloset();});})()`); await sleep(100);
+    await ev(yes); await sleep(150);
+    check('after buying: the ↩ Undo button shows', await ev(`P().owned.includes('top:'+_uk)&&P().look.top===_uk&&P().coins<200`)&&await vis('#undoBtn')&&await ev(`document.querySelector('#undoBar').classList.contains('on')`));
+    await shot('UN3-undo');
+    await ev(`document.querySelector('#undoBtn').click()`); await sleep(150);
+    check('↩ Undo: the coins are back, it is not owned, and the old top is back on', await ev(`P().coins===200&&!P().owned.includes('top:'+_uk)&&P().look.top===_wasTop&&!document.querySelector('#undoBar').classList.contains('on')`));
+    await ev(`(()=>{const p=P(),it=CLOSET.top.items.find(i=>i.id===_uk);tryBuy('top:'+it.id,it.price,it.name,()=>{p.look.top=it.id;save();});})()`); await sleep(100);
+    await ev(yes); await sleep(100); await ev(`show('fidget')`); await sleep(100);
+    check('going to another screen ends it, and the purchase stays', await ev(`!document.querySelector('#undoBar').classList.contains('on')&&P().owned.includes('top:'+_uk)`));
+    await ev(`show('room');P().coins=200;window._n=curRoom(P()).items.length;buyConsumable(DECOR.plant.price||5,'Plant',()=>{curRoom(P()).items.push(Object.assign({uid:uid(),type:'plant',placed:true},spot('plant')));save();renderRoom();})`); await sleep(100);
+    await ev(yes); await sleep(150);
+    check('a decoration bought in the room…', await ev(`curRoom(P()).items.length===_n+1&&P().coins<200`));
+    await ev(`document.querySelector('#undoBtn').click()`); await sleep(150);
+    check('…is taken away again by ↩ Undo, coins back', await ev(`curRoom(P()).items.length===_n&&P().coins===200`));
+    await ev(`P().coins=200;buyConsumable(5,'Plant',()=>{})`); await sleep(100); await ev(yes); await sleep(10600);
+    check('after 10 seconds the button goes away by itself', await ev(`!document.querySelector('#undoBar').classList.contains('on')&&P().coins===195`));
+    // ↩ Undo after giving
+    await ev(`if(DB.profiles.length<2){const q=newProfile('Pal');normalize(q);DB.profiles.push(q);}window._q=DB.profiles.find(x=>x.id!==P().id);window._qg=_q.gifts.length;P().coins=50;
+      sendGift(P(),_q,{kind:'coins',n:5})`); await sleep(100);
+    check('giving 5 coins: the gift waits in the other room, with ↩ Undo', await ev(`P().coins===45&&_q.gifts.length===_qg+1`)&&await vis('#undoBtn'));
+    await ev(`document.querySelector('#undoBtn').click()`); await sleep(100);
+    check('↩ Undo takes the unopened gift back', await ev(`P().coins===50&&_q.gifts.length===_qg`));
+    await ev(`sendGift(P(),_q,{kind:'coins',n:5});_q.gifts.pop()`); await sleep(100);
+    await ev(`document.querySelector('#undoBtn').click()`); await sleep(100);
+    check('…but not once it has been opened', await ev(`P().coins===45`));
+    await ev(`(()=>{const q=JSON.parse(window._v74),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();undoOff();save();show('room')`);
+    check('v1.74 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.74')`));
+  }
+
+  console.log('Gift codes between iPads (v1.75)');
+  {
+    const vis=sel=>ev(`(e=>!!e&&e.offsetParent!==null&&getComputedStyle(e).display!=='none')(document.querySelector(${JSON.stringify(sel)}))`);
+    const mb=t=>`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)}))`;
+    // no network anywhere
+    const net=['index.html'].concat(fs.readdirSync(path.join(__dirname,'..','web','js')).filter(n=>n.endsWith('.js')).map(n=>'web/js/'+n))
+      .filter(n=>/\bfetch\s*\(|XMLHttpRequest|WebSocket|sendBeacon|EventSource/.test(fs.readFileSync(path.join(__dirname,'..',n),'utf8')));
+    check('no app file uses fetch, XHR, WebSocket or sendBeacon (gift codes are read out, never sent)', net.length===0, net);
+    // the code itself
+    check('every decoration that can be given has its own fingerprint (no two share one)', await ev(`(()=>{const k=Object.keys(DECOR).filter(gcSendable),w=k.map(gcWhatOf);
+      return k.length>50&&new Set(w).size===k.length&&w.every(x=>x>=3&&x<65536)&&k.every(x=>gcKeyOf(gcWhatOf(x))===x);})()`));
+    check('every room has its own mailbox number (4 characters, a check letter that works)', await ev(`DB.profiles.every(q=>gcMailboxOk(gcMailbox(q)))&&new Set(DB.profiles.map(gcMailbox)).size===DB.profiles.length&&!gcMailboxOk('2222'.slice(0,3)+'3')`));
+    check('a code made for any gift reads back to the same gift, mailbox and id', await ev(`(()=>{const ks=Object.keys(DECOR).filter(gcSendable);
+      const ws=[0,1,2].concat(ks.map(gcWhatOf));return ws.every((w,i)=>{const m=gcMailbox(DB.profiles[i%DB.profiles.length]),gid=(i*37)%4096,c=gcMake(w,m,gid),r=gcRead(c);
+        return /^[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}$/.test(c)&&r.what===w&&r.mb===m&&r.gid===gid&&r.ver===GC_VER;});})()`));
+    check('every one-character typo and every swap of two neighbors is caught', await ev(`(()=>{const c=gcClean(gcMake(gcWhatOf('plant'),gcMailbox(P()),1234));
+      for(let i=0;i<12;i++){for(const ch of GC_ABC){if(ch===c[i])continue;const t=c.slice(0,i)+ch+c.slice(i+1);if(!gcRead(t).bad)return 'typo '+t;}
+        if(i<11&&c[i]!==c[i+1]){const t=c.slice(0,i)+c[i+1]+c[i]+c.slice(i+2);if(!gcRead(t).bad)return 'swap '+t;}}return true;})()`)===true);
+    check('…and spaces, dashes and small letters are fine; 0, O, 1 and I are explained', await ev(`(()=>{const c=gcMake(0,gcMailbox(P()),7);return gcRead(' '+c.toLowerCase().replace(/-/g,' ')+' ').what===0
+      &&gcRead(c.replace(/^./,'O')).bad==='letters'&&gcRead(c.slice(0,10)).bad==='length';})()`));
+    // sending
+    await ev(`closeModal();stkPaused=true;if(DB.profiles.length<2){const q=newProfile('Pal');normalize(q);DB.profiles.push(q);}window._v75=JSON.stringify(DB.profiles);window._v75a=DB.activeId;DB.settings.pin='';
+      {const q=P();q.coins=100;q.giftCodes={sent:[],opened:[],made:{day:'',n:0}};}show('room');giveModal()`); await sleep(150);
+    check('🎁 Give has 📥 Type a gift code and 📮 Sent at the top', await vis('#gcTypeBtn')&&await vis('#gcSentBtn'));
+    await ev(`document.querySelector('[data-gk="coins:10"]').click()`); await sleep(150);
+    check('"Who is it for?" has 📮 Another iPad', await vis('#gvWho [data-gc]'));
+    await ev(`document.querySelector('#gvWho [data-gc]').click()`); await sleep(150);
+    const otherMb=await ev(`(()=>{const q=DB.profiles.find(x=>x.id!==P().id);return gcMailbox(q);})()`);
+    await ev(`document.querySelector('#gcMb').value=gcMailbox(P());${mb('Next')}.click()`); await sleep(100);
+    check('typing her own mailbox is refused', await ev(`/own mailbox/.test(document.querySelector('#gcMsg').textContent)`));
+    await ev(`document.querySelector('#gcMb').value='${otherMb.slice(0,3)}'+(GC_ABC[(GC_ABC.indexOf('${otherMb[3]}')+1)%32]);${mb('Next')}.click()`); await sleep(100);
+    check('a mailbox number with a typo is refused', await ev(`/look right/.test(document.querySelector('#gcMsg').textContent)&&P().coins===100`));
+    await ev(`document.querySelector('#gcMb').value='${otherMb.toLowerCase()}';${mb('Next')}.click()`); await sleep(150);
+    await ev(`${mb('Make it')}.click()`); await sleep(150);
+    const code=await ev(`(document.querySelector('#gcCode')||{}).textContent||''`);
+    check('the code shows big: 10 coins leave, it is in 📮 Sent, and today\'s count went up', /^[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}$/.test(code)
+      &&await ev(`P().coins===90&&P().giftCodes.sent[0].code==='${code}'&&P().giftCodes.sent[0].mb==='${otherMb}'&&P().giftCodes.made.n===1&&P().giftCodes.made.day===fpDay()`), code);
+    check('…with no Copy or Share button, and no ↩ Undo', await ev(`![...document.querySelectorAll('#modal button')].some(b=>/copy|share/i.test(b.textContent))&&!document.querySelector('#undoBar').classList.contains('on')`));
+    await shot('GC1-code');
+    check('tablet: the code fits on one line', await ev(`(e=>e.scrollWidth<=e.clientWidth+1&&e.getBoundingClientRect().height<100)(document.querySelector('#gcCode'))`));
+    await ev(`closeModal();gcSentModal()`); await sleep(100);
+    check('📮 Sent lists it, and tapping shows it again', await ev(`document.querySelector('#gcList b').textContent==='${code}'`)&&await ev(`(document.querySelector('#gcList [data-gs]').click(),document.querySelector('#gcCode').textContent==='${code}')`));
+    // decorations, and the daily limit
+    await ev(`closeModal();{const p=P();p.room.items.push({uid:'gcPlant',type:'plant',placed:false,x:500,y:600});
+      gcSend(p,{kind:'decor',uid:'gcPlant',type:'plant'},'${otherMb}');}`); await sleep(100);
+    const code2=await ev(`document.querySelector('#gcCode').textContent`);
+    check('a decoration from My Stuff can be sent: it leaves her room', await ev(`!allItems(P()).some(i=>i.uid==='gcPlant')&&P().giftCodes.made.n===2&&gcRead('${code2}').what===gcWhatOf('plant')`));
+    await ev(`closeModal();gcSend(P(),{kind:'coins',n:5},'${otherMb}');closeModal();gcAsk({kind:'coins',n:5})`); await sleep(100);
+    check('3 codes a day: then it says "More tomorrow!" and takes nothing', await ev(`/More tomorrow/.test(document.querySelector('#modalBody').textContent)&&P().coins===85&&P().giftCodes.made.n===3`));
+    await ev(`closeModal();window.FP_TEST_DAY='2031-01-02'`);
+    check('…and the next day there are 3 again', await ev(`gcLeft(P())===3`));
+    await ev(`window.FP_TEST_DAY=''`);
+    // receiving, in the other room
+    await ev(`closeModal();DB.activeId=DB.profiles.find(x=>x.id!==P().id).id;{const q=P();q.giftCodes={sent:[],opened:[],made:{day:'',n:0}};q.gifts=[];window._rc=q.coins;window._rg=q.gifts.length;}show('room');gcTypeModal()`); await sleep(150);
+    check('📥 Type a gift code shows her mailbox number', await ev(`document.querySelector('.gc-mb b').textContent===gcMailbox(P())`));
+    await shot('GC2-type');
+    const typo=code.slice(0,2)+(code[2]==='A'?'B':'A')+code.slice(3);
+    await ev(`document.querySelector('#gcIn').value='${typo}';${mb('Open')}.click()`); await sleep(100);
+    check('a typo: "Check each letter", nothing opens', await ev(`/Check each letter/.test(document.querySelector('#gcMsg').textContent)&&P().gifts.length===_rg`));
+    await ev(`document.querySelector('#gcIn').value='${code}'.toLowerCase();${mb('Open')}.click()`); await sleep(400);
+    check('the right code opens with the usual gift box: +10 coins', await ev(`P().coins===_rc+10&&P().giftCodes.opened.length===1&&/another iPad/.test(document.querySelector('#modalTitle').textContent)`));
+    await shot('GC3-opened');
+    await ev(`closeModal();gcTypeModal();document.querySelector('#gcIn').value='${code}';${mb('Open')}.click()`); await sleep(100);
+    check('the same code again: "You already opened this one!"', await ev(`/already opened/.test(document.querySelector('#gcMsg').textContent)&&P().coins===_rc+10`));
+    await ev(`document.querySelector('#gcIn').value='${code2}';${mb('Open')}.click()`); await sleep(400);
+    check('the decoration code puts the decoration in her room', await ev(`curRoom(P()).items.some(i=>i.type==='plant'&&i.placed)`));
+    await ev(`closeModal();gcTypeModal();document.querySelector('#gcIn').value=gcMake(0,gcMailbox(DB.profiles.find(x=>x.id!==P().id)),9);${mb('Open')}.click()`); await sleep(100);
+    check('a code for another mailbox is refused (and says whose it is)', await ev(`/is for mailbox/.test(document.querySelector('#gcMsg').textContent)`));
+    await ev(`document.querySelector('#gcIn').value=gcMake(65535-(Object.keys(DECOR).filter(gcSendable).map(gcWhatOf).includes(65535)?1:0),gcMailbox(P()),9);${mb('Open')}.click()`); await sleep(100);
+    check('a decoration this app does not know yet: "update the app first", and it is not used up', await ev(`/update the app/.test(document.querySelector('#gcMsg').textContent)&&P().giftCodes.opened.length===2`));
+    check('saved: older rooms get empty gift codes, and bad entries are dropped', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));delete q.giftCodes;normalize(q);const ok1=q.giftCodes.sent.length===0&&q.giftCodes.made.n===0;
+      q.giftCodes={sent:[{code:'bad'},{code:'2345-6789-ABCD',what:1,mb:'AB3K',at:1}],opened:['x','23456789ABCD'],made:{day:5,n:-2}};normalize(q);
+      return ok1&&q.giftCodes.sent.length===1&&q.giftCodes.opened.join()==='23456789ABCD'&&q.giftCodes.made.day===''&&q.giftCodes.made.n===0;})()`));
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true}); await sleep(150);
+    await ev(`closeModal();gcShow('${code}',1,'${otherMb}',true)`); await sleep(150);
+    check('phone: the code fits on one line', await ev(`(e=>e.scrollWidth<=e.clientWidth+1&&e.getBoundingClientRect().height<120)(document.querySelector('#gcCode'))`));
+    await shot('GC4-phone');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(150);
+    await ev(`closeModal();{const o=JSON.parse(window._v75);DB.profiles.forEach(p=>{const q=o.find(x=>x.id===p.id);if(q){Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);}});DB.activeId=window._v75a;}save();show('room')`);
+    check('v1.75 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.75')`));
+  }
+
+  console.log('The pet notices (v1.76)');
+  {
+    const settle=async()=>{await sleep(300);await ev('closeModal()');await sleep(900);};
+    const bub=()=>ev(`(b=>b?b.textContent:'')(document.querySelector('#bubble'))`);
+    await ev(`closeModal();stkPaused=true;window._v76=JSON.stringify(P());{const p=P();p.pet.kind='bat';p.pet.day='';}show('room');goRoom(1)`); await sleep(900);
+    const h0=await ev('petHearts(P())');
+    await ev(`show('soccer');P().stats.goals+=3;P().stats.matches++;show('room')`); await settle();
+    const t1=await bub();
+    check('back from Soccer with 3 goals: the pet says so in the bubble', await ev(`!!NT.last&&NT.last.i===4&&NT.last.n===3`)&&t1===await ev('NT.last.text')
+      &&t1.startsWith('🐾 '+await ev('petName(P())')+': ')&&(await ev(`NT_LINES[4][2](3)`)).some(l=>t1.endsWith(l)), t1);
+    check('…and the first play of the day gives the pet +1 heart', await ev(`P().pet.day===fpDay()&&petHearts(P())===${h0}+1`));
+    await shot('PN1-goals');
+    const h=await ev('petHearts(P())');
+    await ev(`show('brain');P().brain.solved.push('test:x1','test:x2');show('room')`); await settle();
+    check('back from Brain Games: "You solved 2 puzzles" (or another way to say it)', await ev(`NT_LINES[NT.last.i][2](2).some(l=>NT.last.text.endsWith(l))&&NT.last.n===2&&/puzzle|brain/i.test(NT.last.text)`));
+    check('…but no second heart the same day', await ev(`petHearts(P())===${h}`));
+    await ev(`show('fidget');show('room')`); await settle();
+    check('back after doing nothing: no line', !(await bub()));
+    await ev(`show('fidget');P().stats.pops+=3;show('room')`); await settle();
+    check('a few pops is not worth a line (10 or more is)', !(await bub()));
+    await ev(`show('fidget');P().stats.pops+=12;show('room')`); await settle();
+    check('12 pops: "Pop pop pop!"', /pop/i.test(await bub()));
+    await ev(`show('ball');P().stats.homers+=1;P().stats.hits+=4;show('room')`); await settle();
+    check('the most notable thing wins: a home run beats 4 hits', /home run|park/i.test(await bub()));
+    await ev(`show('stage');show('room');goRoom(2)`); await settle();
+    check('moving between rooms says nothing', !(await bub()));
+    await ev(`goRoom(1);P().pet.kind='';P().pet.day='';show('soccer');P().stats.saves+=2;show('room')`); await settle();
+    const t2=await bub();
+    check('no pet yet: the buddy says it (no name), and no heart', /save|hands/i.test(t2)&&!t2.startsWith('🐾')&&await ev(`P().pet.day===''`), t2);
+    await ev(`show('soccer');P().stats.saves+=1;show('room');modal('Test','box',[{text:'OK'}])`); await sleep(1300);
+    check('a box on top (like a bonus card): the line waits…', !(await bub()));
+    await ev(`closeModal()`); await sleep(800);
+    check('…and comes once it is closed', /save|hands/i.test(await bub()));
+    await ev(`show('soccer');P().stats.goals+=1;show('profiles');enterRoom()`); await settle();
+    check('going out to the rooms list forgets it (no line on the way back in)', !/goal|kick/i.test(await bub()));
+    check('every line is short, cheerful and has no coin talk', await ev(`NT_LINES.every(([f,m,l])=>[1,2,5,12].every(n=>l(n).every(t=>t.length<=40&&!/coin|🪙|sad|lost|miss/i.test(t))))`));
+    check('saved: older rooms get pet.day = ""', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));delete q.pet.day;normalize(q);return q.pet.day==='';})()`));
+    await ev(`(()=>{const q=JSON.parse(window._v76),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();save();show('room')`);
+    check('v1.76 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.76')`));
+  }
+
+  console.log('Creations in the room (v1.77)');
+  {
+    const title=()=>ev(`document.querySelector('#modal').classList.contains('hidden')?'':document.querySelector('#modalTitle').textContent`);
+    await ev(`closeModal();stkPaused=true;window._v77=JSON.stringify(P());{const p=P();p.code.solved=[];p.code.prizes=[];p.brain.solved=[];p.brain.shelf=false;
+      p.music.slots=[null,null,null];p.music.box=false;rooms(p).forEach(r=>{r.items=r.items.filter(i=>!/^codeBot|^brainShelf$|^boombox$/.test(i.type));});}show('room');goRoom(1)`); await sleep(200);
+    check('the 8 new prizes: never in the Shop, never given away, each with a theme chip', await ev(`CR_BOTS.concat('brainShelf','boombox').every(k=>DECOR[k]&&DECOR[k].award&&!giftable({type:k,placed:false})&&themesOf('decor:'+k,DECOR[k]).length>0&&!gcSendable(k))`));
+    check('their drawings are strict XML', await ev(`CR_BOTS.concat('brainShelf','boombox').every(k=>!new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg">'+DECOR[k].d({})+'</svg>','image/svg+xml').querySelector('parsererror'))`));
+    check('nothing is given before anything is done', await ev(`crCheck().length===0`));
+    // 🤖 Code Lab robots
+    await ev(`P().code.solved=CODE_PUZZLES.easy.map(q=>q.id);show('code')`); await sleep(700);
+    check('every Easy Code Lab puzzle solved: Beep the Robot, in the Loft by the computer, with a box', await ev(`P().code.prizes.join()==='easy'&&P().room2.items.some(i=>i.type==='codeBotEasy'&&i.placed&&i.x>=700)`)&&/prize/i.test(await title()));
+    await shot('CR1-robot');
+    await ev(`closeModal();show('room');show('code')`); await sleep(700);
+    check('…only once', await ev(`allItems(P()).filter(i=>i.type==='codeBotEasy').length===1&&document.querySelector('#modal').classList.contains('hidden')`));
+    await ev(`P().code.solved=Object.values(CODE_PUZZLES).flat().map(q=>q.id);show('room')`); await sleep(700);
+    if(/bonus/i.test(await title())){await ev(`closeModal()`); await sleep(800);} // the prize box waits behind a bonus card
+    check('all 6 levels: all 6 robots (one box for the 5 new ones, after any bonus card)', await ev(`CR_BOTS.every(k=>P().room2.items.filter(i=>i.type===k).length===1)&&P().code.prizes.length===6`)&&/prizes/i.test(await title()));
+    await ev(`closeModal();goRoom(2)`); await sleep(200); await shot('CR2-robots-loft');
+    // 📚 Brain Shelf
+    await ev(`goRoom(1);P().brain.solved=BRAIN_GAMES.snack.puzzles.easy.map((z,i)=>brId('snack','easy',i));show('brain')`); await sleep(700);
+    check('a Brain Games level finished: the Brain Shelf, in the Backyard', await ev(`P().brain.shelf===true&&P().room3.items.filter(i=>i.type==='brainShelf'&&i.placed).length===1`)&&/prize/i.test(await title()));
+    const ribbons=()=>ev(`(()=>{const d=document.createElement('div');d.innerHTML='<svg>'+DECOR.brainShelf.d({})+'</svg>';return [...d.querySelectorAll('path[opacity="1"]')].length;})()`);
+    check('…its spots fill in as levels are finished (1 now)', await ribbons()===1);
+    await ev(`closeModal();P().brain.solved=P().brain.solved.concat(BRAIN_GAMES.snack.puzzles.medium.map((z,i)=>brId('snack','medium',i)),BRAIN_GAMES.pop.puzzles.easy.map((z,i)=>brId('pop','easy',i)))`);
+    check('…3 after two more levels, and still just one shelf', await ribbons()===3&&await ev(`(crCheck(),allItems(P()).filter(i=>i.type==='brainShelf').length===1)`));
+    await ev(`closeModal();show('room');goRoom(3)`); await sleep(300); await shot('CR3-brain-shelf');
+    // 📻 Boombox
+    await ev(`goRoom(1);show('music');MU.g.forEach((r,i)=>r.fill(0));MU.g[0][0]=MU.g[1][2]=MU.g[2][4]=MU.g[3][6]=1;muSaveSlot(0)`); await sleep(300);
+    check('the first saved loop: a Boombox in My Stuff', await ev(`P().music.box===true&&allItems(P()).filter(i=>i.type==='boombox'&&!i.placed).length===1`)&&/prize/i.test(await title()));
+    await ev(`closeModal();muSaveSlot(1)`); await sleep(200);
+    check('…only once', await ev(`allItems(P()).filter(i=>i.type==='boombox').length===1`));
+    await ev(`closeModal();show('room');{const it=allItems(P()).find(i=>i.type==='boombox');rooms(P()).forEach(r=>{r.items=r.items.filter(i=>i!==it);});it.placed=true;it.x=300;it.y=650;curRoom(P()).items.push(it);}
+      DB.settings.sound=true;CR.until=0;CR.boom=0;renderRoom()`); await sleep(200);
+    await ev(`document.querySelector('#roomSvg .deco[data-uid="'+allItems(P()).find(i=>i.type==='boombox').uid+'"]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(150);
+    check('tapping it plays her loop twice through (nothing else opens)', await ev(`CR.notes===8&&CR.boom===1&&cur==='room'&&document.querySelector('#modal').classList.contains('hidden')&&!!document.querySelector('#roomSvg .boom-play')`), await ev('CR.notes'));
+    await shot('CR4-boombox');
+    await ev(`CR.until=0;crBoomTap(document.querySelector('#roomSvg .boom-play')||document.createElementNS('http://www.w3.org/2000/svg','g'))`);
+    check('the next tap plays her next saved loop', await ev(`CR.boom===2&&/💾 2/.test(document.querySelector('#toast').textContent)`));
+    await ev(`P().music.slots=[null,null,null];CR.until=0;crBoomTap(document.createElementNS('http://www.w3.org/2000/svg','g'))`);
+    check('with no saved loops it plays a little tune', await ev(`CR.notes>0&&/little tune/.test(document.querySelector('#toast').textContent)`));
+    await ev(`decorating=true;CR.until=0;CR.boom=5`);
+    await ev(`document.querySelector('#roomSvg .deco[data-uid="'+allItems(P()).find(i=>i.type==='boombox').uid+'"]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`);
+    check('while decorating a tap does not play it', await ev(`CR.boom===5`));
+    await ev(`decorating=false`);
+    check('saved: older rooms get the new fields (code.prizes, brain.shelf, music.box)', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));delete q.code.prizes;delete q.brain.shelf;delete q.music.box;normalize(q);
+      return Array.isArray(q.code.prizes)&&q.code.prizes.length===0&&q.brain.shelf===false&&q.music.box===false;})()`));
+    await ev(`closeModal();(()=>{const q=JSON.parse(window._v77),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();save();show('room');goRoom(1)`);
+    check('v1.77 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.77')`));
+  }
+
+  console.log('Code Lab level maker (v1.78)');
+  {
+    const title=()=>ev(`document.querySelector('#modal').classList.contains('hidden')?'':document.querySelector('#modalTitle').textContent`);
+    const btn=t=>ev(`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)})).click()`);
+    // a tap (or a drag through several squares) on the editor's board, like a finger
+    await ev(`window._lmAt=(cells)=>{const sv=document.querySelector('#lmBoard'),m=sv.getScreenCTM();
+      const at=(c)=>{const pt=sv.createSVGPoint();pt.x=c[0]*100+50;pt.y=c[1]*100+50;return pt.matrixTransform(m);};
+      cells.forEach((c,i)=>{const q=at(c);sv.dispatchEvent(new PointerEvent(i?'pointermove':'pointerdown',{clientX:q.x,clientY:q.y,pointerId:7,bubbles:true}));});
+      sv.dispatchEvent(new PointerEvent('pointerup',{pointerId:7,bubbles:true}));};`);
+    const rows=()=>ev(`lmRows(LM.d).join('/')`);
+    await ev(`closeModal();stkPaused=true;window._v78=JSON.stringify(P());CODE_STEP=40;LM.drafts={};
+      {const p=P();p.code.mine=[null,null,null];p.code.makePay={day:'',n:0};p.stats.made=0;p.easy=false;}applyEasy();show('code')`); await sleep(700); await ev(`closeModal()`);
+    await ev(`document.querySelector('#clTabs [data-make]').click()`); await sleep(150);
+    check('a 🛠️ Make tab after the 6 levels: it lists 3 empty slots', await ev(`CL.view==='make'&&document.querySelector('#clTabs [data-make]').classList.contains('on')&&document.querySelectorAll('#clList [data-mine]').length===3&&!document.querySelector('#clList .done')`));
+    check('…and the level tabs are still the same 6', await ev(`[...document.querySelectorAll('#clTabs [data-lvl]')].map(b=>b.dataset.lvl).join()==='easy,medium,hard,move,if,challenge'&&P().code.level!=='make'`));
+    check('…it has a spoken line', await ev(`speakLine().k==='code:make'&&speakLine().t.length>10`));
+    await shot('LM1-list');
+    await ev(`document.querySelector('#clList [data-mine="0"]').click()`); await sleep(200);
+    check('a slot opens the editor: 5×5 with the buddy and the carrot', await ev(`CL.view==='edit'&&!document.querySelector('#clMake').classList.contains('hidden')&&LM.d.map.length===5`)&&await rows()==='....C/...../...../...../F....');
+    check('…the editor has a spoken line', await ev(`speakLine().k==='code:edit'`));
+    await ev(`LM.tool='#';_lmAt([[2,2]])`);
+    check('tapping a square paints a toy block', await rows()==='....C/...../..#../...../F....');
+    await ev(`_lmAt([[2,2]])`);
+    check('…tapping it again clears it', await rows()==='....C/...../...../...../F....');
+    await ev(`_lmAt([[1,1],[2,1],[3,1]])`);
+    check('dragging paints a row', await rows()==='....C/.###./...../...../F....');
+    await ev(`LM.tool='*';_lmAt([[0,0],[1,0],[2,0],[3,0],[0,2],[1,2]])`);
+    check('5 stars at most', await ev(`LM.d.map.flat().filter(c=>c==='*').length===5&&/5/.test(document.querySelector('#lmMsg').textContent)`));
+    await ev(`LM.tool='#';_lmAt([[0,4],[4,0]])`);
+    check('the buddy and the carrot are never painted over', await ev(`LM.d.map[4][0]==='F'&&LM.d.map[0][4]==='C'`));
+    await ev(`LM.tool='F';_lmAt([[2,4]])`);
+    check('the start tool moves the buddy (only one)', await ev(`LM.d.map[4][2]==='F'&&LM.d.map.flat().filter(c=>c==='F').length===1`));
+    await ev(`LM.tool='~';_lmAt([[3,3]])`);
+    check('the blocks follow the map: 🌟 for stars, ❓ for puddles', await ev(`lmBlocks(lmRows(LM.d),LM.d.mv)==='ULRD234SQ'`));
+    await ev(`document.querySelector('#lmLimits [data-mv]').click()`); await sleep(50);
+    check('✨ My Move adds ✨ and its own limit', await ev(`LM.d.mv===4&&lmBlocks(lmRows(LM.d),LM.d.mv)==='ULRD234SMQ'&&!!document.querySelector('#lmLimits [data-step^="mv"]')`));
+    await shot('LM2-editor');
+    await ev(`document.querySelector('#lmSize [data-size="4"]').click()`); await sleep(50);
+    check('a smaller map keeps the buddy and the carrot inside', await ev(`LM.d.map.length===4&&LM.d.map.flat().filter(c=>c==='F').length===1&&LM.d.map.flat().filter(c=>c==='C').length===1`));
+    await ev(`document.querySelector('#lmSize [data-size="6"]').click()`); await sleep(50);
+    check('…and a bigger one too', await ev(`LM.d.map.length===6&&LM.d.map.every(r=>r.length===6)&&LM.d.map.flat().filter(c=>c==='F').length===1`));
+    await ev(`for(let i=0;i<20;i++)document.querySelector('#lmLimits [data-step="max:1"]').click()`);
+    check('the block limit stops at 16', await ev(`LM.d.max===16`));
+    // a level she knows: up 3, right 3
+    await ev(`LM.d={map:['...C','.#..','....','F...'].map(r=>[...r]),max:6,mv:0};lmRender();document.querySelector('#lmTest').click()`); await sleep(200);
+    check('▶️ Test it plays it with just the blocks it needs and its limit', await ev(`CL.view==='play'&&CL.lvl==='make'&&[...document.querySelectorAll('#clPal [data-add]')].map(b=>b.dataset.add).join('')==='ULRD234'&&document.querySelectorAll('#clProg .clslot').length===6`));
+    check('…and says solve it to save it', await ev(`/save/i.test(document.querySelector('#clMsg').textContent)&&speakLine().t.length>0`));
+    await ev(`CL.prog=['R','R','R'];clGo()`); await sleep(600);
+    check('not solved: nothing saved', await ev(`CL.state==='oops'&&P().code.mine[0]===null`));
+    const c0=await ev('P().coins');
+    await ev(`CL.prog=['3','U','3','R'];clEdited();clGo()`); await sleep(1300);
+    check('solved: saved in slot 1 with her answer, +3 coins', await ev(`(m=>m&&m.sol==='3U3R'&&m.move===''&&m.max===6&&lmOk(m))(P().code.mine[0])&&P().stats.made===1`)&&await ev('P().coins')===c0+3&&/saved/i.test(await title()));
+    check('…a made level never counts as a Code Lab puzzle', await ev(`!P().code.solved.some(x=>/^mk|^u/.test(x))&&!LM.drafts[0]`));
+    await shot('LM3-saved');
+    await btn('Edit'); await sleep(150);
+    check('✏️ Edit goes back to the editor with the saved level', await ev(`CL.view==='edit'&&lmRows(LM.d).join('/')==='...C/.#../..../F...'`));
+    await ev(`document.querySelector('#lmTest').click()`); await sleep(100); await ev(`CL.prog=['3','U','3','R'];clGo()`); await sleep(1300);
+    check('saving the same level again pays nothing', await ev('P().coins')===c0+3&&await ev(`P().stats.made===1`));
+    await ev(`closeModal()`);
+    // slots 2 and 3, then a 4th new level the same day: 3 a day
+    for(const [i,m] of [[1,['C...','....','....','F...']],[2,['....','C...','....','F...']]]){
+      await ev(`lmEdit(${i});LM.d={map:${JSON.stringify(m)}.map(r=>[...r]),max:6,mv:0};document.querySelector('#lmTest').click()`); await sleep(100);
+      await ev(`CL.prog=['U','U','U'].slice(0,${i===1?3:2});clGo()`); await sleep(900); await ev(`closeModal()`);
+    }
+    await ev(`lmEdit(0);LM.d.max=5;document.querySelector('#lmTest').click()`); await sleep(100); await ev(`CL.prog=['3','U','3','R'];clGo()`); await sleep(1300);
+    check('3 new levels a day pay (+9), the 4th saves without coins', await ev('P().coins')===c0+9&&await ev(`P().code.makePay.n===9&&P().stats.made===4&&P().code.mine.every(Boolean)&&P().code.mine[0].max===5`)&&/full/i.test(await ev(`document.querySelector('#modalBody').textContent`)));
+    await ev(`closeModal()`);
+    // My Move + stars + puddles in a saved level
+    await ev(`lmEdit(1);LM.d={map:['F~*~*C'].concat(['......','......','......','......','......']).map(r=>[...r]),max:2,mv:3};document.querySelector('#lmTest').click()`); await sleep(100);
+    check('a My Move level shows the ✨ row and all its blocks', await ev(`clHasMove()&&!document.querySelector('#clMove').classList.contains('hidden')&&clBlocks()==='ULRD234SMQ'`));
+    await ev(`CL.prog=['3','M'];CL.move=['Q','R','S'];clEdited();clGo()`); await sleep(1400);
+    check('…solving it saves the ✨ row too', await ev(`(m=>m.sol==='3M'&&m.move==='QRS'&&m.moveMax===3&&lmOk(m))(P().code.mine[1])`));
+    await ev(`closeModal();lmEdit(1);document.querySelector('#lmTest').click()`); await sleep(100);
+    await ev(`window.androidBack()`); await sleep(100);
+    check('Back: test → editor → levels → room', await ev(`CL.view==='edit'`)&&await ev(`window.androidBack()&&CL.view==='make'&&document.querySelectorAll('#clList .done').length===3`)&&await ev(`window.androidBack()&&cur==='room'`));
+    // another room on this device
+    await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));q.id='lmTestRoom';q.name='Pip';q.code.mine=[{id:'x1',map:['F..C','....','....','....'],max:4,moveMax:0,sol:'3R',move:'',at:1},
+      {id:'x2',map:['F..C','....','....','....'],max:4,moveMax:0,sol:'R',move:'',at:1},null];DB.profiles.push(q);})();show('code')`); await sleep(600); await ev(`closeModal()`);
+    check('levels from the other rooms show (only ones that can be solved)', await ev(`CL.view==='make'&&document.querySelectorAll('#clList .lm-other').length===1&&/Pip/.test(document.querySelector('#clList .lm-other').textContent)`));
+    await shot('LM4-other-rooms');
+    const f0=await ev('P().free.n'), solved0=await ev('P().code.solved.length');
+    await ev(`document.querySelector('#clList .lm-other').click()`); await sleep(150);
+    check('tapping one plays it', await ev(`CL.view==='play'&&CL.made&&CL.made.from==='lmTestRoom'`));
+    await ev(`CL.prog=['3','R'];clGo()`); await sleep(900);
+    check('…solving it pays through Free Play and saves nothing', await ev('P().free.n')===f0+(await ev('P().free.n')>f0?1:0)&&await ev(`P().code.solved.length===${solved0}&&DB.profiles.find(q=>q.id==='lmTestRoom').code.mine[0].sol==='3R'`)&&/solved/i.test(await title()));
+    await btn('Levels'); await sleep(100);
+    check('…then back to the levels', await ev(`CL.view==='make'`));
+    // removing a level
+    await ev(`lmEdit(2);document.querySelector('#lmDel').click()`); await sleep(100);
+    check('🗑️ asks first', /remove/i.test(await title())&&await ev(`P().code.mine[2]!==null`));
+    await btn('Remove'); await sleep(100);
+    check('…then the slot is empty again', await ev(`P().code.mine[2]===null&&CL.view==='make'`));
+    check('the pet notices a new level, and there are 2 new stickers', await ev(`NT_LINES.some(l=>/level/.test(l[2](1).join()))&&STICKERS.filter(s=>s.id==='make1'||s.id==='make3').length===2`));
+    check('saved: older rooms get the new fields, and broken levels are dropped', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));delete q.code.mine;delete q.code.makePay;delete q.stats.made;normalize(q);
+      const r=JSON.parse(JSON.stringify(P()));r.code.mine=[{id:'z',map:['F.C'],max:4,moveMax:0,sol:'RR',move:''},'x',P().code.mine[0]];normalize(r);
+      return q.code.mine.join()===',,'&&q.code.makePay.n===0&&q.stats.made===0&&r.code.mine[0]===null&&r.code.mine[1]===null&&!!r.code.mine[2];})()`));
+    await ev(`closeModal();DB.profiles=DB.profiles.filter(q=>q.id!=='lmTestRoom');(()=>{const q=JSON.parse(window._v78),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();CL.mk=false;LM.drafts={};save();show('room')`);
+    check('v1.78 is in the Gift Story and the app says 1.78', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.78')&&APP_VERSION==='1.78'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

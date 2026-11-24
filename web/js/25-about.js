@@ -200,7 +200,19 @@ const GIFT_TIMELINE=[
   {v:'1.71',d:'2026-11-24',i:'🧸',n:'Little mode',why:'So the littlest ones can play safely on their own',
     news:['🧸 Little mode keeps the littlest ones in the easy, safe parts','🔒 A grown-up presses and holds 🔒 to leave it','🎨 Dress like… puts on your clothes from one theme']},
   {v:'1.72',d:'2026-11-25',i:'🎉',n:'Happy holidays',why:'So your buddy can celebrate the big days with you',
-    news:['🎉 On a holiday your buddy says hello when your room opens','🦃 Thanksgiving, 🎃 Halloween, 🎄 Christmas and more','🎊 Confetti in the colors of the day']}
+    news:['🎉 On a holiday your buddy says hello when your room opens','🦃 Thanksgiving, 🎃 Halloween, 🎄 Christmas and more','🎊 Confetti in the colors of the day']},
+  {v:'1.73',d:'2026-11-25',i:'🧰',n:'Tidy toolbox',why:'So new things are quicker and safer to add',
+    news:['🧰 A tidy-up behind the scenes','🪙 Every daily coin limit now starts fresh at the same time each day']},
+  {v:'1.74',d:'2026-11-25',i:'↩',n:'Oops-proof',why:'So a phone call or a wrong tap never costs anything',
+    news:['⏸️ Leave in the middle of a song and it waits for you','↩ Bought the wrong thing? Tap Undo to get your coins back','🎁 A gift can be taken back until it is opened']},
+  {v:'1.75',d:'2026-11-25',i:'📮',n:'Gift codes',why:'So you can send gifts to each other on your own iPads',
+    news:['📮 Send coins or a decoration to another iPad with a gift code','📥 Type a code to open a gift from someone else','🔢 Your mailbox number makes sure it reaches you']},
+  {v:'1.76',d:'2026-11-25',i:'🐾',n:'Your pet notices',why:'So your pet cheers for everything you do',
+    news:['🐾 Come back to your room and your pet says what you did','❤️ The first thing you play each day gives your pet a heart','🐰 No pet yet? Your buddy cheers instead']},
+  {v:'1.77',d:'2026-11-25',i:'📻',n:'Made by you',why:'So what you make and finish shows up in your rooms',
+    news:['🤖 Finish a Code Lab level and a robot joins you in the Loft','📚 A Brain Shelf in the Backyard fills up as you finish levels','📻 Save some music and get a boombox that plays it']},
+  {v:'1.78',d:'2026-11-26',i:'🛠️',n:'Level maker',why:'So you can make Code Lab levels for yourself and your family',
+    news:['🛠️ Make your own Code Lab levels in the new Make tab','💾 Solve your level yourself to save it','🏠 Play levels made in the other rooms']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

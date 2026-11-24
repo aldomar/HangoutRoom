@@ -16,13 +16,11 @@ const LT_MENU=[
   {id:'mat',icon:'🎵',name:'Sound Mat',color:'#8ff0d0'},
   {id:'peek',icon:'👀',name:'Peekaboo',color:'#c9a7ff'}
 ];
-const ltToday=()=>new Date().toDateString();
 // +1 coin, LITTLE_DAILY a day; after that the toys keep working and say so once a day.
 function ltPay(){
   const p=P(); if(!p) return;
-  if(p.little.pay.day!==ltToday()) p.little.pay={day:ltToday(),n:0};
-  if(p.little.pay.n<LITTLE_DAILY){p.little.pay.n++;earn(1,'');return;}
-  save(); if(LT.noted!==ltToday()){LT.noted=ltToday();setTimeout(()=>toast('Play coins are full for today! Keep playing for fun ✨'),900);}
+  if(dailyPay(p.little.pay,LITTLE_DAILY,1)){earn(1,'');return;}
+  save(); if(LT.noted!==fpDay()){LT.noted=fpDay();setTimeout(()=>toast('Play coins are full for today! Keep playing for fun ✨'),900);}
 }
 function ltSoundNote(){if(!DB.settings.sound&&!LT.muteNoted){LT.muteNoted=true;toast('🔇 Sound is off (⚙️ Settings)');}}
 

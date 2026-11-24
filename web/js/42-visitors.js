@@ -115,7 +115,6 @@ const VISIT_WISHES=[
   vWish('zip3','zip','🚗','Road trip','Vroom! Let\'s go for a ride!',[vInRoom(['ride'],2,'🚗','Ride things')])
 ];
 const vWishOf=id=>VISIT_WISHES.find(w=>w.id===id);
-const vToday=()=>new Date().toDateString();
 const vPartsDone=(p,w)=>w.parts.map(pt=>({pt,have:Math.min(pt.n,pt.have(p,curRoom(p)))}));
 const vMet=(p,w)=>vPartsDone(p,w).every(x=>x.have>=x.pt.n);
 
@@ -123,7 +122,7 @@ const vMet=(p,w)=>vPartsDone(p,w).every(x=>x.have>=x.pt.n);
 // A new friend knocks when nobody is visiting, there are wishes left and no wish came true today.
 function visitArrive(p){
   const v=p.visit; if(v.cur&&vWishOf(v.cur)) return false;
-  v.cur=''; if(v.day===vToday()) return false;
+  v.cur=''; if(v.day===fpDay()) return false;
   const w=VISIT_WISHES.find(x=>!v.done.includes(x.id)); if(!w) return false;
   v.cur=w.id; save(); return true;
 }
@@ -182,7 +181,7 @@ function visitSwap(){
   say(`Hi! I'm ${VISIT_FRIENDS[w.who].name}! ${w.icon}`);
 }
 function visitDone(p,w){
-  const v=p.visit; v.done.push(w.id); v.cur=''; v.day=vToday(); p.coins+=VISIT_COINS; p.stats.wishes=(p.stats.wishes||0)+1;
+  const v=p.visit; v.done.push(w.id); v.cur=''; v.day=fpDay(); p.coins+=VISIT_COINS; p.stats.wishes=(p.stats.wishes||0)+1;
   const F=VISIT_FRIENDS[w.who], all=VISIT_WISHES.filter(x=>x.who===w.who).every(x=>v.done.includes(x.id)), plush=VISIT_PLUSH[w.who];
   if(all&&!allItems(p).some(i=>i.type===plush)) curRoom(p).items.push({uid:uid(),type:plush,x:VISIT_SPOT.x,y:VISIT_SPOT.y,placed:true});
   save(); updateCoins(); renderRoom(); SFX.cheer(); vibrate(20); giftConfetti();

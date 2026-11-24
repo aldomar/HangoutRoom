@@ -6,12 +6,32 @@ _Last updated: 2026-11-24_
 - **Phase 15: 🎉 Holidays + the rest of the design review (order agreed 2026-11-24, see "Phase 15" in `PLAN.md`).** One PR each:
   - ✅ v1.72 🎉 Holiday greetings: built, PR open (branch `feature/holidays`, from `main`). New file `67-holidays.js`; 12 holidays
     with confetti in their colors; no save changes. Must be merged by Wednesday 2026-11-25 to greet on Thanksgiving (2026-11-26).
-  - ⬜ v1.73 🧰 Shared helpers, part 1 (one "today" = `fpDay()`, one daily-allowance helper; nothing visible changes).
-  - ⬜ v1.74 ⏸️ Small fixes: the Stage pauses instead of stopping when the app is left; ↩ Undo for 10 s after buying or giving.
-  - ⬜ v1.75 🎁 Gift codes between iPads.
-  - ⬜ v1.76 🐾 The pet notices what the child did.
-  - ⬜ v1.77 📻 Creations in the room (a boombox, Code Lab and Brain Games prizes).
-  - ⬜ v1.78 🛠️ Code Lab level maker.
+  - ✅ v1.72 is PR #74.
+  - ✅ v1.73 🧰 Shared helpers, part 1: built, PR open (branch `feature/shared`, stacked on `feature/holidays`). One "today" = `fpDay()`
+    (moved to 01), one `dailyPay` helper (08). Owner's answer 2026-11-24: old "Tue Nov 24 2026" days in saves are converted
+    (`dayIso` in `normalize()`), so nothing pays twice on the update day. No new save fields. (`feature/helpers` was already used by v1.30.)
+  - ✅ v1.73 is PR #75.
+  - ✅ v1.74 ⏸️ Small fixes: built, PR open (branch `feature/fixes`, stacked on `feature/shared`).
+    - The Stage pauses instead of stopping when the app is left (⏸️ Paused, ▶ Keep going, 3-2-1).
+    - ↩ Undo for 10 s after buying or giving, in every room; it puts the room back exactly as it was before.
+    - Owner's answers 2026-11-24 are in `PLAN.md`. No save changes. New file `68-undo.js`.
+  - ✅ v1.74 is PR #76.
+  - ✅ v1.75 🎁 Gift codes between iPads: built, PR open (branch `feature/giftcodes`, stacked on `feature/fixes`).
+    - Owner's answers 2026-11-24: the mailbox number is required, 3 codes a day, coins or decorations (same as gifts now).
+    - New file `69-giftcodes.js`. Save: `giftCodes{sent[], opened[], made{day,n}}` (defaults in `normalize()`, no new save version).
+  - ✅ v1.75 is PR #77.
+  - ✅ v1.76 🐾 The pet notices: built, PR open (branch `feature/petnotice`, stacked on `feature/giftcodes`).
+    - Owner's answers 2026-11-24: every game; with no pet, the buddy says it.
+    - New file `70-petnotice.js`. Save: `pet.day` (the daily first-play heart).
+  - ✅ v1.76 is PR #78.
+  - ✅ v1.77 📻 Creations in the room: built, PR open (branch `feature/creations`, stacked on `feature/petnotice`).
+    - Owner's answers 2026-11-24: a prize for every level; the boombox is free with the first saved loop.
+    - New file `71-creations.js`. Save: `code.prizes[]`, `brain.shelf`, `music.box`.
+  - ✅ v1.77 is PR #79.
+  - ✅ v1.78 🛠️ Code Lab level maker: built, PR open (branch `feature/levelmaker`, stacked on `feature/creations`).
+    - Owner's answers 2026-11-24: build now; every piece; 4×4 to 6×6; +3 a level, 3 a day; other rooms can play them.
+    - New file `72-levelmaker.js`. Save: `code.mine[3]`, `code.makePay`, `stats.made`.
+  - Phase 15 is built. Next: the owner reviews and merges PRs #74–#80 in order, then tries them on the iPads.
   - ⏸️ Parked: a picture lock for each room (idea 13), a level for each player in duels (idea 14).
 - **✅ Phase 14: before the hand-over (done, v1.67–v1.71).** **📋 Design review (2026-11-23): read `docs/DESIGN-REVIEW.md` first.** A whole-app review before the children get the app,
   the owner's answers (each child has their own iPad; the app isn't handed over yet), the ranked ideas and the agreed
@@ -1491,12 +1511,13 @@ _Last updated: 2026-11-24_
 1. ~~Plan Phase 15 (the rest of `docs/DESIGN-REVIEW.md` + holiday greetings) and get the order agreed.~~ Agreed 2026-11-24.
 2. ~~Build v1.72 🎉 Holiday greetings on `feature/holidays`.~~ Built, PR open. Owner: set the phone's date to a holiday (or wait for
    Thanksgiving), open the room, and merge it by Wednesday 2026-11-25.
-3. Plan and build v1.73 🧰 Shared helpers, part 1.
-4. Plan and build v1.74 ⏸️ Stage pause + ↩ Undo.
-5. Plan and build v1.75 🎁 Gift codes between iPads.
-6. Plan and build v1.76 🐾 The pet notices.
-7. Plan and build v1.77 📻 Creations in the room.
-8. Plan and build v1.78 🛠️ Code Lab level maker (best after seeing how the 11-year-old uses the Code Lab).
+3. ~~Plan and build v1.73 🧰 Shared helpers, part 1.~~ Built, PR open.
+4. ~~Plan and build v1.74 ⏸️ Stage pause + ↩ Undo.~~ Built, PR open.
+5. ~~Plan and build v1.75 🎁 Gift codes between iPads.~~ Built, PR open.
+6. ~~Plan and build v1.76 🐾 The pet notices.~~ Built, PR open.
+7. ~~Plan and build v1.77 📻 Creations in the room.~~ Built, PR open.
+8. ~~Plan and build v1.78 🛠️ Code Lab level maker.~~ Built, PR open.
+9. Owner: review and merge PRs #74–#80 in order; then decide what comes after Phase 15 (ideas 13 and 14 stay parked).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

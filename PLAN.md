@@ -1264,42 +1264,109 @@ still open), plus the owner's 🎉 holiday greeting. One PR for each version, in
 agreed before any code (only v1.72's is written so far).
 - ✅ **🎉 Holiday greetings (v1.72, built, PR open on `feature/holidays`):** the owner's idea (2026-11-24). On 12 US holidays the buddy says
   "Happy Thanksgiving!" (and so on) when the room opens, with confetti. No coins, nothing for a limited time. Plan details below.
-- ⬜ **🧰 Shared helpers, part 1 (v1.73; review idea 10 + risk 6):** nothing the children can see changes.
+- ✅ **🧰 Shared helpers, part 1 (v1.73; review idea 10 + risk 6; built, PR open on `feature/shared`):** nothing the children can see changes.
   - Everything uses `fpDay()` for "today". That removes `ltToday`, `rwToday`, `spyToday`, `jamToday`, `trToday`, `hrToday` and the
     `toDateString()` calls in 08, 09, 10, 11, 40, 42, 43, 46, 48 and 52.
   - One helper, `dailyPay(o, cap, n)`, built on `dayLeft` (08), replaces the 12 copied `pay{day,n}` resets.
   - No new save fields. Old `day` values are in the other date format, so each counter starts fresh once on the update day
-    (one extra allowance, once).
+    (one extra allowance, once). **Owner's answer (2026-11-24): convert them instead.** `normalize()` turns an old
+    "Tue Nov 24 2026" day into `2026-11-24` (`dayIso`, a small hand-written converter, so it doesn't depend on iPad Safari reading
+    the old text), so nothing pays twice on the update day. Built as planned otherwise: `fpDay()` moved to section 1, `dailyPay`
+    in section 8 replaces 13 copies (fidgets, Art Desk, Tap-to-Color, Music, Dance, Two-player, Free Play, 🧸 Play, I Spy,
+    Runway, Jam, Trick Shots, Derby), and `gameTake` uses it too.
   - The rest of idea 10 (a screen list for `show()`/`androidBack`, one results box, one prize giver) waits. The exception is
     when `09-screens.js` (at the ~40 KB limit) next has to grow.
-- ⬜ **⏸️ Small fixes (v1.74; risk 7 + idea 12):** no save changes.
+- ✅ **⏸️ Small fixes (v1.74; risk 7 + idea 12; built, PR open on `feature/fixes`):** no save changes.
   - **Stage pause:** leaving the app mid-song pauses it instead of ending it. `AC.suspend()` already freezes the audio clock
     the song runs on, so coming back shows "Ready? ▶" with a 3-2-1 and carries on.
   - **↩ Undo for 10 seconds:** the message after a purchase or a gift gets an Undo button.
     - A purchase is refunded, and the item is removed from `owned` or from the room.
     - A gift can be taken back only while it is still unopened in the other room's `gifts[]`.
-- ⬜ **🎁 Gift codes between iPads (v1.75; idea 7):** as described in `docs/DESIGN-REVIEW.md`.
+  - **Owner's answers (2026-11-24):**
+    - Undo goes back to just before: the whole room as it was (coins, owned things, what was worn, applied or placed). It's offered
+      for 10 s, and only while she stays on the same screen.
+    - Coming back to a paused song shows ⏸️ Paused with ▶ Keep going, then 3-2-1.
+    - Undo shows in every room, Easy and 🧸 Little ones too.
+  - **As built:**
+    - **Stage pause** (`14-stage.js`): `STG.paused` goes `'wait'` → `'count'` → `''`. The audio clock stays suspended until the
+      3-2-1 ends; `ac()` (07) and the return to the app (99) don't wake it.
+    - Leaving a paused song drops the notes already sent to the speaker (the stage bus is disconnected). Jams still end quietly, as before.
+    - **Undo** (new `68-undo.js`): `undoArm()` copies the profile just before `tryBuy`/`buyConsumable`/`sendGift` change anything.
+      `undoShow()` then shows a big ↩ button with a 10 s bar, and `show()` to another screen ends it. The card maker's picked stage
+      or frame is put back too.
+- ✅ **🎁 Gift codes between iPads (v1.75; idea 7; built, PR open on `feature/giftcodes`):** as described in `docs/DESIGN-REVIEW.md`.
   - The code: about 12 characters, a check letter, and a short hash of the `DECOR` key. The smoke test checks that no two keys
     share a hash.
   - Save data: `giftCodes{sent[], opened[]}`.
   - No Copy or Share buttons. The smoke test checks that no code uses `fetch`, XHR or WebSocket.
   - An older app copy that doesn't know a decoration says "Update first".
   - Questions for the plan: the mailbox step (required, optional or left out), a limit on codes per day, and what can be sent.
-- ⬜ **🐾 The pet notices (v1.76; idea 8):**
+  - **Owner's answers (2026-11-24):** the mailbox number is required; 3 codes a day; the same things as gifts between rooms (coins
+    5/10/20 or a decoration from My Stuff; no posters or prizes). Code plan agreed ("go for it").
+  - **As built** (new `69-giftcodes.js`):
+    - **The code:** 12 characters from `GC_ABC` (no 0/O, no 1/I), shown as XXXX-XXXX-XXXX. It holds 50 bits:
+      - a gift id (12 bits)
+      - a version (2)
+      - what it is (16: 0–2 = 5/10/20 coins, else `gcWhatOf(key)`, a fingerprint of the `DECOR` key)
+      - the mailbox (20)
+    - The characters are chained with `GC_KEY` so codes look random. Then come 2 check characters (a sum mod 1021, weights 1–10),
+      which catch every single wrong character and every swap of neighbors (the smoke test tries them all).
+    - **Mailbox:** `gcMailbox(p)` is 3 characters from the room's id plus a check letter. Nothing is stored, and a restore keeps it.
+    - **Sending:** 🎁 Give → "Who is it for?" → 📮 Another iPad → their mailbox → ✔ Make it! The gift leaves at once.
+      - There's no ↩ Undo, no Copy and no Share.
+      - 3 a day through `dailyPay` (`giftCodes.made`). 📮 Sent keeps the last 20.
+    - **Receiving:** 🎁 Give → 📥 Type a gift code. A good code goes into `p.gifts` (from "another iPad", badge 📮) and opens with
+      confetti in the room. An unknown decoration says "update the app first" and isn't used up.
+    - 🎁 Give now opens even with only one room on the iPad (it used to say there was only one room).
+    - Save: `giftCodes{sent[], opened[], made{day,n}}`, with defaults in `normalize()`. No new save version.
+- ✅ **🐾 The pet notices (v1.76; idea 8; built, PR open on `feature/petnotice`):**
   - Back in the room after a game, the pet says one line about it in Fuzzy's bubble ("You scored 3 goals! ⚽"). The line is
     spoken for the Little and Easy levels.
   - The child's first activity of the day gives the pet +1 heart. Hearts only, never coins, never a sad line.
   - Save data: `pet.day` only; what the child just did stays in memory.
-- ⬜ **📻 Creations in the room (v1.77; idea 9):**
+  - **Owner's answers (2026-11-24):** every game with a clear result (not just the sports); with no pet, the buddy says the line.
+  - **As built** (new `70-petnotice.js`):
+    - `show()` calls `petNotice(from, to)`. Leaving the room keeps a copy of `p.stats`, the puzzles solved and the saved music
+      and dances (`ntSnap`). Coming back compares them, and `NT_LINES` (33 kinds, in priority order, 1–3 wordings each, some
+      with a minimum such as 10 pops) picks the most notable change.
+    - With a pet the line is "🐾 Name: …", without one the buddy says it. It's spoken like every bubble.
+    - A box on top (a bonus card, a prize) makes it wait until the box is closed (up to about 10 s).
+    - Moving between rooms and going out to the rooms list say nothing.
+    - No game file changed.
+- ✅ **📻 Creations in the room (v1.77; idea 9; built, PR open on `feature/creations`):**
   - A boombox decoration plays a saved Music Maker loop once when tapped.
   - New `award:1` prizes for finished Code Lab levels (in the Loft, by the desk) and Brain Games levels (in the Backyard, by the chalkboard).
   - Questions for the plan: which levels give a prize, and is the boombox free?
-- ⬜ **🛠️ Code Lab level maker (v1.78; idea 11):**
+  - **Owner's answers (2026-11-24):** every level gives a prize; the boombox is free, given with the first saved loop.
+  - **As built** (new `71-creations.js`, all prizes `award:1`: never in the Shop, never given away):
+    - 🤖 One robot per Code Lab level (Beep, Loop, Twinkle, Swish, Hmm, Captain Byte) when every puzzle of that level is solved.
+      They stand in a row in the Loft, in front of the computer desk.
+    - 📚 The Brain Shelf comes the first time any Brain Games level is finished and stands by the Backyard chalkboard. It has a row
+      per game with 🎀 Easy, 🏆 Medium and ⭐ Hard spots, drawn from her progress, so they fill in by themselves.
+    - 📻 The Boombox goes into 📦 My Stuff with the first saved Music Maker loop. Tapping it in the room (not while decorating)
+      plays her saved loops in turn, twice through each; with none saved it plays a little tune.
+    - Checked when the room, the Code Lab, Brain Games or the Music Maker opens, and when a loop is saved, so rooms that finished
+      levels before v1.77 get their prizes too. The prize box waits until any other open box (a bonus card) is closed.
+    - Save data: `code.prizes[]`, `brain.shelf`, `music.box` (defaults in `normalize()`, no new save version).
+- ✅ **🛠️ Code Lab level maker (v1.78; idea 11; built, PR open on `feature/levelmaker`):**
   - She paints a map and sets the block limit. To save the level she must solve it herself within that limit, checked by `codeSim()`,
     so every saved level can be solved.
   - 3 slots in `code.mine[]`.
   - Chosen over a maze maker because a maze can only be proven by playing it (it uses physics).
   - Best after seeing how the 11-year-old uses the Code Lab.
+  - **Owner's answers (2026-11-24):** build it now; every piece (blocks, stars, puddles, ✨ My Move); maps 4×4 to 6×6;
+    +3 coins a new level, 3 a day; the other rooms on the same device can play her levels.
+  - **As built** (new `72-levelmaker.js`, small hooks in `18-codelab.js`):
+    - A 🛠️ Make tab after the 6 levels lists her 3 slots and the levels from the other rooms.
+    - The editor: size 4×4 / 5×5 / 6×6, tools floor, 🧸 toy block, ⭐ star (5 at most), 💧 puddle, the buddy's start and the 🥕.
+      Tap to paint, tap again to clear, drag to paint a line. The start and the carrot are moved, never painted over.
+    - The blocks come from the map (🌟 with stars, ❓ with puddles) plus a ✨ My Move switch; limits 2–16 (My Move 2–6).
+    - ▶️ Test it plays it in the normal play screen; solving it saves it with her answer, checked again by `codeSim()`.
+    - +3 for a new or changed level, 3 a day (`code.makePay`); the same level again pays nothing. Another room's level pays
+      through Free Play (+1, 10 a day). Made levels never change `code.solved`, bonuses or the 🤖 robots.
+    - Unsaved changes stay as a draft (✏️) until the app closes. 🗑️ asks first.
+    - 2 stickers (Level Maker, Game Designer), a pet line, spoken lines for the list and the editor.
+    - Save data: `code.mine[3]`, `code.makePay{day,n}`, `stats.made` (defaults in `normalize()`, no new save version).
 - ⏸️ **Parked:**
   - A picture lock for each room (idea 13): only if iPads get shared.
   - A level for each player in duels (idea 14, risk 8): only for family visits.

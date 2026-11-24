@@ -12,6 +12,7 @@
    A new screen, tab, mode or Brain game should get a line here (the smoke test checks every one).
    ========================================================= */
 const SPK_FIXED={
+  stagePaused:'Paused. Tap Keep going when you are ready.', // ⏸️ (v1.74)
   closet:'Tap a tab, then tap clothes to dress up your buddy.',
   art:'Pick a color and draw with your finger.',
   cardsMake:'Pick a stage and a frame, then save your photocard.',
@@ -22,6 +23,8 @@ const SPK_FIXED={
   brDuo:'Take turns! Find the pairs. Tap two cards.',
   brFacts:'Here are your fact cards. Tap one to read it.',
   codePick:'Pick a puzzle. Help your buddy get to the carrot!',
+  codeMake:'Make your own level! Tap a box to start one, or play a level from your family.',
+  codeEdit:'Paint your map. Then tap test it, and solve it yourself to save it.',
   stagePick:'Pick a song! ',
   littleMenu:'Pick something to play!',
   littlePick:'Pick a picture to color.',
@@ -63,7 +66,8 @@ const CL_SPEAK={
   hard:'Make a path to the carrot. Use repeat blocks to save space.',
   move:'Put arrows in My Move. Then use the sparkle block to do your move.',
   if:'Put the question block in front of an arrow to hop over a puddle.',
-  challenge:'Use My Move to get to the carrot.'};
+  challenge:'Use My Move to get to the carrot.',
+  make:'Make a path to the carrot on this home made level.'};
 function clSpeak(lvl,pz){return (CL_SPEAK[lvl]||CL_SPEAK.easy)+(pz&&pz.map&&pz.map.join('').includes('*')?' Pick up every star first.':'');}
 
 // Where she is, and what to say there. Busy moments keep the place's key with no words.
@@ -79,11 +83,14 @@ function speakLine(){
     case 'soccer': return {k:'soc:'+(TGS.on?'duo':socMode()),t:spkText('#socTip')};
     case 'ball': return {k:'ball:'+(BDL.on?'duo':bfMode()),t:spkText('#bfTip')};
     case 'stage':
+      if(STG.state==='play'&&STG.paused==='wait') return {k:'stage:paused',t:SPK_FIXED.stagePaused}; // ⏸️ (v1.74)
       if(STG.state==='play'||STG.state==='jam') return {k:'stage:busy',t:''};
       if(JAM.pick) return {k:'stage:jam',t:spkText('#jamHint')};
       return {k:'stage:pick'+(TGT.on?':duo':''),t:SPK_FIXED.stagePick+spkText('#stgHint')};
     case 'code':
       if(CL.view==='pick') return {k:'code:pick',t:SPK_FIXED.codePick};
+      if(CL.view==='make') return {k:'code:make',t:SPK_FIXED.codeMake}; // 🛠️ (v1.78)
+      if(CL.view==='edit') return {k:'code:edit',t:SPK_FIXED.codeEdit};
       return {k:'code:'+CL.lvl+':'+(CL.free?spkId(CL.free):CL.idx),t:clSpeak(CL.lvl,clPz())};
     case 'brain':
       if(BR.view==='menu') return {k:'br:menu',t:SPK_FIXED.brMenu};
@@ -108,7 +115,7 @@ const socMode=()=>typeof socTrick==='function'&&socTrick()?'trick':P().soccer.mo
 function spkAuto(){
   const p=cur==='profiles'?null:P();
   if(!p||!canSpeak()||!readOn(p)||!DB.settings.sound) return false;
-  if(cur==='stage'&&(STG.state==='play'||STG.state==='jam')) return false;
+  if(cur==='stage'&&((STG.state==='play'&&STG.paused!=='wait')||STG.state==='jam')) return false;
   return !(MU.playing||DN.playing);
 }
 let spkToldAt=0; // so the tapped button's name doesn't cut off what was just told (section 34)

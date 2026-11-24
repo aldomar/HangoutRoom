@@ -196,9 +196,8 @@ function saveDrawing(){
     Object.assign(ART,{editId:rec.id,created:rec.created,dirty:false}); ART_THUMBS[rec.id]=rec.thumb; SFX.buy();
     if(!isNew){save();toast('Drawing updated! 🖼️');return true;}
     p.stats.drawings++;
-    const today=new Date().toDateString(); if(p.artPay.day!==today) p.artPay={day:today,n:0};
-    if(ART.marks>=ART_MIN_MARKS&&p.artPay.n<ART_DAILY){p.artPay.n++;earn(ART_COINS,'Art!');toast('Saved to your Gallery! 🖼️');}
-    else{save();toast(p.artPay.n>=ART_DAILY?'Saved! 🖼️ Art coins are done for today. Keep drawing for fun!':'Saved to your Gallery! 🖼️');}
+    if(ART.marks>=ART_MIN_MARKS&&dailyPay(p.artPay,ART_DAILY,1)){earn(ART_COINS,'Art!');toast('Saved to your Gallery! 🖼️');}
+    else{save();toast(!dayLeft(p.artPay,ART_DAILY)?'Saved! 🖼️ Art coins are done for today. Keep drawing for fun!':'Saved to your Gallery! 🖼️');}
     return true;
   },()=>{toast('No space left for drawings. Delete an old one in the Gallery.');return false;});
 }

@@ -5,6 +5,14 @@
 // Each room has a color and a badge, so a child who can't read yet can still find her own room.
 // Color ids and badges are saved: never rename or remove them (new ones can be added).
 const ROOM_COLORS={pink:'#ff8cc6',purple:'#a97cff',mint:'#8ff0d0',gold:'#ffd166',sky:'#7fc8ff',peach:'#ffab7a',green:'#7ee08a',blue:'#6c8cff'}; // green, blue: v1.20
+// (v1.78) a made Code Lab level's shape (types only: whether it can be solved is checked by codeSim when it is played, section 72)
+function codeMineOk(L){
+  if(!L||typeof L!=='object'||typeof L.id!=='string'||typeof L.sol!=='string'||typeof L.move!=='string'||!Array.isArray(L.map)) return false;
+  const n=L.map.length, all=L.map.join('');
+  return n>=4&&n<=6&&L.map.every(r=>typeof r==='string'&&r.length===n&&/^[.#*~FC]+$/.test(r))
+    &&all.split('F').length===2&&all.split('C').length===2&&Number.isInteger(L.max)&&L.max>=2&&L.max<=16
+    &&(L.moveMax===0||Number.isInteger(L.moveMax)&&L.moveMax>=2&&L.moveMax<=6);
+}
 const ROOM_BADGES=['🐰','⭐','💜','🦇','⚽','🎤','🎨','☁️'];
 function newProfile(name,fur,color,badge,look){
   const p={id:uid(),name,color,badge,mascotName:'Fuzzy',coins:25,created:Date.now(),lastDaily:'',seenTip:false,
@@ -18,7 +26,7 @@ function newProfile(name,fur,color,badge,look){
 function normalize(p){
   if(!p.id) p.id=uid();
   if(!p.name) p.name='Room';
-  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0,seeks:0,fetches:0,petWalks:0,finds:0,hits:0,homers:0,catches:0,derbies:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
+  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0,seeks:0,fetches:0,petWalks:0,finds:0,hits:0,homers:0,catches:0,derbies:0,made:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.fidPay=Object.assign({day:'',n:0},p.fidPay&&typeof p.fidPay==='object'?p.fidPay:{}); if(typeof p.fidPay.n!=='number'||!(p.fidPay.n>=0)) p.fidPay.n=0; // v1.36: fidget coins paid today (see FID_DAILY)
   // Music Maker (v1.38, section 40): sound kit, speed (0-2), the loop on the grid now, 3 saved loops, music coins paid today.
@@ -27,7 +35,7 @@ function normalize(p){
    const sl=Array.isArray(m.slots)?m.slots:[], pay=m.pay&&typeof m.pay==='object'?m.pay:{};
    p.music={kit:typeof m.kit==='string'?m.kit:'soft',speed:sp(m.speed),cur:ok(m.cur)?m.cur:'0'.repeat(72),
      slots:[0,1,2].map(i=>{const x=sl[i];return x&&typeof x==='object'&&ok(x.g)?{g:x.g,kit:typeof x.kit==='string'?x.kit:'soft',speed:sp(x.speed)}:null;}),
-     pay:{day:typeof pay.day==='string'?pay.day:'',n:Math.max(0,Math.floor(Number(pay.n)||0))}};}
+     pay:{day:typeof pay.day==='string'?pay.day:'',n:Math.max(0,Math.floor(Number(pay.n)||0))},box:m.box===true};} // box: the 📻 Boombox was given (v1.77)
   p.look=Object.assign({},DEFAULT_LOOK,p.look||{});
   if(!BUDDIES[p.look.kind]) p.look.kind='bunny'; if(!FACES[p.look.face]) p.look.face='sparkle'; // v1.20
   p.owned=Array.isArray(p.owned)?p.owned:[];
@@ -94,6 +102,7 @@ function normalize(p){
   // friendship hearts for each kind of pet she has had. Section 22 checks the ids; this only checks the types.
   p.pet=Object.assign({kind:'',acc:'none'},p.pet&&typeof p.pet==='object'&&!Array.isArray(p.pet)?p.pet:{});
   if(typeof p.pet.kind!=='string') p.pet.kind=''; if(typeof p.pet.acc!=='string') p.pet.acc='none'; if(typeof p.pet.home!=='string') p.pet.home=''; // v1.50
+  if(typeof p.pet.day!=='string') p.pet.day=''; // 🐾 the last day the pet gave its first-play heart (v1.76, section 70)
   if(typeof p.pet.toy!=='string') p.pet.toy='ball'; // 🎾 the fetch toy (v1.54, section 55 checks the id)
   ['seeks','fetches'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));}); // v1.54
   // Pet walks (v1.55, section 56): the last path walked and the find ids found (both checked when they are read).
@@ -166,7 +175,15 @@ function normalize(p){
   // Level bands (v1.69, section 64): p.band, with p.easy kept in step (on for Little and Easy). If they disagree (an older
   // app version changed Easy mode), Easy mode wins, so the room acts as it did there.
   if(!['little','easy','normal','challenge'].includes(p.band)||(p.band==='little'||p.band==='easy')!==p.easy) p.band=p.easy?'easy':'normal';
-  if(p.little.lock===null) p.little.lock=p.band==='little'; // 🧸 Little mode (v1.71, section 66): on for Little rooms
+  if(p.little.lock===null) p.little.lock=p.band==='little';
+  // 🎁 Gift codes (v1.75, section 69): the codes made (last 20), the codes opened here, and codes made today.
+  {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, gc=o(p.giftCodes), m=o(gc.made), cd=c=>typeof c==='string'&&/^[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}$/.test(c);
+   p.giftCodes={sent:(Array.isArray(gc.sent)?gc.sent:[]).filter(s=>s&&cd(s.code)&&Number.isInteger(s.what)&&typeof s.mb==='string').slice(0,20).map(s=>({code:s.code,what:s.what,mb:s.mb.slice(0,4),at:Number(s.at)||0})),
+     opened:(Array.isArray(gc.opened)?gc.opened:[]).filter(c=>typeof c==='string'&&/^[2-9A-Z]{12}$/.test(c)).slice(-300),
+     made:{day:typeof m.day==='string'?m.day:'',n:Math.max(0,Math.floor(Number(m.n)||0))}};}
+  // v1.73: every saved day is fpDay()'s 2026-11-24. Days saved in the old "Tue Nov 24 2026" form are turned into it (dayIso, section 1).
+  p.lastDaily=dayIso(p.lastDaily);
+  [p.artPay,p.fidPay,p.music.pay,p.dance.pay,p.little.pay,p.runway.pay,p.visit,p.duo].forEach(o=>{if(o&&typeof o.day==='string')o.day=dayIso(o.day);}); // 🧸 Little mode (v1.71, section 66): on for Little rooms
   // Buddies (v1.20): the room's color also colors the buttons and bars. New rooms start with it on; rooms made
   // before v1.20 start with it off, so they look the same as before (it can be switched on with ✏️ under the room).
   p.tint=!!p.tint;
@@ -178,10 +195,16 @@ function normalize(p){
   p.code=Object.assign({level:'easy'},p.code&&typeof p.code==='object'&&!Array.isArray(p.code)?p.code:{});
   p.code.solved=Array.isArray(p.code.solved)?p.code.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[];
   if(!['easy','medium','hard','move','if','challenge'].includes(p.code.level)) p.code.level='easy';
+  p.code.prizes=Array.isArray(p.code.prizes)?p.code.prizes.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[]; // 🤖 the levels whose robot was given (v1.77)
+  // 🛠️ (v1.78) her 3 made levels (null or {id, map[], max, moveMax, sol, move, at}) and the coins paid today for making them
+  p.code.mine=[0,1,2].map(i=>{const L=Array.isArray(p.code.mine)?p.code.mine[i]:null;return codeMineOk(L)?L:null;});
+  const mkp=p.code.makePay&&typeof p.code.makePay==='object'?p.code.makePay:{};
+  p.code.makePay={day:typeof mkp.day==='string'?mkp.day:'',n:Math.max(0,Math.floor(Number(mkp.n)||0))};
   // Brain Games (v1.25): the last game played, the level picked in each game, and the puzzle ids solved (each pays once).
   const br=p.brain&&typeof p.brain==='object'&&!Array.isArray(p.brain)?p.brain:{}, brL=br.level&&typeof br.level==='object'&&!Array.isArray(br.level)?br.level:{};
   const brG=['snack','memory','pop','train','word','bake','facts']; // v1.33: + Pattern Train, Word Builder; v1.34: + Fraction Bakery, Fact Cards
-  p.brain={game:brG.includes(br.game)?br.game:'snack',level:{},solved:Array.isArray(br.solved)?br.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[]};
+  p.brain={game:brG.includes(br.game)?br.game:'snack',level:{},solved:Array.isArray(br.solved)?br.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[],
+    shelf:br.shelf===true}; // shelf: the 📚 Brain Shelf was given (v1.77)
   brG.forEach(g=>{p.brain.level[g]=['easy','medium','hard'].includes(brL[g])?brL[g]:'easy';});
 }
 DB.profiles.forEach(normalize);

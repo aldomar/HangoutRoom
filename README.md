@@ -260,6 +260,82 @@ Save data: one new field per room, `little.lock`. Older backups still restore.
 - Moving between rooms doesn't repeat it. No coins and nothing for a limited time: a missed day loses nothing.
 - No change to the save data.
 
+## 🧰 Tidy toolbox (version 1.73)
+A behind-the-scenes tidy-up. Nothing looks different.
+- Every "once a day" thing (the daily gift, visitors, and every daily coin limit) now uses the same clock, so they all start fresh at
+  midnight together.
+- Days saved by older versions are converted on the update, so nothing is paid twice that day.
+- No new save data. Older backups still restore.
+
+## ⏸️ Oops-proof (version 1.74)
+- **A song waits for you.** If the app is left in the middle of a Stage song (a phone call, the Home button), the song pauses.
+  Coming back shows **⏸️ Paused** with a big **▶ Keep going** button, then 3-2-1, and the song carries on where it stopped.
+  ⬅ Songs still leaves. (A 🎸 Jam still just ends, keeping its coins.)
+- **↩ Undo for 10 seconds.** After buying anything (clothes, decorations, walls, fidget designs, pet things, seeds, backdrops,
+  a treat) or giving a gift, a big **↩ Undo** button shows with a shrinking bar.
+  - Tapping it puts the room back exactly as it was just before: the coins come back, and the thing is gone again
+    (taken off, or out of the room).
+  - It goes away after 10 seconds, or as soon as she goes to another screen, so nothing done after that can be lost.
+  - A gift can only be taken back while it's still unopened.
+  - It shows in every room, Easy and 🧸 Little ones too.
+- No new save data.
+
+## 📮 Gift codes between iPads (version 1.75)
+Each child has their own iPad, so gifts can now travel between iPads as a short code that one child reads out and the other types in,
+like a phone number. **The app never sends anything over the internet**: there's no Copy or Share button, and nothing leaves the iPad.
+- **Sending:** 🎁 Give → pick coins (5, 10 or 20) or a decoration from 📦 My Stuff → **📮 Another iPad** → type their **mailbox number**
+  → ✔ Make it! The coins or decoration leave straight away, and a code like `FKRU-JWB9-LQYB` shows in big letters. Read it to them.
+  - 3 codes a day per room. **📮 Sent** (at the top of 🎁 Give) keeps the last 20 codes, in case one is lost.
+  - A code can't be taken back, so there's no ↩ Undo for it.
+- **Receiving:** 🎁 Give → **📥 Type a gift code**. The box shows this room's **📮 mailbox number** (4 letters and numbers) to read
+  to the sender first. Type the code (small letters, spaces and dashes are fine) and tap 🎁 Open: the gift opens with confetti.
+- **Safe from mistakes:**
+  - A code only opens in the room whose mailbox it was made for, and only once.
+  - A typing mistake or two swapped letters is caught ("Check each letter").
+  - Codes never use 0, O, 1 or I, so they can't be mixed up.
+- **Update first:** a decoration that's newer than the receiving iPad's app says "update the app first". The code still works after updating.
+- Where: ⚙️ Settings → 🎁 Give a gift, or the 🎁 tile at the start of 📦 My Stuff in Decorate. Not in 🧸 Little mode.
+- Save data: one new field per room, `giftCodes` (codes sent, codes opened, codes made today). Older backups still restore.
+
+## 🛠️ Code Lab level maker (version 1.78)
+She can now **make her own Code Lab levels** in the new **🛠️ Make** tab:
+- **3 slots.** Tap ➕ to start one. Pick a size (4×4, 5×5 or 6×6), then paint the map with 🧸 toy blocks, ⭐ stars (5 at most),
+  💧 puddles, her buddy's start and the 🥕 carrot. Tap a square to paint it, tap it again to clear it, or drag to paint a line.
+- **Set the challenge.** 🧩 − / + sets how many blocks fit (2 to 16). ✨ My Move adds the My Move row (2 to 6 blocks).
+  The blocks come from the map: 🌟 when there are stars, ❓ when there are puddles.
+- **▶️ Test it.** She has to solve her own level within the limit to save it, so every saved level can be solved.
+- **Coins:** +3 for each new level, 3 levels a day. Saving the same level again pays nothing.
+- **🏠 Family levels.** Levels saved in the other rooms on the same iPad show under her slots. Solving one pays like Free Play
+  (+1, up to 10 a day).
+- Made levels never count as Code Lab puzzles, so they don't change level bonuses or the 🤖 robots.
+- New stickers: 🛠️ Level Maker and Game Designer. The pet notices a new level too.
+- Save data: `code.mine` (the 3 levels), `code.makePay` (coins today) and `stats.made`. Older backups still restore.
+
+## 📻 Made by you (version 1.77)
+What she makes and finishes now shows up in her rooms, as prizes that can't be bought or given away:
+- **🤖 A robot for every Code Lab level.** Solve every puzzle of a level and its robot joins the row in the Loft, in front of the
+  computer: Beep (Easy), Loop (Medium), Twinkle (Hard), Swish (My Move), Hmm (If) and Captain Byte (Challenge).
+- **📚 The Brain Shelf.** Finish any Brain Games level and a shelf appears by the Backyard chalkboard. Each game has a row, with a
+  🎀 for Easy, a 🏆 for Medium and a ⭐ for Hard that light up as those levels are finished.
+- **📻 A Boombox.** Save a loop in the Music Maker and a free boombox arrives in 📦 My Stuff. Place it in any room and tap it:
+  it plays her saved music (each tap the next loop). With no loop saved, it plays a little tune.
+- Rooms that already finished levels get their prizes the next time they open the Code Lab or Brain Games.
+- Prizes can be moved and stored like any decoration.
+- Save data: three new fields, `code.prizes`, `brain.shelf` and `music.box`. Older backups still restore.
+
+## 🐾 Your pet notices (version 1.76)
+- **Come back to the room after playing, and the pet cheers for what you just did**, in the speech bubble:
+  "🐾 Nibbles: You scored 3 goals! ⚽", "You solved 4 puzzles! 🧠", "Yum, fresh from the garden! 🌱", "Pop pop pop! 🫧"…
+  - Every game with a clear result counts: Soccer, the Ball Field, the Stage and Jam, Brain Games and Free Play, the Code Lab,
+    the Marble Maze, the Garden, the Art Desk, Music, Dance, Runway, I Spy, Photocards, 🧸 Play, pet walks and the fidgets.
+  - The most exciting thing wins (a home run beats 4 hits). Each has a few ways to say it.
+  - If nothing happened, nothing is said. Moving between rooms doesn't count.
+- **No pet yet?** The buddy says it instead.
+- **The first thing played each day gives the pet +1 ❤️.** Hearts only, never coins, and never a sad line.
+- The voice says it too when 🔊 Read to me is on (on by default in Little and Easy rooms).
+- If a box is open when she comes back (a bonus card, a prize), the line waits until it's closed.
+- Save data: one new field, `pet.day` (the day of the last first-play heart).
+
 ## Spoken instructions (since version 1.70)
 The app can now **say what to do** on every screen, so the children who can't read yet can play everything:
 - **Each screen, tab and game has one short spoken line**, for example "Pop them all to flip it over!" on the pop-it. In the Brain Games it's

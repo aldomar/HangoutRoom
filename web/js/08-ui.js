@@ -18,13 +18,14 @@ function tryBuy(key,price,name,done){
   const p=P();
   if(!price||p.owned.includes(key)){done();return;}
   if(p.coins<price){needMore(p,price);return;}
-  buyAsk(p,'Get',name,price,()=>{p.coins-=price;p.owned.push(key);save();updateCoins();SFX.buy();toast(`Yay! You got ${name}! ✨`);done();});
+  // ↩ Undo (section 68, v1.74): a copy of the room just before, and the button just after
+  buyAsk(p,'Get',name,price,()=>{const u=undoArm();p.coins-=price;p.owned.push(key);save();updateCoins();SFX.buy();toast(`Yay! You got ${name}! ✨`);done();undoShow(u);});
 }
 function buyConsumable(price,name,done){
   const p=P();
   if(!price){SFX.buy();done();return;} // free things (the Built-in Shelf, v1.40) need no question
   if(p.coins<price){needMore(p,price);return;}
-  buyAsk(p,'Buy',name,price,()=>{p.coins-=price;save();updateCoins();SFX.buy();done();});
+  buyAsk(p,'Buy',name,price,()=>{const u=undoArm();p.coins-=price;save();updateCoins();SFX.buy();done();undoShow(u);});
 }
 function needMore(p,price){SFX.locked();toast(p.easy?`🔒 Need ${price-p.coins} more 🪙`:`You need ${price-p.coins} more 🪙. Try ${payTips(p).words}!`);}
 // Daily coin allowances (v1.67): the games that pay for every goal, save, hit, catch, star or maze replay each have their own,
@@ -41,10 +42,13 @@ const GAME_PAY={
 };
 function dayLeft(o,cap){const d=fpDay();if(o.day!==d){o.day=d;o.n=0;}return Math.max(0,cap-o.n);} // o = {day, n}
 const gameLeft=(p,k)=>dayLeft(GAME_PAY[k].pay(p),GAME_PAY[k].cap);
+// How much of n may be paid (or counted) today against cap, and counts it (v1.73). o = a saved {day, n}; a new day starts it at 0.
+// Every daily allowance goes through this: n is coins for some (fidgets, I Spy, Runway, Two-player) and things for others (drawings, loops…).
+function dailyPay(o,cap,n){const g=Math.max(0,Math.min(n,dayLeft(o,cap)));o.n+=g;return g;}
 // Somewhere that still pays today (not game k): one game with coins left (or the Fidget Shelf), and always 🧠 Brain Games.
 function payTips(p,k){
   const open=Object.keys(GAME_PAY).filter(g=>g!==k&&gameLeft(p,g)>0).map(g=>GAME_PAY[g].name);
-  if(p.fidPay.day!==new Date().toDateString()||p.fidPay.n<FID_DAILY) open.push('🫧 Fidget Shelf'); // section 10
+  if(dayLeft(p.fidPay,FID_DAILY)>0) open.push('🫧 Fidget Shelf'); // section 10
   const pick=open.length?[open[Math.floor(Math.random()*open.length)]]:[];
   const all=pick.concat('🧠 Brain Games');
   return {words:all.join(' or '),icons:all.map(n=>n.split(' ')[0]).join(' ')};
@@ -53,7 +57,7 @@ const gameTold=new Set(); // the allowance notes already shown (room:game:day), 
 // How much of n coins game k may pay now (0 when today's allowance is used up); counts it as paid.
 function gameTake(k,n){
   const p=P(), G=GAME_PAY[k]; if(!p||!G||!(n>0)) return 0;
-  const o=G.pay(p), give=Math.min(n,dayLeft(o,G.cap)); o.n+=give;
+  const o=G.pay(p), give=dailyPay(o,G.cap,n);
   const t=p.id+':'+k+':'+o.day;
   if(o.n>=G.cap&&!gameTold.has(t)){gameTold.add(t);const tip=payTips(p,k);
     setTimeout(()=>toast(p.easy?`🪙 ✔ ${tip.icons}`:`${G.name} coins are full for today! Try ${tip.words} ✨`),give?1300:0);}

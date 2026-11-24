@@ -27,11 +27,7 @@ const fpInt=(r,a,b)=>a+Math.floor(r()*(b-a+1));
 const fpPick=(r,a)=>a[Math.floor(r()*a.length)];
 const fpMix=(r,a)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const fpSeed=()=>'free:'+Date.now().toString(36)+':'+Math.random().toString(36).slice(2,8);
-// Today as 2026-11-19 (the device's own date). The smoke test can set window.FP_TEST_DAY.
-function fpDay(){
-  if(window.FP_TEST_DAY) return window.FP_TEST_DAY;
-  const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
+// fpDay() (today as 2026-11-19) lives in section 1 since v1.73.
 const fpDayNo=day=>{const [y,m,d]=day.split('-').map(Number);return Math.round(Date.UTC(y,m-1,d)/864e5);};
 const potdGame=day=>POTD_GAMES[((fpDayNo(day||fpDay())%POTD_GAMES.length)+POTD_GAMES.length)%POTD_GAMES.length];
 const potdLevel=(p,g)=>p.easy?'easy':BRAIN_LVLS.includes(p.brain.level[g])?p.brain.level[g]:'easy';
@@ -256,9 +252,9 @@ FP_MAKERS.code={
 /* ---------- coins ---------- */
 // +1 per Free Play puzzle, FREE_DAILY a day in all. Returns the line for the done box.
 function fpPay(x,y){
-  const p=P(), day=fpDay(); if(p.free.day!==day) p.free={day,n:0};
+  const p=P(), day=fpDay();
   p.stats.free++;
-  if(p.free.n<FREE_DAILY){p.free.n++;earn(1,'Free Play',x,y);return '+1 🪙';}
+  if(dailyPay(p.free,FREE_DAILY,1)){earn(1,'Free Play',x,y);return '+1 🪙';}
   save();
   if(fpToldDay===p.id+day||p.easy) return '';
   fpToldDay=p.id+day; return '<br><small>Free Play coins are full for today! Keep playing for fun ✨</small>';

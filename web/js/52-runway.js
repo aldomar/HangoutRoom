@@ -37,7 +37,6 @@ const RW_CHEERS=['💖💖💖','💖🌟💖','🌟🌟🌟','🤩🤩🤩'];
 const RW_LINES=[['So cute!','Love it!','Adorable!'],['Love it!','Looking good!','So fun!'],['So stylish!','Wow, wow!','Great look!'],['Superstar!','Totally on theme!','Amazing!']];
 const RW={view:'cards',card:null,look:null,cat:'top',deck:[],at:0,walking:false,timers:[],img:'',imgKey:''};
 const rwCardOf=id=>RW_CARDS.find(c=>c.id===id);
-const rwToday=()=>new Date().toDateString();
 
 /* ---------- matching ---------- */
 const rwItem=(cat,id)=>CLOSET[cat].items.find(i=>i.id===id);
@@ -161,9 +160,8 @@ function rwDone(p,lv){
   RW.walking=false;
   const c=RW.card; p.stats.walks++; if(lv>=3&&c.th.length) p.stats.wows++;
   if(!p.runway.cards.includes(c.id)) p.runway.cards.push(c.id);
-  if(p.runway.pay.day!==rwToday()) p.runway.pay={day:rwToday(),n:0};
-  let line;
-  if(p.runway.pay.n+RW_COINS<=RW_DAILY){p.runway.pay.n+=RW_COINS;earn(RW_COINS,'Runway');line=`+${RW_COINS} 🪙`;}
+  let line; const got=dailyPay(p.runway.pay,RW_DAILY,RW_COINS);
+  if(got){earn(got,'Runway');line=`+${got} 🪙`;}
   else {save();line='Runway coins are full for today. Keep walking for fun ✨';}
   const keep=RW_CATS.some(k=>RW.look[k]!==p.look[k]&&rwOwns(p,k,RW.look[k]));
   modal(`${c.icon} What a show!`,`<div class="rw-end"><div class="rw-big">${RW_CHEERS[lv]}</div>${esc(RW_LINES[lv][0])}<br><b>${line}</b></div>`,
