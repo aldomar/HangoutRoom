@@ -7,12 +7,12 @@ _Last updated: 2026-11-23_
   the owner's answers (each child has their own iPad; the app isn't handed over yet), the ranked ideas and the agreed
   order: v1.67 daily caps → v1.68 🧤 Catch on Hard → v1.69 first-time setup + age bands → v1.70 spoken instructions →
   v1.71 🧸 Little mode.
-- **🪙 Fair daily coins: built, PR #69 open as v1.67** on branch `feature/caps` (from `main` after #68). Plan agreed 2026-11-23 (`PLAN.md`,
+- **🪙 Fair daily coins: done (v1.67 merged, PR #69)** (branch `feature/caps`, from `main` after #68). Plan agreed 2026-11-23 (`PLAN.md`,
   "v1.67 plan details"). Owner's answers: one allowance per game (20 a day for Soccer Kick, Keeper, Batting, Catch, Stage; 10 for
   maze replays); the first perfect on a level (with its prize) and every other first are paid outside it, repeat perfects come out
   of it; Brain Games Free Play stays uncapped. Also: the "not enough coins" hint names a place that still pays, and a 🔊/🔇 button
   in the room (the iPad audio session stays `playback`). Save: 6 `{day, n}` fields with defaults in `normalize()`, no new save version.
-- **🧤 Catch you can read: built as v1.68** on branch `feature/catchhard` (from `feature/caps`, as #69 is still open). Owner's
+- **🧤 Catch you can read: built, PR #70 open as v1.68** on branch `feature/catchhard` (from `feature/caps`; #69 is merged). Owner's
   answers 2026-11-23: cues on every level (CRACK!/WHACK/tok by depth, with the word for sound-off play; mowed lanes and bands;
   a shadow trail on Medium/Hard); fresh hits on Hard only (`ctMakeGame`, checked by `ctHitOk`); Medium slightly harder again
   (glove 0.19, ring from 55%). No save changes. Why: the owner found Hard nearly impossible (even for them), because the shadow
