@@ -1294,13 +1294,31 @@ agreed before any code (only v1.72's is written so far).
     - **Undo** (new `68-undo.js`): `undoArm()` copies the profile just before `tryBuy`/`buyConsumable`/`sendGift` change anything.
       `undoShow()` then shows a big ↩ button with a 10 s bar, and `show()` to another screen ends it. The card maker's picked stage
       or frame is put back too.
-- ⬜ **🎁 Gift codes between iPads (v1.75; idea 7):** as described in `docs/DESIGN-REVIEW.md`.
+- ✅ **🎁 Gift codes between iPads (v1.75; idea 7; built, PR open on `feature/giftcodes`):** as described in `docs/DESIGN-REVIEW.md`.
   - The code: about 12 characters, a check letter, and a short hash of the `DECOR` key. The smoke test checks that no two keys
     share a hash.
   - Save data: `giftCodes{sent[], opened[]}`.
   - No Copy or Share buttons. The smoke test checks that no code uses `fetch`, XHR or WebSocket.
   - An older app copy that doesn't know a decoration says "Update first".
   - Questions for the plan: the mailbox step (required, optional or left out), a limit on codes per day, and what can be sent.
+  - **Owner's answers (2026-11-24):** the mailbox number is required; 3 codes a day; the same things as gifts between rooms (coins
+    5/10/20 or a decoration from My Stuff; no posters or prizes). Code plan agreed ("go for it").
+  - **As built** (new `69-giftcodes.js`):
+    - **The code:** 12 characters from `GC_ABC` (no 0/O, no 1/I), shown as XXXX-XXXX-XXXX. It holds 50 bits:
+      - a gift id (12 bits)
+      - a version (2)
+      - what it is (16: 0–2 = 5/10/20 coins, else `gcWhatOf(key)`, a fingerprint of the `DECOR` key)
+      - the mailbox (20)
+    - The characters are chained with `GC_KEY` so codes look random. Then come 2 check characters (a sum mod 1021, weights 1–10),
+      which catch every single wrong character and every swap of neighbors (the smoke test tries them all).
+    - **Mailbox:** `gcMailbox(p)` is 3 characters from the room's id plus a check letter. Nothing is stored, and a restore keeps it.
+    - **Sending:** 🎁 Give → "Who is it for?" → 📮 Another iPad → their mailbox → ✔ Make it! The gift leaves at once.
+      - There's no ↩ Undo, no Copy and no Share.
+      - 3 a day through `dailyPay` (`giftCodes.made`). 📮 Sent keeps the last 20.
+    - **Receiving:** 🎁 Give → 📥 Type a gift code. A good code goes into `p.gifts` (from "another iPad", badge 📮) and opens with
+      confetti in the room. An unknown decoration says "update the app first" and isn't used up.
+    - 🎁 Give now opens even with only one room on the iPad (it used to say there was only one room).
+    - Save: `giftCodes{sent[], opened[], made{day,n}}`, with defaults in `normalize()`. No new save version.
 - ⬜ **🐾 The pet notices (v1.76; idea 8):**
   - Back in the room after a game, the pet says one line about it in Fuzzy's bubble ("You scored 3 goals! ⚽"). The line is
     spoken for the Little and Easy levels.

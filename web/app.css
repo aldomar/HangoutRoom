@@ -649,6 +649,21 @@ body.easy .lk-label span{display:none}
 .gv-coin b{font-size:20px;color:var(--gold)}
 .tile.gv.poor{opacity:.5}
 .gv-tile .tv{font-size:46px}
+/* 🎁 Gift codes (v1.75) */
+.gc-top{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
+.gc-top .btn{min-height:52px;font-size:17px}
+.gv-who .gc-who{border-color:var(--purple)}
+.gc-help{text-align:center;color:var(--muted);font-weight:700;margin:8px 0}
+.gc-inp{display:block;width:100%;font-size:28px;text-align:center;letter-spacing:4px;font-weight:900;text-transform:uppercase}
+.gc-msg{text-align:center;color:var(--gold);font-weight:800;min-height:22px;margin:8px 0 0}
+.gc-mb{text-align:center;font-size:20px;font-weight:800;margin-bottom:10px}
+.gc-mb b{color:var(--gold);letter-spacing:3px;font-size:28px}
+.gc-code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:clamp(24px,5.4vw,38px);font-weight:900;letter-spacing:3px;text-align:center;white-space:nowrap;color:var(--gold);
+  background:#1a1028;border:3px solid var(--line);border-radius:18px;padding:16px 10px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.gc-list{display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow:auto}
+.gc-list .btn{display:flex;flex-direction:column;align-items:flex-start;min-height:56px;gap:2px}
+.gc-list b{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:20px;letter-spacing:2px;color:var(--gold)}
+.gc-list span{font-size:15px;color:var(--muted)}
 .gv-note{text-align:center;color:var(--muted);font-weight:700;margin:8px 0 0}
 .gv-who{display:flex;flex-direction:column;gap:10px}
 .gv-who .btn{min-height:60px;font-size:20px;display:flex;align-items:center;gap:12px;border-width:3px;border-style:solid}

@@ -167,6 +167,11 @@ function normalize(p){
   // app version changed Easy mode), Easy mode wins, so the room acts as it did there.
   if(!['little','easy','normal','challenge'].includes(p.band)||(p.band==='little'||p.band==='easy')!==p.easy) p.band=p.easy?'easy':'normal';
   if(p.little.lock===null) p.little.lock=p.band==='little';
+  // 🎁 Gift codes (v1.75, section 69): the codes made (last 20), the codes opened here, and codes made today.
+  {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, gc=o(p.giftCodes), m=o(gc.made), cd=c=>typeof c==='string'&&/^[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}$/.test(c);
+   p.giftCodes={sent:(Array.isArray(gc.sent)?gc.sent:[]).filter(s=>s&&cd(s.code)&&Number.isInteger(s.what)&&typeof s.mb==='string').slice(0,20).map(s=>({code:s.code,what:s.what,mb:s.mb.slice(0,4),at:Number(s.at)||0})),
+     opened:(Array.isArray(gc.opened)?gc.opened:[]).filter(c=>typeof c==='string'&&/^[2-9A-Z]{12}$/.test(c)).slice(-300),
+     made:{day:typeof m.day==='string'?m.day:'',n:Math.max(0,Math.floor(Number(m.n)||0))}};}
   // v1.73: every saved day is fpDay()'s 2026-11-24. Days saved in the old "Tue Nov 24 2026" form are turned into it (dayIso, section 1).
   p.lastDaily=dayIso(p.lastDaily);
   [p.artPay,p.fidPay,p.music.pay,p.dance.pay,p.little.pay,p.runway.pay,p.visit,p.duo].forEach(o=>{if(o&&typeof o.day==='string')o.day=dayIso(o.day);}); // 🧸 Little mode (v1.71, section 66): on for Little rooms
