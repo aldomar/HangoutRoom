@@ -12,6 +12,7 @@
    A new screen, tab, mode or Brain game should get a line here (the smoke test checks every one).
    ========================================================= */
 const SPK_FIXED={
+  stagePaused:'Paused. Tap Keep going when you are ready.', // ⏸️ (v1.74)
   closet:'Tap a tab, then tap clothes to dress up your buddy.',
   art:'Pick a color and draw with your finger.',
   cardsMake:'Pick a stage and a frame, then save your photocard.',
@@ -79,6 +80,7 @@ function speakLine(){
     case 'soccer': return {k:'soc:'+(TGS.on?'duo':socMode()),t:spkText('#socTip')};
     case 'ball': return {k:'ball:'+(BDL.on?'duo':bfMode()),t:spkText('#bfTip')};
     case 'stage':
+      if(STG.state==='play'&&STG.paused==='wait') return {k:'stage:paused',t:SPK_FIXED.stagePaused}; // ⏸️ (v1.74)
       if(STG.state==='play'||STG.state==='jam') return {k:'stage:busy',t:''};
       if(JAM.pick) return {k:'stage:jam',t:spkText('#jamHint')};
       return {k:'stage:pick'+(TGT.on?':duo':''),t:SPK_FIXED.stagePick+spkText('#stgHint')};
@@ -108,7 +110,7 @@ const socMode=()=>typeof socTrick==='function'&&socTrick()?'trick':P().soccer.mo
 function spkAuto(){
   const p=cur==='profiles'?null:P();
   if(!p||!canSpeak()||!readOn(p)||!DB.settings.sound) return false;
-  if(cur==='stage'&&(STG.state==='play'||STG.state==='jam')) return false;
+  if(cur==='stage'&&((STG.state==='play'&&STG.paused!=='wait')||STG.state==='jam')) return false;
   return !(MU.playing||DN.playing);
 }
 let spkToldAt=0; // so the tapped button's name doesn't cut off what was just told (section 34)

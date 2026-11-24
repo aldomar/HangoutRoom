@@ -321,6 +321,7 @@
     <div id="stgMascot"></div>
     <div class="stg-hud"><span id="stgScore"></span><span id="stgCombo"></span></div>
     <div class="stg-names hidden" id="stgNames"><span id="stgN1"></span><span id="stgN2"></span></div>
+    <div class="stg-pause hidden" id="stgPause"><div class="stg-pause-box"><div class="stg-pause-t">⏸️ Paused</div><button class="btn pink" id="stgGo" aria-label="Keep going">▶ <span class="tn">Keep going</span></button></div></div>
   </div>
 </div>
 
@@ -506,6 +507,7 @@
 
 <div id="modal" class="modal hidden"><div class="modal-card"><div id="modalTitle"></div><div id="modalBody"></div><div id="modalBtns"></div></div></div>
 <div id="toast"></div>
+<div id="undoBar" class="undo-bar"><button class="btn" id="undoBtn" aria-label="Undo">↩ <span class="tn">Undo</span></button><i></i></div>
 <div id="flash"></div>
 
 <script src="web/js/01-save.js"></script>
@@ -577,6 +579,7 @@
 <script src="web/js/65-speak.js"></script>
 <script src="web/js/66-littlemode.js"></script>
 <script src="web/js/67-holidays.js"></script>
+<script src="web/js/68-undo.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

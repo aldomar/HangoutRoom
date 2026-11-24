@@ -20,7 +20,7 @@ function dayIso(s){
   const m=typeof s==='string'&&/^[A-Za-z]{3} ([A-Za-z]{3}) (\d{1,2}) (\d{4})$/.exec(s.trim()), i=m?DAY_MONS.indexOf(m[1]):-1;
   return i<0?s:`${m[3]}-${String(i+1).padStart(2,'0')}-${m[2].padStart(2,'0')}`;
 }
-const APP_VERSION='1.73';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.74';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
 const DB_VERSION=37;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)

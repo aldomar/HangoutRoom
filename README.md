@@ -267,6 +267,19 @@ A behind-the-scenes tidy-up. Nothing looks different.
 - Days saved by older versions are converted on the update, so nothing is paid twice that day.
 - No new save data. Older backups still restore.
 
+## ⏸️ Oops-proof (version 1.74)
+- **A song waits for you.** If the app is left in the middle of a Stage song (a phone call, the Home button), the song pauses.
+  Coming back shows **⏸️ Paused** with a big **▶ Keep going** button, then 3-2-1, and the song carries on where it stopped.
+  ⬅ Songs still leaves. (A 🎸 Jam still just ends, keeping its coins.)
+- **↩ Undo for 10 seconds.** After buying anything (clothes, decorations, walls, fidget designs, pet things, seeds, backdrops,
+  a treat) or giving a gift, a big **↩ Undo** button shows with a shrinking bar.
+  - Tapping it puts the room back exactly as it was just before: the coins come back, and the thing is gone again
+    (taken off, or out of the room).
+  - It goes away after 10 seconds, or as soon as she goes to another screen, so nothing done after that can be lost.
+  - A gift can only be taken back while it's still unopened.
+  - It shows in every room, Easy and 🧸 Little ones too.
+- No new save data.
+
 ## Spoken instructions (since version 1.70)
 The app can now **say what to do** on every screen, so the children who can't read yet can play everything:
 - **Each screen, tab and game has one short spoken line**, for example "Pop them all to flip it over!" on the pop-it. In the Brain Games it's

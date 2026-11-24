@@ -52,8 +52,8 @@ window.androidBack=function(){
   return false;
 };
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden){save();saveDraft();if(AC)AC.suspend();if(cur==='stage'&&STG.state==='play')stgPickView();if(cur==='stage'&&STG.state==='jam'){jamEnd(true);jamPickView();}muStop();dnStop();} // a song stops (nothing lost)
-  else if(AC)AC.resume();
+  if(document.hidden){save();saveDraft();if(AC)AC.suspend();if(cur==='stage'&&STG.state==='play')stPause();if(cur==='stage'&&STG.state==='jam'){jamEnd(true);jamPickView();}muStop();dnStop();} // a song stops (nothing lost)
+  else if(AC&&!STG.paused)AC.resume(); // a ⏸️ paused song waits for ▶ and its 3-2-1 (section 14, v1.74)
 });
 
 buildDefs();

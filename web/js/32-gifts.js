@@ -38,11 +38,15 @@ function giveTo(g){
       [{text:'✖ No',cls:'ghost'},{text:'✔ Give it!',cls:'pink',on:()=>sendGift(p,q,g)}]);};
 }
 function sendGift(p,q,g){
-  if(g.kind==='coins'){if(p.coins<g.n){needMore(p,g.n);return;}p.coins-=g.n;}
+  if(g.kind==='coins'&&p.coins<g.n){needMore(p,g.n);return;}
+  const u=undoArm(); // ↩ Undo (section 68, v1.74)
+  if(g.kind==='coins') p.coins-=g.n;
   else {const it=allItems(p).find(i=>i.uid===g.uid&&giftable(i)); if(!it) return; rooms(p).forEach(r=>{r.items=r.items.filter(i=>i!==it);});}
-  q.gifts.push(g.kind==='coins'?{id:uid(),from:p.name,badge:p.badge||'🐰',kind:'coins',n:g.n,at:Date.now()}:{id:uid(),from:p.name,badge:p.badge||'🐰',kind:'decor',type:g.type,at:Date.now()});
-  p.stats.gifts++; save(); updateCoins(); SFX.buy(); toast(`🎁 Sent to ${q.name}! They'll find it in their room.`);
+  const gift=g.kind==='coins'?{id:uid(),from:p.name,badge:p.badge||'🐰',kind:'coins',n:g.n,at:Date.now()}:{id:uid(),from:p.name,badge:p.badge||'🐰',kind:'decor',type:g.type,at:Date.now()};
+  q.gifts.push(gift); p.stats.gifts++; save(); updateCoins(); SFX.buy(); toast(`🎁 Sent to ${q.name}! They'll find it in their room.`);
   if(cur==='room'){renderRoom();if(decorating)renderDecoGrid();} checkStickers();
+  undoShow(u,()=>{const r=DB.profiles.find(x=>x.id===q.id), i=r?r.gifts.findIndex(x=>x.id===gift.id):-1; // only while still unopened
+    if(i<0) return false; r.gifts.splice(i,1); return true;});
 }
 
 /* ---------- getting ---------- */

@@ -18,13 +18,14 @@ function tryBuy(key,price,name,done){
   const p=P();
   if(!price||p.owned.includes(key)){done();return;}
   if(p.coins<price){needMore(p,price);return;}
-  buyAsk(p,'Get',name,price,()=>{p.coins-=price;p.owned.push(key);save();updateCoins();SFX.buy();toast(`Yay! You got ${name}! ✨`);done();});
+  // ↩ Undo (section 68, v1.74): a copy of the room just before, and the button just after
+  buyAsk(p,'Get',name,price,()=>{const u=undoArm();p.coins-=price;p.owned.push(key);save();updateCoins();SFX.buy();toast(`Yay! You got ${name}! ✨`);done();undoShow(u);});
 }
 function buyConsumable(price,name,done){
   const p=P();
   if(!price){SFX.buy();done();return;} // free things (the Built-in Shelf, v1.40) need no question
   if(p.coins<price){needMore(p,price);return;}
-  buyAsk(p,'Buy',name,price,()=>{p.coins-=price;save();updateCoins();SFX.buy();done();});
+  buyAsk(p,'Buy',name,price,()=>{const u=undoArm();p.coins-=price;save();updateCoins();SFX.buy();done();undoShow(u);});
 }
 function needMore(p,price){SFX.locked();toast(p.easy?`🔒 Need ${price-p.coins} more 🪙`:`You need ${price-p.coins} more 🪙. Try ${payTips(p).words}!`);}
 // Daily coin allowances (v1.67): the games that pay for every goal, save, hit, catch, star or maze replay each have their own,

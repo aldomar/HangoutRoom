@@ -5518,7 +5518,62 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`fidEarn(3)`);
     check('…and full fidget coins stay full', await ev(`P().coins===window._shC&&P().fidPay.n===30`));
     await ev(`{const o=JSON.parse(window._shSaved),p=P();p.lastDaily=o.daily;p.fidPay=o.fid;p.coins=o.coins;}save();show('room')`);
-    check('v1.73 is in the Gift Story and the app says 1.73', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.73')&&APP_VERSION==='1.73'`));
+    check('v1.73 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.73')`));
+  }
+
+  console.log('Stage pause + Undo (v1.74)');
+  {
+    const vis=sel=>ev(`(e=>!!e&&e.offsetParent!==null&&getComputedStyle(e).display!=='none')(document.querySelector(${JSON.stringify(sel)}))`);
+    const hide=h=>ev(`Object.defineProperty(document,'hidden',{value:${h},configurable:true});document.dispatchEvent(new Event('visibilitychange'))`);
+    const yes=`[...document.querySelectorAll('#modalBtns button')].pop().click()`;
+    await ev(`closeModal();stkPaused=true;window._v74=JSON.stringify(P());P().stage.level='easy';show('stage');stgPickView();stStart('starlight')`); await sleep(2500);
+    // ⏸️ Stage pause
+    await hide(true); await sleep(100);
+    check('leaving the app mid-song pauses it (it does not end)', await ev(`STG.state==='play'&&STG.paused==='wait'&&STG.pT>0`));
+    const pT=await ev('STG.pT');
+    await sleep(1500); await hide(false); await sleep(300);
+    check('coming back: ⏸️ Paused with ▶ Keep going, and the song is still frozen', await vis('#stgPause')&&await vis('#stgGo')&&await ev(`STG.paused==='wait'&&STG.pT===${pT}`));
+    check('…a tap on the notes does nothing while paused', await ev(`stTap(0,STG.pT)===-1`));
+    check('…the 🔊 line says it is paused', await ev(`speakLine().k==='stage:paused'&&speakLine().t.length>0`));
+    await shot('UN1-stage-paused');
+    await ev(`document.querySelector('#stgGo').click()`); await sleep(1200);
+    check('▶ counts 3-2-1 (still frozen while it counts)', await ev(`STG.paused==='count'&&!document.querySelector('#stgPause').offsetParent`));
+    await shot('UN2-stage-count');
+    await sleep(2300);
+    check('…then the song carries on from where it stopped', await ev(`STG.state==='play'&&STG.paused===''`)&&Math.abs(await ev('stSongT()')-pT)<1.2, [pT, await ev('stSongT()')]);
+    await hide(true); await sleep(100); await hide(false); await sleep(100);
+    await ev(`document.querySelector('#stgBack').click()`); await sleep(150);
+    check('⬅ Songs while paused goes back to the song list and lets the sound go again', await ev(`STG.state==='pick'&&!STG.paused`)&&!(await vis('#stgPause')));
+    await ev(`delete document.hidden`);
+    // ↩ Undo after buying
+    await ev(`(()=>{const p=P();p.coins=200;const it=CLOSET.top.items.find(i=>i.price>0&&!p.owned.includes('top:'+i.id));window._uk=it.id;window._wasTop=p.look.top;
+      show('closet');tryBuy('top:'+it.id,it.price,it.name,()=>{p.look.top=it.id;save();renderCloset();});})()`); await sleep(100);
+    await ev(yes); await sleep(150);
+    check('after buying: the ↩ Undo button shows', await ev(`P().owned.includes('top:'+_uk)&&P().look.top===_uk&&P().coins<200`)&&await vis('#undoBtn')&&await ev(`document.querySelector('#undoBar').classList.contains('on')`));
+    await shot('UN3-undo');
+    await ev(`document.querySelector('#undoBtn').click()`); await sleep(150);
+    check('↩ Undo: the coins are back, it is not owned, and the old top is back on', await ev(`P().coins===200&&!P().owned.includes('top:'+_uk)&&P().look.top===_wasTop&&!document.querySelector('#undoBar').classList.contains('on')`));
+    await ev(`(()=>{const p=P(),it=CLOSET.top.items.find(i=>i.id===_uk);tryBuy('top:'+it.id,it.price,it.name,()=>{p.look.top=it.id;save();});})()`); await sleep(100);
+    await ev(yes); await sleep(100); await ev(`show('fidget')`); await sleep(100);
+    check('going to another screen ends it, and the purchase stays', await ev(`!document.querySelector('#undoBar').classList.contains('on')&&P().owned.includes('top:'+_uk)`));
+    await ev(`show('room');P().coins=200;window._n=curRoom(P()).items.length;buyConsumable(DECOR.plant.price||5,'Plant',()=>{curRoom(P()).items.push(Object.assign({uid:uid(),type:'plant',placed:true},spot('plant')));save();renderRoom();})`); await sleep(100);
+    await ev(yes); await sleep(150);
+    check('a decoration bought in the room…', await ev(`curRoom(P()).items.length===_n+1&&P().coins<200`));
+    await ev(`document.querySelector('#undoBtn').click()`); await sleep(150);
+    check('…is taken away again by ↩ Undo, coins back', await ev(`curRoom(P()).items.length===_n&&P().coins===200`));
+    await ev(`P().coins=200;buyConsumable(5,'Plant',()=>{})`); await sleep(100); await ev(yes); await sleep(10600);
+    check('after 10 seconds the button goes away by itself', await ev(`!document.querySelector('#undoBar').classList.contains('on')&&P().coins===195`));
+    // ↩ Undo after giving
+    await ev(`if(DB.profiles.length<2){const q=newProfile('Pal');normalize(q);DB.profiles.push(q);}window._q=DB.profiles.find(x=>x.id!==P().id);window._qg=_q.gifts.length;P().coins=50;
+      sendGift(P(),_q,{kind:'coins',n:5})`); await sleep(100);
+    check('giving 5 coins: the gift waits in the other room, with ↩ Undo', await ev(`P().coins===45&&_q.gifts.length===_qg+1`)&&await vis('#undoBtn'));
+    await ev(`document.querySelector('#undoBtn').click()`); await sleep(100);
+    check('↩ Undo takes the unopened gift back', await ev(`P().coins===50&&_q.gifts.length===_qg`));
+    await ev(`sendGift(P(),_q,{kind:'coins',n:5});_q.gifts.pop()`); await sleep(100);
+    await ev(`document.querySelector('#undoBtn').click()`); await sleep(100);
+    check('…but not once it has been opened', await ev(`P().coins===45`));
+    await ev(`(()=>{const q=JSON.parse(window._v74),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();undoOff();save();show('room')`);
+    check('v1.74 is in the Gift Story and the app says 1.74', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.74')&&APP_VERSION==='1.74'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);
