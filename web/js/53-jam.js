@@ -22,7 +22,6 @@ const JAM_WORDS=['Wow! ✨','On fire! 🔥','Encore! 🎉','So cool! 🌟','Rock
 const JAM={from:'stage',pick:false,on:false,loop:null,clock:'perf',t0:0,step:0,nextT:0,q:[],notes:0,cheers:0,
   press:[0,0,0,0,0],fx:[],spot:null,spotT:0,ptr:{},g:null};
 const jamSound=p=>JAM_SOUNDS[p.jam.sound]?p.jam.sound:'sparkle';
-const jamToday=()=>fpDay();
 
 /* ---------- the loops she can jam over ---------- */
 function jamLoops(p){
@@ -151,8 +150,7 @@ function jamEnd(quiet){
   const n=JAM.notes, done=n>=JAM_MIN; let line='';
   if(done){
     p.stats.jams++; if(JAM.loop.own) p.stats.jamOwn++;
-    if(p.jam.pay.day!==jamToday()) p.jam.pay={day:jamToday(),n:0};
-    if(p.jam.pay.n<JAM_DAILY){p.jam.pay.n++;earn(JAM_COINS,'Jam!');line=`+${JAM_COINS} 🪙`;}
+    if(dailyPay(p.jam.pay,JAM_DAILY,1)){earn(JAM_COINS,'Jam!');line=`+${JAM_COINS} 🪙`;}
     else {save();line='Jam coins are full for today. Keep jamming for fun ✨';}
   } else line=n?`Play ${JAM_MIN} notes or more for 🪙`:'Tap the circles to play along! 🎵';
   if(quiet){checkStickers();return;}

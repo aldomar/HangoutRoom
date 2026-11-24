@@ -191,8 +191,7 @@ function cbHang(){
         ART_THUMBS[rec.id]=rec.thumb; p.little.hung[z.id]={art:rec.id,sig}; SFX.buy();
         if(!isNew){save();toast('Updated in your Gallery! 🖼️');checkStickers();return true;}
         p.stats.drawings++;
-        if(p.artPay.day!==ltToday()) p.artPay={day:ltToday(),n:0};
-        if(p.artPay.n<ART_DAILY){p.artPay.n++;earn(ART_COINS,'Art!');toast('In your Gallery! 🖼️ Hang it on the wall from the Art Desk.');}
+        if(dailyPay(p.artPay,ART_DAILY,1)){earn(ART_COINS,'Art!');toast('In your Gallery! 🖼️ Hang it on the wall from the Art Desk.');}
         else{save();toast('In your Gallery! 🖼️ Art coins are done for today.');}
         checkStickers(); return true;
       });

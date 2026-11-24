@@ -58,7 +58,6 @@ const hrFy=l=>0.92-l*0.7; // the other way round, for the 💡 hint
 const hrIdx=p=>Math.max(0,DERBY.findIndex(c=>c.id===p.ball.derby.cur));
 const hrCur=()=>DERBY[hrIdx(P())];
 const hrDoneN=p=>DERBY.filter(c=>p.ball.derby.done.includes(c.id)).length;
-const hrToday=()=>fpDay();
 function hrStop(){HR.state='off';HR.fly=null;$('#bfStage').classList.remove('derby');}
 function hrRender(){hrBar();hrReset();}
 function hrBar(){
@@ -102,8 +101,7 @@ function hrResult(){
   if(all){
     const first=!p.ball.derby.done.includes(ch.id); p.stats.derbies++; HR.cheer=BF.time; SFX.cheer();
     if(first){p.ball.derby.done.push(ch.id);earn(HR_COINS,'Derby!');}
-    else {if(p.ball.derby.pay.day!==hrToday())p.ball.derby.pay={day:hrToday(),n:0};
-      if(p.ball.derby.pay.n<HR_DAILY){p.ball.derby.pay.n++;earn(HR_REPLAY,'Derby!');} else save();}
+    else {if(dailyPay(p.ball.derby.pay,HR_DAILY,1)){earn(HR_REPLAY,'Derby!');} else save();}
     bfSay(first?'You did it! 🎯':'Again! 🎯');
     if(first) hrWin();
   } else {

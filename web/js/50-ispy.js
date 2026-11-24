@@ -22,7 +22,6 @@ const SPY_THEME_WORDS={emo:'spooky',cute:'cute',sport:'sporty',stage:'for the st
   hero:'for a hero',cozy:'cozy',cafe:'yummy',ocean:'from the ocean',farm:'from the farm',yard:'for outside'};
 const SPY={on:false,clue:null,found:0,need:SPY_ROUND,used:[],lastTheme:'',done:false,light:{x:500,y:420}};
 
-const spyToday=()=>fpDay();
 const spyLvl=p=>p.easy?1:(SPY_LVLS[p.spy.lvl]?p.spy.lvl:1);
 const spyPick=a=>a[Math.floor(Math.random()*a.length)];
 
@@ -144,9 +143,8 @@ function spyHint(){
 function spyRoundDone(){
   const p=P(); if(!p) return;
   SPY.done=true; p.stats.spyRounds++; if(!p.spy.rooms.includes(roomNo)) p.spy.rooms.push(roomNo);
-  if(p.spy.pay.day!==spyToday()) p.spy.pay={day:spyToday(),n:0};
-  let line;
-  if(p.spy.pay.n+SPY_COINS<=SPY_DAILY){p.spy.pay.n+=SPY_COINS;earn(SPY_COINS,'I Spy');line=`+${SPY_COINS} 🪙`;}
+  let line; const c=dailyPay(p.spy.pay,SPY_DAILY,SPY_COINS);
+  if(c){earn(c,'I Spy');line=`+${c} 🪙`;}
   else {save();line='I Spy coins are full for today. Keep playing for fun ✨';}
   SFX.cheer();
   modal('🔍 Super spy!',`<div class="spy-done"><div class="spy-big">🎉</div>You found ${SPY.need} things!<br><b>${line}</b></div>`,

@@ -8,7 +8,19 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.72';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+// Today as 2026-11-24 (the device's own date): the one "today" for every daily thing (v1.73; it was in section 44 since v1.43).
+// The smoke test can set window.FP_TEST_DAY.
+function fpDay(){
+  if(window.FP_TEST_DAY) return window.FP_TEST_DAY;
+  const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+// Before v1.73 some days were saved as "Tue Nov 24 2026" (toDateString). normalize() turns them into 2026-11-24, so nothing pays twice.
+const DAY_MONS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function dayIso(s){
+  const m=typeof s==='string'&&/^[A-Za-z]{3} ([A-Za-z]{3}) (\d{1,2}) (\d{4})$/.exec(s.trim()), i=m?DAY_MONS.indexOf(m[1]):-1;
+  return i<0?s:`${m[3]}-${String(i+1).padStart(2,'0')}-${m[2].padStart(2,'0')}`;
+}
+const APP_VERSION='1.73';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
 const DB_VERSION=37;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)

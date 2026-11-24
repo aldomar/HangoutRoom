@@ -131,14 +131,14 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 
 ## Layout
 - `index.html` (markup) + `web/app.css` + `web/js/`, one file per section, in order:
-  1. `01-save.js` Helpers + save data (`DB`, `save`, `saveSoon`, `P()`)
+  1. `01-save.js` Helpers + save data (`DB`, `save`, `saveSoon`, `P()`; since v1.73 `fpDay()`, the one "today", and `dayIso`)
   2. `02-art-helpers.js` Art helpers (`st`, `starPath`, `heartPath`, `buildDefs` shared patterns and `#fuzz`/`#glow` filters)
   3. `03-mascot.js` Mascot + closet items (`FUR`, `CLOSET` by category, `mascotSVG`; mascot box is 200×270)
   4. `04-room.js` Room (`WALLS`, `FLOORS`, `DECOR` drawn bottom-centre at 0,0; `furniture()` hotspots; room box is 1000×700)
   5. `05-fidget-data.js` Fidget data (`POP_THEMES`, `SQUISHIES`, `SPINS`)
   6. `06-profiles.js` Profiles (`newProfile`, `normalize`)
   7. `07-sound.js` Sound (`SFX`, generated music, spinner hum)
-  8. `08-ui.js` UI basics (`toast`, `modal`, `earn`, `tryBuy`, `buyConsumable`; since v1.67 the daily allowances `GAME_PAY`, `dayLeft`, `gameTake`, `gameEarn`, `payTips`)
+  8. `08-ui.js` UI basics (`toast`, `modal`, `earn`, `tryBuy`, `buyConsumable`; since v1.67 the daily allowances `GAME_PAY`, `dayLeft`, `gameTake`, `gameEarn`, `payTips`; since v1.73 `dailyPay`)
   9. `09-screens.js` Screens (profiles, room + decorate, settings/backup, closet)
   10. `10-fidget-shelf.js` Fidget shelf (pop-it, squishy physics, spinner physics)
   11. `11-art-desk.js` Art Desk (drawing pad, stamps, gallery, posters)
@@ -494,6 +494,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 - `PLAN.md`: roadmap. `docs/STATUS.md`: handover / current state.
 
 ## Conventions
+- **Days and daily allowances (since v1.73):** "today" is always `fpDay()` (section 1, `2026-11-24`; the smoke test sets `FP_TEST_DAY`),
+  never `new Date().toDateString()` or a file's own helper. Every saved `{day, n}` allowance is paid through `dailyPay(o, cap, n)` (section 8),
+  which starts a new day at 0, pays up to the cap and counts it; never copy the reset. The smoke test checks both.
 - **Fidget allowance (since v1.36):** pop-it, squishy, spinner, slime and clicker coins go through `fidEarn()` (section 10) and
   share `FID_DAILY` = 30 coins a day (`p.fidPay`, like the Art Desk's `artPay`). After that the fidgets still work and count
   for stickers, with one gentle note, and it refills quietly the next day. A new fidget must pay through `fidEarn()`, not `earn()`.

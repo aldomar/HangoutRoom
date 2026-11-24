@@ -192,8 +192,7 @@ function dnSaveSlot(i){
   const p=P(), g=p.dance.cur;
   if(dnCount(g)<DN_MIN_MOVES){toast('Add a few more moves first! 💃');return;}
   const fresh=p.dance.slots[i]!==g; p.dance.slots[i]=g;
-  const today=new Date().toDateString(); if(p.dance.pay.day!==today) p.dance.pay={day:today,n:0};
-  if(fresh&&p.dance.pay.n<DN_DAILY){p.dance.pay.n++;earn(DN_COINS,'Dance!');toast(`Saved in 💾 ${i+1}! 💃`);}
+  if(fresh&&dailyPay(p.dance.pay,DN_DAILY,1)){earn(DN_COINS,'Dance!');toast(`Saved in 💾 ${i+1}! 💃`);}
   else{save();toast(fresh?`Saved in 💾 ${i+1}! 💃 Dance coins are done for today. Keep dancing for fun!`:`Saved in 💾 ${i+1}! 💃`);}
   SFX.happy(); dnCtl();
 }
