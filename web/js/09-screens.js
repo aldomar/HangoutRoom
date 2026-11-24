@@ -7,6 +7,7 @@ function show(n){
   n=lockGuard(n); // 🧸 Little mode keeps her in the safe screens (section 66)
   undoLeave(n); // ↩ Undo lasts only on its own screen (section 68)
   petNotice(cur,n); // 🐾 back in the room, the pet says what she just did (section 70)
+  if(n==='room'||n==='code'||n==='brain'||n==='music') setTimeout(crCheck,400); // 🎉 Code Lab robots, Brain Shelf, Boombox (section 71)
   if(n!=='room'&&decorating) exitDecorate(true);
   if(n!=='room'&&SPY.on) spyEnd(true); // 🔍 (section 50)
   if(n!=='room'&&PP.on) ppEnd(true); // 🙈🎾 pet play (section 55)
@@ -189,6 +190,7 @@ roomSvg.addEventListener('click',e=>{
   if(decorating) return;
   if(SPY.on){spyTap(e);return;} // 🔍 I Spy: taps look for the clue, nothing opens (section 50, v1.49)
   if(PP.on){ppTap(e);return;} // 🙈🎾 pet play: nothing opens while it is on (section 55, v1.54)
+  if(crRoomTap(e)) return; // 📻 a tapped Boombox plays her music (section 71)
   const hot=e.target.closest('[data-hot]'); if(hot){handleHot(hot.dataset.hot);return;}
   if(e.target.closest('#mascotG')) mascotTap();
 });

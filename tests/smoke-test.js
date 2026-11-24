@@ -800,7 +800,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await shot('A25-code-hard-solved'); await ev(`closeModal()`);
   await ev(`CODE_STEP=400;clSolve('hard',5)`); await sleep(200); await ev(`show('room')`); await sleep(900);
   check('leaving during a run stops it (nothing paid)', await ev(`CL.state!=='run'&&!P().code.solved.includes('h6')`));
-  await ev(`CODE_STEP=40;show('code');clOpen('hard',0)`); await sleep(100);
+  await ev(`CODE_STEP=40;show('code')`); await sleep(600); await ev(`closeModal()`); // a 🤖 prize box (v1.77) may pop up first
+  await ev(`clOpen('hard',0)`); await sleep(100);
   check('Back from a puzzle goes to the list, then the Loft', await ev(`window.androidBack()&&cur==='code'&&CL.view==='pick'&&window.androidBack()&&cur==='room'&&roomNo===2`));
   await ev(`P().easy=true;P().code.level='hard';show('code')`); await sleep(200);
   check('Easy mode opens the Code Lab on Easy', await ev(`P().code.level==='easy'&&document.querySelector('#clTabs .tab.on').dataset.lvl==='easy'`));
@@ -5696,7 +5697,57 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('every line is short, cheerful and has no coin talk', await ev(`NT_LINES.every(([f,m,l])=>[1,2,5,12].every(n=>l(n).every(t=>t.length<=40&&!/coin|🪙|sad|lost|miss/i.test(t))))`));
     check('saved: older rooms get pet.day = ""', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));delete q.pet.day;normalize(q);return q.pet.day==='';})()`));
     await ev(`(()=>{const q=JSON.parse(window._v76),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();save();show('room')`);
-    check('v1.76 is in the Gift Story and the app says 1.76', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.76')&&APP_VERSION==='1.76'`));
+    check('v1.76 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.76')`));
+  }
+
+  console.log('Creations in the room (v1.77)');
+  {
+    const title=()=>ev(`document.querySelector('#modal').classList.contains('hidden')?'':document.querySelector('#modalTitle').textContent`);
+    await ev(`closeModal();stkPaused=true;window._v77=JSON.stringify(P());{const p=P();p.code.solved=[];p.code.prizes=[];p.brain.solved=[];p.brain.shelf=false;
+      p.music.slots=[null,null,null];p.music.box=false;rooms(p).forEach(r=>{r.items=r.items.filter(i=>!/^codeBot|^brainShelf$|^boombox$/.test(i.type));});}show('room');goRoom(1)`); await sleep(200);
+    check('the 8 new prizes: never in the Shop, never given away, each with a theme chip', await ev(`CR_BOTS.concat('brainShelf','boombox').every(k=>DECOR[k]&&DECOR[k].award&&!giftable({type:k,placed:false})&&themesOf('decor:'+k,DECOR[k]).length>0&&!gcSendable(k))`));
+    check('their drawings are strict XML', await ev(`CR_BOTS.concat('brainShelf','boombox').every(k=>!new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg">'+DECOR[k].d({})+'</svg>','image/svg+xml').querySelector('parsererror'))`));
+    check('nothing is given before anything is done', await ev(`crCheck().length===0`));
+    // 🤖 Code Lab robots
+    await ev(`P().code.solved=CODE_PUZZLES.easy.map(q=>q.id);show('code')`); await sleep(700);
+    check('every Easy Code Lab puzzle solved: Beep the Robot, in the Loft by the computer, with a box', await ev(`P().code.prizes.join()==='easy'&&P().room2.items.some(i=>i.type==='codeBotEasy'&&i.placed&&i.x>=700)`)&&/prize/i.test(await title()));
+    await shot('CR1-robot');
+    await ev(`closeModal();show('room');show('code')`); await sleep(700);
+    check('…only once', await ev(`allItems(P()).filter(i=>i.type==='codeBotEasy').length===1&&document.querySelector('#modal').classList.contains('hidden')`));
+    await ev(`P().code.solved=Object.values(CODE_PUZZLES).flat().map(q=>q.id);show('room')`); await sleep(700);
+    if(/bonus/i.test(await title())){await ev(`closeModal()`); await sleep(800);} // the prize box waits behind a bonus card
+    check('all 6 levels: all 6 robots (one box for the 5 new ones, after any bonus card)', await ev(`CR_BOTS.every(k=>P().room2.items.filter(i=>i.type===k).length===1)&&P().code.prizes.length===6`)&&/prizes/i.test(await title()));
+    await ev(`closeModal();goRoom(2)`); await sleep(200); await shot('CR2-robots-loft');
+    // 📚 Brain Shelf
+    await ev(`goRoom(1);P().brain.solved=BRAIN_GAMES.snack.puzzles.easy.map((z,i)=>brId('snack','easy',i));show('brain')`); await sleep(700);
+    check('a Brain Games level finished: the Brain Shelf, in the Backyard', await ev(`P().brain.shelf===true&&P().room3.items.filter(i=>i.type==='brainShelf'&&i.placed).length===1`)&&/prize/i.test(await title()));
+    const ribbons=()=>ev(`(()=>{const d=document.createElement('div');d.innerHTML='<svg>'+DECOR.brainShelf.d({})+'</svg>';return [...d.querySelectorAll('path[opacity="1"]')].length;})()`);
+    check('…its spots fill in as levels are finished (1 now)', await ribbons()===1);
+    await ev(`closeModal();P().brain.solved=P().brain.solved.concat(BRAIN_GAMES.snack.puzzles.medium.map((z,i)=>brId('snack','medium',i)),BRAIN_GAMES.pop.puzzles.easy.map((z,i)=>brId('pop','easy',i)))`);
+    check('…3 after two more levels, and still just one shelf', await ribbons()===3&&await ev(`(crCheck(),allItems(P()).filter(i=>i.type==='brainShelf').length===1)`));
+    await ev(`closeModal();show('room');goRoom(3)`); await sleep(300); await shot('CR3-brain-shelf');
+    // 📻 Boombox
+    await ev(`goRoom(1);show('music');MU.g.forEach((r,i)=>r.fill(0));MU.g[0][0]=MU.g[1][2]=MU.g[2][4]=MU.g[3][6]=1;muSaveSlot(0)`); await sleep(300);
+    check('the first saved loop: a Boombox in My Stuff', await ev(`P().music.box===true&&allItems(P()).filter(i=>i.type==='boombox'&&!i.placed).length===1`)&&/prize/i.test(await title()));
+    await ev(`closeModal();muSaveSlot(1)`); await sleep(200);
+    check('…only once', await ev(`allItems(P()).filter(i=>i.type==='boombox').length===1`));
+    await ev(`closeModal();show('room');{const it=allItems(P()).find(i=>i.type==='boombox');rooms(P()).forEach(r=>{r.items=r.items.filter(i=>i!==it);});it.placed=true;it.x=300;it.y=650;curRoom(P()).items.push(it);}
+      DB.settings.sound=true;CR.until=0;CR.boom=0;renderRoom()`); await sleep(200);
+    await ev(`document.querySelector('#roomSvg .deco[data-uid="'+allItems(P()).find(i=>i.type==='boombox').uid+'"]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(150);
+    check('tapping it plays her loop twice through (nothing else opens)', await ev(`CR.notes===8&&CR.boom===1&&cur==='room'&&document.querySelector('#modal').classList.contains('hidden')&&!!document.querySelector('#roomSvg .boom-play')`), await ev('CR.notes'));
+    await shot('CR4-boombox');
+    await ev(`CR.until=0;crBoomTap(document.querySelector('#roomSvg .boom-play')||document.createElementNS('http://www.w3.org/2000/svg','g'))`);
+    check('the next tap plays her next saved loop', await ev(`CR.boom===2&&/💾 2/.test(document.querySelector('#toast').textContent)`));
+    await ev(`P().music.slots=[null,null,null];CR.until=0;crBoomTap(document.createElementNS('http://www.w3.org/2000/svg','g'))`);
+    check('with no saved loops it plays a little tune', await ev(`CR.notes>0&&/little tune/.test(document.querySelector('#toast').textContent)`));
+    await ev(`decorating=true;CR.until=0;CR.boom=5`);
+    await ev(`document.querySelector('#roomSvg .deco[data-uid="'+allItems(P()).find(i=>i.type==='boombox').uid+'"]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`);
+    check('while decorating a tap does not play it', await ev(`CR.boom===5`));
+    await ev(`decorating=false`);
+    check('saved: older rooms get the new fields (code.prizes, brain.shelf, music.box)', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));delete q.code.prizes;delete q.brain.shelf;delete q.music.box;normalize(q);
+      return Array.isArray(q.code.prizes)&&q.code.prizes.length===0&&q.brain.shelf===false&&q.music.box===false;})()`));
+    await ev(`closeModal();(()=>{const q=JSON.parse(window._v77),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();save();show('room');goRoom(1)`);
+    check('v1.77 is in the Gift Story and the app says 1.77', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.77')&&APP_VERSION==='1.77'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

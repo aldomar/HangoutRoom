@@ -649,6 +649,11 @@ body.easy .lk-label span{display:none}
 .gv-coin b{font-size:20px;color:var(--gold)}
 .tile.gv.poor{opacity:.5}
 .gv-tile .tv{font-size:46px}
+/* 🎉 Creations in the room (v1.77) */
+.cr-got{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+.cr-got svg{height:110px;max-width:140px}
+#roomSvg .boom-play .bb{animation:boomB .4s steps(2) infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes boomB{0%{transform:scale(1)}100%{transform:scale(1.08,.94)}}
 /* 🎁 Gift codes (v1.75) */
 .gc-top{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
 .gc-top .btn{min-height:52px;font-size:17px}

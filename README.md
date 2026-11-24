@@ -297,6 +297,18 @@ like a phone number. **The app never sends anything over the internet**: there's
 - Where: ⚙️ Settings → 🎁 Give a gift, or the 🎁 tile at the start of 📦 My Stuff in Decorate. Not in 🧸 Little mode.
 - Save data: one new field per room, `giftCodes` (codes sent, codes opened, codes made today). Older backups still restore.
 
+## 📻 Made by you (version 1.77)
+What she makes and finishes now shows up in her rooms, as prizes that can't be bought or given away:
+- **🤖 A robot for every Code Lab level.** Solve every puzzle of a level and its robot joins the row in the Loft, in front of the
+  computer: Beep (Easy), Loop (Medium), Twinkle (Hard), Swish (My Move), Hmm (If) and Captain Byte (Challenge).
+- **📚 The Brain Shelf.** Finish any Brain Games level and a shelf appears by the Backyard chalkboard. Each game has a row, with a
+  🎀 for Easy, a 🏆 for Medium and a ⭐ for Hard that light up as those levels are finished.
+- **📻 A Boombox.** Save a loop in the Music Maker and a free boombox arrives in 📦 My Stuff. Place it in any room and tap it:
+  it plays her saved music (each tap the next loop). With no loop saved, it plays a little tune.
+- Rooms that already finished levels get their prizes the next time they open the Code Lab or Brain Games.
+- Prizes can be moved and stored like any decoration.
+- Save data: three new fields, `code.prizes`, `brain.shelf` and `music.box`. Older backups still restore.
+
 ## 🐾 Your pet notices (version 1.76)
 - **Come back to the room after playing, and the pet cheers for what you just did**, in the speech bubble:
   "🐾 Nibbles: You scored 3 goals! ⚽", "You solved 4 puzzles! 🧠", "Yum, fresh from the garden! 🌱", "Pop pop pop! 🫧"…
