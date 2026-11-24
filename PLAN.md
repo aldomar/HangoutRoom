@@ -925,7 +925,7 @@ team-kit bonus, prizes and stickers; **new original animal characters**. Four st
 - **Save version 37:** `ball{mode, bat{level, best, prizes}, catch{…}, derby{cur, done, pay}}`, `stats.hits/homers/catches/derbies`.
   All the later games' fields are added now, so v1.61–v1.64 need no new save version.
 
-### Phase 14: Before the hand-over (design review 2026-11-23)
+### ✅ Phase 14: Before the hand-over (design review 2026-11-23, done)
 A whole-app review before the children get the app; the findings, the owner's answers and the ranked ideas are in
 `docs/DESIGN-REVIEW.md`. Agreed order (2026-11-23): ✅ v1.67 daily caps (built) → ✅ v1.68 🧤 Catch on Hard (reading the ball: bat
 sound, grass stripes, a shadow trail, no memorizing) → ✅ v1.69 first-time setup + level bands (built) → ✅ v1.70 spoken instructions (built) →
@@ -1257,6 +1257,101 @@ The owner prefers a lock inside the app to iPad settings like Guided Access.
    Surprise me), plus a new theme dress-up: 🎨 Dress like…, in every room's Closet. The Garden shed opens too.
 3. On by default for Little rooms, with a switch in Settings for any room.
 4. It locks again when the app is reopened, and with 🔒 Lock.
+
+### Phase 15: Holidays + the rest of the design review (order agreed 2026-11-24)
+Phase 14 finished the review's first five ideas. This phase covers the rest of `docs/DESIGN-REVIEW.md` (ideas 7–14 and the risks
+still open), plus the owner's 🎉 holiday greeting. One PR for each version, in this order. Each still gets its own detailed plan,
+agreed before any code (only v1.72's is written so far).
+- ✅ **🎉 Holiday greetings (v1.72, built, PR open on `feature/holidays`):** the owner's idea (2026-11-24). On 12 US holidays the buddy says
+  "Happy Thanksgiving!" (and so on) when the room opens, with confetti. No coins, nothing for a limited time. Plan details below.
+- ⬜ **🧰 Shared helpers, part 1 (v1.73; review idea 10 + risk 6):** nothing the children can see changes.
+  - Everything uses `fpDay()` for "today". That removes `ltToday`, `rwToday`, `spyToday`, `jamToday`, `trToday`, `hrToday` and the
+    `toDateString()` calls in 08, 09, 10, 11, 40, 42, 43, 46, 48 and 52.
+  - One helper, `dailyPay(o, cap, n)`, built on `dayLeft` (08), replaces the 12 copied `pay{day,n}` resets.
+  - No new save fields. Old `day` values are in the other date format, so each counter starts fresh once on the update day
+    (one extra allowance, once).
+  - The rest of idea 10 (a screen list for `show()`/`androidBack`, one results box, one prize giver) waits. The exception is
+    when `09-screens.js` (at the ~40 KB limit) next has to grow.
+- ⬜ **⏸️ Small fixes (v1.74; risk 7 + idea 12):** no save changes.
+  - **Stage pause:** leaving the app mid-song pauses it instead of ending it. `AC.suspend()` already freezes the audio clock
+    the song runs on, so coming back shows "Ready? ▶" with a 3-2-1 and carries on.
+  - **↩ Undo for 10 seconds:** the message after a purchase or a gift gets an Undo button.
+    - A purchase is refunded, and the item is removed from `owned` or from the room.
+    - A gift can be taken back only while it is still unopened in the other room's `gifts[]`.
+- ⬜ **🎁 Gift codes between iPads (v1.75; idea 7):** as described in `docs/DESIGN-REVIEW.md`.
+  - The code: about 12 characters, a check letter, and a short hash of the `DECOR` key. The smoke test checks that no two keys
+    share a hash.
+  - Save data: `giftCodes{sent[], opened[]}`.
+  - No Copy or Share buttons. The smoke test checks that no code uses `fetch`, XHR or WebSocket.
+  - An older app copy that doesn't know a decoration says "Update first".
+  - Questions for the plan: the mailbox step (required, optional or left out), a limit on codes per day, and what can be sent.
+- ⬜ **🐾 The pet notices (v1.76; idea 8):**
+  - Back in the room after a game, the pet says one line about it in Fuzzy's bubble ("You scored 3 goals! ⚽"). The line is
+    spoken for the Little and Easy levels.
+  - The child's first activity of the day gives the pet +1 heart. Hearts only, never coins, never a sad line.
+  - Save data: `pet.day` only; what the child just did stays in memory.
+- ⬜ **📻 Creations in the room (v1.77; idea 9):**
+  - A boombox decoration plays a saved Music Maker loop once when tapped.
+  - New `award:1` prizes for finished Code Lab levels (in the Loft, by the desk) and Brain Games levels (in the Backyard, by the chalkboard).
+  - Questions for the plan: which levels give a prize, and is the boombox free?
+- ⬜ **🛠️ Code Lab level maker (v1.78; idea 11):**
+  - She paints a map and sets the block limit. To save the level she must solve it herself within that limit, checked by `codeSim()`,
+    so every saved level can be solved.
+  - 3 slots in `code.mine[]`.
+  - Chosen over a maze maker because a maze can only be proven by playing it (it uses physics).
+  - Best after seeing how the 11-year-old uses the Code Lab.
+- ⏸️ **Parked:**
+  - A picture lock for each room (idea 13): only if iPads get shared.
+  - A level for each player in duels (idea 14, risk 8): only for family visits.
+
+Why this order:
+- **Holidays first** so Thanksgiving (Thursday 2026-11-26) works. It has to be merged by Wednesday to reach the iPads in time.
+- **The shared helpers come early.** Ideas 8, 9 and 11 add new things that pay or count days, and they should use the shared
+  helpers rather than copy them again.
+- **The small fixes come before the hand-over** if possible. A song lost to a phone call, or coins spent by mistake, are
+  the first things a young child would notice.
+- **Gift codes come before the other new features.** With one child per iPad, they are the only way gifting can actually happen.
+- **The level maker comes last.** It's the largest step.
+
+#### v1.72 plan details: 🎉 Holiday greetings (agreed 2026-11-24)
+**Owner's answers (2026-11-24):**
+- The holidays: the 7 defaults below, plus Christmas Eve and Christmas Day 🎄, Easter 🐣, Mother's Day 💐 (the 2nd Sunday of May)
+  and Father's Day 👔 (the 3rd Sunday of June).
+- Not included: the federal days and other family celebrations.
+- Yes to confetti in the holiday's colors.
+
+**Why:** the owner asked for the buddy to say "Happy Thanksgiving!" (and so on) when the room opens on a big US holiday.
+
+**What it does** (new file `web/js/67-holidays.js`):
+- **`HOLIDAYS`:** a list of `{id, icon, words, date(year)}`. `date` returns `YYYY-MM-DD` and handles three kinds of holiday:
+  - fixed dates (July 4)
+  - "the Nth weekday of a month" (Thanksgiving = the 4th Thursday of November)
+  - Easter, if it's chosen (worked out from the year).
+- **The greeting:** `holidayToday()` compares `fpDay()` with the list. `enterRoom()` (09) then has the buddy hop and say the greeting
+  in its speech bubble, for example "Happy Thanksgiving, Mia! 🦃" (the name is the room's own).
+  - It's spoken by the automatic voice like other buddy lines (v1.70), so the 3- and 5-year-olds hear it.
+  - It comes every time the room opens from the rooms list or when the app starts, not when moving between rooms. Nothing is saved.
+  - On the very first visit the "Hi! Tap the shelf…" tip comes first, and the greeting follows a few seconds later.
+  - It also works in a 🧸 Little-mode room.
+- **A little extra (optional):** a short burst of confetti in the holiday's colors, using the gift confetti (`giftConfetti`, 32).
+- **No coins, no limited-time items.** Seasonal things stay on sale all year (the no-pressure rule), and a missed day loses nothing.
+- **Smoke test:**
+  - Each holiday's date is checked for 2026–2030 (for example Thanksgiving 2026-11-26 and 2027-11-25; Easter 2027-03-28).
+  - With `FP_TEST_DAY` set to a holiday, opening the room shows the greeting.
+  - On an ordinary day, no greeting.
+
+**Save:** none.
+
+**Proposed holidays (owner to confirm):**
+- In by default: New Year's Day (Jan 1) 🎆, Valentine's Day (Feb 14) 💝, St. Patrick's Day (Mar 17) 🍀, the Fourth of July 🎆,
+  Halloween (Oct 31) 🎃, Thanksgiving (4th Thursday of November) 🦃, New Year's Eve (Dec 31) 🥳.
+- To ask about:
+  - Christmas Eve and Christmas Day 🎄, and Easter 🐣: these are religious holidays, so they're the family's call.
+  - Other family celebrations, such as Hanukkah, Lunar New Year or Diwali. They need a date table for each year.
+  - Mother's Day and Father's Day: left out by default, because not every child's family fits.
+  - Quieter federal days (MLK Day, Presidents' Day, Memorial Day, Labor Day, Veterans Day): left out by default; they aren't party days.
+- Birthdays would be nice too, but a child's birthday is personal. It would go in `web/about-local.js` (never in git) or in
+  Settings → Level. That's a later question.
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.

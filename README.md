@@ -248,6 +248,18 @@ theme. It only uses clothes the room already owns, and keeps the buddy, fur and 
 
 Save data: one new field per room, `little.lock`. Older backups still restore.
 
+## 🎉 Holiday greetings (since version 1.72)
+**On a big holiday, the buddy says hello** when a room is opened from the rooms list: it hops, says (for example)
+"Happy Thanksgiving, Mia! 🦃" in its speech bubble, and a short burst of confetti falls in the holiday's colors.
+- **The 12 holidays:** 🎆 New Year's Day, 💝 Valentine's Day, 🍀 St. Patrick's Day, 🐣 Easter, 💐 Mother's Day (2nd Sunday of May),
+  👔 Father's Day (3rd Sunday of June), 🎆 the Fourth of July, 🎃 Halloween, 🦃 Thanksgiving (4th Thursday of November),
+  🎄 Christmas Eve, 🎄 Christmas Day and 🥳 New Year's Eve. Dates that move (Easter, Thanksgiving…) are worked out for every year.
+- It uses the device's own date. To try it, set the phone's date to a holiday and open a room.
+- The automatic voice says it too (when 🔊 Read to me is on), so the little ones hear it. It works in 🧸 Little mode.
+- On the very first visit, the "Hi! Tap the shelf…" tip comes first and the greeting follows.
+- Moving between rooms doesn't repeat it. No coins and nothing for a limited time: a missed day loses nothing.
+- No change to the save data.
+
 ## Spoken instructions (since version 1.70)
 The app can now **say what to do** on every screen, so the children who can't read yet can play everything:
 - **Each screen, tab and game has one short spoken line**, for example "Pop them all to flip it over!" on the pop-it. In the Brain Games it's

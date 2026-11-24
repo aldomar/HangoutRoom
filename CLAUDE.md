@@ -224,6 +224,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   66. `66-littlemode.js` 🧸 Little mode (v1.71): `LOCK_SCREENS`, `LOCK_ROOMS`, `LOCK_HOTS`, `lockOn`, `lockGuard` (called first by `show()`), `applyLock`
       (`body.locked`), `lockWiggle`, `lockLine`, the 🔒 `#lockBtn` hold (`LOCK_HOLD`, `lockUnlock`, `lockRelock`), `lockStart`, `lockRow` (Settings → Level);
       🎨 Dress like… (`dressThemes`, `dressLike`, `dressModal`, `#dressBtn`)
+  67. `67-holidays.js` 🎉 Holiday greetings (v1.72): `HOLIDAYS` (`{id, icon, words, cols, date(year)}`; `hdFixed`, `hdNth` for "the Nth weekday",
+      `hdEaster`), `holidayToday(day)` (by `fpDay()`), `holidayGreet(p, wait)` called by `enterRoom()` (09); confetti through `giftConfetti(cols)` (32).
+      Nothing saved, no coins. Holiday ids aren't saved, so they can change.
   99. `99-startup.js` (always last) Main loop + startup (`LOOP_SCREENS`, `wakeLoop` called by `show()`, `androidBack` hook)
 - Drawings live in IndexedDB (`hangoutRoomArt`, through `ArtStore` in section 1), with a localStorage fallback
   (`hangoutRoom.art`). A poster is a room item `{type:'poster', art:<drawing id>}`. Backups carry drawings in an `artwork` list.

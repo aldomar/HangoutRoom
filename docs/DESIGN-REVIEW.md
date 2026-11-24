@@ -1,6 +1,7 @@
 # Design review (2026-11-23)
 
-A whole-app review done before the children get the app. Nothing here is built yet: each item still needs its own
+A whole-app review done before the children get the app. Ideas 1–6 are built (v1.67–v1.71); the rest are planned in
+`PLAN.md`, "Phase 15" (order agreed 2026-11-24, see "Next step" below). Each item still needs its own
 plan, agreed with the owner, before any code is written (see `CLAUDE.md`, "Plan first").
 **Start here if you are picking this up in a new chat**, then read "Agreed so far" and "Next step".
 
@@ -120,12 +121,12 @@ The owner's list was right. These were missing from it or needed a correction:
 | 4 | Read every instruction aloud: a 🔊 button on prompts, spoken by itself for the Little and Easy bands | 3–6 | M | High | ✅ built in v1.70 |
 | 5 | 🧸 Little mode: keeps a toddler in Little Ones' Corner and Easy games until a grown-up presses and holds | 3 (maybe 5) | M | High | ✅ built in v1.71 |
 | 6 | Grown-up backup reminder on the rooms screen after about 30 days | All | S | High | ✅ built in v1.69 |
-| 7 | Gifts between iPads with a gift code (details below) | 5–11 | M | Med | later; owner agrees in principle |
-| 8 | The pet reacts to what the child did (a greeting after a game, a heart for the first activity of the day) | All | M | Med | later |
-| 9 | Creations in the room: a boombox for saved loops and dances, prizes for finishing Code Lab and Brain levels | 6–11 | M | Med | later |
-| 10 | Shared game helpers: one daily-allowance helper, one "today", one results box, one prize giver, a screen list | Dev | M–L | Med | later (the allowance helper can start in v1.67) |
-| 11 | Something to make for the oldest: a Code Lab or maze level editor | 9–11 | L | Med | later |
-| 12 | Undo the last purchase or gift for about 10 seconds | 3–5 | S | Low now | later |
+| 7 | Gifts between iPads with a gift code (details below) | 5–11 | M | Med | planned: v1.75 |
+| 8 | The pet reacts to what the child did (a greeting after a game, a heart for the first activity of the day) | All | M | Med | planned: v1.76 |
+| 9 | Creations in the room: a boombox for saved loops and dances, prizes for finishing Code Lab and Brain levels | 6–11 | M | Med | planned: v1.77 |
+| 10 | Shared game helpers: one daily-allowance helper, one "today", one results box, one prize giver, a screen list | Dev | M–L | Med | part 1 planned: v1.73 (one "today", one allowance helper; the allowance helper started in v1.67) |
+| 11 | Something to make for the oldest: a Code Lab or maze level editor | 9–11 | L | Med | planned: v1.78 (a Code Lab level maker) |
+| 12 | Undo the last purchase or gift for about 10 seconds | 3–5 | S | Low now | planned: v1.74 (with the Stage pause, risk 7) |
 | 13 | A picture lock for each room | 5–11 | M | Low now | only if iPads are shared |
 | 14 | A level for each player in duels | mixed pairs | M | Low now | only for family visits |
 
@@ -182,6 +183,14 @@ numbers (for example `K7P2-9QXM-4T`), using no easily confused characters (no 0/
 - Does each iPad have an English voice on the device? The voice test in the setup will show it.
 
 ## Next step
+**Phase 15 (order agreed 2026-11-24, details in `PLAN.md`, "Phase 15"):** v1.72 🎉 holiday greetings (the owner's new idea:
+the buddy says "Happy Thanksgiving!" and so on when the room opens on a big US holiday) → v1.73 shared helpers part 1 (idea 10, risk 6)
+→ v1.74 Stage pause + ↩ Undo (risk 7, idea 12) → v1.75 gift codes (idea 7) → v1.76 the pet notices (idea 8) → v1.77 creations in
+the room (idea 9) → v1.78 Code Lab level maker (idea 11). Ideas 13 and 14 (and risk 8) are parked unless iPads get shared
+or there are family visits. Already handled since the review: risk 3 (v1.67), risk 4 partly (the 🔊/🔇 button, v1.67), risks
+1, 2 and 5 partly (the setup's PIN and backup line, v1.69; Little mode, v1.71).
+
+**Before that:**
 **v1.67 (daily caps) is built** on branch `feature/caps` (`PLAN.md`, "v1.67 plan details"). **v1.68 (Catch on Hard) is built** on branch `feature/catchhard` (`PLAN.md`, "v1.68 plan details"). **v1.69 (first-time setup + level bands) is built** on branch `feature/setup` (`PLAN.md`, "v1.69 plan details"). **v1.70 (spoken instructions) is built** on branch `feature/speak`. **v1.71 (🧸 Little mode) is built** on branch `feature/littlemode` (`PLAN.md`, "v1.71 plan details"). The agreed order is done.
 
 **Raised by the owner (2026-11-23): 🧤 Catch on Hard is still too hard,** even for the owner, and with capped coins it may just be

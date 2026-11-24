@@ -5458,7 +5458,43 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`LOCK.open='';delete window.AndroidBridge;closeModal();{const q=JSON.parse(window._lkSaved),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);}
       DB.settings.sound=window._lkSound;DB.settings.pin=window._lkPin;save();show('room');goRoom(1);applyEasy()`);
     check('back to normal afterwards', await ev(`!lockOn()&&!document.body.classList.contains('locked')`));
-    check('v1.71 is in the Gift Story and the app says 1.71', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.71')&&APP_VERSION==='1.71'`));
+    check('v1.71 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.71')`));
+  }
+
+  console.log('Holiday greetings (v1.72)');
+  {
+    const want={newYear:['2026-01-01','2027-01-01','2028-01-01','2029-01-01','2030-01-01'],valentine:['2026-02-14','2027-02-14','2028-02-14','2029-02-14','2030-02-14'],
+      stPatrick:['2026-03-17','2027-03-17','2028-03-17','2029-03-17','2030-03-17'],easter:['2026-04-05','2027-03-28','2028-04-16','2029-04-01','2030-04-21'],
+      mother:['2026-05-10','2027-05-09','2028-05-14','2029-05-13','2030-05-12'],father:['2026-06-21','2027-06-20','2028-06-18','2029-06-17','2030-06-16'],
+      july4:['2026-07-04','2027-07-04','2028-07-04','2029-07-04','2030-07-04'],halloween:['2026-10-31','2027-10-31','2028-10-31','2029-10-31','2030-10-31'],
+      thanksgiving:['2026-11-26','2027-11-25','2028-11-23','2029-11-22','2030-11-28'],xmasEve:['2026-12-24','2027-12-24','2028-12-24','2029-12-24','2030-12-24'],
+      christmas:['2026-12-25','2027-12-25','2028-12-25','2029-12-25','2030-12-25'],newYearsEve:['2026-12-31','2027-12-31','2028-12-31','2029-12-31','2030-12-31']};
+    const got=await ev(`JSON.stringify(Object.fromEntries(HOLIDAYS.map(h=>[h.id,[2026,2027,2028,2029,2030].map(y=>h.date(y))])))`);
+    check('the 12 holidays fall on the right dates, 2026–2030', got===JSON.stringify(want), got);
+    check('…and holidayToday() finds each one (and nothing on an ordinary day)', await ev(`HOLIDAYS.every(h=>holidayToday(h.date(2027)).id===h.id)&&!holidayToday('2026-11-24')&&!holidayToday('2027-07-05')`));
+    check('every greeting is short and has no money or time pressure in it', await ev(`HOLIDAYS.every(h=>h.words.split(' ').length<=5&&!/coin|today only|hurry/i.test(h.words)&&h.cols.length>=3)`));
+    await ev(`closeModal();stkPaused=true;window._hdSaved=JSON.stringify({tip:P().seenTip,daily:P().lastDaily,coins:P().coins,sound:DB.settings.sound,speak:P().speak});
+      window._said=[];window.AndroidBridge={speak(t){window._said.push(t);}};DB.settings.sound=true;P().speak=true;P().seenTip=true;P().lastDaily=new Date().toDateString();
+      window.FP_TEST_DAY='2026-11-26';show('profiles');enterRoom()`); await sleep(1300);
+    check('on Thanksgiving, opening the room: the buddy says "Happy Thanksgiving, <name>! 🦃"', await ev(`(b=>!!b&&b.textContent===('Happy Thanksgiving, '+P().name+'! 🦃'))(document.querySelector('#bubble'))`), await ev(`(b=>b&&b.textContent)(document.querySelector('#bubble'))`));
+    check('…with confetti in the holiday colors, and the voice says it without the emoji', await ev(`!!document.querySelector('.confetti i')&&HOLIDAYS.find(h=>h.id==='thanksgiving').cols.some(c=>document.querySelector('.confetti i').getAttribute('style').includes(c))&&window._said.includes('Happy Thanksgiving, '+P().name+'!')`), await ev(`JSON.stringify(window._said)`));
+    await shot('HD1-thanksgiving');
+    check('…and no coins for it', await ev(`P().coins===JSON.parse(window._hdSaved).coins`));
+    await ev(`goRoom(2)`); await sleep(1300);
+    check('moving to another room does not greet again', await ev(`!document.querySelector('#bubble')`));
+    await ev(`document.querySelectorAll('.confetti').forEach(c=>c.remove());P().seenTip=false;show('profiles');enterRoom()`); await sleep(1500);
+    check('on a first visit the "Hi!" tip comes first…', await ev(`(b=>!!b&&b.textContent.startsWith('Hi '))(document.querySelector('#bubble'))`));
+    await sleep(3000);
+    check('…and the greeting follows', await ev(`(b=>!!b&&b.textContent.startsWith('Happy Thanksgiving'))(document.querySelector('#bubble'))`));
+    await ev(`show('profiles');enterRoom();show('fidget')`); await sleep(1300);
+    check('leaving the room before it comes: no greeting anywhere', await ev(`cur==='fidget'&&!document.querySelector('#bubble')`));
+    await ev(`window.FP_TEST_DAY='2026-12-25';show('profiles');P().little.lock=true;LOCK.open='';enterRoom()`); await sleep(1300);
+    check('it works in a 🧸 Little-mode room too ("Merry Christmas")', await ev(`lockOn()&&(b=>!!b&&b.textContent.startsWith('Merry Christmas, '))(document.querySelector('#bubble'))`));
+    await ev(`P().little.lock=false;window.FP_TEST_DAY='2026-11-24';show('profiles');enterRoom()`); await sleep(1300);
+    check('on an ordinary day: no greeting', await ev(`!document.querySelector('#bubble')`));
+    await ev(`window.FP_TEST_DAY='';delete window.AndroidBridge;{const o=JSON.parse(window._hdSaved),p=P();p.seenTip=o.tip;p.lastDaily=o.daily;p.coins=o.coins;p.speak=o.speak;DB.settings.sound=o.sound;}
+      document.querySelectorAll('.confetti').forEach(c=>c.remove());save();show('room');goRoom(1)`);
+    check('v1.72 is in the Gift Story and the app says 1.72', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.72')&&APP_VERSION==='1.72'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);
