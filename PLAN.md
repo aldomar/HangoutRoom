@@ -1264,12 +1264,16 @@ still open), plus the owner's 🎉 holiday greeting. One PR for each version, in
 agreed before any code (only v1.72's is written so far).
 - ✅ **🎉 Holiday greetings (v1.72, built, PR open on `feature/holidays`):** the owner's idea (2026-11-24). On 12 US holidays the buddy says
   "Happy Thanksgiving!" (and so on) when the room opens, with confetti. No coins, nothing for a limited time. Plan details below.
-- ⬜ **🧰 Shared helpers, part 1 (v1.73; review idea 10 + risk 6):** nothing the children can see changes.
+- ✅ **🧰 Shared helpers, part 1 (v1.73; review idea 10 + risk 6; built, PR open on `feature/shared`):** nothing the children can see changes.
   - Everything uses `fpDay()` for "today". That removes `ltToday`, `rwToday`, `spyToday`, `jamToday`, `trToday`, `hrToday` and the
     `toDateString()` calls in 08, 09, 10, 11, 40, 42, 43, 46, 48 and 52.
   - One helper, `dailyPay(o, cap, n)`, built on `dayLeft` (08), replaces the 12 copied `pay{day,n}` resets.
   - No new save fields. Old `day` values are in the other date format, so each counter starts fresh once on the update day
-    (one extra allowance, once).
+    (one extra allowance, once). **Owner's answer (2026-11-24): convert them instead.** `normalize()` turns an old
+    "Tue Nov 24 2026" day into `2026-11-24` (`dayIso`, a small hand-written converter, so it doesn't depend on iPad Safari reading
+    the old text), so nothing pays twice on the update day. Built as planned otherwise: `fpDay()` moved to section 1, `dailyPay`
+    in section 8 replaces 13 copies (fidgets, Art Desk, Tap-to-Color, Music, Dance, Two-player, Free Play, 🧸 Play, I Spy,
+    Runway, Jam, Trick Shots, Derby), and `gameTake` uses it too.
   - The rest of idea 10 (a screen list for `show()`/`androidBack`, one results box, one prize giver) waits. The exception is
     when `09-screens.js` (at the ~40 KB limit) next has to grow.
 - ⬜ **⏸️ Small fixes (v1.74; risk 7 + idea 12):** no save changes.

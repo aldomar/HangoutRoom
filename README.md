@@ -260,6 +260,13 @@ Save data: one new field per room, `little.lock`. Older backups still restore.
 - Moving between rooms doesn't repeat it. No coins and nothing for a limited time: a missed day loses nothing.
 - No change to the save data.
 
+## 🧰 Tidy toolbox (version 1.73)
+A behind-the-scenes tidy-up. Nothing looks different.
+- Every "once a day" thing (the daily gift, visitors, and every daily coin limit) now uses the same clock, so they all start fresh at
+  midnight together.
+- Days saved by older versions are converted on the update, so nothing is paid twice that day.
+- No new save data. Older backups still restore.
+
 ## Spoken instructions (since version 1.70)
 The app can now **say what to do** on every screen, so the children who can't read yet can play everything:
 - **Each screen, tab and game has one short spoken line**, for example "Pop them all to flip it over!" on the pop-it. In the Brain Games it's

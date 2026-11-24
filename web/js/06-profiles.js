@@ -166,7 +166,10 @@ function normalize(p){
   // Level bands (v1.69, section 64): p.band, with p.easy kept in step (on for Little and Easy). If they disagree (an older
   // app version changed Easy mode), Easy mode wins, so the room acts as it did there.
   if(!['little','easy','normal','challenge'].includes(p.band)||(p.band==='little'||p.band==='easy')!==p.easy) p.band=p.easy?'easy':'normal';
-  if(p.little.lock===null) p.little.lock=p.band==='little'; // 🧸 Little mode (v1.71, section 66): on for Little rooms
+  if(p.little.lock===null) p.little.lock=p.band==='little';
+  // v1.73: every saved day is fpDay()'s 2026-11-24. Days saved in the old "Tue Nov 24 2026" form are turned into it (dayIso, section 1).
+  p.lastDaily=dayIso(p.lastDaily);
+  [p.artPay,p.fidPay,p.music.pay,p.dance.pay,p.little.pay,p.runway.pay,p.visit,p.duo].forEach(o=>{if(o&&typeof o.day==='string')o.day=dayIso(o.day);}); // 🧸 Little mode (v1.71, section 66): on for Little rooms
   // Buddies (v1.20): the room's color also colors the buttons and bars. New rooms start with it on; rooms made
   // before v1.20 start with it off, so they look the same as before (it can be switched on with ✏️ under the room).
   p.tint=!!p.tint;

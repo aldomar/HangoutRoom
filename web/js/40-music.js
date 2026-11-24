@@ -153,8 +153,7 @@ function muSaveSlot(i){
   if(n<MU_MIN_NOTES){toast('Add a few more notes first! 🎵');return;}
   const fresh=!(p.music.slots[i]&&p.music.slots[i].g===g);
   p.music.slots[i]={g,kit:muKit(p),speed:muSpeed(p)};
-  const today=new Date().toDateString(); if(p.music.pay.day!==today) p.music.pay={day:today,n:0};
-  if(fresh&&p.music.pay.n<MU_DAILY){p.music.pay.n++;earn(MU_COINS,'Music!');toast(`Saved in 💾 ${i+1}! 🎶`);}
+  if(fresh&&dailyPay(p.music.pay,MU_DAILY,1)){earn(MU_COINS,'Music!');toast(`Saved in 💾 ${i+1}! 🎶`);}
   else{save();toast(fresh?`Saved in 💾 ${i+1}! 🎶 Music coins are done for today. Keep making music for fun!`:`Saved in 💾 ${i+1}! 🎶`);}
   SFX.happy(); muCtl();
 }

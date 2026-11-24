@@ -2578,16 +2578,16 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();show('room');{const p=P();p.fidPay={day:'',n:0};p.coins=100;fidToldDay='';}`); await sleep(100);
   check('fidget coins share an allowance of 30 a day', await ev(`FID_DAILY===30`));
   await ev(`for(let k=0;k<6;k++)fidEarn(5)`); await sleep(100);
-  check('the first 30 fidget coins are paid as usual', await ev(`P().coins===130&&P().fidPay.n===30&&P().fidPay.day===new Date().toDateString()`), await ev('[P().coins,P().fidPay.n]'));
+  check('the first 30 fidget coins are paid as usual', await ev(`P().coins===130&&P().fidPay.n===30&&P().fidPay.day===fpDay()`), await ev('[P().coins,P().fidPay.n]'));
   check('…and a gentle note says they are full for today (no countdown)', await ev(`/full for today/.test(document.querySelector('#toast')?.textContent||document.body.textContent)&&!/tomorrow|hours|minutes/i.test(document.querySelector('#toast')?.textContent||'')`));
   await ev(`fidEarn(1);fidEarn(5)`); await sleep(100);
   check('after that, fidgets pay nothing more today', await ev(`P().coins===130&&P().fidPay.n===30`));
-  await ev(`P().fidPay={day:new Date().toDateString(),n:28};fidEarn(5)`); await sleep(100);
+  await ev(`P().fidPay={day:fpDay(),n:28};fidEarn(5)`); await sleep(100);
   check('a flip bonus near the limit pays only what is left (2 of 5)', await ev(`P().coins===132&&P().fidPay.n===30`));
   await ev(`P().fidPay={day:'Mon Jan 01 2001',n:30};fidEarn(1)`); await sleep(100);
   check('a new day refills it quietly', await ev(`P().coins===133&&P().fidPay.n===1`));
   // a real pop-it board when the allowance is used up: it still pops and flips, it just pays nothing
-  await ev(`P().fidPay={day:new Date().toDateString(),n:30};P().fid.pop='rainbow';P().fid.popShape='classic';show('fidget');setFidTab('popit')`); await sleep(250);
+  await ev(`P().fidPay={day:fpDay(),n:30};P().fid.pop='rainbow';P().fid.popShape='classic';show('fidget');setFidTab('popit')`); await sleep(250);
   const fa0=await ev('P().coins'), ff0=await ev('P().stats.flips'), fp0=await ev('P().stats.pops');
   await ev(`document.querySelectorAll('#popBoard .bub:not(.gone)').forEach(b=>popAt(b))`); await sleep(1300);
   check('with the allowance used, the pop-it still pops and flips (counted for stickers) but pays nothing', await ev(`P().stats.flips===${ff0}+1&&P().stats.pops>${fp0}&&P().coins===${fa0}`), [fa0,await ev('P().coins')]);
@@ -2924,7 +2924,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`vMeet(vWishOf('mochi1'));renderRoom();visitTap()`); await sleep(150);
   check('…the card ticks the lines that are done', await ev(`document.querySelectorAll('#modalBody .vs-row.ok').length===2`));
   await ev(`[...document.querySelectorAll('#modalBtns .btn')].find(b=>/Show me/.test(b.textContent)).click()`); await sleep(250);
-  check('done: +5 coins, the wish is saved, and a thank-you', await ev(`P().coins===105&&P().visit.done.join()==='mochi1'&&P().visit.cur===''&&P().visit.day===new Date().toDateString()&&/loves it/.test(document.querySelector('#modalTitle').textContent)`));
+  check('done: +5 coins, the wish is saved, and a thank-you', await ev(`P().coins===105&&P().visit.done.join()==='mochi1'&&P().visit.cur===''&&P().visit.day===fpDay()&&/loves it/.test(document.querySelector('#modalTitle').textContent)`));
   await shot('V03-thank-you');
   await ev(`closeModal();renderRoom()`);
   check('no new friend the same day', await ev(`P().visit.cur===''&&!document.querySelector('#roomSvg .visitor')`));
@@ -3398,7 +3398,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`pkTap(LT.peek.friend);ltGo('menu');ltGo('peek')`);
     check('leaving right after finding a friend: coming back starts a fresh round', await ev(`!LT.peek.found&&LT.peek.open.length===0`));
     // coins: 10 a day in all
-    await ev(`P().little.pay={day:ltToday(),n:9};LT.noted=''`);
+    await ev(`P().little.pay={day:fpDay(),n:9};LT.noted=''`);
     const cc0=await ev('P().coins');
     await ev(`ltPay();ltPay()`);
     check('+1 coins stop at 10 a day', await ev(`P().coins===${cc0}+1&&P().little.pay.n===10`));
@@ -5056,7 +5056,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`closeModal();${fresh};mzWin()`); await sleep(200);
     check('Marble Maze: …and +1 when there is room', await ev(`P().coins===104&&P().maze.pay.n===1`));
     // "not enough coins" names somewhere that still pays
-    await ev(`closeModal();show('room');${full};P().fidPay={day:new Date().toDateString(),n:FID_DAILY}`);
+    await ev(`closeModal();show('room');${full};P().fidPay={day:fpDay(),n:FID_DAILY}`);
     check('with every allowance used up, the only tip is 🧠 Brain Games', await ev(`payTips(P()).words==='🧠 Brain Games'`));
     await ev(`P().soccer.pay.n=0`);
     check('…with Soccer open: "⚽ Soccer or 🧠 Brain Games"', await ev(`payTips(P()).words==='⚽ Soccer or 🧠 Brain Games'&&payTips(P()).icons==='⚽ 🧠'`));
@@ -5474,7 +5474,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('…and holidayToday() finds each one (and nothing on an ordinary day)', await ev(`HOLIDAYS.every(h=>holidayToday(h.date(2027)).id===h.id)&&!holidayToday('2026-11-24')&&!holidayToday('2027-07-05')`));
     check('every greeting is short and has no money or time pressure in it', await ev(`HOLIDAYS.every(h=>h.words.split(' ').length<=5&&!/coin|today only|hurry/i.test(h.words)&&h.cols.length>=3)`));
     await ev(`closeModal();stkPaused=true;window._hdSaved=JSON.stringify({tip:P().seenTip,daily:P().lastDaily,coins:P().coins,sound:DB.settings.sound,speak:P().speak});
-      window._said=[];window.AndroidBridge={speak(t){window._said.push(t);}};DB.settings.sound=true;P().speak=true;P().seenTip=true;P().lastDaily=new Date().toDateString();
+      window._said=[];window.AndroidBridge={speak(t){window._said.push(t);}};DB.settings.sound=true;P().speak=true;P().seenTip=true;P().lastDaily='2026-11-26';
       window.FP_TEST_DAY='2026-11-26';show('profiles');enterRoom()`); await sleep(1300);
     check('on Thanksgiving, opening the room: the buddy says "Happy Thanksgiving, <name>! 🦃"', await ev(`(b=>!!b&&b.textContent===('Happy Thanksgiving, '+P().name+'! 🦃'))(document.querySelector('#bubble'))`), await ev(`(b=>b&&b.textContent)(document.querySelector('#bubble'))`));
     check('…with confetti in the holiday colors, and the voice says it without the emoji', await ev(`!!document.querySelector('.confetti i')&&HOLIDAYS.find(h=>h.id==='thanksgiving').cols.some(c=>document.querySelector('.confetti i').getAttribute('style').includes(c))&&window._said.includes('Happy Thanksgiving, '+P().name+'!')`), await ev(`JSON.stringify(window._said)`));
@@ -5494,7 +5494,31 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('on an ordinary day: no greeting', await ev(`!document.querySelector('#bubble')`));
     await ev(`window.FP_TEST_DAY='';delete window.AndroidBridge;{const o=JSON.parse(window._hdSaved),p=P();p.seenTip=o.tip;p.lastDaily=o.daily;p.coins=o.coins;p.speak=o.speak;DB.settings.sound=o.sound;}
       document.querySelectorAll('.confetti').forEach(c=>c.remove());save();show('room');goRoom(1)`);
-    check('v1.72 is in the Gift Story and the app says 1.72', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.72')&&APP_VERSION==='1.72'`));
+    check('v1.72 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.72')`));
+  }
+
+  console.log('Shared helpers (v1.73): one "today", one daily allowance');
+  {
+    const jsFiles=fs.readdirSync(path.join(__dirname,'..','web','js')).filter(n=>n.endsWith('.js'));
+    const oldDay=jsFiles.filter(n=>/\.toDateString\(\)|\b(lt|rw|spy|jam|tr|hr|v)Today\b/.test(fs.readFileSync(path.join(__dirname,'..','web','js',n),'utf8')));
+    check('no file keeps its own "today" any more (everything uses fpDay)', oldDay.length===0, oldDay);
+    const resets=jsFiles.filter(n=>n!=='08-ui.js'&&/\.day!==[\w.()]+?\)\s*(\{\s*)?[\w.]+(=\{day[^}]*n:0|\.day=[^}]*\.n=0)/.test(fs.readFileSync(path.join(__dirname,'..','web','js',n),'utf8')));
+    check('no copied "new day, start at 0" resets are left (dailyPay does it)', resets.length===0, resets);
+    check('dayIso turns the old saved days into 2026-11-24 and leaves the rest alone', await ev(`dayIso('Tue Nov 24 2026')==='2026-11-24'&&dayIso('Wed Mar 03 2027')==='2027-03-03'&&dayIso('Sat Jan 1 2028')==='2028-01-01'
+      &&dayIso('2026-11-24')==='2026-11-24'&&dayIso('')===''&&dayIso('hello')==='hello'&&dayIso(undefined)===undefined`));
+    check('dailyPay: pays up to the limit, counts it, and a new day starts again at 0', await ev(`(()=>{const o={day:'2000-01-01',n:9};
+      const a=dailyPay(o,10,3),b=dailyPay(o,10,9),c=dailyPay(o,10,1);return a===3&&b===7&&c===0&&o.n===10&&o.day===fpDay();})()`));
+    check('…the day comes from fpDay(), so FP_TEST_DAY moves it', await ev(`(()=>{const o={day:'',n:0};window.FP_TEST_DAY='2031-05-05';dailyPay(o,5,2);const d=o.day;window.FP_TEST_DAY='';return d==='2031-05-05';})()`));
+    check('an older save: every old-style day becomes today\'s date, and the counts stay', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P())),old=new Date().toDateString();
+      q.lastDaily=old;[q.artPay,q.fidPay,q.music.pay,q.dance.pay,q.little.pay,q.runway.pay,q.visit,q.duo].forEach(o=>{o.day=old;o.n=2;});normalize(q);
+      return q.lastDaily===fpDay()&&[q.artPay,q.fidPay,q.music.pay,q.dance.pay,q.little.pay,q.runway.pay,q.duo].every(o=>o.day===fpDay()&&o.n===2)&&q.visit.day===fpDay();})()`));
+    await ev(`closeModal();stkPaused=true;window._shSaved=JSON.stringify({daily:P().lastDaily,fid:P().fidPay,coins:P().coins});P().lastDaily=new Date().toDateString();P().fidPay={day:new Date().toDateString(),n:30};
+      normalize(P());window._shC=P().coins;show('profiles');enterRoom()`); await sleep(900);
+    check('…so a daily gift already opened today (before the update) is not given again', await ev(`P().coins===window._shC&&P().lastDaily===fpDay()`));
+    await ev(`fidEarn(3)`);
+    check('…and full fidget coins stay full', await ev(`P().coins===window._shC&&P().fidPay.n===30`));
+    await ev(`{const o=JSON.parse(window._shSaved),p=P();p.lastDaily=o.daily;p.fidPay=o.fid;p.coins=o.coins;}save();show('room')`);
+    check('v1.73 is in the Gift Story and the app says 1.73', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.73')&&APP_VERSION==='1.73'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

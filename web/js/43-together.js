@@ -51,12 +51,10 @@ $('#modal').addEventListener('click',e=>{
 /* ---------- coins and counts (both rooms; a Guest gets nothing) ---------- */
 // Returns one line per player for the end box.
 function tgPay(players,game){
-  const today=new Date().toDateString();
   const lines=players.map(pl=>{
     const q=pl.id&&DB.profiles.find(x=>x.id===pl.id); if(!q) return '';
-    const d=q.duo; if(d.day!==today){d.day=today;d.n=0;}
-    d[game]=(d[game]||0)+1;
-    const c=Math.max(0,Math.min(TG_COINS,TG_DAILY-d.n)); d.n+=c; q.coins+=c;
+    const d=q.duo; d[game]=(d[game]||0)+1;
+    const c=dailyPay(d,TG_DAILY,TG_COINS); q.coins+=c;
     return c?`${esc(pl.badge)} ${esc(pl.name)} +${c} 🪙`:`${esc(pl.badge)} ${esc(pl.name)}: coins for playing together are full today. Keep playing for fun! ✨`;
   }).filter(Boolean);
   save(); updateCoins(); SFX.coin();

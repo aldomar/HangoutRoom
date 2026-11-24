@@ -7,10 +7,9 @@
 // the next day (no countdown). The marble maze is a puzzle and pays as before; games are not affected.
 const FID_DAILY=30; let fidToldDay='';
 function fidEarn(n,label,x,y){
-  const p=P(); if(!p) return; const today=new Date().toDateString();
-  if(p.fidPay.day!==today) p.fidPay={day:today,n:0};
-  const give=Math.max(0,Math.min(n,FID_DAILY-p.fidPay.n));
-  if(give){p.fidPay.n+=give;earn(give,label,x,y);} else saveSoon();
+  const p=P(); if(!p) return; const today=fpDay();
+  const give=dailyPay(p.fidPay,FID_DAILY,n);
+  if(give) earn(give,label,x,y); else saveSoon();
   if(p.fidPay.n>=FID_DAILY&&fidToldDay!==p.id+today){fidToldDay=p.id+today;toast('Fidget coins are full for today! Keep playing for fun ✨ Games still give coins.');}
 }
 let fidTab='popit';

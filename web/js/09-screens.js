@@ -98,7 +98,7 @@ function delModal(p){
 }
 function enterRoom(){
   const p=P(); if(!p) return; roomNo=1; show('room'); loadArtThumbs();
-  const today=new Date().toDateString();
+  const today=fpDay();
   if(p.lastDaily!==today){p.lastDaily=today;p.stats.dailies++;save();setTimeout(()=>{earn(10,'Daily gift!',innerWidth/2,innerHeight/2);toast('🎁 Daily gift! +10 coins');},600);}
   const tip=!p.seenTip;
   if(tip){p.seenTip=true;save();setTimeout(()=>say(lockOn()?`Hi ${p.name}! Tap the desk, the shelf or the closet ✨`:`Hi ${p.name}! Tap the shelf, closet or desk ✨`),1200);}

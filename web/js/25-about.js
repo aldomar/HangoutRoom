@@ -200,7 +200,9 @@ const GIFT_TIMELINE=[
   {v:'1.71',d:'2026-11-24',i:'🧸',n:'Little mode',why:'So the littlest ones can play safely on their own',
     news:['🧸 Little mode keeps the littlest ones in the easy, safe parts','🔒 A grown-up presses and holds 🔒 to leave it','🎨 Dress like… puts on your clothes from one theme']},
   {v:'1.72',d:'2026-11-25',i:'🎉',n:'Happy holidays',why:'So your buddy can celebrate the big days with you',
-    news:['🎉 On a holiday your buddy says hello when your room opens','🦃 Thanksgiving, 🎃 Halloween, 🎄 Christmas and more','🎊 Confetti in the colors of the day']}
+    news:['🎉 On a holiday your buddy says hello when your room opens','🦃 Thanksgiving, 🎃 Halloween, 🎄 Christmas and more','🎊 Confetti in the colors of the day']},
+  {v:'1.73',d:'2026-11-25',i:'🧰',n:'Tidy toolbox',why:'So new things are quicker and safer to add',
+    news:['🧰 A tidy-up behind the scenes','🪙 Every daily coin limit now starts fresh at the same time each day']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

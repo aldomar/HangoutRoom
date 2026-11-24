@@ -6,7 +6,10 @@ _Last updated: 2026-11-24_
 - **Phase 15: 🎉 Holidays + the rest of the design review (order agreed 2026-11-24, see "Phase 15" in `PLAN.md`).** One PR each:
   - ✅ v1.72 🎉 Holiday greetings: built, PR open (branch `feature/holidays`, from `main`). New file `67-holidays.js`; 12 holidays
     with confetti in their colors; no save changes. Must be merged by Wednesday 2026-11-25 to greet on Thanksgiving (2026-11-26).
-  - ⬜ v1.73 🧰 Shared helpers, part 1 (one "today" = `fpDay()`, one daily-allowance helper; nothing visible changes).
+  - ✅ v1.72 is PR #74.
+  - ✅ v1.73 🧰 Shared helpers, part 1: built, PR open (branch `feature/shared`, stacked on `feature/holidays`). One "today" = `fpDay()`
+    (moved to 01), one `dailyPay` helper (08). Owner's answer 2026-11-24: old "Tue Nov 24 2026" days in saves are converted
+    (`dayIso` in `normalize()`), so nothing pays twice on the update day. No new save fields. (`feature/helpers` was already used by v1.30.)
   - ⬜ v1.74 ⏸️ Small fixes: the Stage pauses instead of stopping when the app is left; ↩ Undo for 10 s after buying or giving.
   - ⬜ v1.75 🎁 Gift codes between iPads.
   - ⬜ v1.76 🐾 The pet notices what the child did.
@@ -1491,7 +1494,7 @@ _Last updated: 2026-11-24_
 1. ~~Plan Phase 15 (the rest of `docs/DESIGN-REVIEW.md` + holiday greetings) and get the order agreed.~~ Agreed 2026-11-24.
 2. ~~Build v1.72 🎉 Holiday greetings on `feature/holidays`.~~ Built, PR open. Owner: set the phone's date to a holiday (or wait for
    Thanksgiving), open the room, and merge it by Wednesday 2026-11-25.
-3. Plan and build v1.73 🧰 Shared helpers, part 1.
+3. ~~Plan and build v1.73 🧰 Shared helpers, part 1.~~ Built, PR open.
 4. Plan and build v1.74 ⏸️ Stage pause + ↩ Undo.
 5. Plan and build v1.75 🎁 Gift codes between iPads.
 6. Plan and build v1.76 🐾 The pet notices.
