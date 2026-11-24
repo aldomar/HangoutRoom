@@ -12,9 +12,13 @@ _Last updated: 2026-11-23_
   maze replays); the first perfect on a level (with its prize) and every other first are paid outside it, repeat perfects come out
   of it; Brain Games Free Play stays uncapped. Also: the "not enough coins" hint names a place that still pays, and a 🔊/🔇 button
   in the room (the iPad audio session stays `playback`). Save: 6 `{day, n}` fields with defaults in `normalize()`, no new save version.
-- **Next: v1.68 🧤 Catch on Hard.** The owner finds Hard nearly impossible (even for them): the shadow tells where the ball lands
-  too late, and the 15 hits come in a fixed order, so it's memory. Agreed ideas 1–4 in `docs/DESIGN-REVIEW.md` ("Next step");
-  the owner will test it on their phone. Needs its own plan first.
+- **🧤 Catch you can read: built as v1.68** on branch `feature/catchhard` (from `feature/caps`, as #69 is still open). Owner's
+  answers 2026-11-23: cues on every level (CRACK!/WHACK/tok by depth, with the word for sound-off play; mowed lanes and bands;
+  a shadow trail on Medium/Hard); fresh hits on Hard only (`ctMakeGame`, checked by `ctHitOk`); Medium slightly harder again
+  (glove 0.19, ring from 55%). No save changes. Why: the owner found Hard nearly impossible (even for them), because the shadow
+  showed where the ball lands too late and the 15 hits came in a fixed order, so it was memory. The owner will judge Hard on their
+  phone; `CT_SPARE` (61) widens it if needed.
+- **Next after that: v1.69 first-time setup + age bands** (needs its own plan; it changes save data).
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
 - **Phase 2 (Art Desk): done** (v1.3 merged). Checked on an Android phone: it works, and drawings survive closing the app.
 - **Phase 3 (Photocard Wall): done** (v1.4 merged). The owner checked it on the device: all checks passed (2026-11-15).

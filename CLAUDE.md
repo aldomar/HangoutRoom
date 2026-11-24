@@ -374,6 +374,10 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   mode, fades in late on Medium, and never shows on Hard. Catch on Medium/Hard (`depth:1`, `ctDepth()`) adds `v` (0..1, `CT_ZMAX` in
   toward home) to every hit and to the buddy (`CT.bv`/`CT.tv`; `ctFinger` reads the finger's height on the grass); distances go through
   `ctDist` (a run in costs `CT_VU` of a run across), and `ctCanCatch(lvl, fu, fv, hit)` must hold from all 4 corners.
+  Since v1.68 every hit must pass `ctHitOk(lvl, hit)` (inside, `CT_KIND_MIN`, all 4 corners, 0.1–0.55 s spare on Medium/Hard), and Hard
+  makes 5 fresh hits each game (`ctMakeGame(seed)`, `brRand`; `CT_SPARE` is the knob if Hard is too hard); Medium and Easy keep their fixed lists.
+  Reading the ball, every level: the crack by depth (`ctCrack`, `ctTier`: CRACK!/WHACK/tok, with the word drawn by `ctWord` so it works with
+  the sound off), mowed lanes from home and 3 bands near her line (drawn once in `ctBack`), and a shadow trail on Medium and Hard.
   👯 Batting Duel (v1.64, `63-ballduel.js`): the `data-duo="ball"` tab opens `tgPick('ball')`, which calls `bdStart()`. While `BDL.on`
   (`bfDuel()`), section 59 hands over: `bfLvl()` returns `BDL.lvl`, and `bfScore`, `bfResult`, `bfNext` and a tap before a pitch go to
   the `bd*` functions; the mound shows the pitcher's buddy (`#bdPitcher`) instead of Pip/Rocco/Hoot, and the pitcher picks from `#bdBar`.
