@@ -84,7 +84,8 @@ function normalize(p){
   {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, l=o(p.little), py=o(l.pay);
    p.little={colors:Object.fromEntries(Object.entries(o(l.colors)).filter(([k,v])=>Array.isArray(v)).map(([k,v])=>[k,v.slice(0,40).map(c=>typeof c==='string'&&/^#[0-9a-f]{6}$/i.test(c)?c:'')])),
      hung:Object.fromEntries(Object.entries(o(l.hung)).filter(([k,v])=>v&&typeof v==='object'&&typeof v.art==='string').map(([k,v])=>[k,{art:v.art,sig:typeof v.sig==='string'?v.sig:''}])),
-     pay:{day:typeof py.day==='string'?py.day:'',n:Math.max(0,Math.floor(Number(py.n)||0))}};
+     pay:{day:typeof py.day==='string'?py.day:'',n:Math.max(0,Math.floor(Number(py.n)||0))},
+     lock:typeof l.lock==='boolean'?l.lock:null}; // 🧸 Little mode (v1.71): filled in below, once the band is known
    ['colored','peeks','pads'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));});}
   // Visitors (v1.41, section 42): the wish waiting ('' = nobody), the day the last wish came true, and the wish ids done.
   {const v=p.visit&&typeof p.visit==='object'&&!Array.isArray(p.visit)?p.visit:{};
@@ -165,6 +166,7 @@ function normalize(p){
   // Level bands (v1.69, section 64): p.band, with p.easy kept in step (on for Little and Easy). If they disagree (an older
   // app version changed Easy mode), Easy mode wins, so the room acts as it did there.
   if(!['little','easy','normal','challenge'].includes(p.band)||(p.band==='little'||p.band==='easy')!==p.easy) p.band=p.easy?'easy':'normal';
+  if(p.little.lock===null) p.little.lock=p.band==='little'; // 🧸 Little mode (v1.71, section 66): on for Little rooms
   // Buddies (v1.20): the room's color also colors the buttons and bars. New rooms start with it on; rooms made
   // before v1.20 start with it off, so they look the same as before (it can be switched on with ✏️ under the room).
   p.tint=!!p.tint;

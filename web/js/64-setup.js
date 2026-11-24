@@ -41,6 +41,7 @@ function setBand(p,b){
   if(!BANDS[b]) return;
   const was=bandOf(p); p.band=b; p.easy=BANDS[b].easy;
   if(b==='challenge'&&was!=='challenge') bandFresh(p);
+  if(b!==was&&(b==='little'||was==='little')) p.little.lock=b==='little'; // 🧸 Little mode follows the Little band (section 66)
   save();
 }
 // The 4 big buttons with a line saying what the picked one does (New Room, Change Room, Settings).
@@ -53,10 +54,14 @@ function bandWire(id,set){
 }
 // ⚙️ Settings → the room's level (asks for the PIN when one is set).
 function bandModal(){
-  const p=P(); if(!p) return; let b=bandOf(p);
-  modal('🎚️ Level',`<p style="text-align:center;margin:0 0 6px">How hard things are in this room.</p>${bandPick('stBand',b)}`,
-    [{text:'Cancel',cls:'ghost',on:settingsModal},{text:'Save',cls:'pink',on:()=>{setBand(p,b);applyEasy();if(cur==='room')renderRoom();SFX.happy();settingsModal();}}]);
-  bandWire('stBand',v=>b=v);
+  const p=P(); if(!p) return; let b=bandOf(p), lk=lockSet(p);
+  modal('🎚️ Level',`<p style="text-align:center;margin:0 0 6px">How hard things are in this room.</p>${bandPick('stBand',b)}${lockRow(lk)}`,
+    [{text:'Cancel',cls:'ghost',on:settingsModal},{text:'Save',cls:'pink',on:()=>{const was=lockSet(p);setBand(p,b);p.little.lock=lk;save();
+      if(lk&&!was){LOCK.open=p.id;setTimeout(()=>toast('🧸 Little mode is on. Tap 🔒 Lock in the room when you are done.'),300);} // a grown-up is here: it locks when they tap 🔒
+      applyEasy();applyLock();if(cur==='room')renderRoom();SFX.happy();settingsModal();}}]);
+  // picking Little turns Little mode on; leaving Little turns it off (the switch can still change it)
+  bandWire('stBand',v=>{b=v;lk=v==='little'?true:bandOf(p)==='little'?false:lockSet(p);lockRowSet(lk);});
+  $('#stLock').onclick=()=>{SFX.click();lk=!lk;lockRowSet(lk);};
 }
 
 /* ---------- 👋 first-time setup ---------- */
@@ -102,7 +107,8 @@ function setupBackup(again){
     +`<p>Make a backup now and then: ⚙️ Settings → 💾 Backup &amp; Restore. Keep the file somewhere safe.</p>${home}</div>`,
     [{text:'Later',cls:'ghost',on:()=>setupFinish(again)},{text:'💾 Back up now',cls:'pink',on:backupModal}]);
 }
-function setupFinish(again){if(!again&&cur==='room')say('All set! Let\'s hang out ✨');}
+function setupFinish(again){if(!again&&cur==='room'){say('All set! Let\'s hang out ✨');
+  if(lockOn())setTimeout(()=>toast('🧸 Little mode is on. To leave it, press and hold 🔒 at the top.'),1500);}} // section 66
 
 /* ---------- 💾 backup reminder (rooms screen only) ---------- */
 const BK_NAG_DAYS=30;

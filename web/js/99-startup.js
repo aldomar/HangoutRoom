@@ -58,6 +58,7 @@ document.addEventListener('visibilitychange',()=>{
 
 buildDefs();
 show('profiles');
+lockStart(); // 🧸 a locked room opens straight back up (section 66)
 setupCheck(); // 👋 the first-time setup, on a device with no rooms yet (section 64)
 whatsNew(); // ✨ What's New, once per device after an update (section 25)
 wakeLoop();

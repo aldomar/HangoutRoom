@@ -1,6 +1,6 @@
 # Status / handover
 
-_Last updated: 2026-11-23_
+_Last updated: 2026-11-24_
 
 ## Where we are
 - **📋 Design review (2026-11-23): read `docs/DESIGN-REVIEW.md` first.** A whole-app review before the children get the app,
@@ -18,16 +18,22 @@ _Last updated: 2026-11-23_
   (glove 0.19, ring from 55%). No save changes. Why: the owner found Hard nearly impossible (even for them), because the shadow
   showed where the ball lands too late and the 15 hits came in a fixed order, so it was memory. The owner will judge Hard on their
   phone; `CT_SPARE` (61) widens it if needed.
-- **👋 First-time setup + level bands: built, PR #71 open as v1.69** on branch `feature/setup` (from `main` after #70). Plan agreed 2026-11-23 (`PLAN.md`,
+- **👋 First-time setup + level bands: done (v1.69 merged, PR #71)** (branch `feature/setup`, from `main` after #70). Plan agreed 2026-11-23 (`PLAN.md`,
   "v1.69 plan details"). Owner's answers: Free Play +2 at the band's level or above (Little/Easy any, Normal Medium+, Challenge Hard);
   Challenge also starts new games on Medium; the picker shows icons and names only (no ages); the owner sets up each iPad, but the
   welcome is written for any grown-up. Save: `p.band` (with `p.easy` kept in step) and `settings.setupDone` (device, kept by Restore);
   no new save version. Also the 30-day 💾 backup line on the rooms screen (review idea 6).
-- **🗣️ Spoken instructions: built, PR #72 open as v1.70** on branch `feature/speak` (from `feature/setup`, as #71 is still open). Plan agreed
+- **🗣️ Spoken instructions: done (v1.70 merged, PR #72)** (branch `feature/speak`). Plan agreed
   2026-11-23 (`PLAN.md`, "v1.70 plan details"). Owner's answers: 🔇 also stops the automatic voice (🔊 still speaks when tapped);
   it speaks instructions, questions, try-again hints, the buddy's bubble and visitor wishes; a little slower in Little and Easy rooms;
   Read to me stays in Settings (not in the setup). No save changes. On a 390 px phone the Photocards title gets squeezed by the 🔊.
-- **Next: v1.71 🧸 Little mode** (needs its own plan).
+- **🧸 Little mode: built, PR open as v1.71** on branch `feature/littlemode` (from `main` after #72). Plan agreed 2026-11-24 (`PLAN.md`,
+  "v1.71 plan details"). Owner's answers: the Little home is her own room, locked down; every sport on Easy (Kick, Keep, Bat,
+  Catch), the Brain Games on Easy and the Garden are in; the Closet stays for real dress-up, plus 🎨 Dress like… (a theme dress-up
+  from owned clothes, in every room's Closet); on by default for Little rooms with a switch in Settings → Level; relocks when the
+  app is reopened and with 🔒 Lock. Unlock = hold 🔒 3 s, then the PIN. Save: `little.lock`; no new save version.
+  This finishes the agreed design-review order (v1.67–v1.71).
+- **Next:** nothing scheduled. Later ideas (each needs a plan) are in `docs/DESIGN-REVIEW.md`, such as offline gift codes between iPads.
 - **Phase 0 (v1 base): done.** **Phase 1 (ship to the tablet): done** (v1.2 merged).
 - **Phase 2 (Art Desk): done** (v1.3 merged). Checked on an Android phone: it works, and drawings survive closing the app.
 - **Phase 3 (Photocard Wall): done** (v1.4 merged). The owner checked it on the device: all checks passed (2026-11-15).
