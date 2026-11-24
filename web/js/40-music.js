@@ -155,7 +155,7 @@ function muSaveSlot(i){
   p.music.slots[i]={g,kit:muKit(p),speed:muSpeed(p)};
   if(fresh&&dailyPay(p.music.pay,MU_DAILY,1)){earn(MU_COINS,'Music!');toast(`Saved in 💾 ${i+1}! 🎶`);}
   else{save();toast(fresh?`Saved in 💾 ${i+1}! 🎶 Music coins are done for today. Keep making music for fun!`:`Saved in 💾 ${i+1}! 🎶`);}
-  SFX.happy(); muCtl();
+  SFX.happy(); muCtl(); crCheck(); // 📻 the first saved loop brings a Boombox (section 71)
 }
 function muBackKey(){show('room');}
 

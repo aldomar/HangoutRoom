@@ -27,7 +27,7 @@ function normalize(p){
    const sl=Array.isArray(m.slots)?m.slots:[], pay=m.pay&&typeof m.pay==='object'?m.pay:{};
    p.music={kit:typeof m.kit==='string'?m.kit:'soft',speed:sp(m.speed),cur:ok(m.cur)?m.cur:'0'.repeat(72),
      slots:[0,1,2].map(i=>{const x=sl[i];return x&&typeof x==='object'&&ok(x.g)?{g:x.g,kit:typeof x.kit==='string'?x.kit:'soft',speed:sp(x.speed)}:null;}),
-     pay:{day:typeof pay.day==='string'?pay.day:'',n:Math.max(0,Math.floor(Number(pay.n)||0))}};}
+     pay:{day:typeof pay.day==='string'?pay.day:'',n:Math.max(0,Math.floor(Number(pay.n)||0))},box:m.box===true};} // box: the 📻 Boombox was given (v1.77)
   p.look=Object.assign({},DEFAULT_LOOK,p.look||{});
   if(!BUDDIES[p.look.kind]) p.look.kind='bunny'; if(!FACES[p.look.face]) p.look.face='sparkle'; // v1.20
   p.owned=Array.isArray(p.owned)?p.owned:[];
@@ -187,10 +187,12 @@ function normalize(p){
   p.code=Object.assign({level:'easy'},p.code&&typeof p.code==='object'&&!Array.isArray(p.code)?p.code:{});
   p.code.solved=Array.isArray(p.code.solved)?p.code.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[];
   if(!['easy','medium','hard','move','if','challenge'].includes(p.code.level)) p.code.level='easy';
+  p.code.prizes=Array.isArray(p.code.prizes)?p.code.prizes.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[]; // 🤖 the levels whose robot was given (v1.77)
   // Brain Games (v1.25): the last game played, the level picked in each game, and the puzzle ids solved (each pays once).
   const br=p.brain&&typeof p.brain==='object'&&!Array.isArray(p.brain)?p.brain:{}, brL=br.level&&typeof br.level==='object'&&!Array.isArray(br.level)?br.level:{};
   const brG=['snack','memory','pop','train','word','bake','facts']; // v1.33: + Pattern Train, Word Builder; v1.34: + Fraction Bakery, Fact Cards
-  p.brain={game:brG.includes(br.game)?br.game:'snack',level:{},solved:Array.isArray(br.solved)?br.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[]};
+  p.brain={game:brG.includes(br.game)?br.game:'snack',level:{},solved:Array.isArray(br.solved)?br.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[],
+    shelf:br.shelf===true}; // shelf: the 📚 Brain Shelf was given (v1.77)
   brG.forEach(g=>{p.brain.level[g]=['easy','medium','hard'].includes(brL[g])?brL[g]:'easy';});
 }
 DB.profiles.forEach(normalize);

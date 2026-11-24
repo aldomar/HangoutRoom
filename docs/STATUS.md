@@ -23,7 +23,10 @@ _Last updated: 2026-11-24_
   - ✅ v1.76 🐾 The pet notices: built, PR open (branch `feature/petnotice`, stacked on `feature/giftcodes`).
     - Owner's answers 2026-11-24: every game; with no pet, the buddy says it.
     - New file `70-petnotice.js`. Save: `pet.day` (the daily first-play heart).
-  - ⬜ v1.77 📻 Creations in the room (a boombox, Code Lab and Brain Games prizes).
+  - ✅ v1.76 is PR #78.
+  - ✅ v1.77 📻 Creations in the room: built, PR open (branch `feature/creations`, stacked on `feature/petnotice`).
+    - Owner's answers 2026-11-24: a prize for every level; the boombox is free with the first saved loop.
+    - New file `71-creations.js`. Save: `code.prizes[]`, `brain.shelf`, `music.box`.
   - ⬜ v1.78 🛠️ Code Lab level maker.
   - ⏸️ Parked: a picture lock for each room (idea 13), a level for each player in duels (idea 14).
 - **✅ Phase 14: before the hand-over (done, v1.67–v1.71).** **📋 Design review (2026-11-23): read `docs/DESIGN-REVIEW.md` first.** A whole-app review before the children get the app,
@@ -1508,7 +1511,7 @@ _Last updated: 2026-11-24_
 4. ~~Plan and build v1.74 ⏸️ Stage pause + ↩ Undo.~~ Built, PR open.
 5. ~~Plan and build v1.75 🎁 Gift codes between iPads.~~ Built, PR open.
 6. ~~Plan and build v1.76 🐾 The pet notices.~~ Built, PR open.
-7. Plan and build v1.77 📻 Creations in the room.
+7. ~~Plan and build v1.77 📻 Creations in the room.~~ Built, PR open.
 8. Plan and build v1.78 🛠️ Code Lab level maker (best after seeing how the 11-year-old uses the Code Lab).
 
 ## How versions and save upgrades work (since v1.2)

@@ -10,8 +10,8 @@ android {
         applicationId = "com.family.hangoutroom"
         minSdk = 26          // Android 8.0+
         targetSdk = 36
-        versionCode = 77  // bump this (2, 3, ...) every time you install an update
-        versionName = "1.76"
+        versionCode = 78  // bump this (2, 3, ...) every time you install an update
+        versionName = "1.77"
     }
 
     buildTypes {

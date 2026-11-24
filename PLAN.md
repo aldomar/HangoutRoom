@@ -1333,10 +1333,21 @@ agreed before any code (only v1.72's is written so far).
     - A box on top (a bonus card, a prize) makes it wait until the box is closed (up to about 10 s).
     - Moving between rooms and going out to the rooms list say nothing.
     - No game file changed.
-- ⬜ **📻 Creations in the room (v1.77; idea 9):**
+- ✅ **📻 Creations in the room (v1.77; idea 9; built, PR open on `feature/creations`):**
   - A boombox decoration plays a saved Music Maker loop once when tapped.
   - New `award:1` prizes for finished Code Lab levels (in the Loft, by the desk) and Brain Games levels (in the Backyard, by the chalkboard).
   - Questions for the plan: which levels give a prize, and is the boombox free?
+  - **Owner's answers (2026-11-24):** every level gives a prize; the boombox is free, given with the first saved loop.
+  - **As built** (new `71-creations.js`, all prizes `award:1`: never in the Shop, never given away):
+    - 🤖 One robot per Code Lab level (Beep, Loop, Twinkle, Swish, Hmm, Captain Byte) when every puzzle of that level is solved.
+      They stand in a row in the Loft, in front of the computer desk.
+    - 📚 The Brain Shelf comes the first time any Brain Games level is finished and stands by the Backyard chalkboard. It has a row
+      per game with 🎀 Easy, 🏆 Medium and ⭐ Hard spots, drawn from her progress, so they fill in by themselves.
+    - 📻 The Boombox goes into 📦 My Stuff with the first saved Music Maker loop. Tapping it in the room (not while decorating)
+      plays her saved loops in turn, twice through each; with none saved it plays a little tune.
+    - Checked when the room, the Code Lab, Brain Games or the Music Maker opens, and when a loop is saved, so rooms that finished
+      levels before v1.77 get their prizes too. The prize box waits until any other open box (a bonus card) is closed.
+    - Save data: `code.prizes[]`, `brain.shelf`, `music.box` (defaults in `normalize()`, no new save version).
 - ⬜ **🛠️ Code Lab level maker (v1.78; idea 11):**
   - She paints a map and sets the block limit. To save the level she must solve it herself within that limit, checked by `codeSim()`,
     so every saved level can be solved.
