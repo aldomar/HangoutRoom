@@ -115,11 +115,11 @@ The owner's list was right. These were missing from it or needed a correction:
 |---|---|---|---|---|---|
 | 1 | Daily cap for the sports and Stage games + fix the "go to the Fidget Shelf" hint + a quick 🔊/🔇 button in the room | 8–11, parents | S | Med | **v1.67, built** (details below) |
 | 1b | 🧤 Catch on Hard: cues for reading the ball (see "Next step" below) | 8–11 | S–M | Med | **v1.68** (owner agreed ideas 1–4; will test on the phone) |
-| 2 | First-time setup for the grown-up: PIN, the child's room and age band, a "Can you hear me?" voice test, a word about backups | All | M | High | v1.69 (changes save data: plan first) |
-| 3 | Age bands per room (Little / Easy / Normal / Challenge) instead of the one Easy switch; Brain Free Play's +2 only at the child's band or above | All | M | High | with v1.69 |
+| 2 | First-time setup for the grown-up: PIN, the child's room and age band, a "Can you hear me?" voice test, a word about backups | All | M | High | ✅ built in v1.69 |
+| 3 | Age bands per room (Little / Easy / Normal / Challenge) instead of the one Easy switch; Brain Free Play's +2 only at the child's band or above | All | M | High | ✅ built in v1.69 (Little / Easy / Normal / Challenge) |
 | 4 | Read every instruction aloud: a 🔊 button on prompts, spoken by itself for the Little and Easy bands | 3–6 | M | High | v1.70 |
 | 5 | 🧸 Little mode: keeps a toddler in Little Ones' Corner and Easy games until a grown-up presses and holds | 3 (maybe 5) | M | High | v1.71 |
-| 6 | Grown-up backup reminder on the rooms screen after about 30 days | All | S | High | could join v1.69 |
+| 6 | Grown-up backup reminder on the rooms screen after about 30 days | All | S | High | ✅ built in v1.69 |
 | 7 | Gifts between iPads with a gift code (details below) | 5–11 | M | Med | later; owner agrees in principle |
 | 8 | The pet reacts to what the child did (a greeting after a game, a heart for the first activity of the day) | All | M | Med | later |
 | 9 | Creations in the room: a boombox for saved loops and dances, prizes for finishing Code Lab and Brain levels | 6–11 | M | Med | later |
@@ -178,12 +178,11 @@ numbers (for example `K7P2-9QXM-4T`), using no easily confused characters (no 0/
 - This is a later PR and needs its own plan.
 
 ## Open questions
-- Will the owner set up each iPad before handing it over, or will the parents? This decides how much the first-time setup
-  has to explain.
+- ~~Who sets up each iPad?~~ The owner will (2026-11-23), but the welcome is written for any grown-up.
 - Does each iPad have an English voice on the device? The voice test in the setup will show it.
 
 ## Next step
-**v1.67 (daily caps) is built** on branch `feature/caps` (`PLAN.md`, "v1.67 plan details"). **v1.68 (Catch on Hard) is built** on branch `feature/catchhard` (`PLAN.md`, "v1.68 plan details"). Next: plan **v1.69 (first-time setup + age bands)**.
+**v1.67 (daily caps) is built** on branch `feature/caps` (`PLAN.md`, "v1.67 plan details"). **v1.68 (Catch on Hard) is built** on branch `feature/catchhard` (`PLAN.md`, "v1.68 plan details"). **v1.69 (first-time setup + level bands) is built** on branch `feature/setup` (`PLAN.md`, "v1.69 plan details"). Next: plan **v1.70 (spoken instructions)**.
 
 **Raised by the owner (2026-11-23): 🧤 Catch on Hard is still too hard,** even for the owner, and with capped coins it may just be
 frustrating. Why, from the code (`61-catch.js`): with no ring, the only cue is the ball's shadow, which starts at home plate (tiny,

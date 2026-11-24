@@ -225,6 +225,35 @@ This pack adds 25 clothes (15–25 coins each, open to everyone) so every outfit
   firefighter outfit) and 🧩 Full Outfit (every piece of any 3 outfits).
 - No change to the save data. There is still no cape: it needs its own layer behind the body (maybe later).
 
+## Setting up a new device, and room levels (since version 1.69)
+**The first time the app opens on a device with no rooms,** a short setup for a grown-up appears. Each step can be skipped:
+1. 👋 Welcome. **📂 I have a backup** goes straight to Restore (for moving to a new iPad).
+2. 🔒 A grown-up PIN (optional). It protects deleting a room, restoring a backup and changing a room's level.
+3. 🏠 Make the child's room, including its **Level**.
+4. 🔊 "Can you hear me?": the buddy says hello. If the device has no voice, the box explains how to add a free English
+   voice (iPad: Settings → Accessibility → Spoken Content → Voices).
+5. 💾 A word about backups, with a **Back up now** button. On an iPad opened in Safari, it also says to use Add to Home Screen.
+
+A device that already had rooms before 1.69 never sees it. ⚙️ Settings → **🧰 Grown-up setup** runs the PIN, voice and
+backup steps again.
+
+**Every room has a level** (it replaces the old 🐣 Easy mode switch). Pick it in the New Room box, ✏️ Change Room, or
+⚙️ Settings → Level (which asks for the PIN when one is set). It shows icons and names only:
+
+| Level | What it does |
+|---|---|
+| 🧸 Little | Easy mode, and 🔊 Read to me on. (Spoken instructions and a toddler lock come in later versions.) |
+| 🐣 Easy | Easy mode, and 🔊 Read to me on |
+| ⭐ Normal | No Easy mode. Each game remembers its own level |
+| 🔥 Challenge | No Easy mode, and every game she hasn't played yet starts on Medium (she can still tap Easy) |
+
+- Rooms made before 1.69 keep how they were: Easy mode on → 🐣 Easy, off → ⭐ Normal.
+- **Brain Games 🎲 Free Play** still pays +2 with no limit, but only at the room's level or harder: any level for Little and
+  Easy, Medium and Hard for Normal, Hard for Challenge. Easier made-up puzzles pay +1 from Free Play's 10 a day.
+- **Backup reminder:** if there has been no backup for 30 days, a small line shows under the rooms (never inside a room). It goes
+  away as soon as a backup is saved.
+- Save data: each room gets a level (`band`), and the device remembers when it was set up. Every older backup still restores.
+
 ## Catch you can read (since version 1.68)
 🧤 Catch on the Ball Field gives the clues a real outfielder uses, instead of a "go here" ring:
 - **Listen to the bat:** a loud **CRACK!** means a deep ball (stay back), **WHACK** half way, a quiet **tok** a short one (run in).

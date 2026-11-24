@@ -13,7 +13,7 @@
    (Android's save picker) or a download in the browser.
    ========================================================= */
 /* ---------- backup reminder ---------- */
-function backupSaved(){DB.settings.lastBackup=Date.now();save();}
+function backupSaved(){DB.settings.lastBackup=Date.now();save();if(cur==='profiles')bkNag();} // bkNag: section 64
 function lastBackupText(){
   const t=Number(DB.settings.lastBackup)||0; if(!t) return '💾 Last backup: never';
   const days=Math.floor((Date.now()-t)/86400000);

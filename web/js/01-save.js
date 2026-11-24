@@ -8,12 +8,12 @@ const TAU=Math.PI*2;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const APP_VERSION='1.68';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
+const APP_VERSION='1.69';   // shown in Settings; bump with every PR (matches versionName in android/app/build.gradle.kts)
 const SAVE_KEY='hangoutRoom.v1'; // never change: her saves live under this key
 const DB_VERSION=37;          // version of the save-data shape; bump only when the shape changes
 // stageOffset = "Sound late?" on the Stage, in ms (per device, because it depends on the speaker)
 // pin = the optional grown-up PIN ('' = none, else 4 digits). It stays with the device: restoring a backup keeps it.
-const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:'',seenNew:'',lastBackup:0}; // lastBackup (v1.30): when a backup was last saved on this device (ms) // seenNew (v1.22): last version whose What's New was shown
+const DEFAULT_SETTINGS={sound:true,music:false,backupArt:true,stageOffset:0,pin:'',seenNew:'',lastBackup:0,setupDone:0}; // lastBackup (v1.30): when a backup was last saved on this device (ms) // seenNew (v1.22): last version whose What's New was shown
 
 function freshDB(){return {version:DB_VERSION,profiles:[],activeId:null,settings:Object.assign({},DEFAULT_SETTINGS)};}
 
@@ -132,9 +132,14 @@ function fixDB(d){
   let v=Number(d.version)||1;
   while(v<DB_VERSION){v++;if(MIGRATIONS[v])MIGRATIONS[v](d);}
   d.version=v; // a backup from a newer app keeps its higher number and extra fields
+  const hadSetup=!!(d.settings&&typeof d.settings==='object'&&'setupDone' in d.settings);
   d.settings=Object.assign({},DEFAULT_SETTINGS,d.settings||{});
   if(!/^\d{4}$/.test(String(d.settings.pin))) d.settings.pin='';
   d.settings.lastBackup=Math.max(0,Number(d.settings.lastBackup)||0);
+  // setupDone (v1.69): when the first-time setup was finished (ms, 0 = never; section 64). A device that already had rooms
+  // before v1.69 counts as set up, so it never sees the setup.
+  d.settings.setupDone=Math.max(0,Number(d.settings.setupDone)||0);
+  if(!hadSetup&&Array.isArray(d.profiles)&&d.profiles.length) d.settings.setupDone=Date.now();
   d.profiles=Array.isArray(d.profiles)?d.profiles.filter(p=>p&&typeof p==='object'):[];
   if(!d.profiles.some(p=>p.id===d.activeId)) d.activeId=null;
   return d;

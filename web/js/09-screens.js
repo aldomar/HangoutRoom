@@ -44,8 +44,9 @@ function show(n){
 function renderProfiles(){
   $('#profHero').innerHTML=profHeroSVG();
   $('#profList').innerHTML=DB.profiles.map(p=>{const c=ROOM_COLORS[p.color];
-    return `<div class="pcard" data-id="${p.id}" style="border-color:${c};background:linear-gradient(${c}66,var(--panel) 65%)"><div class="pbadge">${p.badge}</div><div class="pm">${mascotSVG(p.look,'10 0 180 270')}</div><div class="pn">${esc(p.name)}</div><div class="pc">🪙 ${p.coins}${p.easy?' <span class="ptag">· 🐣 Easy</span>':''}</div><div class="pa"><button class="btn small ghost" data-act="edit">✏️</button><button class="btn small ghost" data-act="del">🗑️</button></div></div>`;}).join('')||'<div class="empty">No rooms yet — make one to start! 💜</div>';
+    return `<div class="pcard" data-id="${p.id}" style="border-color:${c};background:linear-gradient(${c}66,var(--panel) 65%)"><div class="pbadge">${p.badge}</div><div class="pm">${mascotSVG(p.look,'10 0 180 270')}</div><div class="pn">${esc(p.name)}</div><div class="pc">🪙 ${p.coins}${bandOf(p)!=='normal'?` <span class="ptag">· ${BANDS[bandOf(p)].icon} ${BANDS[bandOf(p)].name}</span>`:''}</div><div class="pa"><button class="btn small ghost" data-act="edit">✏️</button><button class="btn small ghost" data-act="del">🗑️</button></div></div>`;}).join('')||'<div class="empty">No rooms yet — make one to start! 💜</div>';
   $('#newProfBtn').classList.toggle('hidden',DB.profiles.length>=6);
+  bkNag(); // the grown-up's 30-day backup line (section 64)
 }
 $('#profList').addEventListener('click',e=>{
   const c=e.target.closest('.pcard'); if(!c) return;
@@ -55,27 +56,32 @@ $('#profList').addEventListener('click',e=>{
   DB.activeId=p.id; save(); SFX.happy(); enterRoom();
 });
 $('#newProfBtn').onclick=()=>askPin(()=>roomModal(null));
-// Make a new room (p = null) or change a room's name, color and badge.
-function roomModal(p){
+// Make a new room (p = null) or change a room's name, color, badge and level (v1.69).
+// The first-time setup (section 64) passes then(q) to run after a new room is made, and back for Cancel.
+function roomModal(p,then,back){
   const used=DB.profiles.map(x=>x.color), free=Object.keys(ROOM_COLORS).find(k=>!used.includes(k));
-  let fur='white', start='emo', tint=p?p.tint:true, color=p?p.color:(free||'purple'), badge=p?p.badge:ROOM_BADGES[0];
+  let fur='white', start='emo', tint=p?p.tint:true, color=p?p.color:(free||'purple'), badge=p?p.badge:ROOM_BADGES[0], band=p?bandOf(p):'normal';
   modal(p?'✏️ Change Room':'✨ New Room ✨',`<input id="npName" class="inp" maxlength="16" placeholder="Your name" autocomplete="off" value="${p?esc(p.name):''}">`
     +(p?'':`<div class="pick-lbl">Pick a buddy</div><div class="startpick" id="npStart">${starterRow(start)}</div>`
       +`<div class="pick-lbl">Fur</div><div class="furpick" id="npFur">${Object.entries(FUR).filter(([k,v])=>!v.price).map(([k,v])=>`<button data-fur="${k}" style="background:${v.c}" class="${k===fur?'on':''}" title="${v.name}"></button>`).join('')}</div>`)
     +`<div class="pick-lbl">Room color</div><div class="furpick" id="npCol">${Object.entries(ROOM_COLORS).map(([k,c])=>`<button data-col="${k}" style="background:${c}" class="${k===color?'on':''}"></button>`).join('')}</div>`
     +`<div class="pick-lbl">Badge</div><div class="badgepick" id="npBadge">${ROOM_BADGES.map(b=>`<button data-badge="${b}" class="${b===badge?'on':''}">${b}</button>`).join('')}</div>`
+    +`<div class="pick-lbl">Level</div>${bandPick('npBand',band)}`
     +`<button class="btn small ghost tintbtn" id="npTint">🎨 Color the buttons too: <b>${tint?'ON':'OFF'}</b></button>`,
-    [{text:'Cancel',cls:'ghost'},{text:p?'Save':'Make it!',cls:'pink',keep:true,on:()=>{
+    [{text:'Cancel',cls:'ghost',on:back},{text:p?'Save':'Make it!',cls:'pink',keep:true,on:()=>{
       const n=$('#npName').value.trim(); if(!n){toast('Type a name first!');return;}
       closeModal();
-      if(p){p.name=n;p.color=color;p.badge=badge;p.tint=tint;save();SFX.happy();renderProfiles();return;}
-      const q=newProfile(n,fur,color,badge,starterLook(start,fur)); q.tint=tint; giveStarter(q); roomStart(q); DB.profiles.push(q); DB.activeId=q.id; save(); SFX.buy(); enterRoom();
+      if(p){p.name=n;p.color=color;p.badge=badge;p.tint=tint;setBand(p,band);save();SFX.happy();renderProfiles();return;}
+      const q=newProfile(n,fur,color,badge,starterLook(start,fur)); q.tint=tint; giveStarter(q); roomStart(q); setBand(q,band);
+      if(!DB.settings.setupDone) DB.settings.setupDone=Date.now(); // the device's first room: setup counts as done (section 64)
+      DB.profiles.push(q); DB.activeId=q.id; save(); SFX.buy(); enterRoom(); if(then) then(q);
     }}]);
   const pick=(sel,attr,set)=>{const row=$(sel);if(row)row.onclick=e=>{const b=e.target.closest(`[data-${attr}]`);if(!b)return;set(b.dataset[attr]);$$(sel+' button').forEach(x=>x.classList.toggle('on',x===b));SFX.click();};};
   // Picking a buddy also picks its fur; picking a fur shows every buddy in it.
   pick('#npStart','start',v=>{start=v;fur=STARTERS[v].fur;$$('#npFur button').forEach(x=>x.classList.toggle('on',x.dataset.fur===fur));});
   pick('#npFur','fur',v=>{fur=v;$('#npStart').innerHTML=starterRow(start,fur);});
   pick('#npCol','col',v=>color=v); pick('#npBadge','badge',v=>badge=v);
+  bandWire('npBand',v=>band=v);
   $('#npTint').onclick=()=>{tint=!tint;$('#npTint b').textContent=tint?'ON':'OFF';SFX.click();};
   if(!p) setTimeout(()=>{const i=$('#npName');if(i)i.focus();},60);
 }
@@ -292,19 +298,20 @@ function settingsModal(){
   const s=DB.settings;
   const p=P();
   modal('⚙️ Settings',`<div class="setlist"><button class="btn ghost" id="sSound">${s.sound?'🔊 Sounds: ON':'🔇 Sounds: OFF'}</button><button class="btn ghost" id="sMusic">${s.music?'🎵 Music: ON':'🎵 Music: OFF'}</button>`
-    +(p?`<button class="btn ghost" id="sEasy">${p.easy?'🐣 Easy mode: ON':'🐣 Easy mode: OFF'}</button>`:'')
+    +(p?`<button class="btn ghost" id="sBand">${BANDS[bandOf(p)].icon} Level: ${BANDS[bandOf(p)].name}</button>`:'') // section 64
     +(p&&canSpeak()?`<button class="btn ghost" id="sSpeak">${readOn(p)?'🔊 Read to me: ON':'🔈 Read to me: OFF'}</button>`:'') // section 34
     +(p?`<button class="btn ghost" id="sGift">🎁 Give a gift</button>`:'')
-    +`<button class="btn ghost" id="sSwitch">👥 Switch Room</button><button class="btn ghost" id="sBackup">💾 Backup &amp; Restore</button><button class="btn ghost" id="sPin">${s.pin?'🔒 Grown-up PIN: ON':'🔓 Grown-up PIN: OFF'}</button><button class="btn ghost" id="sAbout">💌 About</button></div><p class="about">🐰 Hangout Room · version ${APP_VERSION}</p>`,[{text:'Close',cls:'pink'}]);
+    +`<button class="btn ghost" id="sSwitch">👥 Switch Room</button><button class="btn ghost" id="sBackup">💾 Backup &amp; Restore</button><button class="btn ghost" id="sPin">${s.pin?'🔒 Grown-up PIN: ON':'🔓 Grown-up PIN: OFF'}</button><button class="btn ghost" id="sSetup">🧰 Grown-up setup</button><button class="btn ghost" id="sAbout">💌 About</button></div><p class="about">🐰 Hangout Room · version ${APP_VERSION}</p>`,[{text:'Close',cls:'pink'}]);
   $('#sSound').onclick=()=>{setSound(!s.sound);SFX.click();settingsModal();}; // setSound: section 34
   $('#sMusic').onclick=()=>{s.music=!s.music;save();if(s.music)startMusic();else stopMusic();settingsModal();};
-  if(p) $('#sEasy').onclick=()=>{p.easy=!p.easy;save();SFX.click();applyEasy();if(cur==='room')renderRoom();settingsModal();};
+  if(p) $('#sBand').onclick=()=>{SFX.click();askPin(bandModal);};
   if(p) $('#sGift').onclick=giveModal; // section 32
   if(p&&canSpeak()) $('#sSpeak').onclick=()=>{p.speak=!readOn(p);save();SFX.click();settingsModal();};
   $('#modalBody').insertAdjacentHTML('beforeend',`<p class="bk-last" id="bkLast">${lastBackupText()}</p>`); // for the grown-up (section 34)
   $('#sSwitch').onclick=()=>{closeModal();show('profiles');};
   $('#sBackup').onclick=backupModal;
   $('#sPin').onclick=pinSettings;
+  $('#sSetup').onclick=()=>{SFX.click();askPin(()=>setupPin(true));}; // section 64
   $('#sAbout').onclick=()=>{closeModal();SFX.click();show('about');}; // section 25
 }
 // Easy mode belongs to a room, so it is on only while that room is open (never on the profile screen).
@@ -334,19 +341,20 @@ function forgotPin(){
       if(Number($('#fpAns').value.trim())!==a*b){SFX.locked();toast('Not quite. Try again!');return;}
       DB.settings.pin='';save();closeModal();toast('PIN removed 🔓');}}]);
 }
-function newPin(){ // type a new PIN twice
-  const back={text:'Cancel',cls:'ghost',on:settingsModal};
+function newPin(after){ // type a new PIN twice; then after() (the first-time setup's next step, or Settings)
+  if(typeof after!=='function') after=settingsModal;
+  const back={text:'Cancel',cls:'ghost',on:after};
   pinPad('🔒 Pick a 4-digit PIN',c=>{
     pinPad('🔒 Type it again',c2=>{
-      if(c2!==c){SFX.locked();toast('Those did not match. Try again!');newPin();return true;}
-      DB.settings.pin=c;save();SFX.buy();toast('PIN is on 🔒');settingsModal();return true;},[back]);
+      if(c2!==c){SFX.locked();toast('Those did not match. Try again!');newPin(after);return true;}
+      DB.settings.pin=c;save();SFX.buy();toast('PIN is on 🔒');after();return true;},[back]);
     return true;},[back]);
 }
 function pinSettings(){
-  if(!DB.settings.pin){newPin();return;}
-  askPin(()=>modal('🔒 Grown-up PIN','The PIN is needed to make, change or delete a room, and to restore a backup.',[
+  if(!DB.settings.pin){newPin(settingsModal);return;}
+  askPin(()=>modal('🔒 Grown-up PIN','The PIN is needed to make, change or delete a room, to change a room\'s level, and to restore a backup.',[
     {text:'Remove PIN',cls:'ghost',on:()=>{DB.settings.pin='';save();toast('PIN removed 🔓');settingsModal();}},
-    {text:'Change PIN',cls:'ghost',on:newPin},{text:'Close',cls:'pink',on:settingsModal}]));
+    {text:'Change PIN',cls:'ghost',on:()=>newPin(settingsModal)},{text:'Close',cls:'pink',on:settingsModal}]));
 }
 // A backup is the save data (DB) as text. With the drawings switch on, it also has
 // artwork:[...drawing records]. Older backups have no artwork list and still restore.
@@ -394,7 +402,8 @@ function doRestore(txt){
     d=fixDB(d);d.profiles.forEach(normalize);
     d.settings.pin=DB.settings.pin||''; // the PIN belongs to this device, so a backup can't change or remove it
     d.settings.seenNew=DB.settings.seenNew||''; // so is "What's New seen" (section 25)
-    d.settings.lastBackup=DB.settings.lastBackup||0;} // and when this device last made a backup (section 34)
+    d.settings.lastBackup=DB.settings.lastBackup||0; // and when this device last made a backup (section 34)
+    d.settings.setupDone=DB.settings.setupDone||Date.now();} // and its first-time setup: restoring counts as set up (section 64) // and when this device last made a backup (section 34)
   catch(e){toast('Hmm, that backup code did not work.');return;}
   const done=msg=>{DB=d;save();ART.owner=null;closeModal();toast(msg);show('profiles');};
   // No drawings in the backup: keep the drawings already on this device.

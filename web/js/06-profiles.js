@@ -162,6 +162,9 @@ function normalize(p){
    p.stage.pay=dp(p.stage.pay); p.maze.pay=dp(p.maze.pay);}
   // Little-sister polish (v1.8): Easy mode, and the room's color + badge on the profile screen.
   p.easy=!!p.easy;
+  // Level bands (v1.69, section 64): p.band, with p.easy kept in step (on for Little and Easy). If they disagree (an older
+  // app version changed Easy mode), Easy mode wins, so the room acts as it did there.
+  if(!['little','easy','normal','challenge'].includes(p.band)||(p.band==='little'||p.band==='easy')!==p.easy) p.band=p.easy?'easy':'normal';
   // Buddies (v1.20): the room's color also colors the buttons and bars. New rooms start with it on; rooms made
   // before v1.20 start with it off, so they look the same as before (it can be switched on with ✏️ under the room).
   p.tint=!!p.tint;
