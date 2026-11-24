@@ -23,6 +23,8 @@ const SPK_FIXED={
   brDuo:'Take turns! Find the pairs. Tap two cards.',
   brFacts:'Here are your fact cards. Tap one to read it.',
   codePick:'Pick a puzzle. Help your buddy get to the carrot!',
+  codeMake:'Make your own level! Tap a box to start one, or play a level from your family.',
+  codeEdit:'Paint your map. Then tap test it, and solve it yourself to save it.',
   stagePick:'Pick a song! ',
   littleMenu:'Pick something to play!',
   littlePick:'Pick a picture to color.',
@@ -64,7 +66,8 @@ const CL_SPEAK={
   hard:'Make a path to the carrot. Use repeat blocks to save space.',
   move:'Put arrows in My Move. Then use the sparkle block to do your move.',
   if:'Put the question block in front of an arrow to hop over a puddle.',
-  challenge:'Use My Move to get to the carrot.'};
+  challenge:'Use My Move to get to the carrot.',
+  make:'Make a path to the carrot on this home made level.'};
 function clSpeak(lvl,pz){return (CL_SPEAK[lvl]||CL_SPEAK.easy)+(pz&&pz.map&&pz.map.join('').includes('*')?' Pick up every star first.':'');}
 
 // Where she is, and what to say there. Busy moments keep the place's key with no words.
@@ -86,6 +89,8 @@ function speakLine(){
       return {k:'stage:pick'+(TGT.on?':duo':''),t:SPK_FIXED.stagePick+spkText('#stgHint')};
     case 'code':
       if(CL.view==='pick') return {k:'code:pick',t:SPK_FIXED.codePick};
+      if(CL.view==='make') return {k:'code:make',t:SPK_FIXED.codeMake}; // 🛠️ (v1.78)
+      if(CL.view==='edit') return {k:'code:edit',t:SPK_FIXED.codeEdit};
       return {k:'code:'+CL.lvl+':'+(CL.free?spkId(CL.free):CL.idx),t:clSpeak(CL.lvl,clPz())};
     case 'brain':
       if(BR.view==='menu') return {k:'br:menu',t:SPK_FIXED.brMenu};

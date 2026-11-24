@@ -152,7 +152,8 @@ function codeSim(pz,prog,move){
   if(end==='short'&&x===g.goal.x&&y===g.goal.y) end='stars';
   return {ev,end};
 }
-const codeMax=(lvl,pz)=>pz.max||CODE_LEVELS[lvl].max;
+// (v1.78) a 🛠️ made level plays as level 'make', which is not in CODE_LEVELS: it carries its own max, moveMax and blocks
+const codeMax=(lvl,pz)=>pz.max||(CODE_LEVELS[lvl]||CODE_LEVELS.easy).max;
 const codeCoins=lvl=>CODE_LEVELS[lvl].coins||CODE_COINS, codeBonus=lvl=>CODE_LEVELS[lvl].bonus||CODE_LEVEL_BONUS;
 
 /* ---------- screen ---------- */
@@ -161,13 +162,16 @@ const codeCoins=lvl=>CODE_LEVELS[lvl].coins||CODE_COINS, codeBonus=lvl=>CODE_LEV
 let CL={view:'pick',lvl:'easy',idx:0,prog:[],move:[],row:'main',state:'edit',timer:0,ev:null,k:0,bad:[],badM:[]};
 // (v1.43) CL.free = a made-up 🎲 board (section 44); otherwise the fixed puzzle
 const clPz=()=>CL.free||CODE_PUZZLES[CL.lvl][CL.idx];
-const clHasMove=()=>CODE_LEVELS[CL.lvl].blocks.includes('M');
-const clMoveMax=()=>clPz().moveMax||CODE_LEVELS[CL.lvl].moveMax||4;
+const clBlocks=()=>clPz().blocks||CODE_LEVELS[CL.lvl].blocks;
+const clHasMove=()=>clBlocks().includes('M');
+const clMoveMax=()=>clPz().moveMax||(CODE_LEVELS[CL.lvl]||{}).moveMax||4;
 function renderCode(){if(P())clPickView();}
 function codeStop(){clearTimeout(CL.timer);if(CL.state==='run')CL.state='edit';} // leaving the screen stops a run (nothing lost)
 function clPickView(){
-  const p=P(); if(!p) return; codeStop(); CL.view='pick';
-  $('#clPick').classList.remove('hidden'); $('#clPlay').classList.add('hidden'); $('#clTabs').classList.remove('hidden');
+  const p=P(); if(!p) return; codeStop();
+  if(CL.mk){lmList();return;} // 🛠️ the Make tab is chosen (section 72)
+  CL.view='pick';
+  $('#clPick').classList.remove('hidden'); $('#clPlay').classList.add('hidden'); $('#clMake').classList.add('hidden'); $('#clTabs').classList.remove('hidden');
   $('#clBack').textContent='⬅ Room';
   const lv=p.code.level, list=CODE_PUZZLES[lv];
   $$('#clTabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.lvl===lv));
@@ -182,26 +186,45 @@ function clMini(q){
   const col={'#':'#ff8cc6','C':'#ff9f43','F':'#fff','*':'#ffd166','~':'#5fb4ff'};
   return q.map.map((row,y)=>[...row].map((c,x)=>`<rect x="${x*10+0.6}" y="${y*10+0.6}" width="8.8" height="8.8" rx="2" fill="${col[c]||'#4b3a66'}"/>`).join('')).join('');
 }
-$('#clTabs').onclick=e=>{const b=e.target.closest('[data-lvl]');if(!b||CL.view!=='pick')return;P().code.level=b.dataset.lvl;save();SFX.click();clPickView();};
-$('#clList').onclick=e=>{if(e.target.closest('[data-dice]')){SFX.click();fpCode(P().code.level);return;}
+$('#clTabs').onclick=e=>{
+  if(CL.view!=='pick'&&CL.view!=='make') return;
+  if(e.target.closest('[data-make]')){SFX.click();CL.mk=true;lmList();return;} // 🛠️ Make (section 72)
+  const b=e.target.closest('[data-lvl]');if(!b)return;CL.mk=false;P().code.level=b.dataset.lvl;save();SFX.click();clPickView();};
+$('#clList').onclick=e=>{if(CL.view==='make'){lmListTap(e);return;}
+  if(e.target.closest('[data-dice]')){SFX.click();fpCode(P().code.level);return;}
   const b=e.target.closest('[data-pz]');if(b){SFX.click();clOpen(P().code.level,Number(b.dataset.pz));}};
-$('#clBack').onclick=()=>{SFX.click();if(CL.view==='pick')show('room');else clPickView();};
-function clBackKey(){if(CL.view==='pick')show('room');else clPickView();} // Android Back: a puzzle -> the list -> room
+$('#clBack').onclick=()=>{SFX.click();clBackKey();};
+// Back: a puzzle -> the list -> room. (v1.78) Testing her own level -> its editor -> the 🛠️ levels -> room.
+function clBackKey(){
+  if(CL.view==='pick'||CL.view==='make') show('room');
+  else if(CL.view==='edit') lmList();
+  else if(CL.view==='play'&&CL.made&&CL.made.own!=null) lmEdit(CL.made.own);
+  else clPickView();
+}
 
 function clOpen(lvl,idx,free){
   const p=P(), pz=free||CODE_PUZZLES[lvl]&&CODE_PUZZLES[lvl][idx]; if(!p||!pz) return;
-  codeStop(); Object.assign(CL,{view:'play',lvl,idx,free:free||null,prog:[],move:[],state:'edit',bad:[],badM:[]});
+  codeStop(); Object.assign(CL,{view:'play',lvl,idx,free:free||null,made:null,prog:[],move:[],state:'edit',bad:[],badM:[]});
   CL.row=clHasMove()?'move':'main'; // My Move puzzles start in the ✨ row: make the move first
-  $('#clPick').classList.add('hidden'); $('#clTabs').classList.add('hidden'); $('#clPlay').classList.remove('hidden');
-  $('#clBack').textContent='⬅ Puzzles';
-  $('#clPal').innerHTML=[...CODE_LEVELS[lvl].blocks].map(t=>`<button class="clb${clCls(t)}" data-add="${t}">${clFace(t)}</button>`).join('');
+  $('#clPick').classList.add('hidden'); $('#clTabs').classList.add('hidden'); $('#clMake').classList.add('hidden'); $('#clPlay').classList.remove('hidden');
+  $('#clBack').textContent=lvl==='make'?'⬅ Levels':'⬅ Puzzles';
+  $('#clPal').innerHTML=[...clBlocks()].map(t=>`<button class="clb${clCls(t)}" data-add="${t}">${clFace(t)}</button>`).join('');
   clBoard(); clProg(); clSay(pz.hint||'',true);
 }
 const clFace=t=>CODE_BLOCKS[t].n?`🔁<small>×${CODE_BLOCKS[t].n}</small>`:CODE_BLOCKS[t].i;
 const clCls=t=>CODE_BLOCKS[t].n?' rep':t==='M'?' fn':t==='Q'?' cond':'';
 // The board: 100 units per square, Fuzzy in a group moved with a CSS transition.
 function clBoard(){
-  const p=P(), pz=clPz(), g=codeParse(pz), W=g.w*100, H=g.h*100;
+  const p=P(), g=codeParse(clPz()), W=g.w*100, H=g.h*100;
+  let s=clArt(g);
+  // Fuzzy (one mascot only, so one fuzz filter)
+  s+=`<g id="clFz"><g class="clhop">${mascotSVG(p.look,null,'x="10" y="-30" width="80" height="108"')}</g></g>`;
+  const sv=$('#clBoard'); sv.setAttribute('viewBox',`-10 -36 ${W+20} ${H+46}`); sv.innerHTML=s;
+  clPut(g.start.x,g.start.y,true);
+}
+// The board without Fuzzy: squares, toy blocks, puddles, the carrot and the stars (also drawn by the 🛠️ level maker, section 72).
+function clArt(g){
+  const W=g.w*100, H=g.h*100;
   let s=`<rect x="-8" y="-8" width="${W+16}" height="${H+16}" rx="22" fill="#2b2340"/>`;
   for(let y=0;y<g.h;y++) for(let x=0;x<g.w;x++){
     const k=x+','+y, X=x*100, Y=y*100;
@@ -212,16 +235,13 @@ function clBoard(){
       +`<ellipse cx="${X+40}" cy="${Y+48}" rx="11" ry="5" fill="#d6efff"/><circle cx="${X+64}" cy="${Y+62}" r="4" fill="#d6efff"/></g>`;
   }
   // the carrot
-  const cx=g.goal.x*100+50, cy=g.goal.y*100+50;
+  if(g.goal){const cx=g.goal.x*100+50, cy=g.goal.y*100+50;
   s+=`<g><path d="M${cx-10} ${cy-22} Q${cx-26} ${cy-44} ${cx-14} ${cy-46} Q${cx-4} ${cy-38} ${cx} ${cy-26} Q${cx+6} ${cy-48} ${cx+18} ${cy-42} Q${cx+22} ${cy-30} ${cx+8} ${cy-22}Z" fill="#69db7c" stroke="#2b2235" stroke-width="3"/>`
     +`<path d="M${cx-18} ${cy-22} Q${cx} ${cy-30} ${cx+18} ${cy-22} Q${cx+8} ${cy+14} ${cx} ${cy+38} Q${cx-8} ${cy+14} ${cx-18} ${cy-22}Z" fill="#ff9f43" stroke="#2b2235" stroke-width="3.5"/>`
-    +`<path d="M${cx-8} ${cy-6} h8 M${cx-2} ${cy+10} h7" stroke="#c96a1c" stroke-width="3" stroke-linecap="round"/></g>`;
+    +`<path d="M${cx-8} ${cy-6} h8 M${cx-2} ${cy+10} h7" stroke="#c96a1c" stroke-width="3" stroke-linecap="round"/></g>`;}
   g.stars.forEach(k=>{const [x,y]=k.split(',').map(Number);
     s+=`<path class="clstar" data-star="${k}" d="${starPath(x*100+50,y*100+50,30)}" fill="#ffd166" stroke="#2b2235" stroke-width="3.5"/>`;});
-  // Fuzzy (one mascot only, so one fuzz filter)
-  s+=`<g id="clFz"><g class="clhop">${mascotSVG(p.look,null,'x="10" y="-30" width="80" height="108"')}</g></g>`;
-  const sv=$('#clBoard'); sv.setAttribute('viewBox',`-10 -36 ${W+20} ${H+46}`); sv.innerHTML=s;
-  clPut(g.start.x,g.start.y,true);
+  return s;
 }
 function clPut(x,y,now){
   const f=$('#clFz'); if(!f) return;
@@ -325,6 +345,7 @@ function clDone(){
   clSay(CL_OOPS[CL.end][p.easy?0:1]); tell(CL_OOPS[CL.end][1]); clProg(); // tell: section 65
 }
 function clWin(){
+  if(CL.made){lmWin();return;} // 🛠️ a made level (section 72)
   if(CL.free){fpCodeWin();return;}
   const p=P(), pz=CODE_PUZZLES[CL.lvl][CL.idx], first=!p.code.solved.includes(pz.id);
   CL.state='win'; clProg();

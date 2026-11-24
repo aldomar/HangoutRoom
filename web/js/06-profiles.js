@@ -5,6 +5,14 @@
 // Each room has a color and a badge, so a child who can't read yet can still find her own room.
 // Color ids and badges are saved: never rename or remove them (new ones can be added).
 const ROOM_COLORS={pink:'#ff8cc6',purple:'#a97cff',mint:'#8ff0d0',gold:'#ffd166',sky:'#7fc8ff',peach:'#ffab7a',green:'#7ee08a',blue:'#6c8cff'}; // green, blue: v1.20
+// (v1.78) a made Code Lab level's shape (types only: whether it can be solved is checked by codeSim when it is played, section 72)
+function codeMineOk(L){
+  if(!L||typeof L!=='object'||typeof L.id!=='string'||typeof L.sol!=='string'||typeof L.move!=='string'||!Array.isArray(L.map)) return false;
+  const n=L.map.length, all=L.map.join('');
+  return n>=4&&n<=6&&L.map.every(r=>typeof r==='string'&&r.length===n&&/^[.#*~FC]+$/.test(r))
+    &&all.split('F').length===2&&all.split('C').length===2&&Number.isInteger(L.max)&&L.max>=2&&L.max<=16
+    &&(L.moveMax===0||Number.isInteger(L.moveMax)&&L.moveMax>=2&&L.moveMax<=6);
+}
 const ROOM_BADGES=['🐰','⭐','💜','🦇','⚽','🎤','🎨','☁️'];
 function newProfile(name,fur,color,badge,look){
   const p={id:uid(),name,color,badge,mascotName:'Fuzzy',coins:25,created:Date.now(),lastDaily:'',seenTip:false,
@@ -18,7 +26,7 @@ function newProfile(name,fur,color,badge,look){
 function normalize(p){
   if(!p.id) p.id=uid();
   if(!p.name) p.name='Room';
-  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0,seeks:0,fetches:0,petWalks:0,finds:0,hits:0,homers:0,catches:0,derbies:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
+  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0,seeks:0,fetches:0,petWalks:0,finds:0,hits:0,homers:0,catches:0,derbies:0,made:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.fidPay=Object.assign({day:'',n:0},p.fidPay&&typeof p.fidPay==='object'?p.fidPay:{}); if(typeof p.fidPay.n!=='number'||!(p.fidPay.n>=0)) p.fidPay.n=0; // v1.36: fidget coins paid today (see FID_DAILY)
   // Music Maker (v1.38, section 40): sound kit, speed (0-2), the loop on the grid now, 3 saved loops, music coins paid today.
@@ -188,6 +196,10 @@ function normalize(p){
   p.code.solved=Array.isArray(p.code.solved)?p.code.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[];
   if(!['easy','medium','hard','move','if','challenge'].includes(p.code.level)) p.code.level='easy';
   p.code.prizes=Array.isArray(p.code.prizes)?p.code.prizes.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[]; // 🤖 the levels whose robot was given (v1.77)
+  // 🛠️ (v1.78) her 3 made levels (null or {id, map[], max, moveMax, sol, move, at}) and the coins paid today for making them
+  p.code.mine=[0,1,2].map(i=>{const L=Array.isArray(p.code.mine)?p.code.mine[i]:null;return codeMineOk(L)?L:null;});
+  const mkp=p.code.makePay&&typeof p.code.makePay==='object'?p.code.makePay:{};
+  p.code.makePay={day:typeof mkp.day==='string'?mkp.day:'',n:Math.max(0,Math.floor(Number(mkp.n)||0))};
   // Brain Games (v1.25): the last game played, the level picked in each game, and the puzzle ids solved (each pays once).
   const br=p.brain&&typeof p.brain==='object'&&!Array.isArray(p.brain)?p.brain:{}, brL=br.level&&typeof br.level==='object'&&!Array.isArray(br.level)?br.level:{};
   const brG=['snack','memory','pop','train','word','bake','facts']; // v1.33: + Pattern Train, Word Builder; v1.34: + Fraction Bakery, Fact Cards

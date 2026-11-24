@@ -1348,12 +1348,25 @@ agreed before any code (only v1.72's is written so far).
     - Checked when the room, the Code Lab, Brain Games or the Music Maker opens, and when a loop is saved, so rooms that finished
       levels before v1.77 get their prizes too. The prize box waits until any other open box (a bonus card) is closed.
     - Save data: `code.prizes[]`, `brain.shelf`, `music.box` (defaults in `normalize()`, no new save version).
-- ⬜ **🛠️ Code Lab level maker (v1.78; idea 11):**
+- ✅ **🛠️ Code Lab level maker (v1.78; idea 11; built, PR open on `feature/levelmaker`):**
   - She paints a map and sets the block limit. To save the level she must solve it herself within that limit, checked by `codeSim()`,
     so every saved level can be solved.
   - 3 slots in `code.mine[]`.
   - Chosen over a maze maker because a maze can only be proven by playing it (it uses physics).
   - Best after seeing how the 11-year-old uses the Code Lab.
+  - **Owner's answers (2026-11-24):** build it now; every piece (blocks, stars, puddles, ✨ My Move); maps 4×4 to 6×6;
+    +3 coins a new level, 3 a day; the other rooms on the same device can play her levels.
+  - **As built** (new `72-levelmaker.js`, small hooks in `18-codelab.js`):
+    - A 🛠️ Make tab after the 6 levels lists her 3 slots and the levels from the other rooms.
+    - The editor: size 4×4 / 5×5 / 6×6, tools floor, 🧸 toy block, ⭐ star (5 at most), 💧 puddle, the buddy's start and the 🥕.
+      Tap to paint, tap again to clear, drag to paint a line. The start and the carrot are moved, never painted over.
+    - The blocks come from the map (🌟 with stars, ❓ with puddles) plus a ✨ My Move switch; limits 2–16 (My Move 2–6).
+    - ▶️ Test it plays it in the normal play screen; solving it saves it with her answer, checked again by `codeSim()`.
+    - +3 for a new or changed level, 3 a day (`code.makePay`); the same level again pays nothing. Another room's level pays
+      through Free Play (+1, 10 a day). Made levels never change `code.solved`, bonuses or the 🤖 robots.
+    - Unsaved changes stay as a draft (✏️) until the app closes. 🗑️ asks first.
+    - 2 stickers (Level Maker, Game Designer), a pet line, spoken lines for the list and the editor.
+    - Save data: `code.mine[3]`, `code.makePay{day,n}`, `stats.made` (defaults in `normalize()`, no new save version).
 - ⏸️ **Parked:**
   - A picture lock for each room (idea 13): only if iPads get shared.
   - A level for each player in duels (idea 14, risk 8): only for family visits.

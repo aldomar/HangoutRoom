@@ -1108,7 +1108,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('144 stickers on 8 pages (1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===144&&new Set(STICKERS.map(s=>s.id)).size===144&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('146 stickers on 8 pages (2 for 🛠️ the level maker since v1.78, 1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===146&&new Set(STICKERS.map(s=>s.id)).size===146&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1442,7 +1442,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`show('code');clOpen('hard',3)`); await sleep(300); await shot('A27-phone-code');
   check('phone: Code Lab board and Run button both on screen', await ev(`(()=>{const b=document.querySelector('#clBoard').getBoundingClientRect(),r=document.querySelector('#clRun').getBoundingClientRect();return b.height>150&&r.bottom<=innerHeight&&r.height>=48;})()`));
   await ev(`clPickView()`); await sleep(150); await shot('A35-phone-code-tabs');
-  check('phone: all 6 Code Lab tabs fit without scrolling', await ev(`(()=>{const t=document.querySelector('#clTabs');return t.scrollWidth<=t.clientWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`));
+  check('phone: all 7 Code Lab tabs (6 levels + 🛠️ Make) fit without scrolling', await ev(`(()=>{const t=document.querySelector('#clTabs');return t.scrollWidth<=t.clientWidth&&[...t.children].every(b=>b.getBoundingClientRect().height>=44);})()`));
   await ev(`clOpen('challenge',7);CL.move=[...'QRQUS'];CL.prog=['4','M'];clProg()`); await sleep(200); await shot('A43-phone-code-challenge');
   check('phone: Challenge puzzle (10 palette blocks, both rows) fits with ▶️ Run on screen', await ev(`(()=>{const r=document.querySelector('#clRun').getBoundingClientRect(),b=document.querySelector('#clBoard').getBoundingClientRect();return r.bottom<=innerHeight&&b.height>120;})()`));
   await ev(`clOpen('move',4);CL.move=[...'2R2U'];CL.prog=['2','M'];clProg()`); await sleep(200); await shot('A36-phone-code-mymove');
@@ -5747,7 +5747,107 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('saved: older rooms get the new fields (code.prizes, brain.shelf, music.box)', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));delete q.code.prizes;delete q.brain.shelf;delete q.music.box;normalize(q);
       return Array.isArray(q.code.prizes)&&q.code.prizes.length===0&&q.brain.shelf===false&&q.music.box===false;})()`));
     await ev(`closeModal();(()=>{const q=JSON.parse(window._v77),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();save();show('room');goRoom(1)`);
-    check('v1.77 is in the Gift Story and the app says 1.77', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.77')&&APP_VERSION==='1.77'`));
+    check('v1.77 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.77')`));
+  }
+
+  console.log('Code Lab level maker (v1.78)');
+  {
+    const title=()=>ev(`document.querySelector('#modal').classList.contains('hidden')?'':document.querySelector('#modalTitle').textContent`);
+    const btn=t=>ev(`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes(${JSON.stringify(t)})).click()`);
+    // a tap (or a drag through several squares) on the editor's board, like a finger
+    await ev(`window._lmAt=(cells)=>{const sv=document.querySelector('#lmBoard'),m=sv.getScreenCTM();
+      const at=(c)=>{const pt=sv.createSVGPoint();pt.x=c[0]*100+50;pt.y=c[1]*100+50;return pt.matrixTransform(m);};
+      cells.forEach((c,i)=>{const q=at(c);sv.dispatchEvent(new PointerEvent(i?'pointermove':'pointerdown',{clientX:q.x,clientY:q.y,pointerId:7,bubbles:true}));});
+      sv.dispatchEvent(new PointerEvent('pointerup',{pointerId:7,bubbles:true}));};`);
+    const rows=()=>ev(`lmRows(LM.d).join('/')`);
+    await ev(`closeModal();stkPaused=true;window._v78=JSON.stringify(P());CODE_STEP=40;LM.drafts={};
+      {const p=P();p.code.mine=[null,null,null];p.code.makePay={day:'',n:0};p.stats.made=0;p.easy=false;}applyEasy();show('code')`); await sleep(700); await ev(`closeModal()`);
+    await ev(`document.querySelector('#clTabs [data-make]').click()`); await sleep(150);
+    check('a 🛠️ Make tab after the 6 levels: it lists 3 empty slots', await ev(`CL.view==='make'&&document.querySelector('#clTabs [data-make]').classList.contains('on')&&document.querySelectorAll('#clList [data-mine]').length===3&&!document.querySelector('#clList .done')`));
+    check('…and the level tabs are still the same 6', await ev(`[...document.querySelectorAll('#clTabs [data-lvl]')].map(b=>b.dataset.lvl).join()==='easy,medium,hard,move,if,challenge'&&P().code.level!=='make'`));
+    check('…it has a spoken line', await ev(`speakLine().k==='code:make'&&speakLine().t.length>10`));
+    await shot('LM1-list');
+    await ev(`document.querySelector('#clList [data-mine="0"]').click()`); await sleep(200);
+    check('a slot opens the editor: 5×5 with the buddy and the carrot', await ev(`CL.view==='edit'&&!document.querySelector('#clMake').classList.contains('hidden')&&LM.d.map.length===5`)&&await rows()==='....C/...../...../...../F....');
+    check('…the editor has a spoken line', await ev(`speakLine().k==='code:edit'`));
+    await ev(`LM.tool='#';_lmAt([[2,2]])`);
+    check('tapping a square paints a toy block', await rows()==='....C/...../..#../...../F....');
+    await ev(`_lmAt([[2,2]])`);
+    check('…tapping it again clears it', await rows()==='....C/...../...../...../F....');
+    await ev(`_lmAt([[1,1],[2,1],[3,1]])`);
+    check('dragging paints a row', await rows()==='....C/.###./...../...../F....');
+    await ev(`LM.tool='*';_lmAt([[0,0],[1,0],[2,0],[3,0],[0,2],[1,2]])`);
+    check('5 stars at most', await ev(`LM.d.map.flat().filter(c=>c==='*').length===5&&/5/.test(document.querySelector('#lmMsg').textContent)`));
+    await ev(`LM.tool='#';_lmAt([[0,4],[4,0]])`);
+    check('the buddy and the carrot are never painted over', await ev(`LM.d.map[4][0]==='F'&&LM.d.map[0][4]==='C'`));
+    await ev(`LM.tool='F';_lmAt([[2,4]])`);
+    check('the start tool moves the buddy (only one)', await ev(`LM.d.map[4][2]==='F'&&LM.d.map.flat().filter(c=>c==='F').length===1`));
+    await ev(`LM.tool='~';_lmAt([[3,3]])`);
+    check('the blocks follow the map: 🌟 for stars, ❓ for puddles', await ev(`lmBlocks(lmRows(LM.d),LM.d.mv)==='ULRD234SQ'`));
+    await ev(`document.querySelector('#lmLimits [data-mv]').click()`); await sleep(50);
+    check('✨ My Move adds ✨ and its own limit', await ev(`LM.d.mv===4&&lmBlocks(lmRows(LM.d),LM.d.mv)==='ULRD234SMQ'&&!!document.querySelector('#lmLimits [data-step^="mv"]')`));
+    await shot('LM2-editor');
+    await ev(`document.querySelector('#lmSize [data-size="4"]').click()`); await sleep(50);
+    check('a smaller map keeps the buddy and the carrot inside', await ev(`LM.d.map.length===4&&LM.d.map.flat().filter(c=>c==='F').length===1&&LM.d.map.flat().filter(c=>c==='C').length===1`));
+    await ev(`document.querySelector('#lmSize [data-size="6"]').click()`); await sleep(50);
+    check('…and a bigger one too', await ev(`LM.d.map.length===6&&LM.d.map.every(r=>r.length===6)&&LM.d.map.flat().filter(c=>c==='F').length===1`));
+    await ev(`for(let i=0;i<20;i++)document.querySelector('#lmLimits [data-step="max:1"]').click()`);
+    check('the block limit stops at 16', await ev(`LM.d.max===16`));
+    // a level she knows: up 3, right 3
+    await ev(`LM.d={map:['...C','.#..','....','F...'].map(r=>[...r]),max:6,mv:0};lmRender();document.querySelector('#lmTest').click()`); await sleep(200);
+    check('▶️ Test it plays it with just the blocks it needs and its limit', await ev(`CL.view==='play'&&CL.lvl==='make'&&[...document.querySelectorAll('#clPal [data-add]')].map(b=>b.dataset.add).join('')==='ULRD234'&&document.querySelectorAll('#clProg .clslot').length===6`));
+    check('…and says solve it to save it', await ev(`/save/i.test(document.querySelector('#clMsg').textContent)&&speakLine().t.length>0`));
+    await ev(`CL.prog=['R','R','R'];clGo()`); await sleep(600);
+    check('not solved: nothing saved', await ev(`CL.state==='oops'&&P().code.mine[0]===null`));
+    const c0=await ev('P().coins');
+    await ev(`CL.prog=['3','U','3','R'];clEdited();clGo()`); await sleep(1300);
+    check('solved: saved in slot 1 with her answer, +3 coins', await ev(`(m=>m&&m.sol==='3U3R'&&m.move===''&&m.max===6&&lmOk(m))(P().code.mine[0])&&P().stats.made===1`)&&await ev('P().coins')===c0+3&&/saved/i.test(await title()));
+    check('…a made level never counts as a Code Lab puzzle', await ev(`!P().code.solved.some(x=>/^mk|^u/.test(x))&&!LM.drafts[0]`));
+    await shot('LM3-saved');
+    await btn('Edit'); await sleep(150);
+    check('✏️ Edit goes back to the editor with the saved level', await ev(`CL.view==='edit'&&lmRows(LM.d).join('/')==='...C/.#../..../F...'`));
+    await ev(`document.querySelector('#lmTest').click()`); await sleep(100); await ev(`CL.prog=['3','U','3','R'];clGo()`); await sleep(1300);
+    check('saving the same level again pays nothing', await ev('P().coins')===c0+3&&await ev(`P().stats.made===1`));
+    await ev(`closeModal()`);
+    // slots 2 and 3, then a 4th new level the same day: 3 a day
+    for(const [i,m] of [[1,['C...','....','....','F...']],[2,['....','C...','....','F...']]]){
+      await ev(`lmEdit(${i});LM.d={map:${JSON.stringify(m)}.map(r=>[...r]),max:6,mv:0};document.querySelector('#lmTest').click()`); await sleep(100);
+      await ev(`CL.prog=['U','U','U'].slice(0,${i===1?3:2});clGo()`); await sleep(900); await ev(`closeModal()`);
+    }
+    await ev(`lmEdit(0);LM.d.max=5;document.querySelector('#lmTest').click()`); await sleep(100); await ev(`CL.prog=['3','U','3','R'];clGo()`); await sleep(1300);
+    check('3 new levels a day pay (+9), the 4th saves without coins', await ev('P().coins')===c0+9&&await ev(`P().code.makePay.n===9&&P().stats.made===4&&P().code.mine.every(Boolean)&&P().code.mine[0].max===5`)&&/full/i.test(await ev(`document.querySelector('#modalBody').textContent`)));
+    await ev(`closeModal()`);
+    // My Move + stars + puddles in a saved level
+    await ev(`lmEdit(1);LM.d={map:['F~*~*C'].concat(['......','......','......','......','......']).map(r=>[...r]),max:2,mv:3};document.querySelector('#lmTest').click()`); await sleep(100);
+    check('a My Move level shows the ✨ row and all its blocks', await ev(`clHasMove()&&!document.querySelector('#clMove').classList.contains('hidden')&&clBlocks()==='ULRD234SMQ'`));
+    await ev(`CL.prog=['3','M'];CL.move=['Q','R','S'];clEdited();clGo()`); await sleep(1400);
+    check('…solving it saves the ✨ row too', await ev(`(m=>m.sol==='3M'&&m.move==='QRS'&&m.moveMax===3&&lmOk(m))(P().code.mine[1])`));
+    await ev(`closeModal();lmEdit(1);document.querySelector('#lmTest').click()`); await sleep(100);
+    await ev(`window.androidBack()`); await sleep(100);
+    check('Back: test → editor → levels → room', await ev(`CL.view==='edit'`)&&await ev(`window.androidBack()&&CL.view==='make'&&document.querySelectorAll('#clList .done').length===3`)&&await ev(`window.androidBack()&&cur==='room'`));
+    // another room on this device
+    await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));q.id='lmTestRoom';q.name='Pip';q.code.mine=[{id:'x1',map:['F..C','....','....','....'],max:4,moveMax:0,sol:'3R',move:'',at:1},
+      {id:'x2',map:['F..C','....','....','....'],max:4,moveMax:0,sol:'R',move:'',at:1},null];DB.profiles.push(q);})();show('code')`); await sleep(600); await ev(`closeModal()`);
+    check('levels from the other rooms show (only ones that can be solved)', await ev(`CL.view==='make'&&document.querySelectorAll('#clList .lm-other').length===1&&/Pip/.test(document.querySelector('#clList .lm-other').textContent)`));
+    await shot('LM4-other-rooms');
+    const f0=await ev('P().free.n'), solved0=await ev('P().code.solved.length');
+    await ev(`document.querySelector('#clList .lm-other').click()`); await sleep(150);
+    check('tapping one plays it', await ev(`CL.view==='play'&&CL.made&&CL.made.from==='lmTestRoom'`));
+    await ev(`CL.prog=['3','R'];clGo()`); await sleep(900);
+    check('…solving it pays through Free Play and saves nothing', await ev('P().free.n')===f0+(await ev('P().free.n')>f0?1:0)&&await ev(`P().code.solved.length===${solved0}&&DB.profiles.find(q=>q.id==='lmTestRoom').code.mine[0].sol==='3R'`)&&/solved/i.test(await title()));
+    await btn('Levels'); await sleep(100);
+    check('…then back to the levels', await ev(`CL.view==='make'`));
+    // removing a level
+    await ev(`lmEdit(2);document.querySelector('#lmDel').click()`); await sleep(100);
+    check('🗑️ asks first', /remove/i.test(await title())&&await ev(`P().code.mine[2]!==null`));
+    await btn('Remove'); await sleep(100);
+    check('…then the slot is empty again', await ev(`P().code.mine[2]===null&&CL.view==='make'`));
+    check('the pet notices a new level, and there are 2 new stickers', await ev(`NT_LINES.some(l=>/level/.test(l[2](1).join()))&&STICKERS.filter(s=>s.id==='make1'||s.id==='make3').length===2`));
+    check('saved: older rooms get the new fields, and broken levels are dropped', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));delete q.code.mine;delete q.code.makePay;delete q.stats.made;normalize(q);
+      const r=JSON.parse(JSON.stringify(P()));r.code.mine=[{id:'z',map:['F.C'],max:4,moveMax:0,sol:'RR',move:''},'x',P().code.mine[0]];normalize(r);
+      return q.code.mine.join()===',,'&&q.code.makePay.n===0&&q.stats.made===0&&r.code.mine[0]===null&&r.code.mine[1]===null&&!!r.code.mine[2];})()`));
+    await ev(`closeModal();DB.profiles=DB.profiles.filter(q=>q.id!=='lmTestRoom');(()=>{const q=JSON.parse(window._v78),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();CL.mk=false;LM.drafts={};save();show('room')`);
+    check('v1.78 is in the Gift Story and the app says 1.78', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.78')&&APP_VERSION==='1.78'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);
