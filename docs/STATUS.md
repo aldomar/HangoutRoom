@@ -27,7 +27,7 @@ _Last updated: 2026-11-24_
   2026-11-23 (`PLAN.md`, "v1.70 plan details"). Owner's answers: 🔇 also stops the automatic voice (🔊 still speaks when tapped);
   it speaks instructions, questions, try-again hints, the buddy's bubble and visitor wishes; a little slower in Little and Easy rooms;
   Read to me stays in Settings (not in the setup). No save changes. On a 390 px phone the Photocards title gets squeezed by the 🔊.
-- **🧸 Little mode: built, PR open as v1.71** on branch `feature/littlemode` (from `main` after #72). Plan agreed 2026-11-24 (`PLAN.md`,
+- **🧸 Little mode: built, PR #73 open as v1.71** on branch `feature/littlemode` (from `main` after #72). Plan agreed 2026-11-24 (`PLAN.md`,
   "v1.71 plan details"). Owner's answers: the Little home is her own room, locked down; every sport on Easy (Kick, Keep, Bat,
   Catch), the Brain Games on Easy and the Garden are in; the Closet stays for real dress-up, plus 🎨 Dress like… (a theme dress-up
   from owned clothes, in every room's Closet); on by default for Little rooms with a switch in Settings → Level; relocks when the
