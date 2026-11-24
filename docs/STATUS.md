@@ -19,7 +19,10 @@ _Last updated: 2026-11-24_
   - ✅ v1.75 🎁 Gift codes between iPads: built, PR open (branch `feature/giftcodes`, stacked on `feature/fixes`).
     - Owner's answers 2026-11-24: the mailbox number is required, 3 codes a day, coins or decorations (same as gifts now).
     - New file `69-giftcodes.js`. Save: `giftCodes{sent[], opened[], made{day,n}}` (defaults in `normalize()`, no new save version).
-  - ⬜ v1.76 🐾 The pet notices what the child did.
+  - ✅ v1.75 is PR #77.
+  - ✅ v1.76 🐾 The pet notices: built, PR open (branch `feature/petnotice`, stacked on `feature/giftcodes`).
+    - Owner's answers 2026-11-24: every game; with no pet, the buddy says it.
+    - New file `70-petnotice.js`. Save: `pet.day` (the daily first-play heart).
   - ⬜ v1.77 📻 Creations in the room (a boombox, Code Lab and Brain Games prizes).
   - ⬜ v1.78 🛠️ Code Lab level maker.
   - ⏸️ Parked: a picture lock for each room (idea 13), a level for each player in duels (idea 14).
@@ -1504,7 +1507,7 @@ _Last updated: 2026-11-24_
 3. ~~Plan and build v1.73 🧰 Shared helpers, part 1.~~ Built, PR open.
 4. ~~Plan and build v1.74 ⏸️ Stage pause + ↩ Undo.~~ Built, PR open.
 5. ~~Plan and build v1.75 🎁 Gift codes between iPads.~~ Built, PR open.
-6. Plan and build v1.76 🐾 The pet notices.
+6. ~~Plan and build v1.76 🐾 The pet notices.~~ Built, PR open.
 7. Plan and build v1.77 📻 Creations in the room.
 8. Plan and build v1.78 🛠️ Code Lab level maker (best after seeing how the 11-year-old uses the Code Lab).
 

@@ -5655,7 +5655,48 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await shot('GC4-phone');
     await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(150);
     await ev(`closeModal();{const o=JSON.parse(window._v75);DB.profiles.forEach(p=>{const q=o.find(x=>x.id===p.id);if(q){Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);}});DB.activeId=window._v75a;}save();show('room')`);
-    check('v1.75 is in the Gift Story and the app says 1.75', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.75')&&APP_VERSION==='1.75'`));
+    check('v1.75 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.75')`));
+  }
+
+  console.log('The pet notices (v1.76)');
+  {
+    const settle=async()=>{await sleep(300);await ev('closeModal()');await sleep(900);};
+    const bub=()=>ev(`(b=>b?b.textContent:'')(document.querySelector('#bubble'))`);
+    await ev(`closeModal();stkPaused=true;window._v76=JSON.stringify(P());{const p=P();p.pet.kind='bat';p.pet.day='';}show('room');goRoom(1)`); await sleep(900);
+    const h0=await ev('petHearts(P())');
+    await ev(`show('soccer');P().stats.goals+=3;P().stats.matches++;show('room')`); await settle();
+    const t1=await bub();
+    check('back from Soccer with 3 goals: the pet says so in the bubble', await ev(`!!NT.last&&NT.last.i===4&&NT.last.n===3`)&&t1===await ev('NT.last.text')
+      &&t1.startsWith('🐾 '+await ev('petName(P())')+': ')&&(await ev(`NT_LINES[4][2](3)`)).some(l=>t1.endsWith(l)), t1);
+    check('…and the first play of the day gives the pet +1 heart', await ev(`P().pet.day===fpDay()&&petHearts(P())===${h0}+1`));
+    await shot('PN1-goals');
+    const h=await ev('petHearts(P())');
+    await ev(`show('brain');P().brain.solved.push('test:x1','test:x2');show('room')`); await settle();
+    check('back from Brain Games: "You solved 2 puzzles" (or another way to say it)', await ev(`NT_LINES[NT.last.i][2](2).some(l=>NT.last.text.endsWith(l))&&NT.last.n===2&&/puzzle|brain/i.test(NT.last.text)`));
+    check('…but no second heart the same day', await ev(`petHearts(P())===${h}`));
+    await ev(`show('fidget');show('room')`); await settle();
+    check('back after doing nothing: no line', !(await bub()));
+    await ev(`show('fidget');P().stats.pops+=3;show('room')`); await settle();
+    check('a few pops is not worth a line (10 or more is)', !(await bub()));
+    await ev(`show('fidget');P().stats.pops+=12;show('room')`); await settle();
+    check('12 pops: "Pop pop pop!"', /pop/i.test(await bub()));
+    await ev(`show('ball');P().stats.homers+=1;P().stats.hits+=4;show('room')`); await settle();
+    check('the most notable thing wins: a home run beats 4 hits', /home run|park/i.test(await bub()));
+    await ev(`show('stage');show('room');goRoom(2)`); await settle();
+    check('moving between rooms says nothing', !(await bub()));
+    await ev(`goRoom(1);P().pet.kind='';P().pet.day='';show('soccer');P().stats.saves+=2;show('room')`); await settle();
+    const t2=await bub();
+    check('no pet yet: the buddy says it (no name), and no heart', /save|hands/i.test(t2)&&!t2.startsWith('🐾')&&await ev(`P().pet.day===''`), t2);
+    await ev(`show('soccer');P().stats.saves+=1;show('room');modal('Test','box',[{text:'OK'}])`); await sleep(1300);
+    check('a box on top (like a bonus card): the line waits…', !(await bub()));
+    await ev(`closeModal()`); await sleep(800);
+    check('…and comes once it is closed', /save|hands/i.test(await bub()));
+    await ev(`show('soccer');P().stats.goals+=1;show('profiles');enterRoom()`); await settle();
+    check('going out to the rooms list forgets it (no line on the way back in)', !/goal|kick/i.test(await bub()));
+    check('every line is short, cheerful and has no coin talk', await ev(`NT_LINES.every(([f,m,l])=>[1,2,5,12].every(n=>l(n).every(t=>t.length<=40&&!/coin|🪙|sad|lost|miss/i.test(t))))`));
+    check('saved: older rooms get pet.day = ""', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));delete q.pet.day;normalize(q);return q.pet.day==='';})()`));
+    await ev(`(()=>{const q=JSON.parse(window._v76),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();save();show('room')`);
+    check('v1.76 is in the Gift Story and the app says 1.76', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.76')&&APP_VERSION==='1.76'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

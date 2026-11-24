@@ -94,6 +94,7 @@ function normalize(p){
   // friendship hearts for each kind of pet she has had. Section 22 checks the ids; this only checks the types.
   p.pet=Object.assign({kind:'',acc:'none'},p.pet&&typeof p.pet==='object'&&!Array.isArray(p.pet)?p.pet:{});
   if(typeof p.pet.kind!=='string') p.pet.kind=''; if(typeof p.pet.acc!=='string') p.pet.acc='none'; if(typeof p.pet.home!=='string') p.pet.home=''; // v1.50
+  if(typeof p.pet.day!=='string') p.pet.day=''; // 🐾 the last day the pet gave its first-play heart (v1.76, section 70)
   if(typeof p.pet.toy!=='string') p.pet.toy='ball'; // 🎾 the fetch toy (v1.54, section 55 checks the id)
   ['seeks','fetches'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));}); // v1.54
   // Pet walks (v1.55, section 56): the last path walked and the find ids found (both checked when they are read).

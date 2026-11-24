@@ -6,6 +6,7 @@ let cur='profiles';
 function show(n){
   n=lockGuard(n); // 🧸 Little mode keeps her in the safe screens (section 66)
   undoLeave(n); // ↩ Undo lasts only on its own screen (section 68)
+  petNotice(cur,n); // 🐾 back in the room, the pet says what she just did (section 70)
   if(n!=='room'&&decorating) exitDecorate(true);
   if(n!=='room'&&SPY.on) spyEnd(true); // 🔍 (section 50)
   if(n!=='room'&&PP.on) ppEnd(true); // 🙈🎾 pet play (section 55)
