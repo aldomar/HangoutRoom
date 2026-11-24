@@ -31,7 +31,13 @@ _Last updated: 2026-11-24_
   - ✅ v1.78 🛠️ Code Lab level maker: built, PR open (branch `feature/levelmaker`, stacked on `feature/creations`).
     - Owner's answers 2026-11-24: build now; every piece; 4×4 to 6×6; +3 a level, 3 a day; other rooms can play them.
     - New file `72-levelmaker.js`. Save: `code.mine[3]`, `code.makePay`, `stats.made`.
-  - Phase 15 is built. Next: the owner reviews and merges PRs #74–#80 in order, then tries them on the iPads.
+  - ✅ v1.78 is PR #80. Phase 15 is built.
+  - ✅ v1.79 🪜 Basement (the owner's request): built, PR #82 open (branch `feature/basement`, based on `main`).
+    - Owner's answers 2026-11-24: named Basement; free brick wall and gray carpet; 🏆 Prizes in My Stuff + a free Trophy Case
+      and Prize Podium; Little mode keeps out.
+    - New file `73-basement.js`. Save: `room5` (save version 38).
+    - Folded in at the owner's request: the pet's own speech bubble (`say(text, 'pet')`, section 9).
+  - ✅ PRs #74–#80 (v1.72–v1.78) were merged on 2026-11-24 (into `main` through #81). v1.79 is PR #82, based on `main`.
   - ⏸️ Parked: a picture lock for each room (idea 13), a level for each player in duels (idea 14).
 - **✅ Phase 14: before the hand-over (done, v1.67–v1.71).** **📋 Design review (2026-11-23): read `docs/DESIGN-REVIEW.md` first.** A whole-app review before the children get the app,
   the owner's answers (each child has their own iPad; the app isn't handed over yet), the ranked ideas and the agreed
@@ -1517,7 +1523,8 @@ _Last updated: 2026-11-24_
 6. ~~Plan and build v1.76 🐾 The pet notices.~~ Built, PR open.
 7. ~~Plan and build v1.77 📻 Creations in the room.~~ Built, PR open.
 8. ~~Plan and build v1.78 🛠️ Code Lab level maker.~~ Built, PR open.
-9. Owner: review and merge PRs #74–#80 in order; then decide what comes after Phase 15 (ideas 13 and 14 stay parked).
+9. ~~Plan and build v1.79 🪜 Basement (the owner's request).~~ Built, PR open.
+10. Owner: review and merge PR #82 (v1.79), try it on the iPads, then decide what comes next (ideas 13 and 14 stay parked).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

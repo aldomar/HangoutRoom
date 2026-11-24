@@ -297,6 +297,22 @@ like a phone number. **The app never sends anything over the internet**: there's
 - Where: ⚙️ Settings → 🎁 Give a gift, or the 🎁 tile at the start of 📦 My Stuff in Decorate. Not in 🧸 Little mode.
 - Save data: one new field per room, `giftCodes` (codes sent, codes opened, codes made today). Older backups still restore.
 
+## 🪜 The Basement (version 1.79)
+A fifth room, under her room, for showing off everything she has won:
+- **Getting there:** the ⬇️ arrow at the bottom of her room, or the 🗺️ map (it's under My Room). ⬆️ goes back up.
+- **Nothing is built in**, like the Studio, so every piece is her choice. It starts with a free 🧱 Cozy Brick wall and a
+  Gray Carpet floor (both free in any indoor room too).
+- **🏆 Prizes:** in 🛋️ Decorate → 📦 My Stuff, tap 🏆 Prizes to see every prize she has (trophies, gloves, bats, pennants,
+  garden pots, walk jars, robots and more), wherever it is: 🏠 / 🪜 / 🌳 shows the room, 📦 means stored, ✔ means this room.
+  Tap one to bring it into the room she's in.
+- **Free display pieces** in the Shop, listed first: a 🗄️ **Trophy Case** with 3 shelves and a **Prize Podium**. Drop a prize
+  near a shelf and it sits on it; moving the case moves everything on it.
+- The pet, gifts, visitors, 🔍 I Spy, 🌙 night and saved layouts all work there. 🧸 Little mode rooms don't go there (like the Studio).
+- New sticker: 🪜 Basement Builder (5 things in the Basement).
+- **🐾 The pet's own speech bubble:** when the pet talks (cheering after a game, a new trick…), the bubble now sits over the pet
+  and points at it, instead of over the buddy. Rooms with no pet yet still use the buddy's bubble.
+- Save data: one new room, `room5` (save version 38). Older backups still restore, with an empty Basement.
+
 ## 🛠️ Code Lab level maker (version 1.78)
 She can now **make her own Code Lab levels** in the new **🛠️ Make** tab:
 - **3 slots.** Tap ➕ to start one. Pick a size (4×4, 5×5 or 6×6), then paint the map with 🧸 toy blocks, ⭐ stars (5 at most),

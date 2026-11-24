@@ -82,7 +82,7 @@ function petG(p){
 /* ---------- playing ---------- */
 let PET={last:0};
 // In the room, pet news goes in Fuzzy's speech bubble (a toast at the bottom would cover the pet).
-const petSay=msg=>{if(cur==='room')say(msg);else toast(msg);};
+const petSay=msg=>{if(cur==='room')say(msg,'pet');else toast(msg);}; // the bubble points at the pet (v1.79)
 function petTap(){SFX.click(); if(!petKind(P())) petChoose(); else petMenu();}
 function petDo(trick){const b=$('#petBody'); if(!b) return;
   PET_TRICKS.forEach(t=>b.classList.remove('t-'+t.id)); void b.getBoundingClientRect(); b.classList.add('t-'+trick);
