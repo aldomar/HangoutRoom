@@ -96,7 +96,7 @@ function resolveShot(){
   if(res==='goal'){
     p.stats.goals++; SOC.cheer=SOC.time; SFX.cheer(); vibrate(30);
     const pt=toScr(SOC.g,s.u,s.v), rc=socCv.getBoundingClientRect();
-    earn(L.coins+(hasKit(p)?1:0),'GOAL!',rc.left+pt.x,rc.top+pt.y); socSay(s.fooled?'Curve ball! 🌀':'GOAL! ⚽'); // 🌀 = the curve sent the keeper the wrong way (v1.56)
+    gameEarn('soccer',L.coins+(hasKit(p)?1:0),'GOAL!',rc.left+pt.x,rc.top+pt.y); socSay(s.fooled?'Curve ball! 🌀':'GOAL! ⚽'); // gameEarn: today's allowance (v1.67, section 8); 🌀 = the curve sent the keeper the wrong way (v1.56)
   } else {
     save();
     if(res==='saved'){SFX.save();socSay(`Saved by ${L.name}!`);}
@@ -124,7 +124,8 @@ function endMatch(){
   const p=P(), lvl=p.soccer.level, L=socLevel(), goals=SOC.kicks.filter(Boolean).length;
   SOC.state='done'; p.stats.matches++;
   const best=goals>(p.soccer.best[lvl]||0); if(best) p.soccer.best[lvl]=goals;
-  if(goals===SOC_KICKS){p.stats.perfects++;earn(PERFECT_COINS,'Perfect!');} else save();
+  // The first 5/5 on a level (it wins the trophy) is paid outside the allowance; a repeat comes out of it (v1.67).
+  if(goals===SOC_KICKS){p.stats.perfects++;if(!p.soccer.trophies.includes(lvl))earn(PERFECT_COINS,'Perfect!');else gameEarn('soccer',PERFECT_COINS,'Perfect!');} else save();
   const trophies=giveTrophies();
   SFX.whistle(); renderSocScore(); if(trophies.length) setTimeout(SFX.buy,400);
   const line=goals===SOC_KICKS?'PERFECT! 🌟':goals>=3?'Great kicks! ✨':goals>=1?'Nice! Keep practising 💪':`${L.name} was on fire! Try again? ${L.icon}`;

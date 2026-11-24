@@ -26,7 +26,41 @@ function buyConsumable(price,name,done){
   if(p.coins<price){needMore(p,price);return;}
   buyAsk(p,'Buy',name,price,()=>{p.coins-=price;save();updateCoins();SFX.buy();done();});
 }
-function needMore(p,price){SFX.locked();toast(p.easy?`🔒 Need ${price-p.coins} more 🪙`:`You need ${price-p.coins} more 🪙 — play on the Fidget Shelf to earn some!`);}
+function needMore(p,price){SFX.locked();toast(p.easy?`🔒 Need ${price-p.coins} more 🪙`:`You need ${price-p.coins} more 🪙. Try ${payTips(p).words}!`);}
+// Daily coin allowances (v1.67): the games that pay for every goal, save, hit, catch, star or maze replay each have their own,
+// so every day it pays to go around the app. Firsts (a new prize level, new stars, a new maze) pay with plain earn(), outside it.
+// pay(p) is that game's saved {day, n}; the day comes from fpDay() (section 44), so the smoke test can set FP_TEST_DAY.
+// Brain Games Free Play (+2, section 44) has no allowance on purpose.
+const GAME_PAY={
+  soccer:{name:'⚽ Soccer',cap:20,pay:p=>p.soccer.pay},
+  keep:{name:'🧤 Keeper',cap:20,pay:p=>p.soccer.keep.pay},
+  bat:{name:'⚾ Batting',cap:20,pay:p=>p.ball.bat.pay},
+  catch:{name:'🧤 Catch',cap:20,pay:p=>p.ball.catch.pay},
+  stage:{name:'🎤 Stage',cap:20,pay:p=>p.stage.pay},
+  maze:{name:'🔮 Marble Maze',cap:10,pay:p=>p.maze.pay}
+};
+function dayLeft(o,cap){const d=fpDay();if(o.day!==d){o.day=d;o.n=0;}return Math.max(0,cap-o.n);} // o = {day, n}
+const gameLeft=(p,k)=>dayLeft(GAME_PAY[k].pay(p),GAME_PAY[k].cap);
+// Somewhere that still pays today (not game k): one game with coins left (or the Fidget Shelf), and always 🧠 Brain Games.
+function payTips(p,k){
+  const open=Object.keys(GAME_PAY).filter(g=>g!==k&&gameLeft(p,g)>0).map(g=>GAME_PAY[g].name);
+  if(p.fidPay.day!==new Date().toDateString()||p.fidPay.n<FID_DAILY) open.push('🫧 Fidget Shelf'); // section 10
+  const pick=open.length?[open[Math.floor(Math.random()*open.length)]]:[];
+  const all=pick.concat('🧠 Brain Games');
+  return {words:all.join(' or '),icons:all.map(n=>n.split(' ')[0]).join(' ')};
+}
+const gameTold=new Set(); // the allowance notes already shown (room:game:day), once a day each
+// How much of n coins game k may pay now (0 when today's allowance is used up); counts it as paid.
+function gameTake(k,n){
+  const p=P(), G=GAME_PAY[k]; if(!p||!G||!(n>0)) return 0;
+  const o=G.pay(p), give=Math.min(n,dayLeft(o,G.cap)); o.n+=give;
+  const t=p.id+':'+k+':'+o.day;
+  if(o.n>=G.cap&&!gameTold.has(t)){gameTold.add(t);const tip=payTips(p,k);
+    setTimeout(()=>toast(p.easy?`🪙 ✔ ${tip.icons}`:`${G.name} coins are full for today! Try ${tip.words} ✨`),give?1300:0);}
+  return give;
+}
+// Pays up to n coins from game k's allowance (saves either way); returns the coins paid.
+function gameEarn(k,n,label,x,y){const give=gameTake(k,n);if(give)earn(give,label,x,y);else save();return give;}
 function buyAsk(p,verb,name,price,yes){
   if(p.easy) modal(`${esc(name)}?`,`<div style="font-size:24px;text-align:center">🪙 ${price}</div>`,[{text:'✖ No',cls:'ghost'},{text:'✔ Yes!',cls:'pink',on:yes}]);
   else modal(`${verb} ${esc(name)}?`,`It costs 🪙 ${price}. You have 🪙 ${p.coins}.`,[{text:'Not now',cls:'ghost'},{text:verb==='Get'?'Yes, get it!':'Buy it!',cls:'pink',on:yes}]);

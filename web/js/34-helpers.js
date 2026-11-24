@@ -89,6 +89,14 @@ function snapCard(c){
 function flashSnap(){const f=document.createElement('div');f.className='snap-flash';document.body.appendChild(f);setTimeout(()=>f.remove(),450);}
 $('#roomSnapBtn').onclick=()=>snapRoom();
 
+/* ---------- 🔊/🔇 sound button (v1.67) ---------- */
+// The round button under 🔍 in the room switches every sound on or off (DB.settings.sound, the same switch as in Settings).
+// The room music stops with it. On an iPad the app plays even when the device is muted (section 58), so this is the quick way.
+function setSound(on){const s=DB.settings;s.sound=!!on;save();if(!s.sound)stopMusic();else if(s.music)startMusic();soundBtn();}
+function soundBtn(){const b=$('#soundBtn');if(!b)return;const on=!!DB.settings.sound;
+  b.textContent=on?'🔊':'🔇'; b.setAttribute('aria-label',on?'Sound off':'Sound on'); b.classList.toggle('on',!on);}
+$('#soundBtn').onclick=()=>{const on=!DB.settings.sound;setSound(on);if(on)SFX.happy();else toast('🔇 Sound is off');};
+
 STICKERS.push(
   stk('snap1','art','📷','Say Cheese!','circle','Save a picture of your room or a photocard (📷)',1,p=>p.stats.snaps)
 );

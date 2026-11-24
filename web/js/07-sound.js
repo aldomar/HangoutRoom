@@ -51,7 +51,7 @@ let musicTimer=null,mStep=0;
 const mf=n=>440*Math.pow(2,(n-69)/12);
 const CHORDS=[[57,60,64],[53,57,60],[48,52,55],[55,59,62]], MEL=[69,72,74,76,79,81];
 function startMusic(){
-  if(musicTimer||!DB.settings.music||STG.state==='play'||MU.playing||(typeof DN!=='undefined'&&DN.playing)||(typeof RW!=='undefined'&&RW.walking)) return; if(!ac()) return; // quiet while a Stage song plays
+  if(musicTimer||!DB.settings.music||!DB.settings.sound||STG.state==='play'||MU.playing||(typeof DN!=='undefined'&&DN.playing)||(typeof RW!=='undefined'&&RW.walking)) return; if(!ac()) return; // quiet while a Stage song plays
   musicTimer=setInterval(()=>{
     if(!AC||AC.state!=='running') return;
     const bar=Math.floor(mStep/8)%4;

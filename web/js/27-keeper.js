@@ -142,7 +142,7 @@ function kpResolve(){
   if(saved){
     p.stats.saves++; KP.cheer=KP.time; SFX.save(); SFX.cheer(); vibrate(30);
     const pt=toScr(KP.g,s.u,s.v), rc=socCv.getBoundingClientRect();
-    earn(L.coins+(hasKit(p)?1:0),'SAVE!',rc.left+pt.x,rc.top+pt.y); socSay('SAVED! 🧤');
+    gameEarn('keep',L.coins+(hasKit(p)?1:0),'SAVE!',rc.left+pt.x,rc.top+pt.y); socSay('SAVED! 🧤'); // gameEarn: today's allowance (v1.67, section 8)
   } else {save();SFX.whoosh();socSay(`${L.name} scores! ${L.icon}`);}
   renderKpScore();
 }
@@ -157,7 +157,8 @@ function kpEnd(){
   const p=P(), lvl=p.soccer.keep.level, L=kpLevel(), saves=KP.saves.filter(Boolean).length;
   KP.state='done'; KP.round[lvl]=(KP.round[lvl]+1)%3; p.stats.matches++;
   const best=saves>(p.soccer.keep.best[lvl]||0); if(best) p.soccer.keep.best[lvl]=saves;
-  if(saves===KEEP_KICKS){p.stats.perfects++;earn(PERFECT_COINS,'Perfect!');} else save();
+  // The first 5/5 on a level (it wins the glove) is paid outside the allowance; a repeat comes out of it (v1.67).
+  if(saves===KEEP_KICKS){p.stats.perfects++;if(!p.soccer.keep.gloves.includes(lvl))earn(PERFECT_COINS,'Perfect!');else gameEarn('keep',PERFECT_COINS,'Perfect!');} else save();
   const gloves=giveGloves();
   SFX.whistle(); renderKpScore(); if(gloves.length) setTimeout(SFX.buy,400);
   const line=saves===KEEP_KICKS?'PERFECT KEEPER! 🌟':saves>=3?'Super saves! ✨':saves>=1?'Nice catch! Keep practising 💪':`${L.name} was tricky! Try again? ${L.icon}`;
