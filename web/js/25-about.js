@@ -206,7 +206,9 @@ const GIFT_TIMELINE=[
   {v:'1.74',d:'2026-11-25',i:'↩',n:'Oops-proof',why:'So a phone call or a wrong tap never costs anything',
     news:['⏸️ Leave in the middle of a song and it waits for you','↩ Bought the wrong thing? Tap Undo to get your coins back','🎁 A gift can be taken back until it is opened']},
   {v:'1.75',d:'2026-11-25',i:'📮',n:'Gift codes',why:'So you can send gifts to each other on your own iPads',
-    news:['📮 Send coins or a decoration to another iPad with a gift code','📥 Type a code to open a gift from someone else','🔢 Your mailbox number makes sure it reaches you']}
+    news:['📮 Send coins or a decoration to another iPad with a gift code','📥 Type a code to open a gift from someone else','🔢 Your mailbox number makes sure it reaches you']},
+  {v:'1.76',d:'2026-11-25',i:'🐾',n:'Your pet notices',why:'So your pet cheers for everything you do',
+    news:['🐾 Come back to your room and your pet says what you did','❤️ The first thing you play each day gives your pet a heart','🐰 No pet yet? Your buddy cheers instead']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

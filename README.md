@@ -297,6 +297,19 @@ like a phone number. **The app never sends anything over the internet**: there's
 - Where: ⚙️ Settings → 🎁 Give a gift, or the 🎁 tile at the start of 📦 My Stuff in Decorate. Not in 🧸 Little mode.
 - Save data: one new field per room, `giftCodes` (codes sent, codes opened, codes made today). Older backups still restore.
 
+## 🐾 Your pet notices (version 1.76)
+- **Come back to the room after playing, and the pet cheers for what you just did**, in the speech bubble:
+  "🐾 Nibbles: You scored 3 goals! ⚽", "You solved 4 puzzles! 🧠", "Yum, fresh from the garden! 🌱", "Pop pop pop! 🫧"…
+  - Every game with a clear result counts: Soccer, the Ball Field, the Stage and Jam, Brain Games and Free Play, the Code Lab,
+    the Marble Maze, the Garden, the Art Desk, Music, Dance, Runway, I Spy, Photocards, 🧸 Play, pet walks and the fidgets.
+  - The most exciting thing wins (a home run beats 4 hits). Each has a few ways to say it.
+  - If nothing happened, nothing is said. Moving between rooms doesn't count.
+- **No pet yet?** The buddy says it instead.
+- **The first thing played each day gives the pet +1 ❤️.** Hearts only, never coins, and never a sad line.
+- The voice says it too when 🔊 Read to me is on (on by default in Little and Easy rooms).
+- If a box is open when she comes back (a bonus card, a prize), the line waits until it's closed.
+- Save data: one new field, `pet.day` (the day of the last first-play heart).
+
 ## Spoken instructions (since version 1.70)
 The app can now **say what to do** on every screen, so the children who can't read yet can play everything:
 - **Each screen, tab and game has one short spoken line**, for example "Pop them all to flip it over!" on the pop-it. In the Brain Games it's

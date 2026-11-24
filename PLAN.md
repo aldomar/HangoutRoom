@@ -1319,11 +1319,20 @@ agreed before any code (only v1.72's is written so far).
       confetti in the room. An unknown decoration says "update the app first" and isn't used up.
     - 🎁 Give now opens even with only one room on the iPad (it used to say there was only one room).
     - Save: `giftCodes{sent[], opened[], made{day,n}}`, with defaults in `normalize()`. No new save version.
-- ⬜ **🐾 The pet notices (v1.76; idea 8):**
+- ✅ **🐾 The pet notices (v1.76; idea 8; built, PR open on `feature/petnotice`):**
   - Back in the room after a game, the pet says one line about it in Fuzzy's bubble ("You scored 3 goals! ⚽"). The line is
     spoken for the Little and Easy levels.
   - The child's first activity of the day gives the pet +1 heart. Hearts only, never coins, never a sad line.
   - Save data: `pet.day` only; what the child just did stays in memory.
+  - **Owner's answers (2026-11-24):** every game with a clear result (not just the sports); with no pet, the buddy says the line.
+  - **As built** (new `70-petnotice.js`):
+    - `show()` calls `petNotice(from, to)`. Leaving the room keeps a copy of `p.stats`, the puzzles solved and the saved music
+      and dances (`ntSnap`). Coming back compares them, and `NT_LINES` (33 kinds, in priority order, 1–3 wordings each, some
+      with a minimum such as 10 pops) picks the most notable change.
+    - With a pet the line is "🐾 Name: …", without one the buddy says it. It's spoken like every bubble.
+    - A box on top (a bonus card, a prize) makes it wait until the box is closed (up to about 10 s).
+    - Moving between rooms and going out to the rooms list say nothing.
+    - No game file changed.
 - ⬜ **📻 Creations in the room (v1.77; idea 9):**
   - A boombox decoration plays a saved Music Maker loop once when tapped.
   - New `award:1` prizes for finished Code Lab levels (in the Loft, by the desk) and Brain Games levels (in the Backyard, by the chalkboard).
