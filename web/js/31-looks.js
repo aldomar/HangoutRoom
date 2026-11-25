@@ -56,12 +56,16 @@ function emoteBar(on){
 }
 function playEmote(k){
   const e=EMOTES[k], g=$('#mascotG'); if(!e||!g) return;
+  rdStop(); // any emote ends a saved dance (section 48)
   Object.keys(EMOTES).forEach(n=>g.classList.remove('em-'+n)); g.classList.remove('hop'); void g.getBoundingClientRect();
-  g.classList.add('em-'+k); clearTimeout(playEmote.t); playEmote.t=setTimeout(()=>{const m=$('#mascotG');if(m)m.classList.remove('em-'+k);},e.ms);
+  clearTimeout(playEmote.t);
+  const danced=k==='dance'?rdDance():0; // 💃 her saved dances in turn, with the Dance Maker's music (v1.80)
+  if(!danced){g.classList.add('em-'+k); playEmote.t=setTimeout(()=>{const m=$('#mascotG');if(m)m.classList.remove('em-'+k);},e.ms);}
   const old=$('#emoteFx'); if(old) old.remove();
   roomSvg.insertAdjacentHTML('beforeend',`<g id="emoteFx" class="em-fx" style="pointer-events:none">${[0,1,2].map(i=>`<text x="${k==='nap'?560+i*24:440+i*60}" y="${k==='nap'?430-i*30:410}" font-size="${k==='nap'?28+i*8:34}" style="animation-delay:${i*0.25}s">${e.fx}</text>`).join('')}</g>`);
   setTimeout(()=>{const f=$('#emoteFx');if(f)f.remove();},e.ms+600);
-  e.snd(); say(e.line()); vibrate(10); emoteBar(true);
+  if(danced) say(`💃 Dance ${danced}!`); else{e.snd(); say(e.line());}
+  vibrate(10); emoteBar(true);
 }
 $('#emoteBar').onclick=e=>{const b=e.target.closest('[data-emote]');if(b)playEmote(b.dataset.emote);};
 

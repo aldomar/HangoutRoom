@@ -628,6 +628,26 @@ body.easy .em-btn{min-width:76px;min-height:76px;font-size:36px}
 @keyframes emLaugh{0%,100%{transform:none}50%{transform:scale(1.04,.96) translateY(3px)}}
 .mascot.em-nap{animation:emNap 3.2s ease-in-out}
 @keyframes emNap{0%,100%{transform:none}15%,85%{transform:rotate(-8deg) scale(.97)}50%{transform:rotate(-8deg) scale(.95,.99)}}
+/* 💃 her saved dances in the room (v1.80, section 48): the Dance Maker's moves, one beat (--bt) each, 2D and in px
+   (#mascotG is SVG: % and rotateX/Y don't work there). --d is 1 or -1 so sways go left and right in turn. */
+.mascot.rm-nod{animation:rmNod var(--bt) ease-out}
+.mascot.rm-h{animation:rmHop var(--bt) ease-out}
+.mascot.rm-s{animation:rmSway var(--bt) ease-in-out}
+.mascot.rm-p{animation:rmSpin var(--bt) ease-in-out}
+.mascot.rm-w{animation:rmWiggle var(--bt) linear}
+.mascot.rm-b{animation:rmBounce var(--bt) ease-out}
+.mascot.rm-c{animation:rmClap var(--bt) ease-out}
+.mascot.rm-j{animation:rmJump var(--bt) ease-out}
+.mascot.rm-o{animation:rmBow var(--bt) ease-in-out}
+@keyframes rmNod{40%{transform:translateY(6px) scale(1.02,.97)}}
+@keyframes rmHop{0%,100%{transform:none}10%{transform:scale(1.08,.9)}45%{transform:translateY(-32px) scale(.96,1.05)}80%{transform:scale(1.06,.93)}}
+@keyframes rmSway{50%{transform:translateX(calc(var(--d)*14px)) rotate(calc(var(--d)*10deg))}}
+@keyframes rmSpin{0%,100%{transform:scaleX(1)}25%{transform:scaleX(0)}50%{transform:scaleX(-1)}75%{transform:scaleX(0)}}
+@keyframes rmWiggle{0%,100%{transform:none}20%{transform:skewX(9deg)}40%{transform:skewX(-9deg)}60%{transform:skewX(7deg)}80%{transform:skewX(-7deg)}}
+@keyframes rmBounce{0%,100%{transform:none}35%{transform:scale(1.14,.78)}65%{transform:scale(.95,1.06)}}
+@keyframes rmClap{0%,100%{transform:none}25%{transform:scale(1.07)}50%{transform:scale(.97)}75%{transform:scale(1.05)}}
+@keyframes rmJump{0%,100%{transform:none}15%{transform:scale(1.1,.85)}50%{transform:translateY(-44px) scale(1.12) rotate(calc(var(--d)*8deg))}85%{transform:scale(1.05,.95)}}
+@keyframes rmBow{0%,100%{transform:none}50%{transform:skewX(-14deg) scale(1,.86)}}
 .em-fx text{animation:emRise 1.6s ease-out both}
 @keyframes emRise{0%{opacity:0;transform:translateY(20px)}20%{opacity:1}100%{opacity:0;transform:translateY(-60px)}}
 .looks-row{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap}
@@ -670,6 +690,7 @@ body.easy .lk-label span{display:none}
 /* 🎉 Creations in the room (v1.77) */
 .cr-got{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
 .cr-got svg{height:110px;max-width:140px}
+#roomSvg .deco .bb{pointer-events:all;cursor:pointer} /* decorations let taps through (.deco), but the 📻 boombox is tapped to play */
 #roomSvg .boom-play .bb{animation:boomB .4s steps(2) infinite;transform-box:fill-box;transform-origin:50% 100%}
 @keyframes boomB{0%{transform:scale(1)}100%{transform:scale(1.08,.94)}}
 /* 🎁 Gift codes (v1.75) */
@@ -900,6 +921,7 @@ body.easy .dn-move{min-height:76px;font-size:34px}
 .dn-save svg{display:none}
 .dn-mini{font-size:15px;letter-spacing:-2px}
 .dn-big{font-size:34px;text-align:center;line-height:1.5}
+.dn-track{font-size:18px;font-weight:800;text-align:center;margin-top:6px}
 .dn-mus{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;max-height:52vh;overflow:auto}
 .dn-mus .btn{min-height:52px}
 .tab.dance{border-color:var(--mint)}
