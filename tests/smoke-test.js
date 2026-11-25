@@ -5980,7 +5980,28 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`P().pet.kind=window._pk;save();renderRoom()`);
     check('no pet yet: the line goes in the buddy bubble', b.who==='buddy', JSON.stringify(b));
     check('v1.79 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.79')`));
-    check('v1.80 is in the Gift Story and the app says 1.80', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.80')&&APP_VERSION==='1.80'`));
+    check('v1.80 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.80')`));
+  }
+
+  // 📱 room arrows on phones (v1.81): on an upright phone her room's ⬇️ Basement tab used to sit on the ➡️ Studio tab
+  console.log('Room arrows on phones (v1.81)');
+  {
+    await ev(`show('room');goRoom(1)`); await sleep(200);
+    const tabs=()=>ev(`[...document.querySelectorAll('#roomTabs .rtab')].map(b=>{const r=b.getBoundingClientRect();return [b.className.split(' ')[1],r.left,r.top,r.right,r.bottom]})`);
+    const apart=t=>t.length===4&&t.every((a,i)=>t.every((b,j)=>i===j||a[3]<=b[1]||b[3]<=a[1]||a[4]<=b[2]||b[4]<=a[2])&&a[1]>=0&&a[3]<=innerW);
+    let innerW;
+    for(const [w,h] of [[360,780],[412,915],[844,390]]){
+      await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:true}); innerW=w;
+      for(const easy of [false,true]){
+        await ev(`document.body.classList.toggle('easy',${easy})`); await sleep(150);
+        const t=await tabs();
+        check(`${w}×${h}${easy?' (Easy)':''}: her room's 4 arrow tabs don't overlap and stay on screen`, apart(t), JSON.stringify(t));
+      }
+      if(w===360) await shot('Z90-phone-room-tabs');
+    }
+    await ev(`applyEasy()`);
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(200);
+    check('v1.81 is in the Gift Story and the app says 1.81', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.81')&&APP_VERSION==='1.81'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

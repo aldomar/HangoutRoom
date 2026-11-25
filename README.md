@@ -312,6 +312,10 @@ like a phone number. **The app never sends anything over the internet**: there's
 - **📻 Boombox fix:** tapping the boombox (from version 1.77) now really plays her music. Before, the tap went straight through it.
 - Save data: one new field, `dance.tracks` (the music of the 3 saved dances). Older backups still restore; their dances have no music kept.
 
+## 📱 Room arrows on phones (version 1.81)
+- On a phone held upright, the arrow down to the 🪜 Basement used to cover the arrow to the ✨ Studio. Now it sits in the middle,
+  between the arrows to the 🌳 Backyard and the ✨ Studio. Nothing else changed.
+
 ## 🪜 The Basement (version 1.79)
 A fifth room, under her room, for showing off everything she has won:
 - **Getting there:** the ⬇️ arrow at the bottom of her room, or the 🗺️ map (it's under My Room). ⬆️ goes back up.
