@@ -1381,7 +1381,7 @@ agreed before any code (only v1.72's is written so far).
     - A Basement Builder sticker (5 things in the Basement). Spy Everywhere still needs any 4 rooms.
     - Also (the owner's note): the pet talks in its own speech bubble, over the pet and pointing at it (`say(text, 'pet')`).
     - Save data: `room5` (save version 38, plus defaults in `normalize()`). Older backups restore with an empty Basement.
-- ✅ **💃 Dancing Buddy + 📻 boombox fix (v1.80; the owner's request, 2026-11-24; built, PR open on `feature/room-dance`):**
+- ✅ **💃 Dancing Buddy + 📻 boombox fix (v1.80; the owner's request, 2026-11-24; merged as PR #83):**
   - The room's 💃 Dance emote dances her saved Dance Maker dances in turn (one round of 8 beats), instead of the fixed wiggle.
   - **Owner's answers:** the music is the Dance Maker's choice (🥁 / 🎹 / 💾 / a Stage song; for a song, the 8 beats after its 2-bar drum intro, at its own speed); the boombox fix goes in the same PR.
   - **As built** (in `48-dance.js`): `rdDance()` / `rdStop()`, one `setTimeout` a beat for its sound and move, no main loop. The room
@@ -1392,6 +1392,9 @@ agreed before any code (only v1.72's is written so far).
   - **Saved dances keep their music** (the owner's follow-up, same PR): `p.dance.tracks[3]` = null (older dances), an id (`beat` or a song) or a
     copy of a loop `{g, kit, speed}`, played as music ids `d0`-`d2`. ▶ Load brings back the music too; the room dances to it.
   - Save data: `dance.tracks[3]` (defaults in `normalize()`, no new save version).
+- ✅ **📱 Room arrows on phones (v1.81; the owner's report, 2026-11-25; built, PR open on `fix/room-tabs`):**
+  - On an upright phone, her room's ⬇️ Basement arrow sat on top of the ➡️ Studio arrow (both in the bottom-right corner).
+    Now the ⬇️ arrow sits in the middle, between ⬅️ and ➡️. Only CSS changed; no save data.
 - ⏸️ **Parked:**
   - A picture lock for each room (idea 13): only if iPads get shared.
   - A level for each player in duels (idea 14, risk 8): only for family visits.

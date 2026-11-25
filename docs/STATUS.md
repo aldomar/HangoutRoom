@@ -38,11 +38,14 @@ _Last updated: 2026-11-24_
     - New file `73-basement.js`. Save: `room5` (save version 38).
     - Folded in at the owner's request: the pet's own speech bubble (`say(text, 'pet')`, section 9).
   - ✅ PRs #74–#80 (v1.72–v1.78) were merged on 2026-11-24 (into `main` through #81). v1.79 (PR #82) is merged too.
-  - ✅ v1.80 💃 Dancing Buddy + 📻 boombox fix (the owner's request): built, PR open (branch `feature/room-dance`, based on `main`).
+  - ✅ v1.80 💃 Dancing Buddy + 📻 boombox fix (the owner's request): merged (PR #83).
     - Owner's answers 2026-11-24: the music is the Dance Maker's choice (a Stage song plays the 8 beats after its intro); the boombox fix in the same PR.
     - In `48-dance.js` (`rdDance`, `rdStop`, `dnLoopOf`) + `.rm-*` moves in `app.css`. Save: `dance.tracks[3]`.
     - Follow-up (same PR): each saved dance keeps its music, a loop as a copy (`dnTrackNow`, `dnTrackId`, music ids `d0`-`d2`).
     - The boombox (v1.77) couldn't be tapped: decorations let taps through. Its drawing (`.bb`) now catches them.
+  - ✅ v1.81 📱 Room arrows on phones (the owner's report): built, PR open (branch `fix/room-tabs`, based on `main`).
+    - On an upright phone the ⬇️ Basement tab sat on the ➡️ Studio tab. `.rt-down` is now centered at the bottom (`app.css`); Easy-mode
+      tabs there are 100 px wide (was 112) so all three fit on a 360 px phone. Measured at 360×780 (normal + Easy), 412×915 and 844×390.
   - ⏸️ Parked: a picture lock for each room (idea 13), a level for each player in duels (idea 14).
 - **✅ Phase 14: before the hand-over (done, v1.67–v1.71).** **📋 Design review (2026-11-23): read `docs/DESIGN-REVIEW.md` first.** A whole-app review before the children get the app,
   the owner's answers (each child has their own iPad; the app isn't handed over yet), the ranked ideas and the agreed
@@ -1531,7 +1534,8 @@ _Last updated: 2026-11-24_
 9. ~~Plan and build v1.79 🪜 Basement (the owner's request).~~ Built, PR open.
 10. ~~Owner: review and merge PR #82 (v1.79).~~ Merged.
 11. ~~Build v1.80 💃 Dancing Buddy + 📻 boombox fix (the owner's request).~~ Built, PR open.
-12. Owner: review and merge the v1.80 PR, try 💃 and 📻 on the iPads, then decide what comes next (ideas 13 and 14 stay parked).
+12. ~~Owner: review and merge the v1.80 PR.~~ Merged (PR #83).
+13. Owner: review and merge the v1.81 PR (room arrows on phones), try 💃 and 📻 on the iPads, then decide what comes next (ideas 13 and 14 stay parked).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

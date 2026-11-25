@@ -216,7 +216,9 @@ const GIFT_TIMELINE=[
   {v:'1.79',d:'2026-11-27',i:'🪜',n:'The Basement',why:'So you have a whole new room to show off everything you have won',
     news:['🪜 A Basement under your room: tap the arrow at the bottom','🏆 My Stuff has a Prizes button that finds every prize you have','🗄️ A free Trophy Case and Prize Podium in the Shop','🐾 Your pet now talks in its own speech bubble']},
   {v:'1.80',d:'2026-11-28',i:'💃',n:'Dancing Buddy',why:'So the dances you make can be danced right in your room',
-    news:['💃 Tap your buddy, then Dance: it dances your saved dances with your music','💾 Saved dances remember their music','📻 Tapping the boombox now plays your music']}
+    news:['💃 Tap your buddy, then Dance: it dances your saved dances with your music','💾 Saved dances remember their music','📻 Tapping the boombox now plays your music']},
+  {v:'1.81',d:'2026-11-29',i:'📱',n:'Room arrows on phones',why:'So every room arrow is easy to tap on a phone',
+    news:['📱 On a phone, the Basement arrow now sits in the middle, between the other two']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
