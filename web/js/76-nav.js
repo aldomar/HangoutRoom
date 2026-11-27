@@ -88,3 +88,43 @@ function navLeave(leave){
   tell(SPK_FIXED.navPaused);
 }
 const navLeaveOpen=()=>!$('#modal').classList.contains('hidden')&&!!$('#modalBtns .nl-leave');
+
+/* ---------- 👤 Whose room (v1.88, rule 6) ----------
+   Every coin pill (.coinsDisp) starts with a round picture of the room's buddy, in the room's color, with its badge, so it is always
+   clear whose room is open, even for a child who can't read. The picture is drawn once per look (an <img>, like the Runway's), so
+   the #fuzz filter is never redrawn. updateCoins (08) calls whoChips. Tapping the pill says whose room it is and does nothing else
+   (Read to me says its aria-label; with no voice a short toast shows it). */
+const WHO={key:'',img:''};
+function whoArt(p){
+  const key=JSON.stringify(p.look); if(WHO.key===key) return WHO.img; WHO.key=key;
+  const svg=mascotSVG(p.look,'42 34 116 116','width="116" height="116"').replace('>',`><defs>${$('#gdefs').innerHTML}</defs>`);
+  WHO.img='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg); return WHO.img;
+}
+const whoSay=p=>`This is ${p.name}'s room`;
+function whoChips(p){
+  p=p||P(); if(!p) return;
+  const img=whoArt(p), k=p.id+'|'+WHO.key+'|'+p.badge, col=ROOM_COLORS[p.color]||'var(--line)';
+  $$('.coinsDisp').forEach(e=>{
+    let c=e.querySelector('.who'); if(!c){c=document.createElement('i');c.className='who';c.setAttribute('aria-hidden','true');e.prepend(c);}
+    if(c.dataset.k!==k){c.dataset.k=k;c.innerHTML=`<img alt="" src="${img}"><b>${esc(p.badge)}</b>`;}
+    c.style.borderColor=col; e.setAttribute('role','button'); e.setAttribute('aria-label',whoSay(p));
+  });
+}
+document.addEventListener('click',e=>{
+  const d=e.target.closest('.coinsDisp'), p=P(); if(!d||!p) return;
+  const c=d.querySelector('.who'); if(c){c.classList.remove('who-hi');void c.offsetWidth;c.classList.add('who-hi');}
+  if(!(readOn(p)&&canSpeak())) toast(`${p.badge} ${p.name}'s room · 🪙 ${p.coins}`);
+});
+
+/* ---------- 🔒 Little mode's grown-up check with no PIN (v1.88, issue 10) ----------
+   With a PIN, the 3 s hold asks for it (as before). With no PIN, a second step a toddler won't do by chance: type 4 numbers written
+   as words. One try: a wrong one closes the box, so it starts again with the hold. */
+const LOCK_WORDS=['zero','one','two','three','four','five','six','seven','eight','nine'];
+function lockCheck(then){
+  if(DB.settings.pin){askPin(then);return;}
+  const want=Array.from({length:4},()=>Math.floor(Math.random()*10)).join('');
+  lockCheck.want=want; // read by the smoke test
+  pinPad('🔒 Grown-ups',c=>{closeModal(); if(c!==want){SFX.locked();toast('🔒 Still locked');return true;} then(); return true;},
+    [{text:'✖ Close',cls:'ghost'}]);
+  $('#pinDots').insertAdjacentHTML('beforebegin',`<p class="lk-ask">Type <b>${[...want].map(d=>LOCK_WORDS[d]).join(' · ')}</b></p>`);
+}

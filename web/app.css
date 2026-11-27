@@ -17,7 +17,14 @@ button{font:inherit;color:inherit;border:0;cursor:pointer;background:none}
 .btn.ghost{background:var(--panel2);box-shadow:0 4px 0 #1a1424}
 .btn.ghost:active{box-shadow:0 1px 0 #1a1424}
 .btn.small{padding:7px 11px;font-size:14px;border-radius:12px}
-.coins{background:#3a2c18;color:var(--gold);padding:6px 12px;border-radius:999px;font-weight:900;border:2px solid #6b5220;white-space:nowrap}
+.coins{background:#3a2c18;color:var(--gold);padding:6px 12px;border-radius:999px;font-weight:900;border:2px solid #6b5220;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+/* 👤 whose room (v1.88, section 76): her buddy in the room color, with its badge, at the start of every coin pill */
+.coins .who{position:relative;flex:0 0 auto;width:32px;height:32px;margin:-4px 0 -4px -8px;border-radius:50%;border:3px solid var(--line);background:var(--panel2);font-style:normal}
+.coins .who img{width:100%;height:100%;border-radius:50%;display:block}
+.coins .who b{position:absolute;right:-7px;bottom:-6px;font-size:13px;line-height:1}
+.coins .who.who-hi{animation:who-hi .5s}
+@keyframes who-hi{40%{transform:scale(1.25)}}
+.lk-ask{text-align:center;font-size:18px;margin:0 0 8px}.lk-ask b{color:#fff}
 
 /* profiles */
 #scr-profiles{overflow-y:auto;background:radial-gradient(circle at 50% 25%,#4b3a66,#231b2e 70%)}
@@ -1028,9 +1035,10 @@ body.easy .dn-move{min-height:76px;font-size:34px}
 
 /* 🔍 I Spy (v1.49, section 50): the clue card takes the top bar's place; the 🔍 button sits right of 🌙 */
 .spy-btn{left:74px}
-.sound-btn{left:74px;top:74px} /* 🔊/🔇 all sound (v1.67, section 34) */
+.sound-btn{left:74px;top:74px}
+.give-btn{left:138px} /* 🎁 Give a gift, one tap from the room (v1.88) */ /* 🔊/🔇 all sound (v1.67, section 34) */
 body.spying #roomSvg .deco{pointer-events:all} /* decorations normally let taps through (only Decorate grabs them); I Spy needs them */
-body.spying #scr-room .topbar,body.spying #roomTabs,body.spying #spyBtn,body.spying #roomSnapBtn,body.spying #soundBtn,body.spying #emoteBar{display:none}
+body.spying #scr-room .topbar,body.spying #roomTabs,body.spying #spyBtn,body.spying #roomSnapBtn,body.spying #soundBtn,body.spying #giveBtn,body.spying #emoteBar{display:none}
 .spy-card{display:flex;align-items:center;gap:10px;padding:6px 10px;padding-top:max(6px,env(safe-area-inset-top));background:var(--panel);border-bottom:3px solid var(--gold);flex:0 0 auto;animation:spyIn .35s ease-out}
 .spy-card.hidden{display:none}
 .spy-pic{flex:0 0 auto;width:64px;height:64px;border-radius:14px;background:#fff6e8;border:3px solid var(--gold);padding:3px}
@@ -1162,7 +1170,7 @@ body.easy .rw-ci{font-size:70px}
 .pet-play .btn{min-height:60px;font-size:20px}
 .btn.pp-go{background:var(--purple);color:#fff;border-color:var(--purple-dk)}
 body.petplay #roomSvg .deco{pointer-events:all} /* so a tap on a thing (and the hiding check) finds it, like I Spy */
-body.petplay #scr-room .topbar,body.petplay #roomTabs,body.petplay #spyBtn,body.petplay #roomSnapBtn,body.petplay #soundBtn,body.petplay #nightBtn,body.petplay #emoteBar{display:none}
+body.petplay #scr-room .topbar,body.petplay #roomTabs,body.petplay #spyBtn,body.petplay #roomSnapBtn,body.petplay #soundBtn,body.petplay #giveBtn,body.petplay #nightBtn,body.petplay #emoteBar{display:none}
 .pp-card .spy-txt span{font-size:19px}
 .pp-toys{flex-wrap:wrap;justify-content:flex-end}
 .pp-toy{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px}
@@ -1268,7 +1276,7 @@ html,body{touch-action:manipulation} /* no double-tap zoom (iOS ignores user-sca
 @media (max-width:480px){#bfTabs .tab.mode .w{display:none}#bfTabs .tab.mode,#bfTabs [data-lvl]{font-size:19px;padding:6px 4px;min-width:48px;min-height:48px;justify-content:center}#bfTabs{gap:3px;padding:8px 2px}}
 
 /* 🧸 Little mode (v1.71, section 66): body.locked hides the grown-up and older-kid parts */
-body.locked #mapBtn,body.locked #stkBtn,body.locked #decoBtn,body.locked #setBtn,body.locked #spyBtn,body.locked #roomSnapBtn,
+body.locked #mapBtn,body.locked #stkBtn,body.locked #decoBtn,body.locked #setBtn,body.locked #spyBtn,body.locked #roomSnapBtn,body.locked #giveBtn,
 body.locked #mascotNameBtn,body.locked #runwayBtn,body.locked [data-pa="name"],body.locked [data-pa="change"],
 body.locked #socTabs [data-mode="trick"],body.locked #socTabs [data-duo],body.locked #socTabs [data-lvl]:not([data-lvl="easy"]),
 body.locked #bfTabs [data-mode="derby"],body.locked #bfTabs [data-duo],body.locked #bfTabs [data-lvl]:not([data-lvl="easy"]),

@@ -27,6 +27,12 @@ _Last updated: 2026-11-27_
   - ✅ v1.87 ⏸️ Wait, keep playing?: built (branch `feature/nav-leave`, stacked on `feature/nav-back`): PR #92.
     Owner's answer 2026-11-27: ask only when leaving loses something (rule 5 in `CLAUDE.md` says so now). `navBack`/`navMid`/`navLeave`
     in 76, `NAV_HOLD` in 08; the Stage's ⏸️ gains ⬅ 🎵 Songs; the Runway walk waits. No save changes.
+  - ✅ v1.88 👤 Whose room is it?: built (branch `feature/nav-room`, stacked on `feature/nav-leave`); PR not opened yet.
+    Owner said "go with your picks" (2026-11-27): 🔒 with no PIN asks for 4 numbers written as words after the hold (`lockCheck`, 76);
+    a locked Little room keeps no way out (each child has an iPad); only 🎁 Give a gift gets a shortcut (`#giveBtn` on the room picture);
+    the per-room picture lock (idea 13) stays parked. Every coin pill starts with the room's buddy + badge (`whoChips`, 76, called by
+    `updateCoins`). The setup's voice step says Read to me helps any child who can't read yet. No save changes.
+    Next: try the "Needs checking on a device" list in `docs/NAVIGATION.md` with the children.
     `backBtn`/`navBacks` in 76; every top-bar Back is ⬅ + place icon, 48 px; About → Settings; ✖ Close / ✔ Done everywhere;
     🧱 Basement, 🛖 pet homes, 📐 Layouts, 🪞 Room & Style stickers. Owner's answers 2026-11-27: 🧱, no door look. No save changes.
 - ✅ v1.81 📱 Room arrows on phones: merged (PR #84).

@@ -1538,7 +1538,7 @@ in any of them (nothing about getting around is saved). Issue numbers below are 
   ⬅ 🎵 Songs (`#stgLeave`) and the music stopped; the Runway walk holds its CSS walk, timers and beat. Memory for 2 asks once a pair is
   found. Tapping a level or mode tab mid-match still starts over without asking (not a Back; watch on a device).
 
-**v1.88 👤 Whose room + small shortcuts (rules 6, 7, 8; issues 9, 10, 11, 13, 17)**
+✅ **v1.88 👤 Whose room + small shortcuts (rules 6, 7, 8; issues 9, 10, 11, 13, 17; built on `feature/nav-room`, stacked on `feature/nav-leave`)**
 - A round chip with her buddy's face and badge next to the coins on every top bar (drawn once, as the Runway does), so it is
   always clear whose room is open. Tapping it says "This is <name>'s room" (Read to me) and does nothing else.
 - 🔒 Little mode: depends on the owner's answer (a PIN needed to turn Little mode on, or a second step after the 3 s hold).
@@ -1548,6 +1548,10 @@ in any of them (nothing about getting around is saved). Issue numbers below are 
 - Smoke test: the chip is on every screen's top bar and matches the room; switching rooms changes it.
 - Owner's questions: Little mode's unlock (PIN or second step)? Switching out of a locked room? Which shortcuts, if any?
   Keep the per-room picture lock (idea 13) parked?
+- Owner's answers (2026-11-27, "go with your picks"): 🔒 with no PIN asks for 4 numbers written as words after the hold; a locked
+  Little room gets no way out (each child has an iPad); only 🎁 Give a gift gets a shortcut; the picture lock stays parked.
+- Built: `whoChips`/`whoArt` (76, called by `updateCoins`), `lockCheck` + `LOCK_WORDS` (76, used by `lockUnlock` in 66), `#giveBtn`
+  on the room picture (32; hidden while decorating, in I Spy, pet play and Little mode), and the setup's voice line (64).
 
 After v1.88: try the "Needs checking on a device" list in `docs/NAVIGATION.md` with the children and note what they did.
 

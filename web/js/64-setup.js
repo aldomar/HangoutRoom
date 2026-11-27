@@ -95,7 +95,7 @@ function setupVoice(again){
   }
   const hi=()=>speakText(`Hi ${p.name}! I'm ${p.mascotName||'your buddy'}!`);
   modal('🔊 Can you hear me?',`<div class="setup-txt"><p>Turn the sound up. ${esc(p.mascotName||'The buddy')} is saying hello.</p>`
-    +`<p>🔊 Read to me says what a button is when it is tapped. It is on for 🧸 Little and 🐣 Easy rooms.</p></div>`,
+    +`<p>🔊 Read to me says what a button is when it is tapped. It is on for 🧸 Little and 🐣 Easy rooms.</p><p>👂 It helps any child who can't read yet, in any room: turn it on in ⚙️ Settings for a ⭐ Normal room too.</p></div>`,
     [{text:'✖ Nothing',cls:'ghost',on:()=>modal('🔇 No voice?',`<div class="setup-txt"><p>Check the volume. Then try again.</p>${SETUP_NO_VOICE}</div>`,
         [{text:'🔁 Try again',cls:'ghost',on:()=>setupVoice(again)},{text:'Next ▶',cls:'pink',on:done}])},
      {text:'🔁 Again',cls:'ghost',keep:true,on:hi},{text:'✔ I heard it',cls:'pink',on:done}]);

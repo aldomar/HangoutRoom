@@ -312,6 +312,15 @@ like a phone number. **The app never sends anything over the internet**: there's
 - **📻 Boombox fix:** tapping the boombox (from version 1.77) now really plays her music. Before, the tap went straight through it.
 - Save data: one new field, `dance.tracks` (the music of the 3 saved dances). Older backups still restore; their dances have no music kept.
 
+## 👤 Whose room is it? (version 1.88)
+- **Her buddy's face is next to the coins on every screen,** in the room's color with its badge, so anyone can tell whose room is
+  open, even before they can read. Tapping it says whose room it is (with 🔊 Read to me) and does nothing else.
+- **🎁 Give a gift** is one tap from the room: a round 🎁 button on the room picture, next to 🌙 and 🔍. (It is also still in ⚙️.)
+- **🧸 Little mode with no PIN:** after holding 🔒 for 3 seconds, a grown-up types 4 numbers shown as words (for example
+  "seven · two · nine · one"). A toddler won't do that by chance. With a PIN, it asks for the PIN as before.
+- The first-time setup now says that 🔊 Read to me helps any child who can't read yet, in any room.
+- No save changes.
+
 ## ⏸️ Wait, keep playing? (version 1.87)
 - **Back in the middle of a game now pauses and asks.** A big pink **▶ Keep playing** carries on exactly where she was (same score,
   the ball still in the air), and a smaller **⬅** with the place's picture leaves. This is in Soccer (all modes and the duel), the
