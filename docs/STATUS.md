@@ -23,7 +23,7 @@ _Last updated: 2026-11-27_
     New file `76-nav.js` (`endBox`, `NAV_PLACES`, `NAV_WAIT`); every game's end box moved onto it; Hide & Seek, Fetch and Walk go back
     to the pet menu (`ppQuit`, `ppAsk`, `PP_ASK` = 5, `wkToPet`). Owner said "go for it" on the proposed answers (2026-11-27).
   - ✅ v1.85 is PR #90.
-  - ✅ v1.86 ⬅ Back shows the way: built (branch `feature/nav-back`, stacked on `feature/navigation`); PR not opened yet.
+  - ✅ v1.86 ⬅ Back shows the way: built (branch `feature/nav-back`, stacked on `feature/navigation`): PR #91.
     `backBtn`/`navBacks` in 76; every top-bar Back is ⬅ + place icon, 48 px; About → Settings; ✖ Close / ✔ Done everywhere;
     🧱 Basement, 🛖 pet homes, 📐 Layouts, 🪞 Room & Style stickers. Owner's answers 2026-11-27: 🧱, no door look. No save changes.
 - ✅ v1.81 📱 Room arrows on phones: merged (PR #84).
