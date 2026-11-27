@@ -58,7 +58,8 @@ const BR_SPEAK={
     if(pz.bank) return l==='easy'?`Copy the word ${w}. Tap the letters in order.`:WB.look?`Look at the word ${w}. Then tap hide and spell it.`:`Listen and spell the word. ${w}.`;
     return l==='easy'?`What letter does ${w} start with?`:l==='medium'?`Tap the letters to spell ${w}.`:`Spell the word. ${w}.`;},
   bake:(pz,l)=>l==='easy'?`Which one is cut into ${pz.n} equal pieces?`:l==='medium'?`Put toppings on ${spkFrac(pz.a,pz.b)} of the ${pz.k}. Tap the pieces, then tap done.`:pz.q,
-  facts:pz=>pz.q};
+  facts:pz=>pz.q,
+  search:(pz,l)=>`Find the ${pz.w.split(" ").length} hidden words. Slide your finger from the first letter to the last.`}; // v1.90
 const brPz=()=>BR.free?BR.free.pz:(BRAIN_GAMES[BR.game]&&BRAIN_GAMES[BR.game].puzzles[BR.lvl]||[])[BR.idx];
 const CL_SPEAK={
   easy:'Tap the arrows to make a path to the carrot. Then tap play.',

@@ -604,7 +604,18 @@ body.easy .br-ch{min-width:120px;min-height:120px}body.easy .nbub{width:96px;hei
 @keyframes trGo{0%{transform:translateX(0)}35%{transform:translateX(14px)}70%{transform:translateX(-4px)}100%{transform:translateX(0)}}
 .tr-ch{padding:6px}.tr-ch svg{display:block}
 .wb-pic{background:#fff6fb;border:4px solid #fff;border-radius:22px;width:150px;height:150px;display:flex;align-items:center;justify-content:center;padding:10px;box-shadow:0 4px 0 #1a1424}
-.wb-emo{font-size:96px;line-height:1}.wb-art{width:100%;height:100%;display:flex}.wb-art svg{width:100%;height:100%}
+.wb-emo{font-size:96px;line-height:1;color:#2b2235;font-weight:900}/* v1.90: the number words' digits were near-white on the pale card; emoji ignore the color */
+/* 🔎 Word Search (v1.90): every letter at least 48 px, 7 across fits an iPhone held upright */
+.ws-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px}
+.ws-w{display:flex;align-items:center;gap:6px;min-height:48px;padding:4px 14px;border-radius:14px;border:3px solid var(--wc);background:#fff6fb;color:#2b2235;font-size:20px;font-weight:900;letter-spacing:1px}
+.ws-w.got{background:var(--wc);text-decoration:line-through}.ws-w.got::after{content:'✔'}
+.ws-pic{font-size:28px;line-height:1}
+.ws-grid{--c:max(48px,min(64px,calc((100vw - 34px - (var(--n) - 1) * 4px) / var(--n))));display:grid;grid-template-columns:repeat(var(--n),var(--c));gap:4px;margin:0 auto;padding:6px;
+  background:var(--panel);border:3px solid var(--line);border-radius:18px;touch-action:none;user-select:none;-webkit-user-select:none;width:max-content}
+.ws-cell{width:var(--c);height:var(--c);display:flex;align-items:center;justify-content:center;border-radius:10px;background:#fff6fb;color:#2b2235;font-size:calc(var(--c) * .55);font-weight:900;cursor:pointer}
+.ws-cell.got{background:var(--wc)}
+.ws-cell.sel{background:var(--pink);color:#fff}
+.ws-cell.start{box-shadow:inset 0 0 0 4px var(--purple)}.wb-art{width:100%;height:100%;display:flex}.wb-art svg{width:100%;height:100%}
 .wb-word{font-size:34px;font-weight:900;letter-spacing:4px}.wb-word i{font-style:normal;opacity:.5}.wb-word b{color:var(--gold)}
 .wb-slots{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .wb-slot{width:48px;height:56px;border-radius:12px;border:3px dashed #fff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900}

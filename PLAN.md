@@ -1563,6 +1563,15 @@ After v1.88: try the "Needs checking on a device" list in `docs/NAVIGATION.md` w
   `poorCls`, `easySort`, the hair colors, the fidget tabs, the pet toys and the ⭐ dream bar. `dailyGift(p)`: +20 in Little rooms
   (`DAILY_LITTLE`), +10 elsewhere (`DAILY_GIFT`). No save changes; prices in the data are unchanged.
 
+✅ **v1.90 🔎 Word Search + a bigger word bank (the owner's request, 2026-11-27; branch `feature/word-search`, stacked on `feature/little-coins`)**
+- The owner asked for a word search using the Word Builder bank, and sent a second word list for both games' 🎲 Free Play.
+- Owner's answers (2026-11-27): Easy words with 6+ letters move to Medium; words over 11 letters are dropped (shorter swaps);
+  dam, grief, orphan, debt, thief, sword, fight, fought are dropped (pal, shriek, sphere, subtle, fright, ought); sound-alikes
+  get smart extra tiles (`WB_ALIKE`) instead of being dropped. Also fixed: the number pictures were near-white (owner's report).
+- Built: new file `77-wordsearch.js` (`BRAIN_GAMES.search`, `WS_PUZ` 8 per level, `wsPlace`/`wsCheck`/`wsBuild`, `WS_NO` rude-word
+  check on filler letters, `FP_MAKERS.search`; owner's follow-up: words cross and go different ways, `WS_CROSS`/`WS_NEWDIR`, never all one way), Hard is 7 × 7 (not 8 × 8) so letters stay 48 px on an iPhone. `brain.level.search`
+  and `stats.searched` added in `normalize()`; no save version bump.
+
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
 

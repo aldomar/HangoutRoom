@@ -115,7 +115,7 @@ is the only "go to my room" control.
 | Dance Maker | Music 💃, Stage 💃 | ⬅ 🎹 Music / ⬅ 🎤 Stage | ✔ | – | No end |
 | Music Maker | Loft keyboard | ⬅ 🪜 Loft | ✔ | – | The loop is kept (`music.cur`) |
 | Code Lab | Loft computer | Puzzle → list → room; maker: edit → levels → room; end box: ⬅ 🧩 Puzzles / ▶ Next (🔁 Again on the last one) | ✔ | – | |
-| Brain Games | Chalkboard | Puzzle → menu → room; end box: ⬅ 📚 Games / ▶ Next (🔁 Again on the last one); 👯: ⬅ 📚 Games / 🔁 Play again | ✔ | – | Back from a puzzle goes to the menu, not that game |
+| Brain Games | Chalkboard | Puzzle → menu → room; end box: ⬅ 📚 Games / ▶ Next (🔁 Again on the last one); 👯: ⬅ 📚 Games / 🔁 Play again | ✔ | – | Back from a puzzle goes to the menu, not that game. 🔎 Word Search (v1.90) is one more game here, on the same puzzle screen |
 | Garden | Shed | ⬅ 🌳 Backyard | ✔ | – | |
 | 🧸 Play | 🧸 button; the desk in Little mode | Toy → ⬅ 🖍️ Pictures / ⬅ 🧸 Play → ⬅ + room | ✔ | – | No end (by design) |
 | I Spy (mode) | 🔍 | ✖; end box: ⬅ + this room (stays here) / 🔁 Again | ✖ | – | Top bar and arrows hidden |

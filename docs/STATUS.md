@@ -37,6 +37,10 @@ _Last updated: 2026-11-27_
     Built on branch `feature/little-coins`, stacked on `feature/nav-room`: PR #94.
     Owner's answers 2026-11-27: Little-room prices + a bigger gift (about 40–50 coins' worth a day).
     `costOf` + `dailyGift` in 08; it follows the band (`bandOf(p)==='little'`), not the lock. No save changes.
+  - ✅ v1.90 🔎 Word Search + a bigger word bank (the owner's request + their second word list): built on branch
+    `feature/word-search`, stacked on `feature/little-coins`. Owner's answers 2026-11-27 are in `PLAN.md`. New file `77-wordsearch.js`;
+    bank edits + `WB_ALIKE` in 45; the near-white number pictures fixed (`.wb-emo` color). `brain.level.search` + `stats.searched`
+    (defaults, no version bump). Word Builder bank: 277 Easy / 609 Medium / 459 Hard words.
     `backBtn`/`navBacks` in 76; every top-bar Back is ⬅ + place icon, 48 px; About → Settings; ✖ Close / ✔ Done everywhere;
     🧱 Basement, 🛖 pet homes, 📐 Layouts, 🪞 Room & Style stickers. Owner's answers 2026-11-27: 🧱, no door look. No save changes.
 - ✅ v1.81 📱 Room arrows on phones: merged (PR #84).
