@@ -312,6 +312,16 @@ like a phone number. **The app never sends anything over the internet**: there's
 - **📻 Boombox fix:** tapping the boombox (from version 1.77) now really plays her music. Before, the tap went straight through it.
 - Save data: one new field, `dance.tracks` (the music of the 3 saved dances). Older backups still restore; their dances have no music kept.
 
+## ⏸️ Wait, keep playing? (version 1.87)
+- **Back in the middle of a game now pauses and asks.** A big pink **▶ Keep playing** carries on exactly where she was (same score,
+  the ball still in the air), and a smaller **⬅** with the place's picture leaves. This is in Soccer (all modes and the duel), the
+  Ball Field (all games and the duel), a Stage song, a Runway walk and 👯 Memory for 2.
+- **It only asks when leaving would lose something.** Before the first kick or pitch, after a game ends, and in the makers, fidgets,
+  🎸 Jam, 🧸 Play, the Closet and the pet games, Back goes straight back, as before.
+- On the Stage, Back mid-song shows the same ⏸️ Paused as leaving the app does, now with ⬅ 🎵 Songs under ▶ Keep going.
+- Android: pressing Back twice leaves.
+- No save changes.
+
 ## ⬅ Back shows the way (version 1.86)
 - **Every Back button shows where it goes:** ⬅ 🌳 Backyard after Soccer or the Ball Field, ⬅ 🪜 Loft after the Stage or the Music
   Maker, ⬅ 🎵 Songs, ⬅ 🐾 Pet, ⬅ 👗 Closet. On a small phone only ⬅ and the picture show. Every Back is big enough to tap (48 px).

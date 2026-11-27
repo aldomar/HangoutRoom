@@ -1522,15 +1522,21 @@ in any of them (nothing about getting around is saved). Issue numbers below are 
   PIN and Backup boxes start with ⬅ ⚙️ Settings; every Close/Done is ✖ Close / ✔ Done; 🛖 pet homes, 📐 Layouts, 🪞 the Room & Style
   sticker page, 👥 in the level maker, so 🏠 only opens her room.
 
-**v1.87 ⏸️ Ask before leaving a round (rule 5; issue 4)**
+✅ **v1.87 ⏸️ Ask before leaving a round (rule 5; issue 4; built on `feature/nav-leave`, stacked on `feature/nav-back`)**
 - `navLeave(ok, stay)` (76): Back during a round opens the pause box (from the Stage's ⏸️: a big ▶ Keep playing, a smaller ⬅ + place).
   The round waits underneath (the main loop draws but nothing moves), as the Stage does today.
-- Used by Soccer (Kick, Keep, Tricks, Duel), Batting, Catch, Derby, Batting Duel, a Stage song or Together, a Jam, a Runway walk,
-  Memory for 2. Between rounds (no shot taken yet, or the end box showing) Back leaves straight away, so nothing feels slow.
+- Used by Soccer (Kick, Keep, Tricks, Duel), Batting, Catch, Derby, Batting Duel, a Stage song or Together, a Runway walk,
+  Memory for 2: leaving any of them mid-round loses the round (the score, a chance at the prize, the show's coins). Between rounds (no shot taken yet, or the end box showing) Back leaves straight away, so nothing feels slow.
 - The Android Back key goes through the same check.
 - Smoke test: Back mid-round opens the pause box; ▶ carries on with the same score; ⬅ leaves; Back between rounds leaves at once.
 - Owner's question: also ask in the open-ended makers (Music, Dance, Code Lab level maker) when something isn't saved? (They keep
   their work today, so proposed: no.)
+- Owner's answer (2026-11-27): **ask only when leaving loses something.** If nothing is lost, leave straight away: one less box
+  for the children. So no question in the makers (Music, Dance, the level maker keep their work), the 🎸 Jam (leaving already ends it
+  and pays), the fidgets, 🧸 Play, I Spy or the pet games.
+- Built: `navBack`, `navMid`, `navLeave` (76), `NAV_HOLD` (08, the main loop holds `dt` at 0). The Stage reuses its ⏸️ Paused, now with
+  ⬅ 🎵 Songs (`#stgLeave`) and the music stopped; the Runway walk holds its CSS walk, timers and beat. Memory for 2 asks once a pair is
+  found. Tapping a level or mode tab mid-match still starts over without asking (not a Back; watch on a device).
 
 **v1.88 👤 Whose room + small shortcuts (rules 6, 7, 8; issues 9, 10, 11, 13, 17)**
 - A round chip with her buddy's face and badge next to the coins on every top bar (drawn once, as the Runway does), so it is

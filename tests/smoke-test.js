@@ -422,7 +422,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('half the notes = 1 star', await ev(`P().stage.best.sugar.medium.stars===1`), await ev('JSON.stringify(P().stage.best.sugar)'));
   check('Encore! card after playing all 3 songs', await ev(`P().bonusGot.includes('encore')`));
   await ev(`closeModal();stStart('starlight')`); await sleep(200);
-  check('Back during a song goes to the song list', await ev(`window.androidBack()&&cur==='stage'&&STG.state==='pick'`));
+  check('Back during a song pauses it (⏸️, v1.87), and Back again goes to the song list', await ev(`window.androidBack()&&STG.paused==='wait'&&window.androidBack()&&cur==='stage'&&STG.state==='pick'`));
   check('Back again goes to the room', await ev(`window.androidBack()&&cur==='room'`));
   await ev(`show('stage');show('room')`); await sleep(300);
   check('the Golden Mic is given only once', await ev(`P().room.items.filter(i=>i.type==='goldenMic').length===1`));
@@ -6262,6 +6262,65 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('⚙️ Settings closes with ✖ Close (gray)', await ev(`(b=>b.textContent==='✖ Close'&&b.classList.contains('ghost'))([...document.querySelectorAll('#modalBtns button')].pop())`));
     await ev(`closeModal()`);
     check('v1.86 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.86')`));
+  }
+  console.log('Ask before leaving a round (v1.87)');
+  {
+    const box=`navLeaveOpen()`;
+    const backTop=n=>`document.querySelector('#scr-${n} .topbar .nav-bk').click()`;
+    await ev(`closeModal();setBand(P(),'normal');P().little.lock=false;save();applyEasy();show('room');goRoom(3)`); await sleep(50);
+    // ⚽ Soccer: between rounds Back leaves at once; mid-match it pauses and asks
+    await ev(`show('soccer');P().soccer.mode='kick';renderSoccer();newMatch()`); await sleep(150);
+    await ev(backTop('soccer')); await sleep(80);
+    check('Soccer, no kick yet: ⬅ leaves at once, to the Backyard', await ev(`cur==='room'&&roomNo===3&&!${box}`));
+    await ev(`show('soccer');newMatch();SOC.kicks=[true,false]`); await sleep(150);
+    await ev(backTop('soccer')); await sleep(80);
+    check('Soccer, 2 kicks in: ⬅ opens ⏸️ Paused and stays on the field', await ev(`${box}&&cur==='soccer'&&NAV_HOLD.on`));
+    check('…⬅ 🌳 Backyard on the left (gray), a big pink ▶ Keep playing on the right', await ev(`(b=>b.length===2&&b[0].classList.contains('nl-leave')&&b[0].classList.contains('ghost')&&b[0].textContent.includes('🌳')&&b[1].textContent==='▶ Keep playing'&&b[1].classList.contains('pink'))([...document.querySelectorAll('#modalBtns button')])`));
+    check('…and its buttons wait a moment before they take a tap', await ev(`document.querySelector('#modalBtns').classList.contains('nav-wait')`));
+    await shot('NL1-soccer-paused');
+    await sleep(650); await ev(`document.querySelector('#modalBtns .nl-stay').click()`); await sleep(80);
+    check('▶ Keep playing: back in the same match, same score', await ev(`cur==='soccer'&&!NAV_HOLD.on&&SOC.kicks.length===2&&document.querySelector('#modal').classList.contains('hidden')`));
+    await ev(backTop('soccer')); await sleep(650); await ev(`document.querySelector('#modalBtns .nl-leave').click()`); await sleep(80);
+    check('⬅ 🌳 Backyard in the box leaves to the Backyard', await ev(`cur==='room'&&roomNo===3&&!NAV_HOLD.on`));
+    // ⚾ Batting: the pitch stands still while the box is open; Android Back twice leaves
+    await ev(`show('ball');P().ball.mode='bat';renderBall();bfNewGame();BF.res=[true]`); await sleep(200);
+    check('Android Back mid-game opens ⏸️ Paused', await ev(`window.androidBack()===true&&${box}&&cur==='ball'`));
+    const t0=await ev(`BF.time`); await sleep(400);
+    check('…and the game stands still behind it', await ev(`BF.time===${t0}`));
+    check('…Android Back again leaves (its ⬅)', await ev(`window.androidBack()===true&&cur==='room'&&!${box}`));
+    await ev(`show('ball');bfNewGame()`); await sleep(100);
+    check('Batting before the first pitch: Back leaves at once', await ev(`window.androidBack()===true&&cur==='room'&&!${box}`));
+    // any other box ends the pause, so nothing can stay frozen
+    await ev(`show('ball');bfNewGame();BF.res=[true];window.androidBack();modal('x','',[{text:'✖ Close',cls:'ghost'}])`); await sleep(50);
+    check('a box that opens over ⏸️ ends the pause', await ev(`!NAV_HOLD.on`));
+    await ev(`closeModal();show('room')`);
+    // 🎤 a Stage song uses its own ⏸️ (the music stops too), with ⬅ 🎵 Songs
+    await ev(`goRoom(2);show('stage');stStart('starlight')`); await sleep(1500);
+    await ev(`document.querySelector('#stgBack').click()`); await sleep(100);
+    check('Stage mid-song: ⬅ shows ⏸️ Paused with ▶ Keep going and ⬅ 🎵 Songs', await ev(`STG.state==='play'&&STG.paused==='wait'&&!document.querySelector('#stgPause').classList.contains('hidden')&&document.querySelector('#stgLeave').textContent.includes('🎵')&&cur==='stage'`));
+    await shot('NL2-stage-paused');
+    check('…⬅ 🎵 Songs leaves the song for the song list', await ev(`document.querySelector('#stgLeave').click(),STG.state==='pick'&&document.querySelector('#stgPause').classList.contains('hidden')`));
+    await ev(`document.querySelector('#stgBack').click()`); await sleep(80);
+    check('…and Back from the song list goes straight to the Loft', await ev(`cur==='room'&&roomNo===2`));
+    // 👠 a Runway walk waits too (its walk, cheer and coins)
+    await ev(`goRoom(1);window.RW_TEST_FAST=false;show('closet');rwOpen();document.querySelector('#rwCardList [data-card]').click();rwWalk()`); await sleep(300);
+    await ev(backTop('runway')); await sleep(100);
+    check('Runway mid-walk: ⏸️ Paused, and the walk stands still', await ev(`${box}&&RW.walking&&RW.held&&RW.held.length>0&&getComputedStyle(document.querySelector('#rwWalker')).animationPlayState==='paused'`));
+    await sleep(5000);
+    check('…still waiting after longer than the whole walk (no show box yet)', await ev(`${box}&&RW.walking`));
+    await ev(`document.querySelector('#modalBtns .nl-stay').click()`); await sleep(6500);
+    check('…▶ Keep playing finishes the show (its end box)', await ev(`!RW.walking&&endBoxOpen()&&cur==='runway'`));
+    await ev(`closeModal();show('room')`);
+    // 👯 Memory for 2: asks once a pair is found
+    check('👯 Memory for 2 asks once a pair is found, not before', await ev(`(()=>{const v=BR.view,c=TGM.cards,d=TGM.done;show('brain');BR.view='duo';TGM.done=false;TGM.cards=[{got:-1},{got:-1}];const a=navMid();TGM.cards=[{got:0},{got:0}];const b=navMid();BR.view=v;TGM.cards=c;TGM.done=d;show('room');return a===false&&b===true;})()`));
+    // nothing lost = no question
+    const free=[]; for(const n of ['music','dance','fidget','closet','art','code','little','garden','stickers']){
+      await ev(`show('room');${n==='dance'?`show('music');document.querySelector('#muDance').click()`:`show('${n}')`}`); await sleep(60);
+      if(await ev(`navMid()`)) free.push(n);
+    }
+    check('the makers, fidgets, Closet, Code Lab, 🧸 Play, Garden and Stickers never ask', !free.length, free);
+    await ev(`show('room')`);
+    check('v1.87 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.87')`));
   }
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');

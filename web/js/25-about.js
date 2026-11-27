@@ -228,7 +228,9 @@ const GIFT_TIMELINE=[
   {v:'1.85',d:'2026-12-04',i:'🔚',n:'Clear ways back',why:'Because it was hard to tell where to go after a game',
     news:['🔁 Every game ends with the same box: ⬅ to go back on the left, 🔁 to play again on the right','🙈 After Hide & Seek or 🎾 Fetch you go back to your pet','⬅ The back button shows where it goes, like ⬅ 🌳 Backyard']},
   {v:'1.86',d:'2026-12-05',i:'⬅',n:'Back shows the way',why:'Because the back button should show where it takes you',
-    news:['⬅ Every back button shows a picture of where it goes: ⬅ 🌳 Backyard, ⬅ 🎵 Songs, ⬅ 🐾 Pet','🧱 The Basement has its own picture now','✖ closes a box, ✔ means done, and 🏠 always means your room']}
+    news:['⬅ Every back button shows a picture of where it goes: ⬅ 🌳 Backyard, ⬅ 🎵 Songs, ⬅ 🐾 Pet','🧱 The Basement has its own picture now','✖ closes a box, ✔ means done, and 🏠 always means your room']},
+  {v:'1.87',d:'2026-12-06',i:'⏸️',n:'Wait, keep playing?',why:'So a stray tap on Back never throws away a game you were in the middle of',
+    news:['⏸️ Back in the middle of a match, a song or a show pauses and asks: ▶ Keep playing or ⬅ go back','⬅ Between games, and in the makers and fidgets, Back still goes straight back']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

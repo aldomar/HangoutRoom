@@ -482,4 +482,4 @@ $('#randomBtn').onclick=()=>{
   save();SFX.happy();renderCloset();hopCloset();
 };
 $('#mascotNameBtn').onclick=()=>renameModal(P(),'mascotName',"Name your buddy");
-$$('[data-back]').forEach(b=>b.onclick=()=>{SFX.click();show('room');if(b.dataset.place==='settings')settingsModal();}); // About was opened from ⚙️ (v1.86)
+$$('[data-back]').forEach(b=>b.onclick=()=>{SFX.click();navBack(()=>{show('room');if(b.dataset.place==='settings')settingsModal();});}); // About was opened from ⚙️ (v1.86); mid-round ⏸️ asks first (76, v1.87)

@@ -122,6 +122,7 @@ function stUnpause(){
   if(AC&&!document.hidden) AC.resume();
 }
 $('#stgGo').onclick=stGo;
+$('#stgLeave').onclick=()=>{SFX.click();stUnpause();stgPickView();}; // ⏸️ ⬅ 🎵 Songs: leave the song (v1.87)
 
 /* ---------- clock ---------- */
 const stNow=()=>STG.clock==='ac'&&AC?AC.currentTime:performance.now()/1000;
@@ -148,7 +149,9 @@ function stgPickView(){
 }
 $('#stgTabs').onclick=e=>{const b=e.target.closest('[data-lvl]');if(!b||STG.state!=='pick')return;TGT.on=false;P().stage.level=b.dataset.lvl;save();SFX.click();stgPickView();};
 $('#stgSongs').onclick=e=>{const b=e.target.closest('[data-song]');if(b)stStart(b.dataset.song);};
-$('#stgBack').onclick=()=>{SFX.click();if(jamBackKey())return;if(STG.state==='pick')show('room');else stgPickView();};
+// Back: a jam -> its loops, a song -> ⏸️ (asks, section 76, v1.87), the song list -> the room. Android Back does the same (99).
+function stgBackKey(){if(jamBackKey())return;navBack(()=>{if(STG.state==='pick')show('room');else stgPickView();});}
+$('#stgBack').onclick=()=>{SFX.click();stgBackKey();};
 $$('[data-late]').forEach(b=>b.onclick=()=>{DB.settings.stageOffset=clamp((DB.settings.stageOffset||0)+Number(b.dataset.late),-100,400);save();SFX.click();stgPickView();});
 
 /* ---------- playing ---------- */

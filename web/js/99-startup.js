@@ -11,7 +11,7 @@ let loopOn=false;
 function wakeLoop(){if(loopOn||!loopWanted())return;loopOn=true;loop.last=0;requestAnimationFrame(loop);}
 function loop(t){
   if(!loopWanted()){loopOn=false;if(humG&&AC)humG.gain.setTargetAtTime(0,AC.currentTime,0.05);mzSensor(false);return;}
-  const dt=Math.min(0.05,(t-(loop.last||t))/1000); loop.last=t;
+  const dt=NAV_HOLD.on?0:Math.min(0.05,(t-(loop.last||t))/1000); loop.last=t; // ⏸️ a paused round stands still (section 76, v1.87)
   if(cur==='soccer'&&P()) drawSoccer(dt);
   if(cur==='ball'&&P()) drawBallField(dt); // section 59
   if(cur==='stage'&&STG.state!=='pick'&&P()) drawStage(dt); // keeps dancing behind the result box
@@ -30,6 +30,7 @@ document.addEventListener('pointerdown',e=>{lastX=e.clientX;lastY=e.clientY;ac()
 document.addEventListener('contextmenu',e=>e.preventDefault());
 // Android back button (called by the APK wrapper). Returns true if the app handled it.
 window.androidBack=function(){
+  if(navLeaveOpen()){$('#modalBtns .nl-leave').click();return true;} // ⏸️ the pause box: Back = its ⬅ (leave), the same as Back twice (v1.87)
   if(SPY.on&&SPY.done&&!$('#modal').classList.contains('hidden')){closeModal();spyEnd();return true;} // the 🔍 round box: Back = Done
   if(cur==='stage'&&STG.state==='jamdone'){closeModal();jamPickView();return true;} // the 🎸 jam's cheer box: Back = the loops (section 53)
   if(cur==='room'&&PP.on&&endBoxOpen()){closeModal();ppQuit();return true;} // 🙈🎾 a pet game's end box: Back = ⬅ 🐾 the pet menu (v1.85)
@@ -40,16 +41,17 @@ window.androidBack=function(){
   if(cur==='fidget'||cur==='closet'){show('room');return true;}
   if(cur==='art'){artBack();return true;}
   if(cur==='about'){show('room');settingsModal();return true;} // About was opened from ⚙️ Settings (v1.86)
-  if(cur==='cards'||cur==='soccer'||cur==='ball'||cur==='stickers'){show('room');return true;}
-  if(cur==='stage'){if(jamBackKey())return true;if(STG.state==='pick')show('room');else stgPickView();return true;} // a song -> the song list -> room
+  if(cur==='soccer'||cur==='ball'){navBack(()=>show('room'));return true;} // mid-round: ⏸️ asks first (section 76, v1.87)
+  if(cur==='cards'||cur==='stickers'){show('room');return true;}
+  if(cur==='stage'){stgBackKey();return true;} // a song -> the song list -> room
   if(cur==='code'){clBackKey();return true;} // a puzzle -> the puzzle list -> room
   if(cur==='music'){muBackKey();return true;} // section 40
   if(cur==='dance'){dnBackKey();return true;} // back to the Music Maker or the Stage (section 48)
   if(cur==='garden'){gdBackKey();return true;} // back to the Backyard (section 49)
   if(cur==='walk'){wkBackKey();return true;} // a walk or the finds -> the paths -> the room (section 56)
-  if(cur==='runway'){rwBackKey();return true;} // the walk -> dressing room -> cards -> Closet (section 52)
+  if(cur==='runway'){navBack(rwBackKey);return true;} // the walk -> dressing room -> cards -> Closet (section 52)
   if(cur==='little'){ltBackKey();return true;} // a toy -> the 🧸 menu -> room (section 46)
-  if(cur==='brain'){brBackKey();return true;} // a puzzle -> the Brain Games menu -> room
+  if(cur==='brain'){navBack(brBackKey);return true;} // a puzzle -> the Brain Games menu -> room
   if(cur==='room'){if(roomNo!==1)goRoom(1);else show('profiles');return true;} // Loft, Backyard, Studio or Basement -> room -> profiles
   return false;
 };

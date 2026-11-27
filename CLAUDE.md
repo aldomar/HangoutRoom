@@ -85,8 +85,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 The players are 3 to 11, and many can't read, so getting around must work from icons, places and sounds. **The iPads and
 iPhone have no Back button or swipe-back in this app: on-screen buttons are the only way out of anything.** The map of every
 screen and every way in and out is `docs/NAVIGATION.md`: **update its map and table whenever a screen, mode, game or way out
-changes.** The shared helpers live in `76-nav.js`: `endBox` and `NAV_PLACES` since v1.85, `backBtn` since v1.86; `navLeave` and the
-whose-room chip arrive in v1.87–v1.88 (Phase 16, `PLAN.md`). Once a helper exists, new code must use it; until then, follow the
+changes.** The shared helpers live in `76-nav.js`: `endBox` and `NAV_PLACES` since v1.85, `backBtn` since v1.86, `navBack`/`navLeave` since v1.87; the
+whose-room chip arrives in v1.88 (Phase 16, `PLAN.md`). Once a helper exists, new code must use it; until then, follow the
 rule by hand.
 1. **Every round ends on the same end box** (`endBox`): ⬅ + the place's icon on the left (gray), 🔁 Again or ▶ Next on the right
    (pink), extra choices in the middle. Every button has an icon. The buttons ignore taps for about 0.5 s, so a quick tap from the
@@ -99,8 +99,9 @@ rule by hand.
 4. **Games that play inside the room** (like 🔍 I Spy, 🙈 Hide & Seek, 🎾 Fetch) follow rule 1 too and return to where they were
    started (the pet menu for pet games). The room must never look normal while it ignores taps: while one is on, its card shows
    at the top with a ✖.
-5. **Back during a round pauses and asks** (`navLeave`): a big ▶ Keep playing and a smaller ⬅. Between rounds it leaves straight
-   away. Anything she made and hasn't saved asks first (like the Art Desk does).
+5. **Back during a round pauses and asks, but only when leaving would lose something** (a match, a song, a show; `navLeave`): a big
+   ▶ Keep playing and a smaller ⬅. If nothing is lost (a maker that keeps its work, a Jam, a fidget), Back leaves at once
+   (owner, 2026-11-27). Between rounds it leaves straight away. Anything she made and hasn't saved asks first (like the Art Desk does).
 6. **Whose room it is shows on every screen** (her buddy's face and badge next to the coins). Switching rooms stays easy (⚙️ → 👥)
    but never happens from a stray tap in a game.
 7. **Every place says where she is:** a title with its icon, the room or game picture, and a line in `speakLine` (section 65).
@@ -294,6 +295,10 @@ rule by hand.
       ⬅ Back buttons (v1.86): a top-bar Back is `<button class="btn small nav-bk" data-place="…">`; `backBtn(el, place)` draws ⬅ + the place's
       icon + name (`.nb-t`, hidden under 520 px) and its `aria-label`; `show()` calls `navBacks(n)`, so `room` always shows the room the screen
       was opened from. Screens with steps call `backBtn` at each step. Boxes close with `✖ Close` (gray, last) and finish with `✔ Done`.
+      ⏸️ Ask before leaving (v1.87): every Back that can leave a round calls `navBack(leave)`; `navMid()` says whether a round is under way
+      (a new game that can lose a round adds a line there). Mid-round, `navLeave` opens ⏸️ Paused (⬅ + place gray, big pink ▶ Keep playing)
+      and `NAV_HOLD.on` (08) makes the main loop pass `dt` 0; `modal()`/`closeModal()` turn it off. The Stage uses its own ⏸️ (`#stgLeave`), the
+      Runway walk holds its timers (`rwHold`/`rwResume`). Android Back on the box = its ⬅.
   68. `68-undo.js` ↩ Undo (v1.74): `undoArm()` (a copy of the profile just before), `undoShow(u, back)`, `undoDo`, `undoOff`, `undoLeave`
       (called by `show()`), `#undoBar`. Hooked into `tryBuy`, `buyConsumable` (08) and `sendGift` (32). **A new shop must buy through
       `tryBuy`/`buyConsumable`** so it gets Undo; a new way to spend or give coins outside them should call `undoArm`/`undoShow` itself.

@@ -8,7 +8,7 @@ function ac(){
     master=AC.createGain();master.gain.value=0.9;master.connect(AC.destination);
     musicBus=AC.createGain();musicBus.gain.value=0.6;musicBus.connect(AC.destination);}
   // iOS says 'interrupted' after a call or another app's sound. A ⏸️ paused song keeps the clock stopped until its 3-2-1 ends (section 14, v1.74).
-  if((AC.state==='suspended'||AC.state==='interrupted')&&!(typeof STG!=='undefined'&&STG.paused)) AC.resume();
+  if((AC.state==='suspended'||AC.state==='interrupted')&&!(typeof STG!=='undefined'&&STG.paused)&&!NAV_HOLD.on) AC.resume(); // a ⏸️ paused Stage song or Runway walk stays quiet
   return AC;
 }
 function tone(f,dur,type,vol,slide,delay,bus){
