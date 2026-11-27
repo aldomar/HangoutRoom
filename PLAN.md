@@ -1479,7 +1479,7 @@ in any of them (nothing about getting around is saved). Issue numbers below are 
 
 **How we build it (the process for each PR):**
 1. Before coding: the owner answers that PR's questions below (one short list per PR, asked when its turn comes).
-2. Branch: each PR stacks on the one before (`feature/navigation` on `feature/turn3d`, then `feature/nav-back`,
+2. Branch: each PR stacks on the one before while it is open (`feature/navigation` from `main`, then `feature/nav-back`,
    `feature/nav-pause`, `feature/nav-who`), so each one can be merged in order.
 3. Build the shared helper first, then move every screen onto it one file at a time, so nothing is half-done.
 4. Extend the smoke test so the rule is **checked**, not just followed today (each PR lists its check). Run the full test.

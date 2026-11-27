@@ -11,7 +11,7 @@ _Last updated: 2026-11-27_
   - ✅ v1.83 ↻ Turn decorations: merged (PR #86, reverted by #87 and put back by #88).
     New file `75-turn.js` (`decoT`, `picked`, `turnShow`, `#turnBar`); `rotOk` in 06. ±45° in 15° steps (owner's answer).
     Save: an optional `rot` on room items (and in saved layouts); no new save version.
-  - ✅ v1.84 ◀ ▶ Face left or right: built, PR open (branch `feature/turn3d`, from `main`). The owner wanted the turn to look more 3D
+  - ✅ v1.84 ◀ ▶ Face left or right: merged (PR #89). The owner wanted the turn to look more 3D
     (2026-11-27): ◀ ▶ make a standing thing face left or right (squash + lean through `decoIn` in 75, and a darker side through the
     `#depthL`/`#depthR` filters); ↺ ↻ stay. No stored pictures. Save: an optional `yaw` (−1/1) on room items and layouts.
   - 📋 🧭 Getting around (2026-11-27): the owner reported that after 🙈 Hide & Seek it isn't clear where you are or how to get
@@ -19,7 +19,7 @@ _Last updated: 2026-11-27_
     8 navigation rules, now in `CLAUDE.md`, which the owner liked. The build plan is 4 PRs in Phase 16 of `PLAN.md`:
     v1.85 🔚 one end box (+ the Hide & Seek fix), v1.86 ⬅ Back buttons that show where they go, v1.87 ⏸️ ask before leaving a
     round, v1.88 👤 whose room + shortcuts. No save changes. Each PR's owner questions are listed in `PLAN.md`.
-  - ✅ v1.85 🔚 One end box: built on branch `feature/navigation` (stacked on `feature/turn3d`; the review docs are its first commit).
+  - ✅ v1.85 🔚 One end box: PR open (branch `feature/navigation`, from `main`; the review docs are its first commit).
     New file `76-nav.js` (`endBox`, `NAV_PLACES`, `NAV_WAIT`); every game's end box moved onto it; Hide & Seek, Fetch and Walk go back
     to the pet menu (`ppQuit`, `ppAsk`, `PP_ASK` = 5, `wkToPet`). Owner said "go for it" on the proposed answers (2026-11-27).
 - ✅ v1.81 📱 Room arrows on phones: merged (PR #84).
