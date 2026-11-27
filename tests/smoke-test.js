@@ -1510,6 +1510,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   const gradleV=(fs.readFileSync(path.join(__dirname,'..','android','app','build.gradle.kts'),'utf8').match(/versionName\s*=\s*"([^"]+)"/)||[])[1];
   check('settings shows APP_VERSION', (await ev(`document.querySelector('.about').textContent`)).includes(appV));
   check('APP_VERSION matches Android versionName', appV===gradleV, [appV,gradleV]);
+  // Every version check reads APP_VERSION, never a fixed number, so the next version bump doesn't break an old section (v1.85).
+  const gradleC=+(fs.readFileSync(path.join(__dirname,'..','android','app','build.gradle.kts'),'utf8').match(/versionCode\s*=\s*(\d+)/)||[])[1];
+  check('Android versionCode is the minor version + 1 (so it went up with versionName)', gradleC===+appV.split('.')[1]+1, [appV,gradleC]);
   await ev(`closeModal();show('profiles')`); await sleep(200); await shot('16-profiles');
 
   console.log('Backyard (v1.23)');
@@ -6210,7 +6213,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`document.querySelector('#wkBack').click()`); await sleep(100);
     check('…and goes back to the pet menu in the room', await ev(`cur==='room'&&${box}&&!!document.querySelector('#modalBody .pet-card')`));
     await ev(`closeModal()`);
-    check('v1.85 is in the Gift Story and the app says 1.85', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.85')&&APP_VERSION==='1.85'`));
+    check('v1.85 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.85')`));
   }
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');

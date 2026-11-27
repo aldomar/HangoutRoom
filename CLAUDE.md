@@ -153,6 +153,9 @@ rule by hand.
   It loads the page in a headless browser with a throwaway profile, makes a test room, opens every screen,
   exercises the Art Desk, Photocards, Soccer, the Stage and backup/restore, fails on any console error, and saves screenshots to `tests/shots/` (ignored by git).
   Run it before every PR, and extend it when you add a feature. Use invented names only.
+  **Never compare `APP_VERSION` to a fixed number in a feature's section** (it breaks on the next bump): a section only checks its own
+  `GIFT_TIMELINE` entry. The shared checks (section "Every other screen", and the About checks) tie `APP_VERSION` to `sw.js`, `versionName`,
+  `versionCode` (= the minor version + 1) and a Gift Story that runs from 1.0 to `APP_VERSION`.
 - **On the device:** the owner builds the APK in Android Studio and sideloads it. iPads/iPhones get each merge from GitHub Pages.
 - iOS-only code paths are tried in the smoke test with `IOS_FAKE=true` and fakes for `navigator.share`, `speechSynthesis` and
   `DeviceOrientationEvent.requestPermission`. Haptics, the share sheet and Add to Home Screen can only be checked on a real device.
