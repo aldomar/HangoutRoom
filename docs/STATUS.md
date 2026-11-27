@@ -34,7 +34,7 @@ _Last updated: 2026-11-27_
     `updateCoins`). The setup's voice step says Read to me helps any child who can't read yet. No save changes.
     Next: try the "Needs checking on a device" list in `docs/NAVIGATION.md` with the children.
   - ✅ v1.89 🧸 Little rooms: half prices + a bigger daily gift (the owner's report: littles can't earn enough to dress up).
-    Built on branch `feature/little-coins`, stacked on `feature/nav-room`.
+    Built on branch `feature/little-coins`, stacked on `feature/nav-room`: PR #94.
     Owner's answers 2026-11-27: Little-room prices + a bigger gift (about 40–50 coins' worth a day).
     `costOf` + `dailyGift` in 08; it follows the band (`bandOf(p)==='little'`), not the lock. No save changes.
     `backBtn`/`navBacks` in 76; every top-bar Back is ⬅ + place icon, 48 px; About → Settings; ✖ Close / ✔ Done everywhere;
