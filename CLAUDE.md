@@ -81,6 +81,33 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 - **Touch first.** Use pointer events, which also work with a mouse. Interactive canvases and boards need `touch-action:none`.
 - Tap targets of 48 px or more; text at least 14 px (16 px or more for body text).
 
+## Navigation rules (agreed 2026-11-27)
+The players are 3 to 11, and many can't read, so getting around must work from icons, places and sounds. **The iPads and
+iPhone have no Back button or swipe-back in this app: on-screen buttons are the only way out of anything.** The map of every
+screen and every way in and out is `docs/NAVIGATION.md`: **update its map and table whenever a screen, mode, game or way out
+changes.** The shared helpers (`endBox`, `NAV_PLACES`, `backBtn`, `navLeave`, the whose-room chip) arrive in v1.85–v1.88
+(Phase 16, `PLAN.md`); once a helper exists, new code must use it. Until then, follow the rule by hand.
+1. **Every round ends on the same end box** (`endBox`): ⬅ + the place's icon on the left (gray), 🔁 Again or ▶ Next on the right
+   (pink), extra choices in the middle. Every button has an icon. The buttons ignore taps for about 0.5 s, so a quick tap from the
+   game can't press one by accident.
+2. **Back is always top-left, at least 48 px in every band, and shows where it goes** (⬅ + that place's icon from `NAV_PLACES`,
+   plus its name when there is room). It goes exactly one step back, to where she came from (the room it was opened from, the
+   Closet, the pet menu, a list), never further.
+3. **One meaning per icon:** ⬅ = back one step; ✖ = close this box or game and stay here; 🏠 = her room and nothing else;
+   ✔ = done. The room arrow tabs look like doors, not like ⬅ Back.
+4. **Games that play inside the room** (like 🔍 I Spy, 🙈 Hide & Seek, 🎾 Fetch) follow rule 1 too and return to where they were
+   started (the pet menu for pet games). The room must never look normal while it ignores taps: while one is on, its card shows
+   at the top with a ✖.
+5. **Back during a round pauses and asks** (`navLeave`): a big ▶ Keep playing and a smaller ⬅. Between rounds it leaves straight
+   away. Anything she made and hasn't saved asks first (like the Art Desk does).
+6. **Whose room it is shows on every screen** (her buddy's face and badge next to the coins). Switching rooms stays easy (⚙️ → 👥)
+   but never happens from a stray tap in a game.
+7. **Every place says where she is:** a title with its icon, the room or game picture, and a line in `speakLine` (section 65).
+8. **Three taps at most** from a room to anything played often; deeper things get a shortcut one level up.
+- A new screen, mode or game: add it to `docs/NAVIGATION.md` (map and table), give its Back a `NAV_PLACES` place, and end its
+  rounds with `endBox`. Remember 🧸 Little mode (`LOCK_SCREENS`) and the Android Back key (`androidBack`, which must do the same
+  as the on-screen Back).
+
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,

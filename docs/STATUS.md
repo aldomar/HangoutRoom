@@ -14,6 +14,12 @@ _Last updated: 2026-11-27_
   - ✅ v1.84 ◀ ▶ Face left or right: built, PR open (branch `feature/turn3d`, from `main`). The owner wanted the turn to look more 3D
     (2026-11-27): ◀ ▶ make a standing thing face left or right (squash + lean through `decoIn` in 75, and a darker side through the
     `#depthL`/`#depthR` filters); ↺ ↻ stay. No stored pictures. Save: an optional `yaw` (−1/1) on room items and layouts.
+  - 📋 🧭 Getting around (2026-11-27): the owner reported that after 🙈 Hide & Seek it isn't clear where you are or how to get
+    back. A navigation review (`docs/NAVIGATION.md`: the map, a table of every screen, 17 issues, things to check on a device) led to
+    8 navigation rules, now in `CLAUDE.md`, which the owner liked. The build plan is 4 PRs in Phase 16 of `PLAN.md`:
+    v1.85 🔚 one end box (+ the Hide & Seek fix), v1.86 ⬅ Back buttons that show where they go, v1.87 ⏸️ ask before leaving a
+    round, v1.88 👤 whose room + shortcuts. No save changes. Not built yet; each PR's owner questions are listed in `PLAN.md`.
+    The docs are on branch `feature/navigation` (stacked on `feature/turn3d`), not committed yet.
 - ✅ v1.81 📱 Room arrows on phones: merged (PR #84).
 - **Phase 15: 🎉 Holidays + the rest of the design review (order agreed 2026-11-24, see "Phase 15" in `PLAN.md`).** One PR each:
   - ✅ v1.72 🎉 Holiday greetings: built, PR open (branch `feature/holidays`, from `main`). New file `67-holidays.js`; 12 holidays
