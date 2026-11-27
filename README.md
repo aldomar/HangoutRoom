@@ -312,6 +312,15 @@ like a phone number. **The app never sends anything over the internet**: there's
 - **📻 Boombox fix:** tapping the boombox (from version 1.77) now really plays her music. Before, the tap went straight through it.
 - Save data: one new field, `dance.tracks` (the music of the 3 saved dances). Older backups still restore; their dances have no music kept.
 
+## ⬅ Back shows the way (version 1.86)
+- **Every Back button shows where it goes:** ⬅ 🌳 Backyard after Soccer or the Ball Field, ⬅ 🪜 Loft after the Stage or the Music
+  Maker, ⬅ 🎵 Songs, ⬅ 🐾 Pet, ⬅ 👗 Closet. On a small phone only ⬅ and the picture show. Every Back is big enough to tap (48 px).
+- **💌 About** goes back to ⚙️ Settings, and so do the 🔒 PIN and 💾 Backup boxes (⬅ ⚙️ Settings).
+- **One meaning per picture:** ✖ Close shuts a box, ✔ Done means finished, and 🏠 always means her room. The pet's home is now 🛖,
+  saved layouts 📐, and the Room & Style sticker page 🪞.
+- **🧱 The Basement** has its own picture (it used to share the Loft's 🪜).
+- No save changes.
+
 ## 🔚 Clear ways back (version 1.85)
 Many of the children can't read yet, so after a game it has to be clear, from pictures and places alone, how to play again and how to go back.
 - **Every game ends with the same box.** On the left, **⬅** with a picture of where it goes (⬅ 🌳 Backyard, ⬅ 🎵 Songs,

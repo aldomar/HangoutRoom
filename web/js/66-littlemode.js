@@ -104,7 +104,7 @@ function dressModal(){
   const th=dressThemes(p), keys=Object.keys(THEMES).filter(t=>th[t]);
   modal('🎨 Dress like…',keys.length?`<div class="dress-themes">${keys.map(t=>`<button class="dress-th" data-dress="${t}" aria-label="${THEMES[t].name}"><i>${THEMES[t].icon}</i><span class="tn">${THEMES[t].name}</span></button>`).join('')}</div>`
     :`<p style="text-align:center">Clothes with a theme chip (like 🦇 or 🦕) show up here once they are yours.</p>`,
-    [{text:'Close',cls:'ghost'}]);
+    [{text:'✖ Close',cls:'ghost'}]);
 }
 $('#dressBtn').onclick=dressModal;
 $('#modal').addEventListener('click',e=>{const b=e.target.closest('[data-dress]');if(!b)return;closeModal();dressLike(b.dataset.dress);});

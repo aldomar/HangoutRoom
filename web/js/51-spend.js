@@ -65,7 +65,7 @@ function petHomes(){
   const p=P(), k=petKind(p), on=petHomeId(p);
   const tile=(id,H)=>{const own=!id||p.owned.includes('pethome:'+id);
     return `<button class="tile${id===on?' on':''}${own?'':' locked'}${poorCls(p,own,H?H.price:0)}" data-home="${id}" aria-label="${H?H.name:'Cushion'}"><div class="tv"><svg viewBox="-70 -140 140 146">${H?H.d():petBed()}<g transform="translate(0 -8) scale(.8)">${petArt(k,petAcc(p))}</g></svg></div><div class="tn">${H?H.name:'Cushion'}</div>${own?'':priceTag(p,H.price)}</button>`;};
-  modal('🏠 Pet home',`<div class="pet-pick">${tile('')}${easySort(Object.entries(PET_HOMES),([id,H])=>p.owned.includes('pethome:'+id)?0:H.price).map(([id,H])=>tile(id,H)).join('')}</div>`,[{text:'Done',cls:'pink'}]);
+  modal('🛖 Pet home',`<div class="pet-pick">${tile('')}${easySort(Object.entries(PET_HOMES),([id,H])=>p.owned.includes('pethome:'+id)?0:H.price).map(([id,H])=>tile(id,H)).join('')}</div>`,[{text:'✔ Done',cls:'pink'}]);
   $$('#modalBody [data-home]').forEach(b=>b.onclick=()=>petHomeSet(b.dataset.home));
 }
 function petHomeSet(id){
@@ -215,7 +215,7 @@ SPY_THEME_WORDS.museum='for a museum';
 /* ---------- stickers ---------- */
 const spOwnsAny=(p,pre)=>p.owned.some(k=>String(k).startsWith(pre))?1:0;
 STICKERS.push(
-  stk('petHome','room','🏠','Home Sweet Home','heart','Get a new home for your pet (tap your pet, then 🏠 Home)',1,p=>spOwnsAny(p,'pethome:')),
+  stk('petHome','room','🛖','Home Sweet Home','heart','Get a new home for your pet (tap your pet, then 🛖 Home)',1,p=>spOwnsAny(p,'pethome:')),
   stk('backdrop','stage','🎨','Set Designer','star','Get a new Stage backdrop (under the song list)',1,p=>spOwnsAny(p,'backdrop:')),
   stk('museum3','room','🏛️','Museum Maker','scallop','Put 3 museum pieces in your rooms',3,p=>allItems(p).filter(i=>i.placed&&SP_MUSEUM.includes(i.type)).length)
 );

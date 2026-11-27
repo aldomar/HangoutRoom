@@ -240,7 +240,7 @@ function artModal(r){
   modal('🎨 My drawing',`<div class="art-big" style="background:${Object.prototype.hasOwnProperty.call(PAPERS,r.paper)?PAPERS[r.paper]:'#fff'}"><img src="${esc(r.ink)}" alt=""></div>`,[
     {text:'🗑️ Delete',cls:'ghost',on:()=>delArt(r)},
     {text:hung?'📦 Take down':'🖼️ Hang in room',cls:'ghost',on:()=>hung?takeDown(r.id):hangArt(r)},
-    {text:'Close',cls:'ghost'},
+    {text:'✖ Close',cls:'ghost'},
     {text:'✏️ Keep drawing',cls:'pink',on:()=>openArt(r)}]);
 }
 function openArt(r){

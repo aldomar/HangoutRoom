@@ -28,7 +28,7 @@ function ltSoundNote(){if(!DB.settings.sound&&!LT.muteNoted){LT.muteNoted=true;t
 function renderLittle(){
   const p=P(); if(!p) return;
   const v=LT.view;
-  $('#ltBack').innerHTML=v==='menu'?'⬅<span> Room</span>':'⬅';
+  backBtn('#ltBack',v==='menu'?'room':v==='color'?'pictures':'play');
   $('#ltBack').setAttribute('aria-label',v==='menu'?'Room':'Back');
   const M=LT_MENU.find(m=>m.id===(v==='colorPick'?'color':v));
   $('#ltTitle').textContent=M?M.icon+' '+M.name:'🧸 Play';

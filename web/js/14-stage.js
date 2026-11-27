@@ -134,7 +134,7 @@ function stgPickView(){
   stUnpause(); // ⏸️ leaving a paused song (v1.74)
   const p=P(); if(!p) return; STG.state='pick';
   $('#stgPick').classList.remove('hidden'); $('#stgPlay').classList.add('hidden'); $('#stgTabs').classList.remove('hidden');
-  $('#stgBack').textContent='⬅ Room'; jamHide(); // 🎸 Jam (section 53)
+  backBtn('#stgBack','room'); jamHide(); // 🎸 Jam (section 53)
   $$('#stgTabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.lvl===p.stage.level));
   const lv=p.stage.level, n=STG_LEVELS[lv].lanes;
   $('#stgSongs').innerHTML=SONG_IDS.map(id=>{const S=SONGS[id], b=(p.stage.best[id]||{})[lv]||{stars:0,score:0};
@@ -160,7 +160,7 @@ function stStart(id){
     score:0,combo:0,maxCombo:0,counts:[0,0,0,0],fx:[],press:[0,0,0],time:0});
   STG.clock=a&&a.state==='running'?'ac':'perf'; STG.t0=stNow()+0.4;
   $('#stgPick').classList.add('hidden'); $('#stgTabs').classList.add('hidden'); $('#stgPlay').classList.remove('hidden');
-  $('#stgBack').textContent='⬅ Songs';
+  backBtn('#stgBack','songs');
   $('#stgMascot').innerHTML=lvl==='duo'?tgStageBuddies():mascotSVG(p.look); $('#stgMascot').classList.toggle('duo',lvl==='duo');
   stHud(); SFX.click(); tgStageNames();
 }

@@ -12,12 +12,25 @@
 const NAV_WAIT=500;
 const NAV_PLACES={
   room:()=>{const r=roomInfo(roomNo);return {icon:r.icon,name:r.name};},
-  closet:{icon:'👗',name:'Closet'}, pet:{icon:'🐾',name:'Pet'},
-  songs:{icon:'🎵',name:'Songs'}, loops:{icon:'🎵',name:'Loops'},
-  puzzles:{icon:'🧩',name:'Puzzles'}, levels:{icon:'🛠️',name:'Levels'}, games:{icon:'📚',name:'Games'}
+  settings:{icon:'⚙️',name:'Settings'}, closet:{icon:'👗',name:'Closet'}, pet:{icon:'🐾',name:'Pet'},
+  songs:{icon:'🎵',name:'Songs'}, loops:{icon:'🎵',name:'Loops'}, music:{icon:'🎹',name:'Music'}, stage:{icon:'🎤',name:'Stage'},
+  puzzles:{icon:'🧩',name:'Puzzles'}, levels:{icon:'🛠️',name:'Levels'}, games:{icon:'📚',name:'Games'},
+  paths:{icon:'🛤️',name:'Paths'}, cards:{icon:'🃏',name:'Cards'}, play:{icon:'🧸',name:'Play'}, pictures:{icon:'🖍️',name:'Pictures'}
 };
 function navPlace(k){const v=NAV_PLACES[k]||NAV_PLACES.room;return typeof v==='function'?v():v;}
 const navBackText=k=>{const v=navPlace(k);return `⬅ ${v.icon} ${v.name}`;};
+
+/* ---------- ⬅ the top bars' Back buttons (v1.86, rules 2 and 3) ----------
+   Every top-bar Back has class nav-bk and data-place. backBtn(el, place) draws ⬅ + the place's icon + its name (the name hides
+   on a narrow phone, CSS) and names it for Read to me. show() redraws every Back on the screen it opens (navBacks), so 'room'
+   always shows the room the screen was opened from; screens with steps call backBtn as they change step. */
+function backBtn(el,place){
+  if(typeof el==='string') el=$(el); if(!el) return;
+  const v=navPlace(place); el.dataset.place=place;
+  el.innerHTML=`⬅ <i class="nb-ic">${v.icon}</i><span class="nb-t"> ${esc(v.name)}</span>`;
+  el.setAttribute('aria-label',`Back to ${v.name}`);
+}
+function navBacks(n){const s=$('#scr-'+n); if(s) s.querySelectorAll('.nav-bk').forEach(b=>backBtn(b,b.dataset.place||'room'));}
 
 // o = {title, body, back:{to, on}, mid:[{text, on}], go:{text, on}}. Every text starts with its icon; go is optional.
 function endBox(o){

@@ -159,7 +159,7 @@ $('#brMenu').addEventListener('click',e=>{if(e.target.closest('#factsBtn')){SFX.
 function factBinder(){
   const p=P(); if(!p) return; brStop(); BR.view='facts';
   $('#brMenu').classList.remove('hidden'); $('#brPlay').classList.add('hidden');
-  $('#brBack').textContent='⬅ Games'; $('#brTitle').textContent='📇 My Fact Cards';
+  backBtn('#brBack','games'); $('#brTitle').textContent='📇 My Fact Cards';
   $('#brMenu').innerHTML=`<div class="stg-note">${p.easy?'🪐 ✨':'Solve 🪐 Fact Cards puzzles to fill your binder! Tap a card to read it.'}</div>`
     +Object.keys(FACT_TOPICS).map(t=>{const T=FACT_TOPICS[t], cs=factAll().filter(c=>c.pz.t===t);
       return `<div class="fc-sec"><h3>${T[0]} ${T[1]} <small>${cs.filter(c=>p.brain.solved.includes(c.id)).length} / ${cs.length}</small></h3><div class="fc-grid">`
@@ -168,9 +168,9 @@ function factBinder(){
 }
 $('#brMenu').addEventListener('click',e=>{const b=e.target.closest('[data-fc]'); if(!b||BR.view!=='facts') return;
   const c=factAll().find(x=>x.id===b.dataset.fc), p=P(); if(!c) return; SFX.click();
-  if(p.brain.solved.includes(c.id)) modal(`${FACT_TOPICS[c.pz.t][0]} ${c.pz.card.n}`,factCard(c.pz),[{text:'Close',cls:'pink'}]);
+  if(p.brain.solved.includes(c.id)) modal(`${FACT_TOPICS[c.pz.t][0]} ${c.pz.card.n}`,factCard(c.pz),[{text:'✖ Close',cls:'ghost'}]);
   else modal('❓ Not found yet',`<div style="text-align:center">${factCard(c.pz,true)}<p>${p.easy?'🪐 ▶':'Solve this puzzle to unlock it!'}</p></div>`,
-    [{text:'Close',cls:'ghost'},{text:'▶ Play it',cls:'pink',on:()=>{p.brain.level.facts=c.l;save();brPuzzle('facts',c.l,c.i);}}]);});
+    [{text:'✖ Close',cls:'ghost'},{text:'▶ Play it',cls:'pink',on:()=>{p.brain.level.facts=c.l;save();brPuzzle('facts',c.l,c.i);}}]);});
 
 /* ---------- stickers ---------- */
 STICKERS.push(

@@ -121,7 +121,7 @@ function wkArt(p){
 function renderWalk(){
   const p=P(); if(!p) return;
   const s=$('#scr-walk'); s.dataset.view=WK.view;
-  $('#wkBack').textContent=WK.view==='pick'?navBackText('pet'):'⬅ Paths'; // the pet menu she came from (section 76, v1.85)
+  backBtn('#wkBack',WK.view==='pick'?'pet':'paths'); // the pet menu she came from (section 76)
   if(WK.view==='pick'){
     $('#wkPaths').innerHTML=WALK_IDS.map(k=>{const W=WALK_PATHS[k];
       return `<button class="wk-card" data-path="${k}" aria-label="${W.name}"><svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice"><rect width="1000" height="560" fill="${W.sky}"/>${W.still()}${W.far()}${W.mid()}${W.ground()}</svg>`

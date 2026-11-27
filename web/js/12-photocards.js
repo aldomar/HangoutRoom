@@ -205,7 +205,7 @@ $('#binderGrid').onclick=e=>{const b=e.target.closest('[data-card]');if(!b)retur
 function cardModal(c,isNew){
   const p=P(), pinned=p.cardPins.includes(c.id), no=String(c.no).padStart(3,'0');
   const btns=[{text:pinned?'Unpin':'📌 Pin to wall',cls:pinned?'ghost':'pink',on:()=>togglePin(c)},c.bonus?null:{text:'🗑️ Delete',cls:'ghost',on:()=>delCard(c)},{text:'📷 Save picture',cls:'ghost',keep:true,on:()=>snapCard(c)}]; // section 34
-  btns.push(isNew?{text:'Make another',cls:'ghost'}:{text:'Close',cls:'ghost'});
+  btns.push(isNew?{text:'Make another',cls:'ghost'}:{text:'✖ Close',cls:'ghost'});
   modal(isNew?`📸 Card #${no} is in your binder!`:`Card #${no}`,`<div class="card-modal">${cardSVG(c)}</div>`,btns.filter(Boolean)); // bonus cards are won once: no Delete (v1.33)
 }
 function togglePin(c){

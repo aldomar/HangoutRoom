@@ -57,7 +57,7 @@ function rwOpen(){
 function renderRunway(){
   const p=P(); if(!p) return;
   $('#scr-runway').dataset.view=RW.view;
-  $('#rwBack').textContent=RW.view==='cards'?'⬅ Closet':'⬅ Cards';
+  backBtn('#rwBack',RW.view==='cards'?'closet':'cards');
   if(RW.view==='cards') rwCards(); else rwDress();
 }
 function rwCards(){
@@ -130,7 +130,7 @@ const rwMs=ms=>window.RW_TEST_FAST?20:ms;
 function rwLater(fn,ms){RW.timers.push(setTimeout(fn,rwMs(ms)));}
 function rwWalk(){
   const p=P(); if(!p||RW.walking) return;
-  RW.walking=true; RW.view='walk'; $('#scr-runway').dataset.view='walk'; $('#rwBack').textContent='⬅ Cards';
+  RW.walking=true; RW.view='walk'; $('#scr-runway').dataset.view='walk'; backBtn('#rwBack','cards');
   stopMusic(); SFX.click();
   $('#rwBuddyImg').src=rwArt(RW.look);
   $('#rwJudges').innerHTML=RW.card.judges.map(w=>`<div class="rw-judge"><div class="rw-cheer"></div><div class="rw-line"></div>${vFriendSVG(w,'rw-jsvg')}<span>${VISIT_FRIENDS[w].name}</span></div>`).join('');
@@ -190,7 +190,7 @@ function rwBackKey(){
 $('#rwBack').onclick=()=>{SFX.click();rwBackKey();};
 $('#runwayBtn').onclick=()=>{SFX.click();rwOpen();};
 
-/* ---------- stickers (🏠 Room & Style) ---------- */
+/* ---------- stickers (🪞 Room & Style) ---------- */
 STICKERS.push(
   stk('walk1','room','👠','First Walk','star','Walk the 👠 Runway (in the Closet)',1,p=>p.stats.walks||0),
   stk('walk8','room','🌈','Theme Hopper','cloud','Walk the Runway with 8 different theme cards',8,p=>p.runway.cards.length,1),

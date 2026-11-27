@@ -46,7 +46,7 @@ function jamPickView(){
   STG.state='pick'; JAM.pick=true;
   $('#stgPick').classList.add('hidden'); $('#stgPlay').classList.add('hidden'); $('#stgTabs').classList.add('hidden');
   $('#jamPick').classList.remove('hidden'); $('#jamStop').classList.add('hidden');
-  $('#stgBack').textContent=JAM.from==='music'?'⬅ Music':'⬅ Songs';
+  backBtn('#stgBack',JAM.from==='music'?'music':'songs');
   $('#jamHint').textContent=!DB.settings.sound?'🔇 Sounds are off. Turn them on in ⚙️ Settings to hear the band!'
     :'🎸 Pick a loop to be your band, then tap the circles to play along!';
   $('#jamLoops').innerHTML=jamLoops(p).map(L=>`<button class="song jam-loop${L.own?' own':''}" data-loop="${L.id}" aria-label="${esc(L.name)}">`
@@ -86,7 +86,7 @@ function jamStart(id){
   $('#jamPick').classList.add('hidden'); $('#stgPick').classList.add('hidden'); $('#stgTabs').classList.add('hidden');
   $('#stgPlay').classList.remove('hidden'); $('#jamStop').classList.remove('hidden'); $('#stgNames').classList.add('hidden');
   $('#stgScore').textContent=''; $('#stgCombo').textContent='';
-  $('#stgBack').textContent='⬅ Loops';
+  backBtn('#stgBack','loops');
   $('#stgMascot').innerHTML=mascotSVG(p.look); $('#stgMascot').classList.remove('duo');
   SFX.click(); wakeLoop();
 }

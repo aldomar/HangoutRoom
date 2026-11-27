@@ -185,7 +185,7 @@ body.easy .hcol{width:56px;height:56px}
 body.easy .rtab{width:68px;min-height:96px}
 /* tall screens (phone upright): the picture is a band in the middle, so the side tabs go in the empty strip under it */
 @media (max-aspect-ratio:4/5){
-  .rtab,body.easy .rtab{flex-direction:row;width:auto;min-width:100px;min-height:58px;padding:0 14px;gap:8px}
+  .rtab,body.easy .rtab{flex-direction:row;width:auto;min-width:100px;min-height:58px;padding:0 12px;gap:6px}
   body.easy .rtab{min-width:100px;min-height:66px}
   .rt-left{top:auto;bottom:10px}
   .rt-right{top:auto;bottom:10px}
@@ -364,6 +364,12 @@ body.easy .cl-pal .clb{width:76px;height:76px;font-size:38px}
 #modalBtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 /* 🧭 an end box (section 76) waits a moment before its buttons take a tap, and shows it by fading them in */
 #modalBtns.nav-wait .btn{pointer-events:none;opacity:.5}
+/* ⬅ every top-bar Back: ⬅ + the place it goes to (section 76, v1.86); at least 48 px in every band; the name hides on a narrow phone */
+.topbar .btn.nav-bk{min-height:48px;min-width:48px;display:inline-flex;align-items:center;justify-content:center;gap:3px;flex:0 0 auto}
+/* v1.86: on a phone held sideways (very short) the top bar keeps less padding, so games keep their room */
+@media (max-height:500px){.topbar{padding-top:max(3px,env(safe-area-inset-top));padding-bottom:3px}.tabs{padding-top:4px;padding-bottom:4px}.mz-bar{padding-top:4px}}
+.nav-bk .nb-ic{font-style:normal;font-size:1.15em;line-height:1}
+@media (max-width:520px){.nav-bk .nb-t{display:none}}
 #modalBtns .btn.nav-back,#modalBtns .btn.nav-mid,#modalBtns .btn.nav-go{transition:opacity .25s;min-height:48px}
 .setlist{display:flex;flex-direction:column;gap:12px}
 .about{margin:16px 0 0;text-align:center;font-size:14px;opacity:.8}

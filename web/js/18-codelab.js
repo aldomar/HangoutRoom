@@ -172,7 +172,7 @@ function clPickView(){
   if(CL.mk){lmList();return;} // 🛠️ the Make tab is chosen (section 72)
   CL.view='pick';
   $('#clPick').classList.remove('hidden'); $('#clPlay').classList.add('hidden'); $('#clMake').classList.add('hidden'); $('#clTabs').classList.remove('hidden');
-  $('#clBack').textContent='⬅ Room';
+  backBtn('#clBack','room');
   const lv=p.code.level, list=CODE_PUZZLES[lv];
   $$('#clTabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.lvl===lv));
   const done=list.filter(q=>p.code.solved.includes(q.id)).length;
@@ -207,7 +207,7 @@ function clOpen(lvl,idx,free){
   codeStop(); Object.assign(CL,{view:'play',lvl,idx,free:free||null,made:null,prog:[],move:[],state:'edit',bad:[],badM:[]});
   CL.row=clHasMove()?'move':'main'; // My Move puzzles start in the ✨ row: make the move first
   $('#clPick').classList.add('hidden'); $('#clTabs').classList.add('hidden'); $('#clMake').classList.add('hidden'); $('#clPlay').classList.remove('hidden');
-  $('#clBack').textContent=lvl==='make'?'⬅ Levels':'⬅ Puzzles';
+  backBtn('#clBack',lvl==='make'?'levels':'puzzles');
   $('#clPal').innerHTML=[...clBlocks()].map(t=>`<button class="clb${clCls(t)}" data-add="${t}">${clFace(t)}</button>`).join('');
   clBoard(); clProg(); clSay(pz.hint||'',true);
 }
