@@ -291,8 +291,8 @@ function mzWin(){
   if(all) setTimeout(()=>earn(5,'Every maze!'),700);
   mzBar();
   const last=MZ.i===MAZES.length-1;
-  modal(`⭐ ${esc(m.name)} done!`,`<div style="font-size:22px;text-align:center">${got?`+${got} 🪙`:'🌟'}${all?'<br>🏆 Every maze solved! +5 🪙':''}</div>`,
-    [{text:'🔁 Again',cls:'ghost',on:()=>mzStart(MZ.i)},{text:last?'▶ Maze 1':'▶ Next',cls:'pink',on:()=>mzStart(last?0:MZ.i+1)}]);
+  endBox({title:`⭐ ${esc(m.name)} done!`,body:`<div style="font-size:22px;text-align:center">${got?`+${got} 🪙`:'🌟'}${all?'<br>🏆 Every maze solved! +5 🪙':''}</div>`,
+    back:{to:'room',on:()=>show('room')},mid:[{text:'🔁 Again',on:()=>mzStart(MZ.i)}],go:{text:last?'▶ Maze 1':'▶ Next',on:()=>mzStart(last?0:MZ.i+1)}}); // section 76
 }
 function drawMaze(dt){
   const {ctx,W,H}=fit(mzc); ctx.clearRect(0,0,W,H);

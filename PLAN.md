@@ -1487,10 +1487,10 @@ in any of them (nothing about getting around is saved). Issue numbers below are 
    this plan, `docs/STATUS.md`, `CLAUDE.md` (new helpers in the Layout list). Version bump + `GIFT_TIMELINE` + `sw.js`.
 6. The PR description says what to try on the iPad, including the "Needs checking on a device" items that PR touches.
 
-**v1.85 🔚 One end box (rules 1 and 4; issues 1, 2, 3, 12)**
-- New file `web/js/76-nav.js` (above `99-startup.js`, and in `sw.js`'s `FILES`): `endBox({title, body, again, back, next})`.
+✅ **v1.85 🔚 One end box (rules 1 and 4; issues 1, 2, 3, 12; built on `feature/navigation`)**
+- New file `web/js/76-nav.js` (above `99-startup.js`, and in `sw.js`'s `FILES`): `endBox({title, body, back:{to, on}, mid[], go})`.
   - Buttons always in the same places with icons: ⬅ + the place's icon on the left (gray), 🔁 Again or ▶ Next on the right (pink).
-    Extra choices (👗 Wear it home) go in the middle.
+    Extra choices (✨ Wear it home, ⚽ Just me, 🔁 Again next to ▶ Next) go in the middle.
   - The buttons ignore taps for `NAV_WAIT` (about 0.5 s) after the box opens, and show it (a quick fade-in).
   - `NAV_PLACES`: the icon and name of every place a Back can go to (her rooms from `ROOM_MAP`, 👗 Closet, 🐾 pet menu,
     🎵 Songs, 🧩 Puzzles, 📚 Games, 🛤️ Paths, 🃏 Cards…), shared with v1.86.
@@ -1499,15 +1499,17 @@ in any of them (nothing about getting around is saved). Issue numbers below are 
 - 🙈 Hide & Seek: after "Found you!" the end box opens (🔁 Hide again / ⬅🐾). ✖ (and "Put out a few more things first")
   go back to the pet menu, not the bare room. 🎾 Fetch: tapping the pet, or every 5 fetches, opens the end box.
   🦮 Walk: Back from the paths and the end box go back to the pet menu.
-- Smoke test: every `modal()` in a game's end goes through `endBox` (a list of end functions, each must open a box whose
-  first button is ⬅ and last is 🔁/▶); a tap in the first 0.5 s does nothing; Hide & Seek and Fetch end on the pet menu.
-- Owner's questions: Fetch's box after 5 fetches, or only on a pet tap? Should Walk go back to the pet menu (proposed) or the room?
+- Smoke test: no game file makes an again / next / another / 🏠 button the old way, and each uses `endBox`; the box's layout;
+  a tap in the first 0.5 s does nothing; Hide & Seek, Fetch and Walk end on the pet menu.
+- Owner's answers (2026-11-27, "go for it" on the proposal): Fetch offers the box both on a pet tap and every 5 fetches (`PP_ASK`);
+  Walk goes back to the pet menu (`wkToPet`). I Spy's ⬅ stays in the room it was played in. Runway's "Wear it home" is ✨ (👗 is the Closet).
+  Code Lab and Brain Games: the last puzzle's "Yay!" became 🔁 Again (⬅ already goes to the list).
 
 **v1.86 ⬅ Back buttons that show where they go (rules 2 and 3; issues 5, 6, 7, 8, 14, 16)**
 - `backBtn(el, place)` (76): every top-bar Back shows ⬅ + the place's icon (+ its name when there is room), at least 48 px in every
   band. Screens opened from a room show that room (⬅🌳 from Soccer, ⬅🪜 from the Stage). Screens with steps (Stage, Code Lab,
   Brain Games, Runway, Walk, Jam, 🧸 Play) set it at each step, as they do now, through the same helper.
-- 🏠 only means her room. I Spy's "🏠 Done" becomes "✔ Done"; Runway's "🏠 Done" becomes "⬅👗 Closet"; Walk's "🏠 Home" becomes ⬅ + the room.
+- 🏠 only means her room. (The game boxes' 🏠 Done / 🏠 Home went in v1.85 through `endBox`; the smoke test checks it.) Check the rest of the app.
 - ✖ only means "close this box or game, stay here": every box's close button becomes ✖ in one place (gray, the last button),
   except a real choice (Delete / Keep it).
 - The room arrow tabs get a door look of their own (their arrow + the room's picture), so they don't look like ⬅ Back.

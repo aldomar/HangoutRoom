@@ -4012,7 +4012,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('after the walk, the judges hold up 🤩 cheer cards', await ev(`[...document.querySelectorAll('#rwJudges .rw-judge')].every(j=>j.classList.contains('show')&&j.querySelector('.rw-cheer').textContent==='🤩')`));
     await shot('RW4-cheers'); await sleep(1800);
     check('then a cheer box: +3 coins, the walk and card counted, a 🤩 on a themed card', await ev(`/What a show/.test(document.querySelector('#modalTitle').textContent)&&P().coins===503&&P().stats.walks===1&&P().stats.wows===1&&P().runway.cards.join()==='farm'&&P().runway.pay.n===3`));
-    check('…with 🔁 Another card and 🏠 Done; 👗 Wear it home only when something she owns would change', await ev(`!!(${mb('Another card')}&&${mb('Done')})&&!!${mb('Wear it home')}===RW_CATS.some(k=>RW.look[k]!==P().look[k]&&rwOwns(P(),k,RW.look[k]))`));
+    check('…with 🔁 Another card and ⬅ 👗 Closet; ✨ Wear it home only when something she owns would change (v1.85)', await ev(`!!(${mb('Another card')}&&${mb('Closet')})&&!!${mb('Wear it home')}===RW_CATS.some(k=>RW.look[k]!==P().look[k]&&rwOwns(P(),k,RW.look[k]))`));
     check('…and her things are unchanged (nothing borrowed was kept)', await ev(`JSON.stringify(P().owned)===window.rwOwned&&JSON.stringify(P().look)===window.rwLook`));
     await shot('RW5-done');
     await ev(`${mb('Another card')}.click()`); await sleep(150);
@@ -4347,10 +4347,12 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('a redraw of the room keeps the pet in the same spot', await ev(`PP.spot&&PP.spot.key===${JSON.stringify(spot.key)}&&!!document.querySelector('#ppPet')`));
     const seen=await ev(`PP.seen[Math.floor(PP.seen.length/2)]`);
     await click(seen); await sleep(100);
-    check('a tap on the peeking pet finds it: +2 hearts, 🔁 Again shows, no coins', await ev(`PP.found&&petHearts(P())===${h0}+2&&P().stats.seeks===1&&!!document.querySelector('#ppAgain')&&P().coins===${c0}`));
+    check('a tap on the peeking pet finds it: +2 hearts, no coins', await ev(`PP.found&&petHearts(P())===${h0}+2&&P().stats.seeks===1&&P().coins===${c0}`));
     await shot('PP05-found');
     check('…and then it is back at home', await waitFor(`!document.querySelector('#ppPet')&&getComputedStyle(document.querySelector('#petG .pet-bob')).display!=='none'`));
-    await ev(`document.querySelector('#ppAgain').click()`);
+    check('…and the end box opens (v1.85): ⬅ 🐾 Pet on the left, 🔁 Hide again on the right', await waitFor(`${box}&&(b=>b.length===2&&b[0].textContent.includes('⬅ 🐾 Pet')&&b[1].textContent.includes('🔁 Hide again')&&b[1].classList.contains('pink'))([...document.querySelectorAll('#modalBtns button')])`));
+    await shot('PP05b-found-box');
+    await ev(`document.querySelector('#modalBtns .nav-go').click()`);
     check('🔁 Again hides it somewhere else', await waitFor(`PP.phase==='seek'`)&&await ev(`PP.spot.key!==${JSON.stringify(spot.key)}`));
     await ev(`(()=>{const s=ppSpots().find(x=>x.key===PP.spot.key);const r=s.el.getBoundingClientRect();window.__spotPt=[r.left+r.width/2,r.top+r.height/2];})()`);
     await click(await ev(`__spotPt`)); await sleep(100);
@@ -4364,13 +4366,15 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('Easy mode: more of the pet peeks out', await ev(`(()=>{ppEnd();P().easy=true;goRoom(1);ppStart('hide');return true;})()`)&&await waitFor(`PP.phase==='seek'`)&&await ev(`(f=>f>=0.16&&f<=0.45)(ppShows())`));
     await shot('PP06-hide-easy');
     await ev(`ppEnd();P().easy=false;P().room4.items=[];save();goRoom(4);ppStart('hide')`);
-    check('in a bare room: "Put out a few more things first!" and the game ends', await waitFor(`!PP.on`)&&await ev(`!document.body.classList.contains('petplay')`));
+    check('in a bare room: "Put out a few more things first!" and it goes back to the pet menu (v1.85)', await waitFor(`!PP.on`)&&await ev(`!document.body.classList.contains('petplay')&&(!document.querySelector('#modal').classList.contains('hidden')&&!!document.querySelector('#modalBody .pet-card'))`));
+    await ev(`closeModal()`);
     await ev(`P().room4=JSON.parse(ppSaved.r4);save();goRoom(1)`);
     // night
     await ev(`P().night['1']=true;save();renderRoom();ppStart('hide')`);
     check('at night: two glowing eyes peek out instead', await waitFor(`PP.phase==='seek'`)&&await ev(`!!document.querySelector('#ppEyes')&&document.querySelector('#ppEyes').parentNode===roomSvg&&!document.querySelector('#nightBtn').offsetWidth`));
     await shot('PP07-night-eyes');
-    check('Android Back ends the game, in the room', await ev(`androidBack()&&!PP.on&&cur==='room'&&!document.body.classList.contains('petplay')&&getComputedStyle(document.querySelector('#scr-room .topbar')).display!=='none'`));
+    check('Android Back ends the game: the pet menu opens, in the room (v1.85)', await ev(`androidBack()&&!PP.on&&cur==='room'&&!document.body.classList.contains('petplay')&&getComputedStyle(document.querySelector('#scr-room .topbar')).display!=='none'&&(!document.querySelector('#modal').classList.contains('hidden')&&!!document.querySelector('#modalBody .pet-card'))`));
+    await ev(`closeModal()`);
     await ev(`P().night={};save();renderRoom();ppStart('hide')`); await sleep(20);
     await ev(`show('closet')`);
     check('leaving the room ends it too', await ev(`!PP.on&&!document.body.classList.contains('petplay')`));
@@ -4404,8 +4408,19 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('a tap on the floor throws to that spot', await ev(`PP.phase==='fly'&&Math.abs(PP.fly.L.x-300)<3&&Math.abs(PP.fly.L.y-640)<3`));
     await waitFor(`PP.phase==='ready'`,4000);
     check('an unknown or not-owned toy falls back to the ball', await ev(`(()=>{const p=P(),t=p.pet.toy;p.pet.toy='rocket';const a=ppToy(p);p.pet.toy='disc';p.owned=p.owned.filter(k=>k!=='pettoy:disc');const b=ppToy(p);p.owned.push('pettoy:disc');p.pet.toy=t;return a==='ball'&&b==='ball';})()`));
+    const petPt=await ev(`(r=>[r.left+r.width/2,r.top+r.height*0.6])(document.querySelector('#petG').getBoundingClientRect())`);
+    await click(petPt); await sleep(80);
+    check('Fetch: a tap on the pet opens the end box instead of throwing (v1.85)', await ev(`${box}&&PP.phase==='ready'&&!!document.querySelector('#modalBtns .nav-back')&&document.querySelector('#modalBtns .nav-go').textContent.includes('Keep playing')`));
+    await ev(`document.querySelector('#modalBtns .nav-go').click()`); await sleep(50);
+    check('…🔁 Keep playing closes it, the toy is ready', await ev(`!${box}&&PP.on&&PP.phase==='ready'`));
+    await ev(`PP.streak=4;ppFetched()`);
+    check('…every 5th fetch offers the end box too', await waitFor(`${box}&&!!document.querySelector('#modalBtns .nav-back')`,3000));
+    await ev(`document.querySelector('#modalBtns .nav-back').click()`); await sleep(50);
+    check('…⬅ 🐾 Pet stops and opens the pet menu', await ev(`!PP.on&&(!document.querySelector('#modal').classList.contains('hidden')&&!!document.querySelector('#modalBody .pet-card'))`));
+    await ev(`closeModal();ppStart('fetch')`); await sleep(50);
     await ev(`document.querySelector('#ppX').click()`); await sleep(50);
-    check('✖ stops: the room is back as before', await ev(`!PP.on&&!document.querySelector('#ppToy')&&getComputedStyle(document.querySelector('#scr-room .topbar')).display!=='none'`));
+    check('✖ stops: the room is back as before, with the pet menu open (v1.85)', await ev(`!PP.on&&!document.querySelector('#ppToy')&&getComputedStyle(document.querySelector('#scr-room .topbar')).display!=='none'&&(!document.querySelector('#modal').classList.contains('hidden')&&!!document.querySelector('#modalBody .pet-card'))`));
+    await ev(`closeModal()`);
     check('pet play never opens anything in the room (taps go to the game)', await ev(`(()=>{ppStart('fetch');const c=cur;document.querySelector('[data-hot=closet]').dispatchEvent(new MouseEvent('click',{bubbles:true}));const ok=cur===c&&cur==='room';ppEnd();return ok;})()`));
     // Decorating and I Spy still win
     await ev(`enterDecorate();ppStart('hide')`); await sleep(50);
@@ -6157,6 +6172,44 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('v1.84 is in the Gift Story and the app says 1.84', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.84')&&APP_VERSION==='1.84'`));
   }
 
+  console.log('Clear ways back (v1.85)');
+  {
+    const waitFor=async(cond,ms)=>{for(let i=0;i<(ms||3000)/50;i++){if(await ev(cond))return true;await sleep(50);}return false;};
+    const click=async([x,y])=>{await mouse('mousePressed',x,y);await mouse('mouseReleased',x,y);};
+    const box=`(!document.querySelector('#modal').classList.contains('hidden'))`, btns=`[...document.querySelectorAll('#modalBtns button')]`;
+    // every game's end box goes through endBox (section 76): no "again / next / another" button is made the old way
+    const GAME_FILES=['13-soccer','14-stage','18-codelab','19-fidgets2','27-keeper','28-brain','43-together','44-freeplay','50-ispy','52-runway','53-jam','54-tricks','55-petplay','56-walk','59-ballfield','61-catch','62-derby','63-ballduel','72-levelmaker'];
+    const oldWay=GAME_FILES.flatMap(n=>{const t=fs.readFileSync(path.join(__dirname,'..','web','js',n+'.js'),'utf8');
+      return (t.match(/\{text:'[^']*(Again|again|Next|Another|🏠)[^']*',cls:/g)||[]).map(m=>n+': '+m).concat(t.includes('endBox(')?[]:[n+': no endBox']);});
+    check('every game ends its rounds with endBox, not an old-style box', !oldWay.length, oldWay);
+    check('the 🏠 icon is never a way out of a game box', !GAME_FILES.some(n=>/text:'🏠/.test(fs.readFileSync(path.join(__dirname,'..','web','js',n+'.js'),'utf8'))));
+    // a real end box: Soccer in the Backyard
+    await ev(`show('room');goRoom(3);show('soccer')`); await sleep(100);
+    await ev(`endBox({title:'⚽ Test',body:'x',back:{to:'room',on:()=>show('room')},mid:[{text:'⚽ Just me',on:()=>{}}],go:{text:'🔁 Play again',on:()=>{}}})`);
+    check('the end box: ⬅ + the room it came from on the left, extras in the middle, 🔁 on the right in pink', await ev(`(b=>b.length===3&&b[0].textContent==='⬅ 🌳 Backyard'&&b[0].classList.contains('ghost')&&b[1].textContent.includes('Just me')&&b[2].textContent.includes('🔁')&&b[2].classList.contains('pink'))(${btns})`), await ev(`${btns}.map(b=>b.textContent)`));
+    check('…its buttons wait a moment before they take a tap', await ev(`document.querySelector('#modalBtns').classList.contains('nav-wait')&&getComputedStyle(${btns}[0]).pointerEvents==='none'`));
+    const hit=await ev(`(r=>[r.left+r.width/2,r.top+r.height/2])(${btns}[0].getBoundingClientRect())`);
+    await click(hit); await sleep(30);
+    check('…so a quick tap from the game does nothing', await ev(`${box}&&cur==='soccer'`));
+    await sleep(600);
+    check('…then they work: ⬅ goes back to the Backyard', await ev(`!document.querySelector('#modalBtns').classList.contains('nav-wait')`)&&(await click(hit),await sleep(100),await ev(`!${box}&&cur==='room'&&roomNo===3`)));
+    await ev(`modal('Plain','x',[{text:'OK'}])`);
+    check('a plain box (not an end box) has no wait', await ev(`!document.querySelector('#modalBtns').classList.contains('nav-wait')`));
+    await ev(`closeModal();goRoom(1)`);
+    check('every NAV_PLACES place has an icon and a name', await ev(`Object.keys(NAV_PLACES).every(k=>{const v=navPlace(k);return v.icon&&v.name;})`));
+    // the real end boxes, one per kind of game
+    await ev(`show('brain');brPuzzle('snack','easy',0)`); await sleep(100);
+    await ev(`brWin()`); await waitFor(box,2000);
+    check('Brain Games: ⬅ 📚 Games on the left, ▶ Next on the right', await ev(`(b=>b[0].textContent.includes('⬅ 📚 Games')&&b[b.length-1].textContent.includes('▶ Next'))(${btns})`), await ev(`${btns}.map(b=>b.textContent)`));
+    await shot('NAV1-brain-end');
+    await ev(`closeModal();show('room')`);
+    // the pet walk goes back to the pet menu
+    await ev(`if(!petKind(P())){P().pet.kind='bat';save();}wkStop();WK.view='pick';show('walk')`); await sleep(80);
+    check('🦮 Walk: Back on the paths says ⬅ 🐾 Pet…', await ev(`document.querySelector('#wkBack').textContent.includes('🐾')`));
+    await ev(`document.querySelector('#wkBack').click()`); await sleep(100);
+    check('…and goes back to the pet menu in the room', await ev(`cur==='room'&&${box}&&!!document.querySelector('#modalBody .pet-card')`));
+    await ev(`closeModal()`);
+  }
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');
   ws.close(); ch.kill(); setTimeout(()=>{try{fs.rmSync(prof,{recursive:true,force:true});}catch(e){} process.exit(bad||errors.length?1:0);},800);

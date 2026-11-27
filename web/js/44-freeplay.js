@@ -287,8 +287,8 @@ function fpBrainWin(){
   } else line=FP_THINK.includes(g)&&bandThink(p,l)?fpThinkPay():fpPay(); // +2 only at the room's level band or above (v1.69, section 64)
   BR.timer=setTimeout(()=>{
     if(cur!=='brain'||BR.view!=='play'||BR.tok!==tok) return;
-    modal(fz.daily?'📅 Puzzle of the Day solved!':`🎲 ${G.icon} Solved!`,`<div style="text-align:center;font-size:18px">🎉 ${line}</div>`,
-      [{text:'📚 Games',cls:'ghost',on:brMenu},{text:'🎲 Another one!',cls:'pink',on:()=>fpBrain(g,l)}]);
+    endBox({title:fz.daily?'📅 Puzzle of the Day solved!':`🎲 ${G.icon} Solved!`,body:`<div style="text-align:center;font-size:18px">🎉 ${line}</div>`,
+      back:{to:'games',on:brMenu},go:{text:'🎲 Another one!',on:()=>fpBrain(g,l)}}); // section 76
   },900);
 }
 
@@ -320,8 +320,8 @@ function fpMazeWin(){
   p.stats.mazes++; SFX.happy();
   const line=fpPay(G?r.left+G.ox+MZ.gx*G.cs:null,G?r.top+G.oy+MZ.gy*G.cs:null);
   mzBar();
-  modal('🎲 Maze done!',`<div style="font-size:22px;text-align:center">🎉 ${line}</div>`,
-    [{text:'🔁 Again',cls:'ghost',on:()=>mzStart(0,free)},{text:'🎲 Another one!',cls:'pink',on:fpMaze}]);
+  endBox({title:'🎲 Maze done!',body:`<div style="font-size:22px;text-align:center">🎉 ${line}</div>`,
+    back:{to:'room',on:()=>show('room')},mid:[{text:'🔁 Again',on:()=>mzStart(0,free)}],go:{text:'🎲 Another one!',on:fpMaze}}); // section 76
 }
 
 /* ---------- 🎲 in the Code Lab (Easy and Medium) ---------- */
@@ -344,8 +344,8 @@ function fpCodeWin(){
   const line=fpPay();
   CL.timer=setTimeout(()=>{
     if(cur!=='code'||CL.view!=='play') return;
-    modal('🥕 Yum! 🎲 Board solved!',`<div style="text-align:center;font-size:17px">${p.easy?'🎉':`${esc(p.mascotName)} followed your program all the way! 🎉`}<br>${n} block${n>1?'s':''} · ${line}</div>`,
-      [{text:'🧩 Puzzles',cls:'ghost',on:clPickView},{text:'🎲 Another one!',cls:'pink',on:()=>fpCode(lvl)}]);
+    endBox({title:'🥕 Yum! 🎲 Board solved!',body:`<div style="text-align:center;font-size:17px">${p.easy?'🎉':`${esc(p.mascotName)} followed your program all the way! 🎉`}<br>${n} block${n>1?'s':''} · ${line}</div>`,
+      back:{to:'puzzles',on:clPickView},go:{text:'🎲 Another one!',on:()=>fpCode(lvl)}}); // section 76
   },700);
 }
 

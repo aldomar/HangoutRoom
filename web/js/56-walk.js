@@ -121,7 +121,7 @@ function wkArt(p){
 function renderWalk(){
   const p=P(); if(!p) return;
   const s=$('#scr-walk'); s.dataset.view=WK.view;
-  $('#wkBack').textContent=WK.view==='pick'?'⬅ Room':'⬅ Paths';
+  $('#wkBack').textContent=WK.view==='pick'?navBackText('pet'):'⬅ Paths'; // the pet menu she came from (section 76, v1.85)
   if(WK.view==='pick'){
     $('#wkPaths').innerHTML=WALK_IDS.map(k=>{const W=WALK_PATHS[k];
       return `<button class="wk-card" data-path="${k}" aria-label="${W.name}"><svg viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid slice"><rect width="1000" height="560" fill="${W.sky}"/>${W.still()}${W.far()}${W.mid()}${W.ground()}</svg>`
@@ -195,14 +195,16 @@ function wkHome(){
   const p=P(); if(!p) return;
   WK.done=true; p.stats.petWalks++; const learned=petGive(p,WK_HOME_HEARTS); save();
   $('#wkBench').classList.remove('hidden'); wkTip(); SFX.cheer();
-  modal('🐾 What a lovely walk!',`<div class="wk-found"><div class="wk-big-e">🏡</div><div>${esc(petName(p))} had so much fun!</div><div class="wk-h">❤️ +${WK_HOME_HEARTS}</div>`
+  endBox({title:'🐾 What a lovely walk!',body:`<div class="wk-found"><div class="wk-big-e">🏡</div><div>${esc(petName(p))} had so much fun!</div><div class="wk-h">❤️ +${WK_HOME_HEARTS}</div>`
     +(learned?`<div>🎉 New trick: ${learned.icon} ${learned.name}!</div>`:'')+`</div>`,
-    [{text:'🔁 Another walk',cls:'pink',on:()=>{WK.view='pick';renderWalk();}},{text:'🏠 Home',on:()=>show('room')}]);
+    back:{to:'pet',on:wkToPet},go:{text:'🔁 Another walk',on:()=>{WK.view='pick';renderWalk();}}}); // section 76
   checkStickers();
 }
 function wkStop(){clearTimeout(WK.timer); WK.walking=false; const sc=$('#wkScene'); if(sc) sc.classList.remove('walking');}
+// Back to the pet menu in the room the walk started from (v1.85): that's where she came from.
+function wkToPet(){show('room'); if(cur==='room'&&petKind(P())) petMenu();}
 function wkBackKey(){
-  if(WK.view==='pick') show('room');
+  if(WK.view==='pick') wkToPet();
   else {wkStop(); WK.view='pick'; renderWalk();}
 }
 

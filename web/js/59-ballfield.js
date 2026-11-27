@@ -153,8 +153,8 @@ function bfEnd(){
   const bats=giveBats(); SFX.whistle(); bfScore(); if(bats.length) setTimeout(SFX.buy,400);
   const line=hits===BF_PITCHES?'PERFECT GAME! 🌟':hits>=4?'Great hitting! ✨':hits>=1?'Nice! Keep swinging 💪':`${L.name} was tricky! Try again? ${L.icon}`;
   const won=bats.map(n=>`<div style="margin-top:10px">You won the <b>${n}</b>! It's in your Backyard ⚾</div><svg viewBox="${DECOR[BATS[lvl]].box}" style="height:110px">${DECOR[BATS[lvl]].d()}</svg>`).join('');
-  modal(`⚾ ${hits} / ${BF_PITCHES} hits!`,`<div style="text-align:center;font-size:18px">${line}${homers?`<br>${homers} home run${homers>1?'s':''}! ⭐`:''}${best&&hits?`<br>New best on ${lvl[0].toUpperCase()+lvl.slice(1)}! 🏆`:''}${won}</div>`,
-    [{text:'⬅ Backyard',cls:'ghost',on:()=>show('room')},{text:'Play again',cls:'pink',on:()=>bfNewGame()}]);
+  endBox({title:`⚾ ${hits} / ${BF_PITCHES} hits!`,body:`<div style="text-align:center;font-size:18px">${line}${homers?`<br>${homers} home run${homers>1?'s':''}! ⭐`:''}${best&&hits?`<br>New best on ${lvl[0].toUpperCase()+lvl.slice(1)}! 🏆`:''}${won}</div>`,
+    back:{to:'room',on:()=>show('room')},go:{text:'🔁 Play again',on:()=>bfNewGame()}}); // section 76
   checkStickers();
 }
 bfCv.addEventListener('pointerdown',e=>{e.preventDefault();const m=bfMode();if(m==='catch'){ctDown(e);return;}if(m==='derby'){hrDown(e);return;}bfTap();});

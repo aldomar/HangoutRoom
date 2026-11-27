@@ -164,10 +164,9 @@ function rwDone(p,lv){
   if(got){earn(got,'Runway');line=`+${got} 🪙`;}
   else {save();line='Runway coins are full for today. Keep walking for fun ✨';}
   const keep=RW_CATS.some(k=>RW.look[k]!==p.look[k]&&rwOwns(p,k,RW.look[k]));
-  modal(`${c.icon} What a show!`,`<div class="rw-end"><div class="rw-big">${RW_CHEERS[lv]}</div>${esc(RW_LINES[lv][0])}<br><b>${line}</b></div>`,
-    [{text:'🔁 Another card',cls:'pink',on:()=>{RW.view='cards';RW.at=(RW.at+3)%RW.deck.length;renderRunway();}}]
-    .concat(keep?[{text:'👗 Wear it home',on:()=>rwWearHome()}]:[])
-    .concat([{text:'🏠 Done',on:()=>show('closet')}]));
+  endBox({title:`${c.icon} What a show!`,body:`<div class="rw-end"><div class="rw-big">${RW_CHEERS[lv]}</div>${esc(RW_LINES[lv][0])}<br><b>${line}</b></div>`,
+    back:{to:'closet',on:()=>show('closet')},mid:keep?[{text:'✨ Wear it home',on:()=>rwWearHome()}]:[],
+    go:{text:'🔁 Another card',on:()=>{RW.view='cards';RW.at=(RW.at+3)%RW.deck.length;renderRunway();}}}); // section 76
   checkStickers();
 }
 // 👗 Wear it home: only the pieces she owns; borrowed ones go back to the rack.

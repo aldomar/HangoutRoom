@@ -85,8 +85,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 The players are 3 to 11, and many can't read, so getting around must work from icons, places and sounds. **The iPads and
 iPhone have no Back button or swipe-back in this app: on-screen buttons are the only way out of anything.** The map of every
 screen and every way in and out is `docs/NAVIGATION.md`: **update its map and table whenever a screen, mode, game or way out
-changes.** The shared helpers (`endBox`, `NAV_PLACES`, `backBtn`, `navLeave`, the whose-room chip) arrive in v1.85–v1.88
-(Phase 16, `PLAN.md`); once a helper exists, new code must use it. Until then, follow the rule by hand.
+changes.** The shared helpers live in `76-nav.js`: `endBox` and `NAV_PLACES` since v1.85; `backBtn`, `navLeave` and the
+whose-room chip arrive in v1.86–v1.88 (Phase 16, `PLAN.md`). Once a helper exists, new code must use it; until then, follow the
+rule by hand.
 1. **Every round ends on the same end box** (`endBox`): ⬅ + the place's icon on the left (gray), 🔁 Again or ▶ Next on the right
    (pink), extra choices in the middle. Every button has an icon. The buttons ignore taps for about 0.5 s, so a quick tap from the
    game can't press one by accident.
@@ -283,6 +284,10 @@ changes.** The shared helpers (`endBox`, `NAV_PLACES`, `backBtn`, `navLeave`, th
       ◀ ▶ Face left/right (v1.84): `decoIn` squashes and leans a standing item with `yaw` (`YAW_SQUASH`, `YAW_LEAN`) and adds the static
       `#depthL`/`#depthR` filter (a darker copy behind it as its side; not on drawings with an `an-*` animation); `faceable` (not wall,
       flat or shelf); `yawOk` lives in 06.
+  76. `76-nav.js` 🧭 Getting around (v1.85, the navigation rules): `endBox({title, body, back:{to, on}, mid[], go})` (every game's end box:
+      ⬅ + place on the left, extras in the middle, 🔁/▶/🎲 on the right in pink; `#modalBtns.nav-wait` blocks taps for `NAV_WAIT` ms; `modal()`
+      clears it), `NAV_PLACES`/`navPlace`/`navBackText` (`'room'` = the room on screen, from `ROOM_MAP`), `endBoxOpen()`. The smoke test fails
+      on a game file that makes an again/next button the old way. Pet games: `ppQuit` (55) and `wkToPet` (56) go back to the pet menu.
   68. `68-undo.js` ↩ Undo (v1.74): `undoArm()` (a copy of the profile just before), `undoShow(u, back)`, `undoDo`, `undoOff`, `undoLeave`
       (called by `show()`), `#undoBar`. Hooked into `tryBuy`, `buyConsumable` (08) and `sendGift` (32). **A new shop must buy through
       `tryBuy`/`buyConsumable`** so it gets Undo; a new way to spend or give coins outside them should call `undoArm`/`undoShow` itself.

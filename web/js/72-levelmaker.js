@@ -188,16 +188,16 @@ function lmWin(){
     } else save();
     title='💾 Level saved!';
     body=`${p.easy?'🎉':fresh?`Your level ${i+1} is saved. The other rooms can play it too! 🎉`:'Saved again! 🎉'}<br>${n} block${n>1?'s':''}${line}`;
-    btns=[{text:'✏️ Edit',cls:'ghost',on:()=>lmEdit(i)},{text:'Yay! ✨',cls:'pink',on:lmList}];
+    btns={back:{to:'levels',on:lmList},go:{text:'✏️ Edit',on:()=>lmEdit(i)}};
   } else {
     const line=fpPay();
     title='🥕 Yum! Level solved!';
     body=`${p.easy?'🎉':`You solved ${esc(made.name)}'s level! 🎉`}<br>${n} block${n>1?'s':''}${line?' · '+line:''}`;
-    btns=[{text:'🛠️ Levels',cls:'pink',on:lmList}];
+    btns={back:{to:'levels',on:lmList}};
   }
   CL.timer=setTimeout(()=>{
     if(cur!=='code'||CL.view!=='play') return;
-    modal(title,`<div style="text-align:center;font-size:17px">${body}</div>`,btns);
+    endBox(Object.assign({title,body:`<div style="text-align:center;font-size:17px">${body}</div>`},btns)); // section 76
   },700);
 }
 

@@ -116,9 +116,9 @@ function hrWin(){ // after the cheer: the Golden Ball for all 12, otherwise a li
   if(prize) p.room3.items.push(Object.assign({uid:uid(),type:HR_PRIZE,placed:true},spot(HR_PRIZE)));
   save(); hrBar(); HR.wait=BF.time+99; // the box below starts the next try
   setTimeout(()=>{if(cur!=='ball'||bfMode()!=='derby')return;
-    modal(`${hrCur().icon} ${esc(hrCur().name)}: done!`,`<div style="text-align:center;font-size:18px">🎯 ${hrDoneN(p)} of ${DERBY.length} challenges done!`
+    endBox({title:`${hrCur().icon} ${esc(hrCur().name)}: done!`,body:`<div style="text-align:center;font-size:18px">🎯 ${hrDoneN(p)} of ${DERBY.length} challenges done!`
       +(prize?`<div style="margin-top:10px">All 12! You won the <b>${DECOR[HR_PRIZE].name}</b>! It's in your Backyard ⚾</div><svg viewBox="${DECOR[HR_PRIZE].box}" style="height:110px">${DECOR[HR_PRIZE].d()}</svg>`:'')+'</div>',
-      [{text:'🔁 Again',cls:'ghost',on:()=>hrReset()},{text:'▶ Next',cls:'pink',on:()=>hrGo(hrIdx(p)+1)}]);
+      back:{to:'room',on:()=>show('room')},mid:[{text:'🔁 Again',on:()=>hrReset()}],go:{text:'▶ Next',on:()=>hrGo(hrIdx(p)+1)}}); // section 76
     if(prize) SFX.buy(); checkStickers();},900);
 }
 

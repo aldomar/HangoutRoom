@@ -185,8 +185,8 @@ function tgSocEnd(){
   TGS.state='done'; SFX.whistle(); tgSocScore();
   const pl=TGS.pl, s=[0,1].map(i=>TGS.shots.filter(x=>x.by===i&&x.goal).length);
   const pay=tgPay(pl,'soccer');
-  modal('👯 Soccer Duel',`<div class="tg-end">${tgScores(pl,s.map(n=>`⚽ ${n}`))}<p>${tgCheer(pl,s[0],s[1])}</p>${pay}</div>`,
-    [{text:'⚽ Just me',cls:'ghost',on:()=>{TGS.on=false;renderSoccer();}},{text:'👯 Play again',cls:'pink',on:tgSocStart}]);
+  endBox({title:'👯 Soccer Duel',body:`<div class="tg-end">${tgScores(pl,s.map(n=>`⚽ ${n}`))}<p>${tgCheer(pl,s[0],s[1])}</p>${pay}</div>`,
+    back:{to:'room',on:()=>show('room')},mid:[{text:'⚽ Just me',on:()=>{TGS.on=false;renderSoccer();}}],go:{text:'🔁 Play again',on:tgSocStart}}); // section 76
   setTimeout(checkStickers,300);
 }
 function tgDraw(dt){
@@ -270,8 +270,8 @@ function tgMemEnd(){
   if(BR.view!=='duo') return;
   const pl=TGM.pl, s=TGM.pts; SFX.cheer();
   const pay=tgPay(pl,'memory');
-  modal('👯 Memory for 2',`<div class="tg-end">${tgScores(pl,s.map(n=>`🃏 ${n}`))}<p>${tgCheer(pl,s[0],s[1])}</p>${pay}</div>`,
-    [{text:'⬅ Games',cls:'ghost',on:brMenu},{text:'👯 Play again',cls:'pink',on:()=>tgMemStart(TGM.lvl)}]);
+  endBox({title:'👯 Memory for 2',body:`<div class="tg-end">${tgScores(pl,s.map(n=>`🃏 ${n}`))}<p>${tgCheer(pl,s[0],s[1])}</p>${pay}</div>`,
+    back:{to:'games',on:brMenu},go:{text:'🔁 Play again',on:()=>tgMemStart(TGM.lvl)}}); // section 76
   setTimeout(checkStickers,300);
 }
 
@@ -300,9 +300,9 @@ function tgStageEnd(){
   STG.state='done'; SFX.cheer();
   const pl=tgPlayers()||[tgMe(P()),TG_GUEST], lane=i=>STG.notes.filter(n=>n.lane===i&&n.r>=1&&n.r<=3).length;
   const pay=hits?tgPay(pl,'stage'):'';
-  modal(`🎤 ${'⭐'.repeat(stars)||'🎵'} ${esc(S.name)}`,`<div class="tg-end">${tgScores(pl,[lane(0),lane(1)].map(n=>`🎵 ${n}`))}`
+  endBox({title:`🎤 ${'⭐'.repeat(stars)||'🎵'} ${esc(S.name)}`,body:`<div class="tg-end">${tgScores(pl,[lane(0),lane(1)].map(n=>`🎵 ${n}`))}`
     +`<p>${!hits?'Tap your circle when the notes reach it!':stars===3?'Superstar team! 🌟':'What a team show! 🎉'}<br>Team score ${STG.score}</p>${pay}</div>`,
-    [{text:'🎵 Songs',cls:'ghost',on:stgPickView},{text:'Play again',cls:'pink',on:()=>stStart(STG.song)}]);
+    back:{to:'songs',on:stgPickView},go:{text:'🔁 Play again',on:()=>stStart(STG.song)}}); // section 76
   setTimeout(checkStickers,300);
 }
 

@@ -32,9 +32,10 @@ document.addEventListener('contextmenu',e=>e.preventDefault());
 window.androidBack=function(){
   if(SPY.on&&SPY.done&&!$('#modal').classList.contains('hidden')){closeModal();spyEnd();return true;} // the 🔍 round box: Back = Done
   if(cur==='stage'&&STG.state==='jamdone'){closeModal();jamPickView();return true;} // the 🎸 jam's cheer box: Back = the loops (section 53)
+  if(cur==='room'&&PP.on&&endBoxOpen()){closeModal();ppQuit();return true;} // 🙈🎾 a pet game's end box: Back = ⬅ 🐾 the pet menu (v1.85)
   if(!$('#modal').classList.contains('hidden')){closeModal();return true;}
   if(cur==='room'&&SPY.on){spyEnd();return true;} // 🔍 I Spy -> the room (section 50)
-  if(cur==='room'&&PP.on){ppEnd();return true;} // 🙈🎾 pet play -> the room (section 55)
+  if(cur==='room'&&PP.on){ppQuit();return true;} // 🙈🎾 pet play -> the pet menu (section 55, v1.85)
   if(decorating){exitDecorate();return true;}
   if(cur==='fidget'||cur==='closet'){show('room');return true;}
   if(cur==='art'){artBack();return true;}
