@@ -134,7 +134,7 @@ function renderRoom(){
   s+=fur.wall; // windows, shelves and signs on the wall; furniture standing on the floor is sorted below (v1.39)
   s+=nightBack(p); // 🌙 the night window, behind the room's things (section 31, v1.32)
   const items=R.items.filter(i=>i.placed&&DECOR[i.type]);
-  const deco=i=>`<g class="deco" data-uid="${i.uid}" transform="${decoT(i)}">${DECOR[i.type].d(i)}</g>`;
+  const deco=i=>`<g class="deco" data-uid="${i.uid}" transform="translate(${Math.round(i.x)} ${Math.round(i.y)})">${DECOR[i.type].d(i)}</g>`;
   s+=items.filter(i=>DECOR[i.type].flat).map(deco).join('');
   // Wall things (posters, shelves…) are drawn behind everything that stands, so things on a shelf show in front of it.
   // Rugs and wall things are drawn in list order, and the one touched last moves to the end (toFront, v1.31).
@@ -155,7 +155,6 @@ function renderRoom(){
   roomTabs(); // the arrow tabs to the next rooms (section 41, v1.40)
   updateCoins();
   if(PP.on) ppRedraw(); // 🙈🎾 a pet game keeps going after a redraw (section 55, v1.54)
-  turnShow(); // ↻ the turn buttons over the picked decoration (v1.83)
 }
 // The speech bubble. who 'pet' (v1.79) puts it over the pet, its tail pointing down at it, reaching right (away from the
 // buddy) and kept inside the picture; with no pet in the room it is the buddy's bubble, over the buddy's head.
@@ -206,9 +205,8 @@ roomSvg.addEventListener('click',e=>{
 function toSvg(e){const pt=roomSvg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;return pt.matrixTransform(roomSvg.getScreenCTM().inverse());}
 roomSvg.addEventListener('pointerdown',e=>{
   if(!decorating) return;
-  const g=e.target.closest('.deco'); if(!g){if(picked){picked=null;turnShow();}return;} // a tap on the empty room lets go of the picked thing
+  const g=e.target.closest('.deco'); if(!g) return;
   const it=curRoom(P()).items.find(i=>i.uid===g.dataset.uid); if(!it) return;
-  picked=it.uid; $('#turnBar').classList.add('hidden'); // ↻ hidden while it moves, back when it is let go (v1.83)
   const pt=toSvg(e); drag={it,g,dx:it.x-pt.x,dy:it.y-pt.y,riders:[]};
   try{roomSvg.setPointerCapture(e.pointerId);}catch(_){}
   g.classList.add('dragging'); roomSvg.appendChild(g); SFX.click(); e.preventDefault();
@@ -220,13 +218,13 @@ roomSvg.addEventListener('pointerdown',e=>{
 roomSvg.addEventListener('pointermove',e=>{
   if(!drag) return;
   const pt=toSvg(e); drag.it.x=clamp(pt.x+drag.dx,30,970); drag.it.y=clamp(pt.y+drag.dy,90,700);
-  drag.g.setAttribute('transform',decoT(drag.it));
-  for(const R of drag.riders){R.r.x=drag.it.x+R.dx;R.r.y=drag.it.y+R.dy;if(R.g)R.g.setAttribute('transform',decoT(R.r));}
+  drag.g.setAttribute('transform',`translate(${Math.round(drag.it.x)} ${Math.round(drag.it.y)})`);
+  for(const R of drag.riders){R.r.x=drag.it.x+R.dx;R.r.y=drag.it.y+R.dy;if(R.g)R.g.setAttribute('transform',`translate(${Math.round(R.r.x)} ${Math.round(R.r.y)})`);}
   $('#decoPanel').classList.toggle('drop',e.clientY>$('#decoPanel').getBoundingClientRect().top);
 });
 function endDrag(e){
   if(!drag) return;
-  if(e.clientY>$('#decoPanel').getBoundingClientRect().top){drag.it.placed=false;picked=null;SFX.whoosh();toast('Put away in My Stuff 📦');}
+  if(e.clientY>$('#decoPanel').getBoundingClientRect().top){drag.it.placed=false;SFX.whoosh();toast('Put away in My Stuff 📦');}
   else if(snapToShelf(drag.it)) SFX.pop();
   const away=!drag.it.placed; drag=null; save(); $('#decoPanel').classList.remove('drop'); renderRoom();
   if(away||decoTab==='mine') renderDecoGrid(); // the Shop and the other tabs don't change when a thing moves (v1.32, speed)
@@ -255,7 +253,7 @@ function snapToShelf(it){ // drop a standing thing near a shelf top and it sits 
 }
 
 function enterDecorate(){decorating=true;$('#decoPanel').classList.remove('hidden');$('#decoBtn').innerHTML='✔<span> Done</span>';renderRoom();renderDecoGrid();SFX.click();}
-function exitDecorate(silent){decorating=false;drag=null;picked=null;turnShow();$('#decoPanel').classList.add('hidden');$('#decoBtn').innerHTML='🛋️<span> Decorate</span>';if(!silent)renderRoom();}
+function exitDecorate(silent){decorating=false;drag=null;$('#decoPanel').classList.add('hidden');$('#decoBtn').innerHTML='🛋️<span> Decorate</span>';if(!silent)renderRoom();}
 $('#decoBtn').onclick=()=>decorating?exitDecorate():enterDecorate();
 $('#decoDone').onclick=()=>exitDecorate();
 $('#decoTabs').onclick=e=>{const b=e.target.closest('[data-dt]');if(!b)return;decoTab=b.dataset.dt;SFX.click();renderDecoGrid();};

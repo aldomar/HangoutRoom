@@ -7,10 +7,7 @@ _Last updated: 2026-11-26_
   - ✅ v1.82 💜 Content Pack 6: built, PR open (branch `feature/pack6`, from `main`). New file `74-pack6.js`: 6 coloring pages
     (axolotl, whale shark, dino pup, jellyfish, sea turtle, star pony), the purple Axolotl Plush and the Dino Pup Plush, purple pop-its +
     an axolotl board and more purple things, 3 stickers. No save changes. Owner's answers 2026-11-26: those 4 extra pages; no 💜 chip; two PRs.
-  - ✅ v1.82 is PR #85.
-  - ✅ v1.83 ↻ Turn decorations: built, PR open (branch `feature/rotate`, stacked on `feature/pack6` because both bump the same version lines).
-    New file `75-turn.js` (`decoT`, `picked`, `turnShow`, `#turnBar`); `rotOk` in 06. ±45° in 15° steps (owner's answer).
-    Save: an optional `rot` on room items (and in saved layouts); no new save version.
+  - ⬜ v1.83 ↻ Turn decorations: next (branch `feature/rotate`). ±45° in 15° steps (owner's answer); save: an optional `rot` on room items.
 - ✅ v1.81 📱 Room arrows on phones: merged (PR #84).
 - **Phase 15: 🎉 Holidays + the rest of the design review (order agreed 2026-11-24, see "Phase 15" in `PLAN.md`).** One PR each:
   - ✅ v1.72 🎉 Holiday greetings: built, PR open (branch `feature/holidays`, from `main`). New file `67-holidays.js`; 12 holidays
@@ -1545,7 +1542,8 @@ _Last updated: 2026-11-26_
 11. ~~Build v1.80 💃 Dancing Buddy + 📻 boombox fix (the owner's request).~~ Built, PR open.
 12. ~~Owner: review and merge the v1.80 PR.~~ Merged (PR #83).
 13. ~~Owner: review and merge the v1.81 PR (room arrows on phones).~~ Merged (PR #84).
-14. Owner: review and merge PR #85 (v1.82 💜 Content Pack 6), then the v1.83 PR (↻ Turn decorations; it is stacked on #85).
+14. Owner: review and merge the v1.82 PR (💜 Content Pack 6).
+15. Build v1.83 ↻ Turn decorations (Phase 16, plan agreed 2026-11-26).
 
 ## How versions and save upgrades work (since v1.2)
 - `APP_VERSION` (top of `web/js/01-save.js`) is the app version shown in Settings. It must match

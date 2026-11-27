@@ -6037,61 +6037,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`show('little');LT.view='colorPick';renderLittle()`); await sleep(150); await shot('P6d-color-pick');
     for(const id of ['axolotl','whaleShark','dinoPup','jelly','turtle','starPony']){await ev(`LT.pic='${id}';ltGo('color')`); await sleep(80); await shot('P6e-color-'+id);}
     await ev(`show('room')`);
-    check('v1.82 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.82')`));
-  }
-
-  // ↻ Turn decorations (v1.83): tap a thing in Decorate, then ↺ ↻ turn it 15° a tap, at most 45° each way
-  console.log('Turn decorations (v1.83)');
-  {
-    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
-    await ev(`show('room');goRoom(1);(()=>{const R=curRoom(P());R.items=R.items.filter(i=>!/^tn/.test(i.uid));
-      R.items.push({uid:'tnA',type:'axolotlPlush',x:300,y:640,placed:true},{uid:'tnW',type:'disco',x:700,y:300,placed:true},{uid:'tnS',type:'shelfL',x:760,y:180,placed:true});save();})();enterDecorate()`); await sleep(200);
-    const bar=()=>ev(`(()=>{const b=document.querySelector('#turnBar'),S=b.parentNode.getBoundingClientRect(),r=b.getBoundingClientRect();return {on:!b.classList.contains('hidden'),inside:r.left>=S.left&&r.right<=S.right&&r.top>=S.top&&r.bottom<=S.bottom,big:[...b.querySelectorAll('button')].every(x=>x.getBoundingClientRect().width>=48&&x.getBoundingClientRect().height>=48)};})()`);
-    const tap=async uid=>{const c=await ev(`(()=>{const r=document.querySelector('#roomSvg .deco[data-uid="${uid}"]').getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2];})()`);await mouse('mousePressed',c[0],c[1]);await mouse('mouseReleased',c[0],c[1]);await sleep(120);};
-    const turn=async(d,n)=>{for(let k=0;k<n;k++){await ev(`document.querySelector('#turnBar [data-turn="${d}"]').click()`);}await sleep(80);};
-    const it=uid=>`curRoom(P()).items.find(i=>i.uid==='${uid}')`;
-    check('Decorate starts with nothing picked: no turn buttons', !(await bar()).on);
-    await tap('tnA');
-    let b=await bar();
-    check('tapping the Axolotl Plush picks it: it glows and ↺ ↻ show just above it, inside the picture, 48 px+', b.on&&b.inside&&b.big&&await ev(`document.querySelector('#roomSvg .deco[data-uid="tnA"]').classList.contains('picked')`), b);
-    await shot('T1-turn-picked');
-    await turn(1,1);
-    check('↻ turns it 15° around its feet', await ev(`${it('tnA')}.rot===15&&/translate\\(300 640\\) rotate\\(15\\)$/.test(document.querySelector('#roomSvg .deco[data-uid="tnA"]').getAttribute('transform'))`), await ev(`document.querySelector('#roomSvg .deco[data-uid="tnA"]').getAttribute('transform')`));
-    await turn(1,5);
-    check('it stops at 45°, and ↻ dims', await ev(`${it('tnA')}.rot===45&&document.querySelector('#turnBar [data-turn="1"]').classList.contains('off')&&!document.querySelector('#turnBar [data-turn="-1"]').classList.contains('off')`));
-    await shot('T2-turn-45');
-    await turn(-1,7);
-    check('↺ goes the other way and stops at −45°', await ev(`${it('tnA')}.rot===-45&&document.querySelector('#turnBar [data-turn="-1"]').classList.contains('off')`));
-    await turn(1,3);
-    check('back to straight: rot is left out of the save, no rotate()', await ev(`!('rot' in ${it('tnA')})&&!/rotate/.test(document.querySelector('#roomSvg .deco[data-uid="tnA"]').getAttribute('transform'))`));
-    await turn(1,2); await ev(`save()`);
-    check('a turn is saved', await ev(`JSON.parse(localStorage.getItem('hangoutRoom.v1')).profiles.find(q=>q.id===P().id).room.items.find(i=>i.uid==='tnA').rot===30`));
-    // dragging keeps the turn; the bar hides while it moves
-    const c=await ev(`(()=>{const r=document.querySelector('#roomSvg .deco[data-uid="tnA"]').getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2];})()`);
-    await mouse('mousePressed',c[0],c[1]); await mouse('mouseMoved',c[0]+40,c[1]); await sleep(50);
-    const mid=await bar();
-    await mouse('mouseMoved',c[0]+80,c[1]); await mouse('mouseReleased',c[0]+80,c[1]); await sleep(150);
-    check('dragging hides ↺ ↻ until it is let go; it keeps its turn', !mid.on&&(await bar()).on&&await ev(`${it('tnA')}.rot===30&&/rotate\\(30\\)/.test(document.querySelector('#roomSvg .deco[data-uid="tnA"]').getAttribute('transform'))`));
-    // a wall thing turns around its middle; a shelf doesn't turn
-    await tap('tnW'); await turn(1,1);
-    check('a wall thing (Disco Ball) turns around the middle of its picture', await ev(`/rotate\\(15 0 -100\\)/.test(document.querySelector('#roomSvg .deco[data-uid="tnW"]').getAttribute('transform'))`), await ev(`document.querySelector('#roomSvg .deco[data-uid="tnW"]').getAttribute('transform')`));
-    await tap('tnS');
-    check('a shelf has no turn buttons (what sits on it would float)', !(await bar()).on);
-    // tapping the empty room lets go
-    await tap('tnA');
-    await mouse('mousePressed',600,140); await mouse('mouseReleased',600,140); await sleep(100);
-    check('tapping the empty room lets go: no buttons, no glow', !(await bar()).on&&await ev(`!document.querySelector('#roomSvg .deco.picked')`));
-    // saved layouts keep turns
-    await ev(`layoutSave(P(),0);delete ${it('tnA')}.rot;layoutLoad(P(),0)`); await sleep(100);
-    check('a saved 🏠 layout keeps the turn', await ev(`P().presets[1][0].items.find(i=>i.uid==='tnA').rot===30&&${it('tnA')}.rot===30`));
-    // the save rules
-    check('odd turns are made safe: 99 → 45, 20 → 15, "x" dropped, 0 dropped', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));q.room.items.push({uid:'z1',type:'plant',x:1,y:1,placed:true,rot:99},{uid:'z2',type:'plant',x:1,y:1,placed:true,rot:'x'},{uid:'z3',type:'plant',x:1,y:1,placed:true,rot:20},{uid:'z4',type:'plant',x:1,y:1,placed:true,rot:0});normalize(q);const g=u=>q.room.items.find(i=>i.uid===u);return g('z1').rot===45&&!('rot' in g('z2'))&&g('z3').rot===15&&!('rot' in g('z4'));})()`));
-    // leaving Decorate
-    await tap('tnA'); await ev(`exitDecorate()`); await sleep(100);
-    check('✔ Done hides the buttons and the glow; the plush stays turned', !(await bar()).on&&await ev(`!document.querySelector('#roomSvg .deco.picked')&&/rotate\\(30\\)/.test(document.querySelector('#roomSvg .deco[data-uid="tnA"]').getAttribute('transform'))`));
-    await shot('T3-turned-room');
-    await ev(`(()=>{const R=curRoom(P());R.items=R.items.filter(i=>!/^tn/.test(i.uid));save();renderRoom();})()`);
-    check('v1.83 is in the Gift Story and the app says 1.83', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.83')&&APP_VERSION==='1.83'`));
+    check('v1.82 is in the Gift Story and the app says 1.82', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.82')&&APP_VERSION==='1.82'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

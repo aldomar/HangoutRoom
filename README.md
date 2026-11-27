@@ -312,13 +312,6 @@ like a phone number. **The app never sends anything over the internet**: there's
 - **📻 Boombox fix:** tapping the boombox (from version 1.77) now really plays her music. Before, the tap went straight through it.
 - Save data: one new field, `dance.tracks` (the music of the 3 saved dances). Older backups still restore; their dances have no music kept.
 
-## ↻ Turn decorations (version 1.83)
-- In 🛋️ **Decorate**, tap a decoration (or move it): it glows, and two buttons show just above it. **↺** turns it left, **↻** right,
-  15° a tap, up to 45° (3 taps) each way. Tap the other button to straighten it again.
-- Things standing on the floor tilt on their feet, so they stay on the floor or on a shelf. Wall things and rugs turn around their middle.
-- Shelves don't turn (the things on them would float). Tapping the empty room or ✔ Done puts the buttons away.
-- 🏠 Saved layouts remember the turns. Save data: one optional field on each room item, `rot`; older saves and backups look the same.
-
 ## 💜 Purple Pack (version 1.82)
 The children's first requests, the day they got the app:
 - **🖍️ 6 new pictures** in 🧸 Play → Coloring: an axolotl, a whale shark, a puppy in a dino costume, a jellyfish, a sea turtle and a
