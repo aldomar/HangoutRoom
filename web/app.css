@@ -101,6 +101,12 @@ body.easy .sign{display:inline}
 /* (v1.39) while decorating, the room's own furniture, the buddy, pet and gifts fade, so things behind them can be grabbed */
 .decorating .fixed{opacity:.35;pointer-events:none}
 .decorating .deco.dragging{filter:drop-shadow(0 10px 6px rgba(0,0,0,.45))}
+/* (v1.83) ↻ the picked decoration glows, and the turn bar sits just above it (placed by turnShow, section 9) */
+.decorating .deco.picked{filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 5px var(--pink))}
+.turn-bar{position:absolute;z-index:3;display:flex;gap:8px;padding:6px;border-radius:22px;background:var(--panel);border:3px solid var(--line);box-shadow:0 3px 0 #0003}
+.turn-bar button{width:56px;height:56px;border-radius:16px;border:0;background:var(--pink);color:var(--pink-ink);font-size:32px;font-weight:900;line-height:1;cursor:pointer;touch-action:manipulation}
+.turn-bar button:active{transform:scale(.92)}
+.turn-bar button.off{opacity:.35}
 .deco-panel{flex:0 0 40%;background:var(--panel);border-top:3px solid var(--line);display:flex;flex-direction:column;min-height:0;transition:background .2s}
 .deco-panel.drop{background:#5a2f4f}
 .deco-head{display:flex;align-items:center;gap:6px;padding-right:10px}
