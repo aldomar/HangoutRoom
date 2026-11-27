@@ -134,7 +134,7 @@ function renderRoom(){
   s+=fur.wall; // windows, shelves and signs on the wall; furniture standing on the floor is sorted below (v1.39)
   s+=nightBack(p); // 🌙 the night window, behind the room's things (section 31, v1.32)
   const items=R.items.filter(i=>i.placed&&DECOR[i.type]);
-  const deco=i=>`<g class="deco" data-uid="${i.uid}" transform="${decoT(i)}">${DECOR[i.type].d(i)}</g>`;
+  const deco=i=>`<g class="deco" data-uid="${i.uid}" transform="${decoT(i)}">${decoIn(i,DECOR[i.type].d(i))}</g>`;
   s+=items.filter(i=>DECOR[i.type].flat).map(deco).join('');
   // Wall things (posters, shelves…) are drawn behind everything that stands, so things on a shelf show in front of it.
   // Rugs and wall things are drawn in list order, and the one touched last moves to the end (toFront, v1.31).
