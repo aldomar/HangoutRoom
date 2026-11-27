@@ -171,7 +171,7 @@ addEventListener('resize',()=>{if(cur==='little'&&LT.view==='peek'&&LT.peek&&LT.
 STK_PAGES.little={icon:'🧸',name:'Play',color:'#ffc2dd'};
 STICKERS.push(
   stk('lt1','little','🖍️','First Colors','circle','Color every part of a picture (🧸 Play)',1,p=>p.stats.colored,1),
-  stk('lt12','little','🎨','Little Artist','star','Color all 12 pictures in 🧸 Play',()=>CB_PICS.length,p=>CB_PICS.filter(z=>cbDone(p,z)).length,2),
+  stk('lt12','little','🎨','Little Artist','star','Color every picture in 🧸 Play',()=>CB_PICS.length,p=>CB_PICS.filter(z=>cbDone(p,z)).length,2),
   stk('ltpeek','little','👀','Peekaboo!','heart','Find 10 friends in 👀 Peekaboo',10,p=>p.stats.peeks,1),
   stk('ltpad','little','🎵','Music Mat','circle','Tap the 🎵 Sound Mat 100 times',100,p=>p.stats.pads,1),
   stk('lthang','little','🖼️','On the Wall','scallop','Hang a colored picture in your Gallery (🖼️)',1,p=>Object.keys(p.little.hung).length,1),

@@ -1108,7 +1108,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('147 stickers on 8 pages (1 for 🪜 the Basement since v1.79, 2 for 🛠️ the level maker since v1.78, 1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===147&&new Set(STICKERS.map(s=>s.id)).size===147&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('150 stickers on 8 pages (3 for Pack 6 since v1.82, 1 for 🪜 the Basement since v1.79, 2 for 🛠️ the level maker since v1.78, 1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===150&&new Set(STICKERS.map(s=>s.id)).size===150&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -2433,7 +2433,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`enterDecorate();document.querySelector('[data-dt=shop]').click()`); await sleep(150);
   check('the Shop has all 14 new decorations', await ev(`${JSON.stringify(p3Decor)}.every(k=>document.querySelector('#decoGrid [data-buy='+k+']'))`));
   await ev(`document.querySelector('#decoGrid [data-theme=ocean]').click()`); await sleep(100);
-  check('🐚 Ocean in the Shop shows the seashell set', await ev(`[...document.querySelectorAll('#decoGrid [data-buy]')].map(b=>b.dataset.buy).sort().join()==='coralLamp,shellBed,shellChair,starfishRug'`), await ev(`[...document.querySelectorAll('#decoGrid [data-buy]')].map(b=>b.dataset.buy).join()`));
+  check('🐚 Ocean in the Shop shows the seashell set (+ the Axolotl Plush since v1.82)', await ev(`[...document.querySelectorAll('#decoGrid [data-buy]')].map(b=>b.dataset.buy).sort().join()==='axolotlPlush,coralLamp,shellBed,shellChair,starfishRug'`), await ev(`[...document.querySelectorAll('#decoGrid [data-buy]')].map(b=>b.dataset.buy).join()`));
   await shot('M7-pack3-shop-ocean');
   await ev('checkBonus()'); await sleep(100); const p3Bed0=await ev('P().coins'); // a bonus photocard (+10) may be due from the closet buys
   await ev(`document.querySelector('#decoGrid [data-buy=shellBed]').click()`); await ev(`[...document.querySelectorAll('#modalBtns button')].pop().click()`); await sleep(150);
@@ -3350,9 +3350,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`goRoom(1);document.querySelector('#littleBtn').click()`); await sleep(100);
     // 🖍️ coloring
     await ev(`document.querySelector('[data-lt=color]').click()`); await sleep(200);
-    check('🖍️ shows 12 pictures', await ev(`LT.view==='colorPick'&&document.querySelectorAll('#ltBody .cb-thumb').length===12&&CB_PICS.length===12`));
+    check('🖍️ shows 18 pictures (12 + 6 from Pack 6 since v1.82)', await ev(`LT.view==='colorPick'&&document.querySelectorAll('#ltBody .cb-thumb').length===18&&CB_PICS.length===18`));
     await shot('L02-color-pick');
-    check('picture ids are all different; each has 4 to 8 areas to color plus the background', await ev(`new Set(CB_PICS.map(z=>z.id)).size===12&&CB_PICS.every(z=>z.areas.length>=5&&z.areas.length<=9&&z.areas[0]===CB_BG)`), await ev(`CB_PICS.map(z=>z.id+':'+(z.areas.length-1)).join(' ')`));
+    check('picture ids are all different; each has 4 to 8 areas to color plus the background', await ev(`new Set(CB_PICS.map(z=>z.id)).size===18&&CB_PICS.every(z=>z.areas.length>=5&&z.areas.length<=9&&z.areas[0]===CB_BG)`), await ev(`CB_PICS.map(z=>z.id+':'+(z.areas.length-1)).join(' ')`));
     check('10 big crayons, all different colors', await ev(`CB_CRAYONS.length===10&&new Set(CB_CRAYONS).size===10&&CB_NAMES.length===10`));
     // every area of every picture can be tapped somewhere (it is on top at that point)
     await ev(`window.cbSpot=i=>{const el=document.querySelector('#cbSvg [data-a="'+i+'"]');const b=el.getBoundingClientRect();
@@ -3360,7 +3360,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
       window.cbTap=i=>{const s=cbSpot(i);if(!s)return false;const el=document.querySelector('#cbSvg [data-a="'+i+'"]');el.dispatchEvent(new PointerEvent('pointerdown',{pointerId:7,bubbles:true,clientX:s.x,clientY:s.y}));return true;};
       window.crTap=i=>{const el=document.querySelector('#cbCrayons [data-cr="'+i+'"]');el.dispatchEvent(new PointerEvent('pointerdown',{pointerId:8,bubbles:true}));};`);
     const unreach=await ev(`(()=>{const bad=[];for(const z of CB_PICS){LT.pic=z.id;ltGo('color');z.areas.forEach((_,i)=>{if(!cbSpot(i))bad.push(z.id+':'+i);});}return bad.join(' ');})()`);
-    check('every area of all 12 pictures can be tapped', unreach==='', unreach);
+    check('every area of all 18 pictures can be tapped', unreach==='', unreach);
     await ev(`P().little.colors={};P().little.pay={day:'',n:0};ltGo('colorPick')`);
     await ev(`document.querySelector('#ltBody [data-pic=dino]').click()`); await sleep(150);
     check('tapping a picture opens it big, with crayons and ↩️ 🎲 🗑️ 🖼️ (all 48 px+)', await ev(`LT.view==='color'&&LT.pic==='dino'&&document.querySelectorAll('#cbCrayons .cb-crayon').length===10&&document.querySelectorAll('#ltBody [data-cbt]').length===4&&[...document.querySelectorAll('#cbCrayons .cb-crayon,#ltBody [data-cbt]')].every(b=>b.getBoundingClientRect().width>=48&&b.getBoundingClientRect().height>=48)`));
@@ -3439,9 +3439,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`P().little.pay.day='Mon Jan 01 2001';ltPay()`);
     check('a new day pays again', await ev(`P().coins===${cc0}+2&&P().little.pay.n===1`));
     // stickers
-    check('6 stickers on the 🧸 Play page', await ev(`!!STK_PAGES.little&&STICKERS.filter(s=>s.page==='little').length===6`));
+    check('7 stickers on the 🧸 Play page (Sea Artist since v1.82)', await ev(`!!STK_PAGES.little&&STICKERS.filter(s=>s.page==='little').length===7`));
     check('First Colors and On the Wall are earned; Little Artist counts finished pictures', await ev(`(g=>stkDone(P(),g('lt1'))&&stkDone(P(),g('lthang'))&&stkHave(P(),g('lt12'))===1&&!stkDone(P(),g('lt12')))(id=>STICKERS.find(s=>s.id===id))`));
-    check('Little Artist needs all 12 pictures', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));CB_PICS.forEach(z=>{q.little.colors[z.id]=z.areas.map(()=>'#ff8cc6');});return stkDone(q,STICKERS.find(s=>s.id==='lt12'));})()`));
+    check('Little Artist needs all 18 pictures', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));CB_PICS.forEach(z=>{q.little.colors[z.id]=z.areas.map(()=>'#ff8cc6');});return stkDone(q,STICKERS.find(s=>s.id==='lt12'));})()`));
     // Back
     await ev(`ltGo('mat')`);
     check('Android Back: a toy → the 🧸 menu → the room', await ev(`androidBack()&&LT.view==='menu'&&cur==='little'&&androidBack()&&cur==='room'`));
@@ -6001,7 +6001,43 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     }
     await ev(`applyEasy()`);
     await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(200);
-    check('v1.81 is in the Gift Story and the app says 1.81', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.81')&&APP_VERSION==='1.81'`));
+    check('v1.81 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.81')`));
+  }
+
+  // 💜 Content Pack 6 (v1.82): the children's first requests: coloring pages, two plushes, more purple
+  console.log('Content Pack 6 (v1.82): purple things + sea friends');
+  {
+    const xml=h=>`!new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg">'+${h}+'</svg>','image/svg+xml').querySelector('parsererror')`;
+    check('6 new coloring pages at the end of the list, in order', await ev(`CB_PICS.slice(12).map(z=>z.id).join()==='axolotl,whaleShark,dinoPup,jelly,turtle,starPony'&&CB_PICS.slice(0,12).map(z=>z.id).join()==='dino,rocket,truck,train,shark,robot,buddy,kitten,flower,cupcake,butterfly,house'`));
+    check('every new picture is strict XML with no broken numbers', await ev(`CB_PICS.slice(12).every(z=>{const s=cbSVG(z,[]);return !/NaN|undefined/.test(s)&&!new DOMParser().parseFromString(s,'image/svg+xml').querySelector('parsererror');})`));
+    const dec=['axolotlPlush','dinoPup','amethystLamp','heartPouf','butterflyGarland'];
+    check('5 new decorations for sale (10–40 coins, not prizes), each with a theme chip, all strict XML', await ev(`${JSON.stringify(dec)}.every(k=>DECOR[k]&&!DECOR[k].award&&DECOR[k].price>=10&&DECOR[k].price<=40&&themesOf('decor:'+k,DECOR[k]).length&&${xml('DECOR[k].d()')}&&!/NaN|undefined/.test(DECOR[k].d()))`));
+    check('the Axolotl Plush is Cute + Ocean, the Dino Pup is Dino + Cute, the Crystal Lamp glows', await ev(`(t=>t('axolotlPlush').includes('cute')&&t('axolotlPlush').includes('ocean')&&t('dinoPup').includes('dino')&&t('dinoPup').includes('cute'))(k=>themesOf('decor:'+k,DECOR[k]))&&!!NIGHT_GLOW.amethystLamp`));
+    const cl=[['top','violetHoodie'],['legs','violetFuzz'],['shoes','violetKicks'],['acc','violetBow']];
+    check('4 purple clothes, drawn on every buddy as strict XML, with a theme chip and a photocard tag', await ev(`${JSON.stringify(cl)}.every(([c,id])=>{const i=CLOSET[c].items.find(x=>x.id===id);return i&&i.price>=10&&i.price<=40&&themesOf(c+':'+id,i).length&&CARD_TAGS.cute.includes(c+':'+id)&&Object.keys(BUDDIES).every(k=>{const s=mascotSVG(Object.assign({},DEFAULT_LOOK,{kind:k,[c]:id}));return !/NaN|undefined/.test(s)&&!new DOMParser().parseFromString(s,'image/svg+xml').querySelector('parsererror');});})`));
+    check('purple fidgets: 2 pop-its with 6 colors, the axolotl board, a squishy, a spinner, a slime, a cube, a wall and a floor', await ev(`POP_THEMES.purple.cols.length===6&&POP_THEMES.ube.cols.length===6&&!!POP_SHAPES.axolotl.path&&!!SQUISHIES.ube&&!!SPINS.amethyst&&!!SLIMES.plum&&!!CUBES.violet&&!!WALLS.violetStripe&&!!FLOORS.plumFluff`));
+    await ev(`show('fidget');setFidTab('popit');P().fid.pop='purple';P().fid.popShape='axolotl';renderPop()`); await sleep(150);
+    check('the Purple Dream pop-it on the axolotl board has bubbles to pop', await ev(`document.querySelector('#popBoard').classList.contains('shaped')&&document.querySelectorAll('#popBoard .bub').length>=12`), await ev(`document.querySelectorAll('#popBoard .bub').length`));
+    await shot('P6a-pop-axolotl');
+    await ev(`P().fid.pop='ube';P().fid.popShape='classic';renderPop()`); await sleep(100); await shot('P6b-pop-ube');
+    await ev(`P().fid.pop='rainbow';P().fid.popShape='classic';renderPop();setFidTab('slime');P().fid.slime='plum'`);
+    await sleep(400); await shot('P6f-slime-plum');
+    check('the Berry Starlight slime looks different from the free Glitter Grape one', await ev(`SLIMES.plum.a!==SLIMES.grape.a&&SLIMES.plum.deco!==SLIMES.grape.deco`));
+    await ev(`P().fid.slime='grape';show('room')`);
+    // the stickers
+    check('3 new stickers: Axolotl Friend, Purple Power, Sea Artist', await ev(`['p6axo','p6purple','p6sea'].every(id=>STICKERS.some(s=>s.id===id))`));
+    check('Purple Power and Axolotl Friend count what she has', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));q.owned=q.owned.filter(k=>!P6_PURPLE.includes(k));rooms(q).forEach(R=>{R.items=R.items.filter(i=>!P6_PURPLE_DECOR.includes(i.type));});const g=id=>STICKERS.find(s=>s.id===id);
+      const before=stkDone(q,g('p6purple'))||stkDone(q,g('p6axo'));q.owned=q.owned.concat(['pop:purple','spin:amethyst','slime:plum','legs:violetFuzz']);q.room.items.push({uid:'p6t',type:'axolotlPlush',x:500,y:600,placed:true});return !before&&stkDone(q,g('p6purple'))&&stkDone(q,g('p6axo'));})()`));
+    check('Sea Artist needs the 4 sea pictures colored', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));q.little.colors={};const g=STICKERS.find(s=>s.id==='p6sea');const a=stkDone(q,g);
+      ['axolotl','whaleShark','jelly','turtle'].forEach(id=>{q.little.colors[id]=cbPic(id).areas.map(()=>'#a97cff');});return !a&&stkDone(q,g);})()`));
+    // pictures of the new things
+    await ev(`(()=>{const R=curRoom(P());${JSON.stringify(dec)}.forEach((k,i)=>R.items.push({uid:'p6s'+i,type:k,x:[200,330,700,820,500][i],y:[640,640,640,650,230][i],placed:true}));renderRoom();})()`); await sleep(150);
+    await shot('P6c-pack6-room');
+    await ev(`(()=>{const R=curRoom(P());R.items=R.items.filter(i=>!/^p6s/.test(i.uid));save();renderRoom();})()`);
+    await ev(`show('little');LT.view='colorPick';renderLittle()`); await sleep(150); await shot('P6d-color-pick');
+    for(const id of ['axolotl','whaleShark','dinoPup','jelly','turtle','starPony']){await ev(`LT.pic='${id}';ltGo('color')`); await sleep(80); await shot('P6e-color-'+id);}
+    await ev(`show('room')`);
+    check('v1.82 is in the Gift Story and the app says 1.82', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.82')&&APP_VERSION==='1.82'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

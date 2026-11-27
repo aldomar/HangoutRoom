@@ -1448,6 +1448,21 @@ Why this order:
 - Birthdays would be nice too, but a child's birthday is personal. It would go in `web/about-local.js` (never in git) or in
   Settings → Level. That's a later question.
 
+### Phase 16: the children's first requests (agreed 2026-11-26)
+The children got the app on 2026-11-26 and asked for things straight away. Two PRs:
+- ✅ **💜 Content Pack 6 (v1.82; built, PR open on `feature/pack6`):** new file `web/js/74-pack6.js` (only adds entries; no save changes).
+  - 6 coloring pages for 🧸 Play, at the end of `CB_PICS`: `axolotl`, `whaleShark`, `dinoPup` (a puppy in a dino costume), `jelly`,
+    `turtle`, `starPony` (an original pony with a star on its horn). 18 pictures in all.
+  - Two plushes: the purple **Axolotl Plush** (`axolotlPlush`, Cute + Ocean) and the **Dino Pup Plush** (`dinoPup`, Dino + Cute), 25 coins each.
+  - More purple: pop-its **Purple Dream** (`pop:purple`) and **Ube Swirl** (`pop:ube`), the 🦎 **Axolotl Board** (`popshape:axolotl`),
+    the Ube Bun squishy, Amethyst spinner, Berry Starlight slime, Violet clicker cube, 4 violet clothes, a Crystal Lamp (glows at night),
+    a Purple Heart Pouf, a Butterfly Garland, Violet Stripes (wall) and a Plum Fluff Carpet (floor).
+  - 3 stickers: 🦎 Axolotl Friend, 💜 Purple Power (5 new purple things), 🐢 Sea Artist (color the 4 sea pictures).
+  - Owner's answer (2026-11-26): no new 💜 Purple chip; the new things use the chips that exist.
+- ⬜ **↻ Turn decorations (v1.83, `feature/rotate`):** in Decorate, tap a thing and turn it with ↺ ↻, 15° a tap, at most 45° each way.
+  - Owner's answer (2026-11-26): a tilt of ±45° (not a full turn). Shelves don't turn, so things on them never float.
+  - Save: an optional `rot` on a room item (missing = 0); `normalize()` keeps it to −45…45 in 15° steps. Layouts keep it.
+
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
 

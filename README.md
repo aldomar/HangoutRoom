@@ -312,6 +312,17 @@ like a phone number. **The app never sends anything over the internet**: there's
 - **📻 Boombox fix:** tapping the boombox (from version 1.77) now really plays her music. Before, the tap went straight through it.
 - Save data: one new field, `dance.tracks` (the music of the 3 saved dances). Older backups still restore; their dances have no music kept.
 
+## 💜 Purple Pack (version 1.82)
+The children's first requests, the day they got the app:
+- **🖍️ 6 new pictures** in 🧸 Play → Coloring: an axolotl, a whale shark, a puppy in a dino costume, a jellyfish, a sea turtle and a
+  star pony. That makes 18.
+- **🧸 Two new plushes** in the Shop (25 coins each): a purple **Axolotl Plush** and a **Dino Pup Plush** (a puppy in a dino costume).
+- **💜 More purple:** two purple pop-its (Purple Dream and Ube Swirl) and an axolotl-shaped pop-it board; a purple squishy, spinner,
+  slime and clicker cube; a violet hoodie, leg warmers, sneakers and bow; a Crystal Lamp, a Purple Heart Pouf, a Butterfly Garland,
+  a violet striped wall and a plum carpet.
+- **3 new stickers:** Axolotl Friend, Purple Power (5 of the new purple things) and Sea Artist (color the 4 sea pictures).
+- Nothing in the save data changes.
+
 ## 📱 Room arrows on phones (version 1.81)
 - On a phone held upright, the arrow down to the 🪜 Basement used to cover the arrow to the ✨ Studio. Now it sits in the middle,
   between the arrows to the 🌳 Backyard and the ✨ Studio. Nothing else changed.

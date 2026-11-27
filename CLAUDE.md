@@ -246,6 +246,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
       `studioFurniture` (nothing built in); `baseStart` (free `brick` wall + `grayCarpet` floor on the first visit), `baseHi`; the free
       `prizeCase` (`shelf.tops`, 3 shelves) and `prizePodium`; Decorate's 📦 All / 🏆 Prizes chips (`MINE.prizes`, `prizeChips`,
       `prizeGrid`: every `award:1` item in any room, tap = bring it here). Locked out in 🧸 Little mode (not in `LOCK_ROOMS`).
+  74. `74-pack6.js` Content Pack 6 (v1.82, the children's first requests; only adds entries): 6 coloring pages pushed onto `CB_PICS`
+      (`axolotl whaleShark dinoPup jelly turtle starPony`), the `axolotlPlush` and `dinoPup` plushes, purple things (`P6_PURPLE`, `P6_PURPLE_DECOR`,
+      the `axolotl` pop-it board); themes through `p6Th` (adds to `THEME_OF`), no new chip.
   68. `68-undo.js` ↩ Undo (v1.74): `undoArm()` (a copy of the profile just before), `undoShow(u, back)`, `undoDo`, `undoOff`, `undoLeave`
       (called by `show()`), `#undoBar`. Hooked into `tryBuy`, `buyConsumable` (08) and `sendGift` (32). **A new shop must buy through
       `tryBuy`/`buyConsumable`** so it gets Undo; a new way to spend or give coins outside them should call `undoArm`/`undoShow` itself.

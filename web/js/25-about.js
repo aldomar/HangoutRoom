@@ -218,7 +218,9 @@ const GIFT_TIMELINE=[
   {v:'1.80',d:'2026-11-28',i:'💃',n:'Dancing Buddy',why:'So the dances you make can be danced right in your room',
     news:['💃 Tap your buddy, then Dance: it dances your saved dances with your music','💾 Saved dances remember their music','📻 Tapping the boombox now plays your music']},
   {v:'1.81',d:'2026-11-29',i:'📱',n:'Room arrows on phones',why:'So every room arrow is easy to tap on a phone',
-    news:['📱 On a phone, the Basement arrow now sits in the middle, between the other two']}
+    news:['📱 On a phone, the Basement arrow now sits in the middle, between the other two']},
+  {v:'1.82',d:'2026-11-30',i:'💜',n:'Purple Pack',why:'Because you asked for an axolotl, a dino pup and lots more purple',
+    news:['🖍️ 6 new pictures to color in 🧸 Play: an axolotl, a whale shark, a dino pup, a jellyfish, a sea turtle and a star pony','🦎 A purple Axolotl Plush and a Dino Pup Plush in the Shop','🫧 Purple pop-its and an axolotl pop-it board','💜 More purple: a squishy, a spinner, a slime, a cube, clothes, a lamp and more']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
