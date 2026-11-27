@@ -6385,6 +6385,30 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`show('room')`);
   }
 
+  console.log('Little rooms: half prices + a bigger daily gift (v1.89)');
+  {
+    await ev(`closeModal();stkPaused=true;window._lcSaved=JSON.stringify({band:P().band,lock:P().little.lock,coins:P().coins,daily:P().lastDaily,owned:P().owned.slice(),top:P().look.top,tip:P().seenTip});
+      P().seenTip=true;setBand(P(),'little');P().little.lock=true;LOCK.open='';save();applyEasy();show('room')`); await sleep(100);
+    check('🧸 costOf: half, rounded up; 1 stays 1, free stays free', await ev(`costOf(P(),30)===15&&costOf(P(),25)===13&&costOf(P(),1)===1&&costOf(P(),0)===0`));
+    check('…and the price tags say so', await ev(`priceTag(P(),30).includes('🪙 15')&&priceTag(P(),0).includes('Free')`));
+    await ev(`(()=>{const p=P();p.coins=100;const it=CLOSET.top.items.find(i=>i.price>1&&!p.owned.includes('top:'+i.id));window._lk=it;
+      show('closet');tryBuy('top:'+it.id,it.price,it.name,()=>{p.look.top=it.id;save();renderCloset();});})()`); await sleep(100);
+    check('the buy box shows the Little price', await ev(`document.querySelector('#modalBody').textContent.includes('🪙 '+Math.ceil(_lk.price/2))`));
+    await ev(`${mbtn('✔ Yes')}.click()`); await sleep(150);
+    check('…buying takes half the coins', await ev(`P().owned.includes('top:'+_lk.id)&&P().coins===100-Math.ceil(_lk.price/2)`), await ev('P().coins'));
+    check('…the Closet tiles show half prices', await ev(`(()=>{const p=P(),it=CLOSET[closetCat].items.find(i=>i.price>1&&!isOwned(p,closetCat,i));
+      if(!it)return true;const b=document.querySelector('#closetGrid [data-id="'+it.id+'"] .tp');return !!b&&b.textContent.includes('🪙 '+Math.ceil(it.price/2));})()`));
+    await ev(`document.querySelector('#undoBtn').click()`); await sleep(150);
+    check('…↩ Undo gives the coins back', await ev(`P().coins===100&&!P().owned.includes('top:'+_lk.id)`));
+    await ev(`show('room');P().lastDaily='';save();enterRoom()`); await sleep(900);
+    check('🎁 a Little room\'s daily gift is +20', await ev(`P().coins===120`), await ev('P().coins'));
+    await ev(`closeModal();setBand(P(),'normal');P().little.lock=false;P().lastDaily='';save();applyEasy();enterRoom()`); await sleep(900);
+    check('…a Normal room\'s is still +10, and prices are full again', await ev(`P().coins===130&&costOf(P(),30)===30&&priceTag(P(),30).includes('🪙 30')`), await ev('P().coins'));
+    check('v1.89 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.89')`));
+    await ev(`closeModal();{const o=JSON.parse(window._lcSaved),p=P();setBand(p,o.band);p.little.lock=o.lock;p.coins=o.coins;p.lastDaily=o.daily;p.owned=o.owned;p.look.top=o.top;p.seenTip=o.tip;}
+      LOCK.open='';save();applyEasy();show('room')`);
+  }
+
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');
   ws.close(); ch.kill(); setTimeout(()=>{try{fs.rmSync(prof,{recursive:true,force:true});}catch(e){} process.exit(bad||errors.length?1:0);},800);

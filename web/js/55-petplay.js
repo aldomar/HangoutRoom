@@ -74,7 +74,7 @@ function ppCard(){
     const on=ppToy(p);
     h=`<div class="spy-txt"><b>🎾 Fetch</b><span id="ppText">${p.easy?'Swipe! 👉':'Swipe to throw!'}</span></div>`
       +`<div class="spy-btns pp-toys">${Object.entries(PET_TOYS).map(([id,T])=>{const own=!T.price||p.owned.includes('pettoy:'+id);
-        return `<button class="spy-b pp-toy${id===on?' on':''}${own?'':' locked'}" data-toy="${id}" aria-label="${T.name}"><svg viewBox="-22 -22 44 44">${T.d()}</svg>${own?'':`<small>🪙${T.price}</small>`}</button>`;}).join('')}${X}</div>`;
+        return `<button class="spy-b pp-toy${id===on?' on':''}${own?'':' locked'}" data-toy="${id}" aria-label="${T.name}"><svg viewBox="-22 -22 44 44">${T.d()}</svg>${own?'':`<small>🪙${costOf(p,T.price)}</small>`}</button>`;}).join('')}${X}</div>`;
   }
   $('#ppCard').innerHTML=h;
   $('#ppX').onclick=()=>{SFX.click();ppQuit();};

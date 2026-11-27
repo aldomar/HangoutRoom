@@ -232,7 +232,9 @@ const GIFT_TIMELINE=[
   {v:'1.87',d:'2026-12-06',i:'⏸️',n:'Wait, keep playing?',why:'So a stray tap on Back never throws away a game you were in the middle of',
     news:['⏸️ Back in the middle of a match, a song or a show pauses and asks: ▶ Keep playing or ⬅ go back','⬅ Between games, and in the makers and fidgets, Back still goes straight back']},
   {v:'1.88',d:'2026-12-08',i:'👤',n:'Whose room is it?',why:'So everyone can tell whose room is open, even before they can read',
-    news:['👤 Your buddy\'s face is next to your coins on every screen','🎁 Give a gift with one tap, from the room picture']}
+    news:['👤 Your buddy\'s face is next to your coins on every screen','🎁 Give a gift with one tap, from the room picture']},
+  {v:'1.89',d:'2026-12-09',i:'🧸',n:'Little rooms: more to dress up with',why:'So the youngest can dress up their buddy, pet and fidgets too',
+    news:['🧸 In a Little room everything costs half','🎁 A Little room\'s daily gift is 20 coins']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

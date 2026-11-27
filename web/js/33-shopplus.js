@@ -88,12 +88,12 @@ Object.assign(NIGHT_GLOW,{arcade:{y:-210,r:120,c:'mint'},aquarium:{y:-160,r:130,
 
 const dreamOf=p=>p.dream&&DECOR[p.dream]&&DECOR[p.dream].dream?p.dream:'';
 function dreamBar(p){
-  const k=dreamOf(p); if(!k) return ''; const d=DECOR[k], have=Math.min(p.coins,d.price), pct=Math.round(have/d.price*100);
-  return `<div class="dream-bar"><div class="db-pic">${decoPrev(k)}</div><div class="db-mid"><b>⭐ Saving for ${esc(d.name)}</b><div class="db-track"><i style="width:${pct}%"></i></div><span>${p.coins>=d.price?'You can get it now! 🎉':`🪙 ${have} / ${d.price} · ${d.price-p.coins} more to go`}</span></div><button class="btn small ghost" data-dream-stop aria-label="Stop saving">✖</button></div>`;
+  const k=dreamOf(p); if(!k) return ''; const d=DECOR[k], pr=costOf(p,d.price), have=Math.min(p.coins,pr), pct=Math.round(have/pr*100);
+  return `<div class="dream-bar"><div class="db-pic">${decoPrev(k)}</div><div class="db-mid"><b>⭐ Saving for ${esc(d.name)}</b><div class="db-track"><i style="width:${pct}%"></i></div><span>${p.coins>=pr?'You can get it now! 🎉':`🪙 ${have} / ${pr} · ${pr-p.coins} more to go`}</span></div><button class="btn small ghost" data-dream-stop aria-label="Stop saving">✖</button></div>`;
 }
 function dreamAsk(p,k){
   const d=DECOR[k];
-  modal(`⭐ Save up for ${esc(d.name)}?`,`<div class="gv-ask"><svg viewBox="${d.box}">${d.d()}</svg></div><p style="text-align:center">It costs 🪙 ${d.price}. You have 🪙 ${p.coins}.<br>Keep playing to save up: it'll wait for you!</p>`,
+  modal(`⭐ Save up for ${esc(d.name)}?`,`<div class="gv-ask"><svg viewBox="${d.box}">${d.d()}</svg></div><p style="text-align:center">It costs 🪙 ${costOf(p,d.price)}. You have 🪙 ${p.coins}.<br>Keep playing to save up: it'll wait for you!</p>`,
     [{text:'✖ Not now',cls:'ghost'},{text:'⭐ Save up!',cls:'pink',on:()=>{p.dream=k;save();SFX.happy();renderDecoGrid();}}]);
 }
 // Called by the Shop's buy handler (section 9): returns true when it took care of the tap.

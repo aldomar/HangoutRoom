@@ -242,6 +242,10 @@ This pack adds 25 clothes (15–25 coins each, open to everyone) so every outfit
   **Setting a PIN is a good idea**, so a child who holds 🔒 long enough still can't get out.
 - **It locks again** when a grown-up taps **🔒 Lock** in the room, or when the app is closed and opened again.
 - Coins work as usual. With no Shop, they pile up for later.
+- **🧸 Little rooms pay half price (since version 1.89).** Clothes, hair colors, pet things, fidget designs, seeds and everything
+  else cost half (rounded up, so 1 coin stays 1). The daily gift is **+20 coins** instead of +10. That way the youngest, who can't
+  score much in the games yet, can still dress up their buddy, pet and fidgets. It follows the room's level (🧸 Little), not the
+  lock, so prices stay the same while a grown-up has it unlocked. 🐣 Easy, ⭐ Normal and 🔥 Challenge rooms pay full price.
 
 **🎨 Dress like… (every room's Closet):** tap a theme (🦇 Emo, ☁️ Cute, ⚽ Sport, 🦕 Dino…) and the buddy puts on clothes from that
 theme. It only uses clothes the room already owns, and keeps the buddy, fur and face. Tap it again for another mix.
