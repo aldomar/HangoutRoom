@@ -144,6 +144,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   for(const f of [0.3,0.5,0.7]) await stroke(wave(await padRect(),f,30));
   await ev(`saveDraft()`); await sleep(400);
   await send('Page.reload'); await sleep(1500);
+  for(let i=0;i<60&&!(await ev('document.readyState==="complete"&&!!document.querySelector(".pcard")'));i++) await sleep(250); // a slow reload (e.g. the first run after a restart)
   await ev(`(()=>{document.querySelector('.pcard').click();})()`); await sleep(700);
   check('poster still in room after reload', await ev(`!!document.querySelector('#roomSvg image')`));
   await ev(`handleHot('desk')`); await sleep(800);
@@ -6169,7 +6170,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await shot('T5-face-phone');
     await ev(`exitDecorate();(()=>{const R=curRoom(P());R.items=R.items.filter(i=>!/^fc/.test(i.uid));save();renderRoom();})()`);
     await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
-    check('v1.84 is in the Gift Story and the app says 1.84', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.84')&&APP_VERSION==='1.84'`));
+    check('v1.84 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.84')`));
   }
 
   console.log('Clear ways back (v1.85)');
@@ -6209,6 +6210,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`document.querySelector('#wkBack').click()`); await sleep(100);
     check('…and goes back to the pet menu in the room', await ev(`cur==='room'&&${box}&&!!document.querySelector('#modalBody .pet-card')`));
     await ev(`closeModal()`);
+    check('v1.85 is in the Gift Story and the app says 1.85', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.85')&&APP_VERSION==='1.85'`));
   }
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');
