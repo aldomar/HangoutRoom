@@ -81,7 +81,7 @@ const layoutsOf=p=>p.presets[roomNo];
 function layoutPrev(L){
   const W=WALLS[L.wall]||WALLS.lavender, F=FLOORS[L.floor]||FLOORS.wood;
   return `<svg viewBox="0 0 1000 700"><rect width="1000" height="470" fill="${W.fill}"/><rect y="470" width="1000" height="230" fill="${F.fill}"/>`
-    +L.items.filter(i=>DECOR[i.type]&&!DECOR[i.type].art).map(i=>`<g transform="${decoT(i)}">${DECOR[i.type].d()}</g>`).join('')+`</svg>`;
+    +L.items.filter(i=>DECOR[i.type]&&!DECOR[i.type].art).map(i=>`<g transform="translate(${Math.round(i.x)} ${Math.round(i.y)})">${DECOR[i.type].d()}</g>`).join('')+`</svg>`;
 }
 function layoutGrid(p){
   return `<div class="hint lay-hint">Keep this room's look, and put it back any time 🏠</div>`+layoutsOf(p).map((L,i)=>L
@@ -90,7 +90,7 @@ function layoutGrid(p){
 }
 function layoutSave(p,i){
   const R=curRoom(p);
-  layoutsOf(p)[i]={wall:R.wall,floor:R.floor,items:R.items.filter(x=>x.placed&&DECOR[x.type]).map(x=>Object.assign({uid:x.uid,type:x.type,x:Math.round(x.x),y:Math.round(x.y)},rotOk(x.rot)?{rot:rotOk(x.rot)}:{})),at:Date.now()};
+  layoutsOf(p)[i]={wall:R.wall,floor:R.floor,items:R.items.filter(x=>x.placed&&DECOR[x.type]).map(x=>({uid:x.uid,type:x.type,x:Math.round(x.x),y:Math.round(x.y)})),at:Date.now()};
   save(); SFX.save(); toast('Room layout saved! 🏠'); renderDecoGrid(); checkStickers();
 }
 function layoutLoad(p,i){
@@ -101,7 +101,7 @@ function layoutLoad(p,i){
     const it=allItems(p).find(x=>x.uid===s.uid);
     if(!it){missing++;return;} // given away
     if(!R.items.includes(it)){rooms(p).forEach(r=>{r.items=r.items.filter(x=>x!==it);});R.items.push(it);}
-    Object.assign(it,{x:s.x,y:s.y,placed:true}); if(rotOk(s.rot)) it.rot=rotOk(s.rot); else delete it.rot; // ↻ (v1.83)
+    Object.assign(it,{x:s.x,y:s.y,placed:true});
   });
   const yard=roomNo===3, ok=(L2,k,isW)=>L2[k]&&!L2[k].yard===!yard&&surfOwned(p,isW,k,L2[k]);
   if(ok(WALLS,L.wall,true)) R.wall=L.wall; if(ok(FLOORS,L.floor,false)) R.floor=L.floor;

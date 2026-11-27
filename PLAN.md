@@ -1459,11 +1459,9 @@ The children got the app on 2026-11-26 and asked for things straight away. Two P
     a Purple Heart Pouf, a Butterfly Garland, Violet Stripes (wall) and a Plum Fluff Carpet (floor).
   - 3 stickers: 🦎 Axolotl Friend, 💜 Purple Power (5 new purple things), 🐢 Sea Artist (color the 4 sea pictures).
   - Owner's answer (2026-11-26): no new 💜 Purple chip; the new things use the chips that exist.
-- ✅ **↻ Turn decorations (v1.83; built, PR open on `feature/rotate`, stacked on `feature/pack6`):** new file `web/js/75-turn.js`. in Decorate, tap a thing and turn it with ↺ ↻, 15° a tap, at most 45° each way.
+- ⬜ **↻ Turn decorations (v1.83, `feature/rotate`):** in Decorate, tap a thing and turn it with ↺ ↻, 15° a tap, at most 45° each way.
   - Owner's answer (2026-11-26): a tilt of ±45° (not a full turn). Shelves don't turn, so things on them never float.
   - Save: an optional `rot` on a room item (missing = 0); `normalize()` keeps it to −45…45 in 15° steps. Layouts keep it.
-  - Standing things turn around their feet (they stay on the floor or a shelf); wall things and rugs around their middle.
-  - The picked thing glows; tapping the empty room, ✔ Done or another room lets go. The buttons hide while it is dragged.
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
