@@ -8,6 +8,8 @@ const ROOM_COLORS={pink:'#ff8cc6',purple:'#a97cff',mint:'#8ff0d0',gold:'#ffd166'
 // (v1.78) a made Code Lab level's shape (types only: whether it can be solved is checked by codeSim when it is played, section 72)
 // (v1.83) ↻ how far a decoration is turned: whole steps of ROT_STEP degrees, at most ROT_MAX each way; 0 = not turned (rot left out)
 const ROT_STEP=15, ROT_MAX=45;
+// (v1.84) ◀ ▶ which way a standing decoration faces: -1 left, 1 right; 0 = the front (yaw left out)
+function yawOk(v){return v===-1||v===1?v:0;}
 function rotOk(v){const n=Math.round(Number(v)/ROT_STEP)*ROT_STEP;return Number.isFinite(n)?Math.max(-ROT_MAX,Math.min(ROT_MAX,n))||0:0;}
 function codeMineOk(L){
   if(!L||typeof L!=='object'||typeof L.id!=='string'||typeof L.sol!=='string'||typeof L.move!=='string'||!Array.isArray(L.map)) return false;
@@ -53,7 +55,7 @@ function normalize(p){
   p.room5=Object.assign({wall:'',floor:'',items:[]},p.room5&&typeof p.room5==='object'&&!Array.isArray(p.room5)?p.room5:{});
   ['wall','floor'].forEach(k=>{if(typeof p.room5[k]!=='string')p.room5[k]='';});
   [p.room,p.room2,p.room3,p.room4,p.room5].forEach(r=>{if(!Array.isArray(r.items))r.items=[];r.items=r.items.filter(i=>i&&typeof i==='object');
-    r.items.forEach(i=>{if('rot' in i){const v=rotOk(i.rot);if(v)i.rot=v;else delete i.rot;}});}); // ↻ a turned decoration (v1.83)
+    r.items.forEach(i=>{if('rot' in i){const v=rotOk(i.rot);if(v)i.rot=v;else delete i.rot;}if('yaw' in i&&!yawOk(i.yaw))delete i.yaw;});}); // ↻ a turned decoration (v1.83)
   p.fid=Object.assign({pop:'rainbow',squish:'mochi',spin:'galaxy',popShape:'classic',slime:'grape',cube:'pastel',marble:'pearl'},p.fid||{}); // popShape: v1.10; slime, cube, marble: v1.16
   // Marble Maze (v1.16): the ids of the mazes solved (each pays +3 once).
   p.maze=Object.assign({},p.maze&&typeof p.maze==='object'&&!Array.isArray(p.maze)?p.maze:{});
@@ -141,7 +143,7 @@ function normalize(p){
   const lk=Array.isArray(p.looks)?p.looks:[]; p.looks=[0,1,2,3].map(i=>lk[i]&&typeof lk[i]==='object'&&!Array.isArray(lk[i])?Object.fromEntries(Object.entries(lk[i]).filter(([k,v])=>typeof v==='string')):null);
   // Gifts + layouts (v1.28): the gifts waiting to be opened, and up to 3 saved layouts per room.
   p.gifts=(Array.isArray(p.gifts)?p.gifts:[]).filter(g=>g&&typeof g==='object'&&typeof g.id==='string'&&(g.kind==='coins'&&Number(g.n)>0||g.kind==='decor'&&typeof g.type==='string')).map(g=>Object.assign(g,{from:String(g.from||'').slice(0,24),badge:typeof g.badge==='string'?g.badge:'🎁'},g.kind==='coins'?{n:Math.min(100,Math.floor(Number(g.n)))}:{}));
-  const pr=p.presets&&typeof p.presets==='object'&&!Array.isArray(p.presets)?p.presets:{}, lay=L=>L&&typeof L==='object'&&typeof L.wall==='string'&&typeof L.floor==='string'&&Array.isArray(L.items)?Object.assign(L,{items:L.items.filter(i=>i&&typeof i.uid==='string'&&typeof i.type==='string').map(i=>Object.assign({uid:i.uid,type:i.type,x:Number(i.x)||0,y:Number(i.y)||0},rotOk(i.rot)?{rot:rotOk(i.rot)}:{}))}):null;
+  const pr=p.presets&&typeof p.presets==='object'&&!Array.isArray(p.presets)?p.presets:{}, lay=L=>L&&typeof L==='object'&&typeof L.wall==='string'&&typeof L.floor==='string'&&Array.isArray(L.items)?Object.assign(L,{items:L.items.filter(i=>i&&typeof i.uid==='string'&&typeof i.type==='string').map(i=>Object.assign({uid:i.uid,type:i.type,x:Number(i.x)||0,y:Number(i.y)||0},rotOk(i.rot)?{rot:rotOk(i.rot)}:{},yawOk(i.yaw)?{yaw:i.yaw}:{}))}):null;
   p.presets={1:0,2:0,3:0,4:0,5:0}; Object.keys(p.presets).forEach(k=>{const a=Array.isArray(pr[k])?pr[k]:[];p.presets[k]=[0,1,2].map(i=>lay(a[i]));});
   if(typeof p.speak!=='boolean') p.speak=null; // v1.30 🔊 Read to me: null = on in Easy mode, off otherwise
   if(typeof p.dream!=='string') p.dream=''; // v1.29: the big dream she is saving up for (a DECOR key, or '')

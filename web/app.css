@@ -107,6 +107,9 @@ body.easy .sign{display:inline}
 .turn-bar button{width:56px;height:56px;border-radius:16px;border:0;background:var(--pink);color:var(--pink-ink);font-size:32px;font-weight:900;line-height:1;cursor:pointer;touch-action:manipulation}
 .turn-bar button:active{transform:scale(.92)}
 .turn-bar button.off{opacity:.35}
+.turn-bar button[data-face]{background:var(--purple);color:#fff;font-size:26px} /* (v1.84) ◀ ▶ face left/right */
+.turn-bar button.gone{display:none}
+@media (max-width:560px){.turn-bar{gap:5px;padding:4px}.turn-bar button{width:48px;height:48px;font-size:27px}}
 .deco-panel{flex:0 0 40%;background:var(--panel);border-top:3px solid var(--line);display:flex;flex-direction:column;min-height:0;transition:background .2s}
 .deco-panel.drop{background:#5a2f4f}
 .deco-head{display:flex;align-items:center;gap:6px;padding-right:10px}

@@ -6091,7 +6091,70 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('✔ Done hides the buttons and the glow; the plush stays turned', !(await bar()).on&&await ev(`!document.querySelector('#roomSvg .deco.picked')&&/rotate\\(30\\)/.test(document.querySelector('#roomSvg .deco[data-uid="tnA"]').getAttribute('transform'))`));
     await shot('T3-turned-room');
     await ev(`(()=>{const R=curRoom(P());R.items=R.items.filter(i=>!/^tn/.test(i.uid));save();renderRoom();})()`);
-    check('v1.83 is in the Gift Story and the app says 1.83', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.83')&&APP_VERSION==='1.83'`));
+    check('v1.83 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.83')`));
+  }
+
+  // ◀ ▶ Face left or right (v1.84): a standing decoration turns in 3D (squash + lean + a darker edge), no new drawings
+  console.log('Face left or right (v1.84)');
+  {
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`show('room');goRoom(1);(()=>{const R=curRoom(P());R.items=R.items.filter(i=>!/^fc/.test(i.uid));
+      R.items.push({uid:'fcA',type:'axolotlPlush',x:130,y:650,placed:true},{uid:'fcL',type:'dinoPup',x:300,y:640,placed:true,yaw:-1},{uid:'fcR',type:'dinoPup',x:700,y:640,placed:true,yaw:1},{uid:'fcF',type:'dinoPup',x:500,y:470,placed:true},
+        {uid:'fcV',type:'lava',x:850,y:640,placed:true},{uid:'fcW',type:'disco',x:700,y:300,placed:true},{uid:'fcS',type:'shelfL',x:220,y:200,placed:true});save();})();enterDecorate()`); await sleep(200);
+    const tap=async uid=>{const c=await ev(`(()=>{const r=document.querySelector('#roomSvg .deco[data-uid="${uid}"]').getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2];})()`);await mouse('mousePressed',c[0],c[1]);await mouse('mouseReleased',c[0],c[1]);await sleep(120);};
+    const face=async(d,n)=>{for(let k=0;k<n;k++){await ev(`document.querySelector('#turnBar [data-face="${d}"]').click()`);await sleep(40);}await sleep(60);};
+    const it=uid=>`curRoom(P()).items.find(i=>i.uid==='${uid}')`;
+    const inner=uid=>`document.querySelector('#roomSvg .deco[data-uid="${uid}"]>g')`;
+    const bar=()=>ev(`(()=>{const b=document.querySelector('#turnBar'),S=b.parentNode.getBoundingClientRect(),r=b.getBoundingClientRect(),v=[...b.querySelectorAll('button')].filter(x=>!x.classList.contains('gone'));return {on:!b.classList.contains('hidden'),n:v.length,inside:r.left>=S.left&&r.right<=S.right&&r.top>=S.top&&r.bottom<=S.bottom,big:v.every(x=>x.getBoundingClientRect().width>=48&&x.getBoundingClientRect().height>=48)};})()`);
+    await tap('fcA');
+    let b=await bar();
+    check('a standing thing shows 4 buttons ◀ ↺ ↻ ▶, inside the picture, 48 px+', b.on&&b.n===4&&b.inside&&b.big, b);
+    check('the buttons have names for 🔊 Read to me', await ev(`[...document.querySelectorAll('#turnBar button')].map(x=>x.getAttribute('aria-label')).join()==='Face left,Tilt left,Tilt right,Face right'`));
+    await face(1,1);
+    check('▶ makes it face right: yaw 1, squashed and leaning, with the right-hand edge filter', await ev(`${it('fcA')}.yaw===1&&${inner('fcA')}.getAttribute('transform')==='matrix('+YAW_SQUASH+' '+(-YAW_LEAN)+' 0 1 0 0)'&&YAW_SQUASH<1&&YAW_LEAN>0&&${inner('fcA')}.getAttribute('filter')==='url(#depthR)'`), await ev(`${inner('fcA')}&&${inner('fcA')}.outerHTML.slice(0,90)`));
+    check('it stays picked after the redraw, and ▶ dims', await ev(`document.querySelector('#roomSvg .deco[data-uid="fcA"]').classList.contains('picked')&&document.querySelector('#turnBar [data-face="1"]').classList.contains('off')&&!document.querySelector('#turnBar [data-face="-1"]').classList.contains('off')`));
+    await face(1,2);
+    check('another ▶ stays facing right', await ev(`${it('fcA')}.yaw===1`));
+    await face(-1,3);
+    check('◀ goes back through the front to facing left, and stops there', await ev(`${it('fcA')}.yaw===-1&&${inner('fcA')}.getAttribute('filter')==='url(#depthL)'&&document.querySelector('#turnBar [data-face="-1"]').classList.contains('off')`));
+    await ev(`document.querySelector('#turnBar [data-turn="1"]').click()`); await sleep(60);
+    check('tilt and facing together: both kept', await ev(`${it('fcA')}.yaw===-1&&${it('fcA')}.rot===15&&/rotate\\(15\\)/.test(document.querySelector('#roomSvg .deco[data-uid="fcA"]').getAttribute('transform'))&&/^matrix/.test(${inner('fcA')}.getAttribute('transform'))`));
+    await ev(`save()`);
+    check('facing is saved', await ev(`JSON.parse(localStorage.getItem('hangoutRoom.v1')).profiles.find(q=>q.id===P().id).room.items.find(i=>i.uid==='fcA').yaw===-1`));
+    await face(1,1);
+    check('back to the front: yaw left out, no wrapper', await ev(`!('yaw' in ${it('fcA')})&&!/depth|matrix/.test(document.querySelector('#roomSvg .deco[data-uid="fcA"]').innerHTML)`));
+    await face(1,1);
+    // dragging a turned thing keeps it turned
+    const c=await ev(`(()=>{const r=document.querySelector('#roomSvg .deco[data-uid="fcA"]').getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2];})()`);
+    await mouse('mousePressed',c[0],c[1]); await mouse('mouseMoved',c[0]+30,c[1]); await mouse('mouseMoved',c[0]+60,c[1]); await mouse('mouseReleased',c[0]+60,c[1]); await sleep(150);
+    check('dragging keeps it facing right', await ev(`${it('fcA')}.yaw===1&&${inner('fcA')}.getAttribute('filter')==='url(#depthR)'`));
+    // an animated drawing turns but gets no edge; wall things and shelves can't face
+    await ev(`picked='fcV';turnShow()`); await face(1,1); // picked straight away: a visitor may stand in front of it
+    check('an animated decoration (Lava Lamp) faces right with no filter (nothing redrawn 5× a second)', await ev(`${it('fcV')}.yaw===1&&/^matrix/.test(${inner('fcV')}.getAttribute('transform'))&&!${inner('fcV')}.hasAttribute('filter')`));
+    await tap('fcW');
+    b=await bar();
+    check('a wall thing (Disco Ball) shows only ↺ ↻', b.on&&b.n===2, b);
+    await ev(`document.querySelector('#turnBar [data-face="1"]').click()`);
+    check('…and can not face', await ev(`!('yaw' in ${it('fcW')})`));
+    await tap('fcS');
+    check('a shelf shows no buttons', !(await bar()).on);
+    check('a facing drawing is strict XML', await ev(`!new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg">'+decoIn({type:'dinoPup',yaw:1},DECOR.dinoPup.d())+'</svg>','image/svg+xml').querySelector('parsererror')`));
+    check('the edge filters are in the page defs', await ev(`!!document.querySelector('#depthL')&&!!document.querySelector('#depthR')`));
+    // layouts + the save rules
+    await ev(`layoutSave(P(),1);delete ${it('fcA')}.yaw;layoutLoad(P(),1)`); await sleep(100);
+    check('a saved 🏠 layout keeps which way things face', await ev(`P().presets[1][1].items.find(i=>i.uid==='fcA').yaw===1&&${it('fcA')}.yaw===1`));
+    check('odd facings are made safe: 2 and "x" dropped, -1 kept', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));q.room.items.push({uid:'y1',type:'plant',x:1,y:1,placed:true,yaw:2},{uid:'y2',type:'plant',x:1,y:1,placed:true,yaw:'x'},{uid:'y3',type:'plant',x:1,y:1,placed:true,yaw:-1});normalize(q);const g=u=>q.room.items.find(i=>i.uid===u);return !('yaw' in g('y1'))&&!('yaw' in g('y2'))&&g('y3').yaw===-1;})()`));
+    await ev(`exitDecorate()`); await sleep(150);
+    await shot('T4-face-left-front-right');
+    // phone size: the 4 buttons still fit
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+    await ev(`renderRoom();enterDecorate()`); await sleep(200); await tap('fcF');
+    b=await bar();
+    check('on a phone the 4 buttons fit inside the picture, 48 px+', b.on&&b.n===4&&b.inside&&b.big, b);
+    await shot('T5-face-phone');
+    await ev(`exitDecorate();(()=>{const R=curRoom(P());R.items=R.items.filter(i=>!/^fc/.test(i.uid));save();renderRoom();})()`);
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    check('v1.84 is in the Gift Story and the app says 1.84', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.84')&&APP_VERSION==='1.84'`));
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

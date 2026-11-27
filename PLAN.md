@@ -1464,6 +1464,12 @@ The children got the app on 2026-11-26 and asked for things straight away. Two P
   - Save: an optional `rot` on a room item (missing = 0); `normalize()` keeps it to −45…45 in 15° steps. Layouts keep it.
   - Standing things turn around their feet (they stay on the floor or a shelf); wall things and rugs around their middle.
   - The picked thing glows; tapping the empty room, ✔ Done or another room lets go. The buttons hide while it is dragged.
+  - Merged as PR #88 (2026-11-27).
+- ✅ **◀ ▶ Face left or right (v1.84; built, PR open on `feature/turn3d`):** the owner wanted the turn to look more 3D.
+  - Owner's answers (2026-11-27): a 3D turn with a thicker side, no new stored pictures; keep the tilt and add ◀ ▶ (four buttons).
+  - `decoIn()` (75) squashes and leans the same drawing; the `#depthL`/`#depthR` filters add a darker copy behind it as its side.
+  - Only standing things face (not wall things, rugs or shelves). Animated drawings turn without the filter.
+  - Save: an optional `yaw` on a room item (−1 or 1; missing = the front). Layouts keep it.
 
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.

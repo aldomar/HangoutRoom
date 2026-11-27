@@ -312,6 +312,15 @@ like a phone number. **The app never sends anything over the internet**: there's
 - **📻 Boombox fix:** tapping the boombox (from version 1.77) now really plays her music. Before, the tap went straight through it.
 - Save data: one new field, `dance.tracks` (the music of the 3 saved dances). Older backups still restore; their dances have no music kept.
 
+## ◀ ▶ Face left or right (version 1.84)
+- In 🛋️ **Decorate**, a picked thing that stands on the floor (or on a shelf) now has four buttons: **◀ ↺ ↻ ▶**.
+  ◀ and ▶ turn it to face left or right, as if it were turned in 3D: it gets a little narrower, leans slightly, and a darker
+  side shows, like the thing has some thickness. Tap the other arrow to bring it back to the front.
+- ↺ ↻ still tilt it, and a thing can be tilted and turned at the same time.
+- No new pictures are stored: the same drawing is turned in code, so it works for every decoration, old and new.
+- Wall things, rugs and shelves only tilt. Things with a moving part (like the Lava Lamp) turn without the darker side, to keep the tablet fast.
+- 🏠 Saved layouts remember which way things face. Save data: one more optional field on a room item, `yaw` (−1 left, 1 right).
+
 ## ↻ Turn decorations (version 1.83)
 - In 🛋️ **Decorate**, tap a decoration (or move it): it glows, and two buttons show just above it. **↺** turns it left, **↻** right,
   15° a tap, up to 45° (3 taps) each way. Tap the other button to straighten it again.

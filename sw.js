@@ -5,7 +5,7 @@
    - FILES must list every file index.html loads (the smoke test checks). A new web/js file goes here too.
    - It never asks the internet for anything but these files. web/about-local.js is git-ignored, so it isn't hosted:
      when it's missing, an empty script is used. */
-const VERSION='1.83';
+const VERSION='1.84';
 const STORE='hangout-room-'+VERSION;
 const FILES=['./','index.html','manifest.webmanifest','web/app.css','web/icon-180.png',
   'web/js/01-save.js','web/js/02-art-helpers.js','web/js/03-mascot.js','web/js/04-room.js',
