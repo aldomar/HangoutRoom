@@ -129,9 +129,9 @@ function trWin(){
     else {save();line='Trick coins are full for today. Keep kicking for fun ✨';}}
   const prize=trGivePrize(), D=DECOR[TR_PRIZE];
   const nextI=TRICKS.findIndex((t,i)=>i>trIdx(p)&&!p.soccer.tricks.includes(t.id)), go=nextI>=0?nextI:TRICKS.findIndex(t=>!p.soccer.tricks.includes(t.id));
-  modal(`🎉 ${tr.icon} ${esc(tr.name)}`,`<div style="text-align:center;font-size:18px">You did the trick! ⚽<br><b>${line}</b><br>🎯 ${trDoneN(p)} / ${TRICKS.length} tricks`
+  endBox({title:`🎉 ${tr.icon} ${esc(tr.name)}`,body:`<div style="text-align:center;font-size:18px">You did the trick! ⚽<br><b>${line}</b><br>🎯 ${trDoneN(p)} / ${TRICKS.length} tricks`
     +(prize?`<div style="margin-top:10px">You did all ${TRICKS.length}! The <b>${D.name}</b> is in your Backyard 🏅</div><svg viewBox="${D.box}" style="height:120px">${D.d()}</svg>`:'')+'</div>',
-    [{text:'🔁 Again',cls:'ghost',on:trRender},{text:'▶ Next trick',cls:'pink',on:()=>trGo(go>=0?go:trIdx(p)+1)}]);
+    back:{to:'room',on:()=>show('room')},mid:[{text:'🔁 Again',on:trRender}],go:{text:'▶ Next trick',on:()=>trGo(go>=0?go:trIdx(p)+1)}}); // section 76
   if(prize) setTimeout(SFX.buy,400);
   trRender(); // ready for another go behind the box
   checkStickers();

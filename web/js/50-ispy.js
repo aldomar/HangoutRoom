@@ -147,8 +147,8 @@ function spyRoundDone(){
   if(c){earn(c,'I Spy');line=`+${c} 🪙`;}
   else {save();line='I Spy coins are full for today. Keep playing for fun ✨';}
   SFX.cheer();
-  modal('🔍 Super spy!',`<div class="spy-done"><div class="spy-big">🎉</div>You found ${SPY.need} things!<br><b>${line}</b></div>`,
-    [{text:'🔁 Again',cls:'pink',on:()=>spyRound()},{text:'🏠 Done',on:()=>spyEnd()}]);
+  endBox({title:'🔍 Super spy!',body:`<div class="spy-done"><div class="spy-big">🎉</div>You found ${SPY.need} things!<br><b>${line}</b></div>`,
+    back:{to:'room',on:()=>spyEnd()},go:{text:'🔁 Again',on:()=>spyRound()}}); // section 76: ⬅ stays in this room
   checkStickers();
 }
 // 🔦 at night: a dark layer with one moving hole (and the lamps still glowing a little). renderRoom adds it.

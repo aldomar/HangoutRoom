@@ -163,8 +163,8 @@ function kpEnd(){
   SFX.whistle(); renderKpScore(); if(gloves.length) setTimeout(SFX.buy,400);
   const line=saves===KEEP_KICKS?'PERFECT KEEPER! 🌟':saves>=3?'Super saves! ✨':saves>=1?'Nice catch! Keep practising 💪':`${L.name} was tricky! Try again? ${L.icon}`;
   const glo=gloves.map(n=>`<div style="margin-top:10px">You won the <b>${n}</b>! It's in your Backyard 🧤</div><svg viewBox="${DECOR[GLOVES[lvl]].box}" style="height:110px">${DECOR[GLOVES[lvl]].d()}</svg>`).join('');
-  modal(`🧤 ${saves} / ${KEEP_KICKS} saves!`,`<div style="text-align:center;font-size:18px">${line}${best&&saves?`<br>New best on ${lvl[0].toUpperCase()+lvl.slice(1)}! 🏆`:''}${glo}</div>`,
-    [{text:'⬅ Room',cls:'ghost',on:()=>show('room')},{text:'Play again',cls:'pink',on:()=>{kpNewMatch();SFX.whistle();}}]);
+  endBox({title:`🧤 ${saves} / ${KEEP_KICKS} saves!`,body:`<div style="text-align:center;font-size:18px">${line}${best&&saves?`<br>New best on ${lvl[0].toUpperCase()+lvl.slice(1)}! 🏆`:''}${glo}</div>`,
+    back:{to:'room',on:()=>show('room')},go:{text:'🔁 Play again',on:()=>{kpNewMatch();SFX.whistle();}}}); // section 76
 }
 
 /* ---------- touch: tap a spot in the goal, swipe to dive, or (Easy) tap the ball ---------- */

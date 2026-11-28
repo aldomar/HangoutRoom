@@ -81,6 +81,34 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 - **Touch first.** Use pointer events, which also work with a mouse. Interactive canvases and boards need `touch-action:none`.
 - Tap targets of 48 px or more; text at least 14 px (16 px or more for body text).
 
+## Navigation rules (agreed 2026-11-27)
+The players are 3 to 11, and many can't read, so getting around must work from icons, places and sounds. **The iPads and
+iPhone have no Back button or swipe-back in this app: on-screen buttons are the only way out of anything.** The map of every
+screen and every way in and out is `docs/NAVIGATION.md`: **update its map and table whenever a screen, mode, game or way out
+changes.** The shared helpers live in `76-nav.js`: `endBox` and `NAV_PLACES` since v1.85; `backBtn`, `navLeave` and the
+whose-room chip arrive in v1.86–v1.88 (Phase 16, `PLAN.md`). Once a helper exists, new code must use it; until then, follow the
+rule by hand.
+1. **Every round ends on the same end box** (`endBox`): ⬅ + the place's icon on the left (gray), 🔁 Again or ▶ Next on the right
+   (pink), extra choices in the middle. Every button has an icon. The buttons ignore taps for about 0.5 s, so a quick tap from the
+   game can't press one by accident.
+2. **Back is always top-left, at least 48 px in every band, and shows where it goes** (⬅ + that place's icon from `NAV_PLACES`,
+   plus its name when there is room). It goes exactly one step back, to where she came from (the room it was opened from, the
+   Closet, the pet menu, a list), never further.
+3. **One meaning per icon:** ⬅ = back one step; ✖ = close this box or game and stay here; 🏠 = her room and nothing else;
+   ✔ = done. The room arrow tabs look like doors, not like ⬅ Back.
+4. **Games that play inside the room** (like 🔍 I Spy, 🙈 Hide & Seek, 🎾 Fetch) follow rule 1 too and return to where they were
+   started (the pet menu for pet games). The room must never look normal while it ignores taps: while one is on, its card shows
+   at the top with a ✖.
+5. **Back during a round pauses and asks** (`navLeave`): a big ▶ Keep playing and a smaller ⬅. Between rounds it leaves straight
+   away. Anything she made and hasn't saved asks first (like the Art Desk does).
+6. **Whose room it is shows on every screen** (her buddy's face and badge next to the coins). Switching rooms stays easy (⚙️ → 👥)
+   but never happens from a stray tap in a game.
+7. **Every place says where she is:** a title with its icon, the room or game picture, and a line in `speakLine` (section 65).
+8. **Three taps at most** from a room to anything played often; deeper things get a shortcut one level up.
+- A new screen, mode or game: add it to `docs/NAVIGATION.md` (map and table), give its Back a `NAV_PLACES` place, and end its
+  rounds with `endBox`. Remember 🧸 Little mode (`LOCK_SCREENS`) and the Android Back key (`androidBack`, which must do the same
+  as the on-screen Back).
+
 ## Save data: protect her progress
 - localStorage key `hangoutRoom.v1`. Shape: `DB = {version, profiles[], activeId, settings}`.
   Each profile has `name, mascotName, coins, lastDaily, seenTip, stats, look, owned[], room{wall,floor,items[]}, fid{pop,squish,spin,popShape}`,
@@ -125,6 +153,9 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
   It loads the page in a headless browser with a throwaway profile, makes a test room, opens every screen,
   exercises the Art Desk, Photocards, Soccer, the Stage and backup/restore, fails on any console error, and saves screenshots to `tests/shots/` (ignored by git).
   Run it before every PR, and extend it when you add a feature. Use invented names only.
+  **Never compare `APP_VERSION` to a fixed number in a feature's section** (it breaks on the next bump): a section only checks its own
+  `GIFT_TIMELINE` entry. The shared checks (section "Every other screen", and the About checks) tie `APP_VERSION` to `sw.js`, `versionName`,
+  `versionCode` (= the minor version + 1) and a Gift Story that runs from 1.0 to `APP_VERSION`.
 - **On the device:** the owner builds the APK in Android Studio and sideloads it. iPads/iPhones get each merge from GitHub Pages.
 - iOS-only code paths are tried in the smoke test with `IOS_FAKE=true` and fakes for `navigator.share`, `speechSynthesis` and
   `DeviceOrientationEvent.requestPermission`. Haptics, the share sheet and Add to Home Screen can only be checked on a real device.
@@ -256,6 +287,10 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
       ◀ ▶ Face left/right (v1.84): `decoIn` squashes and leans a standing item with `yaw` (`YAW_SQUASH`, `YAW_LEAN`) and adds the static
       `#depthL`/`#depthR` filter (a darker copy behind it as its side; not on drawings with an `an-*` animation); `faceable` (not wall,
       flat or shelf); `yawOk` lives in 06.
+  76. `76-nav.js` 🧭 Getting around (v1.85, the navigation rules): `endBox({title, body, back:{to, on}, mid[], go})` (every game's end box:
+      ⬅ + place on the left, extras in the middle, 🔁/▶/🎲 on the right in pink; `#modalBtns.nav-wait` blocks taps for `NAV_WAIT` ms; `modal()`
+      clears it), `NAV_PLACES`/`navPlace`/`navBackText` (`'room'` = the room on screen, from `ROOM_MAP`), `endBoxOpen()`. The smoke test fails
+      on a game file that makes an again/next button the old way. Pet games: `ppQuit` (55) and `wkToPet` (56) go back to the pet menu.
   68. `68-undo.js` ↩ Undo (v1.74): `undoArm()` (a copy of the profile just before), `undoShow(u, back)`, `undoDo`, `undoOff`, `undoLeave`
       (called by `show()`), `#undoBar`. Hooked into `tryBuy`, `buyConsumable` (08) and `sendGift` (32). **A new shop must buy through
       `tryBuy`/`buyConsumable`** so it gets Undo; a new way to spend or give coins outside them should call `undoArm`/`undoShow` itself.

@@ -224,7 +224,9 @@ const GIFT_TIMELINE=[
   {v:'1.83',d:'2026-12-01',i:'↻',n:'Turn decorations',why:'Because you asked to tilt things while decorating',
     news:['🛋️ In Decorate, tap a thing: ↺ and ↻ turn it a little each tap','📐 Up to 3 taps each way; tap the other arrow to straighten it','🏠 Saved layouts remember how things were turned']},
   {v:'1.84',d:'2026-12-03',i:'▶',n:'Face left or right',why:'Because you wanted things to look more 3D when you turn them',
-    news:['◀ ▶ In Decorate, a plush, chair or lamp can face left or right, with a little 3D edge','↺ ↻ still tilt things, and you can do both','🏠 Saved layouts remember which way things face']}
+    news:['◀ ▶ In Decorate, a plush, chair or lamp can face left or right, with a little 3D edge','↺ ↻ still tilt things, and you can do both','🏠 Saved layouts remember which way things face']},
+  {v:'1.85',d:'2026-12-04',i:'🔚',n:'Clear ways back',why:'Because it was hard to tell where to go after a game',
+    news:['🔁 Every game ends with the same box: ⬅ to go back on the left, 🔁 to play again on the right','🙈 After Hide & Seek or 🎾 Fetch you go back to your pet','⬅ The back button shows where it goes, like ⬅ 🌳 Backyard']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

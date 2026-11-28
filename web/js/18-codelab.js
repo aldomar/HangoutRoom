@@ -360,11 +360,11 @@ function clWin(){
   const next=CODE_PUZZLES[CL.lvl][CL.idx+1], lvl=CL.lvl, idx=CL.idx, n=CL.prog.length+(clHasMove()?CL.move.length:0);
   CL.timer=setTimeout(()=>{
     if(cur!=='code'||CL.view!=='play') return;
-    modal(`🥕 Yum! Puzzle ${idx+1} solved!`,
-      `<div style="text-align:center;font-size:17px">${p.easy?'🎉':`${esc(p.mascotName)} followed your program all the way! 🎉`}`
+    endBox({title:`🥕 Yum! Puzzle ${idx+1} solved!`,
+      body:`<div style="text-align:center;font-size:17px">${p.easy?'🎉':`${esc(p.mascotName)} followed your program all the way! 🎉`}`
       +`<br>${n} block${n>1?'s':''}${coins?` · +${coins} 🪙`:''}`
       +(all?`<br>Every ${CODE_LEVELS[lvl].name} puzzle solved! (+${codeBonus(lvl)} bonus) 🏆`:'')+'</div>',
-      [{text:'🧩 Puzzles',cls:'ghost',on:clPickView},next?{text:'Next ▶',cls:'pink',on:()=>clOpen(lvl,idx+1)}:{text:'Yay! ✨',cls:'pink',on:clPickView}]);
+      back:{to:'puzzles',on:clPickView},go:next?{text:'▶ Next',on:()=>clOpen(lvl,idx+1)}:{text:'🔁 Again',on:()=>clOpen(lvl,idx)}}); // section 76
     checkBonus(); // "First Program!" (shown as a message, because the result box is open)
   },700);
 }

@@ -211,11 +211,11 @@ function stFinish(){
   const mic=giveMic(); SFX.cheer(); if(mic) setTimeout(SFX.buy,400);
   const line=!hits?'Tap the notes when they reach the circles!':full?'FULL COMBO! 🎉':stars===3?'Superstar show! 🌟':stars===2?'Great show! ✨':'Nice show! Keep practising 💜';
   const M=DECOR.goldenMic;
-  modal(`🎤 ${'⭐'.repeat(stars)||'🎵'} ${esc(S.name)}`,
-    `<div style="text-align:center;font-size:17px">${line}<br><span style="font-size:15px">Perfect ${c[0]} · Great ${c[1]} · Good ${c[2]} · Oops ${c[3]}</span>`
+  endBox({title:`🎤 ${'⭐'.repeat(stars)||'🎵'} ${esc(S.name)}`,
+    body:`<div style="text-align:center;font-size:17px">${line}<br><span style="font-size:15px">Perfect ${c[0]} · Great ${c[1]} · Good ${c[2]} · Oops ${c[3]}</span>`
     +`<br>Score ${STG.score}${coins?` · +${coins} 🪙`:''}${newBest&&STG.score?'<br>New best! 🏆':''}`
     +(mic?`<div style="margin-top:10px">You won the <b>Golden Mic</b>! It's in your room 🎤</div><svg viewBox="${M.box}" style="height:120px">${M.d()}</svg>`:'')+'</div>',
-    [{text:'🎵 Songs',cls:'ghost',on:stgPickView},{text:'Play again',cls:'pink',on:()=>stStart(id)}]);
+    back:{to:'songs',on:stgPickView},go:{text:'🔁 Play again',on:()=>stStart(id)}}); // section 76
   checkBonus(); // e.g. "First Show!" (shown as a message, because the result box is open)
 }
 // The Golden Mic: 3 stars on Hard on any song puts it in her room, once (stage.mic).

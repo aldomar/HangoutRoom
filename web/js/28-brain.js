@@ -83,11 +83,11 @@ function brWin(){
   const next=G.puzzles[l][idx+1], tok=BR.tok;
   BR.timer=setTimeout(()=>{
     if(cur!=='brain'||BR.view!=='play'||BR.tok!==tok) return;
-    modal(`${G.icon} Puzzle ${idx+1} solved!`,
-      `<div style="text-align:center;font-size:18px">🎉${coins?` +${coins} 🪙`:''}`
+    endBox({title:`${G.icon} Puzzle ${idx+1} solved!`,
+      body:`<div style="text-align:center;font-size:18px">🎉${coins?` +${coins} 🪙`:''}`
       +(G.winExtra?G.winExtra(G.puzzles[l][idx],l,idx,first):'')
       +(all?`<br>Every ${l[0].toUpperCase()+l.slice(1)} puzzle solved! (+${BRAIN_BONUS} bonus) 🏆`:first||p.easy?'':'<br>Practice makes perfect ✨')+'</div>',
-      [{text:'📚 Games',cls:'ghost',on:brMenu},next?{text:'Next ▶',cls:'pink',on:()=>brPuzzle(g,l,idx+1)}:{text:'Yay! ✨',cls:'pink',on:brMenu}]);
+      back:{to:'games',on:brMenu},go:next?{text:'▶ Next',on:()=>brPuzzle(g,l,idx+1)}:{text:'🔁 Again',on:()=>brPuzzle(g,l,idx)}}); // section 76
   },900);
 }
 // Answer buttons (Snack Stand). nums = the choices in order; dots = also show the number as dots (Easy).

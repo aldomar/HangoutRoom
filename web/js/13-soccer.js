@@ -130,8 +130,8 @@ function endMatch(){
   SFX.whistle(); renderSocScore(); if(trophies.length) setTimeout(SFX.buy,400);
   const line=goals===SOC_KICKS?'PERFECT! 🌟':goals>=3?'Great kicks! ✨':goals>=1?'Nice! Keep practising 💪':`${L.name} was on fire! Try again? ${L.icon}`;
   const tro=trophies.map(n=>`<div style="margin-top:10px">You won the <b>${n}</b>! It's in your room 🏆</div><svg viewBox="${DECOR[TROPHIES[lvl]].box}" style="height:110px">${DECOR[TROPHIES[lvl]].d()}</svg>`).join('');
-  modal(`⚽ ${goals} / ${SOC_KICKS} goals!`,`<div style="text-align:center;font-size:18px">${line}${best&&goals?`<br>New best on ${lvl[0].toUpperCase()+lvl.slice(1)}! 🏆`:''}${tro}</div>`,
-    [{text:'⬅ Room',cls:'ghost',on:()=>show('room')},{text:'Play again',cls:'pink',on:()=>{newMatch();SFX.whistle();}}]);
+  endBox({title:`⚽ ${goals} / ${SOC_KICKS} goals!`,body:`<div style="text-align:center;font-size:18px">${line}${best&&goals?`<br>New best on ${lvl[0].toUpperCase()+lvl.slice(1)}! 🏆`:''}${tro}</div>`,
+    back:{to:'room',on:()=>show('room')},go:{text:'🔁 Play again',on:()=>{newMatch();SFX.whistle();}}}); // section 76
   checkBonus(); // e.g. "First Goal!" (shown as a message, because the result box is open)
 }
 

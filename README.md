@@ -312,6 +312,20 @@ like a phone number. **The app never sends anything over the internet**: there's
 - **📻 Boombox fix:** tapping the boombox (from version 1.77) now really plays her music. Before, the tap went straight through it.
 - Save data: one new field, `dance.tracks` (the music of the 3 saved dances). Older backups still restore; their dances have no music kept.
 
+## 🔚 Clear ways back (version 1.85)
+Many of the children can't read yet, so after a game it has to be clear, from pictures and places alone, how to play again and how to go back.
+- **Every game ends with the same box.** On the left, **⬅** with a picture of where it goes (⬅ 🌳 Backyard, ⬅ 🎵 Songs,
+  ⬅ 📚 Games, ⬅ 👗 Closet, ⬅ 🐾 Pet). On the right, in pink, **🔁 Play again** or **▶ Next**. Anything extra (⚽ Just me,
+  ✨ Wear it home) sits in the middle. This is the same in Soccer, the Ball Field, the Stage, Code Lab, Brain Games, the Marble
+  Maze, I Spy, the Runway, the Jam, the duels and the pet games.
+- The box's buttons wait half a second before they work, so a quick tap left over from the game can't press one by mistake.
+- **🙈 Hide & Seek:** after the pet is found, the box offers 🔁 Hide again or ⬅ 🐾 Pet. Before, the room looked normal but
+  ignored every tap, and the only way out was a small ✖.
+- **🎾 Fetch:** tap the pet (or after every 5 fetches) for the same box. ✖ and Back in both pet games, and 🦮 Walk's Back and
+  its end box, now go back to the pet menu, where she started.
+- The rules every new feature follows are in `CLAUDE.md` ("Navigation rules"); the map of every screen is `docs/NAVIGATION.md`.
+- No save changes.
+
 ## ◀ ▶ Face left or right (version 1.84)
 - In 🛋️ **Decorate**, a picked thing that stands on the floor (or on a shelf) now has four buttons: **◀ ↺ ↻ ▶**.
   ◀ and ▶ turn it to face left or right, as if it were turned in 3D: it gets a little narrower, leans slightly, and a darker
@@ -504,12 +518,13 @@ Tap your pet: two big new buttons at the top of its menu. Both games play in whi
 - **🙈 Hide & Seek:** close your eyes (1… 2… 3…) and the pet hides behind something in the room: a standing decoration, the
   closet, the desk, the tree, the shed… A bit of it peeks out (ears, a wing, a tail). At night 🌙 you see two glowing eyes.
   Tap where it is hiding. A wrong guess just says "Not here!"; after 3 the right spot sparkles. Found: **+2 hearts** ❤️.
-  🔁 hides it again somewhere else. A room with almost nothing in it (a bare Studio) needs a few things first.
+  Then a box offers 🔁 Hide again (somewhere else) or ⬅ 🐾 Pet (since v1.85). A room with almost nothing in it (a bare Studio) needs a few things first.
 - **🎾 Fetch:** swipe to throw the toy (or tap a spot on the floor). The pet runs, picks it up and brings it back: **+1 heart**.
   Every 5th fetch in a row it shows off a trick.
 - **Fetch toys:** 🎾 Ball (free), 🦴 Squeaky Bone (6 coins), 🧶 Yarn Ball (8, leaves a wiggly string) and 🥏 Star Disc (10, flies farther).
   Pick one in the Fetch bar at the top.
-- **✖** (or Back) stops the game. The pet still earns hearts only, never coins.
+- **✖** (or Back) stops the game and opens the pet menu again (since v1.85). In Fetch, tap the pet for 🔁 Keep playing or ⬅ 🐾 Pet.
+  The pet still earns hearts only, never coins.
 - 4 new stickers on the Room & Style page: 🙈 Found You!, 🔎 Seek Champ (25 finds), 🎾 Good Catch, 🥏 Fetch Fan (50 fetches).
 - Save version 35 (`pet.toy`, `stats.seeks`, `stats.fetches`); every older backup still restores.
 

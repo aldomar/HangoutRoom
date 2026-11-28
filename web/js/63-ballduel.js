@@ -86,8 +86,8 @@ function bdEnd(){
   BF.state='done'; SFX.whistle(); $('#bdBar').classList.add('hidden'); bdScore();
   const pl=BDL.pl, s=[0,1].map(i=>BDL.res.filter(r=>r.by===i&&r.res).length);
   const pay=tgPay(pl,'ball');
-  modal('👯 Batting Duel',`<div class="tg-end">${tgScores(pl,s.map(n=>`⚾ ${n}`))}<p>${tgCheer(pl,s[0],s[1])}</p>${pay}</div>`,
-    [{text:'⚾ Just me',cls:'ghost',on:()=>{bdOff();renderBall();}},{text:'👯 Play again',cls:'pink',on:bdStart}]);
+  endBox({title:'👯 Batting Duel',body:`<div class="tg-end">${tgScores(pl,s.map(n=>`⚾ ${n}`))}<p>${tgCheer(pl,s[0],s[1])}</p>${pay}</div>`,
+    back:{to:'room',on:()=>show('room')},mid:[{text:'⚾ Just me',on:()=>{bdOff();renderBall();}}],go:{text:'🔁 Play again',on:bdStart}}); // section 76
   setTimeout(checkStickers,300);
 }
 // the level tabs during a duel: a new duel at that speed

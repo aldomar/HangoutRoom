@@ -362,6 +362,9 @@ body.easy .cl-pal .clb{width:76px;height:76px;font-size:38px}
 #modalTitle{font-size:22px;font-weight:900;margin-bottom:8px}
 #modalBody{color:var(--muted);margin-bottom:14px;font-weight:700}
 #modalBtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+/* 🧭 an end box (section 76) waits a moment before its buttons take a tap, and shows it by fading them in */
+#modalBtns.nav-wait .btn{pointer-events:none;opacity:.5}
+#modalBtns .btn.nav-back,#modalBtns .btn.nav-mid,#modalBtns .btn.nav-go{transition:opacity .25s;min-height:48px}
 .setlist{display:flex;flex-direction:column;gap:12px}
 .about{margin:16px 0 0;text-align:center;font-size:14px;opacity:.8}
 .inp{width:100%;font:inherit;font-size:18px;padding:10px 12px;border-radius:14px;border:3px solid var(--line);background:#1d1626;color:#fff;user-select:text;-webkit-user-select:text}

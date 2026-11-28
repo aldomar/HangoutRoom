@@ -1471,6 +1471,76 @@ The children got the app on 2026-11-26 and asked for things straight away. Two P
   - Only standing things face (not wall things, rugs or shelves). Animated drawings turn without the filter.
   - Save: an optional `yaw` on a room item (−1 or 1; missing = the front). Layouts keep it.
 
+#### 🧭 Getting around (navigation review 2026-11-27; plan proposed, owner liked every rule)
+The owner's report: after 🙈 Hide & Seek ends, it isn't clear where you are or how to get back. A review of the whole
+app's navigation (map, table and 17 issues in `docs/NAVIGATION.md`) found more places like it. The 8 navigation rules are now
+in `CLAUDE.md` ("Navigation rules"), so every new feature follows them. Four PRs, one rule group each, **no save changes**
+in any of them (nothing about getting around is saved). Issue numbers below are the ones in `docs/NAVIGATION.md`.
+
+**How we build it (the process for each PR):**
+1. Before coding: the owner answers that PR's questions below (one short list per PR, asked when its turn comes).
+2. Branch: each PR stacks on the one before while it is open (`feature/navigation` from `main`, then `feature/nav-back`,
+   `feature/nav-pause`, `feature/nav-who`), so each one can be merged in order.
+3. Build the shared helper first, then move every screen onto it one file at a time, so nothing is half-done.
+4. Extend the smoke test so the rule is **checked**, not just followed today (each PR lists its check). Run the full test.
+5. Docs: tick the issues in `docs/NAVIGATION.md` (and update its map and table when a way out changes), `README.md`,
+   this plan, `docs/STATUS.md`, `CLAUDE.md` (new helpers in the Layout list). Version bump + `GIFT_TIMELINE` + `sw.js`.
+6. The PR description says what to try on the iPad, including the "Needs checking on a device" items that PR touches.
+
+✅ **v1.85 🔚 One end box (rules 1 and 4; issues 1, 2, 3, 12; built on `feature/navigation`)**
+- New file `web/js/76-nav.js` (above `99-startup.js`, and in `sw.js`'s `FILES`): `endBox({title, body, back:{to, on}, mid[], go})`.
+  - Buttons always in the same places with icons: ⬅ + the place's icon on the left (gray), 🔁 Again or ▶ Next on the right (pink).
+    Extra choices (✨ Wear it home, ⚽ Just me, 🔁 Again next to ▶ Next) go in the middle.
+  - The buttons ignore taps for `NAV_WAIT` (about 0.5 s) after the box opens, and show it (a quick fade-in).
+  - `NAV_PLACES`: the icon and name of every place a Back can go to (her rooms from `ROOM_MAP`, 👗 Closet, 🐾 pet menu,
+    🎵 Songs, 🧩 Puzzles, 📚 Games, 🛤️ Paths, 🃏 Cards…), shared with v1.86.
+- Move every end box onto it: Soccer, Keeper, Tricks, Batting, Catch, Derby, both duels, Stage, Stage Together, Jam, Code Lab
+  (and 🎲, 🛠️), Brain Games (and 🎲, 👯 Memory), Marble Maze, I Spy, Runway, Walk. The words stay; the order, icons and colors change.
+- 🙈 Hide & Seek: after "Found you!" the end box opens (🔁 Hide again / ⬅🐾). ✖ (and "Put out a few more things first")
+  go back to the pet menu, not the bare room. 🎾 Fetch: tapping the pet, or every 5 fetches, opens the end box.
+  🦮 Walk: Back from the paths and the end box go back to the pet menu.
+- Smoke test: no game file makes an again / next / another / 🏠 button the old way, and each uses `endBox`; the box's layout;
+  a tap in the first 0.5 s does nothing; Hide & Seek, Fetch and Walk end on the pet menu.
+- Owner's answers (2026-11-27, "go for it" on the proposal): Fetch offers the box both on a pet tap and every 5 fetches (`PP_ASK`);
+  Walk goes back to the pet menu (`wkToPet`). I Spy's ⬅ stays in the room it was played in. Runway's "Wear it home" is ✨ (👗 is the Closet).
+  Code Lab and Brain Games: the last puzzle's "Yay!" became 🔁 Again (⬅ already goes to the list).
+
+**v1.86 ⬅ Back buttons that show where they go (rules 2 and 3; issues 5, 6, 7, 8, 14, 16)**
+- `backBtn(el, place)` (76): every top-bar Back shows ⬅ + the place's icon (+ its name when there is room), at least 48 px in every
+  band. Screens opened from a room show that room (⬅🌳 from Soccer, ⬅🪜 from the Stage). Screens with steps (Stage, Code Lab,
+  Brain Games, Runway, Walk, Jam, 🧸 Play) set it at each step, as they do now, through the same helper.
+- 🏠 only means her room. (The game boxes' 🏠 Done / 🏠 Home went in v1.85 through `endBox`; the smoke test checks it.) Check the rest of the app.
+- ✖ only means "close this box or game, stay here": every box's close button becomes ✖ in one place (gray, the last button),
+  except a real choice (Delete / Keep it).
+- The room arrow tabs get a door look of their own (their arrow + the room's picture), so they don't look like ⬅ Back.
+- About's Back reopens ⚙️ Settings.
+- Smoke test: every `.topbar` Back on every screen and step is at least 48×48 px and has a place icon; no button says 🏠 unless it opens her room.
+- Owner's questions: the Loft and the Basement both use 🪜 on the map. Give the Basement its own icon (e.g. 🧱 or 📦)?
+  The door look for the room tabs: try two looks and pick?
+
+**v1.87 ⏸️ Ask before leaving a round (rule 5; issue 4)**
+- `navLeave(ok, stay)` (76): Back during a round opens the pause box (from the Stage's ⏸️: a big ▶ Keep playing, a smaller ⬅ + place).
+  The round waits underneath (the main loop draws but nothing moves), as the Stage does today.
+- Used by Soccer (Kick, Keep, Tricks, Duel), Batting, Catch, Derby, Batting Duel, a Stage song or Together, a Jam, a Runway walk,
+  Memory for 2. Between rounds (no shot taken yet, or the end box showing) Back leaves straight away, so nothing feels slow.
+- The Android Back key goes through the same check.
+- Smoke test: Back mid-round opens the pause box; ▶ carries on with the same score; ⬅ leaves; Back between rounds leaves at once.
+- Owner's question: also ask in the open-ended makers (Music, Dance, Code Lab level maker) when something isn't saved? (They keep
+  their work today, so proposed: no.)
+
+**v1.88 👤 Whose room + small shortcuts (rules 6, 7, 8; issues 9, 10, 11, 13, 17)**
+- A round chip with her buddy's face and badge next to the coins on every top bar (drawn once, as the Runway does), so it is
+  always clear whose room is open. Tapping it says "This is <name>'s room" (Read to me) and does nothing else.
+- 🔒 Little mode: depends on the owner's answer (a PIN needed to turn Little mode on, or a second step after the 3 s hold).
+- A locked Little room on a shared device: depends on the owner's answer (e.g. a "👥 hold to switch" that only opens the rooms list).
+- Shortcuts for the deepest things, chosen by the owner (for example 🎁 Give a gift on the room bar, 👯 on the Backyard).
+- The grown-up setup's voice step says that Read to me helps children who can't read yet, in any band.
+- Smoke test: the chip is on every screen's top bar and matches the room; switching rooms changes it.
+- Owner's questions: Little mode's unlock (PIN or second step)? Switching out of a locked room? Which shortcuts, if any?
+  Keep the per-room picture lock (idea 13) parked?
+
+After v1.88: try the "Needs checking on a device" list in `docs/NAVIGATION.md` with the children and note what they did.
+
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
 

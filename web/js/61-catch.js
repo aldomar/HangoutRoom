@@ -151,8 +151,8 @@ function ctEnd(){
   const won=givePennantPrizes(); SFX.whistle(); ctScore(); if(won.length) setTimeout(SFX.buy,400);
   const line=n===CT_HITS?'PERFECT! Nothing got past you! 🌟':n>=3?'Great catching! ✨':n>=1?'Nice! Keep practicing 💪':`${L.name} hit them far! Try again? ${L.icon}`;
   const pr=won.map(nm=>`<div style="margin-top:10px">You won the <b>${nm}</b>! It's in your Backyard 🧤</div><svg viewBox="${DECOR[PENNANTS[lvl]].box}" style="height:90px">${DECOR[PENNANTS[lvl]].d()}</svg>`).join('');
-  modal(`🧤 ${n} / ${CT_HITS} catches!`,`<div style="text-align:center;font-size:18px">${line}${best&&n?`<br>New best on ${lvl[0].toUpperCase()+lvl.slice(1)}! 🏆`:''}${pr}</div>`,
-    [{text:'⬅ Backyard',cls:'ghost',on:()=>show('room')},{text:'Play again',cls:'pink',on:()=>ctNewGame()}]);
+  endBox({title:`🧤 ${n} / ${CT_HITS} catches!`,body:`<div style="text-align:center;font-size:18px">${line}${best&&n?`<br>New best on ${lvl[0].toUpperCase()+lvl.slice(1)}! 🏆`:''}${pr}</div>`,
+    back:{to:'room',on:()=>show('room')},go:{text:'🔁 Play again',on:()=>ctNewGame()}}); // section 76
   checkStickers();
 }
 

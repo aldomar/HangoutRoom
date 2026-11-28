@@ -14,6 +14,9 @@
    never rename them. The pet still never earns coins. Totals: p.stats.seeks / fetches.
    ========================================================= */
 const PP_FIND_HEARTS=2, PP_FETCH_HEARTS=1, PP_HINT=3, PP_MIN=2, PP_SCALE=0.85;
+// v1.85 (section 76): a find ends on the end box (🔁 Hide again / ⬅ 🐾 Pet); Fetch offers it every PP_ASK fetches and when
+// the pet is tapped. ✖, Android Back and "put out a few more things" all go back to the pet menu (ppQuit), where she started.
+const PP_ASK=5;
 const PP_FLOOR={x0:60,x1:940,y0:505,y1:688}; // where a thrown toy can land
 const PP_HAND={x:600,y:548}; // the toy waits by the buddy's right hand
 const PP_DROP={x:PET_SPOT.x+34,y:PET_SPOT.y-4}; // where the pet drops the toy
@@ -43,6 +46,14 @@ function ppStart(mode){
   $('#ppCard').classList.remove('hidden');
   if(mode==='hide') ppHideRound(); else {PP.phase='ready'; renderRoom(); ppCard();}
 }
+// Stop and go back to the pet menu (✖, ⬅ in the end box, Android Back).
+function ppQuit(){ppEnd(); if(cur==='room'&&petKind(P())) petMenu();}
+function ppAsk(){
+  const p=P(); if(!p||!PP.on) return; const name=esc(petName(p));
+  endBox({title:PP.mode==='hide'?`🙈 You found ${name}!`:`🎾 ${PP.streak?PP.streak+' fetches!':'Fetch'}`,
+    body:`<div style="text-align:center;font-size:20px">🐾 ${name} ❤️ ${petHearts(p)}</div>`,
+    back:{to:'pet',on:ppQuit},go:PP.mode==='hide'?{text:'🔁 Hide again',on:ppHideRound}:{text:'🔁 Keep playing',on:()=>{}}});
+}
 function ppEnd(quiet){
   const was=PP.on;
   PP.timers.forEach(clearTimeout); PP.timers=[]; cancelAnimationFrame(PP.raf); PP.raf=0;
@@ -58,7 +69,7 @@ function ppCard(){
   if(PP.mode==='hide'){
     const txt=PP.phase==='count'?`${name} is hiding… 🙈`:PP.found?`You found ${name}! ❤️ +${PP_FIND_HEARTS}`:`Where is ${name}?`;
     h=`<div class="spy-txt"><b>🙈 Hide &amp; Seek</b><span id="ppText">${txt}</span></div>`
-      +`<div class="spy-btns">${PP.found?`<button class="spy-b pp-again" id="ppAgain" aria-label="Hide again">🔁</button>`:''}${X}</div>`;
+      +`<div class="spy-btns">${X}</div>`; // 🔁 is in the end box now (v1.85)
   } else {
     const on=ppToy(p);
     h=`<div class="spy-txt"><b>🎾 Fetch</b><span id="ppText">${p.easy?'Swipe! 👉':'Swipe to throw!'}</span></div>`
@@ -66,8 +77,7 @@ function ppCard(){
         return `<button class="spy-b pp-toy${id===on?' on':''}${own?'':' locked'}" data-toy="${id}" aria-label="${T.name}"><svg viewBox="-22 -22 44 44">${T.d()}</svg>${own?'':`<small>🪙${T.price}</small>`}</button>`;}).join('')}${X}</div>`;
   }
   $('#ppCard').innerHTML=h;
-  $('#ppX').onclick=()=>{SFX.click();ppEnd();};
-  const a=$('#ppAgain'); if(a) a.onclick=()=>{SFX.click();ppHideRound();};
+  $('#ppX').onclick=()=>{SFX.click();ppQuit();};
   $$('#ppCard [data-toy]').forEach(b=>b.onclick=()=>ppPickToy(b.dataset.toy));
 }
 // renderRoom (section 9) calls this at the end while a game is on, so a redraw keeps the game as it was.
@@ -166,7 +176,7 @@ function ppHideRound(){
   [1,2,3].forEach(i=>ppSoon(()=>{const t=$('#ppCount'); if(t) t.textContent=['1…','1… 2…','1… 2… 3…'][i-1]; tone(300+i*80,0.08,'triangle',0.1);},i*600-400));
   ppSoon(()=>{
     if(!PP.on) return; const c=$('#ppCurtain'); if(c) c.remove();
-    if(!ppHide()){PP.phase=''; ppAway(false); ppCard(); say('Put out a few more things first! 🛋️'); ppSoon(()=>ppEnd(),1800); return;}
+    if(!ppHide()){PP.phase=''; ppAway(false); ppCard(); say('Put out a few more things first! 🛋️'); ppSoon(ppQuit,1800); return;}
     PP.phase='seek'; ppCard(); say('Ready or not! 🐾'); SFX.whoosh();
   },2100);
 }
@@ -207,7 +217,7 @@ function ppFound(){
   ppHearts(PP_FIND_HEARTS,c.x,c.y-90*PP_SCALE);
   SFX.cheer(); vibrate(12); ppCard();
   if(!learned) say(`Found you! 🎉`);
-  ppSoon(()=>{PP.spot=null; PP.phase='done'; renderRoom(); ppCard();},1500);
+  ppSoon(()=>{PP.spot=null; PP.phase='done'; renderRoom(); ppCard(); ppAsk();},1500);
   checkStickers();
 }
 function ppHearts(n,cx,cy){
@@ -234,6 +244,7 @@ function ppUp(e){
   if(!PP.on||PP.mode!=='fetch'||PP.phase!=='ready'||!PP.down) return;
   const a=PP.down, b=toSvg(e); PP.down=null;
   const dx=b.x-a.x, dy=b.y-a.y, len=Math.hypot(dx,dy), T=PET_TOYS[ppToy(P())];
+  if(len<25&&e.target.closest&&e.target.closest('#petG')){ppAsk();return;} // a tap on the pet: the end box (v1.85)
   if(len<25) ppThrow(b.x,b.y); // a tap: throw it to that spot
   else ppThrow(PP_HAND.x+dx*2.2*T.far,PP_HAND.y+dy*2.2*T.far);
 }
@@ -305,7 +316,7 @@ function ppFetched(){
   ppHearts(PP_FETCH_HEARTS,PP_DROP.x,PP_DROP.y-90);
   SFX.happy(); vibrate(10);
   if(!learned) say(PP.streak%5===0?`${PP.streak} fetches! Show-off! 🌟`:['Good catch! 🎾','Again, again! 🐾','Fetch master! ✨','Woo-hoo! 💜'][PP.streak%4]);
-  ppSoon(()=>{if(!PP.on) return; PP.phase='ready'; renderRoom();},trick==='wiggle'?800:1300);
+  ppSoon(()=>{if(!PP.on) return; PP.phase='ready'; renderRoom(); if(PP.streak%PP_ASK===0) ppAsk();},trick==='wiggle'?800:1300);
   checkStickers();
 }
 

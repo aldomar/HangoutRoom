@@ -155,9 +155,9 @@ function jamEnd(quiet){
   } else line=n?`Play ${JAM_MIN} notes or more for 🪙`:'Tap the circles to play along! 🎵';
   if(quiet){checkStickers();return;}
   SFX.cheer();
-  modal(`🎸 ${n?'Great jam!':'Jam time!'}`,`<div style="text-align:center;font-size:18px"><div style="font-size:30px;font-weight:900">🎶 ${n} ${n===1?'note':'notes'}</div>`
+  endBox({title:`🎸 ${n?'Great jam!':'Jam time!'}`,body:`<div style="text-align:center;font-size:18px"><div style="font-size:30px;font-weight:900">🎶 ${n} ${n===1?'note':'notes'}</div>`
     +`${esc(JAM.loop.icon+' '+JAM.loop.name)}<br><b>${line}</b></div>`,
-    [{text:'🎵 Loops',cls:'ghost',on:jamPickView},{text:'🎸 Again',cls:'pink',on:()=>jamStart(JAM.loop.id)}]);
+    back:{to:'loops',on:jamPickView},go:{text:'🔁 Again',on:()=>jamStart(JAM.loop.id)}}); // section 76
   checkStickers();
 }
 
