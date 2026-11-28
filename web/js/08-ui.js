@@ -5,13 +5,16 @@
 let lastX=innerWidth/2,lastY=innerHeight/2;
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2800);}
 function floatText(txt,x,y){const d=document.createElement('div');d.className='float';d.textContent=txt;d.style.left=(x==null?lastX:x)+'px';d.style.top=(y==null?lastY:y)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),1200);}
+// NAV_HOLD.on (v1.87, section 76): a game paused by its ⏸️ box. Any box opening or closing ends it, so no box can leave a game frozen.
+const NAV_HOLD={on:false};
 function modal(title,body,buttons){
+  NAV_HOLD.on=false;
   $('#modalTitle').innerHTML=title; $('#modalBody').innerHTML=body;
   const bc=$('#modalBtns'); bc.innerHTML=''; bc.classList.remove('nav-wait'); // an end box's short wait (section 76) is only for its own buttons
   buttons.forEach(b=>{const el=document.createElement('button');el.className='btn '+(b.cls||'');el.textContent=b.text;el.onclick=()=>{if(!b.keep)closeModal();if(b.on)b.on();};bc.appendChild(el);});
   $('#modal').classList.remove('hidden');
 }
-function closeModal(){$('#modal').classList.add('hidden');}
+function closeModal(){$('#modal').classList.add('hidden');NAV_HOLD.on=false;}
 function updateCoins(){const p=P();if(!p)return;$$('.coinsDisp').forEach(e=>e.textContent='🪙 '+p.coins);}
 function earn(n,label,x,y){const p=P();if(!p)return;p.coins+=n;save();updateCoins();SFX.coin();floatText(`+${n} 🪙${label?' '+label:''}`,x,y);}
 function tryBuy(key,price,name,done){

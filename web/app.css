@@ -1290,3 +1290,9 @@ body.locked [data-give]{display:none!important}
 .dress-th i{font-style:normal;font-size:34px;line-height:1}
 .dress-th span{font-size:15px;font-weight:800}
 .dress-th:active{border-color:var(--pink);background:var(--hi)}
+/* ⏸️ Back during a round (v1.87, section 76): a big pink ▶ Keep playing, a smaller ⬅ + place; the Runway walk stands still behind it */
+.nl-pic{font-size:64px;text-align:center;line-height:1.1}
+#modalBtns .nl-stay{flex:2 1 0;min-height:64px;font-size:22px}
+#modalBtns .nl-leave{flex:1 1 0}
+#scr-runway.nl-hold *{animation-play-state:paused!important}
+#stgLeave{min-height:48px}

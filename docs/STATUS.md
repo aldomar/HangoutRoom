@@ -24,6 +24,9 @@ _Last updated: 2026-11-27_
     to the pet menu (`ppQuit`, `ppAsk`, `PP_ASK` = 5, `wkToPet`). Owner said "go for it" on the proposed answers (2026-11-27).
   - ✅ v1.85 is PR #90.
   - ✅ v1.86 ⬅ Back shows the way: built (branch `feature/nav-back`, stacked on `feature/navigation`): PR #91.
+  - ✅ v1.87 ⏸️ Wait, keep playing?: built (branch `feature/nav-leave`, stacked on `feature/nav-back`): PR #92.
+    Owner's answer 2026-11-27: ask only when leaving loses something (rule 5 in `CLAUDE.md` says so now). `navBack`/`navMid`/`navLeave`
+    in 76, `NAV_HOLD` in 08; the Stage's ⏸️ gains ⬅ 🎵 Songs; the Runway walk waits. No save changes.
     `backBtn`/`navBacks` in 76; every top-bar Back is ⬅ + place icon, 48 px; About → Settings; ✖ Close / ✔ Done everywhere;
     🧱 Basement, 🛖 pet homes, 📐 Layouts, 🪞 Room & Style stickers. Owner's answers 2026-11-27: 🧱, no door look. No save changes.
 - ✅ v1.81 📱 Room arrows on phones: merged (PR #84).

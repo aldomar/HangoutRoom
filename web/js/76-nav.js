@@ -42,3 +42,49 @@ function endBox(o){
   clearTimeout(endBox.t); endBox.t=setTimeout(()=>c.classList.remove('nav-wait'),NAV_WAIT);
 }
 const endBoxOpen=()=>!$('#modal').classList.contains('hidden')&&!!$('#modalBtns .nav-back');
+
+/* ---------- ⏸️ Back during a round (v1.87, rule 5) ----------
+   Back asks only when leaving would lose something (owner, 2026-11-27): a match, a song, a show, a duel half played. Everywhere
+   else, and between rounds, it leaves at once. navBack(leave) is called by every Back that can leave a round (the top bars and
+   androidBack). Mid-round it opens the pause box: ⬅ + place on the left (small, gray), a big pink ▶ Keep playing on the right.
+   While it is open NAV_HOLD.on (08) is true and the main loop passes dt = 0 (99), so the ball, pitch or kick stays exactly where it was;
+   modal() and closeModal() turn it off (08), so no box can leave a game frozen. The Stage uses its own ⏸️ Paused (14), which
+   also stops the music; the Runway walk holds its CSS walk and its timers (52). A new game that can lose a round adds a line to navMid. */
+SPK_FIXED.navPaused='Paused. Tap play to keep playing, or the arrow to go back.'; // 🗣️ said when the pause box opens (section 65)
+function navMid(){
+  if(!P()) return null;
+  if(cur==='soccer'){
+    if(TGS.on) return TGS.state!=='done'&&(TGS.shots.length>0||TGS.state!=='aim');
+    if(socKeep()) return KP.state!=='done'&&KP.state!=='off'&&(KP.saves.length>0||!['ready','off'].includes(KP.state));
+    if(socTrick()) return TR.state!=='done'&&(TR.hit.some(Boolean)||TR.state==='fly'||TR.state==='result');
+    return SOC.state!=='done'&&(SOC.kicks.length>0||SOC.state!=='aim');
+  }
+  if(cur==='ball'){
+    if(bfDuel()) return BF.state!=='done'&&(BDL.res.length>0||!['ready','off'].includes(BF.state));
+    const m=bfMode();
+    if(m==='catch') return CT.state!=='done'&&CT.state!=='off'&&(CT.res.length>0||CT.state!=='ready');
+    if(m==='derby') return ['wind','pitch','fly','result'].includes(HR.state);
+    return BF.state!=='done'&&BF.state!=='off'&&(BF.res.length>0||BF.state!=='ready');
+  }
+  if(cur==='stage') return STG.state==='play'&&!STG.paused;
+  if(cur==='runway') return RW.walking;
+  if(cur==='brain') return BR.view==='duo'&&!TGM.done&&TGM.cards.some(c=>c.got>=0);
+  return false;
+}
+function navBack(leave){
+  if(!navMid()){leave();return;}
+  if(cur==='stage'){if(AC)AC.suspend();stPause();return;} // the Stage's own ⏸️ (its ⬅ is #stgLeave, v1.87)
+  navLeave(leave);
+}
+// The pause box. Tapping outside does nothing (like every box); the Android Back key presses its ⬅ (99).
+function navLeave(leave){
+  const bk=$('#scr-'+cur+' .topbar .nav-bk'), place=bk&&bk.dataset.place||'room';
+  if(cur==='runway') rwHold();
+  modal('⏸️ Paused',`<div class="nl-pic" aria-hidden="true">⏸️</div>`,[
+    {text:navBackText(place),cls:'ghost nav-back nl-leave',on:()=>{NAV_HOLD.on=false;if(cur==='runway')rwHeldDrop();leave();}},
+    {text:'▶ Keep playing',cls:'pink nav-go nl-stay',on:()=>{NAV_HOLD.on=false;if(cur==='runway')rwResume();}}]);
+  NAV_HOLD.on=true;
+  const c=$('#modalBtns'); c.classList.add('nav-wait'); clearTimeout(endBox.t); endBox.t=setTimeout(()=>c.classList.remove('nav-wait'),NAV_WAIT);
+  tell(SPK_FIXED.navPaused);
+}
+const navLeaveOpen=()=>!$('#modal').classList.contains('hidden')&&!!$('#modalBtns .nl-leave');

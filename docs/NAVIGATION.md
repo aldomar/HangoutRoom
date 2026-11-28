@@ -1,6 +1,6 @@
 # Navigation map and rules
 
-_Written 2026-11-27 (navigation review); updated for v1.85 (one end box, pet games back to the pet menu) and v1.86 (every Back shows where it goes). Keep it up to date when a screen, mode, game or way out is added._
+_Written 2026-11-27 (navigation review); updated for v1.85 (one end box, pet games back to the pet menu) v1.86 (every Back shows where it goes) and v1.87 (Back mid-round pauses and asks). Keep it up to date when a screen, mode, game or way out is added._
 
 This page answers "how does a child get into each part of the app, and how do they get back out?". It comes from reading
 the code (`show()` in `web/js/09-screens.js`, every Back handler and every end-of-game box), not from the screens alone.
@@ -103,14 +103,14 @@ is the only "go to my room" control.
 | Sticker Book | 📒 | ⬅ + room | ✔ | – | |
 | Fidget Shelf | Shelf | ⬅ + room | ✔ | – | 6 tabs, no end |
 | Closet | Closet | ⬅ + room | ✔ | – | |
-| Runway | Closet 👠 | ⬅ 🃏 Cards → ⬅ 👗 Closet; end box: ⬅ 👗 Closet / ✨ Wear it home / 🔁 Another card | ✔ (3 steps) | – | Back during the walk skips the show (no coins) |
+| Runway | Closet 👠 | ⬅ 🃏 Cards → ⬅ 👗 Closet; end box: ⬅ 👗 Closet / ✨ Wear it home / 🔁 Another card | ✔ (3 steps) | – | Back during the walk: ⏸️ asks; the walk waits (v1.87) |
 | Art Desk | Desk | ⬅ + room (asks to save), 🖼️ Gallery | ✔ | – | The only screen that warns before leaving |
 | Photocards | Corkboard | ⬅ + room, 📒 Binder | ✔ | – | |
-| Soccer | Backyard goal | ⬅ 🌳 Backyard; end box: ⬅ 🌳 Backyard / 🔁 Play again | ✔ | – | Back mid-match drops it without asking |
-| Ball Field | Bat rack | ⬅ 🌳 Backyard; end box: ⬅ 🌳 Backyard / 🔁 Play again | ✔ | – | |
+| Soccer | Backyard goal | ⬅ 🌳 Backyard; end box: ⬅ 🌳 Backyard / 🔁 Play again | ✔ | – | Back mid-match: ⏸️ ⬅ 🌳 Backyard / ▶ Keep playing (v1.87) |
+| Ball Field | Bat rack | ⬅ 🌳 Backyard; end box: ⬅ 🌳 Backyard / 🔁 Play again | ✔ | – | Back mid-game: ⏸️ asks (v1.87) |
 | Tricks, Derby | Their mode tab | End box: ⬅ 🌳 Backyard / 🔁 Again / ▶ Next | top bar ✔ | – | |
 | Duels (Soccer, Ball) | 👯 tab → who box | End box: ⬅ 🌳 Backyard / ⚽⚾ Just me / 🔁 Play again | top bar ✔ | – | Leaving the screen ends the duel |
-| Stage | Loft marquee, 🎸 in the Music Maker | ⬅ 🪜 Loft → ⬅ 🎵 Songs → ⬅ 🎵 Loops (the picture changes with the step); end box: ⬅ 🎵 Songs / 🔁 Play again | ✔ | – | Pauses when the app is left; Back mid-song drops it |
+| Stage | Loft marquee, 🎸 in the Music Maker | ⬅ 🪜 Loft → ⬅ 🎵 Songs → ⬅ 🎵 Loops (the picture changes with the step); end box: ⬅ 🎵 Songs / 🔁 Play again | ✔ | – | Pauses when the app is left, and on Back mid-song (⏸️ ▶ Keep going / ⬅ 🎵 Songs, v1.87) |
 | Jam | Stage 🎸, Music 🎸 | ⏹️; Back → loops → songs or Music; end box: ⬅ 🎵 Loops / 🔁 Again | ✔ | – | |
 | Dance Maker | Music 💃, Stage 💃 | ⬅ 🎹 Music / ⬅ 🎤 Stage | ✔ | – | No end |
 | Music Maker | Loft keyboard | ⬅ 🪜 Loft | ✔ | – | The loop is kept (`music.cur`) |
@@ -135,7 +135,7 @@ Severity: **High** = a child gets stuck or can't tell the choices apart; **Med**
 | 1 | 🙈 Hide & Seek, 🎾 Fetch | After a find the room looks normal but ignores every tap; the top bar and arrows stay hidden; the only ways out are 🔁 / ✖ at the top; ✖ lands in the room, not the pet menu. Fetch never ends. Too few things = it quits by itself after 1.8 s with only text. | 3–8, pre-readers | End each round with the shared end box (🔁 Again / ⬅🐾 pet menu); ✖ reopens the pet menu; Fetch offers the box on a pet tap or every 5 fetches | S | High | ✅ v1.85 |
 | 2 | Every end box | "Play again" has no icon (Soccer, Keeper, Batting, Catch, Stage, Stage Together). Button order flips (Walk, I Spy, Runway put "again" first). The way-out button has 9 names. | Pre-readers | One shared end box: 🔁 right and pink, ⬅ + place icon left | S–M | High | ✅ v1.85 |
 | 3 | End boxes after quick tapping (Batting, Stage, Number Pop, Catch) | The box's buttons work at once, so the next quick tap can press "⬅ Backyard" | 3–5 | Buttons wait about 0.5 s | S | Med | ✅ v1.85 |
-| 4 | Back mid-round: Soccer, Keeper, Batting, Catch, Derby, a Stage song, a Runway walk, a Jam | The round is dropped without asking (only the Art Desk asks) | All, most of all toddlers | Back during a round pauses and asks with icons: big ▶ keep playing, small ⬅ leave | M | Med | v1.87 |
+| 4 | Back mid-round: Soccer, Keeper, Batting, Catch, Derby, a Stage song, a Runway walk, a Jam | The round is dropped without asking (only the Art Desk asks) | All, most of all toddlers | Back during a round pauses and asks with icons: big ▶ keep playing, small ⬅ leave; only when leaving loses something (owner). A Jam keeps its coins, so it leaves at once | M | Med | ✅ v1.87 |
 | 5 | Every top-bar Back (`.btn.small`) | About 33 px tall in normal rooms, under the 48 px rule (52 px in Easy) | 5–8 in normal rooms | At least 48 px everywhere | S | Med | ✅ v1.86 |
 | 6 | "⬅ Room" labels | From Backyard and Loft games it says Room but lands in the Backyard or Loft; Garden says Yard; the Ball Field box says Backyard | Readers misled; pre-readers get no picture | Back shows where it goes: ⬅🌳, ⬅🪜, ⬅👗, ⬅🐾 | S | Med | ✅ v1.86 |
 | 7 | 🏠 | Means 4 things: her room (map), the room you came from (Walk), the Closet (Runway), stay here (I Spy) | Pre-readers | 🏠 only ever means her room; ✔ for "done, stay here" (pet homes are 🛖, Layouts 📐, the Room & Style stickers 🪞) | S | Med | ✅ v1.86 |

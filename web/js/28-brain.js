@@ -41,7 +41,7 @@ function brOpen(g){
   const list=BRAIN_GAMES[g].puzzles[l], first=list.findIndex((z,i)=>!p.brain.solved.includes(brId(g,l,i)));
   brPuzzle(g,l,first<0?0:first); // the first puzzle not solved yet
 }
-$('#brBack').onclick=()=>{SFX.click();brBackKey();};
+$('#brBack').onclick=()=>{SFX.click();navBack(brBackKey);}; // 👯 Memory half played: ⏸️ asks first (76, v1.87)
 function brBackKey(){if(BR.view!=='menu')brMenu();else show('room');} // Android Back: a puzzle -> the menu -> room
 
 /* ---------- the puzzle screen: level tabs, 8 puzzle buttons, the question and the board ---------- */

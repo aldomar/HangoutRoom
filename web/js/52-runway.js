@@ -35,7 +35,7 @@ const RW_CARDS=[
 ];
 const RW_CHEERS=['💖💖💖','💖🌟💖','🌟🌟🌟','🤩🤩🤩'];
 const RW_LINES=[['So cute!','Love it!','Adorable!'],['Love it!','Looking good!','So fun!'],['So stylish!','Wow, wow!','Great look!'],['Superstar!','Totally on theme!','Amazing!']];
-const RW={view:'cards',card:null,look:null,cat:'top',deck:[],at:0,walking:false,timers:[],img:'',imgKey:''};
+const RW={view:'cards',card:null,look:null,cat:'top',deck:[],at:0,walking:false,timers:[],due:[],held:null,img:'',imgKey:''}; // due/held: the walk's timers, for ⏸️ (v1.87)
 const rwCardOf=id=>RW_CARDS.find(c=>c.id===id);
 
 /* ---------- matching ---------- */
@@ -127,7 +127,16 @@ function rwArt(look){
   RW.img='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg); return RW.img;
 }
 const rwMs=ms=>window.RW_TEST_FAST?20:ms;
-function rwLater(fn,ms){RW.timers.push(setTimeout(fn,rwMs(ms)));}
+function rwLater(fn,ms){rwAt(fn,rwMs(ms));}
+function rwAt(fn,ms){const d={fn,at:Date.now()+ms};d.id=setTimeout(()=>{RW.due=RW.due.filter(x=>x!==d);fn();},ms);RW.due.push(d);RW.timers.push(d.id);}
+// ⏸️ Back during the walk (v1.87, section 76): the walk, its cheer timers and its beat wait until ▶ Keep playing.
+function rwHold(){
+  if(!RW.walking) return; const now=Date.now();
+  RW.held=RW.due.map(d=>({fn:d.fn,left:Math.max(0,d.at-now)})); RW.timers.forEach(clearTimeout); RW.timers=[]; RW.due=[];
+  $('#scr-runway').classList.add('nl-hold'); if(AC&&AC.state==='running') AC.suspend();
+}
+function rwHeldDrop(){RW.held=null;$('#scr-runway').classList.remove('nl-hold');if(AC&&!document.hidden)AC.resume();}
+function rwResume(){const h=RW.held||[]; rwHeldDrop(); if(cur==='runway'&&RW.walking) h.forEach(d=>rwAt(d.fn,d.left));}
 function rwWalk(){
   const p=P(); if(!p||RW.walking) return;
   RW.walking=true; RW.view='walk'; $('#scr-runway').dataset.view='walk'; backBtn('#rwBack','cards');
@@ -179,7 +188,7 @@ function rwWearHome(){
   toast(back?`👗 Wearing it! The 👜 borrowed things went back to the rack.`:'👗 Wearing it!');
 }
 function rwStop(){
-  RW.timers.forEach(clearTimeout); RW.timers=[];
+  RW.timers.forEach(clearTimeout); RW.timers=[]; RW.due=[]; if(RW.held) rwHeldDrop();
   if(RW.walking){RW.walking=false;const w=$('#rwWalker');if(w)w.classList.remove('go');}
 }
 function rwBackKey(){
@@ -187,7 +196,7 @@ function rwBackKey(){
   if(RW.view==='dress'){RW.view='cards';renderRunway();return;}
   show('closet');
 }
-$('#rwBack').onclick=()=>{SFX.click();rwBackKey();};
+$('#rwBack').onclick=()=>{SFX.click();navBack(rwBackKey);}; // mid-walk ⏸️ asks first (76, v1.87)
 $('#runwayBtn').onclick=()=>{SFX.click();rwOpen();};
 
 /* ---------- stickers (🪞 Room & Style) ---------- */
