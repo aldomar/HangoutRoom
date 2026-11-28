@@ -1109,7 +1109,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('150 stickers on 8 pages (3 for Pack 6 since v1.82, 1 for 🪜 the Basement since v1.79, 2 for 🛠️ the level maker since v1.78, 1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===150&&new Set(STICKERS.map(s=>s.id)).size===150&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('152 stickers on 8 pages (2 for Word Search since v1.90, 3 for Pack 6 since v1.82, 1 for 🪜 the Basement since v1.79, 2 for 🛠️ the level maker since v1.78, 1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===152&&new Set(STICKERS.map(s=>s.id)).size===152&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1701,9 +1701,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`closeModal();stkPaused=true;P().easy=false;applyEasy();P().coins=100;save();show('room');goRoom(3)`); await sleep(250);
   check('the Backyard chalkboard is now a hotspot', await ev(`!!document.querySelector('#roomSvg [data-hot=brain][data-piece=easel]')`));
   await ev(`handleHot('brain')`); await sleep(300); await shot('H01-brain-menu');
-  check('it opens the Brain Games menu with 7 games (2 more since v1.33, 2 more since v1.34), 0 / 24 each', await ev(`cur==='brain'&&BR.view==='menu'&&[...document.querySelectorAll('#brMenu [data-game]')].map(b=>b.dataset.game).join()==='snack,memory,pop,train,word,bake,facts'&&[...document.querySelectorAll('#brMenu .br-n')].every(n=>n.textContent.includes('0 / 24'))`));
+  check('it opens the Brain Games menu with 8 games (2 more since v1.33, 2 more since v1.34, 🔎 since v1.90), 0 / 24 each', await ev(`cur==='brain'&&BR.view==='menu'&&[...document.querySelectorAll('#brMenu [data-game]')].map(b=>b.dataset.game).join()==='snack,memory,pop,train,word,bake,facts,search'&&[...document.querySelectorAll('#brMenu .br-n')].every(n=>n.textContent.includes('0 / 24'))`));
   // the puzzle recipes
-  check('every game has 8 puzzles on each level, with different ids', await ev(`Object.keys(BRAIN_GAMES).every(g=>BRAIN_LVLS.every(l=>BRAIN_GAMES[g].puzzles[l].length===8))&&new Set(Object.keys(BRAIN_GAMES).flatMap(g=>BRAIN_LVLS.flatMap(l=>BRAIN_GAMES[g].puzzles[l].map((z,i)=>brId(g,l,i))))).size===168`));
+  check('every game has 8 puzzles on each level, with different ids', await ev(`Object.keys(BRAIN_GAMES).every(g=>BRAIN_LVLS.every(l=>BRAIN_GAMES[g].puzzles[l].length===8))&&new Set(Object.keys(BRAIN_GAMES).flatMap(g=>BRAIN_LVLS.flatMap(l=>BRAIN_GAMES[g].puzzles[l].map((z,i)=>brId(g,l,i))))).size===192`));
   check('Snack Stand: every answer is one of the choices; choices are different whole numbers (3 on Easy, 4 after)', await ev(`BRAIN_LVLS.every(l=>BRAIN_GAMES.snack.puzzles[l].every((z,i)=>{const o=BRAIN_GAMES.snack.options(z,l,i),a=BRAIN_GAMES.snack.answer(z,l);return o.includes(a)&&new Set(o).size===o.length&&o.every(n=>Number.isInteger(n)&&n>=1)&&o.length===(l==='easy'?3:4);}))`));
   check('Snack Stand: Easy counts up to 10; the answer is not always in the same place', await ev(`BRAIN_GAMES.snack.puzzles.easy.every(z=>z.n>=1&&z.n<=10)&&BRAIN_LVLS.every(l=>new Set(BRAIN_GAMES.snack.puzzles[l].map((z,i)=>BRAIN_GAMES.snack.options(z,l,i).indexOf(BRAIN_GAMES.snack.answer(z,l)))).size>=2)`));
   check('Snack Stand: the Hard answers are right (boxes, change, prices)', await ev(`BRAIN_GAMES.snack.puzzles.hard.map(z=>z.a).join()==='18,7,28,14,48,19,63,6'`));
@@ -2332,7 +2332,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   console.log('Fraction Bakery + Fact Cards (v1.34)');
   await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
   await ev(`closeModal();P().easy=false;applyEasy();show('brain')`); await sleep(200);
-  check('the menu shows 7 games and a 📇 My Fact Cards button (0 / 24)', await ev(`[...document.querySelectorAll('#brMenu [data-game]')].map(b=>b.dataset.game).join()==='snack,memory,pop,train,word,bake,facts'&&document.querySelector('#factsBtn').textContent.includes('0 / 24')`));
+  check('the menu shows 8 games and a 📇 My Fact Cards button (0 / 24)', await ev(`[...document.querySelectorAll('#brMenu [data-game]')].map(b=>b.dataset.game).join()==='snack,memory,pop,train,word,bake,facts,search'&&document.querySelector('#factsBtn').textContent.includes('0 / 24')`));
   check('Fraction Bakery Easy: the answer is a choice, 3 different choices, each treat has the right number of pieces, and the uneven ones really are uneven',
     await ev(`FB_PUZ.easy.every(z=>{const o=fbOpts(z);return o.length===3&&new Set(o).size===3&&o.includes(String(z.n))&&o.every(x=>(fbTreat(z.k,parseInt(x,10),!x.endsWith('u')).match(/data-sl=/g)||[]).length===parseInt(x,10));})
       &&[2,3,4].every(n=>{const a=FB_UNEVEN.round[n],s=a.map((x,i)=>(i+1<n?a[i+1]:a[0]+360)-x),c=[0,...FB_UNEVEN.bar[n],1],w=c.slice(1).map((x,i)=>x-c[i]);
@@ -3109,7 +3109,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`(()=>{closeModal();stkPaused=true;const p=P();p.easy=false;applyEasy();p.coins=100;p.free={day:'',n:0};p.potd={day:''};p.stats.free=0;p.stats.potd=0;
     window._fpBest=JSON.stringify([p.brain.solved,p.maze.solved,p.code.solved]);window.FP_TEST_DAY='2026-11-19';save();})()`);
   // the makers: many seeds each, every puzzle checked by the same rules as the fixed ones
-  check('8 makers: 6 Brain Games (Word Builder from v1.45, not Fact Cards), the maze and the Code Lab', await ev(`Object.keys(FP_MAKERS).sort().join()==='bake,code,maze,memory,pop,snack,train,word'&&FP_BRAIN.length===6&&FP_BRAIN.includes('word')&&!FP_BRAIN.includes('facts')`));
+  check('9 makers: 7 Brain Games (Word Builder from v1.45, Word Search from v1.90, not Fact Cards), the maze and the Code Lab', await ev(`Object.keys(FP_MAKERS).sort().join()==='bake,code,maze,memory,pop,search,snack,train,word'&&FP_BRAIN.length===7&&FP_BRAIN.includes('word')&&!FP_BRAIN.includes('facts')`));
   const fpAll=await ev(`(()=>{const bad=[];
     FP_BRAIN.forEach(g=>BRAIN_LVLS.forEach(l=>{for(let i=0;i<150;i++){const z=fpMake(g,l,'t'+i);if(!z||!FP_MAKERS[g].ok(z.pz,l))bad.push(g+l+i);}}));
     for(let i=0;i<150;i++){const z=fpMake('maze','easy','t'+i);if(!z)bad.push('maze'+i);}
@@ -3128,8 +3128,8 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('Code Lab: each made board\'s answer works within its blocks; Medium can\'t be done with arrows only', await ev(`Array.from({length:80},(_,i)=>fpMake('code','medium','c'+i).pz).every(z=>codeSim(z,[...z.sol],null).end==='win'&&z.sol.length<=z.max&&fpCodeWalk(z.map).length>z.max&&/[234]/.test(z.sol))
     &&Array.from({length:80},(_,i)=>fpMake('code','easy','c'+i).pz).every(z=>codeSim(z,[...z.sol],null).end==='win'&&z.max<=12&&!/[234]/.test(z.sol))`));
   // 📅 Puzzle of the Day
-  await ev(`window._fpDays=Array.from({length:7},(_,k)=>new Date(Date.UTC(2026,10,19+k)).toISOString().slice(0,10))`);
-  check('the daily game turns through the 6 Brain Games, one a day', await ev(`new Set(_fpDays.slice(0,6).map(potdGame)).size===6&&_fpDays.slice(0,6).every(d=>POTD_GAMES.includes(potdGame(d)))&&potdGame(_fpDays[6])===potdGame(_fpDays[0])`));
+  await ev(`window._fpDays=Array.from({length:8},(_,k)=>new Date(Date.UTC(2026,10,19+k)).toISOString().slice(0,10))`);
+  check('the daily game turns through the 7 Brain Games, one a day', await ev(`new Set(_fpDays.slice(0,7).map(potdGame)).size===7&&_fpDays.slice(0,7).every(d=>POTD_GAMES.includes(potdGame(d)))&&potdGame(_fpDays[7])===potdGame(_fpDays[0])`));
   await ev(`window.FP_TEST_DAY=_fpDays.find(d=>potdGame(d)==='train');P().brain.level.train='medium';show('brain')`); await sleep(200);
   check('the 📅 card is at the top of the Brain Games menu, next to 👯, and says what today\'s game is', await ev(`(()=>{const c=document.querySelector('#brMenu [data-potd]'),d=document.querySelector('#brMenu [data-duo=memory]'),g=document.querySelector('#brMenu .br-games');
     return !!c&&c.parentElement===d.parentElement&&c.getBoundingClientRect().bottom<=g.getBoundingClientRect().top&&c.getBoundingClientRect().bottom<=innerHeight&&c.textContent.includes('Pattern Train')&&c.textContent.includes('+5')&&c.getBoundingClientRect().height>=48;})()`));
@@ -3149,6 +3149,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     else if(g==='pop'){const done=i=>document.querySelector('.nbub[data-b="'+i+'"]').classList.contains('popped');
       if(l==='medium'){z.b.forEach((n,i)=>{if(done(i))return;const j=z.b.findIndex((m,jj)=>jj!==i&&!done(jj)&&m+n===z.t);if(j>=0){popTap(i);popTap(j);}});}
       else z.b.forEach((n,i)=>{if(l==='easy'?n===z.t:z.t%n===0)popTap(i);});}
+    else if(g==='search') wsSolveAll();
     else if(g==='word'){q('#wbHide:not(.hidden)');[...z.w].forEach(c=>q('#brBoard .wb-tile[data-c="'+c+'"]:not(.used)'));}
     else if(g==='bake'){if(l==='easy')q('[data-o="'+z.n+'"]');else if(l==='medium'){FB.on=FB.on.map((x,i)=>i<z.a*z.n/z.b);fbCheck(z);}else q('#brBoard [data-n="'+z.a+'"]');}
     return BR.won;}`);
@@ -3168,7 +3169,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await shot('U04-daily-easy');
   await ev(`P().easy=false;applyEasy();closeModal()`);
   // 🎲 Free Play in the Brain Games
-  check('🎲 sits after the puzzle numbers in the 6 games, not in Fact Cards', await ev(`FP_BRAIN.every(g=>(brOpen(g),!!document.querySelector('#brDots [data-dice]')&&document.querySelector('#brDots').lastElementChild.matches('[data-dice]')))&&!(brOpen('facts'),document.querySelector('#brDots [data-dice]'))`));
+  check('🎲 sits after the puzzle numbers in the 7 games, not in Fact Cards', await ev(`FP_BRAIN.every(g=>(brOpen(g),!!document.querySelector('#brDots [data-dice]')&&document.querySelector('#brDots').lastElementChild.matches('[data-dice]')))&&!(brOpen('facts'),document.querySelector('#brDots [data-dice]'))`));
   await ev(`P().brain.level.pop='medium';brOpen('pop');document.querySelector('#brDots [data-dice]').click()`); await sleep(150);
   check('🎲 opens a made-up puzzle: the dice lit, no number lit', await ev(`!!BR.free&&!BR.free.daily&&BR.game==='pop'&&document.querySelector('#brDots [data-dice]').classList.contains('on')&&!document.querySelector('#brDots [data-pz].on')`));
   await shot('U05-free-pop');
@@ -3180,14 +3181,14 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('🎲 Another one! makes a new one', await ev(`!!BR.free&&BR.free.key!==${JSON.stringify(fpKey)}&&!BR.won`));
   await ev(`document.querySelector('#brTabs [data-lvl=hard]').click()`); await sleep(150);
   check('a level tab in Free Play makes a new one at that level', await ev(`!!BR.free&&!BR.free.daily&&BR.lvl==='hard'&&BR.free.lvl==='hard'`));
-  // every game and level, through the screen (18 puzzles: +2 each in FP_THINK, Memory Match +1 within the 10 a day)
+  // every game and level, through the screen (21 puzzles: +2 each in FP_THINK, Memory Match +1 within the 10 a day)
   await ev(`P().free={day:FP_TEST_DAY,n:0};P().stats.free=0`); const fpc2=await ev('P().coins');
   const fpWon=await ev(`(()=>{const out=[];FP_BRAIN.forEach(g=>BRAIN_LVLS.forEach(l=>{fpBrain(g,l);if(!_fpSolve())out.push(g+':'+l);}));return out;})()`);
   check('a made-up puzzle of every game and level can be solved on screen', fpWon.length===0, fpWon);
   await sleep(1100);
   const fpWant=await ev(`(()=>{let c=0,n=0;FP_BRAIN.forEach(g=>BRAIN_LVLS.forEach(l=>{if(FP_THINK.includes(g)&&bandThink(P(),l))c+=FREE_THINK;else if(n<FREE_DAILY){n++;c++;}}));return [c,n];})()`);
   check('Memory Match is the only Brain Game 🎲 on the 10-a-day cap', await ev(`FP_BRAIN.filter(g=>!FP_THINK.includes(g)).join()==='memory'&&FREE_THINK===2`));
-  check('18 solved: +2 each in the thinking games at her band (Normal: Medium and Hard), +1 each for the rest, all 18 count for stickers', await ev(`P().coins===${fpc2}+${fpWant[0]}&&P().free.n===${fpWant[1]}&&P().stats.free===18`), await ev(`[P().coins-${fpc2},P().free.n,P().stats.free,${JSON.stringify(fpWant)}]`));
+  check('21 solved: +2 each in the thinking games at her band (Normal: Medium and Hard), +1 each for the rest, all 21 count for stickers', await ev(`P().coins===${fpc2}+${fpWant[0]}&&P().free.n===${fpWant[1]}&&P().stats.free===21`), await ev(`[P().coins-${fpc2},P().free.n,P().stats.free,${JSON.stringify(fpWant)}]`));
   await ev(`closeModal();P().free={day:FP_TEST_DAY,n:FREE_DAILY}`); const fpCap=await ev('P().coins');
   await ev(`fpBrain('train','medium');_fpSolve()`); await sleep(1100);
   check('with the 10 a day used up, a Medium 🎲 Pattern Train still pays +2', await ev(`P().coins===${fpCap}+2&&/[+]2/.test(document.querySelector('#modalBody').textContent)`));
@@ -3279,7 +3280,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('every picture belongs to a word in the bank and draws', await ev(`Object.entries(WB_PICS).every(([w,pic])=>BRAIN_LVLS.some(l=>WB_BANK[l].includes(w))&&(/^[db]:/.test(pic)?memPic(pic).length>60:wbPic(pic).length>0))`),
       await ev(`Object.entries(WB_PICS).filter(([w,pic])=>!BRAIN_LVLS.some(l=>WB_BANK[l].includes(w))||(/^[db]:/.test(pic)&&memPic(pic).length<=60)).map(e=>e[0]).join()`));
     check('a made-up word: extra letters are never in the word (so only one way to spell it)', await ev(`BRAIN_LVLS.every(l=>Array.from({length:120},(_,i)=>fpMake('word',l,'w'+i).pz).every(z=>[...z.x].every(c=>!z.w.includes(c))&&z.x.length>=2))`));
-    check('Word Builder has 🎲 and is in the 📅 daily turn (6 games)', await ev(`FP_BRAIN.includes('word')&&POTD_GAMES.length===6&&POTD_GAMES.includes('word')`));
+    check('Word Builder has 🎲 and is in the 📅 daily turn (7 games since v1.90)', await ev(`FP_BRAIN.includes('word')&&POTD_GAMES.length===7&&POTD_GAMES.includes('word')`));
     check('the 8 fixed Word Builder puzzles are unchanged and still play the old way', await ev(`BRAIN_LVLS.every(l=>WB_PUZ[l].length===8)&&(brPuzzle('word','medium',0),!document.querySelector('#wbLook')&&!!document.querySelector('#brQ .wb-slot i'))`));
     const _wbBest=await ev(`JSON.stringify(P().brain.solved)`);
     // Easy = trace
@@ -3331,7 +3332,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('in Easy mode the question is just 👀, then 🔤', await ev(`document.querySelector('#wbAsk').textContent==='👀'&&(document.querySelector('#wbHide').click(),document.querySelector('#wbAsk').textContent==='🔤')`));
     await ev(`P().easy=false`);
     // 📅 daily Word Builder
-    await ev(`window.FP_TEST_DAY=Array.from({length:7},(_,k)=>new Date(Date.UTC(2027,0,1+k)).toISOString().slice(0,10)).find(d=>potdGame(d)==='word');P().brain.level.word='medium';brMenu()`); await sleep(150);
+    await ev(`window.FP_TEST_DAY=Array.from({length:8},(_,k)=>new Date(Date.UTC(2027,0,1+k)).toISOString().slice(0,10)).find(d=>potdGame(d)==='word');P().brain.level.word='medium';brMenu()`); await sleep(150);
     check('📅 a Word Builder day: the card says Word Builder and opens a bank word', await ev(`document.querySelector('#brMenu [data-potd]').textContent.includes('Word Builder')&&(document.querySelector('#brMenu [data-potd]').click(),BR.game==='word'&&BR.free&&BR.free.daily&&BR.free.pz.bank===1&&!!document.querySelector('#wbLook'))`));
     const wc0=await ev('P().coins'), wd0=await ev('P().stats.potd');
     check('…and solving it pays the daily +5', await ev('_fpSolve()'));
@@ -3339,6 +3340,60 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('…+5 coins, once', await ev(`P().coins===${wc0}+5&&P().stats.potd===${wd0}+1`));
     await ev(`closeModal();window.FP_TEST_DAY=''`);
     check('v1.45 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.45')`));
+  }
+
+  console.log('Word Search + the bigger word bank (v1.90)');
+  {
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`closeModal();stkPaused=true;P().easy=false;show('brain')`); await sleep(250);
+    // the bank: the owner's second list, with the agreed changes
+    check('the second list is in (pal, fuzz, grandma, sunflower, playground, intelligent, shriek)', await ev(`['PAL','FUZZ','THANK','ZEBRA'].every(w=>WB_BANK.easy.includes(w))&&['GRANDMA','PURPLE','SUNFLOWER','FRIGHT','SOCCER'].every(w=>WB_BANK.medium.includes(w))&&['PLAYGROUND','INTELLIGENT','PRONOUNCE','SHRIEK','SUBTLE','SPHERE','OUGHT'].every(w=>WB_BANK.hard.includes(w))`));
+    check('the words left out of it are not there (too short, too long, or not right for the app)', await ev(`!['IF','OX','US','DAM','GRIEF','ORPHAN','DEBT','THIEF','SWORD','FIGHT','FOUGHT','IRRESPONSIBLE','NEIGHBORHOOD','CONSCIENTIOUS','INTELLIGENCE','PRONUNCIATION','ORGANIZATION','CIVILIZATION','CONSTITUTION'].some(w=>BRAIN_LVLS.some(l=>WB_BANK[l].includes(w)))`));
+    check('no word is in two levels', await ev(`(()=>{const a=BRAIN_LVLS.flatMap(l=>WB_BANK[l]);return new Set(a).size===a.length;})()`));
+    check('a word with a sound-alike never gets the extra letters that spell it (RIGHT never offers W or E)', await ev(`BRAIN_LVLS.every(l=>Array.from({length:300},(_,i)=>fpMake('word',l,'al'+i).pz).every(z=>[...z.x].every(c=>!(WB_ALIKE[z.w]||'').includes(c))))&&Object.keys(WB_ALIKE).every(w=>WB_ALIKE[WB_ALIKE[w]]===w||!BRAIN_LVLS.some(l=>WB_BANK[l].includes(WB_ALIKE[w])))&&!FP_MAKERS.word.ok({bank:1,w:'RIGHT',x:'WAB',pic:''},'medium')`));
+    await ev(`brPuzzle('word','easy',0,{pz:{bank:1,w:'SIX',x:'AM',pic:'6'},key:'wnum',idx:0,lvl:'easy'})`); await sleep(150);
+    check('a number picture is dark on its pale card (it was near-white)', await ev(`getComputedStyle(document.querySelector('#brQ .wb-emo')).color==='rgb(43, 34, 53)'`));
+    await shot('V09-word-number');
+    // 🔎 Word Search
+    await ev(`brMenu()`); await sleep(100);
+    check('🔎 Word Search is on the Brain Games menu, 0 / 24', await ev(`!!document.querySelector('#brMenu [data-game="search"]')&&document.querySelector('#brMenu [data-game="search"] .br-n').textContent.includes('0 / 24')`));
+    check('every fixed grid builds, and holds each word exactly once, in a way its level allows', await ev(`BRAIN_LVLS.every(l=>WS_PUZ[l].length===8&&WS_PUZ[l].every((pz,i)=>{const g=wsBuild(wsWords(pz),l,brId('search',l,i));return g&&wsCheck(g,wsWords(pz),l);}))`),
+      await ev(`BRAIN_LVLS.flatMap(l=>WS_PUZ[l].map((pz,i)=>wsBuild(wsWords(pz),l,brId('search',l,i))?'':l+i)).filter(Boolean).join()`));
+    check('a grid is the same every time (built from its id)', await ev(`JSON.stringify(wsBuild(wsWords(WS_PUZ.hard[2]),'hard','search:h3'))===JSON.stringify(wsBuild(wsWords(WS_PUZ.hard[2]),'hard','search:h3'))`));
+    check('Easy goes only across and down, and its filler letters are never in a word', await ev(`WS_PUZ.easy.every((pz,i)=>{const w=wsWords(pz),g=wsBuild(w,'easy',brId('search','easy',i));return w.every(x=>{const f=wsFind(g,x)[0];return f.dx+f.dy===1&&f.dx>=0&&f.dy>=0;})&&[...g.join('')].every(c=>w.join('').includes(c)||!w.some(x=>x.includes(c)));})`));
+    check('the rude-word check works: filler letters that spell one fail, the same grid without it passes', await ev(`(()=>{const w=['CAT','DOG','PIG'],g=['CATHH','DOGHH','PIGHH','HHHHH','SEXHH'];return !wsCheck(g,w,'easy')&&wsCheck(g.slice(0,4).concat('SUXHH'),w,'easy');})()`));
+    check('🎲 made-up grids: 150 per level, all fair, bank words only, the same seed = the same grid', await ev(`BRAIN_LVLS.every(l=>Array.from({length:150},(_,i)=>fpMake('search',l,'ws'+i)).every(z=>z&&FP_MAKERS.search.ok(z.pz,l)))&&JSON.stringify(fpMake('search','hard','x'))===JSON.stringify(fpMake('search','hard','x'))`));
+    check('the words mix: never all the same way, and most Medium grids have words crossing (the owner\'s wish)', await ev(`(()=>{let cross=0;const ok=BRAIN_LVLS.every(l=>Array.from({length:100},(_,i)=>fpMake('search',l,'mx'+i).pz).every(z=>{const N=z.g.length,c={},ds=new Set();
+      wsWords(z).forEach(w=>{const f=wsFind(z.g,w)[0];ds.add(f.dx+','+f.dy);for(let i=0;i<w.length;i++){const k=(f.y+f.dy*i)*N+f.x+f.dx*i;c[k]=(c[k]||0)+1;}});
+      if(l==='medium'&&Object.values(c).some(v=>v>1))cross++;return ds.size>=2;}));return ok&&cross>=70;})()`));
+    const ws0=await ev(`(()=>{P().brain.solved=P().brain.solved.filter(x=>!x.startsWith('search:'));P().stats.searched=0;P().brain.level.search='easy';save();return P().coins;})()`);
+    await ev(`brOpen('search')`); await sleep(200);
+    check('it opens on Easy puzzle 1: 3 words with pictures and a 5 × 5 grid, letters 48 px or more', await ev(`BR.game==='search'&&BR.idx===0&&document.querySelectorAll('#brQ .ws-w').length===3&&document.querySelectorAll('#brQ .ws-pic').length===3&&document.querySelectorAll('#brBoard .ws-cell').length===25&&[...document.querySelectorAll('#brBoard .ws-cell')].every(c=>c.getBoundingClientRect().width>=48)`));
+    check('it says what to do (no emoji, 20 words at most)', await ev(`(()=>{const s=speakLine();return !!s&&/hidden words/.test(s.t)&&s.t.split(' ').length<=20&&!/[\\u{1F300}-\\u{1FAFF}]/u.test(s.t);})()`));
+    await shot('V10-search-easy');
+    const wsPt=async(w,i)=>ev(`(()=>{const f=wsFind(WS.g,'${w}')[0],x=f.x+f.dx*${i},y=f.y+f.dy*${i},r=document.querySelector('#brBoard .ws-cell[data-x="'+x+'"][data-y="'+y+'"]').getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2];})()`);
+    const wsA=await wsPt('CAT',0), wsB=await wsPt('CAT',1), wsC=await wsPt('CAT',2);
+    await stroke([wsA,wsB,wsC]); await sleep(100);
+    check('sliding a finger from C to T finds CAT: its letters and its chip turn its color', await ev(`WS.got.length===1&&WS.words[WS.got[0]]==='CAT'&&document.querySelectorAll('#brBoard .ws-cell.got').length===3&&document.querySelector('#brQ .ws-w[data-i="0"]').classList.contains('got')`));
+    const wsD=await wsPt('DOG',2), wsE=await wsPt('DOG',0);
+    await stroke([wsD,wsD]); await sleep(50); await stroke([wsE,wsE]); await sleep(100);
+    check('tapping the last letter and then the first finds DOG too (backwards counts)', await ev(`WS.got.length===2`));
+    await stroke([wsA,wsB]); await sleep(50);
+    check('a line that is not a word just clears (nothing found, no score lost)', await ev(`WS.got.length===2&&!document.querySelector('#brBoard .ws-cell.sel')&&!BR.won`));
+    check('finding the last word wins', await ev(`wsSolveAll()`));
+    await sleep(1100);
+    check('the first win pays +2, counts as solved and in stats.searched, and ends on the end box', await ev(`P().coins===${ws0}+2&&P().brain.solved.includes('search:e1')&&P().stats.searched===1&&endBoxOpen()`));
+    await ev(`closeModal();P().brain.level.search='hard';brOpen('search')`); await sleep(200);
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+    await sleep(200);
+    check('on an iPhone held upright, Hard\'s 7 × 7 grid fits with every letter 48 px or more', await ev(`document.querySelectorAll('#brBoard .ws-cell').length===49&&[...document.querySelectorAll('#brBoard .ws-cell')].every(c=>{const r=c.getBoundingClientRect();return r.width>=48&&r.left>=0&&r.right<=innerWidth;})`));
+    await shot('V11-search-hard-phone');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    check('🎲 Free Play makes a Word Search from the word bank, and it can be solved', await ev(`(fpBrain('search','medium'),BR.free&&WS.words.every(w=>WB_BANK.medium.includes(w))&&wsSolveAll())`));
+    await sleep(1100);
+    check('the 🔎 stickers are there (8 puzzles, 30 searches)', await ev(`['search8','search30'].every(id=>STICKERS.some(s=>s.id===id))`));
+    check('v1.90 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.90')`));
+    await ev(`closeModal();P().brain.level.search='easy';save()`);
   }
 
   console.log("Little Ones' Corner (v1.46)");

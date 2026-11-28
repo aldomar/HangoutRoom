@@ -104,6 +104,27 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   the games on the Brain Games menu). Tap a card to read it again; tap a ❓ to play the puzzle that unlocks it.
 - 2 new stickers on the **Code & Brain** page: 🍕 Fraction Baker (8 puzzles) and 📇 Fact Finder (12 fact cards).
 
+## 🔎 Word Search and a bigger word bank (version 1.90)
+An eighth Brain Game at the Backyard chalkboard, using the same words as 🔤 Word Builder.
+- **How to play:** slide a finger from the first letter of a word to the last (either way round counts). Little hands can
+  also tap the first letter, then the last. A found word turns its color in the grid and in the word list, and is said
+  out loud. A line that isn't a word just clears: there are no wrong answers and no timer.
+- **Easy:** a 5 × 5 grid, 3 words with pictures, only across and down. **Medium:** 6 × 6, 5 words, slanted too.
+  **Hard:** 7 × 7, 6 words, any way, even backwards. Every letter is at least 48 px, even on an iPhone.
+- 8 puzzles per level (+2 coins the first time, +5 for a whole level, like every Brain Game), then **🎲 Free Play**
+  (+2 each, no daily limit) with words from the word bank. It joins the **📅 Puzzle of the Day** turn (7 games now).
+- Words cross each other and go different ways (never all in the same direction), so the grid is a real search.
+- The letters that fill the gaps are checked, so no rude word can ever appear by accident.
+- 2 new stickers on the **Code & Brain** page: 🔎 Word Finder (8 puzzles) and 🔍 Sharp Eyes (30 word searches).
+- **The word bank grew** with the family's second list: about 280 Easy words, 610 Medium and 460 Hard. Changes to the
+  list (agreed with the owner): Easy words with 6 or more letters moved to Medium; words over 11 letters were left out
+  (shorter ones like intelligent and pronounce took their place); if, ox and us are too short; dam (it sounds wrong read
+  aloud), grief, orphan, debt, thief, sword, fight and fought were left out (pal, shriek, sphere, subtle, fright and
+  ought came in). Words that sound like another word of the same length (right/write, there/their…) never get the extra
+  letters that would spell the other one. About 60 new words have a picture.
+- **Fix:** in Word Builder the number pictures (1, 2, 3…) were almost white on the pale card; they are dark now.
+- Save data: Word Search's level and a "word searches finished" count, added by themselves. Older backups still restore.
+
 ## The Studio and getting around (since version 1.40)
 - **✨ The Studio** is a fourth room with **nothing built in**: just a wall and a floor, so every single thing in it
   is her choice. It is the place for decorating ideas and, later, for visitors' wishes. Its wall starts in her room

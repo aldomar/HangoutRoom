@@ -31,7 +31,7 @@ function newProfile(name,fur,color,badge,look){
 function normalize(p){
   if(!p.id) p.id=uid();
   if(!p.name) p.name='Room';
-  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0,seeks:0,fetches:0,petWalks:0,finds:0,hits:0,homers:0,catches:0,derbies:0,made:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
+  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0,seeks:0,fetches:0,petWalks:0,finds:0,hits:0,homers:0,catches:0,derbies:0,made:0,searched:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.fidPay=Object.assign({day:'',n:0},p.fidPay&&typeof p.fidPay==='object'?p.fidPay:{}); if(typeof p.fidPay.n!=='number'||!(p.fidPay.n>=0)) p.fidPay.n=0; // v1.36: fidget coins paid today (see FID_DAILY)
   // Music Maker (v1.38, section 40): sound kit, speed (0-2), the loop on the grid now, 3 saved loops, music coins paid today.
@@ -132,6 +132,7 @@ function normalize(p){
      derby:{cur:typeof dy.cur==='string'?dy.cur:'d1',done:Array.isArray(dy.done)?dy.done.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[],
        pay:{day:typeof pay.day==='string'?pay.day:'',n:n(pay.n)}}};
    ['hits','homers','catches','derbies'].forEach(k=>{p.stats[k]=n(p.stats[k]);});}
+  p.stats.searched=Math.max(0,Math.floor(Number(p.stats.searched)||0)); // v1.90: 🔎 Word Search puzzles finished
   const petObj=o=>o&&typeof o==='object'&&!Array.isArray(o)?o:{};
   p.pet.names=Object.fromEntries(Object.entries(petObj(p.pet.names)).filter(([k,v])=>typeof v==='string'&&v.trim()).map(([k,v])=>[k,v.slice(0,12)]));
   p.pet.hearts=Object.fromEntries(Object.entries(petObj(p.pet.hearts)).map(([k,v])=>[k,Math.max(0,Math.floor(Number(v)||0))]));
@@ -215,7 +216,7 @@ function normalize(p){
   p.code.makePay={day:typeof mkp.day==='string'?mkp.day:'',n:Math.max(0,Math.floor(Number(mkp.n)||0))};
   // Brain Games (v1.25): the last game played, the level picked in each game, and the puzzle ids solved (each pays once).
   const br=p.brain&&typeof p.brain==='object'&&!Array.isArray(p.brain)?p.brain:{}, brL=br.level&&typeof br.level==='object'&&!Array.isArray(br.level)?br.level:{};
-  const brG=['snack','memory','pop','train','word','bake','facts']; // v1.33: + Pattern Train, Word Builder; v1.34: + Fraction Bakery, Fact Cards
+  const brG=['snack','memory','pop','train','word','bake','facts','search']; // v1.33: + Pattern Train, Word Builder; v1.34: + Fraction Bakery, Fact Cards; v1.90: + Word Search
   p.brain={game:brG.includes(br.game)?br.game:'snack',level:{},solved:Array.isArray(br.solved)?br.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[],
     shelf:br.shelf===true}; // shelf: the 📚 Brain Shelf was given (v1.77)
   brG.forEach(g=>{p.brain.level[g]=['easy','medium','hard'].includes(brL[g])?brL[g]:'easy';});
