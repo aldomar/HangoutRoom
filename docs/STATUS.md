@@ -6,7 +6,7 @@ _Last updated: 2026-11-27_
 - **🍳 Phase 17: the Kitchen (agreed 2026-11-27, see "Phase 17" in `PLAN.md`).** The owner's design plan (a separate file, not in git)
   has 6 sections. Section 1 (recon) is done; the owner's answers are in `PLAN.md` (the sixth room, ⬅️ of her room with the Backyard
   moved behind it; Little mode lets it in; every recipe open; 2/3/4 coins per new star, +2 a replay, 20 a day).
-  - ✅ v1.91 🍳 Kitchen, section 2 (the vertical slice): built on branch `feature/kitchen`, stacked on `feature/word-search`.
+  - ✅ v1.91 🍳 Kitchen, section 2 (the vertical slice): PR #96 on branch `feature/kitchen` (v1.85–v1.90 are merged). Smoke test 2604 passed, 0 failed; the Shop timing check (CPU slowed 6×) is near its 1.5 s limit late in the run (1448 ms; 1555 ms once).
     New files `78-kitchen.js`, `79-kitchen-play.js`, `80-kitchen-food.js`, `81-kitchen-stations.js`. 🥗 Rainbow Fruit Salad on
     🐣/🌟/🧠, 🍽️ My Dishes, the 🫧 sink toy. Save version 39 (`room6`, `kitchen`, `stats.cooked`). The ROOM_MAP columns moved
     (her room is column 3 now); the Backyard's `from` is 6.
