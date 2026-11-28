@@ -6665,6 +6665,73 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`closeModal();{const o=JSON.parse(window._kcSaved),p=P();setBand(p,o.band);p.coins=o.coins;p.little.lock=o.lock;}LOCK.open='';save();applyEasy();roomNo=1;show('room')`);
   }
 
+
+  console.log('Kitchen challenge makers (v1.92)');
+  {
+    await ev(`closeModal();show('room')`);
+    check('14 challenge makers, each with a name, its levels, make() and ok()', await ev(`(()=>{const ids=Object.keys(KC_MAKERS);return ids.length===14&&ids.join(' ')==='count order pattern grow tops scoop parts scale words sequence time sort spell money'
+      &&ids.every(id=>{const M=KC_MAKERS[id];return M.name&&M.lvls.length&&M.lvls.every(l=>['easy','medium','hard'].includes(l))&&typeof M.make==='function'&&typeof M.ok==='function';});})()`));
+    // every maker at every level, 300 seeds each: a puzzle that passes its rules, the same puzzle for the same seed, clean lines,
+    // the answer among the choices, no "undefined" or "NaN" anywhere, and plenty of different puzzles
+    const sweep=await ev(`(()=>{const bad=[],kinds={};
+      const lineOk=(t,max)=>{const c=spkClean(t);return !!c&&!/\\p{Extended_Pictographic}/u.test(c)&&c.split(' ').length<=max;};
+      for(const id of Object.keys(KC_MAKERS)) for(const L of KC_MAKERS[id].lvls){const seen=new Set();
+        for(let i=0;i<300;i++){const seed='kc-'+id+'-'+L+'-'+i, pz=kcMake(id,L,brRand(seed));
+          if(!pz){bad.push([id,L,i,'none']);continue;}
+          const js=JSON.stringify(pz); seen.add(js);
+          if(js!==JSON.stringify(kcMake(id,L,brRand(seed)))) bad.push([id,L,i,'not the same for one seed']);
+          if(!KC_MAKERS[id].ok(pz,L)) bad.push([id,L,i,'ok']);
+          if(pz.k!==id||pz.lvl!==L) bad.push([id,L,i,'k/lvl']);
+          if(/undefined|NaN|\\[object/.test(js)) bad.push([id,L,i,'undefined: '+js.slice(0,120)]);
+          if(!lineOk(pz.say,30)||!lineOk(pz.hint,20)) bad.push([id,L,i,'lines: '+pz.say+' / '+pz.hint]);
+          if(pz.choices&&(!pz.choices.includes(pz.answer)||new Set(pz.choices).size!==pz.choices.length)) bad.push([id,L,i,'choices']);
+        }
+        kinds[id+':'+L]=seen.size;}
+      return {bad:bad.slice(0,8),n:bad.length,kinds};})()`);
+    check('every maker at every level: 300 seeds make good puzzles (rules, same seed = same puzzle, clean spoken lines, answer in the choices)', sweep.n===0, sweep.bad);
+    const few=Object.entries(sweep.kinds).filter(([k,n])=>n<(k==='parts:easy'?3:/^(time:easy|spell:easy|words:easy|tops:easy|money:easy|parts:medium)$/.test(k)?6:20));
+    check('…and they really vary (dozens of different puzzles for most)', few.length===0, [few,sweep.kinds]);
+    // the answers really are right (worked out again here, a different way)
+    check('🥄 cups read right: 1 cup, ½ cup, 1½ cups, 2¾ cups; said as words', await ev(`kcCups(4)==='1 cup'&&kcCups(2)==='½ cup'&&kcCups(6)==='1½ cups'&&kcCups(11)==='2¾ cups'&&kcCups(8)==='2 cups'
+      &&kcCupsSay(3)==='three quarters of a cup'&&kcCupsSay(6)==='1 and a half cups'&&kcCupsSay(8)==='2 cups'&&kcCupsSay(4)==='1 cup'`));
+    const answers=await ev(`(()=>{const bad=[],R=i=>brRand('kc-ans-'+i);
+      for(let i=0;i<200;i++){
+        for(const L of ['easy','medium','hard']){
+          const sc=kcMake('scoop',L,R(i)); if(Object.entries(sc.answer).reduce((s,[k,n])=>s+k*n,0)!==sc.q||!kcScoopOk(sc,sc.answer)||kcScoopOk(sc,{[sc.scoops[0]]:Math.floor(sc.q/sc.scoops[0])+1})) bad.push(['scoop',L,i]);
+          const c=kcMake('count',L,R(i)); if((L==='hard')!==c.tray.some(id=>KC_FOOD[id].kind==='veg')) bad.push(['count veg',L,i]);
+          const g=kcMake('grow',L,R(i)); if(+g.answer<=g.seq[g.seq.length-1]) bad.push(['grow',L,i]);
+          const sq=kcMake('sequence',L,R(i)); if(!(L==='easy'?sq.order.length===3:L==='hard'?sq.order.length===6&&sq.cards.length===7:[4,5].includes(sq.order.length))) bad.push(['sequence',L,i]);
+          const so=kcMake('sort',L,R(i)); if(!so.bins.every(b=>so.items.some(it=>it.bin===b.id))) bad.push(['sort',L,i]);
+          const sp=kcMake('spell',L,R(i));
+          if(L==='hard'&&(sp.tiles.join('')===sp.answer||[...sp.tiles].sort().join('')!==[...sp.answer].sort().join(''))) bad.push(['unscramble',i]);
+          if(L!=='easy'&&kcRude(sp.tiles.join(''))) bad.push(['rude',L,i]);
+        }
+        const t=kcMake('time','hard',R(i)), [h,m]=t.start.split(':').map(Number), e=(h%12)*60+m+t.minutes, hh=Math.floor(e/60)%12||12;
+        if(t.answer!==hh+':'+String(e%60).padStart(2,'0')) bad.push(['time',i,t.start,t.minutes,t.answer]);
+        const pa=kcMake('parts','hard',R(i)); if(+pa.answer*pa.friends!==pa.N) bad.push(['share',i]);
+        const sd=kcMake('scale','medium',R(i)); if(+sd.answer!==2*sd.from) bad.push(['double',i]);
+        const sh=kcMake('scale','hard',R(i)); if(sh.answer!==kcCups(sh.q/2)) bad.push(['half',i]);
+        const mo=kcMake('money','medium',R(i)); if(!kcMoneyOk(mo,mo.answer)||kcMoneyOk(mo,{10:mo.price/10+1})) bad.push(['money pay',i]);
+        const mh=kcMake('money','hard',R(i)); if(parseInt(mh.answer)!==100-mh.price) bad.push(['change',i]);
+        const tp=kcMake('tops','hard',R(i)); if(tp.parts.some(p=>p.slices!==tp.slices/p.of)) bad.push(['pizza',i]);
+        const pt=kcMake('pattern','hard',R(i)); if(!pt.rim.every((k,j)=>k===pt.rim[j%pt.size])) bad.push(['pattern',i]);
+        const wh=kcMake('words','hard',R(i)); if(!KC_HOMO.some(h=>h.s.replace('___',h.o)===wh.answer)) bad.push(['silly line',i]);
+      }
+      return bad.slice(0,8);})()`);
+    check('…every answer checks out when worked out again (scoops, clocks, sharing, halves, change, pizza, patterns, the silly line)', answers.length===0, answers);
+    check('🌸 the sound-alike bank: each line has one blank, the two words differ, and a 🐣 question never says either word', await ev(`KC_HOMO.length>=16&&KC_HOMO.every(h=>h.s.split('___').length===2&&h.w!==h.o&&(!h.wp||!!h.op&&!h.q.toLowerCase().includes(h.w.toLowerCase())&&!h.q.toLowerCase().includes(h.o.toLowerCase())))`));
+    check('🔢 every set of steps has 6 different steps and a silly one', await ev(`KC_SEQ.every(S=>S.steps.length===6&&new Set(S.steps.map(s=>s[1])).size===6&&!!S.silly&&!S.steps.some(s=>s[1]===S.silly[1]))`));
+    check('a level a maker does not have falls back to its first (✖️ scaling has no 🐣 Easy)', await ev(`kcMake('scale','easy',brRand('x')).lvl==='medium'&&kcMake('nope','easy',brRand('x'))===null`));
+    // the 🥗 Fruit Salad takes its bowl and plate puzzles from the makers
+    for(const L of ['easy','medium','hard']){
+      await ev(`KC_TEST_SEED='kc-maker-${L}';show('kitchen');kcStart('fruit','${L}');while(KC.run.steps[KC.run.i]!=='bowl')kcNext();`); await sleep(100);
+      check(`${L}: the 🥣 bowl's puzzle is a count puzzle (its need fits the tray)`, await ev(`(()=>{const n=KC.run.st.need(),t=KC.run.st.tray();return n.length>=1&&n.every(nd=>t.filter(x=>nd.col?KC_FOOD[x.id].col===nd.col:x.id===nd.key).length>nd.n);})()`));
+      await ev(`kcNext()`); await sleep(100);
+      check(`${L}: the ✨ plate ${L==='medium'?'has an order card':L==='hard'?'has a pattern that repeats':'is free'}`, await ev(`(()=>{const o=KC.run.st.order(),r=KC.run.st.rim();return ${L==='medium'}?!!o&&o.length>=2&&!r:${L==='hard'}?!!r&&r.length===KC_RIM_N&&!o:!o&&!r;})()`));
+    }
+    await ev(`KC_TEST_SEED=null;kcBook();show('room')`);
+    check('Gift Story: v1.92 Kitchen puzzles', await ev(`(g=>!!g&&g.news.length>=2)(GIFT_TIMELINE.find(g=>g.v==='1.92'))`));
+  }
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');
   ws.close(); ch.kill(); setTimeout(()=>{try{fs.rmSync(prof,{recursive:true,force:true});}catch(e){} process.exit(bad||errors.length?1:0);},800);

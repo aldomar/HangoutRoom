@@ -318,6 +318,12 @@ rule by hand.
       A new station draws with `kcSvgIn` (its `focus` box zooms in on upright phones) and handles touches with `kcPointer`.
       **Recipe, food and topping ids are saved (in dishes): never rename them.** Every prompt goes through `ctx.say` (20 words, no emoji spoken),
       and each recipe level needs a play-through in the smoke test.
+  82. `82-kitchen-challenges.js` (v1.92) the learning puzzles: `KC_MAKERS[id] = {name, lvls, make(r, lvl), ok(pz, lvl)}` (`count order pattern grow tops
+      scoop parts scale words sequence time sort spell money`), `kcMake(id, lvl, r)` (rolls until `ok`; a missing level falls back to the first).
+      A puzzle is plain data: `k, lvl, shown, say` (30 words, no emoji), `hint` (20 words), and `choices[]` + `answer` (+ `pics[]`) when she picks.
+      Cups are counted in quarters (`kcCups`, `kcCupsSay`). Banks: `KC_HOMO` (sound-alikes; a 🐣 question never says the word), `KC_SEQ`, `KC_SPELL`
+      (scrambles never make a `WS_NO` word), `KC_STORE`, `KC_SHOP`. A station asks `kcMake` for its puzzle; a new kind of puzzle is a new maker
+      (the smoke test runs every maker at every level over 300 seeds).
   68. `68-undo.js` ↩ Undo (v1.74): `undoArm()` (a copy of the profile just before), `undoShow(u, back)`, `undoDo`, `undoOff`, `undoLeave`
       (called by `show()`), `#undoBar`. Hooked into `tryBuy`, `buyConsumable` (08) and `sendGift` (32). **A new shop must buy through
       `tryBuy`/`buyConsumable`** so it gets Undo; a new way to spend or give coins outside them should call `undoArm`/`undoShow` itself.

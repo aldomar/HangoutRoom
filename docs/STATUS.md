@@ -10,7 +10,11 @@ _Last updated: 2026-11-27_
     New files `78-kitchen.js`, `79-kitchen-play.js`, `80-kitchen-food.js`, `81-kitchen-stations.js`. 🥗 Rainbow Fruit Salad on
     🐣/🌟/🧠, 🍽️ My Dishes, the 🫧 sink toy. Save version 39 (`room6`, `kitchen`, `stats.cooked`). The ROOM_MAP columns moved
     (her room is column 3 now); the Backyard's `from` is 6.
-    Next: the owner tries it on an iPad with the children, then section 3 (the challenge engine).
+    Next: the owner tries it on an iPad with the children.
+  - ✅ v1.92 🧩 Kitchen puzzles, section 3 (the challenge engine): branch `feature/kitchen-challenges`, stacked on `feature/kitchen`
+    (the owner asked to go on before the iPad test). New file `82-kitchen-challenges.js`: 14 puzzle makers `KC_MAKERS[id] = {name, lvls,
+    make(r, lvl), ok(pz, lvl)}` and `kcMake(id, lvl, r)`; a puzzle is plain data (`shown`, `say`, `hint`, `choices`/`answer`…).
+    The bowl uses `count`, the plate `order` (🌟) and `pattern` (🧠, now 6 kinds). No save change. Next: section 4, 🥞 Pancakes.
 - **🎁 The children have the app (2026-11-26).** Their first requests are **Phase 16** (`PLAN.md`). Two PRs:
   - ✅ v1.82 💜 Content Pack 6: built, PR open (branch `feature/pack6`, from `main`). New file `74-pack6.js`: 6 coloring pages
     (axolotl, whale shark, dino pup, jellyfish, sea turtle, star pony), the purple Axolotl Plush and the Dino Pup Plush, purple pop-its +

@@ -143,6 +143,19 @@ book and the first recipe. The other 7 recipes come in later updates.
   Hard in one recipe).
 - Save data: save version 39 (`room6` for the room, `kitchen` for stars, dishes and coins today). Every older backup still restores.
 
+## 🧩 Kitchen puzzles (version 1.92)
+Behind the scenes, the Kitchen learned to make its own puzzles, ready for the recipes still to come. Each kind of puzzle
+has an 🐣 Easy, 🌟 Medium and 🧠 Hard version, and a new one is made every time she plays (nothing is saved).
+- **The kinds:** counting into the bowl, order cards, repeating patterns, growing number patterns, counting toppings
+  (5 blueberries; 3 rows of 4; mushrooms on half the pizza), measuring with scoops (1 cup, ½ cup and ¼ cup), equal parts
+  and sharing, doubling and halving a recipe, sound-alike words (flour or flower?), putting steps in order, timers and
+  clocks ("It's 3:45. Cookies take 20 minutes. When are they done?"), sorting (fruit or vegetable; fridge, freezer or
+  pantry), spelling (first letters, fridge magnets, unscrambling) and pretend money (pennies, dimes and nickels, change from a dollar).
+- **What she sees now:** the 🥗 Fruit Salad's bowl and decorating steps use the new puzzles, and on 🧠 Hard the pattern
+  around the bowl has two new kinds to finish. The other kinds show up as the next recipes are built.
+- Every puzzle is said out loud, and a wrong answer still only gets a funny line and a hint.
+- No save change.
+
 ## 🔎 Word Search and a bigger word bank (version 1.90)
 An eighth Brain Game at the Backyard chalkboard, using the same words as 🔤 Word Builder.
 - **How to play:** slide a finger from the first letter of a word to the last (either way round counts). Little hands can

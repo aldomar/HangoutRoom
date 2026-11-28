@@ -12,6 +12,7 @@
    ✨ plate  tap a topping to add it, drag one to move it, drag it off the bowl to take it away. 🐣 free; 🌟 copy the
              order card; 🧠 finish the pattern around the rim first.
    The fruit from each step is added to ctx.dish.f, so the plated dish shows what she really made.
+   The bowl's and the plate's puzzles come from the challenge makers (KC_MAKERS, section 82, v1.92).
    The smoke test reads a few answers from the handles (chop n, bowl need/tray, plate order/rim); nothing else uses them.
    ===================================================================== */
 const kcInt=(r,a,b)=>a+Math.floor(r()*(b-a+1));
@@ -223,37 +224,11 @@ const KC_COL_NAME={red:'red',orange:'orange',green:'green',blue:'blue',purple:'p
 KC_STATIONS.bowl={start(ctx){
   const r=ctx.rnd, L=ctx.lvl, pre=ctx.dish.f.slice(), pileId='bowl:'+(ctx.run?ctx.run.seed:'x');
   let need=[], tray=[], inB=[], alive=true, drag=null, fixed=false, shown, spoken, showNeed=L!=='hard', hardWords='';
-  // need: [{key, test(foodId), n, label, icon}] - what has to be in the bowl
-  if(L==='easy'){
-    const k=kcPick(r,['strawberry','blueberry','cherry','kiwi','orange']), n=kcInt(r,2,6), F=KC_FOOD[k];
-    need=[{key:k,test:id=>id===k,n,icon:kcFood(k,0,0,0.9),label:''}];
-    tray=Array(n+kcInt(r,2,3)).fill(k);
-    shown=`🥣 Put ${n} ${kcPlural(n,F)} in the bowl!`; spoken=`Put ${n} ${kcPlural(n,F)} in the bowl.`;
-  } else if(L==='medium'){
-    const cols=kcShuf(r,Object.keys(KC_BY_COL)), c1=cols[0], c2=cols[1], c3=cols[2], a=kcInt(r,2,5), b=kcInt(r,2,5);
-    const of=(c,n)=>Array.from({length:n},(_,i)=>KC_BY_COL[c][i%KC_BY_COL[c].length]);
-    need=[{key:c1,test:id=>KC_FOOD[id].col===c1,n:a,col:c1,label:KC_COL_NAME[c1]},{key:c2,test:id=>KC_FOOD[id].col===c2,n:b,col:c2,label:KC_COL_NAME[c2]}];
-    tray=of(c1,a+2).concat(of(c2,b+2),of(c3,2));
-    shown=`🥣 Put in ${a} ${c1} and ${b} ${c2} fruits!`; spoken=`Put in ${a} ${c1} fruits and ${b} ${c2} fruits.`;
-  } else {
-    const ks=kcShuf(r,['blueberry','grape','plum','strawberry','cherry','kiwi']), A=ks[0], B=ks[1], FA=KC_FOOD[A], FB=KC_FOOD[B];
-    if(r()<0.5){
-      const g=kcInt(r,2,3); let k=kcInt(r,2,4); if((g*k)%2) k++;
-      const nA=g*k, nB=nA/2;
-      need=[{key:A,test:id=>id===A,n:nA,icon:kcFood(A,0,0,0.9)},{key:B,test:id=>id===B,n:nB,icon:kcFood(B,0,0,0.9)}];
-      shown=`🥣 Add ${g} groups of ${k} ${FA.many}, and half as many ${FB.many}. Only fruit!`;
-      spoken=`Add ${g} groups of ${k} ${FA.many}, and half as many ${FB.many}. Only fruit!`;
-      hardWords=`${g} groups of ${k} is ${nA}. Half of ${nA} is ${nB}.`;
-    } else {
-      const T=kcInt(r,8,12), a=kcInt(r,3,5), b=T-a;
-      need=[{key:A,test:id=>id===A,n:a,icon:kcFood(A,0,0,0.9)},{key:B,test:id=>id===B,n:b,icon:kcFood(B,0,0,0.9)}];
-      shown=`🥣 Put ${T} fruits in: ${a} ${kcPlural(a,FA)} and the rest ${FB.many}. Only fruit!`;
-      spoken=`Put ${T} fruits in. ${a} ${kcPlural(a,FA)}, and the rest ${FB.many}. Only fruit!`;
-      hardWords=`${T} take away ${a} is ${b}.`;
-    }
-    tray=Array(need[0].n+2).fill(A).concat(Array(need[1].n+2).fill(B),kcShuf(r,['carrot','broccoli','onion','potato']).slice(0,3));
-  }
-  tray=kcShuf(r,tray).map((id,i)=>({id,i,out:false}));
+  // need: [{key, test(foodId), n, label, icon}] - what has to be in the bowl, from the 🥣 count maker (section 82)
+  const pz=kcMake('count',L,r);
+  need=pz.need.map(nd=>({key:nd.key,n:nd.n,col:nd.by==='col'?nd.key:'',label:nd.by==='col'?nd.label:'',
+    test:nd.by==='col'?id=>KC_FOOD[id].col===nd.key:id=>id===nd.key,icon:nd.by==='id'?kcFood(nd.key,0,0,0.9):''}));
+  tray=pz.tray.map((id,i)=>({id,i,out:false})); shown=pz.shown; spoken=pz.say; hardWords=L==='hard'?pz.hint:'';
   const have=nd=>inB.filter(id=>nd.test(id)).length;
   const trayPos=i=>{const per=Math.ceil(tray.length/2), row=i<per?0:1, k=row?i-per:i, n=row?tray.length-per:per;return {x:400+(k-(n-1)/2)*Math.min(84,700/n),y:row?172:76};};
   function bowlG(){
@@ -319,14 +294,12 @@ KC_STATIONS.bowl={start(ctx){
 
 /* ---------- ✨ Decorate & plate ---------- */
 const KC_PLATE={x:400,y:450,k:2.6};
-const KC_PATTERNS=[['a','b'],['a','b','b'],['a','b','c'],['a','a','b']];
 KC_STATIONS.plate={start(ctx){
   const r=ctx.rnd, L=ctx.lvl, D=ctx.dish, pileId='bowl:'+(ctx.run?ctx.run.seed:'x');
   let alive=true, drag=null, order=null, rim=null, rimGiven=0, doneShown=L==='medium';
   D.c=[]; D.rim=[];
-  if(L==='medium'){const ks=kcShuf(r,KC_TOP_IDS.filter(k=>k!=='dots')).slice(0,kcInt(r,2,3));order=ks.map(k=>({k,n:kcInt(r,1,3)}));}
-  if(L==='hard'){const P=kcPick(r,KC_PATTERNS), ks=kcShuf(r,KC_TOP_IDS.filter(k=>k!=='dots')), map={a:ks[0],b:ks[1],c:ks[2]};
-    rim=Array.from({length:KC_RIM_N},(_,i)=>map[P[i%P.length]]); rimGiven=P.length+1; D.rim=rim.slice(0,rimGiven);}
+  if(L==='medium') order=kcMake('order','medium',r).order; // 🧾 and 🔁 makers (section 82)
+  if(L==='hard'){const pz=kcMake('pattern','hard',r);rim=pz.rim;rimGiven=pz.given;D.rim=rim.slice(0,rimGiven);}
   const cnt=k=>D.c.filter(t=>t.k===k).length;
   const orderWords=()=>order.map(o=>`${o.n} ${o.n===1?KC_TOPS[o.k].name:KC_TOPS[o.k].many}`).join(', ').replace(/, ([^,]*)$/,' and $1');
   function draw(){
