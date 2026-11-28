@@ -11,7 +11,7 @@ _Last updated: 2026-11-27_
     🐣/🌟/🧠, 🍽️ My Dishes, the 🫧 sink toy. Save version 39 (`room6`, `kitchen`, `stats.cooked`). The ROOM_MAP columns moved
     (her room is column 3 now); the Backyard's `from` is 6.
     Next: the owner tries it on an iPad with the children.
-  - ✅ v1.92 🧩 Kitchen puzzles, section 3 (the challenge engine): branch `feature/kitchen-challenges`, stacked on `feature/kitchen`
+  - ✅ v1.92 🧩 Kitchen puzzles, section 3 (the challenge engine): PR #97 on branch `feature/kitchen-challenges`, stacked on `feature/kitchen`
     (the owner asked to go on before the iPad test). New file `82-kitchen-challenges.js`: 14 puzzle makers `KC_MAKERS[id] = {name, lvls,
     make(r, lvl), ok(pz, lvl)}` and `kcMake(id, lvl, r)`; a puzzle is plain data (`shown`, `say`, `hint`, `choices`/`answer`…).
     The bowl uses `count`, the plate `order` (🌟) and `pattern` (🧠, now 6 kinds). No save change. Next: section 4, 🥞 Pancakes.
