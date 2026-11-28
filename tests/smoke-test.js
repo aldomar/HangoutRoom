@@ -5494,8 +5494,14 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     // 🔒 press and hold
     await press(400);
     check('a quick press only shakes: still locked', await ev(`lockOn()&&document.querySelector('#lockBtn').classList.contains('shake')`));
+    const padType=async c=>{for(const k of c){await ev(`document.querySelector('#pinPad [data-k="${k}"]').click()`);await sleep(30);}await sleep(250);};
     await press(3300);
-    check('press and hold 3 seconds (no PIN): unlocked, and the full room is back', await ev(`!lockOn()&&!document.body.classList.contains('locked')`)&&await vis('#setBtn')&&await vis('#decoBtn'));
+    check('press and hold 3 seconds (no PIN): asks for 4 numbers written as words (v1.88)', await ev(`(t=>/^Type \\w+ · \\w+ · \\w+ · \\w+$/.test(t)&&!/\\d/.test(t))(document.querySelector('.lk-ask').textContent)&&lockOn()`));
+    await shot('LK3b-words');
+    await padType(await ev(`lockCheck.want==='0000'?'1111':'0000'`));
+    check('…a wrong code closes the box and stays locked', await ev(`lockOn()&&document.querySelector('#modal').classList.contains('hidden')`));
+    await press(3300); await padType(await ev(`lockCheck.want`));
+    check('…the right one: unlocked, and the full room is back', await ev(`!lockOn()&&!document.body.classList.contains('locked')`)&&await vis('#setBtn')&&await vis('#decoBtn'));
     check('…the 🔒 is now "Lock", and other screens open', await ev(`document.querySelector('#lockBtn').textContent.includes('Lock')&&(show('art'),cur==='art')`));
     await ev(`show('room')`); await sleep(100); await shot('LK4-unlocked');
     await ev(`document.querySelector('#lockBtn').click()`); await sleep(150);
@@ -6322,6 +6328,63 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`show('room')`);
     check('v1.87 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.87')`));
   }
+  console.log('Whose room + shortcuts (v1.88)');
+  {
+    const vis=sel=>ev(`(e=>!!e&&e.offsetParent!==null&&getComputedStyle(e).display!=='none')(document.querySelector(${JSON.stringify(sel)}))`);
+    await ev(`closeModal();setBand(P(),'normal');P().little.lock=false;LOCK.open='';save();applyEasy();show('room');goRoom(1)`); await sleep(100);
+    const chipOk=`(p=>[...document.querySelectorAll('.coinsDisp')].every(e=>{const c=e.querySelector('.who'),i=c&&c.querySelector('img');
+      return c&&i&&i.getAttribute('src').startsWith('data:image/svg+xml')&&c.dataset.k.startsWith(p.id+'|')&&c.textContent===p.badge
+        &&e.getAttribute('aria-label')===whoSay(p)&&e.textContent.endsWith('🪙 '+p.coins);}))(P())`;
+    check('👤 every coin pill starts with her buddy and badge, and still shows her coins', await ev(chipOk), await ev(`document.querySelectorAll('.coinsDisp').length`));
+    const shown=[];
+    for(const n of ['room','soccer','ball','closet','fidget','brain','music','code','stage','cards']){
+      await ev(`show('${n}')`); await sleep(80);
+      const ok=await ev(`(e=>!!e&&e.offsetWidth>0&&(i=>i.complete&&i.naturalWidth>0)(e.querySelector('.who img')))(document.querySelector('#scr-${n} .coinsDisp'))`);
+      if(!ok) shown.push(n);
+    }
+    check('…and it shows (a drawn picture) on every screen with coins', !shown.length, shown);
+    await ev(`show('soccer')`); await sleep(100); await shot('WR1-soccer-chip');
+    check('…in the room color', await ev(`document.querySelector('#scr-soccer .coinsDisp .who').style.borderColor!==''`));
+    // the picture follows her look, and switching rooms changes it
+    const k0=await ev(`document.querySelector('#scr-soccer .coinsDisp .who').dataset.k`);
+    await ev(`window._wrFur=P().look.fur;P().look.fur=P().look.fur==='black'?'white':'black';show('closet')`); await sleep(80);
+    check('a new look redraws the picture', await ev(`document.querySelector('#scr-closet .coinsDisp .who').dataset.k!==${JSON.stringify(k0)}`));
+    await ev(`P().look.fur=window._wrFur;show('room')`);
+    await ev(`window._wrMe=P().id;if(DB.profiles.length<2){const q=newProfile('Testa');DB.profiles.push(q);window._wrNew=q.id;}`);
+    await ev(`DB.activeId=DB.profiles.find(q=>q.id!==window._wrMe).id;enterRoom()`); await sleep(200);
+    check('switching rooms shows the other room\'s buddy and name', await ev(chipOk)&&await ev(`P().id!==window._wrMe`));
+    await ev(`DB.activeId=window._wrMe;if(window._wrNew)DB.profiles=DB.profiles.filter(q=>q.id!==window._wrNew);enterRoom()`); await sleep(200);
+    check('…and back again', await ev(`P().id===window._wrMe&&${chipOk}`));
+    // tapping it only says whose room it is
+    await ev(`show('soccer')`); await sleep(80);
+    await ev(`document.querySelector('#scr-soccer .coinsDisp').click()`); await sleep(80);
+    check('tapping it says whose room it is and stays put', await ev(`cur==='soccer'&&document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#scr-soccer .coinsDisp .who').classList.contains('who-hi')`));
+    // 🎁 one tap from the room
+    await ev(`show('room')`); await sleep(100);
+    check('🎁 on the room picture', await vis('#giveBtn'));
+    await ev(`document.querySelector('#giveBtn').click()`); await sleep(100);
+    check('…opens 🎁 What to give?', await ev(`document.querySelector('#modalTitle').textContent.includes('What to give')`));
+    await ev(`closeModal();P().little.lock=true;LOCK.open='';show('room')`); await sleep(100);
+    check('…hidden in 🧸 Little mode', !(await vis('#giveBtn')));
+    await ev(`P().little.lock=false;show('room');enterDecorate()`); await sleep(100);
+    check('…and while decorating', !(await vis('#giveBtn')));
+    await ev(`exitDecorate(true);show('room')`); await sleep(80);
+    // phone: the room bar and the game bars still fit
+    await send('Emulation.setDeviceMetricsOverride',{width:360,height:740,deviceScaleFactor:1,mobile:true}); await sleep(300);
+    const tight=[];
+    for(const n of ['room','soccer','ball','closet','stage','music']){
+      await ev(`show('${n}')`); await sleep(120);
+      if(!(await ev(`(b=>b.scrollWidth<=b.clientWidth+1)(document.querySelector('#scr-${n} .topbar'))`))) tight.push(n);
+    }
+    check('360 px phone: every top bar with the picture still fits', !tight.length, tight);
+    await ev(`show('room')`); await sleep(150); await shot('WR2-phone-room');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(200);
+    // the grown-up setup's voice step
+    check('the setup says Read to me helps any child who can\'t read yet', await ev(`String(setupVoice).includes('any child who can')`));
+    check('v1.88 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.88')`));
+    await ev(`show('room')`);
+  }
+
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');
   ws.close(); ch.kill(); setTimeout(()=>{try{fs.rmSync(prof,{recursive:true,force:true});}catch(e){} process.exit(bad||errors.length?1:0);},800);

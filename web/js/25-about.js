@@ -230,7 +230,9 @@ const GIFT_TIMELINE=[
   {v:'1.86',d:'2026-12-05',i:'⬅',n:'Back shows the way',why:'Because the back button should show where it takes you',
     news:['⬅ Every back button shows a picture of where it goes: ⬅ 🌳 Backyard, ⬅ 🎵 Songs, ⬅ 🐾 Pet','🧱 The Basement has its own picture now','✖ closes a box, ✔ means done, and 🏠 always means your room']},
   {v:'1.87',d:'2026-12-06',i:'⏸️',n:'Wait, keep playing?',why:'So a stray tap on Back never throws away a game you were in the middle of',
-    news:['⏸️ Back in the middle of a match, a song or a show pauses and asks: ▶ Keep playing or ⬅ go back','⬅ Between games, and in the makers and fidgets, Back still goes straight back']}
+    news:['⏸️ Back in the middle of a match, a song or a show pauses and asks: ▶ Keep playing or ⬅ go back','⬅ Between games, and in the makers and fidgets, Back still goes straight back']},
+  {v:'1.88',d:'2026-12-08',i:'👤',n:'Whose room is it?',why:'So everyone can tell whose room is open, even before they can read',
+    news:['👤 Your buddy\'s face is next to your coins on every screen','🎁 Give a gift with one tap, from the room picture']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

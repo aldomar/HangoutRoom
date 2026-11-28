@@ -9,7 +9,7 @@
    - the desk opens 🧸 Play (its sign says Play) and the corkboard loses its sign; a room hotspot not in LOCK_HOTS
      just wiggles (lockWiggle): nothing opens and nothing is said; no visitors;
    - Android Back never leaves the room (show('profiles') comes back to the room), and the app reopens into the room.
-   🔒 #lockBtn in the room's top bar: press and hold LOCK_HOLD ms (a ring fills), then the PIN if one is set.
+   🔒 #lockBtn in the room's top bar: press and hold LOCK_HOLD ms (a ring fills), then the PIN, or with no PIN 4 numbers written as words (lockCheck, v1.88).
    Unlocked lasts until 🔒 Lock is tapped or the app is opened again (LOCK.open is never saved).
    🎨 Dress like… (every room's Closet): dresses the buddy in pieces she owns from one theme (dressLike).
    ========================================================= */
@@ -48,8 +48,8 @@ function lockWiggle(h){
 const lockLine=()=>roomNo===3?'Tap the goal, the bat rack, the chalkboard or the shed!':'Tap Play, the shelf, the closet, your buddy or your pet!';
 
 /* ---------- 🔒 press and hold ---------- */
-function lockUnlock(){
-  askPin(()=>{const p=P();if(!p)return;LOCK.open=p.id;applyLock();renderRoom();SFX.happy();
+function lockUnlock(){ // the PIN, or with no PIN 4 numbers written as words (lockCheck, section 76, v1.88)
+  lockCheck(()=>{const p=P();if(!p)return;LOCK.open=p.id;applyLock();renderRoom();SFX.happy();
     toast('🔓 Unlocked for grown-ups. Tap 🔒 Lock to lock it again.');});
 }
 function lockRelock(){
@@ -75,7 +75,7 @@ function lockShake(){const b=$('#lockBtn');b.classList.remove('shake');void b.of
 function lockStart(){if(lockSet(P())&&lockOn())enterRoom();}
 
 /* ---------- ⚙️ Settings → Level: the switch ---------- */
-const lockSay=on=>on?'🔒 On: only the easy, safe parts. Press and hold 🔒 (and the PIN) to leave.':'🔓 Off: the whole app.';
+const lockSay=on=>on?'🔒 On: only the easy, safe parts. Press and hold 🔒, then the PIN (or 4 numbers if there is none) to leave.':'🔓 Off: the whole app.';
 function lockRow(on){return `<button class="btn ghost lock-sw" id="stLock" aria-pressed="${on}">🧸 Little mode: <b>${on?'On':'Off'}</b></button><div class="band-say" id="stLockSay">${lockSay(on)}</div>`;}
 function lockRowSet(on){const b=$('#stLock');if(!b)return;b.setAttribute('aria-pressed',on);b.querySelector('b').textContent=on?'On':'Off';$('#stLockSay').textContent=lockSay(on);}
 

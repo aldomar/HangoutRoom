@@ -15,7 +15,8 @@ function modal(title,body,buttons){
   $('#modal').classList.remove('hidden');
 }
 function closeModal(){$('#modal').classList.add('hidden');NAV_HOLD.on=false;}
-function updateCoins(){const p=P();if(!p)return;$$('.coinsDisp').forEach(e=>e.textContent='🪙 '+p.coins);}
+function updateCoins(){const p=P();if(!p)return;$$('.coinsDisp').forEach(e=>{let t=e.querySelector('.cn-t');if(!t){e.textContent='';t=document.createElement('span');t.className='cn-t';e.append(t);}t.textContent='🪙 '+p.coins;});
+  if(typeof whoChips==='function') whoChips(p);} // 👤 whose room, next to the coins (section 76, v1.88)
 function earn(n,label,x,y){const p=P();if(!p)return;p.coins+=n;save();updateCoins();SFX.coin();floatText(`+${n} 🪙${label?' '+label:''}`,x,y);}
 function tryBuy(key,price,name,done){
   const p=P();

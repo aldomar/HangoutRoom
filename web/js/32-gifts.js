@@ -115,6 +115,7 @@ $('#decoGrid').addEventListener('click',e=>{
   if(sv){const i=+sv.dataset.laySave; if(layoutsOf(p)[i]) modal('Save over this layout?',`<div class="lay-ask">${layoutPrev(layoutsOf(p)[i])}</div>`,[{text:'✖ No',cls:'ghost'},{text:'✔ Yes',cls:'pink',on:()=>layoutSave(p,i)}]); else layoutSave(p,i);}
   else if(ld){const i=+ld.dataset.layLoad; modal('Put this layout back?',`<div class="lay-ask">${layoutPrev(layoutsOf(p)[i])}</div><p style="text-align:center">What's in the room now goes to 📦 My Stuff.</p>`,[{text:'✖ No',cls:'ghost'},{text:'✔ Yes',cls:'pink',on:()=>layoutLoad(p,i)}]);}
 });
+$('#giveBtn').onclick=giveModal; // 🎁 on the room picture: one tap to give (v1.88, issue 13)
 const giveTile=p=>others(p).length?`<button class="tile gv-tile" data-give="1"><div class="tv">🎁</div><div class="tn">Give a gift</div></button>`:'';
 
 STICKERS.push(

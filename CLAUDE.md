@@ -86,7 +86,7 @@ The players are 3 to 11, and many can't read, so getting around must work from i
 iPhone have no Back button or swipe-back in this app: on-screen buttons are the only way out of anything.** The map of every
 screen and every way in and out is `docs/NAVIGATION.md`: **update its map and table whenever a screen, mode, game or way out
 changes.** The shared helpers live in `76-nav.js`: `endBox` and `NAV_PLACES` since v1.85, `backBtn` since v1.86, `navBack`/`navLeave` since v1.87; the
-whose-room chip arrives in v1.88 (Phase 16, `PLAN.md`). Once a helper exists, new code must use it; until then, follow the
+whose-room chip `whoChips` and the Little mode check `lockCheck` since v1.88. New code must use these helpers; where none exists, follow the
 rule by hand.
 1. **Every round ends on the same end box** (`endBox`): ⬅ + the place's icon on the left (gray), 🔁 Again or ▶ Next on the right
    (pink), extra choices in the middle. Every button has an icon. The buttons ignore taps for about 0.5 s, so a quick tap from the
@@ -299,6 +299,9 @@ rule by hand.
       (a new game that can lose a round adds a line there). Mid-round, `navLeave` opens ⏸️ Paused (⬅ + place gray, big pink ▶ Keep playing)
       and `NAV_HOLD.on` (08) makes the main loop pass `dt` 0; `modal()`/`closeModal()` turn it off. The Stage uses its own ⏸️ (`#stgLeave`), the
       Runway walk holds its timers (`rwHold`/`rwResume`). Android Back on the box = its ⬅.
+      👤 Whose room (v1.88): `whoChips` (called by `updateCoins`, 08) puts the room's buddy (drawn once per look into an `<img>`, `whoArt`)
+      and badge, in the room color, at the start of every `.coinsDisp`; tapping it only says whose room it is. A new screen with coins
+      gets it for free. 🔒 `lockCheck(then)`: the PIN, or with no PIN 4 numbers written as words (`LOCK_WORDS`). 🎁 `#giveBtn` on the room picture.
   68. `68-undo.js` ↩ Undo (v1.74): `undoArm()` (a copy of the profile just before), `undoShow(u, back)`, `undoDo`, `undoOff`, `undoLeave`
       (called by `show()`), `#undoBar`. Hooked into `tryBuy`, `buyConsumable` (08) and `sendGift` (32). **A new shop must buy through
       `tryBuy`/`buyConsumable`** so it gets Undo; a new way to spend or give coins outside them should call `undoArm`/`undoShow` itself.
@@ -351,7 +354,7 @@ rule by hand.
   so Back never leaves and `lockStart()` reopens into it), `goRoom`/the room tabs keep to `LOCK_ROOMS`, `handleHot` wiggles anything not in
   `LOCK_HOTS` (the desk opens 🧸 Play instead of the Art Desk, with a Play sign; the corkboard has no sign), games open on Easy, and CSS under `body.locked` hides the rest (non-Easy level tabs, duels, Tricks, Derby, 📅, rename, Runway).
   **A new screen or hotspot is locked out by default**; add it to `LOCK_SCREENS`/`LOCK_HOTS` only if it's right for a 3-year-old, and hide its
-  harder tabs under `body.locked`. Unlocking (hold 🔒 3 s, then `askPin`) lasts until 🔒 Lock or the app reopens (`LOCK.open`, never saved).
+  harder tabs under `body.locked`. Unlocking (hold 🔒 3 s, then `lockCheck`: the PIN, or with no PIN 4 numbers written as words, v1.88) lasts until 🔒 Lock or the app reopens (`LOCK.open`, never saved).
 - Spoken instructions (since v1.70, section 65): `speakLine()` names where she is (screen + tab/mode/view/puzzle) and its line. `spkCheck()` runs
   after every tap (the Read to me click listener in 34, which now says a button's name just after the tap, unless a place's line was said) and
   after `show()`; it speaks when the place changed and `spkAuto()` (Read to me on, sound on, no song or loop). `tell(t)` says one-off lines the
