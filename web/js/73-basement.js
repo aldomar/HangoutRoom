@@ -11,7 +11,7 @@
    - Two free display pieces (Shop, listed first): the 🗄️ Trophy Case (3 shelves: shelf.tops, section 9) and the Prize Podium.
    Room 5 and its saved ids (brick, grayCarpet, prizeCase, prizePodium) are saved: never rename them.
    ===================================================================== */
-ROOM_MAP.push({n:5,icon:'🧱',name:'Basement',from:1,dir:'down',col:2,row:3});
+ROOM_MAP.push({n:5,icon:'🧱',name:'Basement',from:1,dir:'down',col:3,row:3});
 ROOM_NAMES[5]='Basement';
 
 /* ---------- the first look ---------- */

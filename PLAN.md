@@ -1572,6 +1572,39 @@ After v1.88: try the "Needs checking on a device" list in `docs/NAVIGATION.md` w
   check on filler letters, `FP_MAKERS.search`; owner's follow-up: words cross and go different ways, `WS_CROSS`/`WS_NEWDIR`, never all one way), Hard is 7 × 7 (not 8 × 8) so letters stay 48 px on an iPhone. `brain.level.search`
   and `stats.searched` added in `normalize()`; no save version bump.
 
+### Phase 17: 🍳 the Kitchen (agreed 2026-11-27)
+The owner's design plan "Hangout Room – Kitchen Room Plan" (kept outside git): a Kitchen room whose 8 recipes are short chains of
+hands-on "stations" (wash, peel, chop, stir, flip…) with math and word challenges woven in, on 🐣 Easy / 🌟 Medium / 🧠 Hard.
+Build it one section at a time, each a PR, and test section 2 on a real iPad with the children before building the rest.
+
+Owner's answers (2026-11-27), after the recon (section 1):
+- It is the **sixth** room (the Basement is the fifth). It sits **⬅️ left of her room**, and the **Backyard moves to the left of
+  the Kitchen**; her window stays a one-tap shortcut to the Backyard, so every room is still one tap from her room.
+- **🧸 Little mode lets it in** (Easy only: the recipe book and the sink).
+- **Every recipe is open**, in a suggested order that builds up (like the Brain Games and the Code Lab); no padlocks.
+- **Coins:** 2 / 3 / 4 per new star (Easy / Medium / Hard) outside any cap; a replay with no new star +2, 20 a day.
+- From the plan's open questions: unlocked right away; keep the money challenges; cups and spoons only (no mL or grams);
+  the birthday candles are tapped (no microphone: it would need a new Android permission and an iPad prompt).
+- Recon decisions (no objection): dishes are saved as small recipes (redrawn in SVG), not pictures; no ages anywhere (the
+  cake's candles become a counting step); no timer that changes stars or coins (a Speed Round would be just for fun);
+  the device voice only (no recorded voices, since GitHub Pages is public); the iPad's own Reduce Motion is followed.
+
+Sections (one PR each unless noted):
+1. ✅ **Recon** (no code): how rooms, levels, Free Play, coins, decorations, profiles, two-player and gifting work, and where the Kitchen plugs in.
+2. ✅ **v1.91 Vertical slice** (branch `feature/kitchen`, stacked on `feature/word-search`): the room, the recipe book, the station
+   runner, Wash / Peel / Chop / Into the bowl / Decorate, 🥗 Rainbow Fruit Salad on all 3 levels, 🍽️ My Dishes, the 🫧 sink toy.
+   New files `78-kitchen.js` (room), `79-kitchen-play.js` (book, runner, stars, coins, dishes), `80-kitchen-food.js` (recipes,
+   food and dish drawings), `81-kitchen-stations.js`. Save version 39: `room6`, `kitchen{level, stars{}, dishes[], pay}`, `stats.cooked`.
+   **Then: test it on an iPad with the children** before section 3.
+3. **Challenge engine:** the bowl's counting moves into reusable makers (seeded, like 🎲 Free Play's `FP_MAKERS`): scoop math,
+   counting, homophones, sequencing, timers, money; the smoke test checks every level of each across many seeds.
+4. **The other stations and recipes 2–8**, one recipe at a time, in order (🥞 Pancakes, 🥪 Sandwich Shop, 🍕 Pizza, 🍲 Veggie Soup,
+   🍪 Cookies, 🍨 Smoothie & Sundae, 🎂 Birthday Cake).
+5. **Replay layer:** customers at the 🛎️ order window (the friends from the games: Mochi, Boo, Bolt, Zip…), 🧊 Chef's Choice at the
+   fridge (Free Play with a twist), variants, Messy Kitchen sandbox, a Daily Special (+5 once a day, no streak), 👯 co-op and
+   cook-off (`tgPick`, `tgPay`), star prizes (`award:1`), giving a dish as a gift (on one iPad; gift codes can't carry a dish).
+6. **Polish:** narration pass, sounds, Reduce Motion, an accessibility check of every station, playtest notes turned into fixes.
+
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
 

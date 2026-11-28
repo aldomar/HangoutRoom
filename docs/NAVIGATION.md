@@ -1,6 +1,6 @@
 # Navigation map and rules
 
-_Written 2026-11-27 (navigation review); updated for v1.85 (one end box, pet games back to the pet menu) v1.86 (every Back shows where it goes) and v1.87 (Back mid-round pauses and asks). Keep it up to date when a screen, mode, game or way out is added._
+_Written 2026-11-27 (navigation review); updated for v1.85 (one end box, pet games back to the pet menu) v1.86 (every Back shows where it goes) and v1.87 (Back mid-round pauses and asks) and v1.91 (the 🍳 Kitchen, with the Backyard behind it). Keep it up to date when a screen, mode, game or way out is added._
 
 This page answers "how does a child get into each part of the app, and how do they get back out?". It comes from reading
 the code (`show()` in `web/js/09-screens.js`, every Back handler and every end-of-game box), not from the screens alone.
@@ -12,15 +12,16 @@ app opens without Safari's bars, and the app never uses the browser history. `wi
 runs on the Android tablet. **On the children's devices, the buttons on the screen are the only way out of anything.**
 
 ## How getting around works
-- **Her room is the hub.** The other rooms hang off it: ⬆️ the Loft, ⬅️ the Backyard (her window is a shortcut too),
-  ➡️ the Studio, ⬇️ the Basement. The arrow tabs sit at the edges of the room picture; the 🗺️ map shows every room.
+- **Her room is the hub.** The other rooms hang off it: ⬆️ the Loft, ⬅️ the Kitchen (since v1.91), ➡️ the Studio,
+  ⬇️ the Basement. The 🌳 Backyard is one more ⬅️ past the Kitchen, and her window is still a one-tap shortcut to it, so every
+  room is one tap from her room. The arrow tabs sit at the edges of the room picture; the 🗺️ map shows every room.
 - **Screens remember which room they were opened from.** `show('room')` keeps `roomNo`, so leaving Soccer lands in the
   Backyard and leaving the Stage lands in the Loft. Opening a room from the rooms list (`enterRoom()`) always starts in her room.
 - **Room modes** (🔍 I Spy, 🙈 Hide & Seek, 🎾 Fetch) are not screens: they play inside the room on screen, hide the top bar,
   the room arrows and the round buttons, and show a card at the top instead.
 - **Boxes** (`modal()`) close only with one of their own buttons. Tapping outside does nothing.
-- **🧸 Little mode** (`lockGuard`, section 66) sends any screen not in `LOCK_SCREENS` back to the room, keeps to her room and
-  the Backyard, and hides ⚙️ (so switching rooms needs a grown-up).
+- **🧸 Little mode** (`lockGuard`, section 66) sends any screen not in `LOCK_SCREENS` back to the room, keeps to her room, the
+  Backyard and (since v1.91) the Kitchen, and hides ⚙️ (so switching rooms needs a grown-up).
 - **Two-player games** pick the second player in a box (another room or 👤 Guest). The game stays on the first player's
   screen; leaving the screen ends the duel; the end box offers "Just me" or "Play again".
 - **Leaving the app** saves, pauses a Stage song (⏸️, then ▶ and 3-2-1), ends a Jam, and stops the Music and Dance Makers.
@@ -41,7 +42,9 @@ flowchart TD
 
   subgraph HOUSE [The house: arrow tabs + 🗺️ map]
     ROOM1[🏠 My Room] <-- "⬆️ / ⬇️" --> LOFT[🪜 Loft]
-    ROOM1 <-- "⬅️ tab or window" --> YARD[🌳 Backyard]
+    ROOM1 <-- "⬅️ / ➡️" --> KITCHEN[🍳 Kitchen]
+    KITCHEN <-- "⬅️ / ➡️" --> YARD[🌳 Backyard]
+    ROOM1 -- "window (shortcut)" --> YARD
     ROOM1 <-- "➡️" --> STUDIO[✨ Studio]
     ROOM1 <-- "⬇️ / ⬆️" --> BASE[🧱 Basement]
   end
@@ -80,7 +83,11 @@ flowchart TD
   YARD -- chalkboard --> BRAIN[📚 Brain Games: menu → puzzle / 👯 / 📅 / 🎲]
   YARD -- shed --> GARDEN[🌱 Garden]
 
-  SOC & BALL & STAGE & CODE & MUSIC & BRAIN & GARDEN & FID & CARDS & STK & LITTLE & ART & ABOUT & CLOSET -- "⬅ (to the room it was opened from)" --> ROOMS((the room on screen))
+  KITCHEN -- "recipe book" --> KBOOK[📖 Recipes: book → a recipe / 🍽️ My Dishes]
+  KBOOK -- "a recipe: ⬅ 📖 Recipes (asks mid-recipe); end box ⬅ 📖 Recipes / 🍽️ Put it out / 🔁 Again" --> KBOOK
+  KITCHEN -- sink --> KSINK[🫧 Sink: washing toy]
+
+  SOC & BALL & STAGE & CODE & MUSIC & BRAIN & GARDEN & FID & CARDS & STK & LITTLE & ART & ABOUT & CLOSET & KBOOK & KSINK -- "⬅ (to the room it was opened from)" --> ROOMS((the room on screen))
   SOC & BALL & BRAIN & STAGE -- "👯" --> TGP[Who is playing? box]
   TGP -- "a room or 👤 Guest" --> DUEL[the duel, on the same screen]
   DUEL -- "Just me / Play again" --> SOC & BALL & BRAIN & STAGE
@@ -96,7 +103,7 @@ is the only "go to my room" control.
 | Screen | Entry points | Exit points | Has back? | Has home? | Notes |
 |---|---|---|---|---|---|
 | Rooms list | App start, refresh, restore, ⚙️ → 👥 | Tap a room (1 tap, no question), + New (PIN) | – | – | A locked Little room skips it on start |
-| Rooms 1–5 | Rooms list, arrow tabs, 🗺️ map, window → Backyard | Hotspots, top bar, arrow tabs | No (Android: room → her room → rooms list) | 🗺️ map | Only way to the rooms list is ⚙️ → 👥 |
+| Rooms 1–6 | Rooms list, arrow tabs, 🗺️ map, window → Backyard | Hotspots, top bar, arrow tabs | No (Android: room → her room → rooms list) | 🗺️ map | Only way to the rooms list is ⚙️ → 👥. Since v1.91 the Backyard's ➡️ tab goes to the 🍳 Kitchen (then ➡️ again to her room) |
 | Decorate (mode) | 🛋️ | ✔ Done | ✔ Done | – | Leaving the room ends it |
 | Settings (box) | ⚙️ | ✖ Close (gray, last), 👥 Switch, 💌 About, 🎁 Gift… | ✖ Close | – | Hidden in Little mode. PIN and Backup boxes: ⬅ ⚙️ Settings |
 | About | ⚙️ → 💌 | ⬅ ⚙️ Settings | ✔ | – | Reopens Settings (v1.86) |
@@ -117,6 +124,8 @@ is the only "go to my room" control.
 | Code Lab | Loft computer | Puzzle → list → room; maker: edit → levels → room; end box: ⬅ 🧩 Puzzles / ▶ Next (🔁 Again on the last one) | ✔ | – | |
 | Brain Games | Chalkboard | Puzzle → menu → room; end box: ⬅ 📚 Games / ▶ Next (🔁 Again on the last one); 👯: ⬅ 📚 Games / 🔁 Play again | ✔ | – | Back from a puzzle goes to the menu, not that game. 🔎 Word Search (v1.90) is one more game here, on the same puzzle screen |
 | Garden | Shed | ⬅ 🌳 Backyard | ✔ | – | |
+| 📖 Recipes (Kitchen) | The Kitchen's recipe book | ⬅ 🍳 Kitchen; a recipe → ⬅ 📖 Recipes; 🍽️ My Dishes → ⬅ 📖 Recipes | ✔ | – | v1.91. Back mid-recipe: ⏸️ ⬅ 📖 Recipes / ▶ Keep playing. End box: ⬅ 📖 Recipes / 🍽️ Put it out / 🔁 Again. The 🔜 pages only say "coming soon" |
+| 🫧 Sink (Kitchen) | The Kitchen's sink | ⬅ 🍳 Kitchen | ✔ | – | v1.91. A washing toy with no end and no coins. The 🧊 fridge and 🛎️ order window only say "coming in a future update" |
 | 🧸 Play | 🧸 button; the desk in Little mode | Toy → ⬅ 🖍️ Pictures / ⬅ 🧸 Play → ⬅ + room | ✔ | – | No end (by design) |
 | I Spy (mode) | 🔍 | ✖; end box: ⬅ + this room (stays here) / 🔁 Again | ✖ | – | Top bar and arrows hidden |
 | Pet menu (box) | The pet | ✖ Close, 🙈, 🎾, 🦮, 🛖 Home | ✖ Close | – | |
@@ -150,8 +159,8 @@ Severity: **High** = a child gets stuck or can't tell the choices apart; **Med**
 | 16 | Close words in boxes | Close (pink in Settings, gray elsewhere), ✖, ✖ Not now, Done, Yay! ✨, Keep it, Cancel; mostly text only | Pre-readers | ✖ Close (gray) in every box, ✔ Done for "finished, stay here" | S | Low | ✅ v1.86 |
 | 17 | Spoken help in normal rooms | Read to me follows Easy mode, so a pre-reader on ⭐ Normal hears nothing unless it is turned on | 5-year-olds on Normal | A line in the grown-up setup; the 🔊 buttons stay | S | Low | ✅ v1.88 |
 
-Taps from her room (counting the room arrow): Fidget Shelf, Closet, Art Desk, Photocards, Stickers, 🧸 Play, I Spy, the pet
-menu: 1. Music Maker, Stage, Code Lab, Soccer, Ball Field, Brain Games, Garden, Hide & Seek, Fetch, Walk: 2. Keep, Tricks,
+Taps from her room (counting the room arrow; the Backyard counts the window): Fidget Shelf, Closet, Art Desk, Photocards, Stickers, 🧸 Play, I Spy, the pet
+menu: 1. Music Maker, Stage, Code Lab, Soccer, Ball Field, Brain Games, Garden, 📖 Recipes, 🫧 Sink, Hide & Seek, Fetch, Walk: 2. A recipe, Keep, Tricks,
 Catch, Derby, a Brain game, 📅, Dance Maker, a walk path: 3. Duels, Jam, a Runway show: 4. Memory for 2: 5.
 
 ## Needs checking on a device

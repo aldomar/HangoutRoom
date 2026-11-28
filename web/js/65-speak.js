@@ -103,6 +103,7 @@ function speakLine(){
     case 'music': return MU.playing?{k:'music',t:''}:{k:'music',t:SPK_FIXED.music};
     case 'dance': return DN.playing?{k:'dance',t:''}:{k:'dance',t:spkText('#dnHint')};
     case 'garden': return {k:'garden',t:spkText('#gdHint')};
+    case 'kitchen': return kcSpeak(); // 🍳 (section 79, v1.91)
     case 'walk': return WK.view==='pick'?{k:'walk:pick',t:SPK_FIXED.walkPick}:WK.view==='book'?{k:'walk:book',t:SPK_FIXED.walkBook}:{k:'walk:walk',t:spkText('#wkTip')};
     case 'runway': return RW.view==='cards'?{k:'rw:cards',t:SPK_FIXED.runwayCards}:RW.view==='dress'?{k:'rw:dress',t:SPK_FIXED.runwayDress}:{k:'rw:walk',t:''};
     case 'little': return LT.view==='menu'?{k:'lt:menu',t:SPK_FIXED.littleMenu}:LT.view==='colorPick'?{k:'lt:pick',t:SPK_FIXED.littlePick}

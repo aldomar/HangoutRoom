@@ -31,7 +31,7 @@ function newProfile(name,fur,color,badge,look){
 function normalize(p){
   if(!p.id) p.id=uid();
   if(!p.name) p.name='Room';
-  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0,seeks:0,fetches:0,petWalks:0,finds:0,hits:0,homers:0,catches:0,derbies:0,made:0,searched:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
+  p.stats=Object.assign({pops:0,flips:0,squish:0,spins:0,bestRpm:0,drawings:0,cards:0,goals:0,kicks:0,matches:0,perfects:0,saves:0,shows:0,fullCombos:0,stretches:0,clicks:0,mazes:0,dailies:0,nights:0,gifts:0,snaps:0,wishes:0,free:0,potd:0,colored:0,peeks:0,pads:0,planted:0,harvests:0,spied:0,spyRounds:0,walks:0,wows:0,jams:0,jamOwn:0,tricks:0,seeks:0,fetches:0,petWalks:0,finds:0,hits:0,homers:0,catches:0,derbies:0,made:0,searched:0,cooked:0},p.stats||{}); // dailies (v1.18) = daily gifts opened, a plain count (not a streak)
   p.artPay=Object.assign({day:'',n:0},p.artPay||{}); // art coins paid today (see ART_DAILY)
   p.fidPay=Object.assign({day:'',n:0},p.fidPay&&typeof p.fidPay==='object'?p.fidPay:{}); if(typeof p.fidPay.n!=='number'||!(p.fidPay.n>=0)) p.fidPay.n=0; // v1.36: fidget coins paid today (see FID_DAILY)
   // Music Maker (v1.38, section 40): sound kit, speed (0-2), the loop on the grid now, 3 saved loops, music coins paid today.
@@ -54,7 +54,9 @@ function normalize(p){
   // The Basement (v1.79): bare like the Studio. '' = not visited yet: baseStart() (section 73) gives it the brick wall then.
   p.room5=Object.assign({wall:'',floor:'',items:[]},p.room5&&typeof p.room5==='object'&&!Array.isArray(p.room5)?p.room5:{});
   ['wall','floor'].forEach(k=>{if(typeof p.room5[k]!=='string')p.room5[k]='';});
-  [p.room,p.room2,p.room3,p.room4,p.room5].forEach(r=>{if(!Array.isArray(r.items))r.items=[];r.items=r.items.filter(i=>i&&typeof i==='object');
+  p.room6=Object.assign({wall:'',floor:'',items:[]},p.room6&&typeof p.room6==='object'&&!Array.isArray(p.room6)?p.room6:{}); // 🍳 the Kitchen (v1.91, section 78)
+  ['wall','floor'].forEach(k=>{if(typeof p.room6[k]!=='string')p.room6[k]='';});
+  [p.room,p.room2,p.room3,p.room4,p.room5,p.room6].forEach(r=>{if(!Array.isArray(r.items))r.items=[];r.items=r.items.filter(i=>i&&typeof i==='object');
     r.items.forEach(i=>{if('rot' in i){const v=rotOk(i.rot);if(v)i.rot=v;else delete i.rot;}if('yaw' in i&&!yawOk(i.yaw))delete i.yaw;});}); // ↻ a turned decoration (v1.83)
   p.fid=Object.assign({pop:'rainbow',squish:'mochi',spin:'galaxy',popShape:'classic',slime:'grape',cube:'pastel',marble:'pearl'},p.fid||{}); // popShape: v1.10; slime, cube, marble: v1.16
   // Marble Maze (v1.16): the ids of the mazes solved (each pays +3 once).
@@ -88,7 +90,7 @@ function normalize(p){
    ['planted','harvests'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));});}
   // I Spy (v1.49, section 50): the clue level (1 picture, 2 name, 3 hint), the room numbers with a finished round, coins paid today.
   {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, s=o(p.spy), py=o(s.pay), lv=Math.floor(Number(s.lvl));
-   p.spy={lvl:lv>=1&&lv<=3?lv:1,rooms:Array.isArray(s.rooms)?[...new Set(s.rooms.filter(n=>[1,2,3,4,5].includes(n)))]:[],
+   p.spy={lvl:lv>=1&&lv<=3?lv:1,rooms:Array.isArray(s.rooms)?[...new Set(s.rooms.filter(n=>[1,2,3,4,5,6].includes(n)))]:[],
      pay:{day:typeof py.day==='string'?py.day:'',n:Math.max(0,Math.floor(Number(py.n)||0))}};
    ['spied','spyRounds'].forEach(k=>{p.stats[k]=Math.max(0,Math.floor(Number(p.stats[k])||0));});}
   // Runway (v1.51, section 52): coins paid today and the theme card ids walked (checked against RW_CARDS when counted).
@@ -145,10 +147,10 @@ function normalize(p){
   // Gifts + layouts (v1.28): the gifts waiting to be opened, and up to 3 saved layouts per room.
   p.gifts=(Array.isArray(p.gifts)?p.gifts:[]).filter(g=>g&&typeof g==='object'&&typeof g.id==='string'&&(g.kind==='coins'&&Number(g.n)>0||g.kind==='decor'&&typeof g.type==='string')).map(g=>Object.assign(g,{from:String(g.from||'').slice(0,24),badge:typeof g.badge==='string'?g.badge:'🎁'},g.kind==='coins'?{n:Math.min(100,Math.floor(Number(g.n)))}:{}));
   const pr=p.presets&&typeof p.presets==='object'&&!Array.isArray(p.presets)?p.presets:{}, lay=L=>L&&typeof L==='object'&&typeof L.wall==='string'&&typeof L.floor==='string'&&Array.isArray(L.items)?Object.assign(L,{items:L.items.filter(i=>i&&typeof i.uid==='string'&&typeof i.type==='string').map(i=>Object.assign({uid:i.uid,type:i.type,x:Number(i.x)||0,y:Number(i.y)||0},rotOk(i.rot)?{rot:rotOk(i.rot)}:{},yawOk(i.yaw)?{yaw:i.yaw}:{}))}):null;
-  p.presets={1:0,2:0,3:0,4:0,5:0}; Object.keys(p.presets).forEach(k=>{const a=Array.isArray(pr[k])?pr[k]:[];p.presets[k]=[0,1,2].map(i=>lay(a[i]));});
+  p.presets={1:0,2:0,3:0,4:0,5:0,6:0}; Object.keys(p.presets).forEach(k=>{const a=Array.isArray(pr[k])?pr[k]:[];p.presets[k]=[0,1,2].map(i=>lay(a[i]));});
   if(typeof p.speak!=='boolean') p.speak=null; // v1.30 🔊 Read to me: null = on in Easy mode, off otherwise
   if(typeof p.dream!=='string') p.dream=''; // v1.29: the big dream she is saving up for (a DECOR key, or '')
-  p.night=Object.fromEntries(Object.entries(p.night&&typeof p.night==='object'&&!Array.isArray(p.night)?p.night:{}).filter(([k,v])=>['1','2','3','4','5'].includes(k)&&v===true));
+  p.night=Object.fromEntries(Object.entries(p.night&&typeof p.night==='object'&&!Array.isArray(p.night)?p.night:{}).filter(([k,v])=>['1','2','3','4','5','6'].includes(k)&&v===true));
   // Photocards (v1.4). A card: {id, no, at, look, stage, frame, title, name, s:[cute,spooky,sporty], bonus?}
   p.cards=Array.isArray(p.cards)?p.cards.filter(c=>c&&typeof c==='object'&&typeof c.id==='string'):[];
   p.cards.forEach(c=>{if(typeof c.no!=='number')c.no=Number(c.no)||0;});
@@ -220,5 +222,12 @@ function normalize(p){
   p.brain={game:brG.includes(br.game)?br.game:'snack',level:{},solved:Array.isArray(br.solved)?br.solved.filter((x,i,a)=>typeof x==='string'&&a.indexOf(x)===i):[],
     shelf:br.shelf===true}; // shelf: the 📚 Brain Shelf was given (v1.77)
   brG.forEach(g=>{p.brain.level[g]=['easy','medium','hard'].includes(brL[g])?brL[g]:'easy';});
+  // 🍳 Kitchen (v1.91, section 79): the level picked, the best stars per recipe and level (0-3), the Dish Book (newest last,
+  // KC_DISH_MAX kept) and the replay coins paid today. A dish is {id, r, lv, f[], c[], at}: its drawing, not a picture.
+  {const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{}, k=o(p.kitchen), sr=o(k.stars), py=o(k.pay), L=['easy','medium','hard'];
+   const stars={}; Object.keys(sr).forEach(r=>{const x=o(sr[r]);stars[r]={};L.forEach(l=>{stars[r][l]=Math.max(0,Math.min(3,Math.floor(Number(x[l])||0)));});});
+   const dish=d=>d&&typeof d==='object'&&typeof d.id==='string'&&typeof d.r==='string'&&Array.isArray(d.f)&&Array.isArray(d.c);
+   p.kitchen={level:L.includes(k.level)?k.level:'easy',stars,dishes:(Array.isArray(k.dishes)?k.dishes.filter(dish):[]).slice(-24),
+     pay:{day:typeof py.day==='string'?py.day:'',n:Math.max(0,Math.floor(Number(py.n)||0))}};}
 }
 DB.profiles.forEach(normalize);

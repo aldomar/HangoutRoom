@@ -68,6 +68,7 @@ function navMid(){
   }
   if(cur==='stage') return STG.state==='play'&&!STG.paused;
   if(cur==='runway') return RW.walking;
+  if(cur==='kitchen') return kcMid(); // 🍳 a recipe under way (section 79, v1.91)
   if(cur==='brain') return BR.view==='duo'&&!TGM.done&&TGM.cards.some(c=>c.got>=0);
   return false;
 }

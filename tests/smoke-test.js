@@ -1109,7 +1109,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
 
   console.log('Sticker Book (v1.18)');
   await ev(`closeModal();P().easy=false;show('room');goRoom(1);applyEasy()`); await sleep(500);
-  check('152 stickers on 8 pages (2 for Word Search since v1.90, 3 for Pack 6 since v1.82, 1 for 🪜 the Basement since v1.79, 2 for 🛠️ the level maker since v1.78, 1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===152&&new Set(STICKERS.map(s=>s.id)).size===152&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
+  check('154 stickers on 8 pages (2 for the Kitchen since v1.91, 2 for Word Search since v1.90, 3 for Pack 6 since v1.82, 1 for 🪜 the Basement since v1.79, 2 for 🛠️ the level maker since v1.78, 1 for 🎯 the Derby since v1.62, 1 for 🧤 Catch since v1.61, 3 for the Ball Field since v1.60, 3 for Pack 5 since v1.58, 4 for the pet since v1.19, 4 for Pack 2 since v1.21, 2 for the Backyard since v1.23, 3 for the keeper since v1.24, 4 for Brain Games since v1.25, 4 for songs since v1.26, 2 for looks since v1.27, 2 for gifts and layouts since v1.28, 1 for big dreams since v1.29, 1 for snapshots since v1.30, 2 for Brain Games 3 since v1.33, 2 for Brain Games 4 since v1.34, 4 for Pack 3 since v1.35, 4 for Pack 4 since v1.36, 3 for Extras since v1.37, 1 for the Music Maker since v1.38, 1 for the Studio since v1.40, 6 on the Friends page since v1.41, 3 more for playing together since v1.42, 3 for Free Play since v1.43, 6 on the 🧸 Play page since v1.46, 3 for the Dance Maker since v1.47, 4 for the Garden since v1.48, 3 for I Spy since v1.49, 3 for new things to buy since v1.50, 3 for the Runway since v1.51, 3 for the Stage Jam since v1.52, 3 for Trick Shots since v1.53, 4 for pet play since v1.54, 3 for pet walks since v1.55), ids all different, 6 or more per page', await ev(`STICKERS.length===154&&new Set(STICKERS.map(s=>s.id)).size===154&&Object.keys(STK_PAGES).length===8&&Object.keys(STK_PAGES).every(k=>STICKERS.filter(s=>s.page===k).length>=6)`));
   check('every sticker draws and can measure progress', await ev(`STICKERS.every(s=>STK_SHAPES[s.shape]&&/<svg[^>]*>.*<path/.test(stickerSVG(s))&&Number.isFinite(stkHave(P(),s))&&stkNeed(s)>0)`));
   check('stickers are given only through the book code (none yet while paused)', await ev(`P().stickers.length===0`));
   const sk0=await ev('P().coins'), skWant=await ev(`STICKERS.filter(s=>stkDone(P(),s)).length`);
@@ -1518,10 +1518,11 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   console.log('Backyard (v1.23)');
   await ev(`closeModal();stkPaused=true;P().easy=false;P().coins=500;applyEasy();show('room');goRoom(1)`); await sleep(200);
   const goBtns=()=>ev(`[...document.querySelectorAll('#roomTabs [data-go]')].map(b=>b.className.split('rt-')[1]+':'+b.dataset.go).join('|')`);
-  check('her room has ⬆️ Loft, ⬅️ Backyard, ➡️ Studio and ⬇️ Basement tabs', (await goBtns())==='up:2|left:3|right:4|down:5', await goBtns());
+  check('her room has ⬆️ Loft, ➡️ Studio, ⬇️ Basement and ⬅️ Kitchen tabs (the Backyard is past the Kitchen since v1.91)', (await goBtns())==='up:2|right:4|down:5|left:6', await goBtns());
+  await ev(`document.querySelector('#roomTabs [data-go="6"]').click()`); await sleep(250);
   await ev(`document.querySelector('#roomTabs [data-go="3"]').click()`); await sleep(250); await shot('F01-backyard');
   check('🌳 Yard opens the Backyard', await ev(`roomNo===3&&cur==='room'&&document.querySelector('#roomTitle').textContent.endsWith("'s Backyard")`));
-  check('the Backyard has one ➡️ tab back to her room', (await goBtns())==='right:1', await goBtns());
+  check('the Backyard has one ➡️ tab back to the Kitchen', (await goBtns())==='right:6', await goBtns());
   check('a new Backyard: White Picket fence, Grass, nothing placed', await ev(`P().room3.wall==='picket'&&P().room3.floor==='grass'&&document.querySelector('[data-fence=picket]')&&!P().room3.items.length`));
   check('the tree, goal, shed, easel, Fuzzy and the pet are drawn', await ev(`!!(document.querySelector('[data-tree]')&&document.querySelector('[data-hot=goal]')&&document.querySelector('[data-piece=shed]')&&document.querySelector('[data-piece=easel]')&&document.querySelector('#mascotG')&&document.querySelector('[data-hot=pet]'))`));
   await ev(`document.querySelector('#mapBtn').click()`); await sleep(150);
@@ -2815,7 +2816,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   console.log('Studio + getting around (v1.40)');
   await ev(`(()=>{closeModal();exitDecorate(true);stkPaused=true;const p=P();p.easy=false;applyEasy();p.night={};p.coins=100;p.dream='';themePick.shop='all';p.room4={wall:'',floor:'',items:[]};save();show('room');goRoom(1);})()`); await sleep(200);
   const stTabs=()=>ev(`[...document.querySelectorAll('#roomTabs [data-go]')].map(b=>b.className.split('rt-')[1]+':'+b.dataset.go).join('|')`);
-  check('her room: ⬆️ Loft, ⬅️ Backyard, ➡️ Studio and ⬇️ Basement tabs, each with a spoken name', (await stTabs())==='up:2|left:3|right:4|down:5'&&await ev(`[...document.querySelectorAll('#roomTabs .rtab')].every(b=>/^Go to the /.test(b.getAttribute('aria-label')))`), await stTabs());
+  check('her room: ⬆️ Loft, ➡️ Studio, ⬇️ Basement and ⬅️ Kitchen tabs, each with a spoken name', (await stTabs())==='up:2|right:4|down:5|left:6'&&await ev(`[...document.querySelectorAll('#roomTabs .rtab')].every(b=>/^Go to the /.test(b.getAttribute('aria-label')))`), await stTabs());
   check('the tabs are at least 48 px and sit inside the screen', await ev(`[...document.querySelectorAll('#roomTabs .rtab')].every(b=>{const r=b.getBoundingClientRect();return r.width>=48&&r.height>=48&&r.left>=0&&r.right<=innerWidth;})`));
   check('the left tab is clear of the 🌙 and 📷 buttons', await ev(`(()=>{const t=document.querySelector('.rt-left').getBoundingClientRect(),s=document.querySelector('#roomSnapBtn').getBoundingClientRect();return t.top>=s.bottom;})()`));
   await shot('S01-room-tabs');
@@ -2843,7 +2844,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   await ev(`for(const k of ['lava','plant','disco','eggChair'])P().room4.items.push(Object.assign({uid:'st'+k,type:k,placed:true},spot(k)));exitDecorate()`); await sleep(150);
   await shot('S03-studio-decorated');
   check('5 things in the Studio earn ✨ Studio Star', await ev(`stkDone(P(),STICKERS.find(s=>s.id==='studio5'))&&STICKERS.find(s=>s.id==='studio5').page==='room'`));
-  check('allItems and rooms() include the Studio', await ev(`rooms(P()).length===5&&allItems(P()).some(i=>i.uid==='stP')`));
+  check('allItems and rooms() include the Studio', await ev(`rooms(P()).length>=5&&rooms(P())[3]===P().room4&&allItems(P()).some(i=>i.uid==='stP')`));
   // night mode: the Studio has no window, so no Loft window appears
   await ev(`document.querySelector('#nightBtn').click()`); await sleep(150);
   check('🌙 works in the Studio, without the Loft window', await ev(`P().night['4']===true&&!!document.querySelector('#roomSvg .night')&&!document.querySelector('#roomSvg circle[cx="340"][cy="140"]')`));
@@ -2862,7 +2863,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('the Studio has its own layouts', await ev(`Array.isArray(P().presets[4])&&P().presets[4].length===3&&(()=>{enterDecorate();document.querySelector('[data-dt=layouts]').click();const n=document.querySelectorAll('#decoGrid *').length;exitDecorate();return n>0;})()`));
   // 🗺️ the map
   await ev(`document.querySelector('#mapBtn').click()`); await sleep(150);
-  check('🗺️ shows every room, the Studio marked ⭐ Here', await ev(`document.querySelectorAll('#modalBody [data-map]').length===5&&document.querySelector('#modalBody .hm-room.on').dataset.map==='4'&&document.querySelector('#modalBody .hm-room.on').textContent.includes('Here')`));
+  check('🗺️ shows every room, the Studio marked ⭐ Here', await ev(`document.querySelectorAll('#modalBody [data-map]').length===ROOM_MAP.length&&document.querySelector('#modalBody .hm-room.on').dataset.map==='4'&&document.querySelector('#modalBody .hm-room.on').textContent.includes('Here')`));
   check('the map buttons are big enough to tap', await ev(`[...document.querySelectorAll('#modalBody .hm-room')].every(b=>{const r=b.getBoundingClientRect();return r.width>=48&&r.height>=48;})`));
   await shot('S05-map');
   await ev(`document.querySelector('[data-map="3"]').click()`); await sleep(200);
@@ -5140,7 +5141,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     const full=`(()=>{const p=P();Object.keys(GAME_PAY).forEach(k=>{const o=GAME_PAY[k].pay(p);o.day=fpDay();o.n=GAME_PAY[k].cap;});})()`;
     const toastT=`document.querySelector('#toast').textContent`;
     await ev(`closeModal();show('room');goRoom(1);stkPaused=true;window.FP_TEST_DAY='2031-03-01';gameTold.clear();P().coins=100;P().bonusGot=BONUS.map(b=>b.id);${fresh}`); await sleep(100);
-    check('6 allowances: 20 for Soccer, Keeper, Batting, Catch and the Stage, 10 for maze replays', await ev(`['soccer','keep','bat','catch','stage'].every(k=>GAME_PAY[k].cap===20)&&GAME_PAY.maze.cap===10&&Object.keys(GAME_PAY).length===6`));
+    check('7 allowances: 20 for Soccer, Keeper, Batting, Catch, the Stage and the Kitchen (since v1.91), 10 for maze replays', await ev(`['soccer','keep','bat','catch','stage','kitchen'].every(k=>GAME_PAY[k].cap===20)&&GAME_PAY.maze.cap===10&&Object.keys(GAME_PAY).length===7`));
     for(const k of ['soccer','keep','bat','catch','stage','maze']){
       await ev(`P().coins=100;${toastT}='';for(let i=0;i<9;i++)gameEarn('${k}',3)`); await sleep(1500);
       const cap=await ev(`GAME_PAY['${k}'].cap`);
@@ -5466,7 +5467,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await ev(`DB.settings.sound=true;show('room')`);
     check('never during a Stage song', await ev(`(()=>{cur='stage';STG.state='play';window._said=[];tell('Hello there');const n=window._said.length;STG.state='pick';cur='room';return n===0;})()`));
     // the 🔊 buttons
-    check('a 🔊 button in every screen\'s top bar (not the rooms, the room or About), 48 px, labeled', await ev(`(()=>{const b=[...document.querySelectorAll('.say-btn')];return b.length===16&&b.every(x=>x.getAttribute('aria-label')==='Say it again'&&!x.classList.contains('hidden'))
+    check('a 🔊 button in every screen\'s top bar (not the rooms, the room or About), 48 px, labeled', await ev(`(()=>{const b=[...document.querySelectorAll('.say-btn')];return b.length===17&&b.every(x=>x.getAttribute('aria-label')==='Say it again'&&!x.classList.contains('hidden'))
       &&!document.querySelector('#scr-room .say-btn,#scr-profiles .say-btn,#scr-about .say-btn');})()`), await ev(`document.querySelectorAll('.say-btn').length`));
     await ev(`show('closet')`); await sleep(50);
     check('…48 px', await ev(`(r=>r.width>=48&&r.height>=48)(document.querySelector('#scr-closet .say-btn').getBoundingClientRect())`));
@@ -5504,7 +5505,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('…🌙 and 🔊 stay', await vis('#nightBtn')&&await vis('#soundBtn'));
     check('…the 🔒 is 48 px', await ev(`(r=>r.width>=48&&r.height>=48)(document.querySelector('#lockBtn').getBoundingClientRect())`));
     await shot('LK1-locked-room');
-    check('only one room arrow: the Backyard', await ev(`(a=>a.length===1&&a[0]==='3')([...document.querySelectorAll('#roomTabs [data-go]')].map(b=>b.dataset.go))`));
+    check('only one room arrow: the Kitchen (the Backyard is past it, since v1.91)', await ev(`(a=>a.length===1&&a[0]==='6')([...document.querySelectorAll('#roomTabs [data-go]')].map(b=>b.dataset.go))`));
     check('the Loft and the Studio stay shut (goRoom), the Backyard opens', await ev(`(()=>{goRoom(2);const a=roomNo;goRoom(4);const b=roomNo;goRoom(3);const c=roomNo;goRoom(1);return a===1&&b===1&&c===3;})()`));
     const out=await ev(`(()=>{const bad=[];['art','cards','stage','code','music','dance','runway','stickers','about','profiles'].forEach(n=>{show(n);if(cur!=='room')bad.push(n);});return bad;})()`);
     check('every other screen sends her back to the room (rooms list, Art, Stage, Code Lab, Music, About…)', out.length===0, out);
@@ -6004,7 +6005,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('the Basement has one ⬆️ tab back to her room', (await tabs())==='up:1', await tabs());
     await shot('BS2-first-visit');
     await ev(`document.querySelector('#mapBtn').click()`); await sleep(150);
-    check('🗺️ shows 5 rooms, the Basement under her room, marked ⭐ Here', await ev(`document.querySelectorAll('#modalBody [data-map]').length===5&&(b=>b.classList.contains('on')&&b.style.gridRow.startsWith('3')&&b.style.gridColumn.startsWith('2'))(document.querySelector('#modalBody [data-map="5"]'))`));
+    check('🗺️ shows every room, the Basement under her room, marked ⭐ Here', await ev(`document.querySelectorAll('#modalBody [data-map]').length===ROOM_MAP.length&&(b=>b.classList.contains('on')&&b.style.gridRow.startsWith('3')&&b.style.gridColumn===document.querySelector('#modalBody [data-map="1"]').style.gridColumn)(document.querySelector('#modalBody [data-map="5"]'))`));
     await shot('BS3-map'); await ev(`closeModal()`);
     check('Android Back from the Basement goes to her room', await ev(`window.androidBack()===true&&roomNo===1`));
     await ev(`goRoom(5)`); await sleep(100);
@@ -6046,7 +6047,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('a Basement Builder sticker; Spy Everywhere still needs 4 rooms', await ev(`!!STICKERS.find(s=>s.id==='basement5')&&(s=>s.need===4&&/4 rooms/.test(s.hint))(STICKERS.find(s=>s.id==='spyAll'))`));
     check('saved: save version 38; older rooms and backups get an empty Basement; night and layouts take room 5', await ev(`(()=>{const q=JSON.parse(JSON.stringify(P()));delete q.room5;q.night={'5':true,'9':true};delete q.presets[5];normalize(q);
       const d={version:37,profiles:[{name:'x'}]};MIGRATIONS[38](d);
-      return DB_VERSION===38&&q.room5.wall===''&&q.room5.items.length===0&&JSON.stringify(q.night)==='{"5":true}'&&q.presets[5].length===3&&d.profiles[0].room5.items.length===0;})()`));
+      return DB_VERSION>=38&&q.room5.wall===''&&q.room5.items.length===0&&JSON.stringify(q.night)==='{"5":true}'&&q.presets[5].length===3&&d.profiles[0].room5.items.length===0;})()`));
     await ev(`closeModal();(()=>{const q=JSON.parse(window._v79),p=P();Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,q);})();MINE.prizes=false;save();goRoom(1)`);
     // 🐾 the pet's own speech bubble
     const bub=()=>ev(`(b=>b?{who:b.dataset.who,tip:(m=>m&&[+m[1],+m[2]])(b.querySelector('path').getAttribute('d').match(/L(-?[\\d.]+) (-?[\\d.]+)/)),box:(r=>[+r.getAttribute('x'),+r.getAttribute('y'),+r.getAttribute('width')])(b.querySelector('rect'))}:null)(document.querySelector('#bubble'))`);
@@ -6462,6 +6463,206 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('v1.89 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.89')`));
     await ev(`closeModal();{const o=JSON.parse(window._lcSaved),p=P();setBand(p,o.band);p.little.lock=o.lock;p.coins=o.coins;p.lastDaily=o.daily;p.owned=o.owned;p.look.top=o.top;p.seenTip=o.tip;}
       LOCK.open='';save();applyEasy();show('room')`);
+  }
+
+  console.log('Kitchen: the sixth room + Rainbow Fruit Salad (v1.91)');
+  {
+    await ev(`closeModal();stkPaused=true;window._kcSaved=JSON.stringify({band:P().band,easy:P().easy,coins:P().coins,lock:P().little.lock});setBand(P(),'normal');P().little.lock=false;LOCK.open='';save();applyEasy();roomNo=1;show('room')`); await sleep(150);
+    const at=async sel=>ev(`(e=>{if(!e)return null;const r=e.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,t:r.top,b:r.bottom};})(document.querySelector(${JSON.stringify(sel)}))`);
+    const tap=async(x,y)=>{await mouse('mousePressed',x,y);await mouse('mouseReleased',x,y);};
+    const tapSel=async sel=>{const c=await at(sel);if(c)await tap(c.x,c.y);return c;};
+    const svgAt=async(x,y)=>ev(`(()=>{const s=document.querySelector('#kcStage svg'),p=new DOMPoint(${x},${y}).matrixTransform(s.getScreenCTM());return {x:p.x,y:p.y};})()`);
+    const step=()=>ev(`KC.run&&!KC.run.done?KC.run.steps[KC.run.i]:''`);
+    const lineOk=async()=>ev(`(L=>!!L&&!!L.t&&L.t.split(/\\s+/).length<=20&&!/\\p{Extended_Pictographic}/u.test(L.t))(speakLine())`);
+    const lines=[];
+    // the screen points along peel strip k (down = top to bottom), following the banana's real shape
+    const stripPts=async(k,down)=>ev(`(()=>{const N=document.querySelectorAll('#kcStage .kc-strip').length,mid=-1+(2*${k}+1)/N,s=document.querySelector('#kcStage svg'),m=s.getScreenCTM(),out=[];for(let i=0;i<=8;i++){const y=-130+260*i/8,p=new DOMPoint(400+kcBanX(y)+mid*kcBanW(y),262+y).matrixTransform(m);out.push([p.x,p.y]);}return ${down}?out:out.reverse();})()`);
+    async function wash(){
+      for(let n=0;n<60&&await step()==='wash';n++){
+        if(await at('#kcStage [data-spot]')){const c=await at('#kcStage [data-spot]');for(let k=0;k<3;k++){await tap(c.x,c.y);await sleep(30);}}
+        else if(await at('#kcTurn')){await tapSel('#kcTurn');await sleep(450);} else await sleep(200);
+        await sleep(60);
+      }
+    }
+    async function peel(swipe){
+      for(let n=0;n<20&&await step()==='peel';n++){
+        const k=await ev(`[...document.querySelectorAll('#kcStage .kc-strip')].findIndex(x=>!x.classList.contains('off'))`);
+        if(k<0){await sleep(300);continue;}
+        const pts=await stripPts(k,true);
+        if(swipe) await stroke(pts); else await tap(pts[4][0],pts[4][1]);
+        await sleep(120);
+      }
+    }
+    async function chop(){
+      const N=await ev('KC.run.st.n'), [A,B,Y]=await ev('[KC_CH_A,KC_CH_B,KC_CH_Y]');
+      for(let i=1;i<N;i++){const p=await svgAt(A+(B-A)*i/N,Y);await tap(p.x,p.y);await sleep(80);}
+      return N;
+    }
+    async function bowl(){
+      const need=await ev('KC.run.st.need()');
+      for(const nd of need){
+        for(let k=0;k<nd.n;k++){
+          const i=await ev(`(()=>{const nd=${JSON.stringify(nd)};const t=KC.run.st.tray().find(t=>!t.out&&(nd.col?KC_FOOD[t.id].col===nd.col:t.id===nd.key));return t?t.i:-1;})()`);
+          if(i<0) break; await tapSel(`#kcStage [data-ti="${i}"]`); await sleep(60);
+        }
+      }
+      if(await at('#kcBowlDone')) await tapSel('#kcBowlDone');
+      return need;
+    }
+    async function plate(lvl){
+      if(lvl==='easy'){await tapSel('#kcTools [data-top="heart"]');await sleep(60);}
+      if(lvl==='medium'){const o=await ev('KC.run.st.order()');for(const x of o)for(let k=0;k<x.n;k++){await tapSel(`#kcTools [data-top="${x.k}"]`);await sleep(40);}}
+      if(lvl==='hard'){const rim=await ev('KC.run.st.rim()');for(let i=await ev('KC.run.dish.rim.length');i<rim.length;i++){await tapSel(`#kcTools [data-top="${rim[i]}"]`);await sleep(40);}}
+      await sleep(80); await tapSel('#kcPlateDone');
+    }
+    async function play(lvl,o){
+      o=o||{};
+      await ev(`KC_TEST_SEED='kitchen-test-${lvl}';kcStart('fruit','${lvl}')`); await sleep(200);
+      const seen=[];
+      for(let n=0;n<12;n++){
+        const s=await step(); if(!s) break; seen.push(s);
+        lines.push([lvl+':'+s,await lineOk(),await ev('speakLine()&&speakLine().t')]);
+        if(s==='wash') await wash();
+        else if(s==='peel'){if(o.upFirst){await stroke(await stripPts(1,false));await sleep(150);o.upMiss=await ev('KC.run.miss');o.upFirst=false;}
+          await peel(lvl!=='easy');}
+        else if(s==='chop') o.N=await chop();
+        else if(s==='bowl'){if(o.veg){const vi=await ev(`(KC.run.st.tray().find(t=>KC_FOOD[t.id].kind==='veg')||{i:-1}).i`);if(vi>=0){await tapSel(`#kcStage [data-ti="${vi}"]`);await sleep(120);}o.vegMiss=await ev('KC.run.miss');}
+          o.need=await bowl();}
+        else if(s==='plate'){if(o.shot)await shot('KC8-'+lvl+'-plate-start');await plate(lvl);if(o.shot){await sleep(300);await shot('KC9-'+lvl+'-end');}}
+        await sleep(1050);
+      }
+      o.seen=seen; return o;
+    }
+
+    // the room and getting around
+    check('6 rooms: rooms() has the Kitchen (room6), save version 39', await ev(`rooms(P()).length===6&&rooms(P())[5]===P().room6&&DB_VERSION===39&&DB.version===39`));
+    check('🗺️ the Kitchen is left of her room, and the Backyard left of the Kitchen', await ev(`(k=>k.from===1&&k.dir==='left'&&roomInfo(3).from===6&&roomInfo(3).dir==='left'&&roomInfo(3).col<k.col&&k.col<roomInfo(1).col)(roomInfo(6))`));
+    check('her room\'s ⬅️ tab goes to the Kitchen; her window still goes straight to the Backyard', await ev(`!!document.querySelector('#roomTabs .rt-left[data-go="6"]')&&!document.querySelector('#roomTabs [data-go="3"]')`));
+    await ev(`handleHot('window')`); await sleep(150);
+    check('…the window: one tap to the Backyard, whose ➡️ tab now goes to the Kitchen', await ev(`roomNo===3&&!!document.querySelector('#roomTabs .rt-right[data-go="6"]')`));
+    await ev(`document.querySelector('#roomTabs [data-go="6"]').click()`); await sleep(150);
+    check('the Kitchen: free tile wall + checks floor, tabs ⬅️ Backyard and ➡️ My Room', await ev(`roomNo===6&&P().room6.wall==='kitchenTile'&&P().room6.floor==='kitchenCheck'&&!!document.querySelector('#roomTabs .rt-left[data-go="3"]')&&!!document.querySelector('#roomTabs .rt-right[data-go="1"]')&&document.querySelector('#roomTitle').textContent.includes('Kitchen')`));
+    await shot('KC0-room');
+    check('…its recipe book, sink, fridge and order window are hotspots (named for Read to me and I Spy)', await ev(`['recipes','sink','fridge','order'].every(h=>!!document.querySelector('#roomSvg [data-hot='+h+']')&&HOT_WORDS[h]&&SPY_FURN[h])`));
+    check('…the fridge, counter and cabinets can be recolored', await ev(`['fridge','counter','cabinets'].every(k=>FURN_PIECES[k]&&FURN_PIECES[k].room===6)`));
+    await ev(`handleHot('fridge')`); await sleep(100);
+    check('the fridge (Chef\'s Choice) says it is coming in a future update', await ev(`cur==='room'&&document.querySelector('#toast').textContent.includes('future update')`));
+    check('4 kitchen things in the Shop with the 🧁 Cafe chip; a dish is never in the Shop', await ev(`['hangingPots','fruitMagnets','herbPots','cupcakeRug'].every(k=>DECOR[k]&&DECOR[k].price>0&&themesOf('decor:'+k,DECOR[k]).includes('cafe'))&&DECOR.dish.dish===1`));
+    check('Android Back in the Kitchen goes to her room', await ev(`androidBack()&&roomNo===1`));
+    await ev(`goRoom(6)`); await sleep(100);
+
+    // the recipe book
+    await ev(`handleHot('recipes')`); await sleep(200);
+    check('📖 opens the recipe book: 8 pages, 7 of them 🔜 Soon, #1 says ⭐ Start here, ⬅ Kitchen', await ev(`cur==='kitchen'&&KC.view==='book'&&document.querySelectorAll('#kcBook .kc-rcp').length===8&&document.querySelectorAll('#kcBook .kc-rcp.soon').length===7&&!!document.querySelector('#kcBook .kc-first')&&document.querySelector('#kcBack').textContent.includes('Kitchen')`));
+    check('…3 level tabs 🐣 🌟 🧠, and the book has its spoken line', await ev(`document.querySelectorAll('#kcTabs [data-lvl]').length===3`)&&await lineOk());
+    await ev(`document.querySelector('#kcBook [data-rcp="pizza"]').click()`); await sleep(80);
+    check('a 🔜 page only says it is coming soon', await ev(`KC.view==='book'&&document.querySelector('#toast').textContent.includes('coming')`));
+    check('KC_RECIPES: 8 recipes, unique ids, Fruit Salad has Easy 4 / Medium 5 / Hard 5 steps, all built', await ev(`KC_RECIPES.length===8&&new Set(KC_RECIPES.map(r=>r.id)).size===8&&(s=>s.easy.length===4&&s.medium.length===5&&s.hard.length===5&&[].concat(s.easy,s.medium,s.hard).every(k=>KC_STATIONS[k]))(kcRecipe('fruit').steps)`));
+
+    // ⏸️ Back: nothing lost yet → straight back; something done → it asks
+    await ev(`kcStart('fruit','easy')`); await sleep(150);
+    await ev(`document.querySelector('#kcBack').click()`); await sleep(120);
+    check('Back before touching anything goes straight to the book', await ev(`KC.view==='book'&&document.querySelector('#modal').classList.contains('hidden')`));
+    await ev(`KC_TEST_SEED='kitchen-test-back';kcStart('fruit','easy')`); await sleep(150);
+    { const c=await at('#kcStage [data-spot]'); await tap(c.x,c.y); await sleep(80); }
+    check('the recipe screen: ⬅ 📖 Recipes, the step dots and 💡', await ev(`document.querySelector('#kcBack').textContent.includes('Recipes')&&document.querySelectorAll('#kcSteps i').length===4&&!!document.querySelector('#kcHint')`));
+    await ev(`document.querySelector('#kcBack').click()`); await sleep(120);
+    check('…Back mid-recipe pauses and asks (⬅ 📖 Recipes, ▶ Keep playing)', await ev(`navLeaveOpen()&&document.querySelector('#modalBtns .nl-leave').textContent.includes('Recipes')`));
+    await sleep(550); await ev(`document.querySelector('#modalBtns .nl-stay').click()`); await sleep(100);
+    check('…▶ Keep playing keeps the recipe', await ev(`KC.view==='play'&&KC.run&&KC.run.i===0`));
+    await ev(`androidBack()`); await sleep(100); await sleep(550); await ev(`document.querySelector('#modalBtns .nl-leave').click()`); await sleep(120);
+    check('…Android Back asks too, and ⬅ goes to the book', await ev(`KC.view==='book'&&!KC.run`));
+
+    // 🫧 rubbing works as well as tapping
+    await ev(`KC_TEST_SEED='kitchen-test-rub';kcStart('fruit','easy')`); await sleep(150);
+    { const c=await at('#kcStage [data-spot]'), op0=await ev(`+document.querySelector('#kcStage [data-spot]').getAttribute('opacity')`);
+      const pts=[];for(let i=0;i<=24;i++)pts.push([c.x+Math.sin(i)*22,c.y+Math.cos(i*1.3)*14]); await stroke(pts); await sleep(80);
+      check('🫧 rubbing a dirt spot washes it away (or fades it)', await ev(`(e=>!e||+e.getAttribute('opacity')<${op0})(document.querySelector('#kcStage [data-spot="0"]'))`)); }
+    await ev(`kcBook()`); await sleep(80);
+
+    // 🐣 Easy end to end
+    const c0=await ev('P().coins');
+    const E=await play('easy');
+    check('🐣 Easy: Wash → Peel → Into the bowl → Decorate', JSON.stringify(E.seen)==='["wash","peel","bowl","plate"]', E.seen);
+    check('…ends on the end box: ⬅ 📖 Recipes, 🍽️ Put it out, 🔁 Again', await ev(`endBoxOpen()&&document.querySelector('#modalTitle').textContent.includes('Yum')&&document.querySelector('#modalBtns .nav-back').textContent.includes('Recipes')&&[...document.querySelectorAll('#modalBtns button')].some(b=>b.textContent.includes('Put it out'))&&document.querySelector('#modalBtns .nav-go').textContent.includes('Again')`));
+    check('…finishing on Easy is ⭐⭐⭐, and the 3 new stars pay 3 × 2', await ev(`P().kitchen.stars.fruit.easy===3&&document.querySelectorAll('#modalBody .kc-endst i.on').length===3`)&&await ev('P().coins')===c0+6, [c0,await ev('P().coins')]);
+    check('…the dish is in the Dish Book: washed fruit, banana and the counted fruit, plus a topping', await ev(`(d=>d&&d.r==='fruit'&&d.lv==='easy'&&d.f.includes('banana')&&d.f.length>=2+3+${E.need[0].n}&&d.c.length===1)(P().kitchen.dishes.slice(-1)[0])`));
+    await sleep(550); await ev(`[...document.querySelectorAll('#modalBtns button')].find(b=>b.textContent.includes('Put it out')).click()`); await sleep(150);
+    check('🍽️ Put it out: a dish decoration (its own drawing) in the Kitchen, valid XML', await ev(`(it=>!!it&&!!it.dish&&it.dish.f.length>0&&new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg">'+DECOR.dish.d(it)+'</svg>','image/svg+xml').getElementsByTagName('parsererror').length===0)(P().room6.items.find(i=>i.type==='dish'))`)&&await ev(`KC.view==='book'`));
+    check('…a dish can\'t be given as a gift yet', await ev(`!giftable(Object.assign({},P().room6.items.find(i=>i.type==='dish'),{placed:false}))`));
+
+    // 🌟 Medium
+    const c1=await ev('P().coins');
+    const M=await play('medium');
+    check('🌟 Medium: Wash → Peel → Chop → Into the bowl → Decorate', JSON.stringify(M.seen)==='["wash","peel","chop","bowl","plate"]', M.seen);
+    check('…the bowl asked for two colors; no misses = ⭐⭐⭐, +9', M.need.length===2&&M.need.every(n=>n.col)&&await ev(`P().kitchen.stars.fruit.medium===3`)&&await ev('P().coins')===c1+9, [M.need,c1,await ev('P().coins')]);
+    check('…the chopped banana pieces are in the dish', await ev(`P().kitchen.dishes.slice(-1)[0].f.filter(k=>k==='banana').length===${M.N}`));
+    await sleep(550); await ev(`document.querySelector('#modalBtns .nav-back').click()`); await sleep(100);
+
+    // 🧠 Hard, with two misses: an upward peel and a carrot
+    const c2=await ev('P().coins');
+    const H=await play('hard',{upFirst:true,veg:true,shot:true});
+    check('🧠 Hard: 5 steps; peeling upward is a miss', JSON.stringify(H.seen)==='["wash","peel","chop","bowl","plate"]'&&H.upMiss===1, [H.seen,H.upMiss]);
+    check('…a vegetable in the fruit salad is a silly miss (it stays out)', H.vegMiss===2&&await ev(`!P().kitchen.dishes.slice(-1)[0].f.some(k=>KC_FOOD[k].kind==='veg')`), H.vegMiss);
+    check('…2 misses on Hard = ⭐⭐, paying 2 × 4', await ev(`P().kitchen.stars.fruit.hard===2`)&&await ev('P().coins')===c2+8, [c2,await ev('P().coins')]);
+    check('…the rim pattern is finished in the dish', await ev(`(d=>d.rim.length===KC_RIM_N&&d.rim.every(Boolean))(P().kitchen.dishes.slice(-1)[0])`));
+    await sleep(550); await ev(`document.querySelector('#modalBtns .nav-back').click()`); await sleep(100);
+    check('every station prompt has a spoken line: no emoji, 20 words at most', lines.every(l=>l[1]), lines.filter(l=>!l[1]));
+
+    // a replay with no new star pays +2 from the 🍳 allowance
+    const c3=await ev('P().coins'); await play('easy'); await sleep(300);
+    check('a replay with no new stars pays +2 (the 🍳 Kitchen allowance, 20 a day)', await ev('P().coins')===c3+2&&await ev(`P().kitchen.pay.n===2&&GAME_PAY.kitchen.cap===20`), [c3,await ev('P().coins')]);
+    await sleep(550); await ev(`document.querySelector('#modalBtns .nav-back').click()`); await sleep(100);
+    await ev(`kcDishes()`); await sleep(100);
+    check('🍽️ My Dishes shows every dish made, newest first, ⬅ 📖 Recipes', await ev(`document.querySelectorAll('#kcDishes .kc-dish').length===P().kitchen.dishes.length&&P().kitchen.dishes.length===4&&document.querySelector('#kcBack').textContent.includes('Recipes')`)&&await lineOk());
+    await ev(`androidBack()`); await sleep(80);
+    check('…Back goes to the book, and the book\'s stamps show the levels played', await ev(`KC.view==='book'&&document.querySelectorAll('#kcBook [data-rcp="fruit"] .kc-stamps i.on').length===3`));
+    await ev(`kcBackKey()`); await sleep(100);
+    check('…and Back from the book is the Kitchen', await ev(`cur==='room'&&roomNo===6`));
+
+    // 🫧 the sink
+    await ev(`handleHot('sink')`); await sleep(200);
+    check('🫧 the sink: a washing toy with no steps, ⬅ Kitchen, its own line', await ev(`cur==='kitchen'&&KC.view==='sink'&&!document.querySelector('#kcSteps i')&&!!document.querySelector('#kcStage [data-spot]')&&document.querySelector('#kcBack').textContent.includes('Kitchen')`)&&await lineOk());
+    const cs=await ev('P().coins');
+    for(let n=0;n<40&&await at('#kcStage [data-spot]');n++){const c=await at('#kcStage [data-spot]');for(let k=0;k<3;k++){await tap(c.x,c.y);await sleep(25);}await sleep(40);}
+    if(await at('#kcTurn')){await tapSel('#kcTurn');await sleep(450);for(let n=0;n<20&&await at('#kcStage [data-spot]');n++){const c=await at('#kcStage [data-spot]');for(let k=0;k<3;k++){await tap(c.x,c.y);await sleep(25);}await sleep(40);}}
+    await sleep(1500);
+    check('…once clean, the next thing to wash comes; the sink pays nothing', await ev(`!!document.querySelector('#kcStage [data-spot]')`)&&await ev('P().coins')===cs);
+    await ev(`androidBack()`); await sleep(100);
+    check('…Back goes to the Kitchen', await ev(`cur==='room'&&roomNo===6`));
+
+    // 🧸 Little mode + Easy mode
+    await ev(`setBand(P(),'little');P().little.lock=true;LOCK.open='';save();applyEasy();goRoom(6);show('room')`); await sleep(150);
+    check('🧸 Little mode lets the Kitchen in: recipe book + sink, never the locked fridge', await ev(`roomNo===6&&LOCK_ROOMS.includes(6)&&LOCK_SCREENS.includes('kitchen')&&LOCK_HOTS.includes('recipes')&&LOCK_HOTS.includes('sink')&&!LOCK_HOTS.includes('fridge')`));
+    await ev(`P().kitchen.level='hard';handleHot('recipes')`); await sleep(200);
+    check('…the book opens on Easy and shows only the 🐣 tab', await ev(`cur==='kitchen'&&P().kitchen.level==='easy'&&[...document.querySelectorAll('#kcTabs [data-lvl]')].filter(b=>getComputedStyle(b).display!=='none').length===1`));
+    await shot('KC1-book-little');
+    await ev(`setBand(P(),'normal');P().little.lock=false;LOCK.open='';save();applyEasy();kcBook()`); await sleep(100);
+    check('🔥 Challenge starts a new room\'s Kitchen on Medium (bandFresh)', await ev(`(q=>{q.kitchen.stars={};q.kitchen.level='easy';bandFresh(q);return q.kitchen.level==='medium';})(JSON.parse(JSON.stringify(P())))`));
+
+    // saves: old saves and backups get the Kitchen, and keep it
+    check('an old save (version 38) gets room6 + kitchen; normalize keeps good data and drops bad', await ev(`(()=>{const d={version:38,profiles:[{name:'Old',room5:{wall:'',floor:'',items:[]}}],settings:{}};fixDB(d);const p=d.profiles[0];normalize(p);
+      const q=JSON.parse(JSON.stringify(P()));q.kitchen.stars.fruit.easy=9;q.kitchen.dishes.push({bad:1});q.kitchen.level='zzz';normalize(q);
+      return p.room6&&Array.isArray(p.room6.items)&&p.kitchen.level==='easy'&&Array.isArray(p.kitchen.dishes)&&q.kitchen.stars.fruit.easy===3&&q.kitchen.dishes.every(x=>x.id)&&q.kitchen.level==='easy';})()`));
+    check('the Kitchen\'s 🌙, layouts and I Spy keys are kept for room 6', await ev(`(q=>{q.night={'6':true};q.spy.rooms=[6];normalize(q);return q.night['6']===true&&q.spy.rooms.includes(6)&&Array.isArray(q.presets[6]);})(JSON.parse(JSON.stringify(P())))`));
+    check('stickers: Little Chef (a recipe made) and Star Chef (3 stars on every level)', await ev(`(a=>stkDone(P(),a)&&!stkDone(P(),STICKERS.find(s=>s.id==='chefStars')))(STICKERS.find(s=>s.id==='chef1'))`));
+    check('v1.91 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.91')`));
+    await ev(`show('kitchen');kcBook()`); await sleep(100); await shot('KC2-book');
+    await ev(`KC_TEST_SEED='kitchen-shot';kcStart('fruit','medium')`); await sleep(200); await shot('KC3-wash');
+    await ev(`KC.run.i=0;kcNext()`); await sleep(150); await shot('KC4-peel');
+    await ev(`kcNext()`); await sleep(150); await shot('KC5-chop');
+    await ev(`kcNext()`); await sleep(150); await shot('KC6-bowl');
+    await ev(`kcNext()`); await sleep(150); await shot('KC7-plate');
+    await ev(`kcBook();show('room')`);
+    // 📱 an upright phone: the book and a station fit, and every button is 48 px or more
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true}); await sleep(250);
+    await ev(`show('kitchen');kcBook()`); await sleep(150); await shot('KC10-phone-book');
+    await ev(`KC_TEST_SEED='kitchen-phone';kcStart('fruit','hard');kcNext();kcNext();kcNext();kcNext()`); await sleep(200); await shot('KC11-phone-plate');
+    check('📱 390 px phone: the Decorate buttons are 48 px or more and stay on screen', await ev(`[...document.querySelectorAll('#kcTools button,#kcHint,#kcBack')].every(b=>{const r=b.getBoundingClientRect();return r.height>=48&&r.width>=48&&r.right<=391&&r.bottom<=845;})`));
+    check('…the picture keeps a usable size (at least 300 px tall)', await ev(`document.querySelector('#kcStage').getBoundingClientRect().height>=300`), await ev(`document.querySelector('#kcStage').getBoundingClientRect().height`));
+    await ev(`kcBook();show('room')`);
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false}); await sleep(200);
+    await ev(`closeModal();{const o=JSON.parse(window._kcSaved),p=P();setBand(p,o.band);p.coins=o.coins;p.little.lock=o.lock;}LOCK.open='';save();applyEasy();roomNo=1;show('room')`);
   }
 
   console.log(`\n${ok} passed, ${bad} failed`);

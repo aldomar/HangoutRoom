@@ -36,6 +36,7 @@ function show(n){
   if(n==='little') renderLittle(); else ltStop(); // 🧸 Play (section 46)
   if(n==='dance') renderDance(); else dnStop(); // 💃 Dance Maker (section 48)
   if(n==='garden') renderGarden(); // 🌱 Garden (section 49)
+  if(n==='kitchen') renderKitchen(); else kcStop(); // 🍳 Kitchen (section 79, v1.91)
   if(n==='ball') renderBall(); else bfStop(); // ⚾ Ball Field (section 59)
   if(n==='runway') renderRunway(); else rwStop(); // 👠 Runway (section 52)
   if(n==='walk') renderWalk(); else wkStop(); // 🦮 Pet walks (section 56)
@@ -117,13 +118,13 @@ let decorating=false,decoTab='mine',drag=null;
 // floor and items; My Stuff (items with placed:false) is shared, so a stored thing can be placed in either room.
 // Since v1.23 there is a third: 3 = the Backyard (p.room3, drawn in 26-backyard.js), and since v1.40 a fourth:
 // 4 = the Studio (p.room4, bare, section 41). rooms(p) lists them all. Getting around: the edge tabs and 🗺️ map (section 41).
-// Since v1.79 a fifth: 5 = the Basement (p.room5, bare like the Studio, section 73).
+// Since v1.79 a fifth: 5 = the Basement (p.room5, bare like the Studio, section 73). Since v1.91 a sixth: 6 = the Kitchen (p.room6, section 78).
 let roomNo=1;
-const curRoom=p=>roomNo===5?p.room5:roomNo===4?p.room4:roomNo===3?p.room3:roomNo===2?p.room2:p.room;
-const rooms=p=>[p.room,p.room2,p.room3,p.room4,p.room5];
+const curRoom=p=>roomNo===6?p.room6:roomNo===5?p.room5:roomNo===4?p.room4:roomNo===3?p.room3:roomNo===2?p.room2:p.room;
+const rooms=p=>[p.room,p.room2,p.room3,p.room4,p.room5,p.room6];
 const allItems=p=>rooms(p).reduce((a,r)=>a.concat(r.items),[]);
 const ROOM_NAMES={1:'Room',2:'Loft',3:'Backyard',4:'Studio'};
-function goRoom(n){if(lockOn()&&!LOCK_ROOMS.includes(n))n=1;roomNo=n;drag=null;SFX.whoosh();if(n===4)studioStart(P());if(n===5)baseStart(P());renderRoom();if(decorating)renderDecoGrid();else if(n===4)studioHi();else if(n===5)baseHi();}
+function goRoom(n){if(lockOn()&&!LOCK_ROOMS.includes(n))n=1;roomNo=n;drag=null;SFX.whoosh();if(n===4)studioStart(P());if(n===5)baseStart(P());if(n===6)kitchenStart(P());renderRoom();if(decorating)renderDecoGrid();else if(n===4)studioHi();else if(n===5)baseHi();else if(n===6)kitchenHi();}
 function mascotG(p){return `<g id="mascotG" class="mascot"><ellipse cx="500" cy="604" rx="62" ry="12" fill="#00000030"/>${mascotSVG(p.look,null,'x="420" y="396" width="160" height="216"')}</g>`;}
 function renderRoom(){
   const p=P(); if(!p) return;
@@ -131,7 +132,7 @@ function renderRoom(){
   let s=roomNo===3?yardBack(R):`<rect width="1000" height="470" fill="${W.fill}"/><rect width="1000" height="470" fill="url(#${W.pat})"/>`; // the Backyard: sky + fence (section 26)
   const G=roomNo===3?FLOORS[yardFloor(R)]:F;
   s+=`<rect y="470" width="1000" height="230" fill="${G.fill}"/><rect y="470" width="1000" height="230" fill="url(#${G.pat})"/><rect y="458" width="1000" height="16" fill="#00000026"/>`;
-  const fur=roomNo>=4?studioFurniture(true):roomNo===3?yardFurniture(true):roomNo===2?loftFurniture(true):furniture(true);
+  const fur=roomNo===6?kitchenFurniture(true):roomNo>=4?studioFurniture(true):roomNo===3?yardFurniture(true):roomNo===2?loftFurniture(true):furniture(true);
   s+=fur.wall; // windows, shelves and signs on the wall; furniture standing on the floor is sorted below (v1.39)
   s+=nightBack(p); // 🌙 the night window, behind the room's things (section 31, v1.32)
   const items=R.items.filter(i=>i.placed&&DECOR[i.type]);
@@ -191,6 +192,8 @@ function handleHot(h){
   else if(h==='garden'){SFX.click();show('garden');} // the Backyard's garden shed (v1.48)
   else if(h==='ballfield'){SFX.click();show('ball');} // the Backyard's bat rack: the ⚾ Ball Field (v1.60)
   else if(h==='music'){SFX.click();show('music');} // the Loft's keyboard (v1.38)
+  else if(h==='recipes'){SFX.click();kcOpen('book');} // the Kitchen's 📖 recipe book (section 79, v1.91)
+  else if(h==='sink'){SFX.click();kcOpen('sink');} // the Kitchen's sink: the washing toy (section 79)
   else if(h==='pet'){petTap();} // section 22
   else if(h==='gift'){giftOpen();} // section 32
   else if(h==='visitor'){visitTap();} // a friend with a wish (section 42, v1.41)
@@ -278,7 +281,7 @@ function renderDecoGrid(){
     if(h===prizeChips()+giveTile(p)) h+=`<div class="empty">Nothing stored right now! Drag things from your room down here to put them away, or get new stuff in the Shop 🛍️</div>`;
   } else if(decoTab==='shop'){ // seasonal things (v1.17) have their own tab
     const yd=([k,d])=>d.first||roomNo===3&&d.yard?0:1; // the Backyard lists outdoor things first (v1.23); first:1 = always first (v1.40)
-    const tf=themeFilter('shop',Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award&&!d.season).sort((a,b)=>yd(a)-yd(b)).map(([k,d])=>['decor:'+k,d])); // 🔎 theme chips + ⭐ dreams (section 33)
+    const tf=themeFilter('shop',Object.entries(DECOR).filter(([k,d])=>!d.art&&!d.award&&!d.season&&!d.dish).sort((a,b)=>yd(a)-yd(b)).map(([k,d])=>['decor:'+k,d])); // 🔎 theme chips + ⭐ dreams (section 33)
     h=dreamBar(p)+tf.chips+easySort(tf.list.map(([k,d])=>[k.slice(6),d]),([k,d])=>d.price).map(([k,d])=>`<button class="tile${d.dream?' dream':''}${poorCls(p,false,d.price)}" data-buy="${k}"><div class="tv">${decoPrev(k)}</div><div class="tn">${d.name}</div>${priceTag(p,d.price)}</button>`).join('');
   } else if(decoTab==='season'){
     h=seasonGrid(p); // section 20

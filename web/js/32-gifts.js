@@ -12,7 +12,7 @@
 const GIFT_COINS=[5,10,20];
 const GIFT_SPOT={x:262,y:690}; // clear of the trophies (345 / 180), the pet (566) and Fuzzy (420-580)
 const LAYOUT_SLOTS=3;
-const giftable=it=>!it.placed&&DECOR[it.type]&&!DECOR[it.type].art&&!DECOR[it.type].award;
+const giftable=it=>!it.placed&&DECOR[it.type]&&!DECOR[it.type].art&&!DECOR[it.type].award&&!DECOR[it.type].dish; // a 🍽️ dish (section 79) carries its own drawing: not yet
 const canOpen=g=>g.kind==='coins'||!!DECOR[g.type];
 const others=p=>DB.profiles.filter(q=>q.id!==p.id);
 
