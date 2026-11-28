@@ -1555,6 +1555,14 @@ in any of them (nothing about getting around is saved). Issue numbers below are 
 
 After v1.88: try the "Needs checking on a device" list in `docs/NAVIGATION.md` with the children and note what they did.
 
+✅ **v1.89 🧸 Little rooms: half prices + a bigger daily gift (the owner's report, 2026-11-27; branch `feature/little-coins`, stacked on `feature/nav-room`)**
+- The problem: in a 🧸 Little room the youngest earn little (🧸 Play 10 a day, slow fidgets, the +10 gift; they rarely score in
+  the games), so they can't dress up their buddy, pet or fidgets.
+- Owner's answers (2026-11-27): Little-room prices + a bigger daily gift, aiming at about 40–50 coins' worth a day.
+- Built: `costOf(p, price)` (08: half, rounded up, in 🧸 Little rooms by `bandOf`), used by `tryBuy`, `buyConsumable`, `priceTag`,
+  `poorCls`, `easySort`, the hair colors, the fidget tabs, the pet toys and the ⭐ dream bar. `dailyGift(p)`: +20 in Little rooms
+  (`DAILY_LITTLE`), +10 elsewhere (`DAILY_GIFT`). No save changes; prices in the data are unchanged.
+
 ## Ideas backlog (not scheduled)
 - Mascot emotes/dances, outfit save slots ("looks"), room presets, night mode and gifting between rooms are now in Phase 10.
 

@@ -617,6 +617,9 @@ rule by hand.
   Home Run Derby (v1.62): +3 per challenge the first time, +1 a replay, 10 a day (`HR_DAILY`).
   Visitors (v1.41): +5 per wish that comes true (one new friend a day), and a plush after a friend's 3 wishes.
   Item prices are 0–40, except ⭐ big dreams (`dream:1`, 60–100, since v1.29). Keep earning steady and fair.
+  🧸 Little rooms (since v1.89, by `bandOf(p)==='little'`, not the lock): everything costs half, rounded up (`costOf(p, price)`, section 8),
+  and the daily gift is +20 (`dailyGift(p)`). **A new shop must buy through `tryBuy`/`buyConsumable` and show prices through
+  `priceTag` or `costOf`**, never a raw `item.price`.
 - A new closet item = one entry in `CLOSET[cat].items` with `{id, name, price, d()}` (tops use `t()` and `s()` for sleeves).
   A new decoration = one entry in `DECOR` with `{name, price, box, d()}` (plus `flat:1` for rugs, `wall:1` for wall items).
 - **A content pack** is a new numbered file (like `17-pack1.js`) that only adds entries. New SVG patterns go in

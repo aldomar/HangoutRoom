@@ -18,15 +18,22 @@ function closeModal(){$('#modal').classList.add('hidden');NAV_HOLD.on=false;}
 function updateCoins(){const p=P();if(!p)return;$$('.coinsDisp').forEach(e=>{let t=e.querySelector('.cn-t');if(!t){e.textContent='';t=document.createElement('span');t.className='cn-t';e.append(t);}t.textContent='🪙 '+p.coins;});
   if(typeof whoChips==='function') whoChips(p);} // 👤 whose room, next to the coins (section 76, v1.88)
 function earn(n,label,x,y){const p=P();if(!p)return;p.coins+=n;save();updateCoins();SFX.coin();floatText(`+${n} 🪙${label?' '+label:''}`,x,y);}
+// 🧸 Little rooms pay half, rounded up (v1.89): every shop shows and takes prices through costOf (bandOf is section 64).
+const LITTLE_COST=n=>Math.ceil(n/2);
+const isLittle=p=>!!p&&typeof bandOf==='function'&&bandOf(p)==='little';
+function costOf(p,price){return price>0&&isLittle(p)?LITTLE_COST(price):price;}
+// The daily gift (a bonus only, no streak): 🧸 Little rooms get DAILY_LITTLE (v1.89).
+const DAILY_GIFT=10, DAILY_LITTLE=20;
+const dailyGift=p=>isLittle(p)?DAILY_LITTLE:DAILY_GIFT;
 function tryBuy(key,price,name,done){
-  const p=P();
+  const p=P(); price=costOf(p,price);
   if(!price||p.owned.includes(key)){done();return;}
   if(p.coins<price){needMore(p,price);return;}
   // ↩ Undo (section 68, v1.74): a copy of the room just before, and the button just after
   buyAsk(p,'Get',name,price,()=>{const u=undoArm();p.coins-=price;p.owned.push(key);save();updateCoins();SFX.buy();toast(`Yay! You got ${name}! ✨`);done();undoShow(u);});
 }
 function buyConsumable(price,name,done){
-  const p=P();
+  const p=P(); price=costOf(p,price);
   if(!price){SFX.buy();done();return;} // free things (the Built-in Shelf, v1.40) need no question
   if(p.coins<price){needMore(p,price);return;}
   buyAsk(p,'Buy',name,price,()=>{const u=undoArm();p.coins-=price;save();updateCoins();SFX.buy();done();undoShow(u);});
@@ -76,6 +83,7 @@ function buyAsk(p,verb,name,price,yes){
 // Easy mode shops: things she owns (or that are free) first, then cheapest first; ones she can't afford yet are dimmed.
 // list = [key, item] entries; cost(entry) = 0 if owned/free, else the price.
 function easySort(list,cost){const p=P();if(!p||!p.easy)return list;
-  return list.map((e,i)=>[e,i]).sort((a,b)=>cost(a[0])-cost(b[0])||a[1]-b[1]).map(x=>x[0]);}
-const poorCls=(p,own,price)=>!own&&p.easy&&p.coins<price?' poor':'';
-const priceTag=(p,price)=>!price?`<div class="tp">Free</div>`:`<div class="tp">${p.easy&&p.coins<price?'🔒 ':''}🪙 ${price}</div>`;
+  const c=e=>costOf(p,cost(e));
+  return list.map((e,i)=>[e,i]).sort((a,b)=>c(a[0])-c(b[0])||a[1]-b[1]).map(x=>x[0]);}
+const poorCls=(p,own,price)=>!own&&p.easy&&p.coins<costOf(p,price)?' poor':'';
+const priceTag=(p,price)=>{price=costOf(p,price);return !price?`<div class="tp">Free</div>`:`<div class="tp">${p.easy&&p.coins<price?'🔒 ':''}🪙 ${price}</div>`;};

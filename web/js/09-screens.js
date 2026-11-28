@@ -104,7 +104,7 @@ function delModal(p){
 function enterRoom(){
   const p=P(); if(!p) return; roomNo=1; show('room'); loadArtThumbs();
   const today=fpDay();
-  if(p.lastDaily!==today){p.lastDaily=today;p.stats.dailies++;save();setTimeout(()=>{earn(10,'Daily gift!',innerWidth/2,innerHeight/2);toast('🎁 Daily gift! +10 coins');},600);}
+  if(p.lastDaily!==today){p.lastDaily=today;p.stats.dailies++;save();const g=dailyGift(p);setTimeout(()=>{earn(g,'Daily gift!',innerWidth/2,innerHeight/2);toast(`🎁 Daily gift! +${g} coins`);},600);}
   const tip=!p.seenTip;
   if(tip){p.seenTip=true;save();setTimeout(()=>say(lockOn()?`Hi ${p.name}! Tap the desk, the shelf or the closet ✨`:`Hi ${p.name}! Tap the shelf, closet or desk ✨`),1200);}
   holidayGreet(p,tip?4100:1000); // 🎉 "Happy Thanksgiving!" on a holiday, after the first-visit tip (section 67, v1.72)
@@ -455,7 +455,7 @@ function renderCloset(){
   const hc=$('#hairCols'); hc.classList.toggle('hidden',closetCat!=='hair');
   if(closetCat==='hair'){const cur=hairIds(p.look).c;
     hc.innerHTML=easySort(Object.entries(HAIR_COLORS),([k,v])=>hcOwned(p,k)?0:v.price).map(([k,v])=>{const own=hcOwned(p,k), poor=poorCls(p,own,v.price);
-      return `<button class="hcol${k===cur?' on':''}${own?'':' locked'}" data-hc="${k}" title="${v.name}" style="background:${v.s?`linear-gradient(135deg,${v.c} 55%,${v.s} 55%)`:v.c}${poor?';opacity:.5':''}">${own?'':`<span>${poor?'🔒':''}🪙${v.price}</span>`}</button>`;}).join('');}
+      return `<button class="hcol${k===cur?' on':''}${own?'':' locked'}" data-hc="${k}" title="${v.name}" style="background:${v.s?`linear-gradient(135deg,${v.c} 55%,${v.s} 55%)`:v.c}${poor?';opacity:.5':''}">${own?'':`<span>${poor?'🔒':''}🪙${costOf(p,v.price)}</span>`}</button>`;}).join('');}
 }
 const hcOwned=(p,k)=>!HAIR_COLORS[k].price||p.owned.includes('hairc:'+k);
 $('#hairCols').onclick=e=>{const b=e.target.closest('[data-hc]');if(!b)return;const p=P(),k=b.dataset.hc,v=HAIR_COLORS[k];

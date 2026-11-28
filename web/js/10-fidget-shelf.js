@@ -27,13 +27,13 @@ function renderSkins(){
   const p=P(); if(!p) return; const F=FID[fidTab];
   const own=([id,t])=>!t.price||p.owned.includes(F.key+':'+id);
   $('#skinRow').innerHTML=easySort(Object.entries(F.list),e=>own(e)?0:e[1].price).map(e=>{const [id,t]=e, o=own(e), poor=poorCls(p,o,t.price);
-    return `<button class="tab ${p.fid[F.key]===id?'on':''}" data-skin="${id}"${poor?' style="opacity:.5"':''}>${t.name}${o?'':(poor?' · 🔒🪙':' · 🪙')+t.price}</button>`;}).join('')
+    return `<button class="tab ${p.fid[F.key]===id?'on':''}" data-skin="${id}"${poor?' style="opacity:.5"':''}>${t.name}${o?'':(poor?' · 🔒🪙':' · 🪙')+costOf(p,t.price)}</button>`;}).join('')
     +(fidTab==='popit'?'<span class="skin-sep"></span>'+shapeButtons(p):'');
 }
 function shapeButtons(p){ // pop-it board shapes, after the color themes
   const own=([id,t])=>!t.price||p.owned.includes('popshape:'+id);
   return easySort(Object.entries(POP_SHAPES),e=>own(e)?0:e[1].price).map(e=>{const [id,t]=e, o=own(e), poor=poorCls(p,o,t.price);
-    return `<button class="tab ${p.fid.popShape===id?'on':''}" data-shape="${id}"${poor?' style="opacity:.5"':''}>${t.name}${o?'':(poor?' · 🔒🪙':' · 🪙')+t.price}</button>`;}).join('');
+    return `<button class="tab ${p.fid.popShape===id?'on':''}" data-shape="${id}"${poor?' style="opacity:.5"':''}>${t.name}${o?'':(poor?' · 🔒🪙':' · 🪙')+costOf(p,t.price)}</button>`;}).join('');
 }
 $('#skinRow').onclick=e=>{
   const sb=e.target.closest('[data-shape]');
