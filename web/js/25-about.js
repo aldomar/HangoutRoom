@@ -238,7 +238,9 @@ const GIFT_TIMELINE=[
   {v:'1.90',d:'2026-12-10',i:'🔎',n:'Word Search',why:'A second word game, and many more words to learn',
     news:['🔎 Word Search in Brain Games: find the hidden words','🔤 Word Builder has hundreds of new words in 🎲 Free Play','🔢 The number pictures are easy to see now']},
   {v:'1.91',d:'2026-12-11',i:'🍳',n:'The Kitchen',why:'A room to cook in, with a recipe book full of things to make',
-    news:['🍳 A new room: the Kitchen, next to your room (the Backyard is through it now)','🥗 Make a Rainbow Fruit Salad: wash, peel, chop, count and decorate','🫧 The sink is a washing toy, and every dish you make goes in 🍽️ My Dishes']}
+    news:['🍳 A new room: the Kitchen, next to your room (the Backyard is through it now)','🥗 Make a Rainbow Fruit Salad: wash, peel, chop, count and decorate','🫧 The sink is a washing toy, and every dish you make goes in 🍽️ My Dishes']},
+  {v:'1.92',d:'2026-12-12',i:'🧩',n:'Kitchen puzzles',why:'The Kitchen learned lots of new puzzles for the recipes still to come',
+    news:['🧩 The Kitchen can now make counting, measuring, clock, money and word puzzles','🔁 The Fruit Salad on 🧠 Hard has new patterns to finish']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

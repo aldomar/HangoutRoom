@@ -1596,8 +1596,9 @@ Sections (one PR each unless noted):
    New files `78-kitchen.js` (room), `79-kitchen-play.js` (book, runner, stars, coins, dishes), `80-kitchen-food.js` (recipes,
    food and dish drawings), `81-kitchen-stations.js`. Save version 39: `room6`, `kitchen{level, stars{}, dishes[], pay}`, `stats.cooked`.
    **Then: test it on an iPad with the children** before section 3.
-3. **Challenge engine:** the bowl's counting moves into reusable makers (seeded, like 🎲 Free Play's `FP_MAKERS`): scoop math,
-   counting, homophones, sequencing, timers, money; the smoke test checks every level of each across many seeds.
+3. ✅ **v1.92 Challenge engine** (branch `feature/kitchen-challenges`, stacked on `feature/kitchen`): new file `82-kitchen-challenges.js`,
+   14 seeded makers (`KC_MAKERS`, like 🎲 Free Play's `FP_MAKERS`): count, order, pattern, grow, tops, scoop, parts, scale, words,
+   sequence, time, sort, spell, money. The Fruit Salad's bowl and plate use them; the smoke test runs every level of each over 300 seeds.
 4. **The other stations and recipes 2–8**, one recipe at a time, in order (🥞 Pancakes, 🥪 Sandwich Shop, 🍕 Pizza, 🍲 Veggie Soup,
    🍪 Cookies, 🍨 Smoothie & Sundae, 🎂 Birthday Cake).
 5. **Replay layer:** customers at the 🛎️ order window (the friends from the games: Mochi, Boo, Bolt, Zip…), 🧊 Chef's Choice at the
