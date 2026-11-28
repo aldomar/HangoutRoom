@@ -488,6 +488,23 @@
   </div>
 </div>
 
+<!-- KITCHEN (v1.91, the Kitchen's recipe book and sink; section 79) -->
+<div id="scr-kitchen" class="screen">
+  <div class="topbar">
+    <button class="btn small ghost nav-bk" id="kcBack" data-place="room">⬅ Kitchen</button>
+    <div class="title" id="kcTitle">📖 Recipes</div>
+    <div class="coins coinsDisp"></div>
+  </div>
+  <div class="kc-book" id="kcBook"></div>
+  <div class="kc-dishes hidden" id="kcDishes"></div>
+  <div class="kc-play hidden" id="kcPlay">
+    <div class="kc-bar"><div class="kc-steps" id="kcSteps"></div><button class="btn ghost kc-hint" id="kcHint" aria-label="Hint">💡</button></div>
+    <div class="kc-say" id="kcSay"></div>
+    <div class="kc-stage" id="kcStage"></div>
+    <div class="kc-tools" id="kcTools"></div>
+  </div>
+</div>
+
 <!-- LITTLE ONES' CORNER (v1.46, the 🧸 button in the room's top bar) -->
 <div id="scr-little" class="screen">
   <div class="topbar">
@@ -607,6 +624,10 @@
 <script src="web/js/75-turn.js"></script>
 <script src="web/js/76-nav.js"></script>
 <script src="web/js/77-wordsearch.js"></script>
+<script src="web/js/78-kitchen.js"></script>
+<script src="web/js/79-kitchen-play.js"></script>
+<script src="web/js/80-kitchen-food.js"></script>
+<script src="web/js/81-kitchen-stations.js"></script>
 <script src="web/js/99-startup.js"></script>
 </body>
 </html>

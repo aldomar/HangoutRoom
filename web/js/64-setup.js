@@ -34,6 +34,7 @@ function bandFresh(p){
   ['bat','catch'].forEach(g=>{const x=p.ball[g];if(x&&none(x.best)&&!x.prizes.length)go(x,'level');});
   if(none(p.stage.best)) go(p.stage,'level');
   if(!p.code.solved.length) go(p.code,'level');
+  if(!Object.keys(p.kitchen.stars).length) go(p.kitchen,'level'); // 🍳 (v1.91)
   Object.keys(p.brain.level).forEach(g=>{if(!p.brain.solved.some(id=>id.startsWith(g+':')))go(p.brain.level,g);});
   if(!p.stats.spied&&p.spy.lvl===1) p.spy.lvl=2;
 }

@@ -104,6 +104,45 @@ Two more Brain Games (7 in all), with the same levels, 8 puzzles each and coins.
   the games on the Brain Games menu). Tap a card to read it again; tap a ❓ to play the puzzle that unlocks it.
 - 2 new stickers on the **Code & Brain** page: 🍕 Fraction Baker (8 puzzles) and 📇 Fact Finder (12 fact cards).
 
+## 🍳 The Kitchen (version 1.91)
+A sixth room for cooking games. This is the first part of a bigger plan (Phase 17 in `PLAN.md`): the room, the recipe
+book and the first recipe. The other 7 recipes come in later updates.
+- **Where it is:** tap ⬅️ in her room. The 🌳 Backyard is now one more ⬅️ past the Kitchen, and her window is still a
+  one-tap shortcut straight to the Backyard, so every room is still one tap from her room.
+- **What's in it:** a fridge, a counter with the 📖 recipe book and a 🫧 sink, a cooktop and oven, wall cabinets and a
+  🛎️ order window. The Kitchen gets a free tile wall and a checked floor the first time she goes in, and it can be
+  decorated like every room (the fridge, counter and cabinets can be recolored too). 4 new things in the Shop with the
+  🧁 Cafe chip: Hanging Pots, Fruit Magnets, Herb Pots and a Cupcake Rug.
+- **📖 The recipe book** has 8 pages in a suggested order (each recipe will add something new), but any recipe can be
+  played at any time. Only **🥗 Rainbow Fruit Salad** is ready; the other pages say 🔜 Soon. The 🐣 Easy / 🌟 Medium /
+  🧠 Hard tabs at the top change how hard it is. Each page shows its best stars for that level and a stamp for each level played.
+- **🥗 Rainbow Fruit Salad**, one step at a time (the dots at the top show the steps):
+  - 🫧 **Wash** the fruit: rub the dirt spots (or tap each one a few times). On Medium and Hard there is dirt on the
+    back too: tap ↻ to turn the fruit over.
+  - 🍌 **Peel** the banana: swipe a strip of peel down from the top, or tap it. One long swipe can take several strips.
+    On Medium and Hard peel only comes off downwards (an upward swipe is a gentle "oops"); Hard shows no arrows.
+  - 🔪 **Chop** the banana (Medium and Hard): swipe down across it or tap where to cut. Medium cuts on dotted lines;
+    Hard asks for 3 or 4 **equal** pieces with no lines.
+  - 🥣 **Into the bowl**: drag fruit into the bowl or just tap it (tap one in the bowl to take it back out).
+    Easy counts one kind ("Put 4 strawberries in", with dots to fill). Medium counts by color ("3 red and 4 green fruits").
+    Hard is a word problem ("3 groups of 2 blueberries and half as many kiwis") with vegetables on the tray that don't
+    belong in a fruit salad, then ✔ Done.
+  - ✨ **Decorate**: tap toppings (leaves, cream, stars, hearts, cherries, sprinkles), drag them around, drag one off
+    the bowl to take it away. Easy is free decorating; Medium copies an order card; Hard finishes a pattern around the bowl first.
+- **No failing:** a wrong try gets a funny line and a hint; a second wrong try shows the answer and moves on. Hints come
+  by themselves on Easy (after 5 seconds without a touch); on Medium after a wrong try; 💡 always gives one.
+  Every instruction is read aloud when Read to me is on, and 🔊 says it again.
+- **Stars and coins:** finishing on Easy is always ⭐⭐⭐. On Medium and Hard fewer wrong tries = more stars. Every new star
+  pays 2 / 3 / 4 coins (Easy / Medium / Hard); playing again with no new star pays +2, up to 20 coins a day.
+- **🍽️ My Dishes:** every salad she makes is kept (the newest 24) in My Dishes on the recipe book. **🍽️ Put it out**
+  puts it in the room as a decoration, which can be moved to any room like everything else. Dishes can't be given as gifts yet.
+- **🫧 The sink** is a washing toy: wash fruit and vegetables, one after another, with no goals and no coins. Good for the littlest.
+- **🧸 Little mode** lets the Kitchen in: the recipe book (on Easy) and the sink. The fridge (🧊 Chef's Choice) and the
+  order window (🛎️ customer orders) say "coming in a future update".
+- 2 new stickers on the **Room & Style** page: 🥗 Little Chef (make a recipe) and 🍳 Star Chef (3 stars on Easy, Medium and
+  Hard in one recipe).
+- Save data: save version 39 (`room6` for the room, `kitchen` for stars, dishes and coins today). Every older backup still restores.
+
 ## 🔎 Word Search and a bigger word bank (version 1.90)
 An eighth Brain Game at the Backyard chalkboard, using the same words as 🔤 Word Builder.
 - **How to play:** slide a finger from the first letter of a word to the last (either way round counts). Little hands can

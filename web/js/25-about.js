@@ -236,7 +236,9 @@ const GIFT_TIMELINE=[
   {v:'1.89',d:'2026-12-09',i:'🧸',n:'Little rooms: more to dress up with',why:'So the youngest can dress up their buddy, pet and fidgets too',
     news:['🧸 In a Little room everything costs half','🎁 A Little room\'s daily gift is 20 coins']},
   {v:'1.90',d:'2026-12-10',i:'🔎',n:'Word Search',why:'A second word game, and many more words to learn',
-    news:['🔎 Word Search in Brain Games: find the hidden words','🔤 Word Builder has hundreds of new words in 🎲 Free Play','🔢 The number pictures are easy to see now']}
+    news:['🔎 Word Search in Brain Games: find the hidden words','🔤 Word Builder has hundreds of new words in 🎲 Free Play','🔢 The number pictures are easy to see now']},
+  {v:'1.91',d:'2026-12-11',i:'🍳',n:'The Kitchen',why:'A room to cook in, with a recipe book full of things to make',
+    news:['🍳 A new room: the Kitchen, next to your room (the Backyard is through it now)','🥗 Make a Rainbow Fruit Salad: wash, peel, chop, count and decorate','🫧 The sink is a washing toy, and every dish you make goes in 🍽️ My Dishes']}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

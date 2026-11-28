@@ -13,9 +13,9 @@
    Unlocked lasts until 🔒 Lock is tapped or the app is opened again (LOCK.open is never saved).
    🎨 Dress like… (every room's Closet): dresses the buddy in pieces she owns from one theme (dressLike).
    ========================================================= */
-const LOCK_SCREENS=['room','little','fidget','closet','soccer','ball','brain','garden','walk'];
-const LOCK_ROOMS=[1,3]; // her room and the Backyard (the goal, the bat rack, the chalkboard and the shed)
-const LOCK_HOTS=['desk','shelf','closet','window','goal','brain','garden','ballfield','pet','gift'];
+const LOCK_SCREENS=['room','little','fidget','closet','soccer','ball','brain','garden','walk','kitchen'];
+const LOCK_ROOMS=[1,3,6]; // her room and the Backyard (the goal, the bat rack, the chalkboard and the shed)
+const LOCK_HOTS=['desk','shelf','closet','window','goal','brain','garden','ballfield','pet','gift','recipes','sink'];
 const LOCK_HOLD=3000;
 const LOCK={open:'',hold:null,ate:false};
 const lockSet=p=>!!(p&&p.little&&p.little.lock);
@@ -45,7 +45,7 @@ function lockWiggle(h){
   g.classList.remove('lk-wig'); void g.getBoundingClientRect(); g.classList.add('lk-wig');
   clearTimeout(lockWiggle.t); lockWiggle.t=setTimeout(()=>g.classList.remove('lk-wig'),600);
 }
-const lockLine=()=>roomNo===3?'Tap the goal, the bat rack, the chalkboard or the shed!':'Tap Play, the shelf, the closet, your buddy or your pet!';
+const lockLine=()=>roomNo===6?'Tap the recipe book or the sink!':roomNo===3?'Tap the goal, the bat rack, the chalkboard or the shed!':'Tap Play, the shelf, the closet, your buddy or your pet!';
 
 /* ---------- 🔒 press and hold ---------- */
 function lockUnlock(){ // the PIN, or with no PIN 4 numbers written as words (lockCheck, section 76, v1.88)

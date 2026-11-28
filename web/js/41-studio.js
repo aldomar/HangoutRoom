@@ -11,10 +11,10 @@
    ========================================================= */
 // col/row = its place on the 🗺️ map (a grid). from/dir = which room it hangs off, and which way.
 const ROOM_MAP=[
-  {n:1,icon:'🏠',name:'My Room',col:2,row:2},
-  {n:2,icon:'🪜',name:'Loft',from:1,dir:'up',col:2,row:1},
-  {n:3,icon:'🌳',name:'Backyard',from:1,dir:'left',col:1,row:2},
-  {n:4,icon:'✨',name:'Studio',from:1,dir:'right',col:3,row:2}
+  {n:1,icon:'🏠',name:'My Room',col:3,row:2},
+  {n:2,icon:'🪜',name:'Loft',from:1,dir:'up',col:3,row:1},
+  {n:3,icon:'🌳',name:'Backyard',from:6,dir:'left',col:1,row:2}, // since v1.91 through the 🍳 Kitchen (section 78); her window is still a shortcut
+  {n:4,icon:'✨',name:'Studio',from:1,dir:'right',col:4,row:2}
 ];
 const RT_BACK={up:'down',down:'up',left:'right',right:'left'};
 const RT_ARROW={up:'⬆️',down:'⬇️',left:'⬅️',right:'➡️'};
