@@ -85,7 +85,7 @@
         <button class="tab" data-dt="floor">🟫<span> Floors</span></button>
         <button class="tab" data-dt="season">🍂<span> Seasons</span></button>
         <button class="tab" data-dt="colors">🎨<span> Colors</span></button>
-        <button class="tab" data-dt="layouts">🏠<span> Layouts</span></button>
+        <button class="tab" data-dt="layouts">📐<span> Layouts</span></button>
       </div>
       <button class="btn small pink" id="decoDone">✔<span> Done</span></button>
     </div>
@@ -97,7 +97,7 @@
 <!-- STICKER BOOK (v1.18) -->
 <div id="scr-about" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" data-back>⬅ Room</button>
+    <button class="btn small ghost nav-bk" data-back data-place="settings">⬅ Settings</button>
     <div class="title">💌 About</div>
   </div>
   <div class="ab-page" id="abPage"></div>
@@ -105,7 +105,7 @@
 
 <div id="scr-stickers" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" data-back>⬅ Room</button>
+    <button class="btn small ghost nav-bk" data-back data-place="room">⬅ Room</button>
     <div class="title">📒 Sticker Book</div>
     <div class="stk-count" id="stkCount"></div>
     <div class="coins coinsDisp"></div>
@@ -117,7 +117,7 @@
 <!-- FIDGET SHELF -->
 <div id="scr-fidget" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" data-back>⬅ Room</button>
+    <button class="btn small ghost nav-bk" data-back data-place="room">⬅ Room</button>
     <div class="title">🫧 Fidget Shelf</div>
     <div class="coins coinsDisp"></div>
   </div>
@@ -143,7 +143,7 @@
 <!-- CLOSET -->
 <div id="scr-closet" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" data-back>⬅ Room</button>
+    <button class="btn small ghost nav-bk" data-back data-place="room">⬅ Room</button>
     <div class="title">👗 Closet</div>
     <div class="coins coinsDisp"></div>
   </div>
@@ -169,7 +169,7 @@
 <!-- ART DESK -->
 <div id="scr-art" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" id="artBack">⬅ Room</button>
+    <button class="btn small ghost nav-bk" id="artBack" data-place="room">⬅ Room</button>
     <div class="title">🎨 Art Desk</div>
     <div class="coins coinsDisp"></div>
     <button class="btn small ghost" id="artGalBtn">🖼️ Gallery</button>
@@ -200,7 +200,7 @@
 <!-- PHOTOCARD WALL -->
 <div id="scr-cards" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" data-back>⬅ Room</button>
+    <button class="btn small ghost nav-bk" data-back data-place="room">⬅ Room</button>
     <div class="title">📸 Photocards</div>
     <div class="coins coinsDisp"></div>
     <button class="btn small ghost" id="cardViewBtn">📒 Binder</button>
@@ -235,7 +235,7 @@
 <!-- SOCCER FIELD -->
 <div id="scr-soccer" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" data-back>⬅ Room</button>
+    <button class="btn small ghost nav-bk" data-back data-place="room">⬅ Room</button>
     <div class="title" id="socTitle">⚽ Soccer Field</div>
     <div class="kit hidden" id="kitBadge">⚽ Team kit +1</div>
     <div class="coins coinsDisp"></div>
@@ -263,7 +263,7 @@
 <!-- BALL FIELD (v1.60, section 59) -->
 <div id="scr-ball" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" data-back>⬅ Room</button>
+    <button class="btn small ghost nav-bk" data-back data-place="room">⬅ Room</button>
     <div class="title" id="bfTitle">⚾ Ball Field</div>
     <div class="kit hidden" id="bfKit">⚾ Team kit +1</div>
     <div class="coins coinsDisp"></div>
@@ -293,7 +293,7 @@
 <!-- STAGE (rhythm game) -->
 <div id="scr-stage" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" id="stgBack">⬅ Room</button>
+    <button class="btn small ghost nav-bk" id="stgBack" data-place="room">⬅ Room</button>
     <div class="title">🎤 Stage</div>
     <div class="coins coinsDisp"></div>
   </div>
@@ -329,7 +329,7 @@
 <!-- CODE LAB (coding puzzles, on the Loft's computer desk) -->
 <div id="scr-code" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" id="clBack">⬅ Room</button>
+    <button class="btn small ghost nav-bk" id="clBack" data-place="room">⬅ Room</button>
     <div class="title">💻 Code Lab</div>
     <div class="coins coinsDisp"></div>
   </div>
@@ -380,7 +380,7 @@
 <!-- MUSIC MAKER (v1.38, the Loft's keyboard) -->
 <div id="scr-music" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" id="muBack">⬅ Room</button>
+    <button class="btn small ghost nav-bk" id="muBack" data-place="room">⬅ Room</button>
     <div class="title">🎹 Music Maker</div>
     <div class="coins coinsDisp"></div>
   </div>
@@ -399,7 +399,7 @@
 <!-- DANCE MAKER (v1.47, 💃 in the Music Maker and the Stage) -->
 <div id="scr-dance" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" id="dnBack">⬅ Room</button>
+    <button class="btn small ghost nav-bk" id="dnBack" data-place="room">⬅ Room</button>
     <div class="title">💃 Dance Maker</div>
     <div class="coins coinsDisp"></div>
   </div>
@@ -423,7 +423,7 @@
 <!-- PET WALK (v1.55, section 56) -->
 <div id="scr-walk" class="screen" data-view="pick">
   <div class="topbar">
-    <button class="btn small ghost" id="wkBack">⬅ Room</button>
+    <button class="btn small ghost nav-bk" id="wkBack" data-place="pet">⬅ Pet</button>
     <div class="title">🦮 Walk</div>
     <button class="btn small ghost" id="wkBookBtn" aria-label="Walk Finds">🧺<span> Finds</span></button>
   </div>
@@ -437,7 +437,7 @@
 
 <div id="scr-runway" class="screen" data-view="cards">
   <div class="topbar">
-    <button class="btn small ghost" id="rwBack">⬅ Closet</button>
+    <button class="btn small ghost nav-bk" id="rwBack" data-place="closet">⬅ Closet</button>
     <div class="title">👠 Runway</div>
     <div class="coins coinsDisp"></div>
   </div>
@@ -474,7 +474,7 @@
 <!-- GARDEN (v1.48, the Backyard's garden shed) -->
 <div id="scr-garden" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" id="gdBack" aria-label="Backyard">⬅<span> Yard</span></button>
+    <button class="btn small ghost nav-bk" id="gdBack" data-place="room">⬅ Backyard</button>
     <div class="title">🌱 Garden</div>
     <div class="coins coinsDisp"></div>
   </div>
@@ -490,7 +490,7 @@
 <!-- LITTLE ONES' CORNER (v1.46, the 🧸 button in the room's top bar) -->
 <div id="scr-little" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" id="ltBack" aria-label="Room">⬅<span> Room</span></button>
+    <button class="btn small ghost nav-bk" id="ltBack" data-place="room">⬅ Room</button>
     <div class="title" id="ltTitle">🧸 Play</div>
     <div class="coins coinsDisp"></div>
   </div>
@@ -500,7 +500,7 @@
 <!-- BRAIN GAMES (v1.25, the Backyard's chalkboard) -->
 <div id="scr-brain" class="screen">
   <div class="topbar">
-    <button class="btn small ghost" id="brBack">⬅ Room</button>
+    <button class="btn small ghost nav-bk" id="brBack" data-place="room">⬅ Room</button>
     <div class="title" id="brTitle">📚 Brain Games</div>
     <div class="coins coinsDisp"></div>
   </div>

@@ -64,6 +64,6 @@ function iosSaveFile(txt,name){
 // A picture: shown big; press and hold it to save it to Photos. Returns true when shown.
 function iosPicture(url){
   if(!onIOS()) return false;
-  modal('📷 Your picture',`<img class="ios-pic" src="${url}" alt="Your picture"><div class="ios-pic-tip">Press and hold the picture, then tap <b>Save to Photos</b>.</div>`,[{text:'Done',cls:'pink'}]);
+  modal('📷 Your picture',`<img class="ios-pic" src="${url}" alt="Your picture"><div class="ios-pic-tip">Press and hold the picture, then tap <b>Save to Photos</b>.</div>`,[{text:'✔ Done',cls:'pink'}]);
   return true;
 }

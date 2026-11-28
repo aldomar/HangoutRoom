@@ -124,8 +124,8 @@ function petMenu(){
     +`<div class="pet-tricks">${PET_TRICKS.map(t=>`<span class="${h>=t.at?'on':''}" title="${t.name}">${h>=t.at?t.icon:'🔒'}<small>${t.name}</small></span>`).join('')}</div></div></div>`
     +`<div class="pet-play"><button class="btn pp-go" data-pa="hide">🙈 Hide &amp; Seek</button><button class="btn pp-go" data-pa="fetch">🎾 Fetch</button><button class="btn pp-go" data-pa="walk">🦮 Walk</button></div>`
     +`<div class="pet-acts"><button class="btn pink" data-pa="pat">🤚 Pet</button><button class="btn" data-pa="treat">🍪 Treat <small>🪙${PET_TREAT}</small></button>`
-    +`<button class="btn ghost" data-pa="dress">🎀 Dress</button><button class="btn ghost" data-pa="home">🏠 Home</button><button class="btn ghost" data-pa="name">✏️ Name</button><button class="btn ghost" data-pa="change">🔄 Change</button></div>`,
-    [{text:'Close',cls:'ghost'}]);
+    +`<button class="btn ghost" data-pa="dress">🎀 Dress</button><button class="btn ghost" data-pa="home">🛖 Home</button><button class="btn ghost" data-pa="name">✏️ Name</button><button class="btn ghost" data-pa="change">🔄 Change</button></div>`,
+    [{text:'✖ Close',cls:'ghost'}]);
   $$('#modalBody [data-pa]').forEach(b=>b.onclick=()=>{SFX.click();({hide:()=>ppStart('hide'),fetch:()=>ppStart('fetch'),walk:wkOpen,pat:petPat,treat:petTreat,dress:petDress,home:petHomes,name:petRename,change:petChoose})[b.dataset.pa]();});
 }
 function petChoose(){
@@ -145,7 +145,7 @@ function petDress(){
   const p=P(), k=petKind(p), on=petAcc(p);
   const tile=(id,A)=>{const own=id==='none'||p.owned.includes('petacc:'+id);
     return `<button class="tile${id===on?' on':''}${own?'':' locked'}${poorCls(p,own,A?A.price:0)}" data-acc="${id}"><div class="tv"><svg viewBox="-62 -104 124 110">${petArt(k,id)}</svg></div><div class="tn">${A?A.name:'Nothing'}</div>${own?'':priceTag(p,A.price)}</button>`;};
-  modal('🎀 Dress-up',`<div class="pet-pick">${tile('none')}${easySort(Object.entries(PET_ACC),([id,A])=>p.owned.includes('petacc:'+id)?0:A.price).map(([id,A])=>tile(id,A)).join('')}</div>`,[{text:'Done',cls:'pink'}]);
+  modal('🎀 Dress-up',`<div class="pet-pick">${tile('none')}${easySort(Object.entries(PET_ACC),([id,A])=>p.owned.includes('petacc:'+id)?0:A.price).map(([id,A])=>tile(id,A)).join('')}</div>`,[{text:'✔ Done',cls:'pink'}]);
   $$('#modalBody [data-acc]').forEach(b=>b.onclick=()=>petWear(b.dataset.acc));
 }
 function petWear(id){

@@ -1782,7 +1782,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('…→ the Backyard', await ev(`window.androidBack()===true&&cur==='room'&&roomNo===3`));
   await ev(`show('brain');document.querySelector('#brMenu [data-game=pop]').click()`); await sleep(150);
   await ev(`document.querySelector('#brBack').click()`); await sleep(100);
-  check('⬅ Games goes back to the menu, ⬅ Room to the room', await ev(`BR.view==='menu'&&document.querySelector('#brBack').textContent.includes('Room')`)&&await ev(`(document.querySelector('#brBack').click(),cur==='room')`));
+  check('⬅ Games goes back to the menu, ⬅ Room to the room', await ev(`BR.view==='menu'&&document.querySelector('#brBack').dataset.place==='room'`)&&await ev(`(document.querySelector('#brBack').click(),cur==='room')`));
   await ev(`P().easy=true;applyEasy();show('brain')`); await sleep(200);
   check('Easy mode: every game opens on Easy, with no reading needed', await ev(`Object.values(P().brain.level).every(l=>l==='easy')`)&&await ev(`(document.querySelector('#brMenu [data-game=snack]').click(),BR.lvl==='easy'&&!document.querySelector('#brQ').textContent.includes('How many'))`));
   await shot('H12-brain-easy-mode');
@@ -1860,9 +1860,11 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
   check('with a secret, tapping the buddy 5 times shows it', await ev(`!document.querySelector('#abSecret').classList.contains('hidden')&&document.querySelector('#abSecret').textContent==='Boop the snoot!'`));
   await shot('C03-about-secret');
   await ev(`window.ABOUT_LOCAL=${realLocal}||undefined;renderAbout()`);
-  check('Android Back from About goes to the room', await ev(`window.androidBack()===true&&cur==='room'`));
+  check('Android Back from About goes back to ⚙️ Settings, in the room (v1.86)', await ev(`window.androidBack()===true&&cur==='room'&&!!document.querySelector('#sSwitch')`));
+  await ev(`closeModal()`);
   await ev(`show('about')`); await ev(`document.querySelector('#scr-about [data-back]').click()`);
-  check('⬅ Room from About goes to the room', await ev(`cur==='room'`));
+  check('⬅ ⚙️ Settings from About goes back to Settings, in the room (v1.86)', await ev(`cur==='room'&&!!document.querySelector('#sSwitch')`));
+  await ev(`closeModal()`);
   await ev(`show('profiles');whatsNew.wait=0;DB.settings.seenNew='1.21';whatsNew()`); await sleep(200); await shot('C04-whats-new');
   check('after an update, What\'s New shows the news once (the last 3 updates at most, the newest included)', await ev(`!document.querySelector('#modal').classList.contains('hidden')&&document.querySelector('#modalTitle').textContent.includes('New')&&document.querySelectorAll('#modalBody .wn').length===Math.min(3,GIFT_TIMELINE.filter(t=>verNum(t.v)>verNum('1.21')).length)&&document.querySelector('#modalBody').textContent.includes(GIFT_TIMELINE[GIFT_TIMELINE.length-1].n)&&DB.settings.seenNew===APP_VERSION`));
   await ev(`closeModal();whatsNew()`);
@@ -3655,7 +3657,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('Easy mode: a 🌱 Garden label over the shed, inside the picture', await ev(`(()=>{const s=document.querySelector('#roomSvg [data-hot=garden] .sign'),r=s&&s.getBoundingClientRect(),w=roomSvg.getBoundingClientRect();return !!s&&s.textContent.includes('Garden')&&r.right<=w.right+1&&r.top>=w.top;})()`));
     await shot('G01-yard-shed'); await ev(`P().easy=false;applyEasy();renderRoom()`);
     await ev(`document.querySelector('#roomSvg [data-hot=garden]').dispatchEvent(new MouseEvent('click',{bubbles:true}))`); await sleep(250);
-    check('tapping the shed opens the Garden: 6 empty plots, 12 seed packets, ⬅ Yard', await ev(`cur==='garden'&&document.querySelectorAll('#gdBed .gd-plot.gd-empty').length===6&&document.querySelectorAll('#gdSeeds .gd-seed').length===12&&document.querySelector('#gdBack').textContent.includes('Yard')`));
+    check('tapping the shed opens the Garden: 6 empty plots, 12 seed packets, ⬅ Yard', await ev(`cur==='garden'&&document.querySelectorAll('#gdBed .gd-plot.gd-empty').length===6&&document.querySelectorAll('#gdSeeds .gd-seed').length===12&&document.querySelector('#gdBack').textContent.includes('Backyard')`));
     check('seeds to buy show a price; free ones do not', await ev(`GD_SEEDS.every(s=>!!document.querySelector('#gdSeeds [data-seed="'+s.id+'"] .tp')===!!s.price)`));
     // planting: plot first
     const gc0=await ev(`P().coins`);
@@ -3868,9 +3870,9 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('8 pet homes to buy, 12-30 coins, with different ids', await ev(`(e=>e.length===8&&e.every(([k,H])=>H.price>=12&&H.price<=30&&H.name&&H.icon))(Object.entries(PET_HOMES))`));
     check('before buying one, the pet sits on the cushion bed', await ev(`petHomeId(P())===''&&!!document.querySelector('#petG [data-ph=cushion]')`));
     await ev(`petMenu()`); await sleep(150);
-    check('the pet menu has a 🏠 Home button', await ev(`!!document.querySelector('#modalBody [data-pa=home]')`));
+    check('the pet menu has a 🛖 Home button', await ev(`!!document.querySelector('#modalBody [data-pa=home]')`));
     await ev(`document.querySelector('#modalBody [data-pa=home]').click()`); await sleep(150);
-    check('🏠 Home shows the cushion (picked) and the 8 homes with prices', await ev(`document.querySelectorAll('#modalBody [data-home]').length===9&&document.querySelector('#modalBody [data-home=""]').classList.contains('on')&&document.querySelectorAll('#modalBody [data-home] .tp').length===8`));
+    check('🛖 Home shows the cushion (picked) and the 8 homes with prices', await ev(`document.querySelectorAll('#modalBody [data-home]').length===9&&document.querySelector('#modalBody [data-home=""]').classList.contains('on')&&document.querySelectorAll('#modalBody [data-home] .tp').length===8`));
     await shot('CS1-pet-homes');
     const homeBad=[];
     for(const id of await ev(`Object.keys(PET_HOMES)`)){
@@ -4062,7 +4064,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
     await ev(`P().easy=false;applyEasy();show('room')`);
     // stickers
-    check('3 new stickers on the 🏠 Room & Style page: First Walk, Theme Hopper, Crowd Favorite', await ev(`['walk1','walk8','wow3'].every(id=>(s=>s&&s.page==='room')(STICKERS.find(s=>s.id===id)))`));
+    check('3 new stickers on the 🪞 Room & Style page: First Walk, Theme Hopper, Crowd Favorite', await ev(`['walk1','walk8','wow3'].every(id=>(s=>s&&s.page==='room')(STICKERS.find(s=>s.id===id)))`));
     check('…First Walk is done; Theme Hopper needs 8 cards, Crowd Favorite 3 🤩', await ev(`stkDone(P(),STICKERS.find(s=>s.id==='walk1'))&&!stkDone(P(),STICKERS.find(s=>s.id==='walk8'))&&(P().runway.cards=RW_CARDS.slice(0,8).map(c=>c.id),P().stats.wows=3,stkDone(P(),STICKERS.find(s=>s.id==='walk8'))&&stkDone(P(),STICKERS.find(s=>s.id==='wow3')))`));
     // backups
     const rwB=await ev(`JSON.stringify(DB)`);
@@ -4446,7 +4448,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     await shot('PP13-easy');
     await ev(`ppEnd();P().easy=false;applyEasy();renderRoom()`);
     // stickers
-    check('4 new stickers on the 🏠 Room & Style page: Found You!, Seek Champ, Good Catch, Fetch Fan', await ev(`['ppFind1','ppFind','ppFetch1','ppFetch'].every(id=>(s=>s&&s.page==='room')(STICKERS.find(s=>s.id===id)))`));
+    check('4 new stickers on the 🪞 Room & Style page: Found You!, Seek Champ, Good Catch, Fetch Fan', await ev(`['ppFind1','ppFind','ppFetch1','ppFetch'].every(id=>(s=>s&&s.page==='room')(STICKERS.find(s=>s.id===id)))`));
     check('…Found You! and Good Catch are done now', await ev(`['ppFind1','ppFetch1'].every(id=>stkDone(P(),STICKERS.find(s=>s.id===id)))&&!stkDone(P(),STICKERS.find(s=>s.id==='ppFetch'))`));
     // backups
     const ppB=await ev(`JSON.stringify(DB)`);
@@ -4557,7 +4559,7 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('Easy mode: a short tip, a bigger 👣', await ev(`document.querySelector('#wkTip').textContent==='Hold 👣'&&document.querySelector('#wkGo').getBoundingClientRect().height>=70`));
     await ev(`P().easy=false;applyEasy();show('room')`);
     // stickers
-    check('3 new stickers on the 🏠 Room & Style page: Walk Buddy, Collector, Treasure Hunter', await ev(`['petWalk1','petWalkPath','petWalkAll'].every(id=>(s=>s&&s.page==='room')(STICKERS.find(s=>s.id===id)))`));
+    check('3 new stickers on the 🪞 Room & Style page: Walk Buddy, Collector, Treasure Hunter', await ev(`['petWalk1','petWalkPath','petWalkAll'].every(id=>(s=>s&&s.page==='room')(STICKERS.find(s=>s.id===id)))`));
     check('…Walk Buddy and Collector are done (the pond is full), Treasure Hunter not yet', await ev(`stkDone(P(),STICKERS.find(s=>s.id==='petWalk1'))&&stkDone(P(),STICKERS.find(s=>s.id==='petWalkPath'))&&!stkDone(P(),STICKERS.find(s=>s.id==='petWalkAll'))`));
     // backups
     const wkB=await ev(`JSON.stringify(DB)`);
@@ -6214,6 +6216,52 @@ let ok=0,bad=0; function check(name,cond,extra){if(cond){ok++;console.log('  ok 
     check('…and goes back to the pet menu in the room', await ev(`cur==='room'&&${box}&&!!document.querySelector('#modalBody .pet-card')`));
     await ev(`closeModal()`);
     check('v1.85 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.85')`));
+  }
+  console.log('Back shows the way (v1.86)');
+  {
+    const btn=s=>`document.querySelector('${s}')`;
+    const bk=n=>`(b=>!!b&&b.textContent.trim().startsWith('⬅')&&!!b.querySelector('.nb-ic')&&b.querySelector('.nb-ic').textContent.trim().length>0&&(r=>r.width>=48&&r.height>=48)(b.getBoundingClientRect()))(document.querySelector('#scr-${n} .topbar .nav-bk'))`;
+    // every screen with a top bar: one ⬅ with a picture of where it goes, 48 px or more, in every band
+    if(!(await ev('petKind(P())'))) await ev(`P().pet.kind='bat';save()`);
+    const OPEN={runway:`show('closet');rwOpen()`,walk:`show('room');wkOpen()`,dance:`show('music');document.querySelector('#muDance').click()`}; // opened the way the app does
+    const SCREENS=['about','stickers','fidget','closet','art','cards','soccer','ball','stage','code','music','dance','walk','runway','garden','little','brain'];
+    for(const band of ['normal','easy']){
+      await ev(`setBand(P(),'${band}');P().little.lock=false;save();applyEasy();show('room');goRoom(3)`); await sleep(50);
+      const bad=[]; for(const n of SCREENS){await ev(OPEN[n]||`show('${n}')`); await sleep(60); if(!(await ev(bk(n)))) bad.push(n);}
+      check(`${band}: every top bar has ⬅ + a place picture, 48 px or more`, !bad.length, bad);
+    }
+    await ev(`setBand(P(),'normal');save();applyEasy()`);
+    await ev(`show('room');goRoom(3);show('soccer')`); await sleep(60);
+    check('opened from the Backyard, Soccer\'s Back says ⬅ 🌳 Backyard', await ev(`${btn('#scr-soccer .nav-bk')}.textContent.includes('🌳')&&${btn('#scr-soccer .nav-bk')}.textContent.includes('Backyard')`));
+    await shot('NB1-soccer-back');
+    await ev(`show('room');goRoom(2);show('stage')`); await sleep(60);
+    check('…and the Stage, opened from the Loft, says ⬅ 🪜 Loft', await ev(`${btn('#stgBack')}.textContent.includes('🪜')`));
+    check('Read to me names where Back goes', await ev(`${btn('#stgBack')}.getAttribute('aria-label')==='Back to Loft'`));
+    await ev(`show('room');goRoom(1)`);
+    // phones: the name hides, the button stays 48 px
+    await send('Emulation.setDeviceMetricsOverride',{width:360,height:740,deviceScaleFactor:1,mobile:true});
+    await ev(`goRoom(3);show('ball')`); await sleep(100);
+    check('small phone: Back shows ⬅ + the picture only, still 48 px', await ev(`getComputedStyle(document.querySelector('#scr-ball .nb-t')).display==='none'&&${bk('ball')}`));
+    await shot('NB2-phone-back');
+    await send('Emulation.setDeviceMetricsOverride',{width:1180,height:820,deviceScaleFactor:1,mobile:false});
+    await ev(`show('room');goRoom(1)`);
+    // 🧱 the Basement has its own picture; every room's is different
+    check('🧱 the Basement has its own picture, and no two rooms share one', await ev(`roomInfo(5).icon==='🧱'&&new Set(ROOM_MAP.map(r=>r.icon)).size===ROOM_MAP.length`));
+    // ✖ / ✔: no box button is a bare "Close" or "Done"
+    const bare=fs.readdirSync(path.join(__dirname,'..','web','js')).filter(f=>f.endsWith('.js')).flatMap(f=>(fs.readFileSync(path.join(__dirname,'..','web','js',f),'utf8').match(/text:'(Close|Done[^']*)'/g)||[]).map(m=>f+': '+m));
+    check('every box closes with ✖ Close and finishes with ✔ Done (no bare words)', !bare.length, bare);
+    // 🏠 only ever opens her room
+    if(!(await ev('petKind(P())'))) await ev(`P().pet.kind='bat';save()`);
+    await ev(`renderRoom();petMenu()`); await sleep(60);
+    const homes=await ev(`[...document.querySelectorAll('button')].filter(b=>b.textContent.includes('🏠')&&!(b.dataset.map==='1'||b.dataset.go==='1'||(b.classList.contains('nav-bk')&&b.dataset.place==='room'))).map(b=>b.id||b.dataset.pa||b.dataset.dt||b.textContent.trim().slice(0,20))`);
+    check('🏠 is only on buttons that open her room (Layouts are 📐, pet homes 🛖)', !homes.length, homes);
+    await ev(`closeModal()`);
+    // boxes opened from ⚙️ go back to it
+    await ev(`settingsModal();document.querySelector('#sBackup').click()`); await sleep(80);
+    check('💾 Backup & Restore: ⬅ ⚙️ Settings on the left goes back to Settings', await ev(`(b=>b.textContent.includes('⚙️ Settings')&&(b.click(),!!document.querySelector('#sSwitch')))(document.querySelector('#modalBtns button'))`));
+    check('⚙️ Settings closes with ✖ Close (gray)', await ev(`(b=>b.textContent==='✖ Close'&&b.classList.contains('ghost'))([...document.querySelectorAll('#modalBtns button')].pop())`));
+    await ev(`closeModal()`);
+    check('v1.86 is in the Gift Story', await ev(`GIFT_TIMELINE.some(t=>t.v==='1.86')`));
   }
   console.log(`\n${ok} passed, ${bad} failed`);
   console.log(errors.length?'CONSOLE ERRORS:\n'+errors.join('\n'):'No console errors');

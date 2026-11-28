@@ -39,7 +39,8 @@ window.androidBack=function(){
   if(decorating){exitDecorate();return true;}
   if(cur==='fidget'||cur==='closet'){show('room');return true;}
   if(cur==='art'){artBack();return true;}
-  if(cur==='cards'||cur==='soccer'||cur==='ball'||cur==='stickers'||cur==='about'){show('room');return true;}
+  if(cur==='about'){show('room');settingsModal();return true;} // About was opened from ⚙️ Settings (v1.86)
+  if(cur==='cards'||cur==='soccer'||cur==='ball'||cur==='stickers'){show('room');return true;}
   if(cur==='stage'){if(jamBackKey())return true;if(STG.state==='pick')show('room');else stgPickView();return true;} // a song -> the song list -> room
   if(cur==='code'){clBackKey();return true;} // a puzzle -> the puzzle list -> room
   if(cur==='music'){muBackKey();return true;} // section 40

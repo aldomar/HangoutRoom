@@ -40,7 +40,7 @@ function mapOpen(){
   modal('🗺️ My House',`<div class="hmap" style="grid-template-columns:repeat(${cols},1fr)">`+ROOM_MAP.map(r=>
     `<button class="hm-room${r.n===roomNo?' on':''}" data-map="${r.n}" style="grid-column:${r.col};grid-row:${r.row}" aria-label="${r.name}">`
     +`<i>${r.icon}</i><span class="tn">${r.name}</span>${r.n===roomNo?'<em>⭐ Here</em>':''}</button>`).join('')+`</div>`,
-    [{text:'Close',cls:'ghost'}]);
+    [{text:'✖ Close',cls:'ghost'}]);
 }
 $('#mapBtn').onclick=mapOpen;
 $('#modal').addEventListener('click',e=>{const b=e.target.closest('[data-map]');if(!b)return;

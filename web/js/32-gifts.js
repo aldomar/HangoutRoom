@@ -84,14 +84,14 @@ function layoutPrev(L){
     +L.items.filter(i=>DECOR[i.type]&&!DECOR[i.type].art).map(i=>`<g transform="${decoT(i)}">${decoIn(i,DECOR[i.type].d())}</g>`).join('')+`</svg>`;
 }
 function layoutGrid(p){
-  return `<div class="hint lay-hint">Keep this room's look, and put it back any time 🏠</div>`+layoutsOf(p).map((L,i)=>L
-    ?`<div class="tile lay"><div class="tv wide">${layoutPrev(L)}</div><div class="tn">🏠 ${i+1} · ${L.items.length} thing${L.items.length===1?'':'s'}</div><div class="lay-btns"><button class="btn small pink" data-lay-load="${i}">📂 Load</button><button class="btn small ghost" data-lay-save="${i}" aria-label="Save here">💾</button></div></div>`
+  return `<div class="hint lay-hint">Keep this room's look, and put it back any time 📐</div>`+layoutsOf(p).map((L,i)=>L
+    ?`<div class="tile lay"><div class="tv wide">${layoutPrev(L)}</div><div class="tn">📐 ${i+1} · ${L.items.length} thing${L.items.length===1?'':'s'}</div><div class="lay-btns"><button class="btn small pink" data-lay-load="${i}">📂 Load</button><button class="btn small ghost" data-lay-save="${i}" aria-label="Save here">💾</button></div></div>`
     :`<button class="tile lay" data-lay-save="${i}"><div class="tv wide lay-empty">➕</div><div class="tn">💾 Save room here</div></button>`).join('');
 }
 function layoutSave(p,i){
   const R=curRoom(p);
   layoutsOf(p)[i]={wall:R.wall,floor:R.floor,items:R.items.filter(x=>x.placed&&DECOR[x.type]).map(x=>Object.assign({uid:x.uid,type:x.type,x:Math.round(x.x),y:Math.round(x.y)},rotOk(x.rot)?{rot:rotOk(x.rot)}:{},yawOk(x.yaw)?{yaw:x.yaw}:{})),at:Date.now()};
-  save(); SFX.save(); toast('Room layout saved! 🏠'); renderDecoGrid(); checkStickers();
+  save(); SFX.save(); toast('Room layout saved! 📐'); renderDecoGrid(); checkStickers();
 }
 function layoutLoad(p,i){
   const L=layoutsOf(p)[i], R=curRoom(p); if(!L) return;
@@ -119,5 +119,5 @@ const giveTile=p=>others(p).length?`<button class="tile gv-tile" data-give="1"><
 
 STICKERS.push(
   stk('gift1','room','🎁','Kind Heart','heart','Give a gift to another room (🎁)',1,p=>p.stats.gifts),
-  stk('layout1','room','🏠','Interior Designer','scallop','Save a room layout (🛋️ Decorate → 🏠 Layouts)',1,p=>Object.values(p.presets).reduce((a,l)=>a+l.filter(Boolean).length,0))
+  stk('layout1','room','📐','Interior Designer','scallop','Save a room layout (🛋️ Decorate → 📐 Layouts)',1,p=>Object.values(p.presets).reduce((a,l)=>a+l.filter(Boolean).length,0))
 );

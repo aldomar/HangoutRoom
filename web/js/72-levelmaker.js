@@ -45,7 +45,7 @@ function lmOthers(p){
 function lmList(){
   const p=P(); if(!p) return; codeStop(); CL.mk=true; CL.view='make'; CL.made=null; LM.drag=false;
   $('#clPick').classList.remove('hidden'); $('#clPlay').classList.add('hidden'); $('#clMake').classList.add('hidden'); $('#clTabs').classList.remove('hidden');
-  $('#clBack').textContent='⬅ Room';
+  backBtn('#clBack','room');
   $$('#clTabs .tab').forEach(b=>b.classList.toggle('on',!!b.dataset.make));
   $('#clHint').textContent=p.easy?'🛠️ 🗺️ ➡️ 🥕 ➡️ 💾':'🛠️ Make your own level! Solve it yourself to save it.';
   const mini=map=>`<svg viewBox="0 0 ${map[0].length*10} ${map.length*10}">${clMini({map})}</svg>`;
@@ -57,7 +57,7 @@ function lmList(){
     return `<button class="clp" data-mine="${i}" aria-label="Make a new level"><span class="lm-new">➕</span><b>${p.easy?'':'New'}</b></button>`;
   }).join('');
   const others=lmOthers(p);
-  if(others.length) h+=`<div class="lm-head">🏠 ${p.easy?'':'Levels from the other rooms'}</div>`
+  if(others.length) h+=`<div class="lm-head">👥 ${p.easy?'':'Levels from the other rooms'}</div>`
     +others.map(o=>`<button class="clp lm-other" data-from="${esc(o.q.id)}" data-slot="${o.i}" aria-label="${esc(o.q.name)}'s level">${mini(o.L.map)}<span class="lm-who">${esc(o.q.badge||'')} ${esc(o.q.name)}</span></button>`).join('');
   $('#clList').innerHTML=h;
 }
@@ -76,7 +76,7 @@ function lmEdit(i){
   LM.slot=i; LM.d=LM.drafts[i]||(p.code.mine[i]?lmFrom(p.code.mine[i]):lmBlank(5));
   CL.view='edit'; CL.made=null;
   $('#clPick').classList.add('hidden'); $('#clPlay').classList.add('hidden'); $('#clTabs').classList.add('hidden'); $('#clMake').classList.remove('hidden');
-  $('#clBack').textContent='⬅ Levels';
+  backBtn('#clBack','levels');
   lmMsg(p.easy?'🗺️ ➡️ ▶️':'Pick a tool, then tap or drag on the map. 🎨',true);
   lmRender();
 }

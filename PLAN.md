@@ -1505,18 +1505,22 @@ in any of them (nothing about getting around is saved). Issue numbers below are 
   Walk goes back to the pet menu (`wkToPet`). I Spy's ⬅ stays in the room it was played in. Runway's "Wear it home" is ✨ (👗 is the Closet).
   Code Lab and Brain Games: the last puzzle's "Yay!" became 🔁 Again (⬅ already goes to the list).
 
-**v1.86 ⬅ Back buttons that show where they go (rules 2 and 3; issues 5, 6, 7, 8, 14, 16)**
+✅ **v1.86 ⬅ Back buttons that show where they go (rules 2 and 3; issues 5, 6, 7, 8, 14, 16; built on `feature/nav-back`, stacked on `feature/navigation`)**
 - `backBtn(el, place)` (76): every top-bar Back shows ⬅ + the place's icon (+ its name when there is room), at least 48 px in every
   band. Screens opened from a room show that room (⬅🌳 from Soccer, ⬅🪜 from the Stage). Screens with steps (Stage, Code Lab,
   Brain Games, Runway, Walk, Jam, 🧸 Play) set it at each step, as they do now, through the same helper.
 - 🏠 only means her room. (The game boxes' 🏠 Done / 🏠 Home went in v1.85 through `endBox`; the smoke test checks it.) Check the rest of the app.
 - ✖ only means "close this box or game, stay here": every box's close button becomes ✖ in one place (gray, the last button),
   except a real choice (Delete / Keep it).
-- The room arrow tabs get a door look of their own (their arrow + the room's picture), so they don't look like ⬅ Back.
+- The room arrow tabs stay as they are (arrow + the room's icon, the icon bigger than the arrow): once every Back shows its place too,
+  "arrow + picture" means "go to that place" everywhere, so the two agree.
 - About's Back reopens ⚙️ Settings.
 - Smoke test: every `.topbar` Back on every screen and step is at least 48×48 px and has a place icon; no button says 🏠 unless it opens her room.
-- Owner's questions: the Loft and the Basement both use 🪜 on the map. Give the Basement its own icon (e.g. 🧱 or 📦)?
-  The door look for the room tabs: try two looks and pick?
+- Owner's answers (2026-11-27): the Basement gets its own icon, 🧱 (its free brick wall; the Loft keeps 🪜). No door look for the room
+  tabs: arrow + room icon is enough.
+- Built: 17 top-bar Backs (`nav-bk` + `data-place`; About → ⚙️, Runway → 👗, Walk → 🐾, the rest → the room it was opened from);
+  PIN and Backup boxes start with ⬅ ⚙️ Settings; every Close/Done is ✖ Close / ✔ Done; 🛖 pet homes, 📐 Layouts, 🪞 the Room & Style
+  sticker page, 👥 in the level maker, so 🏠 only opens her room.
 
 **v1.87 ⏸️ Ask before leaving a round (rule 5; issue 4)**
 - `navLeave(ok, stay)` (76): Back during a round opens the pause box (from the Stage's ⏸️: a big ▶ Keep playing, a smaller ⬅ + place).

@@ -92,7 +92,7 @@ function gcShow(code,what,m,fresh){
   modal('🎁 Your gift code',`<div class="gc-code" id="gcCode">${code}</div>`
     +`<p class="gc-help">${gcWhatText(what)} for 📮 ${m}.<br>Read it to them. They tap 🎁 Give, then 📥 Type a gift code.</p>`
     +(fresh?`<p class="gc-help">It's kept in 📮 Sent, in case you need it again.</p>`:''),
-    [{text:'Done ✔',cls:'pink'}]);
+    [{text:'✔ Done',cls:'pink'}]);
 }
 function gcSentModal(){
   const p=P(); if(!p) return; SFX.click(); const L=p.giftCodes.sent;

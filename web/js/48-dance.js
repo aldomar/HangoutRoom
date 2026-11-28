@@ -135,7 +135,7 @@ function dnArt(p){
 }
 function renderDance(){
   const p=P(); if(!p) return;
-  $('#dnBack').textContent=DN.from==='music'?'⬅ Music':DN.from==='stage'?'⬅ Stage':'⬅ Room';
+  backBtn('#dnBack',DN.from==='music'||DN.from==='stage'?DN.from:'room');
   $('#dnBuddy').src=dnArt(p);
   $('#dnLights').innerHTML=Array.from({length:8},(_,k)=>`<i style="--k:${['#ff8cc6','#ffd166','#8ff0d0','#a97cff'][k%4]}"></i>`).join('');
   $('#dnMoves').innerHTML=DN_CODES.map(c=>`<button class="dn-move" data-move="${c}" aria-label="${DN_MOVES[c].name}">${DN_MOVES[c].icon}<span class="tn">${DN_MOVES[c].name}</span></button>`).join('');

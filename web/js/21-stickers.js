@@ -14,7 +14,7 @@ const STK_PAGES={
   soccer:{icon:'⚽',name:'Sports',color:'#8ff0d0'}, // Soccer + the ⚾ Ball Field (named Sports since v1.60; the id stays)
   stage:{icon:'🎤',name:'Stage',color:'#ffd166'},
   code:{icon:'💻',name:'Code Lab',color:'#7fc8ff'},
-  room:{icon:'🏠',name:'Room & Style',color:'#ffab7a'}
+  room:{icon:'🪞',name:'Room & Style',color:'#ffab7a'}
 };
 // need = how many (a number, or a function for lists that can grow); have(p) = how far she is. tier = 1-3 little stars.
 const stk=(id,page,icon,name,shape,hint,need,have,tier)=>({id,page,icon,name,shape,hint,need,have,tier:tier||0});

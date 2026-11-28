@@ -234,7 +234,7 @@ function tgMemStart(lvl){
   Object.assign(TGM,{cards:deck.map(id=>({id,open:false,got:-1})),open:[],lock:false,turn:0,pts:[0,0],pl,done:false});
   brStop(); BR.view='duo';
   $('#brMenu').classList.add('hidden'); $('#brPlay').classList.add('hidden'); $('#brDuo').classList.remove('hidden');
-  $('#brBack').textContent='⬅ Games'; $('#brTitle').textContent='👯 Memory for 2';
+  backBtn('#brBack','games'); $('#brTitle').textContent='👯 Memory for 2';
   const faces={}; set.forEach(id=>{faces[id]=memPic(id);});
   const cols=deck.length<=6?3:deck.length<=12?4:5;
   $('#brDuo').innerHTML=`<div class="tabs" style="background:var(--panel);justify-content:center">${BRAIN_LVLS.map(l=>`<button class="tab${l===TGM.lvl?' on':''}" data-tg-lvl="${l}">${l==='easy'?'🐣':l==='medium'?'🌟':'🧠'} <span>${l==='easy'?6:l==='medium'?12:20}</span></button>`).join('')}</div>`

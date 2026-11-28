@@ -13,6 +13,7 @@ function show(n){
   if(n!=='room'&&SPY.on) spyEnd(true); // 🔍 (section 50)
   if(n!=='room'&&PP.on) ppEnd(true); // 🙈🎾 pet play (section 55)
   cur=n; $$('.screen').forEach(s=>s.classList.toggle('on',s.id==='scr-'+n));
+  navBacks(n); // ⬅ + where it goes (section 76, v1.86); screens with steps set theirs again below
   const ep=n==='profiles'?null:P(); applyEasy(); applyLock();
   if(ep&&(ep.easy||lockOn())){if(n==='soccer'){ep.soccer.level='easy';ep.soccer.keep.level='easy';}if(n==='ball'){ep.ball.bat.level='easy';ep.ball.catch.level='easy';}if(n==='stage')ep.stage.level='easy';if(n==='code')ep.code.level='easy';if(n==='brain')Object.keys(ep.brain.level).forEach(g=>{ep.brain.level[g]='easy';});} // Easy mode opens games on Easy
   if(n==='room'||n==='cards') checkBonus(); // gives any milestone cards she has earned (section 12)
@@ -327,7 +328,7 @@ function settingsModal(){
     +(p?`<button class="btn ghost" id="sBand">${BANDS[bandOf(p)].icon} Level: ${BANDS[bandOf(p)].name}</button>`:'') // section 64
     +(p&&canSpeak()?`<button class="btn ghost" id="sSpeak">${readOn(p)?'🔊 Read to me: ON':'🔈 Read to me: OFF'}</button>`:'') // section 34
     +(p?`<button class="btn ghost" id="sGift">🎁 Give a gift</button>`:'')
-    +`<button class="btn ghost" id="sSwitch">👥 Switch Room</button><button class="btn ghost" id="sBackup">💾 Backup &amp; Restore</button><button class="btn ghost" id="sPin">${s.pin?'🔒 Grown-up PIN: ON':'🔓 Grown-up PIN: OFF'}</button><button class="btn ghost" id="sSetup">🧰 Grown-up setup</button><button class="btn ghost" id="sAbout">💌 About</button></div><p class="about">🐰 Hangout Room · version ${APP_VERSION}</p>`,[{text:'Close',cls:'pink'}]);
+    +`<button class="btn ghost" id="sSwitch">👥 Switch Room</button><button class="btn ghost" id="sBackup">💾 Backup &amp; Restore</button><button class="btn ghost" id="sPin">${s.pin?'🔒 Grown-up PIN: ON':'🔓 Grown-up PIN: OFF'}</button><button class="btn ghost" id="sSetup">🧰 Grown-up setup</button><button class="btn ghost" id="sAbout">💌 About</button></div><p class="about">🐰 Hangout Room · version ${APP_VERSION}</p>`,[{text:'✖ Close',cls:'ghost'}]);
   $('#sSound').onclick=()=>{setSound(!s.sound);SFX.click();settingsModal();}; // setSound: section 34
   $('#sMusic').onclick=()=>{s.music=!s.music;save();if(s.music)startMusic();else stopMusic();settingsModal();};
   if(p) $('#sBand').onclick=()=>{SFX.click();askPin(bandModal);};
@@ -379,8 +380,8 @@ function newPin(after){ // type a new PIN twice; then after() (the first-time se
 function pinSettings(){
   if(!DB.settings.pin){newPin(settingsModal);return;}
   askPin(()=>modal('🔒 Grown-up PIN','The PIN is needed to make, change or delete a room, to change a room\'s level, and to restore a backup.',[
-    {text:'Remove PIN',cls:'ghost',on:()=>{DB.settings.pin='';save();toast('PIN removed 🔓');settingsModal();}},
-    {text:'Change PIN',cls:'ghost',on:()=>newPin(settingsModal)},{text:'Close',cls:'pink',on:settingsModal}]));
+    {text:navBackText('settings'),cls:'ghost',on:settingsModal},{text:'Remove PIN',cls:'ghost',on:()=>{DB.settings.pin='';save();toast('PIN removed 🔓');settingsModal();}},
+    {text:'Change PIN',cls:'ghost',on:()=>newPin(settingsModal)}]));
 }
 // A backup is the save data (DB) as text. With the drawings switch on, it also has
 // artwork:[...drawing records]. Older backups have no artwork list and still restore.
@@ -396,7 +397,7 @@ function backupModal(){
       <div class="setlist" style="margin-top:10px"><button class="btn ghost" id="bkArt">${withArt?'🎨 Drawings: IN backup':'🎨 Drawings: NOT in backup'}</button></div>
       <p style="margin:10px 0 0">${info}</p>`+(big?`<p style="margin:6px 0 0">This backup is big, so the code is not shown. Use Copy code or Save file.</p>`
         :`<textarea class="inp" id="bkCode" readonly style="margin-top:10px">${esc(code)}</textarea>`),
-      [{text:'Copy code',cls:'ghost',keep:true,on:()=>copyText(code)},{text:'Save file',cls:'ghost',keep:true,on:()=>downloadFile(code)},{text:'Restore…',cls:'ghost',on:()=>askPin(restoreModal)},{text:'Close',cls:'pink'}]);
+      [{text:navBackText('settings'),cls:'ghost',on:settingsModal},{text:'Copy code',cls:'ghost',keep:true,on:()=>copyText(code)},{text:'Save file',cls:'ghost',keep:true,on:()=>downloadFile(code)},{text:'Restore…',cls:'ghost',on:()=>askPin(restoreModal)}]);
     $('#bkArt').onclick=()=>{DB.settings.backupArt=!withArt;save();SFX.click();backupModal();};
   });
 }
@@ -481,4 +482,4 @@ $('#randomBtn').onclick=()=>{
   save();SFX.happy();renderCloset();hopCloset();
 };
 $('#mascotNameBtn').onclick=()=>renameModal(P(),'mascotName',"Name your buddy");
-$$('[data-back]').forEach(b=>b.onclick=()=>{SFX.click();show('room');});
+$$('[data-back]').forEach(b=>b.onclick=()=>{SFX.click();show('room');if(b.dataset.place==='settings')settingsModal();}); // About was opened from ⚙️ (v1.86)

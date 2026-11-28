@@ -85,8 +85,8 @@ sharks and (original) heroes. Every item stays open to every child: no "boy"/"gi
 The players are 3 to 11, and many can't read, so getting around must work from icons, places and sounds. **The iPads and
 iPhone have no Back button or swipe-back in this app: on-screen buttons are the only way out of anything.** The map of every
 screen and every way in and out is `docs/NAVIGATION.md`: **update its map and table whenever a screen, mode, game or way out
-changes.** The shared helpers live in `76-nav.js`: `endBox` and `NAV_PLACES` since v1.85; `backBtn`, `navLeave` and the
-whose-room chip arrive in v1.86–v1.88 (Phase 16, `PLAN.md`). Once a helper exists, new code must use it; until then, follow the
+changes.** The shared helpers live in `76-nav.js`: `endBox` and `NAV_PLACES` since v1.85, `backBtn` since v1.86; `navLeave` and the
+whose-room chip arrive in v1.87–v1.88 (Phase 16, `PLAN.md`). Once a helper exists, new code must use it; until then, follow the
 rule by hand.
 1. **Every round ends on the same end box** (`endBox`): ⬅ + the place's icon on the left (gray), 🔁 Again or ▶ Next on the right
    (pink), extra choices in the middle. Every button has an icon. The buttons ignore taps for about 0.5 s, so a quick tap from the
@@ -95,7 +95,7 @@ rule by hand.
    plus its name when there is room). It goes exactly one step back, to where she came from (the room it was opened from, the
    Closet, the pet menu, a list), never further.
 3. **One meaning per icon:** ⬅ = back one step; ✖ = close this box or game and stay here; 🏠 = her room and nothing else;
-   ✔ = done. The room arrow tabs look like doors, not like ⬅ Back.
+   ✔ = done; an arrow + a place's picture = go to that place (the room tabs and every Back button agree).
 4. **Games that play inside the room** (like 🔍 I Spy, 🙈 Hide & Seek, 🎾 Fetch) follow rule 1 too and return to where they were
    started (the pet menu for pet games). The room must never look normal while it ignores taps: while one is on, its card shows
    at the top with a ✖.
@@ -291,6 +291,9 @@ rule by hand.
       ⬅ + place on the left, extras in the middle, 🔁/▶/🎲 on the right in pink; `#modalBtns.nav-wait` blocks taps for `NAV_WAIT` ms; `modal()`
       clears it), `NAV_PLACES`/`navPlace`/`navBackText` (`'room'` = the room on screen, from `ROOM_MAP`), `endBoxOpen()`. The smoke test fails
       on a game file that makes an again/next button the old way. Pet games: `ppQuit` (55) and `wkToPet` (56) go back to the pet menu.
+      ⬅ Back buttons (v1.86): a top-bar Back is `<button class="btn small nav-bk" data-place="…">`; `backBtn(el, place)` draws ⬅ + the place's
+      icon + name (`.nb-t`, hidden under 520 px) and its `aria-label`; `show()` calls `navBacks(n)`, so `room` always shows the room the screen
+      was opened from. Screens with steps call `backBtn` at each step. Boxes close with `✖ Close` (gray, last) and finish with `✔ Done`.
   68. `68-undo.js` ↩ Undo (v1.74): `undoArm()` (a copy of the profile just before), `undoShow(u, back)`, `undoDo`, `undoOff`, `undoLeave`
       (called by `show()`), `#undoBar`. Hooked into `tryBuy`, `buyConsumable` (08) and `sendGift` (32). **A new shop must buy through
       `tryBuy`/`buyConsumable`** so it gets Undo; a new way to spend or give coins outside them should call `undoArm`/`undoShow` itself.

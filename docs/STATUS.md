@@ -22,6 +22,10 @@ _Last updated: 2026-11-27_
   - ✅ v1.85 🔚 One end box: PR open (branch `feature/navigation`, from `main`; the review docs are its first commit).
     New file `76-nav.js` (`endBox`, `NAV_PLACES`, `NAV_WAIT`); every game's end box moved onto it; Hide & Seek, Fetch and Walk go back
     to the pet menu (`ppQuit`, `ppAsk`, `PP_ASK` = 5, `wkToPet`). Owner said "go for it" on the proposed answers (2026-11-27).
+  - ✅ v1.85 is PR #90.
+  - ✅ v1.86 ⬅ Back shows the way: built (branch `feature/nav-back`, stacked on `feature/navigation`): PR #91.
+    `backBtn`/`navBacks` in 76; every top-bar Back is ⬅ + place icon, 48 px; About → Settings; ✖ Close / ✔ Done everywhere;
+    🧱 Basement, 🛖 pet homes, 📐 Layouts, 🪞 Room & Style stickers. Owner's answers 2026-11-27: 🧱, no door look. No save changes.
 - ✅ v1.81 📱 Room arrows on phones: merged (PR #84).
 - **Phase 15: 🎉 Holidays + the rest of the design review (order agreed 2026-11-24, see "Phase 15" in `PLAN.md`).** One PR each:
   - ✅ v1.72 🎉 Holiday greetings: built, PR open (branch `feature/holidays`, from `main`). New file `67-holidays.js`; 12 holidays
