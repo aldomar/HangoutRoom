@@ -23,3 +23,6 @@ tests/shots/
 
 # Personal About words (nicknames, letter): kept off GitHub. See web/about-local.example.js
 web/about-local.js
+
+# The owner's own design plans (they have personal details): kept off GitHub
+docs/Hangout Room *Plan.md
